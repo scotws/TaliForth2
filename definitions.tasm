@@ -1,0 +1,111 @@
+; Definitions for Tali Forth 2
+; Scot W. Stevenson <scot.stevenson@gmail.com>
+; First version: 01. Apr 2016  (Liara Forth)
+; This version: 24. Nov 2017
+
+; This file is included by taliforth.asm
+
+; I/O facilities are handled in the separate kernel files. The definitions for
+; multitasking are preliminary and will probably change
+
+; TODO THIS FILE IS BEING EDITED
+
+; ===================================================================
+; MEMORY MAP 
+
+        ;     0000  +-------------------+  ram-start, dpage, user0
+        ;           |                   |
+        ;           |  ^  Data Stack    |  <-- dsp
+        ;           |  |                |
+        ;     0100  +-------------------+  dsp0, stack
+        ;           |                   |
+        ;           |  ^  Return Stack  |  <-- rsp 
+        ;           |  |                |
+        ;     0200  +-------------------+  rsp0, buffer, buffer0
+        ;           |  |                |
+        ;           |  v  Input Buffer  |
+        ;           |                   |
+        ;     0300  +-------------------+  cp0
+        ;           |  |                |
+        ;           |  v  Dictionary    |  <-- cp
+        ;           |                   |
+        ;   (...)   ~~~~~~~~~~~~~~~~~~~~~
+        ;           |                   |
+        ;           |                   |
+        ;     7fff  +-------------------+  ram-end
+
+        ; Hard physical addresses
+        .equ ram-start  0000             ; start of installed RAM (32k)
+        .equ ram-end    $8000-1          ; end of installed ROM
+        
+        ; Soft physical addresses
+        .equ dpage      ram-start        ; direct page:       0000 - 00ff
+        .equ stack      { dpage + 0100 } ; return stack area: 0100 - 01ff
+        .equ buffer0    { stack + 0100 } ; buffer areas:      0200 - 02ff
+
+        ; Defined locations
+        .equ user0      dpage            ; user and system variables 
+        .equ dsp0       { stack - 1 }    ; initial Data Stack Pointer:   00ff
+        .equ stack0     { buffer0 - 1 }  ; initial Return Stack Pointer: 01ff
+
+        ; Buffers
+        .equ bsize      0080                ; size of input/output buffers
+        .equ buffer1    { buffer0 + bsize } ; output buffer 0280 (UNUSED)
+
+        ; Dictionary RAM
+        .equ cp0        { buffer1 + bsize } ; Dictionary starts after last buffer
+        .equ cp-end     { code0 - 1 }       ; Last RAM byte available
+
+        ; Other locations
+        .equ padoffset  $ff     ; offset from CP to PAD (holds number strings)
+
+
+; ===================================================================
+; DIRECT PAGE ADDRESSES
+
+; All are one cell (two bytes) long to prevent weird errors
+; TODO rewrite with USER variables
+        .equ cp        { user0 + &00 } ; Compiler Pointer, 2 bytes
+        .equ dp        { user0 + &02 } ; Dictionary Pointer, 2 bytes
+        .equ workword  { user0 + &04 } ; nt (not xt) of word being compiled
+        .equ insrc     { user0 + &06 } ; Input Source for SOURCE-ID
+        .equ cib       { user0 + &08 } ; Address of current input buffer
+        .equ ciblen    { user0 + &10 } ; Length of current input buffer
+        .equ toin      { user0 + &12 } ; Pointer to CIB (>IN in Forth)
+        .equ output    { user0 + &14 } ; Jump target for EMIT
+        .equ input     { user0 + &16 } ; Jump target for KEY
+        .equ havekey   { user0 + &18 } ; Jump target for KEY?
+        .equ state     { user0 + &20 } ; STATE: -1 compile, 0 interpret
+        .equ base      { user0 + &22 } ; Radix for number conversion
+        .equ tohold    { user0 + &24 } ; Pointer for formatted output 
+        .equ tmpbranch { user0 + &26 } ; temp storage for 0BRANCH, BRANCH only
+        .equ tmp1      { user0 + &28 } ; Temporary storage
+        .equ tmp2      { user0 + &30 } ; Temporary storage
+        .equ tmp3      { user0 + &32 } ; Temporary storage
+        .equ tmpdsp    { user0 + &34 } ; Temporary DSP (X) storage, 2 bytes
+        .equ tmptos    { user0 + &36 } ; Temporary TOS (Y) storage, 2 bytes
+        .equ nc_limit  { user0 + &38 } ; Holds limit for Native Compile size
+        .equ scratch   { user0 + &40 } ; 8 byte scratchpad (see UM/MOD)
+ 
+
+; ===================================================================
+; HELPER DEFINITIONS
+
+; ASCII characters
+        .equ AscCC   03  ; break (Control-C) ASCII character
+        .equ AscBELL 07  ; ACSCII bell sound
+        .equ AscBS   08  ; backspace ASCII character
+        .equ AscLF   0a  ; line feed ASCII character
+        .equ AscCR   0d  ; carriage return ASCII character
+        .equ AscCN   0e  ; ASCII CNTR-n (for next command)
+        .equ AscCP   10  ; ASCII CNTR-p (for previous command)
+        .equ AscESC  1b  ; Escape ASCII character
+        .equ AscSP   20  ; space ASCII character
+        .equ AscDEL  7f  ; DEL ASCII character
+
+; Dictionary flags. The first four bits are currently unused
+        .equ CO 0001 ; Compile Only
+        .equ AN 0002 ; Always Native Compile
+        .equ IM 0004 ; Immediate Word
+        .equ NN 0008 ; Never Native Compile
+

@@ -1,0 +1,52 @@
+#!/usr/bin/env python3
+# Convert JSON list of Forth words to Tali 2 header file
+# Scot W. Stevenson <scot.stevenson@gmail.com>
+# First version: 24. Nov 2017
+# This version: 24. Nov 2017
+"""Convert JSON Forth word information to Tali 2 header file
+
+Assumes the file "wordsource.json" in the current directory with three
+keys "name", "word", and "group" which are then processed and printed
+to the screen in the format of entries to header.asm, the Tali 2 list
+of headers in the form of:
+
+    nt_drop:
+            .byte 4, 0
+            .word <TBA>, xt_drop, z_drop
+            .byte "drop"
+
+See the comments in the file header.asm for details. The field "<TBA>" 
+and the details of the flags (second .byte value) are added later by 
+the user by hand to the actual header.asm file. 
+"""
+
+import json 
+
+SOURCE = 'wordsource.json'
+TEMPLATE = 'nt_{0}:\n'\
+        '        .byte {1}, 0\n'\
+        '        .word <TBA>, xt_{2}, z_{3}\n'\
+        '        .byte "{4}"\n' 
+
+
+def main(): 
+
+    with open(SOURCE) as f:
+        json_data = json.load(f) 
+
+    # Make sure we're all pretty for testing
+    json.dumps(json_data, indent=4)
+    
+    for item in json_data:
+
+        length = len(item['word'])
+        name = item['name']
+        word = item['word']
+
+        # TODO format word so we handle quotation marks etc
+
+        print(TEMPLATE.format(name, length, name, name, word))
+
+
+if __name__ == '__main__':
+    main()

@@ -12,14 +12,14 @@
 
 ;
 ; ## DROP ( u -- ) Pop top element off of the stack
-; ## drop  type: native  group: ANSI  size: 6  cycles: 20  status: unwritten
+; ## drop  "ANSI core"  bytes: 6, cycles: 20, status: unwritten
 xt_drop: 
 
 z_drop:         rts
 
 
 ; ## C-FETCH ( addr -- c ) Get character from memory
-; ## c@  type: native  group: ANSI  size: 6  cycles: 20  status: unwritten
+; ## c@  "ANSI core"  bytes: 6, cycles: 20,  status: unwritten
 xt_c-fetch: 
 
 z_c-fetch:      rts

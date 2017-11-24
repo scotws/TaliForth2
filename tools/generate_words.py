@@ -2,8 +2,12 @@
 # Generate TaliForth 2 structures from a word list
 # Scot W. Stevenson <scot.stevenson@gmail.com>
 # First version: 21. Nov 2017
-# This version: 21. Nov 2017
-"""Generate 65c02 assembler templates for Forth words"""
+# This version: 24. Nov 2017
+"""Generate 65c02 assembler templates for Forth words
+
+After running this script, various parts need to be adjusted by hand. For
+instance, the boot sequence has COLD-ABORT-QUIT flowing into each other.
+"""
 
 import json
 import pprint
