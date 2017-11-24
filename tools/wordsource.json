@@ -1,0 +1,4 @@
+[       
+        { "name": "dot", "command": "." },
+        { "name": "dot-byte", "command": ".byte"}
+]

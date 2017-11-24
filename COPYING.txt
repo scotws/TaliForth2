@@ -1,0 +1,8 @@
+Tali Forth License and Copying 
+Scot W. Stevenson <scot.stevenson@gmail.com>
+First version: 07. Apr 2014
+This version:  07. Apr 2014
+
+Forth has a long tradition of being placed in the public domain. Tali Forth for the 65c02 continues this. Where external code was used, it was also from the public domain, see source code for documentation of individual routines. 
+
+Tali Forth for the 65c02 is provided on an "as is" basis without any warranty of any kind, including, without limitation, the implied warranties of merchantability and fitness for a particular purpose and their equivalents under the laws of any jurisdiction. Put briefly, use this at your own risk.
