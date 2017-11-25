@@ -12,38 +12,39 @@ of headers in the form of:
 
     nt_drop:
             .byte 4, 0
-            .word <TBA>, xt_drop, z_drop
+            .word 0000, xt_drop, z_drop
             .byte "drop"
 
-See the comments in the file header.asm for details. The field "<TBA>" 
-and the details of the flags (second .byte value) are added later by 
-the user by hand to the actual header.asm file. 
+See the comments in the file header.asm for details. The first word
+field ("0000") and the details of the flags (second .byte value) are
+added later by the user by hand to the actual header.asm file; there
+is some processing of the "tricky words" with quotation marks and
+backslashes required anyway.
 """
 
-import json 
+import json
 
 SOURCE = 'wordsource.json'
 TEMPLATE = 'nt_{0}:\n'\
         '        .byte {1}, 0\n'\
-        '        .word <TBA>, xt_{2}, z_{3}\n'\
-        '        .byte "{4}"\n' 
+        '        .word 0000, xt_{2}, z_{3}\n'\
+        '        .byte "{4}"\n'
 
 
-def main(): 
+def main():
+    """Main function"""
 
-    with open(SOURCE) as f:
-        json_data = json.load(f) 
+    with open(SOURCE) as json_file:
+        json_data = json.load(json_file)
 
     # Make sure we're all pretty for testing
     json.dumps(json_data, indent=4)
-    
+
     for item in json_data:
 
         length = len(item['word'])
         name = item['name']
         word = item['word']
-
-        # TODO format word so we handle quotation marks etc
 
         print(TEMPLATE.format(name, length, name, name, word))
 

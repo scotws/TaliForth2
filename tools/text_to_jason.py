@@ -2,7 +2,7 @@
 # Convert text formatted list of words to JSON format
 # Scot W. Stevenson <scot.stevenson@gmail.com>
 # First version: 24. Nov 2017
-# This version: 24. Nov 2017
+# This version: 25. Nov 2017
 """Convert text list of Forth words to JSON for Tali Forth 2
 
 Assumes the file "wordsource.txt" in the current directory with three
@@ -14,27 +14,28 @@ that start with # and empty lines are ignored
 """
 
 SOURCE = 'wordsource.txt'
-INDENT = '\t' 
-# TEMPLATE = '{{"name": "{0}", "word": "{1}", "group": "{3}"}}'
-TEMPLATE = '{{ "name": "{0}", "word": "{1}" }},'
+INDENT = '\t'
+TEMPLATE = '{{ "name": "{0}", "word": "{1}", "source": "{2}" }},'
 COMMENT = '#'
 
-def main(): 
+def main():
+    """Main function"""
 
-    with open(SOURCE) as f:
-        raw_list = f.readlines()
+    with open(SOURCE) as raw_file:
+        raw_list = raw_file.readlines()
 
     print('[')
 
     for raw_line in raw_list:
 
         if raw_line.strip() == '':
-            continue 
+            continue
 
         if raw_line.startswith(COMMENT):
-            continue 
+            continue
 
-        word, name = raw_line.split(maxsplit=2)
+        word, name, source = raw_line.split(maxsplit=2)
+        source = source.strip()
 
         if '\\' in word:
             word = word.replace('\\', '\\\\')  # Guys, this is silly
@@ -42,7 +43,7 @@ def main():
         if '"' in word:
             word = word.replace('"', '\\"')
 
-        print(INDENT+TEMPLATE.format(name, word))
+        print(INDENT+TEMPLATE.format(name, word, source))
 
     print(']')
 
