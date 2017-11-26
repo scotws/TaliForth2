@@ -1,12 +1,12 @@
-# Tali Forth 2 for the 65c02 
-Scot W. Stevenson <scot.stevenson@gmail.com> 
-First version: 19. Jan 2014 (original Tali Forth)
-This version: 21. Nov 2017
+# Tali Forth 2 for the 65c02  
+Scot W. Stevenson <scot.stevenson@gmail.com>  
+First version: 19. Jan 2014 (original Tali Forth) 
+This version: 26. Nov 2017  
 
-(THIS VERSION OF TALI IS BEING COMPLETELY REWRITTEN, THE CODE CURRENTLY WON'T
-EVEN ASSEMBLE. COME BACK LATER!)
+**(THIS VERSION OF TALI IS BEING COMPLETELY REWRITTEN, THE CODE _MIGHT_ ASSEMBLE
+BUT IT CERTAINLY WON'T RUN. WE'LL GET THERE!)**
 
-## Dude, I am the very model of a Salarian scientist, let me just start!
+## Dude, I am the very model of a Salarian scientist, just let me start!
 
 Run `py65mon --mpu 65C02 -r ophis.bin` from this directory.
 

@@ -113,18 +113,21 @@ source file the way gofmt does for Go (golang), I work with the following rules:
 
 - Tabs are *eight characters long* and converted to spaces
 
-- Function-like routines are followed by a one-tab indented "function doc"
-based on the Python 3 model: Three quotation marks at the start, three at the
-end it its own line, unless it is a one-liner. This should make it easier to
-automatically extract the docs for them at some point.
+- Function-like routines are followed by a one-tab indented "function doc" based
+  on the Python 3 model: Three quotation marks at the start, three at the end it
+  its own line, unless it is a one-liner. This should make it easier to
+  automatically extract the docs for them at some point.
 
 - The native words have a special commentary format that allows the automatic
 generation of word list by a tool in the tools folder, see there for details.
 
-- Hex numbers are lower case, such as `$fffe`
+- Assembler mnenomics are lower case. I get enough uppercase insanity writing
+  German, thank you very much.
+
+- Hex numbers are also lower case, such as `$fffe`
 
 
-## Frequently Asked Questions
+## Frequently and Infrequently Asked Questions
 
 ### Why "Tali" Forth?
 
@@ -134,10 +137,13 @@ to.
 (If it sounds vaguely familiar, you're probably thinking of Tali'Zorah vas
 Normandy, a character in the "Mass Effect" universe created by EA / BioWare.
 This software has absolutely nothing to do with either the game or the companies
-and neither do I, expect that I've played the games and enjoyed them.)
+and neither do I, expect that I've played the games and enjoyed them, though I
+do have some issues with _Andromeda_. Like what happened to the quarian ark?)
 
 
 ### Then who is "Liara"?
 
-Liara Forth is a STC Forth for the big sibling of the 6502, the 65816. 
+Liara Forth is a STC Forth for the big sibling of the 6502, the 65816. Tali 1
+came first, then I wrote Liara with that knowledge and learned even more, and
+now Tali 2 is such much better for the experience.
 
