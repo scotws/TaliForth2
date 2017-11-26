@@ -1,21 +1,16 @@
-TODO/CHANGES file for Tali Forth 2 
+TODO/CHANGES for Tali Forth 2 
 Scot W. Stevenson <scot.stevenson@gmail.com>
-First version: 26. Nov 2017
+First version: 19. Jan 2014
 This version: 26. Nov 2017
 
 TODO NEXT
-        - Add strings to forth_words.asm, assemble test
+        - Write/review docs for memory map, hang on wall
+        - Write/review docs for stack structure, hang on wall
+        - Write routine to print a string ("It's alive!")
+        - Print temporary boot string
+        - Get scaffolding CLI loop up and running
+        - Get Dictionary search up and running
         - Write tools/validate_headers.py
-        - Write tools/generate_wordlist.py
-        - Write kernel.asm output routines
-        - Write routine to print a string
-        - Print temporary boot string, test
-
-        - MILESTONE: Release on Github as Alpha 0.1
-
-        - Write docs for memory map
-        - Write docs for stack function
-        - Get temporary I/O loop up and running
 
         - (... and so much more!) 
 
@@ -27,7 +22,7 @@ TODO DURING CODING (STUFF FROM TALI FORTH 1)
 
 
 TODO POST-ALPHA ("NOT ALL THERE YET")
-        - (TBA, until then, eat cookies)
+        - Write tools/generate_wordlist.py
 
 
 TODO POST-BETA ("ALL THERE, BUT PROBABLY BUGGY AS HELL")
@@ -46,7 +41,9 @@ TODO SOMETIME
 
 
 ALREADY DONE (LAST ON TOP WITH DATE)
-        - 26. Nov 2017 - Generated headers and words skeletons from template
+
+        - 26. Nov 2017 - Add strings to forth_words.asm; create GitHub repo
+        - 25. Nov 2017 - Generated headers and words skeletons from template
         - 23. Feb 2017 - Decided on major rewrite as Tali Forth 2
 
 

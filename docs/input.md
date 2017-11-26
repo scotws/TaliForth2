@@ -1,12 +1,12 @@
 # Input design for Tali Forth 2
-Scot W. Stevenson <scot.stevenson@gmail.com>
-First version: 27. Dez 2016 (Liara Forth)
-This version: 26. Nov 2017
+Scot W. Stevenson <scot.stevenson@gmail.com>  
+First version: 27. Dez 2016 (Liara Forth)  
+This version: 26. Nov 2017  
 
 Tali Forth 2, like Liara Forth, follows the ANSI input model with
-REFILL instead of older forms. 
+`refill` instead of older forms. 
 
-There are up to four possible input sources in Forth (C&D p. 155):
+There are up to four possible input sources in Forth (see C&D p. 155):
 
 1. The keyboard ("user input device")
 
@@ -23,14 +23,17 @@ for the keyboard, -1 (0ffff) for a string in memory, and a number n for a
 file-id.
 
 Since Tali currently doesn't support blocks, we can skip the BLK instruction and
-go right to SOURCE-ID. 
+go right to `source-id`. 
 
 
 ## Starting up
 
-The intial commands after reboot flow into each other: ``` COLD -> ABORT -> QUIT
-``` This is the same as with pre-ANSI Forths. However, QUIT now calls REFILL to
-get the input. REFILL does different things based on which of the four input
+The intial commands after reboot flow into each other: 
+
+`cold` -> `abort -> `quit` 
+
+This is the same as with pre-ANSI Forths. However, `quit` now calls `refill` to
+get the input. `refill` does different things based on which of the four input
 sources (see above) is active: 
 
 1. **Keyboard entry.** This is the default. Get line of input via ACCEPT and
@@ -47,7 +50,7 @@ sources (see above) is active:
 
 Tali Forth accepts input lines of up to 256 characters.
 
-(THE FOLLOWING PART OF THIS SECTION IS UNDER HEAVY REVIEW)
+**(THE FOLLOWING PART OF THIS SECTION IS UNDER HEAVY REVIEW)**
 
 The address of the current input buffer is stored in `cib` and is either 
 `ibuffer1` or `ibuffer2`, each of which is 256 bytes long. The length of the

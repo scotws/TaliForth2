@@ -37,15 +37,10 @@ def main():
     with open(SOURCE) as json_file:
         json_data = json.load(json_file)
 
-    # Make sure we're all pretty for testing
-    json.dumps(json_data, indent=4)
-
     for item in json_data:
-
         length = len(item['word'])
         name = item['name']
         word = item['word']
-
         print(TEMPLATE.format(name, length, name, name, word))
 
 

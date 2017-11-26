@@ -52,5 +52,3 @@ In headers.asm:
         - nt_dot_quote, "."" becomes ".", $22
         - nt_s_quote, "s"" becomes "s", $22
 
-In native_words.asm:
-

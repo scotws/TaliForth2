@@ -1,7 +1,7 @@
 # Tali Forth 2 for the 65c02  
-Scot W. Stevenson <scot.stevenson@gmail.com>  
-First version: 19. Jan 2014 (original Tali Forth) 
-This version: 26. Nov 2017  
+Scot W. Stevenson <scot.stevenson@gmail.com>   
+First version: 19. Jan 2014 (original Tali Forth)  
+This version: 26. Nov 2017   
 
 **(THIS VERSION OF TALI IS BEING COMPLETELY REWRITTEN, THE CODE _MIGHT_ ASSEMBLE
 BUT IT CERTAINLY WON'T RUN. WE'LL GET THERE!)**
