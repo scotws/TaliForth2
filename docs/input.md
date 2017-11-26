@@ -1,9 +1,10 @@
 # Input design for Tali Forth 2
 Scot W. Stevenson <scot.stevenson@gmail.com>
 First version: 27. Dez 2016 (Liara Forth)
-This version: 24. Nov 2017
+This version: 26. Nov 2017
 
-Tali Forth 2 follows the ANSI input model with REFILL instead of older forms. 
+Tali Forth 2, like Liara Forth, follows the ANSI input model with
+REFILL instead of older forms. 
 
 There are up to four possible input sources in Forth (C&D p. 155):
 
@@ -44,8 +45,9 @@ sources (see above) is active:
 
 ## The Command Line Interface
 
-Tali Forth accepts input lines of up to 256 characters. It remembers one
-previous input that can be accessed with CONTROL-p. 
+Tali Forth accepts input lines of up to 256 characters.
+
+(THE FOLLOWING PART OF THIS SECTION IS UNDER HEAVY REVIEW)
 
 The address of the current input buffer is stored in `cib` and is either 
 `ibuffer1` or `ibuffer2`, each of which is 256 bytes long. The length of the

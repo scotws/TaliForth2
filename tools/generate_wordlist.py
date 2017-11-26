@@ -5,6 +5,10 @@
 # This version: 21. Nov 2017
 
 import argparse
+import sys
+
+print("THIS NEEDS TO BE COMPLETELY REWRITTEN.")
+sys.exit(0)
 
 SOURCE = '../words.asm'
 MARKER = '; ## '

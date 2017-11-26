@@ -1,0 +1,105 @@
+How Tali Forth handles loops and branches
+Scot W. Stevenson <scot.stevenson@gmail.com>
+First version: 30. Jan 2015
+This version: 23. Feb 2015
+
+This document gives the background on how Tali Forth as a STC Forth variant
+handles loops (DO/?DO/LEAVE/LOOP/+LOOP) and branches (IF/ELSE/THEN). It is
+based on a discussion at http://forum.6502.org/viewtopic.php?f=9&t=3176 , see
+there for more details. Another take on this subject that handles things a bit
+differently is at
+http://blogs.msdn.com/b/ashleyf/archive/2011/02/06/loopty-do-i-loop.aspx
+
+
+BRANCHES
+
+Branches are easiest to understand at first, so we start with them. 
+
+For IF-THEN, we need to compile something called a "conditional forward
+branch", traditionally called 0BRANCH. Then, at run-time, if the value on the
+Data Stack is false (flag is zero), the branch is taken ("branch on zero",
+therefore the name). Execpt that we don't have the target of that branch yet --
+it will later be added by THEN. For this to work, we remember the address after
+the 0BRANCH instruction during the compilation of IF. This is put on the Data
+Stack, so that THEN knows where to compile it's address in the second step.
+Until then, a dummy value is compiled after 0BRANCH to reserve the space we
+need. 
+
+In Forth, this can be realized by
+
+: IF  POSTPONE 0BRANCH HERE 0 , ; IMMEDIATE
+
+and 
+
+: THEN  HERE SWAP ! ; IMMEDIATE
+
+though Tali Forth uses as much assembler as possible. Note THEN doesn't
+actually compile anything at the location in memory where it is at. It's job is
+simply to help IF out of the mess it created. 
+
+If we have an ELSE, we have to add an unconditional BRANCH and manipulate the
+address that IF left on the Data Stack. The Forth for this is: 
+
+: ELSE  POSTPONE BRANCH HERE 0 , HERE ROT ! ; IMMEDIATE
+
+THEN has no idea what has just happened, and just like before compiles its
+address where the value on the top of the Data Stack told it to -- except that
+this value now comes from ELSE, not IF. 
+
+
+
+LOOPS 
+
+Loops are far more complicated, because we have DO ?DO LOOP +LOOP UNLOOP and
+LEAVE to take care of. These can call up to three addresses: One for the normal
+looping action (LOOP/+LOOP), one to skip over the loop at the beginning (?DO)
+and one to skip out of the loop (LEAVE). 
+
+Based on a suggestion by Garth Wilson, we begin each loop in run-time by saving
+the address after the whole loop construct to the Return Stack. That way, LEAVE
+and ?DO know where to jump to when called, and we don't interfere with any
+IF/THEN structures. On top of that address, we place the limit and start values
+for the loop. 
+
+The key to staying sane while designing these constructs is to first make
+a list of what we want to happen at compile-time and what at run-time. Let's
+start with a simple DO/LOOP.
+
+
+DO AT COMPILE-TIME: 
+- Remember current address (in other words, HERE) on the Return Stack (!) so 
+  we can later compile the code for the post-loop address to the Return Stack
+- Compile some dummy values to reserve the space for said code
+- Compile the run-time code; we'll call that fragment (DO)
+- Push the current address (the new HERE) to the Data Stack so LOOP knows where 
+  the loop contents begin
+
+DO AT RUN-TIME: 
+- Take limit and start off Data Stack and push them to the Return Stack
+
+Since LOOP is just a special case of +LOOP with an index of one, we can get
+away with considering them at the same time. 
+
+
+LOOP AT COMPILE TIME: 
+- Compile the run-time part (+LOOP)
+- Consume the address that is on top of the Data Stack as the jump target for 
+  normal looping and compile it
+- Compile UNLOOP for when we're done with the loop, getting rid of the 
+  limit/start and post-loop addresses on the Return Stack 
+- Get the address on the top of the Return Stack which points to the dummy
+  code compiled by DO
+- At that address, compile the code that pushes the address after the list
+  construct to the Return Stack at run-time
+
+LOOP AT RUN-TIME (which is (+LOOP)) 
+- Add loop step to count
+- Loop again if we haven't crossed the limit, otherwise continue after loop
+
+At one glance, we can see that the complicated stuff happens at compile-time.
+This is good, because we only have to do that once for each loop. 
+
+In Tali Forth, these routines are coded in assembler. With this setup, UNLOOP
+becomes simple (six PLAs -- four for the limit/count of DO, two for the address
+pushed to the stack just before it) and LEAVE even simpler (four PLAs for the
+address). 
