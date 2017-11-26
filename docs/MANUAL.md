@@ -1,4 +1,6 @@
 # Manual for Tali Forth 2 for the 65c02 
+First version: FEHLT
+This version: 26. Nov 2017
 Scot W. Stevenson <scot.stevenson@gmail.com> 
 
 (THIS TEXT IS UNDER DEVELOPMENT AND MERELY A COLLECTION OF NOTES)
@@ -88,15 +90,36 @@ docs/testwords.md includes a list of words that will help with some general
 cases.
 
 
-## Notes for Developers 
+## For Developers 
 
 Any feedback and comments is welcome. Feel free to adapt Tali Forth to your own
-system. Please note:
+system - this is why the source code is perversely overcommented. 
+
+
+### General notes
 
 - The X register should not be changed without saving its pointer status
 
 - The Y register is free to be changed by subroutines. This means it should not
   be expected to survive subroutines unchanged.
+
+
+### Coding style
+
+Until I get around to writing a tool for Ophis assembler code that formats the
+source file the way gofmt does for Go (golang), I work with the following rules:
+
+- Actual opcodes are indented by two tabs
+
+- Tabs are eight characters long and converted to spaces
+
+- Function-like routines are followed by a one-tab indented "function doc"
+based on the Python 3 model: Three quotation marks at the start, three at the
+end it its own line, unless it is a one-liner. This should make it easier to
+automatically extract the docs for them at some point.
+
+- The native words have a special commentary format that allows the automatic
+generation of word list by a tool in the tools folder, see there for details.
 
 
 ## Frequently Asked Questions
@@ -110,6 +133,7 @@ to.
 Normandy, a character in the "Mass Effect" universe created by EA / BioWare.
 This software has absolutely nothing to do with either the game or the companies
 and neither do I, expect that I've played the games and enjoyed them.)
+
 
 ### Then who is "Liara"?
 

@@ -16,7 +16,13 @@
 ; This default version Tali ships with is written for the py65mon machine 
 ; monitor (see docs/MANUAL.md for details). 
 
-
+; --------------------------------------------------------------------- 
+; All vectors currently end up in the same place - we restart the system
+; hard. If you want to use them on actual hardware, you'll have to redirect
+; them all.
+v_nmi:
+v_reset:
+v_irq:
 kernel_init:
         ; """Initialize the hardware. This is called with a JMP and not
         ; a JSR because we don't have anything set up for that yet. With
@@ -46,5 +52,14 @@ kernel_putc:
 ; is easier to see where the kernel ends in hex dumps. This string is
 ; displayed after a successful boot
 s_kernel_id: .byte "Tali default kernel for py65mon (26. Nov 2017)", 0
+
+; --------------------------------------------------------------------- 
+; INTERRUPT VECTORS
+
+.advance $FFFA 
+
+.word v_nmi
+.word v_reset
+.word v_irq
 
 ; END
