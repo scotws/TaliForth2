@@ -109,9 +109,9 @@ system - this is why the source code is perversely overcommented.
 Until I get around to writing a tool for Ophis assembler code that formats the
 source file the way gofmt does for Go (golang), I work with the following rules:
 
-- Actual opcodes are indented by two tabs
+- Actual opcodes are indented by *two tabs*
 
-- Tabs are eight characters long and converted to spaces
+- Tabs are *eight characters long* and converted to spaces
 
 - Function-like routines are followed by a one-tab indented "function doc"
 based on the Python 3 model: Three quotation marks at the start, three at the
@@ -120,6 +120,8 @@ automatically extract the docs for them at some point.
 
 - The native words have a special commentary format that allows the automatic
 generation of word list by a tool in the tools folder, see there for details.
+
+- Hex numbers are lower case, such as `$fffe`
 
 
 ## Frequently Asked Questions

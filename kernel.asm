@@ -4,7 +4,7 @@
 ; This version: 26. Nov 2017
 ;
 ; This section attempts to isolate the hardware-dependent parts of Tali Forth
-; to make it easier for people to port it two their own machines. Ideally, you
+; to make it easier for people to port it to their own machines. Ideally, you
 ; shouldn't have to touch the other files. There are three routines and one 
 ; string that must be present for Tali to run:
 ;
@@ -56,7 +56,7 @@ s_kernel_id: .byte "Tali default kernel for py65mon (26. Nov 2017)", 0
 ; --------------------------------------------------------------------- 
 ; INTERRUPT VECTORS
 
-.advance $FFFA 
+.advance $fffa
 
 .word v_nmi
 .word v_reset
