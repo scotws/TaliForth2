@@ -31,7 +31,7 @@ forth:
 ; Of the 32 KiB we use, 24 are reserved for Tali (from $8000 to $DFFF) and the
 ; last eight are left for whatever the user wants to use them for.
 
-.advance $dfff
+.advance $e000
 .require "kernel.asm"
 
 ; END

@@ -16,7 +16,12 @@
 ; This default version Tali ships with is written for the py65mon machine 
 ; monitor (see docs/MANUAL.md for details). 
 
-; --------------------------------------------------------------------- 
+; The main file of Tali got us to $e000. However, py65mon by default puts
+; the basic I/O routines at the beginning of $f000. We don't want to change
+; that because it would make using it out of the box harder, so we just 
+; advance past the virtual hardware addresses.
+.advance $f006
+
 ; All vectors currently end up in the same place - we restart the system
 ; hard. If you want to use them on actual hardware, you'll have to redirect
 ; them all.

@@ -28,13 +28,10 @@ go right to `source-id`.
 
 ## Starting up
 
-The intial commands after reboot flow into each other: 
-
-`cold` -> `abort -> `quit` 
-
-This is the same as with pre-ANSI Forths. However, `quit` now calls `refill` to
-get the input. `refill` does different things based on which of the four input
-sources (see above) is active: 
+The intial commands after reboot flow into each other: `cold` to `abort` to
+`quit`. This is the same as with pre-ANSI Forths. However, `quit` now calls
+`refill` to get the input. `refill` does different things based on which of the
+four input sources (see above) is active: 
 
 1. **Keyboard entry.** This is the default. Get line of input via ACCEPT and
    return a TRUE flag even if the input string was empty.
