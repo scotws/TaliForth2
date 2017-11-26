@@ -1,0 +1,78 @@
+TODO/CHANGES file for Tali Forth 2 
+Scot W. Stevenson <scot.stevenson@gmail.com>
+First version: 26. Nov 2017
+This version: 26. Nov 2017
+
+TODO NEXT
+        - Add strings to forth_words.asm, assemble test
+        - Write tools/validate_headers.py
+        - Write tools/generate_wordlist.py
+        - Write kernel.asm output routines
+        - Write routine to print a string
+        - Print temporary boot string, test
+
+        - MILESTONE: Release on Github as Alpha 0.1
+
+        - Write docs for memory map
+        - Write docs for stack function
+        - Get temporary I/O loop up and running
+
+        - (... and so much more!) 
+
+
+TODO DURING CODING (STUFF FROM TALI FORTH 1)
+        - Check if DOVAR needlessly uses temporary storage
+        - Check if f_postpo_int is ever used at all
+        - Code D>S so it respects the sign
+
+
+TODO POST-ALPHA ("NOT ALL THERE YET")
+        - (TBA, until then, eat cookies)
+
+
+TODO POST-BETA ("ALL THERE, BUT PROBABLY BUGGY AS HELL")
+        - (TBA, until then, eat cookies)
+
+
+TODO POST-RELEASE
+        - (TBA, until then, eat cookies)
+
+
+TODO SOMETIME
+        - Add multitasking (round-robin)
+        - Add USER variables
+        - Warn if word already in Dictionary
+        - Add CASE, THROW/CATCH
+
+
+ALREADY DONE (LAST ON TOP WITH DATE)
+        - 26. Nov 2017 - Generated headers and words skeletons from template
+        - 23. Feb 2017 - Decided on major rewrite as Tali Forth 2
+
+
+-----------------------------------------------------------------------
+
+ORIGINAL TALI TIMELINE
+        - 10. Feb 2015: Added RECURSE. Tali now "feature complete", entering BETA
+        - 09. Feb 2015: Added new and working versions of DO/?DO/LEAVE/LOOP/+LOOP
+        - 28. Jan 2015: Added LEAVE, rewrote THEN, LOOP, +LOOP and DO
+        - 25. Jan 2015: Added WORD (against better judgement); MOVE; 2R words 
+        - 20. Jan 2015: Added ABORT", complete rewrite of S"
+        - 19. Jan 2015: Added f_cmpljsr and friends, converted code to their use
+        - 17. Jan 2015: Added DEFER, DEFER!, DEFER@, IS, ACTION-OF; >BODY works
+        - 14. Jan 2015: Major rewrite of CREATE, DOVAR, DOES; adds DODOES
+        - 11. Jan 2015: Added ['], internal routine for POSTPONE (l_postpoint)
+        - 10. Jan 2015: Added PICK, VALUE and TO
+        - 11. Nov 2014: Added ANSI-standard +LOOP
+        - 09. Nov 2014: LOOP, DO, I and J now confirm to ANSI standard
+        - 02. Nov 2014: Expanded README.txt, CR now newline, adapted to new py65
+        - 16. May 2014: CREATE/DOES> working 
+        - 13. Apr 2014: Basic DO/LOOP works (ALPHA 002) 
+        - 07. Apr 2014: Published as ALPHA 001 to 6502.org
+        - 03. Apr 2014: IF ELSE THEN works 
+        - 26. Feb 2014: Native compiling works
+        - 20. Feb 2014: Basic BEGIN-AGAIN loop works
+        - 15. Feb 2014: Basic compiling function up and running 
+        - 06. Feb 2014: Design of Dictionary structure complete
+        - 01. Feb 2014: Primitive interpreter loop up and running
+        - 19. Jan 2014: Start of project
