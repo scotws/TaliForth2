@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-# Convert JSON list of Forth words to Tali 2 header file
+# Convert JSON list of Forth words to Tali Forth 2 header file
 # Scot W. Stevenson <scot.stevenson@gmail.com>
 # First version: 24. Nov 2017
-# This version: 24. Nov 2017
-"""Convert JSON Forth word information to Tali 2 header file
+# This version: 26. Nov 2017
+"""Convert JSON Forth word information to Tali Forth 2 header file
 
 Assumes the file "wordsource.json" in the current directory with three
 keys "name", "word", and "group" which are then processed and printed
@@ -19,7 +19,7 @@ See the comments in the file header.asm for details. The first word
 field ("0000") and the details of the flags (second .byte value) are
 added later by the user by hand to the actual header.asm file; there
 is some processing of the "tricky words" with quotation marks and
-backslashes required anyway.
+backslashes required anyway. See tools/README.txt for details
 """
 
 import json

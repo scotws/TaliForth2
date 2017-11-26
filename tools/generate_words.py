@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
-# Generate TaliForth 2 structures from a word list
+# Generate Tali Forth 2 native word skeleton from a word list
 # Scot W. Stevenson <scot.stevenson@gmail.com>
 # First version: 21. Nov 2017
-# This version: 25. Nov 2017
-"""Generate 65c02 assembler templates for Forth words
+# This version: 26. Nov 2017
+"""Generate 65c02 assembler templates for Tali Forth native words
 
 After running this script, various parts need to be adjusted by hand. For
 instance, the boot sequence has COLD-ABORT-QUIT flowing into each other.
+See tools/README.txt for more details.
 """
 
 import json
@@ -30,7 +31,6 @@ def main():
     # The JSON date is return as a list of dictionaries in a pretty
     # random order. We move that data to a dictionary of dictionaries with
     # the name as the key so we can get a handle on sorting this
-
     words = {e['name']: e for e in json_data}
     word_list = sorted(words.keys())
 
