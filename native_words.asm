@@ -20,11 +20,11 @@ xt_abort:       nop
 z_abort:        rts
 .scend
 
-; ## ABORT-QUOTE ( -- ) "<TBA>"
+; ## ABORT_QUOTE ( -- ) "<TBA>"
 ; ## "abort""  src: ANSI core  b: TBA  c: TBA  status: TBA
 .scope
-xt_abort-quote: nop
-z_abort-quote:  rts
+xt_abort_quote: nop
+z_abort_quote:  rts
 .scend
 
 ; ## ABS ( -- ) "<TBA>"
@@ -76,11 +76,11 @@ xt_and:         nop
 z_and:          rts
 .scend
 
-; ## AT-XT ( -- ) "<TBA>"
+; ## AT_XY ( -- ) "<TBA>"
 ; ## "at-xy"  src: ANSI facility  b: TBA  c: TBA  status: TBA
 .scope
-xt_at-xt:       nop
-z_at-xt:        rts
+xt_at_xy:       nop
+z_at_xy:        rts
 .scend
 
 ; ## BACKSLASH ( -- ) "<TBA>"
@@ -125,20 +125,20 @@ xt_bounds:      nop
 z_bounds:       rts
 .scend
 
-; ## BRACKET-CHAR ( -- ) "<TBA>"
+; ## BRACKET_CHAR ( -- ) "<TBA>"
 ; ## "[char]"  src: ANSI core  b: TBA  c: TBA  status: TBA
 .scope
-xt_bracket-char:
+xt_bracket_char:
                 nop
-z_bracket-char: rts
+z_bracket_char: rts
 .scend
 
-; ## BRACKET-TICK ( -- ) "<TBA>"
+; ## BRACKET_TICK ( -- ) "<TBA>"
 ; ## "[']"  src: ANSI core  b: TBA  c: TBA  status: TBA
 .scope
-xt_bracket-tick:
+xt_bracket_tick:
                 nop
-z_bracket-tick: rts
+z_bracket_tick: rts
 .scend
 
 ; ## BRANCH ( -- ) "<TBA>"
@@ -155,32 +155,32 @@ xt_bye:         nop
 z_bye:          rts
 .scend
 
-; ## C-COMMA ( -- ) "<TBA>"
+; ## C_COMMA ( -- ) "<TBA>"
 ; ## "c,"  src: ANSI core  b: TBA  c: TBA  status: TBA
 .scope
-xt_c-comma:     nop
-z_c-comma:      rts
+xt_c_comma:     nop
+z_c_comma:      rts
 .scend
 
-; ## C-FETCH ( -- ) "<TBA>"
+; ## C_FETCH ( -- ) "<TBA>"
 ; ## "c@"  src: ANSI core  b: TBA  c: TBA  status: TBA
 .scope
-xt_c-fetch:     nop
-z_c-fetch:      rts
+xt_c_fetch:     nop
+z_c_fetch:      rts
 .scend
 
-; ## C-STORE ( -- ) "<TBA>"
+; ## C_STORE ( -- ) "<TBA>"
 ; ## "c!"  src: ANSI core  b: TBA  c: TBA  status: TBA
 .scope
-xt_c-store:     nop
-z_c-store:      rts
+xt_c_store:     nop
+z_c_store:      rts
 .scend
 
-; ## CELL-PLUS ( -- ) "<TBA>"
+; ## CELL_PLUS ( -- ) "<TBA>"
 ; ## "cell+"  src: ANSI core  b: TBA  c: TBA  status: TBA
 .scope
-xt_cell-plus:   nop
-z_cell-plus:    rts
+xt_cell_plus:   nop
+z_cell_plus:    rts
 .scend
 
 ; ## CELLS ( -- ) "<TBA>"
@@ -197,11 +197,11 @@ xt_char:        nop
 z_char:         rts
 .scend
 
-; ## CHAR-PLUS ( -- ) "<TBA>"
+; ## CHAR_PLUS ( -- ) "<TBA>"
 ; ## "char+"  src: ANSI core  b: TBA  c: TBA  status: TBA
 .scope
-xt_char-plus:   nop
-z_char-plus:    rts
+xt_char_plus:   nop
+z_char_plus:    rts
 .scend
 
 ; ## CHARS ( -- ) "<TBA>"
@@ -218,13 +218,11 @@ xt_cmove:       nop
 z_cmove:        rts
 .scend
 
-; ## CMOVE-GREATER ( -- ) "<TBA>"
+; ## CMOVE_UP ( -- ) "<TBA>"
 ; ## "cmove>"  src: ANSI string  b: TBA  c: TBA  status: TBA
 .scope
-xt_cmove-greater:
-                nop
-z_cmove-greater:
-                rts
+xt_cmove_up:    nop
+z_cmove_up:     rts
 .scend
 
 ; ## COLD ( -- ) "<TBA>"
@@ -248,21 +246,21 @@ xt_comma:       nop
 z_comma:        rts
 .scend
 
-; ## COMPILE-COMMA ( -- ) "<TBA>"
+; ## COMPILE_COMMA ( -- ) "<TBA>"
 ; ## "compile,"  src: ANSI core ext  b: TBA  c: TBA  status: TBA
 .scope
-xt_compile-comma:
+xt_compile_comma:
                 nop
-z_compile-comma:
+z_compile_comma:
                 rts
 .scend
 
-; ## COMPILE-ONLY ( -- ) "<TBA>"
+; ## COMPILE_ONLY ( -- ) "<TBA>"
 ; ## "compile-only"  src: Tali Forth  b: TBA  c: TBA  status: TBA
 .scope
-xt_compile-only:
+xt_compile_only:
                 nop
-z_compile-only: rts
+z_compile_only: rts
 .scend
 
 ; ## CONSTANT ( -- ) "<TBA>"
@@ -293,39 +291,39 @@ xt_create:      nop
 z_create:       rts
 .scend
 
-; ## D-DOT ( -- ) "<TBA>"
+; ## D_DOT ( -- ) "<TBA>"
 ; ## "d."  src: ANSI double  b: TBA  c: TBA  status: TBA
 .scope
-xt_d-dot:       nop
-z_d-dot:        rts
+xt_d_dot:       nop
+z_d_dot:        rts
 .scend
 
-; ## D-MINUS ( -- ) "<TBA>"
+; ## D_MINUS ( -- ) "<TBA>"
 ; ## "d-"  src: ANSI double  b: TBA  c: TBA  status: TBA
 .scope
-xt_d-minus:     nop
-z_d-minus:      rts
+xt_d_minus:     nop
+z_d_minus:      rts
 .scend
 
-; ## D-PLUS ( -- ) "<TBA>"
+; ## D_PLUS ( -- ) "<TBA>"
 ; ## "d+"  src: ANSI double  b: TBA  c: TBA  status: TBA
 .scope
-xt_d-plus:      nop
-z_d-plus:       rts
+xt_d_plus:      nop
+z_d_plus:       rts
 .scend
 
-; ## D-R ( -- ) "<TBA>"
+; ## D_R ( -- ) "<TBA>"
 ; ## "d.r"  src: ANSI double  b: TBA  c: TBA  status: TBA
 .scope
-xt_d-r:         nop
-z_d-r:          rts
+xt_d_r:         nop
+z_d_r:          rts
 .scend
 
-; ## D-TO-S ( -- ) "<TBA>"
+; ## D_TO_S ( -- ) "<TBA>"
 ; ## "d>s"  src: ANSI double  b: TBA  c: TBA  status: TBA
 .scope
-xt_d-to-s:      nop
-z_d-to-s:       rts
+xt_d_to_s:      nop
+z_d_to_s:       rts
 .scend
 
 ; ## DABS ( -- ) "<TBA>"
@@ -356,11 +354,13 @@ xt_depth:       nop
 z_depth:        rts
 .scend
 
-; ## DIGIT-Q ( -- ) "<TBA>"
+; ## DIGIT_QUESTION ( -- ) "<TBA>"
 ; ## "digit?"  src: Tali Forth  b: TBA  c: TBA  status: TBA
 .scope
-xt_digit-q:     nop
-z_digit-q:      rts
+xt_digit_question:
+                nop
+z_digit_question:
+                rts
 .scend
 
 ; ## DNEGATE ( -- ) "<TBA>"
@@ -391,39 +391,39 @@ xt_dot:         nop
 z_dot:          rts
 .scend
 
-; ## DOT-BYTE ( -- ) "<TBA>"
+; ## DOT_BYTE ( -- ) "<TBA>"
 ; ## ".byte"  src: Tali Forth  b: TBA  c: TBA  status: TBA
 .scope
-xt_dot-byte:    nop
-z_dot-byte:     rts
+xt_dot_byte:    nop
+z_dot_byte:     rts
 .scend
 
-; ## DOT-PARENS ( -- ) "<TBA>"
+; ## DOT_PAREN ( -- ) "<TBA>"
 ; ## ".("  src: ANSI core  b: TBA  c: TBA  status: TBA
 .scope
-xt_dot-parens:  nop
-z_dot-parens:   rts
+xt_dot_paren:   nop
+z_dot_paren:    rts
 .scend
 
-; ## DOT-QUOTE ( -- ) "<TBA>"
+; ## DOT_QUOTE ( -- ) "<TBA>"
 ; ## ".""  src: ANSI core  b: TBA  c: TBA  status: TBA
 .scope
-xt_dot-quote:   nop
-z_dot-quote:    rts
+xt_dot_quote:   nop
+z_dot_quote:    rts
 .scend
 
-; ## DOT-R ( -- ) "<TBA>"
+; ## DOT_R ( -- ) "<TBA>"
 ; ## ".r"  src: ANSI core ext  b: TBA  c: TBA  status: TBA
 .scope
-xt_dot-r:       nop
-z_dot-r:        rts
+xt_dot_r:       nop
+z_dot_r:        rts
 .scend
 
-; ## DOT-S ( -- ) "<TBA>"
+; ## DOT_S ( -- ) "<TBA>"
 ; ## ".s"  src: ANSI tools  b: TBA  c: TBA  status: TBA
 .scope
-xt_dot-s:       nop
-z_dot-s:        rts
+xt_dot_s:       nop
+z_dot_s:        rts
 .scend
 
 ; ## DROP ( -- ) "<TBA>"
@@ -461,11 +461,11 @@ xt_emit:        nop
 z_emit:         rts
 .scend
 
-; ## EQUAL ( -- ) "<TBA>"
+; ## EQUALS ( -- ) "<TBA>"
 ; ## "="  src: ANSI core  b: TBA  c: TBA  status: TBA
 .scope
-xt_equal:       nop
-z_equal:        rts
+xt_equals:      nop
+z_equals:       rts
 .scend
 
 ; ## ERASE ( -- ) "<TBA>"
@@ -524,41 +524,27 @@ xt_find:        nop
 z_find:         rts
 .scend
 
-; ## FIND-NAME ( -- ) "<TBA>"
+; ## FIND_NAME ( -- ) "<TBA>"
 ; ## "find-name"  src: Gforth  b: TBA  c: TBA  status: TBA
 .scope
-xt_find-name:   nop
-z_find-name:    rts
+xt_find_name:   nop
+z_find_name:    rts
 .scend
 
-; ## FM/MOD ( -- ) "<TBA>"
+; ## FM_SLASH_MOD ( -- ) "<TBA>"
 ; ## "fm/mod"  src: ANSI core  b: TBA  c: TBA  status: TBA
 .scope
-xt_fm/mod:      nop
-z_fm/mod:       rts
-.scend
-
-; ## GREATER-BODY ( -- ) "<TBA>"
-; ## ">body"  src: ANSI core  b: TBA  c: TBA  status: TBA
-.scope
-xt_greater-body:
+xt_fm_slash_mod:
                 nop
-z_greater-body: rts
+z_fm_slash_mod: rts
 .scend
 
-; ## GREATER-R ( -- ) "<TBA>"
-; ## ">r"  src: ANSI core  b: TBA  c: TBA  status: TBA
-.scope
-xt_greater-r:   nop
-z_greater-r:    rts
-.scend
-
-; ## GREATER-THAN ( -- ) "<TBA>"
+; ## GREATER_THAN ( -- ) "<TBA>"
 ; ## ">"  src: ANSI core  b: TBA  c: TBA  status: TBA
 .scope
-xt_greater-than:
+xt_greater_than:
                 nop
-z_greater-than: rts
+z_greater_than: rts
 .scend
 
 ; ## HERE ( -- ) "<TBA>"
@@ -610,11 +596,11 @@ xt_input:       nop
 z_input:        rts
 .scend
 
-; ## INT-TO-NAME ( -- ) "<TBA>"
+; ## INT_TO_NAME ( -- ) "<TBA>"
 ; ## "int>name"  src: Tali Forth  b: TBA  c: TBA  status: TBA
 .scope
-xt_int-to-name: nop
-z_int-to-name:  rts
+xt_int_to_name: nop
+z_int_to_name:  rts
 .scend
 
 ; ## INVERT ( -- ) "<TBA>"
@@ -638,12 +624,12 @@ xt_key:         nop
 z_key:          rts
 .scend
 
-; ## KEY-QUESTION ( -- ) "<TBA>"
+; ## KEY_QUESTION ( -- ) "<TBA>"
 ; ## "key?"  src: ANSI facility  b: TBA  c: TBA  status: TBA
 .scope
-xt_key-question:
+xt_key_question:
                 nop
-z_key-question: rts
+z_key_question: rts
 .scend
 
 ; ## LATESTNT ( -- ) "<TBA>"
@@ -667,26 +653,28 @@ xt_leave:       nop
 z_leave:        rts
 .scend
 
-; ## LEFT-BRACKET ( -- ) "<TBA>"
+; ## LEFT_BRACKET ( -- ) "<TBA>"
 ; ## "["  src: ANSI core  b: TBA  c: TBA  status: TBA
 .scope
-xt_left-bracket:
+xt_left_bracket:
                 nop
-z_left-bracket: rts
+z_left_bracket: rts
 .scend
 
-; ## LESS-NUMBER ( -- ) "<TBA>"
+; ## LESS_NUMBER_SIGN ( -- ) "<TBA>"
 ; ## "<#"  src: ANSI core  b: TBA  c: TBA  status: TBA
 .scope
-xt_less-number: nop
-z_less-number:  rts
+xt_less_number_sign:
+                nop
+z_less_number_sign:
+                rts
 .scend
 
-; ## LESS-THAN ( -- ) "<TBA>"
+; ## LESS_THAN ( -- ) "<TBA>"
 ; ## "<"  src: ANSI core  b: TBA  c: TBA  status: TBA
 .scope
-xt_less-than:   nop
-z_less-than:    rts
+xt_less_than:   nop
+z_less_than:    rts
 .scend
 
 ; ## LITERAL ( -- ) "<TBA>"
@@ -710,11 +698,11 @@ xt_lshift:      nop
 z_lshift:       rts
 .scend
 
-; ## M-STAR ( -- ) "<TBA>"
+; ## M_STAR ( -- ) "<TBA>"
 ; ## "m*"  src: ANSI core  b: TBA  c: TBA  status: TBA
 .scope
-xt_m-star:      nop
-z_m-star:       rts
+xt_m_star:      nop
+z_m_star:       rts
 .scend
 
 ; ## MARKER ( -- ) "<TBA>"
@@ -745,19 +733,12 @@ xt_minus:       nop
 z_minus:        rts
 .scend
 
-; ## MINUS-ROT ( -- ) "<TBA>"
-; ## "-rot"  src: Gforth  b: TBA  c: TBA  status: TBA
-.scope
-xt_minus-rot:   nop
-z_minus-rot:    rts
-.scend
-
-; ## MINUS-TRAILING ( -- ) "<TBA>"
+; ## MINUS_TRAILING ( -- ) "<TBA>"
 ; ## "-trailing"  src: ANSI string  b: TBA  c: TBA  status: TBA
 .scope
-xt_minus-trailing:
+xt_minus_trailing:
                 nop
-z_minus-trailing:
+z_minus_trailing:
                 rts
 .scend
 
@@ -775,27 +756,27 @@ xt_move:        nop
 z_move:         rts
 .scend
 
-; ## NAME-TO-INT ( -- ) "<TBA>"
+; ## NAME_TO_INT ( -- ) "<TBA>"
 ; ## "name>int"  src: Gforth  b: TBA  c: TBA  status: TBA
 .scope
-xt_name-to-int: nop
-z_name-to-int:  rts
+xt_name_to_int: nop
+z_name_to_int:  rts
 .scend
 
-; ## NAME-TO-STRING ( -- ) "<TBA>"
+; ## NAME_TO_STRING ( -- ) "<TBA>"
 ; ## "name>string"  src: Gforth  b: TBA  c: TBA  status: TBA
 .scope
-xt_name-to-string:
+xt_name_to_string:
                 nop
-z_name-to-string:
+z_name_to_string:
                 rts
 .scend
 
-; ## NC-LIMIT ( -- ) "<TBA>"
+; ## NC_LIMIT ( -- ) "<TBA>"
 ; ## "nc-limit"  src: Tali Forth  b: TBA  c: TBA  status: TBA
 .scope
-xt_nc-limit:    nop
-z_nc-limit:     rts
+xt_nc_limit:    nop
+z_nc_limit:     rts
 .scend
 
 ; ## NEGATE ( -- ) "<TBA>"
@@ -805,12 +786,12 @@ xt_negate:      nop
 z_negate:       rts
 .scend
 
-; ## NEVER-COMPILE ( -- ) "<TBA>"
+; ## NEVER_COMPILE ( -- ) "<TBA>"
 ; ## "never-compile"  src: Tali Forth  b: TBA  c: TBA  status: TBA
 .scope
-xt_never-compile:
+xt_never_compile:
                 nop
-z_never-compile:
+z_never_compile:
                 rts
 .scend
 
@@ -819,6 +800,20 @@ z_never-compile:
 .scope
 xt_nip:         nop
 z_nip:          rts
+.scend
+
+; ## NOT_EQUALS ( -- ) "<TBA>"
+; ## "<>"  src: ANSI core ext  b: TBA  c: TBA  status: TBA
+.scope
+xt_not_equals:  nop
+z_not_equals:   rts
+.scend
+
+; ## NOT_ROTE ( -- ) "<TBA>"
+; ## "-rot"  src: Gforth  b: TBA  c: TBA  status: TBA
+.scope
+xt_not_rote:    nop
+z_not_rote:     rts
 .scend
 
 ; ## NUMBER ( -- ) "<TBA>"
@@ -835,18 +830,18 @@ xt_one:         nop
 z_one:          rts
 .scend
 
-; ## ONE-MINUS ( -- ) "<TBA>"
+; ## ONE_MINUS ( -- ) "<TBA>"
 ; ## "1-"  src: ANSI core  b: TBA  c: TBA  status: TBA
 .scope
-xt_one-minus:   nop
-z_one-minus:    rts
+xt_one_minus:   nop
+z_one_minus:    rts
 .scend
 
-; ## ONE-PLUS ( -- ) "<TBA>"
+; ## ONE_PLUS ( -- ) "<TBA>"
 ; ## "1+"  src: ANSI core  b: TBA  c: TBA  status: TBA
 .scope
-xt_one-plus:    nop
-z_one-plus:     rts
+xt_one_plus:    nop
+z_one_plus:     rts
 .scend
 
 ; ## OR ( -- ) "<TBA>"
@@ -870,41 +865,6 @@ xt_over:        nop
 z_over:         rts
 .scend
 
-; ## P-CLOSE ( -- ) "<TBA>"
-; ## ")"  src: ANSI core  b: TBA  c: TBA  status: TBA
-.scope
-xt_p-close:     nop
-z_p-close:      rts
-.scend
-
-; ## P-DO ( -- ) "<TBA>"
-; ## "(do)"  src: Tali Forth  b: TBA  c: TBA  status: TBA
-.scope
-xt_p-do:        nop
-z_p-do:         rts
-.scend
-
-; ## P-OPEN ( -- ) "<TBA>"
-; ## "("  src: ANSI core  b: TBA  c: TBA  status: TBA
-.scope
-xt_p-open:      nop
-z_p-open:       rts
-.scend
-
-; ## P-PLUS-LOOP ( -- ) "<TBA>"
-; ## "(+loop)"  src: Tali Forth  b: TBA  c: TBA  status: TBA
-.scope
-xt_p-plus-loop: nop
-z_p-plus-loop:  rts
-.scend
-
-; ## P-Q-DO ( -- ) "<TBA>"
-; ## "(?do)"  src: Tali Forth  b: TBA  c: TBA  status: TBA
-.scope
-xt_p-q-do:      nop
-z_p-q-do:       rts
-.scend
-
 ; ## PAD ( -- ) "<TBA>"
 ; ## "pad"  src: ANSI core ext  b: TBA  c: TBA  status: TBA
 .scope
@@ -919,6 +879,36 @@ xt_page:        nop
 z_page:         rts
 .scend
 
+; ## PAREN ( -- ) "<TBA>"
+; ## "("  src: ANSI core  b: TBA  c: TBA  status: TBA
+.scope
+xt_paren:       nop
+z_paren:        rts
+.scend
+
+; ## PAREN_DO ( -- ) "<TBA>"
+; ## "(do)"  src: Tali Forth  b: TBA  c: TBA  status: TBA
+.scope
+xt_paren_do:    nop
+z_paren_do:     rts
+.scend
+
+; ## PAREN_PLUS_LOOP ( -- ) "<TBA>"
+; ## "(+loop)"  src: Tali Forth  b: TBA  c: TBA  status: TBA
+.scope
+xt_paren_plus_loop:
+                nop
+z_paren_plus_loop:
+                rts
+.scend
+
+; ## PAREN_Q_DO ( -- ) "<TBA>"
+; ## "(?do)"  src: Tali Forth  b: TBA  c: TBA  status: TBA
+.scope
+xt_paren_q_do:  nop
+z_paren_q_do:   rts
+.scend
+
 ; ## PARSE ( -- ) "<TBA>"
 ; ## "parse"  src: ANSI core ext  b: TBA  c: TBA  status: TBA
 .scope
@@ -926,11 +916,11 @@ xt_parse:       nop
 z_parse:        rts
 .scend
 
-; ## PARSE-NAME ( -- ) "<TBA>"
+; ## PARSE_NAME ( -- ) "<TBA>"
 ; ## "parse-name"  src: ANSI core ext  b: TBA  c: TBA  status: TBA
 .scope
-xt_parse-name:  nop
-z_parse-name:   rts
+xt_parse_name:  nop
+z_parse_name:   rts
 .scend
 
 ; ## PICK ( -- ) "<TBA>"
@@ -947,18 +937,18 @@ xt_plus:        nop
 z_plus:         rts
 .scend
 
-; ## PLUS-LOOP ( -- ) "<TBA>"
+; ## PLUS_LOOP ( -- ) "<TBA>"
 ; ## "+loop"  src: ANSI core  b: TBA  c: TBA  status: TBA
 .scope
-xt_plus-loop:   nop
-z_plus-loop:    rts
+xt_plus_loop:   nop
+z_plus_loop:    rts
 .scend
 
-; ## PLUS-STORE ( -- ) "<TBA>"
+; ## PLUS_STORE ( -- ) "<TBA>"
 ; ## "+!"  src: ANSI core  b: TBA  c: TBA  status: TBA
 .scope
-xt_plus-store:  nop
-z_plus-store:   rts
+xt_plus_store:  nop
+z_plus_store:   rts
 .scend
 
 ; ## POSTPONE ( -- ) "<TBA>"
@@ -975,19 +965,19 @@ xt_question:    nop
 z_question:     rts
 .scend
 
-; ## QUESTION-DO ( -- ) "<TBA>"
+; ## QUESTION_DO ( -- ) "<TBA>"
 ; ## "?do"  src: ANSI core ext  b: TBA  c: TBA  status: TBA
 .scope
-xt_question-do: nop
-z_question-do:  rts
+xt_question_do: nop
+z_question_do:  rts
 .scend
 
-; ## QUESTION-DUP ( -- ) "<TBA>"
+; ## QUESTION_DUP ( -- ) "<TBA>"
 ; ## "?dup"  src: ANSI core  b: TBA  c: TBA  status: TBA
 .scope
-xt_question-dup:
+xt_question_dup:
                 nop
-z_question-dup: rts
+z_question_dup: rts
 .scend
 
 ; ## QUIT ( -- ) "<TBA>"
@@ -997,18 +987,18 @@ xt_quit:        nop
 z_quit:         rts
 .scend
 
-; ## R-FETCH ( -- ) "<TBA>"
+; ## R_FETCH ( -- ) "<TBA>"
 ; ## "r@"  src: ANSI core  b: TBA  c: TBA  status: TBA
 .scope
-xt_r-fetch:     nop
-z_r-fetch:      rts
+xt_r_fetch:     nop
+z_r_fetch:      rts
 .scend
 
-; ## R-FROM ( -- ) "<TBA>"
+; ## R_FROM ( -- ) "<TBA>"
 ; ## "r>"  src: ANSI core  b: TBA  c: TBA  status: TBA
 .scope
-xt_r-from:      nop
-z_r-from:       rts
+xt_r_from:      nop
+z_r_from:       rts
 .scend
 
 ; ## RECURSE ( -- ) "<TBA>"
@@ -1032,20 +1022,27 @@ xt_repeat:      nop
 z_repeat:       rts
 .scend
 
-; ## RIGHT-BRACKET ( -- ) "<TBA>"
+; ## RIGHT_BRACKET ( -- ) "<TBA>"
 ; ## "]"  src: ANSI core  b: TBA  c: TBA  status: TBA
 .scope
-xt_right-bracket:
+xt_right_bracket:
                 nop
-z_right-bracket:
+z_right_bracket:
                 rts
 .scend
 
-; ## ROT ( -- ) "<TBA>"
+; ## RIGHT_PAREN ( -- ) "<TBA>"
+; ## ")"  src: ANSI core  b: TBA  c: TBA  status: TBA
+.scope
+xt_right_paren: nop
+z_right_paren:  rts
+.scend
+
+; ## ROTE ( -- ) "<TBA>"
 ; ## "rot"  src: ANSI core  b: TBA  c: TBA  status: TBA
 .scope
-xt_rot:         nop
-z_rot:          rts
+xt_rote:        nop
+z_rote:         rts
 .scend
 
 ; ## RSHIFT ( -- ) "<TBA>"
@@ -1055,18 +1052,18 @@ xt_rshift:      nop
 z_rshift:       rts
 .scend
 
-; ## S-QUOTE ( -- ) "<TBA>"
+; ## S_QUOTE ( -- ) "<TBA>"
 ; ## "s""  src: ANSI core  b: TBA  c: TBA  status: TBA
 .scope
-xt_s-quote:     nop
-z_s-quote:      rts
+xt_s_quote:     nop
+z_s_quote:      rts
 .scend
 
-; ## S-TO-D ( -- ) "<TBA>"
+; ## S_TO_D ( -- ) "<TBA>"
 ; ## "s>d"  src: ANSI core  b: TBA  c: TBA  status: TBA
 .scope
-xt_s-to-d:      nop
-z_s-to-d:       rts
+xt_s_to_d:      nop
+z_s_to_d:       rts
 .scend
 
 ; ## SEMICOLON ( -- ) "<TBA>"
@@ -1090,19 +1087,19 @@ xt_slash:       nop
 z_slash:        rts
 .scend
 
-; ## SLASH-MOD ( -- ) "<TBA>"
+; ## SLASH_MOD ( -- ) "<TBA>"
 ; ## "/mod"  src: ANSI core  b: TBA  c: TBA  status: TBA
 .scope
-xt_slash-mod:   nop
-z_slash-mod:    rts
+xt_slash_mod:   nop
+z_slash_mod:    rts
 .scend
 
-; ## SLASH-STRING ( -- ) "<TBA>"
+; ## SLASH_STRING ( -- ) "<TBA>"
 ; ## "/string"  src: ANSI string  b: TBA  c: TBA  status: TBA
 .scope
-xt_slash-string:
+xt_slash_string:
                 nop
-z_slash-string: rts
+z_slash_string: rts
 .scend
 
 ; ## SLITERAL ( -- ) "<TBA>"
@@ -1112,12 +1109,12 @@ xt_sliteral:    nop
 z_sliteral:     rts
 .scend
 
-; ## SM-SLASH-REM ( -- ) "<TBA>"
+; ## SM_SLASH_REM ( -- ) "<TBA>"
 ; ## "sm/rem"  src: ANSI core  b: TBA  c: TBA  status: TBA
 .scope
-xt_sm-slash-rem:
+xt_sm_slash_rem:
                 nop
-z_sm-slash-rem: rts
+z_sm_slash_rem: rts
 .scend
 
 ; ## SOURCE ( -- ) "<TBA>"
@@ -1127,11 +1124,11 @@ xt_source:      nop
 z_source:       rts
 .scend
 
-; ## SOURCE-ID ( -- ) "<TBA>"
+; ## SOURCE_ID ( -- ) "<TBA>"
 ; ## "source-id"  src: ANSI core ext  b: TBA  c: TBA  status: TBA
 .scope
-xt_source-id:   nop
-z_source-id:    rts
+xt_source_id:   nop
+z_source_id:    rts
 .scend
 
 ; ## SPACE ( -- ) "<TBA>"
@@ -1155,19 +1152,19 @@ xt_star:        nop
 z_star:         rts
 .scend
 
-; ## STAR-SLASH ( -- ) "<TBA>"
+; ## STAR_SLASH ( -- ) "<TBA>"
 ; ## "*/"  src: ANSI core  b: TBA  c: TBA  status: TBA
 .scope
-xt_star-slash:  nop
-z_star-slash:   rts
+xt_star_slash:  nop
+z_star_slash:   rts
 .scend
 
-; ## STAR-SLASH-MOD ( -- ) "<TBA>"
+; ## STAR_SLASH_MOD ( -- ) "<TBA>"
 ; ## "*/mod"  src: ANSI core  b: TBA  c: TBA  status: TBA
 .scope
-xt_star-slash-mod:
+xt_star_slash_mod:
                 nop
-z_star-slash-mod:
+z_star_slash_mod:
                 rts
 .scend
 
@@ -1213,18 +1210,32 @@ xt_to:          nop
 z_to:           rts
 .scend
 
-; ## TO-IN ( -- ) "<TBA>"
-; ## ">in"  src: ANSI core  b: TBA  c: TBA  status: TBA
+; ## TO_BODY ( -- ) "<TBA>"
+; ## ">body"  src: ANSI core  b: TBA  c: TBA  status: TBA
 .scope
-xt_to-in:       nop
-z_to-in:        rts
+xt_to_body:     nop
+z_to_body:      rts
 .scend
 
-; ## TO-NUMBER ( -- ) "<TBA>"
+; ## TO_IN ( -- ) "<TBA>"
+; ## ">in"  src: ANSI core  b: TBA  c: TBA  status: TBA
+.scope
+xt_to_in:       nop
+z_to_in:        rts
+.scend
+
+; ## TO_NUMBER ( -- ) "<TBA>"
 ; ## ">number"  src: ANSI core  b: TBA  c: TBA  status: TBA
 .scope
-xt_to-number:   nop
-z_to-number:    rts
+xt_to_number:   nop
+z_to_number:    rts
+.scend
+
+; ## TO_R ( -- ) "<TBA>"
+; ## ">r"  src: ANSI core  b: TBA  c: TBA  status: TBA
+.scope
+xt_to_r:        nop
+z_to_r:         rts
 .scend
 
 ; ## TRUE ( -- ) "<TBA>"
@@ -1248,72 +1259,68 @@ xt_two:         nop
 z_two:          rts
 .scend
 
-; ## TWO-DROP ( -- ) "<TBA>"
+; ## TWO_DROP ( -- ) "<TBA>"
 ; ## "2drop"  src: ANSI core  b: TBA  c: TBA  status: TBA
 .scope
-xt_two-drop:    nop
-z_two-drop:     rts
+xt_two_drop:    nop
+z_two_drop:     rts
 .scend
 
-; ## TWO-DUP ( -- ) "<TBA>"
+; ## TWO_DUP ( -- ) "<TBA>"
 ; ## "2dup"  src: ANSI core  b: TBA  c: TBA  status: TBA
 .scope
-xt_two-dup:     nop
-z_two-dup:      rts
+xt_two_dup:     nop
+z_two_dup:      rts
 .scend
 
-; ## TWO-GREATER-R ( -- ) "<TBA>"
-; ## "2>r"  src: ANSI core ext  b: TBA  c: TBA  status: TBA
-.scope
-xt_two-greater-r:
-                nop
-z_two-greater-r:
-                rts
-.scend
-
-; ## TWO-OVER ( -- ) "<TBA>"
+; ## TWO_OVER ( -- ) "<TBA>"
 ; ## "2over"  src: ANSI core  b: TBA  c: TBA  status: TBA
 .scope
-xt_two-over:    nop
-z_two-over:     rts
+xt_two_over:    nop
+z_two_over:     rts
 .scend
 
-; ## TWO-R-FETCH ( -- ) "<TBA>"
+; ## TWO_R_FETCH ( -- ) "<TBA>"
 ; ## "2r@"  src: ANSI core ext  b: TBA  c: TBA  status: TBA
 .scope
-xt_two-r-fetch: nop
-z_two-r-fetch:  rts
+xt_two_r_fetch: nop
+z_two_r_fetch:  rts
 .scend
 
-; ## TWO-R-GREATER ( -- ) "<TBA>"
+; ## TWO_R_FROM ( -- ) "<TBA>"
 ; ## "2r>"  src: ANSI core ext  b: TBA  c: TBA  status: TBA
 .scope
-xt_two-r-greater:
-                nop
-z_two-r-greater:
-                rts
+xt_two_r_from:  nop
+z_two_r_from:   rts
 .scend
 
-; ## TWO-STAR ( -- ) "<TBA>"
+; ## TWO_STAR ( -- ) "<TBA>"
 ; ## "2*"  src: ANSI core  b: TBA  c: TBA  status: TBA
 .scope
-xt_two-star:    nop
-z_two-star:     rts
+xt_two_star:    nop
+z_two_star:     rts
 .scend
 
-; ## TWO-SWAP ( -- ) "<TBA>"
+; ## TWO_SWAP ( -- ) "<TBA>"
 ; ## "2swap"  src: ANSI core  b: TBA  c: TBA  status: TBA
 .scope
-xt_two-swap:    nop
-z_two-swap:     rts
+xt_two_swap:    nop
+z_two_swap:     rts
 .scend
 
-; ## TWO-VARIABLE ( -- ) "<TBA>"
+; ## TWO_TO_R ( -- ) "<TBA>"
+; ## "2>r"  src: ANSI core ext  b: TBA  c: TBA  status: TBA
+.scope
+xt_two_to_r:    nop
+z_two_to_r:     rts
+.scend
+
+; ## TWO_VARIABLE ( -- ) "<TBA>"
 ; ## "2variable"  src: ANSI double  b: TBA  c: TBA  status: TBA
 .scope
-xt_two-variable:
+xt_two_variable:
                 nop
-z_two-variable: rts
+z_two_variable: rts
 .scend
 
 ; ## TYPE ( -- ) "<TBA>"
@@ -1323,62 +1330,55 @@ xt_type:        nop
 z_type:         rts
 .scend
 
-; ## U-DOT ( -- ) "<TBA>"
+; ## U_DOT ( -- ) "<TBA>"
 ; ## "u."  src: ANSI core  b: TBA  c: TBA  status: TBA
 .scope
-xt_u-dot:       nop
-z_u-dot:        rts
+xt_u_dot:       nop
+z_u_dot:        rts
 .scend
 
-; ## U-DOT-R ( -- ) "<TBA>"
+; ## U_DOT_R ( -- ) "<TBA>"
 ; ## "u.r"  src: ANSI core ext  b: TBA  c: TBA  status: TBA
 .scope
-xt_u-dot-r:     nop
-z_u-dot-r:      rts
+xt_u_dot_r:     nop
+z_u_dot_r:      rts
 .scend
 
-; ## UD-DOT ( -- ) "<TBA>"
+; ## UD_DOT ( -- ) "<TBA>"
 ; ## "ud."  src: Gforth  b: TBA  c: TBA  status: TBA
 .scope
-xt_ud-dot:      nop
-z_ud-dot:       rts
+xt_ud_dot:      nop
+z_ud_dot:       rts
 .scend
 
-; ## UD-DOT-R ( -- ) "<TBA>"
+; ## UD_DOT_R ( -- ) "<TBA>"
 ; ## "ud.r"  src: Gforth  b: TBA  c: TBA  status: TBA
 .scope
-xt_ud-dot-r:    nop
-z_ud-dot-r:     rts
+xt_ud_dot_r:    nop
+z_ud_dot_r:     rts
 .scend
 
-; ## UD-SLASH-MOD ( -- ) "<TBA>"
+; ## UD_SLASH_MOD ( -- ) "<TBA>"
 ; ## "ud/mod"  src: Gforth  b: TBA  c: TBA  status: TBA
 .scope
-xt_ud-slash-mod:
+xt_ud_slash_mod:
                 nop
-z_ud-slash-mod: rts
+z_ud_slash_mod: rts
 .scend
 
-; ## UM-SLASH-MOD ( -- ) "<TBA>"
+; ## UM_SLASH_MOD ( -- ) "<TBA>"
 ; ## "um/mod"  src: ANSI core  b: TBA  c: TBA  status: TBA
 .scope
-xt_um-slash-mod:
+xt_um_slash_mod:
                 nop
-z_um-slash-mod: rts
+z_um_slash_mod: rts
 .scend
 
-; ## UM-STAR ( -- ) "<TBA>"
+; ## UM_STAR ( -- ) "<TBA>"
 ; ## "um*"  src: ANSI core  b: TBA  c: TBA  status: TBA
 .scope
-xt_um-star:     nop
-z_um-star:      rts
-.scend
-
-; ## UNEQUAL ( -- ) "<TBA>"
-; ## "<>"  src: ANSI core ext  b: TBA  c: TBA  status: TBA
-.scope
-xt_unequal:     nop
-z_unequal:      rts
+xt_um_star:     nop
+z_um_star:      rts
 .scend
 
 ; ## UNLOOP ( -- ) "<TBA>"
@@ -1430,12 +1430,12 @@ xt_words:       nop
 z_words:        rts
 .scend
 
-; ## WORDS-AND-SIZES ( -- ) "<TBA>"
+; ## WORDS_AND_SIZES ( -- ) "<TBA>"
 ; ## "words&sizes"  src: Tali Forth  b: TBA  c: TBA  status: TBA
 .scope
-xt_words-and-sizes:
+xt_words_and_sizes:
                 nop
-z_words-and-sizes:
+z_words_and_sizes:
                 rts
 .scend
 
@@ -1460,39 +1460,40 @@ xt_zero:        nop
 z_zero:         rts
 .scend
 
-; ## ZERO-BRANCH ( -- ) "<TBA>"
+; ## ZERO_BRANCH ( -- ) "<TBA>"
 ; ## "0branch"  src: Tali Forth  b: TBA  c: TBA  status: TBA
 .scope
-xt_zero-branch: nop
-z_zero-branch:  rts
+xt_zero_branch: nop
+z_zero_branch:  rts
 .scend
 
-; ## ZERO-EQUAL ( -- ) "<TBA>"
+; ## ZERO_EQUAL ( -- ) "<TBA>"
 ; ## "0="  src: ANSI core  b: TBA  c: TBA  status: TBA
 .scope
-xt_zero-equal:  nop
-z_zero-equal:   rts
+xt_zero_equal:  nop
+z_zero_equal:   rts
 .scend
 
-; ## ZERO-GREATER ( -- ) "<TBA>"
+; ## ZERO_GREATER ( -- ) "<TBA>"
 ; ## "0>"  src: ANSI core ext  b: TBA  c: TBA  status: TBA
 .scope
-xt_zero-greater:
+xt_zero_greater:
                 nop
-z_zero-greater: rts
+z_zero_greater: rts
 .scend
 
-; ## ZERO-LESS ( -- ) "<TBA>"
+; ## ZERO_LESS ( -- ) "<TBA>"
 ; ## "0<"  src: ANSI core  b: TBA  c: TBA  status: TBA
 .scope
-xt_zero-less:   nop
-z_zero-less:    rts
+xt_zero_less:   nop
+z_zero_less:    rts
 .scend
 
-; ## ZERO-UNEQUAL ( -- ) "<TBA>"
+; ## ZERO_UNEQUAL ( -- ) "<TBA>"
 ; ## "0<>"  src: ANSI core ext  b: TBA  c: TBA  status: TBA
 .scope
-xt_zero-unequal:
+xt_zero_unequal:
                 nop
-z_zero-unequal: rts
+z_zero_unequal: rts
 .scend
+

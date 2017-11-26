@@ -44,5 +44,13 @@ In horrible ASCII graphics, the whole workflow looks something like this:
 
 
 All assembler files need a certain amount of modification by hand, just because
-it would have been more work to catch all the special cases in code. 
+it would have been more work to catch all the special cases in code: 
+
+In headers.asm:
+        - nt_abort_quote, "abort"" becomes "abort", $22
+        - nt_backslash, "\" becomes $5c
+        - nt_dot_quote, "."" becomes ".", $22
+        - nt_s_quote, "s"" becomes "s", $22
+
+In native_words.asm:
 
