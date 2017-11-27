@@ -1,73 +1,66 @@
 Memory Map for Tali Forth 2 for the 65c02
 Scot W. Stevenson <scot.stevenson@gmail.com>
 First version: 19. Jan 2014
-This version: 26. Nov 2017
+This version: 27. Nov 2017
 
-THIS IS STILL THE OLD VERSION, PLEASE IGNORE
-
-Hex memory addresses on left are based on example system with 32k RAM and 32k RAM
-kB ROM. Note there are no user variables currently. Since buffers are not yet
-implemented, this map is incomplete. 
+Tali Forth 2 was developed with a simple 32 KiB RAM, 32 KiB ROM design. 
 
 
-     0000 +----------------------------------+ <-- RamStart, SPMAX
-          |                                  |
-          |                                  |
-          |    Parameter (Data) Stack   ^    | <-- PS Pointer (65c02 X Reg)
-          |                             |    |
-          |                             |    |
-     0080 +----------------------------------+ <-- SP0
-          |    (Unused)                      |
-     0090 +----------------------------------+  
-          |    Forth Registers, Pointers     | 
-     00D0 +----------------------------------+  
-          |    Reserved for Kernel/OS        | 
-     00F0 +----------------------------------+  
-          |    (Unused)                      |
-     00FF +----------------------------------+  
+The following drawing is not to scale.
 
-     0100 +----------------------------------+
-          |                                  |
-          |                                  |
-          |    Return Stack             ^    | <-- RS Pointer (65c02 SP)
-          |                             |    |
-          |                             |    |
-     01FF +----------------------------------+ <-- RP0
 
-     0200 +----------------------------------+ <-- TIB (SOURCE) 
-          |                             |    |
-          |    Terminal Input Buffer    V    | <-- >IN Pointer 
-          |                                  |
-     02FF +----------------------------------+ <-- [TIB+TIBSIZE]
-
-     0300 +----------------------------------+ <-- SYSPAD
-          |                                  |
-          |    System Scratch Pad            |
-          |                                  |
-     03FF +----------------------------------+ 
-
-     0400 +----------------------------------+ <-- CP0
-          |                             |    |
-          |                             V    | <-- Compiler Pointer (CP)
-          |    Forth Dictionary (RAM)        | 
-          |                                  |
-          |                                  |
-          +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+ <-- (PAD) [CP+offset]
-          |    PAD (User Temp Area)          |
-          +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+ <-- [PAD+PADSIZE]
-          |                                  |
-          |    Buffer RAM               ^    | <-- XXXX
-          |                             |    |
-     7FFF +----------------------------------+ <-- RamEnd
-
-     8000 +----------------------------------+ <-- FORTH, COLD, IRQ, BRK
-          |    Forth Routines (ROM)          | 
-          +----------------------------------+ 
-          |                                  |
-          |    Forth Dictionary (ROM)        | <-- Dictionary Pointer
-          |                                  |
-          +----------------------------------+
-          |    OS and System Vectors         | <-- Interrupt Vectors
-     FFFF +----------------------------------+ 
+    $0000  +-------------------+  ram_start, zpage, user0
+           |  User varliables  |
+           +-------------------+  
+           |                   |
+           |  ^  Data Stack    |  <-- dsp
+           |  |                |
+    $0078  +-------------------+  dsp0, stack
+           |                   |
+           |   (Reserved for   |
+           |      kernel)      |
+           |                   |
+    $0100  +===================+  
+           |                   |
+           |  ^  Return Stack  |  <-- rsp 
+           |  |                |
+    $0200  +-------------------+  rsp0, buffer, buffer0
+           |  |                |
+           |  v  Input Buffer  |
+           |                   |
+    $0280  +-------------------+  buffer1
+           |                   |
+           |  (unused buffer)  |
+           |                   |
+    $0300  +-------------------+  cp0
+           |  |                |
+           |  v  Dictionary    |
+           |       (RAM)       |
+           |                   |
+           ~~~~~~~~~~~~~~~~~~~~~  <-- cp
+           |                   |
+           |                   |
+           |                   |
+    $7fff  #####################  ram_end
+    $8000  |                   |  forth, code0
+           |                   |
+           |                   |
+           |    Tali Forth     |
+           |     (24 KiB)      |
+           |                   |
+           |                   |
+    $e000  +-------------------+
+           |                   |  kernel_putc, kernel_getc   
+           |      Kernel       |
+           |                   |
+    $f000  +-------------------+  
+           |   I/O addresses   |
+           +-------------------+     
+           |                   |
+           |      Kernel       |
+           |                   |
+    $fffa  +-------------------+     
+           |  65c02 vectors    |
+    $ffff  +-------------------+     
 
 
