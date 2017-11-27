@@ -65,7 +65,7 @@ high_level_start:
 
         ; SEE. A longish word we'll want to modify for a while until we are
         ; happy with the format. Then replace it by code because this is just
-        ; far too long. Note we need lots of backslashes for Orphis
+        ; far too long.
         .byte ": see parse-name find-name dup 0= abort", 34, " No such name", 34, " "
         .byte "base @ >r  hex  dup cr space .", 34, " nt: ", 34, " . "
         .byte "dup 4 + @ space .", 34, " xt: ", 34, " . "
