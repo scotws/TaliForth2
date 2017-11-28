@@ -6,7 +6,7 @@ This version: 27. Nov 2017
 Tali Forth 2 was developed with a simple 32 KiB RAM, 32 KiB ROM design. 
 
 
-The following drawing is not to scale.
+The following drawing is not only ugly, but also not drawn to scale.
 
 
     $0000  +-------------------+  ram_start, zpage, user0

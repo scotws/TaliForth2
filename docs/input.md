@@ -33,7 +33,7 @@ The intial commands after reboot flow into each other: `cold` to `abort` to
 `refill` to get the input. `refill` does different things based on which of the
 four input sources (see above) is active: 
 
-1. **Keyboard entry.** This is the default. Get line of input via ACCEPT and
+1. **Keyboard entry.** This is the default. Get line of input via `accept` and
    return a TRUE flag even if the input string was empty.
 
 2. **EVALUTE string.** Return a FALSE flag.

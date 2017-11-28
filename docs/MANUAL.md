@@ -1,6 +1,5 @@
 # Manual for Tali Forth 2 for the 65c02 
-First version: FEHLT
-This version: 26. Nov 2017
+This version: 28. Nov 2017
 Scot W. Stevenson <scot.stevenson@gmail.com> 
 
 (THIS TEXT IS UNDER DEVELOPMENT AND MERELY A COLLECTION OF NOTES)
@@ -17,13 +16,12 @@ Tali comes with an assembled version that should run out of the box with the
 [py65mon](https://github.com/mnaberez/py65) simulator, a Python program. In this
 version, Tali is compiled to 32k and starts at $8000. 
 
-To install py65mon with Linux, use `sudo pip install -U py65`
-
-(If you don't have PIP installed, you will have to add it first with
+To install py65mon with Linux, use `sudo pip install -U py65`. If you don't 
+have PIP installed, you will have to add it first with
 ```
 sudo apt-get install python-pip
 ```
-There is a setup.py script as part of the package, too.) To start the emulator,
+There is a setup.py script as part of the package, too. To start the emulator,
 run:
 ```
 py65mon --mpu 65C02 -r ophis.bin
@@ -46,27 +44,12 @@ sudo python setup.py install
 Switch to the folder where the Tali code lives, and assemble with
 
 ```
-ophis --65c02 taliforth.asm
+ophis -c taliforth.asm
 ```
 
-Development was performed with [py65mon](https://github.com/mnaberez/py65) which
-is also in Python. To install on Linux:
-
-```
-sudo pip install -U py65
-```
-
-(If you don't have PIP installed, you will have to add it first with something like
-
-```
-sudo apt-get install python-pip
-```
-
-There is a setup.py script as part of the package, too.) To start the emulator, run:
-
-```
-py65mon --mpu 65C02 -r ophis.bin
-```
+Note that Ophis will not accept math operation characters (`-*/+`) in label
+names because it will try to perform those operations. Because of this, 
+we use underscores in the label names.
 
 
 ## Gotchas
