@@ -1,7 +1,7 @@
 ; Default kernel file for Tali Forth 2 
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 19. Jan 2014
-; This version: 26. Nov 2017
+; This version: 29. Nov 2017
 ;
 ; This section attempts to isolate the hardware-dependent parts of Tali Forth
 ; to make it easier for people to port it to their own machines. Ideally, you
@@ -29,14 +29,25 @@ v_nmi:
 v_reset:
 v_irq:
 kernel_init:
+.scope
         ; """Initialize the hardware. This is called with a JMP and not
         ; a JSR because we don't have anything set up for that yet. With
         ; py65mon, of course, this is really easy. -- At the end, we JMP
         ; back to the label forth to start the Forth system.
         ; """
-                nop                     ; this is just to make a point
-                jmp forth
+                
+        ; We've successfully set everything up, so print the kernel
+        ; string
 
+                ldx #00
+*               lda s_kernel_id,x
+                beq _done
+                jsr kernel_putc
+                inx
+                bra -
+_done:
+                jmp forth
+.scend
 
 kernel_getc:
         ; """Get a single character from the keyboard. By default, py65mon
@@ -56,7 +67,8 @@ kernel_putc:
 ; Leave the following string as the last entry in the kernel routine so it
 ; is easier to see where the kernel ends in hex dumps. This string is
 ; displayed after a successful boot
-s_kernel_id: .byte "Tali default kernel for py65mon (26. Nov 2017)", 0
+
+s_kernel_id: .byte "Tali default kernel for py65mon (29. Nov 2017)", AscLF, 0
 
 ; --------------------------------------------------------------------- 
 ; INTERRUPT VECTORS

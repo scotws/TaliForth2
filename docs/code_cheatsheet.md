@@ -84,6 +84,6 @@ the following lines for work on `.asm` files:
 ```
 ab drop# inx<tab><tab>; drop<cr>inx<cr><left>
 ab push# dex<tab><tab>; push<cr>dex<cr>lda $<LSB><cr>sta $00,x<cr>lda $<MSB><cr>sta $01,x<cr><up><up><up><up><end>
-ab pop# lda $00,x<tab><tab>; pop<cr>sta $<LSB><cr>lda $01,x<cr>sta$<MSB><cr>inx<cr>inx<cr><up><up><up><up><up><end>
+ab pop# lda $00,x<tab><tab>; pop<cr>sta $<LSB><cr>lda $01,x<cr>sta $<MSB><cr>inx<cr>inx<cr><up><up><up><up><up><end>
 ```
 

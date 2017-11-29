@@ -426,12 +426,14 @@ xt_dot_s:       nop
 z_dot_s:        rts
 .scend
 
-; ## DROP ( -- ) "<TBA>"
-; ## "drop"  src: ANSI core  b: TBA  c: TBA  status: TBA
-.scope
-xt_drop:        nop
+
+; ## DROP ( u -- ) "Pop top entry on Data Stack"
+; ## "drop"  src: ANSI core  b: 2  c: 4  status: done
+xt_drop:        
+                inx             ; drop
+                inx
 z_drop:         rts
-.scend
+
 
 ; ## DUMP ( -- ) "<TBA>"
 ; ## "dump"  src: ANSI tools  b: TBA  c: TBA  status: TBA
