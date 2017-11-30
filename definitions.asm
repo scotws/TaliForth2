@@ -1,7 +1,7 @@
 ; Definitions for Tali Forth 2
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 01. Apr 2016 (Liara Forth)
-; This version: 27. Nov 2017
+; This version: 30. Nov 2017
 
 ; This file is included by taliforth.asm
 
@@ -64,7 +64,7 @@
 .alias ram_start $0000       ; start of installed 32 KiB of RAM
 .alias ram_end   $8000-1     ; end of installed RAM
 .alias zpage     ram_start   ; begin of Zero Page ($0000-$00ff)
-.alias stack     $0100       ; begin of Return Stack ($0100-$01ff)
+.alias stack0    $0100       ; begin of Return Stack ($0100-$01ff)
 
 
 ; SOFT PHYSICAL ADDRESSES
@@ -73,13 +73,13 @@
 ; prepare for this, though, we've already named the location of the user
 ; variables user0. The two buffers are reserved for futher use, at the moment
 ; buffer0 is used for input and buffer1 for temporary use during the WORD
-; word (TODO check this)
+; word
 
 .alias user0     zpage          ; user and system variables
 .alias dsp0      $78            ; initial Data Stack Pointer, see docs/stack.md
 .alias rsp0      $ff            ; initial Return Stack Pointer (65c02 stack)
 .alias bsize     $80            ; size of input/output buffers
-.alias buffer0   stack+$100     ; input buffer ($0200-$027f)
+.alias buffer0   stack0+$100    ; input buffer ($0200-$027f)
 .alias buffer1   buffer0+bsize  ; temporary buffer area ($0280-$02ff)
 .alias cp0       buffer1+bsize  ; Dictionary starts after last buffer
 .alias cp_end    code0-1        ; Last RAM byte available
@@ -106,7 +106,7 @@
 .alias input     user0+16  ; vector for KEY
 .alias havekey   user0+18  ; vector for KEY?
 .alias state     user0+20  ; STATE: -1 compile, 0 interpret
-.alias base      user0+22  ; radix for number conversion, default 10
+.alias base      user0+22  ; number radix, default 10
 .alias nc_limit  user0+24  ; limit for Native Compile size
 .alias tmpbranch user0+26  ; temp storage for 0BRANCH, BRANCH only
 .alias tmp1      user0+28  ; temporary storage
@@ -117,16 +117,20 @@
 .alias tohold    user0+38  ; pointer for formatted output 
 .alias scratch   user0+40  ; 8 byte scratchpad (see UM/MOD)
 
+; Last address used for variables:   0048 ($0030)
+; First usable Data Stack location: $0077  (0119)
+; Bytes avaible for Data Stack: 71 --> 35 16-bit cells
+
 
 ; ASCII CHARACTERS
 
-.alias AscCC   $03  ; break (CNTR-c)
+.alias AscCC   $03  ; break (CTRL-c)
 .alias AscBELL $07  ; bell sound
 .alias AscBS   $08  ; backspace 
 .alias AscLF   $0a  ; line feed
 .alias AscCR   $0d  ; carriage return
-.alias AscCN   $0e  ; CNTR-n (for "next command" in CLI)
-.alias AscCP   $10  ; CNTR-p (for "previous command" in CLI)
+.alias AscCN   $0e  ; CTRL-n (for "next command" in CLI)
+.alias AscCP   $10  ; CTRL-p (for "previous command" in CLI)
 .alias AscESC  $1b  ; escape
 .alias AscSP   $20  ; space
 .alias AscDEL  $7f  ; delete

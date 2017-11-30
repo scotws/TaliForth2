@@ -29,7 +29,6 @@ v_nmi:
 v_reset:
 v_irq:
 kernel_init:
-.scope
         ; """Initialize the hardware. This is called with a JMP and not
         ; a JSR because we don't have anything set up for that yet. With
         ; py65mon, of course, this is really easy. -- At the end, we JMP
@@ -39,6 +38,7 @@ kernel_init:
         ; We've successfully set everything up, so print the kernel
         ; string
 
+.scope
                 ldx #00
 *               lda s_kernel_id,x
                 beq _done

@@ -3,37 +3,30 @@
 ; First version: 19. Jan 2014 (Tali Forth)
 ; This version: 27. Nov 2017
 
-; This is the main file for Tali Forth 2. At different points, it imports
-; other files in this sequence:
-;
-;  - definitions.asm   Top-level definitions with memory map
-;  - headers.asm       Headers of the Forth words
-;  - native_words.asm  Code of the lower-level Forth words
-;  - forth_words.asm   Code of the high-level Forth words
-;  - strings.asm       Strings and error messages
-;  - kernel.asm        Hardware-dependend routines (for py65mon by default)
-
+; This is the main file for Tali Forth 2
 
 ; By default, we have 32 KiB of RAM and 32 KiB of ROM. See docs/memorymap.txt
 ; for details
 .org $8000
 
 ; Label used to calculate UNUSED. Silly for Tali Forth, where we assume 32 KiB
-; RAM and 32 KiB ROM, but required for Liara Forth and kept here to make the
+; RAM and 32 KiB ROM, but required for Liara Forth, and kept here to make the
 ; code compatible
 code0:
+
+.require "definitions.asm"      ; Top-level definitions, memory map
 
 ; Insert point for Tali Forth after kernel hardware setup
 forth:
 
-.require "definitions.asm"
-.require "native_words.asm"
-.require "forth_words.asm"
-.require "headers.asm"
-.require "strings.asm"
+.require "native_words.asm"     ; Native Forth words. Starts with COLD
+.require "forth_words.asm"      ; High-level Forth words
+.require "user_words.asm"       ; User-defined words (optional)
+.require "headers.asm"          ; Headers of native words
+.require "strings.asm"          ; Strings and error messages
 
 
-
+; =====================================================================
 ; COMPILE WORDS, JUMPS and SUBROUTINE JUMPS INTO CODE
 
 ; These three routines compile instructions such as "jsr xt_words" into a 
@@ -148,7 +141,7 @@ print_string:
         ; """Print a zero-terminated string to the console/screen, adding a
         ; CR. 
         ; """
-        ; TODO
+        ; TODO 
         	rts
 
 
