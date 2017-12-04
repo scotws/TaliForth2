@@ -1,7 +1,7 @@
 ; Tali Forth 2 for the 65c02
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 19. Jan 2014 (Tali Forth)
-; This version: 27. Nov 2017
+; This version: 04. Dec 2017
 
 ; This is the main file for Tali Forth 2
 
@@ -138,12 +138,32 @@ interpret:
 
 
 print_string: 
+.scope
         ; """Print a zero-terminated string to the console/screen, adding a
-        ; CR. 
+        ; LF. We are given the string number, which functions as an index to
+        ; the string table. We do not check to see if the index is out of
+        ; range. Uses tmp3.
         ; """
-        ; TODO 
-        	rts
+                tay
+                lda string_table,y
+                sta tmp3                ; LSB
+                iny
+                lda string_table,y
+                sta tmp3+1              ; MSB
 
+                ldy #00
+_loop:
+                lda (tmp3),y
+                beq _done               ; strings are zero-terminated
+                jsr emit_a              ; allows vectoring via OUTPUT
+                iny
+                bra _loop
+_done:
+                lda AscLF
+                jsr emit_a
+
+        	rts
+.scend
 
 print_u:
         ; """Print unsigned number on TOS. This is the equvalent to Forth's

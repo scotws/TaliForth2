@@ -18,7 +18,7 @@
 
 
 ; ## COLD ( -- ) "Reset the Forth system"
-; ## "cold"  src: Tali Forth  b: TBA  c: TBA  status: TBA
+; ## "cold"  src: Tali Forth  b: TBA  c: TBA  status: fragment
 ;       """Reset the Forth system. Does not restart the kernel,
 ;       use the 65c02 reset for that. Flows into ABORT.
 ;       """
@@ -26,7 +26,7 @@ xt_cold:
                 ; Since the default case for Tali is the py65mon
                 ; emulator, we have no use for interrupts. If you
                 ; are going to include them in your system in any
-                ; way, you're going to have to do it from scratch.
+                ; way, you're going to have to do it from scratch
                 sei
 
                 ; initialize 65c02 stack (Return Stack)
@@ -43,7 +43,7 @@ xt_cold:
                 sta base
                 stz base+1
 
-          	; We start out with smaller words with less than 20 bytes being
+                ; We start out with smaller words with less than 20 bytes being
                 ; natively compiled, because this includes words like LSHIFT and MAX. 
                 lda #20
                 sta nc_limit
@@ -145,7 +145,7 @@ xt_cold:
 
 
 ; ## ABORT ( -- ) "Reset the Data Stack and restart the CLI"
-; ## "abort"  src: ANSI core  b: TBA  c: TBA  status: TBA
+; ## "abort"  src: ANSI core  b: TBA  c: TBA  status: fragment
         ; """Clear Data Stack and continue into QUIT. We can jump here via
         ; subroutine if we want to because we are going to reset the 65c02's
         ; stack pointer (the Return Stack) anyway during QUIT. Note we don't
@@ -154,17 +154,87 @@ xt_cold:
 xt_abort:       ldx #dsp0
 
 
-; ## QUIT ( -- ) "<TBA>"
-; ## "quit"  src: ANSI core  b: TBA  c: TBA  status: TBA
-xt_quit:        nop
+; ## QUIT ( -- ) "Reset the input and get new input"
+; ## "quit"  src: ANSI core  b: TBA  c: TBA  status: fragment
+.scope
+xt_quit:        
+                ; clear Return Stack
+                ldx #rsp0
+                txs
 
-; TODO HIER HIER
+                ; make sure instruction pointer is empty
+                stz ip
+                stz ip+1
 
+                ; SOURCE-ID is keyboard import
+                stz insrc
+                stz insrc+1
+
+                ; STATE is zero (interpret, not compile)
+                stz state
+                stz state+1
+
+_get_line:
+                ; empty current input buffer
+                stz ciblen
+                stz ciblen+1
+
+                ; accept a line from the current import source
+                jsr xt_refill           ; ( -- f ) 
+
+                ; test flag: LSB of TOS
+                lda 0,x
+                bne _refill_successful
+
+                ; If REFILL returned a FALSE flag, something went wrong and we
+                ; need to print an error message and reset the machine. We don't
+                ; need to save TOS because we're going to clobber it anyway when we
+                ; go back to ABORT.
+                lda #8                  ; number for error string refill 1
+                jmp error 
+
+_refill_successful:
+                ; Assume we have successfully accepted a string of input from
+                ; a source, with address cib and length of input in ciblen. We
+                ; arrive here still with the TRUE flag from REFILL as TOS
+                inx                     ; DROP
+                inx
+     
+                ; make >IN point to begining of buffer
+                stz toin 
+                stz toin+1 
+ 
+                ; Main compile/execute routine
+                jsr interpret
+
+                ; Test for Data Stack underflow. We don't check for
+                ; overflow
+                cpx #dsp0+1
+                bcc _stack_ok           ; DSP must always be smaller (!) than DSP0
+     
+                lda #11                 ; number for underflow es_underflow
+                jmp error
+
+_stack_ok:
+                ; Display system prompt if all went well. If we're interpreting,
+                ; this is " ok", if we're compiling, it's " compiled"
+                lda state
+                bne _compiled
+
+                lda #00                 ; number for "ok" string
+                bra _print
+_compiled:
+                lda #1                  ; number for "compiled" string
+_print:
+                jsr print_string
+
+                ; Awesome line, everybody! Now get the next one
+                bra _get_line
 
 z_cold:         
 z_abort:        
 z_quit:         ; no RTS required
-
+.scend
 
 
 ; ## ABORT_QUOTE ( -- ) "<TBA>"

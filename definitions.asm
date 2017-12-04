@@ -1,7 +1,7 @@
 ; Definitions for Tali Forth 2
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 01. Apr 2016 (Liara Forth)
-; This version: 30. Nov 2017
+; This version: 04. Dec 2017
 
 ; This file is included by taliforth.asm
 
@@ -102,24 +102,25 @@
 .alias cib       user0+8  ; address of current input buffer
 .alias ciblen    user0+10  ; length of current input buffer
 .alias toin      user0+12  ; pointer to CIB (>IN in Forth)
-.alias output    user0+14  ; vector for EMIT
-.alias input     user0+16  ; vector for KEY
-.alias havekey   user0+18  ; vector for KEY?
-.alias state     user0+20  ; STATE: -1 compile, 0 interpret
-.alias base      user0+22  ; number radix, default 10
-.alias nc_limit  user0+24  ; limit for Native Compile size
-.alias tmpbranch user0+26  ; temp storage for 0BRANCH, BRANCH only
-.alias tmp1      user0+28  ; temporary storage
-.alias tmp2      user0+30  ; temporary storage
-.alias tmp3      user0+32  ; temporary storage
-.alias tmpdsp    user0+34  ; temporary DSP (X) storage
-.alias tmptos    user0+36  ; temporary TOS storage
-.alias tohold    user0+38  ; pointer for formatted output 
-.alias scratch   user0+40  ; 8 byte scratchpad (see UM/MOD)
+.alias ip        user0+14  ; Instruction Pointer (current xt)
+.alias output    user0+16  ; vector for EMIT
+.alias input     user0+18  ; vector for KEY
+.alias havekey   user0+20  ; vector for KEY?
+.alias state     user0+22  ; STATE: -1 compile, 0 interpret
+.alias base      user0+24  ; number radix, default 10
+.alias nc_limit  user0+26  ; limit for Native Compile size
+.alias tmpbranch user0+28  ; temp storage for 0BRANCH, BRANCH only
+.alias tmp1      user0+30  ; temporary storage
+.alias tmp2      user0+32  ; temporary storage
+.alias tmp3      user0+34  ; temporary storage (especially for print)
+.alias tmpdsp    user0+36  ; temporary DSP (X) storage
+.alias tmptos    user0+38  ; temporary TOS storage
+.alias tohold    user0+40  ; pointer for formatted output 
+.alias scratch   user0+42  ; 8 byte scratchpad (see UM/MOD)
 
-; Last address used for variables:   0048 ($0030)
+; Last address used for variables:   0050 ($0032)
 ; First usable Data Stack location: $0077  (0119)
-; Bytes avaible for Data Stack: 71 --> 35 16-bit cells
+; Bytes avaible for Data Stack: 69 --> 32 16-bit cells
 
 
 ; ASCII CHARACTERS
