@@ -120,13 +120,6 @@ _nibble_to_ascii:
 .scend
 
 
-error: 
-        ; """Given the error number in A, print the associated error string and 
-        ; call ABORT. 
-        ; """
-        ; TODO jsr print_error
-        	jmp xt_abort
-
 
 interpret:
         ; """Core routine for the interpreter called by EVALUATE and QUIT.
@@ -136,9 +129,22 @@ interpret:
         ; TODO 
                 rts
 
+error: 
+        ; """Given the error number in A, print the associated error string and 
+        ; call ABORT. Uses tmp3.
+        ; """
+                tay
+                lda error_table,y
+                sta tmp3                ; LSB
+                iny
+                lda error_table,y
+                sta tmp3+1              ; MSB
+
+                jsr print_common
+        	jmp xt_abort            ; no JSR, as we clobber Return Stack
+
 
 print_string: 
-.scope
         ; """Print a zero-terminated string to the console/screen, adding a
         ; LF. We are given the string number, which functions as an index to
         ; the string table. We do not check to see if the index is out of
@@ -151,6 +157,14 @@ print_string:
                 lda string_table,y
                 sta tmp3+1              ; MSB
 
+                ; falls through to print_common
+
+print_common:
+.scope
+        ; """Common print loop for print_string and print_error. Assumes
+        ; zero-terminated address of string to be printed is in tmp3. 
+        ; Adds LF
+        ; """
                 ldy #00
 _loop:
                 lda (tmp3),y
