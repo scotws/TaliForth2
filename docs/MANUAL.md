@@ -1,5 +1,5 @@
 # Manual for Tali Forth 2 for the 65c02 
-This version: 28. Nov 2017
+This version: 04. Dec 2017
 Scot W. Stevenson <scot.stevenson@gmail.com> 
 
 (THIS TEXT IS UNDER DEVELOPMENT AND MERELY A COLLECTION OF NOTES)
@@ -92,9 +92,9 @@ system - this is why the source code is perversely overcommented.
 Until I get around to writing a tool for Ophis assembler code that formats the
 source file the way gofmt does for Go (golang), I work with the following rules:
 
-- Actual opcodes are indented by *two tabs*
+- Actual opcodes are indented by **two tabs**
 
-- Tabs are *eight characters long* and converted to spaces
+- Tabs are **eight characters long** and converted to spaces
 
 - Function-like routines are followed by a one-tab indented "function doc" based
   on the Python 3 model: Three quotation marks at the start, three at the end it
@@ -102,12 +102,18 @@ source file the way gofmt does for Go (golang), I work with the following rules:
   automatically extract the docs for them at some point.
 
 - The native words have a special commentary format that allows the automatic
-generation of word list by a tool in the tools folder, see there for details.
+  generation of word list by a tool in the tools folder, see there for details.
 
 - Assembler mnenomics are lower case. I get enough uppercase insanity writing
   German, thank you very much.
 
 - Hex numbers are also lower case, such as `$fffe`
+
+- Numbers in mnemonics are a stripped-down as possible to reduce visual clutter:
+  `lda 0,x` instead of `lda $00,x`. 
+
+- Comments are included like popcorn to help readers who are new both to Forth
+  and 6502 assembler.
 
 
 ## Frequently and Infrequently Asked Questions
