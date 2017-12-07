@@ -1,7 +1,7 @@
 ; Tali Forth 2 for the 65c02
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 19. Jan 2014 (Tali Forth)
-; This version: 04. Dec 2017
+; This version: 07. Dec 2017
 
 ; This is the main file for Tali Forth 2
 
@@ -120,19 +120,23 @@ _nibble_to_ascii:
 .scend
 
 
-
 interpret:
         ; """Core routine for the interpreter called by EVALUATE and QUIT.
         ; Process one line only. Assumes that the address of name is in
         ; cib and the length of the whole input line string is in ciblen
         ; """
         ; TODO 
+                lda #'i                 ; TODO for testing
+                jsr emit_a
+
                 rts
+
 
 error: 
         ; """Given the error number in A, print the associated error string and 
         ; call ABORT. Uses tmp3.
         ; """
+                asl
                 tay
                 lda error_table,y
                 sta tmp3                ; LSB
@@ -150,6 +154,7 @@ print_string:
         ; the string table. We do not check to see if the index is out of
         ; range. Uses tmp3.
         ; """
+                asl
                 tay
                 lda string_table,y
                 sta tmp3                ; LSB
@@ -173,7 +178,7 @@ _loop:
                 iny
                 bra _loop
 _done:
-                lda AscLF
+                lda #AscLF
                 jsr emit_a
 
         	rts

@@ -1,7 +1,7 @@
 Memory Map for Tali Forth 2 for the 65c02
 Scot W. Stevenson <scot.stevenson@gmail.com>
 First version: 19. Jan 2014
-This version: 27. Nov 2017
+This version: 7. Dec 2017
 
 Tali Forth 2 was developed with a simple 32 KiB RAM, 32 KiB ROM design. 
 
@@ -27,10 +27,6 @@ The following drawing is not only ugly, but also not drawn to scale.
     $0200  +-------------------+  rsp0, buffer, buffer0
            |  |                |
            |  v  Input Buffer  |
-           |                   |
-    $0280  +-------------------+  buffer1
-           |                   |
-           |  (unused buffer)  |
            |                   |
     $0300  +-------------------+  cp0
            |  |                |

@@ -38,10 +38,6 @@
 ;           |  |                |
 ;           |  v  Input Buffer  |
 ;           |                   |
-;    $0280  +-------------------+ buffer1
-;           |                   |
-;           |  (unused buffer)  |
-;           |                   |
 ;    $0300  +-------------------+  cp0
 ;           |  |                |
 ;           |  v  Dictionary    |
@@ -71,17 +67,14 @@
 
 ; Tali currently doesn't have separate user variables for multitasking. To
 ; prepare for this, though, we've already named the location of the user
-; variables user0. The two buffers are reserved for futher use, at the moment
-; buffer0 is used for input and buffer1 for temporary use during the WORD
-; word
+; variables user0. 
 
 .alias user0     zpage          ; user and system variables
 .alias dsp0      $78            ; initial Data Stack Pointer, see docs/stack.md
 .alias rsp0      $ff            ; initial Return Stack Pointer (65c02 stack)
-.alias bsize     $80            ; size of input/output buffers
+.alias bsize     $ff            ; size of input/output buffers
 .alias buffer0   stack0+$100    ; input buffer ($0200-$027f)
-.alias buffer1   buffer0+bsize  ; temporary buffer area ($0280-$02ff)
-.alias cp0       buffer1+bsize  ; Dictionary starts after last buffer
+.alias cp0       buffer0+bsize  ; Dictionary starts after last buffer
 .alias cp_end    code0-1        ; Last RAM byte available
 .alias padoffset $ff            ; offset from CP to PAD (holds number strings)
 

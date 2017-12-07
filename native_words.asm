@@ -184,7 +184,7 @@ _get_line:
 
                 ; test flag: LSB of TOS
                 lda 0,x
-                bne _refill_successful
+                bne _success
 
                 ; If REFILL returned a FALSE flag, something went wrong and we
                 ; need to print an error message and reset the machine. We don't
@@ -193,7 +193,7 @@ _get_line:
                 lda #8                  ; code for error string refill 1
                 jmp error 
 
-_refill_successful:
+_success:
                 ; Assume we have successfully accepted a string of input from
                 ; a source, with address cib and length of input in ciblen. We
                 ; arrive here still with the TRUE flag from REFILL as TOS
@@ -209,11 +209,12 @@ _refill_successful:
 
                 ; Test for Data Stack underflow. We don't check for
                 ; overflow
-                cpx #dsp0+1
-                bcc _stack_ok           ; DSP must always be smaller (!) than DSP0
-     
-                lda #11                 ; code for underflow es_underflow
-                jmp error
+                ; TODO enable
+                ; cpx #dsp0
+                ; bcc _stack_ok           ; DSP must always be smaller (!) than DSP0
+
+                ; lda #11                 ; code for underflow es_underflow
+                ; jmp error
 
 _stack_ok:
                 ; Display system prompt if all went well. If we're interpreting,
@@ -221,7 +222,7 @@ _stack_ok:
                 lda state
                 bne _compiled
 
-                lda #00                 ; number for "ok" string
+                lda #0                  ; number for "ok" string
                 bra _print
 _compiled:
                 lda #1                  ; number for "compiled" string
@@ -304,16 +305,13 @@ _loop:
                 ; BS and DEL do the same thing for the moment
                 cmp #AscBS     
                 beq _bs
-                cmp #AscDEL (CTRL-h)
+                cmp #AscDEL     ; (CTRL-h)
                 beq _bs
 
-                ; CTRL-c and ESC abort (see if this is too harsh)
+                ; CTRL-c aborts. At some point, consider moving this to the
+                ; KEY routine
                 cmp #AscCC     
                 bne + 
-                jmp xt_abort
-*
-                cmp #AscESC
-                bne +
                 jmp xt_abort
 *
                 ; That's quite enough, echo character. EMIT_A sidesteps all the
