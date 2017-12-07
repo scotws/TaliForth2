@@ -1,7 +1,7 @@
 ; Definitions for Tali Forth 2
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 01. Apr 2016 (Liara Forth)
-; This version: 04. Dec 2017
+; This version: 07. Dec 2017
 
 ; This file is included by taliforth.asm
 
@@ -130,11 +130,9 @@
 .alias AscBS   $08  ; backspace 
 .alias AscLF   $0a  ; line feed
 .alias AscCR   $0d  ; carriage return
-.alias AscCN   $0e  ; CTRL-n (for "next command" in CLI)
-.alias AscCP   $10  ; CTRL-p (for "previous command" in CLI)
 .alias AscESC  $1b  ; escape
 .alias AscSP   $20  ; space
-.alias AscDEL  $7f  ; delete
+.alias AscDEL  $7f  ; delete (CTRL-h)
 
 
 ; DICTIONARY FLAGS

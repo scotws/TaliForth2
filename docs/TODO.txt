@@ -1,13 +1,9 @@
 TODO/CHANGES for Tali Forth 2 
 Scot W. Stevenson <scot.stevenson@gmail.com>
 First version: 19. Jan 2014
-This version: 26. Nov 2017
+This version: 07. Dec 2017
 
 TODO NEXT
-        - Write/review docs for memory map, hang on wall
-        - Write/review docs for stack structure, hang on wall
-        - Write routine to print a string ("It's alive!")
-        - Print temporary boot string
         - Get scaffolding CLI loop up and running
         - Get Dictionary search up and running
         - Write tools/validate_headers.py
@@ -30,7 +26,8 @@ TODO POST-BETA ("ALL THERE, BUT PROBABLY BUGGY AS HELL")
 
 
 TODO POST-RELEASE
-        - (TBA, until then, eat cookies)
+        - Add CTRL-c check to KEY
+        - Add real Delete Key detection (ESC[3~)
 
 
 TODO SOMETIME
@@ -42,6 +39,10 @@ TODO SOMETIME
 
 ALREADY DONE (LAST ON TOP WITH DATE)
 
+        - early Dec 2017 - Write/review docs for memory map, hang on wall
+        - early Dec 2017 - Write/review docs for stack structure, hang on wall
+        - early Dec 2017 - Write routine to print a string ("It's alive!")
+        - early Dec 2017 - Print temporary boot string
         - 26. Nov 2017 - Add strings to forth_words.asm; create GitHub repo
         - 25. Nov 2017 - Generated headers and words skeletons from template
         - 23. Feb 2017 - Decided on major rewrite as Tali Forth 2

@@ -1,8 +1,8 @@
 ; High-level Forth word routines
 ; Tali Forth 2 for the 65c02
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
-; First version: 01. April 2016 (Liara Forth)
-; This version: 24. Nov 2017
+; First version: 01. Apr 2016 (Liara Forth)
+; This version: 07. Dec 2017
 
 ; These words are too complicated (at the moment) or would be too long
 ; to be included as assembler code. So at startup, we have the basic
@@ -35,7 +35,7 @@ high_level_start:
         .byte ": is state @ if postpone ['] postpone defer! else ' defer! then ; immediate "
         .byte ": action-of state @ if postpone ['] postpone defer@ else ' defer@ then ; immediate "
 
-        ; High level math definitions. The should be moved to actual 65816 code
+        ; High level math definitions. The should be moved to actual 65c02 code
         ; for speed at some point. Note we use SM/REM instead of FM/MOD for most
         ; stuff
         .byte ": / >r s>d r> sm/rem swap drop ; "
