@@ -132,7 +132,6 @@ interpret:
                 ; delimiters per default and skips any leading spaces, which
                 ; PARSE doesn't
 _loop:
-                ; HIER HIER 
                 jsr xt_parse_name       ; ( "string" -- addr u ) 
 
                 ; If PARSE-NAME returns 0 (empty line), no characters were left
@@ -143,6 +142,14 @@ _loop:
                 ; Go to FIND-NAME to see if this is a word we know. We have to
                 ; make a copy of the address in case it isn't a word we know and
                 ; we have to go see if it is a number
+                
+                ; HIER HIER TODO TODO
+                ; ------------- TESTING -------------
+                lda #'a
+                jsr emit_a
+                
+                ; ------------- TESTING -------------
+                
                 jsr xt_two_dup          ; TODO convert this to assembler
                 jsr xt_find_name        ; ( addr u -- nt | 0 )
 

@@ -1304,13 +1304,14 @@ z_paren_q_do:   rts
 ; ## "parse-name"  src: ANSI core ext  b: TBA  c: TBA  status: coded
 .scope
 xt_parse_name:
-        ; Find next word in input string, skipping leading spaces. This is 
+        ; """Find next word in input string, skipping leading spaces. This is 
         ; a special form of PARSE and drops through to that word. See PARSE 
         ; for more detail. We use this word internally for the interpreter
         ; because it is a lot easier to use. Reference implementations at
         ; http://forth-standard.org/standard/core/PARSE-NAME and
         ; http://www.forth200x.org/reference-implementations/parse-name.fs
         ; Roughly, the word is comparable to BL WORD COUNT
+        ; """
 
                 ; skip leading spaces. We only use the LSB of toin, so the
                 ; maximal input size again is 256 chars
@@ -1360,7 +1361,7 @@ _found:
 ; ## "parse"  src: ANSI core ext  b: TBA  c: TBA  status: coded
 .scope
 xt_parse:
-        ; Find word in input string delimited by character given. Do not skip 
+        ; """Find word in input string delimited by character given. Do not skip 
         ; leading delimiters, this is the main difference to PARSE-NAME. PARSE
         ; and PARSE-NAME replace WORD in modern systems. See the ANSI
         ; documentation at
@@ -1379,6 +1380,7 @@ xt_parse:
         ; for the delimiter, TOIN (>IN) points to the where we currently are.
         ; Since PARSE does not skip leading delimiters, we assume we are on a
         ; useful string.
+        ; """
 
                 lda 0,x         ; save delimiter
                 sta tmp1
@@ -1533,19 +1535,19 @@ z_recurse:      rts
 
 ; ## REFILL ( -- f ) "Refill the input buffer"
 ; ## "refill"  src: ANSI core ext  b: TBA  c: TBA  status: coded
-;       """Attempt to fill the input buffer from the input source, returning
-;       a true flag if successful. When the input source is the user input
-;       device, attempt to receive input into the terminal input buffer. If
-;       successful, make the result the input buffer, set >IN to zero, and
-;       return true. Receipt of a line containing no characters is considered
-;       successful. If there is no input available from the current input
-;       source, return false. When the input source is a string from EVALUATE,
-;       return false and perform no other action." See
-;       https://www.complang.tuwien.ac.at/forth/gforth/Docs-html/The-Input-Stream.html
-;       and Conklin & Rather p. 156
-;       """"
 .scope
 xt_refill:      
+        ; """Attempt to fill the input buffer from the input source, returning
+        ; a true flag if successful. When the input source is the user input
+        ; device, attempt to receive input into the terminal input buffer. If
+        ; successful, make the result the input buffer, set >IN to zero, and
+        ; return true. Receipt of a line containing no characters is considered
+        ; successful. If there is no input available from the current input
+        ; source, return false. When the input source is a string from EVALUATE,
+        ; return false and perform no other action." See
+        ; https://www.complang.tuwien.ac.at/forth/gforth/Docs-html/The-Input-Stream.html
+        ; and Conklin & Rather p. 156
+        ; """"
                 ; Get input source from SOURCE-ID. We don't have blocks in this
                 ; version, or else we would have to check BLK first. This is an
                 ; optimized version of a subroutine jump to SOURCE-ID
@@ -1725,18 +1727,71 @@ xt_source_id:   nop
 z_source_id:    rts
 .scend
 
-; ## SPACE ( -- ) "<TBA>"
-; ## "space"  src: ANSI core  b: TBA  c: TBA  status: TBA
-.scope
-xt_space:       nop
-z_space:        rts
-.scend
 
-; ## SPACES ( -- ) "<TBA>"
-; ## "spaces"  src: ANSI core  b: TBA  c: TBA  status: TBA
+; ## SPACE ( -- ) "Print a single space"
+; ## "space"  src: ANSI core  b: 5  c: TBA  status: coded
+xt_space:      
+                lda #AscSP
+                jsr emit_a
+
+z_space:        rts
+
+
+; ## SPACES ( u -- ) "Print a number of spaces"
+; ## "spaces"  src: ANSI core  b: TBA  c: TBA  status: coded
+; TODO test with TOS > 256
 .scope
-xt_spaces:      nop
-z_spaces:       rts
+xt_spaces:      
+                ; catch any zero in TOS fast
+                lda 0,x
+                ora 1,x
+                beq _done
+
+                ; usually we're only going to print far less than 256 spaces,
+                ; so we create a quick loop for that. Short loop could be realized
+                ; as a separate subroutine, but unless we're really pressed for
+                ; memory at some point, this is faster
+                lda #AscSP
+                ldy 1,x
+                bne _lots_of_spaces
+
+                ldy 0,x
+_quick_loop:
+                ; we reach here knowing that there must be a number that is not
+                ; zero in the TOS
+                jsr emit_a
+                dey
+                beq _done
+                bra _quick_loop
+
+_lots_of_spaces:
+                ; we go through the first loop once to get rid of the lower
+                ; counter byte. This could be zero
+                ldy 0,x
+
+_first_slow_loop:
+                beq _slow_outer_loop
+                jsr emit_a
+                dey
+                bra _first_slow_loop
+                
+_slow_outer_loop:
+                ; we arrive here knowing that the MSB of TOS cannot be a zero
+                ldy #00                
+
+_slow_inner_loop:
+                jsr emit_a 
+                dey
+                bne _slow_inner_loop
+
+                dec 1,x
+                bne _slow_outer_loop
+
+_done:
+                inx             ; drop
+                inx
+
+z_spaces:       rts 
 .scend
 
 ; ## STAR ( -- ) "<TBA>"
