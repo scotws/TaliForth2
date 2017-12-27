@@ -86,18 +86,18 @@ xt_cold:
                 stz ciblen+1
 
                 stz insrc       ; SOURCE-ID is zero
-                stz ciblen+1
+                stz insrc+1
 
                 stz state       ; STATE is zero (interpret mode)
-                stz ciblen+1
+                stz state+1
      
                 ; The name token (nt) of DROP is always the first one in the
                 ; new Dictionary, so we start off the Dictionary Pointer (DP)
                 ; there. Anything that comes after that (with WORDS, before
                 ; that) is high-level
-                lda #<nt_drop
+                lda #<dictionary_start
                 sta dp
-                lda #>nt_drop
+                lda #>dictionary_start
                 sta dp+1
  
                 ; Clear the screen, assumes vt100 terminal
@@ -326,12 +326,12 @@ _loop:
                 bne _loop       ; fall thru if buffer limit reached
 
 _eol:
-                jsr xt_space    ; print final space
-
                 sty 0,x         ; Y contains number of chars accepted already
                 stz 1,x         ; we only accept 256 chars
 
+                jsr xt_space    ; print final space
                 bra z_accept
+
 _bs:
                 cpy #0          ; buffer empty?
                 bne +
@@ -461,12 +461,15 @@ xt_branch:      nop
 z_branch:       rts
 .scend
 
-; ## BYE ( -- ) "<TBA>"
-; ## "bye"  src: ANSI tools ext  b: TBA  c: TBA  status: TBA
+
+; ## BYE ( -- ) "Break"
+; ## "bye"  src: ANSI tools ext  b: TBA  c: TBA  status: coded
 .scope
-xt_bye:         nop
-z_bye:          rts
+xt_bye:         
+                brk
+z_bye:          rts             ; never reached
 .scend
+
 
 ; ## C_COMMA ( -- ) "<TBA>"
 ; ## "c,"  src: ANSI core  b: TBA  c: TBA  status: TBA
@@ -907,12 +910,121 @@ xt_find:        nop
 z_find:         rts
 .scend
 
-; ## FIND_NAME ( -- ) "<TBA>"
-; ## "find-name"  src: Gforth  b: TBA  c: TBA  status: TBA
+
+; ## FIND_NAME ( addr u -- nt|0 ) "Get the name token of input word"
+; ## "find-name"  src: Gforth  b: TBA  c: TBA  status: coded
 .scope
-xt_find_name:   nop
+xt_find_name:
+	; """Given a string, find the Name Token (nt) of a word or return
+        ; zero if the word is not in the dictionary. We use this instead of
+        ; ancient FIND to look up words in the Dictionary passed by
+        ; PARSE-NAME. Note this returns the nt, not the xt of a word like
+        ; FIND. To convert, use NAME>INT. This is a Gforth word. See
+	; https://www.complang.tuwien.ac.at/forth/gforth/Docs-html/Name-token.html 
+	; FIND calls this word
+        ; """
+        
+                ; check for special case of an empty string (length zero)
+                lda 0,x
+                ora 1,x
+                beq _fail_done          ; this might have to be JMP
+
+_have_string:
+                ; set up first loop iteration
+                lda dp                  ; nt of first word in Dictionary
+                sta tmp1
+                lda dp+1
+                sta tmp1+1
+
+                lda 2,x                 ; Address of mystery string
+                sta tmp2
+                lda 3,x
+                sta tmp2+1
+
+_loop:
+                ; first quick test: Are strings the same length?
+                lda (tmp1)
+                cmp 0,x
+                bne _next_entry
+
+_compare_string:
+                ; are the same length, so we now have to compare each
+                ; character
+
+                ; second quick test: Is the first character the same?
+                ldy #8
+                lda (tmp1),y
+                cmp (tmp2)              ; first character of mystery string
+                bne _next_entry
+
+                ; string length are the same and the first character is the
+                ; same. If the length of the string is 1, we're already done
+                lda 0,x
+                dec
+                beq _success
+
+                ; No such luck: The strings are the same length and the first
+                ; char is the same, but the word is more than one char long.
+                ; So we suck it up and compare every single character. We go
+                ; from back to front, because words like CELLS and CELL+ would
+                ; take longer otherwise. We can also shorten the loop by one
+                ; because we've already compared the first char. 
+
+                ; The string of the word we're testing against is 8 bytes down
+                lda tmp1
+                clc
+                adc #8
+                sta tmp3        ; we preserve tmp1
+                lda tmp1+1
+                adc #0          ; we only need the carry
+                sta tmp3+1
+
+                ldy 0,x         ; index is length of string minus 1
+                dey
+
+_string_loop:
+                lda (tmp2),y    ; last char of mystery string
+                cmp (tmp3),y    ; last char of word we're testing against
+                bne _next_entry
+
+                dey
+                bne _string_loop
+
+_success:
+                ; the strings match. Put correct nt NOS, because we'll drop
+                ; TOS before we leave
+                lda tmp1
+                sta 2,x
+                lda tmp1+1
+                sta 3,x
+
+                bra _done
+
+_next_entry:
+                ; not the same, so we get the next worth. Next header
+                ; address is two bytes down
+                ldy #2
+                lda (tmp1),y
+                sta tmp1
+                iny
+                lda (tmp1),y
+                sta tmp1+1
+
+                ; if we got a zero, we've walked the whole Dictionary and
+                ; return as a failure, otherwise try again
+                ora tmp1
+                bne _loop       ; fall through to _fail_done
+
+_fail_done:
+                stz 2,x         ; failure flag
+                stz 3,x
+_done: 
+                inx
+                inx
+
 z_find_name:    rts
 .scend
+
 
 ; ## FM_SLASH_MOD ( -- ) "<TBA>"
 ; ## "fm/mod"  src: ANSI core  b: TBA  c: TBA  status: TBA
@@ -1255,7 +1367,7 @@ z_number:       rts
 ; ## "1"  src: Tali Forth  b: 8  c: TBA  status: coded
 xt_one:         dex
                 dex
-                lda #01
+                lda #1
                 sta 0,x
                 stz 1,x
 
@@ -1448,14 +1560,12 @@ xt_parse:
                 lda 0,x         ; save delimiter
                 sta tmp1
 
+                lda toin        ; save original >IN for length calculation
+                sta tmp2        
+
                 ; save beginning of word (cib+toin) to NOS as the return value
                 dex
                 dex
-                dex
-                dex
-
-                lda toin
-                sta tmp2        ; save original >IN for length calculation
 
                 clc
                 adc cib

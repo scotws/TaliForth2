@@ -143,17 +143,12 @@ _loop:
                 ; make a copy of the address in case it isn't a word we know and
                 ; we have to go see if it is a number
                 
-                ; ------------- TESTING -------------
-                lda #'a
-                jsr emit_a
-
-                ; ------------- TESTING -------------
- 
                 jsr xt_two_dup          ; ( addr u -- addr u addr u ) 
                 jsr xt_find_name        ; ( addr u addr u -- addr u nt|0 )
 
                 ; a zero signals that we didn't find a word in the Dictionary
                 lda 0,x
+                ora 1,x
                 bne _got_name_token
 
                 ; We didn't get any nt we know of, so let's see if this is
@@ -198,9 +193,7 @@ _got_name_token:
                 inx
                 inx                     ; ( nt ) 
                 
-                ; This is a quicker
-                ; version of NAME>INT. But first, save a version of nt for
-                ; error handling and compilation stuff.
+                ; Save a version of nt for error handling and compilation stuff
                 lda 0,x
                 sta tmpbranch
                 lda 1,x
