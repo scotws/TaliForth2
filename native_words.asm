@@ -545,12 +545,34 @@ xt_colon:       nop
 z_colon:        rts
 .scend
 
-; ## COMMA ( -- ) "<TBA>"
-; ## ","  src: ANSI core  b: TBA  c: TBA  status: TBA
+
+; ## COMMA ( n -- ) "Allot and store one cell in memory"
+; ## ","  src: ANSI core  b: 22  c: TBA  status: coded
 .scope
-xt_comma:       nop
+xt_comma:
+        ; """Store TOS at current place in memory. Since this an eight-bit
+        ; machine, we can ignore all alignment issures
+        ; """
+                lda 0,x
+                sta (cp)
+
+                inc cp
+                bne _msb
+                inc cp+1
+_msb:
+                lda 1,x
+                sta (cp)
+
+                inc cp
+                bne _done
+                inc cp+1
+_done:
+                inx
+                inx
+       
 z_comma:        rts
 .scend
+
 
 ; ## COMPILE_COMMA ( -- ) "<TBA>"
 ; ## "compile,"  src: ANSI core ext  b: TBA  c: TBA  status: TBA
@@ -770,17 +792,16 @@ z_else:         rts
 
 
 ; ## EMIT ( char -- ) "Print character to current output"
-; ## "emit"  src: ANSI core  b: TBA  c: TBA  status: fragment
+; ## "emit"  src: ANSI core  b: TBA  c: TBA  status: tested
 xt_emit:
         ; """Run-time default for EMIT. The user can revector this by changing
         ; the value of the OUTPUT variable. We ignore the MSB completely, and 
         ; do not check to see if we have been given a valid ASCII character. 
-        ; Don't make this native compile. 
+        ; Don't make this native compile
         ; """
-                ; TODO
-                ; load LSB of TOS A
-                ; DROP
-                ; falls through to emit_a
+                lda 0,x
+                inx
+                inx
 
 emit_a:
         ; We frequently want to print the character in A without fooling
@@ -813,12 +834,39 @@ xt_evaluate:    nop
 z_evaluate:     rts
 .scend
 
-; ## EXECUTE ( -- ) "<TBA>"
-; ## "execute"  src: ANSI core  b: TBA  c: TBA  status: TBA
+
+; ## EXECUTE ( xt -- ) "Jump to word based on execution token"
+; ## "execute"  src: ANSI core  b: 19  c: TBA  status: tested
 .scope
-xt_execute:     nop
+xt_execute:     
+                lda 0,x
+                sta ip
+                lda 1,x
+                sta ip+1
+
+                inx
+                inx
+
+                ; Only JMP has the addressing mode we need, but all our
+                ; Forth words end with a RTS instruction. We fake the 
+                ; return address by pushing the correct address to the stack
+                ; We'll land on a NOP so we don't have to DEC the return
+                ; address
+                lda #>_done     ; push MSB first
+                pha
+                lda #<_done
+                pha
+
+                jmp (IP)
+
+_done:          ; keep the NOP here as the landing site for the indirect 
+                ; subroutine jump (easier and quicker than adjusting the
+                ; return address on the stack)
+                nop             ; never reached
+
 z_execute:      rts
 .scend
+
 
 ; ## EXIT ( -- ) "<TBA>"
 ; ## "exit"  src: ANSI core  b: TBA  c: TBA  status: TBA
@@ -1114,12 +1162,27 @@ xt_move:        nop
 z_move:         rts
 .scend
 
-; ## NAME_TO_INT ( -- ) "<TBA>"
-; ## "name>int"  src: Gforth  b: TBA  c: TBA  status: TBA
+
+; ## NAME_TO_INT ( nt -- xt ) "Convert Name Token to Execute Token"
+; ## "name>int"  src: Gforth  b: 11  c: TBA  status: coded
+; TODO deal with compile-only words
 .scope
-xt_name_to_int: nop
+xt_name_to_int: 
+        ; """See
+        ; https://www.complang.tuwien.ac.at/forth/gforth/Docs-html/Name-token.html
+        ; """ 
+                ; The xt starts four bytes down from the nt
+                lda 0,x
+                clc
+                adc #4
+                sta 0,x
+
+                bcc _done
+                inc 1,x 
+_done:
 z_name_to_int:  rts
 .scend
+
 
 ; ## NAME_TO_STRING ( -- ) "<TBA>"
 ; ## "name>string"  src: Gforth  b: TBA  c: TBA  status: TBA
@@ -1944,12 +2007,27 @@ xt_two_drop:    nop
 z_two_drop:     rts
 .scend
 
-; ## TWO_DUP ( -- ) "<TBA>"
-; ## "2dup"  src: ANSI core  b: TBA  c: TBA  status: TBA
-.scope
-xt_two_dup:     nop
+
+; ## TWO_DUP ( a b -- a b a b ) "Duplicate first two stack elements"
+; ## "2dup"  src: ANSI core  b: 20  c: TBA  status: coded
+xt_two_dup:
+                dex
+                dex
+                dex
+                dex
+
+                lda 4,x         ; TOS
+                sta 0,x
+                lda 5,x
+                sta 1,x
+
+                lda 6,x         ; NOS
+                sta 2,x
+                lda 7,x
+                sta 3,x
+
 z_two_dup:      rts
-.scend
+
 
 ; ## TWO_OVER ( -- ) "<TBA>"
 ; ## "2over"  src: ANSI core  b: TBA  c: TBA  status: TBA

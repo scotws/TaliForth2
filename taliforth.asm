@@ -143,15 +143,14 @@ _loop:
                 ; make a copy of the address in case it isn't a word we know and
                 ; we have to go see if it is a number
                 
-                ; HIER HIER TODO TODO
                 ; ------------- TESTING -------------
                 lda #'a
                 jsr emit_a
-                
+
                 ; ------------- TESTING -------------
-                
-                jsr xt_two_dup          ; TODO convert this to assembler
-                jsr xt_find_name        ; ( addr u -- nt | 0 )
+ 
+                jsr xt_two_dup          ; ( addr u -- addr u addr u ) 
+                jsr xt_find_name        ; ( addr u addr u -- addr u nt|0 )
 
                 ; a zero signals that we didn't find a word in the Dictionary
                 lda 0,x
@@ -159,12 +158,12 @@ _loop:
 
                 ; We didn't get any nt we know of, so let's see if this is
                 ; a number. 
-                inx             ; drop
+                inx                     ; ( addr u 0 -- addr u )
                 inx
 
                 ; If the number conversion doesn't work, NUMBER will do the
                 ; complaining for us
-                jsr xt_number           ; ( addr u -- u | d ) 
+                jsr xt_number           ; ( addr u -- u|d ) 
 
                 ; If we're interpreting, we're done
                 lda state
@@ -179,19 +178,25 @@ _loop:
                 jsr cmpl_subroutine
 
                 ; compile our number
-                ; TODO convert this to assembler
                 jsr xt_comma
      
                 ; That was so much fun, let's do it again!
                 bra _loop
 
 _got_name_token:
-                ; We have a known word's nt as TOS. We're going to need its xt
+                ; We have a known word's nt TOS. We're going to need its xt
                 ; though, which is four bytes father down. 
 
-                ; Arrive here with ( addr u nt ), so we NIP twice
-                jsr xt_nip      ; TODO convert to assembler
-                jsr xt_nip 
+                ; we arrive here with ( addr u nt ), so we NIP twice
+                lda 0,x
+                sta 4,x
+                lda 1,x
+                sta 5,x
+
+                inx
+                inx
+                inx
+                inx                     ; ( nt ) 
                 
                 ; This is a quicker
                 ; version of NAME>INT. But first, save a version of nt for
