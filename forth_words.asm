@@ -2,7 +2,7 @@
 ; Tali Forth 2 for the 65c02
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 01. Apr 2016 (Liara Forth)
-; This version: 07. Dec 2017
+; This version: 27. Dec 2017
 
 ; These words are too complicated (at the moment) or would be too long
 ; to be included as assembler code. So at startup, we have the basic

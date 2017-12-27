@@ -132,6 +132,7 @@ interpret:
                 ; delimiters per default and skips any leading spaces, which
                 ; PARSE doesn't
 _loop:
+                ; HIER HIER 
                 jsr xt_parse_name       ; ( "string" -- addr u ) 
 
                 ; If PARSE-NAME returns 0 (empty line), no characters were left
