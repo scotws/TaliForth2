@@ -1,7 +1,7 @@
 ; Dictionary Headers for Tali Forth 2
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 05. Dec 2016 (Liara Forth)
-; This version: 27. Dec 2017
+; This version: 27. Jan 2018
 
 ; Dictionary headers are kept separately from the code, which allows various
 ; tricks in the code. We roughly follow the Gforth terminology: The Execution
@@ -69,9 +69,14 @@ nt_cold:
         .word nt_bye, xt_cold, z_cold
         .byte "cold"
 
+nt_bell:
+        .byte 4, 0
+        .word nt_cold, xt_bell, z_bell
+        .byte "bell"
+
 nt_at_xy:
         .byte 5, 0
-        .word nt_cold, xt_at_xy, z_at_xy
+        .word nt_bell, xt_at_xy, z_at_xy
         .byte "at-xy"
 
 nt_page:
@@ -89,9 +94,14 @@ nt_backslash:
         .word nt_cr, xt_backslash, z_backslash
         .byte $5c
 
+nt_base:
+        .byte 4, 0
+        .word nt_backslash, xt_base, z_base
+        .byte "base"
+
 nt_quit:
         .byte 4, 0
-        .word nt_backslash, xt_quit, z_quit
+        .word nt_base, xt_quit, z_quit
         .byte "quit"
 
 nt_abort:
@@ -119,9 +129,14 @@ nt_find_name:
         .word nt_name_to_int, xt_find_name, z_find_name
         .byte "find-name"
 
+nt_allot:
+        .byte 5, 0
+        .word nt_find_name, xt_allot, z_allot
+        .byte "allot"
+
 nt_key:
         .byte 3, 0
-        .word nt_find_name, xt_key, z_key
+        .word nt_allot, xt_key, z_key
         .byte "key"
 
 nt_depth:
@@ -144,9 +159,14 @@ nt_refill:
         .word nt_accept, xt_refill, z_refill
         .byte "refill"
 
+nt_bl:
+        .byte 2, 0
+        .word nt_refill, xt_bl, z_bl
+        .byte "bl"
+
 nt_spaces:
         .byte 6, 0
-        .word nt_refill, xt_spaces, z_spaces
+        .word nt_bl, xt_spaces, z_spaces
         .byte "spaces"
 
 nt_c_comma:
@@ -254,9 +274,19 @@ nt_execute:
         .word nt_emit, xt_execute, z_execute
         .byte "execute"
 
+nt_c_store:
+        .byte 2, 0
+        .word nt_execute, xt_c_store, z_c_store
+        .byte "c!"
+
+nt_c_fetch:
+        .byte 2, 0
+        .word nt_c_store, xt_c_fetch, z_c_fetch
+        .byte "c@"
+
 nt_tuck:
         .byte 4, 0
-        .word nt_execute, xt_tuck, z_tuck
+        .word nt_c_fetch, xt_tuck, z_tuck
         .byte "tuck"
 
 nt_comma:
@@ -581,30 +611,10 @@ nt_aligned:
         .word 0000, xt_aligned, z_aligned
         .byte "aligned"
 
-nt_allot:
-        .byte 5, 0
-        .word 0000, xt_allot, z_allot
-        .byte "allot"
-
-nt_base:
-        .byte 4, 0
-        .word 0000, xt_base, z_base
-        .byte "base"
-
 nt_begin:
         .byte 5, 0
         .word 0000, xt_begin, z_begin
         .byte "begin"
-
-nt_bell:
-        .byte 4, 0
-        .word 0000, xt_bell, z_bell
-        .byte "bell"
-
-nt_bl:
-        .byte 2, 0
-        .word 0000, xt_bl, z_bl
-        .byte "bl"
 
 nt_bounds:
         .byte 6, 0
@@ -615,16 +625,6 @@ nt_branch:
         .byte 6, 0
         .word 0000, xt_branch, z_branch
         .byte "branch"
-
-nt_c_store:
-        .byte 2, 0
-        .word 0000, xt_c_store, z_c_store
-        .byte "c!"
-
-nt_c_fetch:
-        .byte 2, 0
-        .word 0000, xt_c_fetch, z_c_fetch
-        .byte "c@"
 
 nt_cell_plus:
         .byte 5, 0

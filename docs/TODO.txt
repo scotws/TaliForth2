@@ -1,13 +1,11 @@
 TODO/CHANGES for Tali Forth 2 
 Scot W. Stevenson <scot.stevenson@gmail.com>
 First version: 19. Jan 2014
-This version: 07. Dec 2017
+This version: 27. Jan 2018
 
 TODO NEXT
-        - Get scaffolding CLI loop up and running
-        - Get Dictionary search up and running
+        - Write all words
         - Write tools/validate_headers.py
-
         - (... and so much more!) 
 
 
@@ -22,11 +20,11 @@ TODO POST-ALPHA ("NOT ALL THERE YET")
 
 
 TODO POST-BETA ("ALL THERE, BUT PROBABLY BUGGY AS HELL")
-        - (TBA, until then, eat cookies)
+        - In ALLOT, figure out how to handle release of too much memory
 
 
 TODO POST-RELEASE
-        - Add CTRL-c check to KEY
+        - Add CTRL-c check to KEY (pre-empted by py65)
         - Add real Delete Key detection (ESC[3~)
 
 
@@ -39,6 +37,8 @@ TODO SOMETIME
 
 ALREADY DONE (LAST ON TOP WITH DATE)
 
+        - Jan 2018 - Get scaffolding CLI loop up and running
+        - Jan 2018 - Get Dictionary search up and running
         - early Dec 2017 - Write/review docs for memory map, hang on wall
         - early Dec 2017 - Write/review docs for stack structure, hang on wall
         - early Dec 2017 - Write routine to print a string ("It's alive!")

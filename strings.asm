@@ -1,7 +1,7 @@
 ; List of Strings for Tali Forth 2
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 01. Apr 2016 (for Liara Forth)
-; This version: 04. Dec 2017
+; This version: 27. Jan 2017
 
 ; This file is included by taliforth.asm 
 
@@ -39,7 +39,7 @@ error_table:
         .word es_intonly, es_noname, es_radix, es_refill1, es_refill2 ;  5-9
         .word es_state, es_underflow, es_syntax                       ; 10-12
 
-es_allot:     .byte "ALLOT out of bounds", 0 
+es_allot:     .byte "ALLOT using all available memory", 0 
 es_componly:  .byte "Interpreting a compile-only word", 0
 es_defer:     .byte "DEFERed word not defined yet", 0
 es_divzero:   .byte "Division by zero", 0
