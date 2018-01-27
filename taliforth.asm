@@ -142,7 +142,6 @@ _loop:
                 ; Go to FIND-NAME to see if this is a word we know. We have to
                 ; make a copy of the address in case it isn't a word we know and
                 ; we have to go see if it is a number
-                
                 jsr xt_two_dup          ; ( addr u -- addr u addr u ) 
                 jsr xt_find_name        ; ( addr u addr u -- addr u nt|0 )
 
@@ -181,13 +180,12 @@ _loop:
 _got_name_token:
                 ; We have a known word's nt TOS. We're going to need its xt
                 ; though, which is four bytes father down. 
-
+                
                 ; we arrive here with ( addr u nt ), so we NIP twice
                 lda 0,x
                 sta 4,x
                 lda 1,x
                 sta 5,x
-
                 inx
                 inx
                 inx

@@ -71,7 +71,7 @@
 <               less_than               ANSI core
 <#              less_number_sign        ANSI core
 <>              not_equals              ANSI core ext
-=               equals                  ANSI core
+=               equal                   ANSI core
 >               greater_than            ANSI core
 >body           to_body                 ANSI core
 >in             to_in                   ANSI core
@@ -226,5 +226,5 @@ within          within                  ANSI core ext
 word            word                    ANSI core 
 words           words                   ANSI tools
 words&sizes     words_and_sizes         Tali Forth
-wordsize        wordsize                ANSI searc
+wordsize        wordsize                ANSI search
 xor             xor                     ANSI core

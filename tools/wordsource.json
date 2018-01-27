@@ -49,7 +49,7 @@
 	{ "name": "less_than", "word": "<", "source": "ANSI core" },
 	{ "name": "less_number_sign", "word": "<#", "source": "ANSI core" },
 	{ "name": "not_equals", "word": "<>", "source": "ANSI core ext" },
-	{ "name": "equals", "word": "=", "source": "ANSI core" },
+	{ "name": "equal", "word": "=", "source": "ANSI core" },
 	{ "name": "greater_than", "word": ">", "source": "ANSI core" },
 	{ "name": "to_body", "word": ">body", "source": "ANSI core" },
 	{ "name": "to_in", "word": ">in", "source": "ANSI core" },
@@ -204,6 +204,6 @@
 	{ "name": "word", "word": "word", "source": "ANSI core" },
 	{ "name": "words", "word": "words", "source": "ANSI tools" },
 	{ "name": "words_and_sizes", "word": "words&sizes", "source": "Tali Forth" },
-	{ "name": "wordsize", "word": "wordsize", "source": "ANSI searc" },
+	{ "name": "wordsize", "word": "wordsize", "source": "ANSI search" },
 	{ "name": "xor", "word": "xor", "source": "ANSI core" }
 ]

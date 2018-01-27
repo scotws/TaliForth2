@@ -154,7 +154,7 @@ xt_cold:
 xt_abort:       ldx #dsp0
 
 
-; ## QUIT ( -- ) "Reset the input and get new input"
+; ## QUIT ( _- ) "Reset the input and get new input"
 ; ## "quit"  src: ANSI core  b: TBA  c: TBA  status: fragment
         ; """Rest the input and start command loop.
         ; """
@@ -247,17 +247,32 @@ xt_abort_quote: nop
 z_abort_quote:  rts
 .scend
 
-; ## ABS ( -- ) "<TBA>"
-; ## "abs"  src: ANSI core  b: TBA  c: TBA  status: TBA
+
+; ## ABS ( n -- u ) "Return absolute value of a number"
+; ## "abs"  src: ANSI core  b: TBA  c: TBA  status: coded
 .scope
-xt_abs:         nop
+xt_abs:         
+                lda 1,x 
+                bpl _done       ; positive number, easy money!
+
+                ; negative: calculate 0 - n
+                sec
+                lda #0
+                sbc 0,x         ; LSB
+                sta 0,x
+
+                lda #0          ; MSB
+                sbc 1,x
+                sta 1,x
+
+_done:
 z_abs:          rts
 .scend
 
 
 ; ## ACCEPT ( addr n -- n ) "Receive a string of characters"
 ; ## "accept"  src: ANSI core  b: TBA  c: TBA  status: coded
-	; """ Receive a string of at most n1 characters, placing them at
+        ; """ Receive a string of at most n1 characters, placing them at
         ; addr. Return the actual number of characters as n2. Characters
         ; are echoed as they are received. ACCEPT is called by REFILL in
         ; modern Forths. This version accepts 256 chars max in the 
@@ -375,6 +390,7 @@ xt_aligned:     nop
 z_aligned:      rts
 .scend
 
+
 ; ## ALLOT ( -- ) "<TBA>"
 ; ## "allot"  src: ANSI core  b: TBA  c: TBA  status: TBA
 .scope
@@ -382,26 +398,62 @@ xt_allot:       nop
 z_allot:        rts
 .scend
 
-; ## AND ( -- ) "<TBA>"
-; ## "and"  src: ANSI core  b: TBA  c: TBA  status: TBA
-.scope
-xt_and:         nop
+
+; ## AND ( n n -- n ) "Logically AND TOS and NOS"
+; ## "and"  src: ANSI core  b: 14  c: TBA  status: coded
+xt_and:         
+                lda 0,x
+                and 2,x
+                sta 2,x
+
+                lda 1,x
+                and 3,x
+                sta 3,x
+
+                inx
+                inx
+
 z_and:          rts
-.scend
 
-; ## AT_XY ( -- ) "<TBA>"
+
+; ## AT_XY ( n m -- ) "Move cursor to position given"
 ; ## "at-xy"  src: ANSI facility  b: TBA  c: TBA  status: TBA
-.scope
-xt_at_xy:       nop
-z_at_xy:        rts
-.scend
+        ; """On an ANSI compatible terminal, place cursor at row n colum m. 
+        ; Code is ESC[<n>;<m>H Do not use U. to print the numbers because the 
+        ; trailing space will not work with xterm 
+        ; """
+xt_at_xy:       
+                lda #AscESC
+                jsr emit_a
+                lda #$5B        ; ASCII for "["
+                jsr emit_a
+                lda 3,x         ; n (x) is in MSB
+                jsr byte_to_ascii
+                lda #$3B        ; ASCII for ";"
+                jsr emit_a
+                lda 1,x         ; m (y) is in LSB
+                jsr byte_to_ascii
+                lda #'H         ; for Mac OS X 
+                jsr emit_a
 
-; ## BACKSLASH ( -- ) "<TBA>"
-; ## "\"  src: ANSI core ext  b: TBA  c: TBA  status: TBA
-.scope
-xt_backslash:   nop
+                inx             ; 2DROP
+                inx
+                inx
+                inx
+        
+z_at_xy:        rts
+
+
+; ## BACKSLASH ( -- ) "Ignore rest of line"
+; ## "\"  src: ANSI core ext  b: 8  c: TBA  status: coded
+xt_backslash:   
+                lda ciblen
+                sta toin
+                lda ciblen+1
+                sta toin+1
+
 z_backslash:    rts
-.scend
+
 
 ; ## BASE ( -- ) "<TBA>"
 ; ## "base"  src: ANSI core  b: TBA  c: TBA  status: TBA
@@ -471,12 +523,25 @@ z_bye:          rts             ; never reached
 .scend
 
 
-; ## C_COMMA ( -- ) "<TBA>"
-; ## "c,"  src: ANSI core  b: TBA  c: TBA  status: TBA
+; ## C_COMMA ( c -- ) "Store one byte/char in the Dictionary"
+; ## "c,"  src: ANSI core  b: TBA  c: TBA  status: coded
+; TODO make sure we haven't allocated more than we have
 .scope
-xt_c_comma:     nop
+xt_c_comma:     
+                lda 0,x
+                sta (cp)
+
+                ; increase CP to the next byte
+                inc cp
+                bne _done
+                inc cp+1
+_done:
+                inx
+                inx
+
 z_c_comma:      rts
 .scend
+
 
 ; ## C_FETCH ( -- ) "<TBA>"
 ; ## "c@"  src: ANSI core  b: TBA  c: TBA  status: TBA
@@ -608,12 +673,14 @@ xt_count:       nop
 z_count:        rts
 .scend
 
-; ## CR ( -- ) "<TBA>"
-; ## "cr"  src: ANSI core  b: TBA  c: TBA  status: TBA
-.scope
-xt_cr:          nop
+
+; ## CR ( -- ) "Print a line feed"
+; ## "cr"  src: ANSI core  b: 5  c: TBA  status: coded
+xt_cr:         
+                lda #AscLF
+                jsr emit_a
 z_cr:           rts
-.scend
+
 
 ; ## CREATE ( -- ) "<TBA>"
 ; ## "create"  src: ANSI core  b: TBA  c: TBA  status: TBA
@@ -678,12 +745,25 @@ xt_defer:       nop
 z_defer:        rts
 .scend
 
-; ## DEPTH ( -- ) "<TBA>"
-; ## "depth"  src: ANSI core  b: TBA  c: TBA  status: TBA
-.scope
-xt_depth:       nop
+
+; ## DEPTH ( -- u ) "Get number of cells (not bytes) used by stack"
+; ## "depth"  src: ANSI core  b: 14  c: TBA  status: coded
+xt_depth:       
+                stx tmpdsp
+                lda dsp0
+                sec
+                sbc tmpdsp
+
+                ; divide by two because each cell is two bytes
+                lsr
+
+                dex
+                dex
+                sta 0,x
+                stz 1,x
+
 z_depth:        rts
-.scend
+
 
 ; ## DIGIT_QUESTION ( -- ) "<TBA>"
 ; ## "digit?"  src: Tali Forth  b: TBA  c: TBA  status: TBA
@@ -715,10 +795,17 @@ xt_does:        nop
 z_does:         rts
 .scend
 
-; ## DOT ( -- ) "<TBA>"
+; ## DOT ( u -- ) "Print TOS"
 ; ## "."  src: ANSI core  b: TBA  c: TBA  status: TBA
+; TODO This is a temporary version
 .scope
-xt_dot:         nop
+xt_dot:         lda 1,x
+                jsr byte_to_ascii
+                lda 0,x
+                jsr byte_to_ascii
+                inx
+                inx
+
 z_dot:          rts
 .scend
 
@@ -816,12 +903,32 @@ emit_a:
 z_emit:         ; never reached 
 
 
-; ## EQUALS ( -- ) "<TBA>"
-; ## "="  src: ANSI core  b: TBA  c: TBA  status: TBA
+; ## EQUAL ( n n -- f ) "See if TOS and NOS are equal"
+; ## "="  src: ANSI core  b: 24  c: TBA  status: coded
 .scope
-xt_equals:      nop
-z_equals:       rts
+xt_equal:       
+                lda 0,x                 ; LSB
+                cmp 2,x
+                bne _false
+
+                lda 1,x                 ; MSB
+                cmp 3,x
+                bne _false
+
+                lda #$ff
+                bra _done
+
+_false:         lda #0                  ; drop thru to done
+
+_done:          sta 2,x
+                sta 3,x
+
+                inx
+                inx
+
+z_equal:        rts
 .scend
+
 
 ; ## ERASE ( -- ) "<TBA>"
 ; ## "erase"  src: ANSI core ext  b: TBA  c: TBA  status: TBA
@@ -846,7 +953,7 @@ xt_execute:
                 sta ip
                 lda 1,x
                 sta ip+1
-
+                
                 inx
                 inx
 
@@ -860,7 +967,7 @@ xt_execute:
                 lda #<_done
                 pha
 
-                jmp (IP)
+                jmp (ip)
 
 _done:          ; keep the NOP here as the landing site for the indirect 
                 ; subroutine jump (easier and quicker than adjusting the
@@ -915,13 +1022,13 @@ z_find:         rts
 ; ## "find-name"  src: Gforth  b: TBA  c: TBA  status: coded
 .scope
 xt_find_name:
-	; """Given a string, find the Name Token (nt) of a word or return
+        ; """Given a string, find the Name Token (nt) of a word or return
         ; zero if the word is not in the dictionary. We use this instead of
         ; ancient FIND to look up words in the Dictionary passed by
         ; PARSE-NAME. Note this returns the nt, not the xt of a word like
         ; FIND. To convert, use NAME>INT. This is a Gforth word. See
-	; https://www.complang.tuwien.ac.at/forth/gforth/Docs-html/Name-token.html 
-	; FIND calls this word
+        ; https://www.complang.tuwien.ac.at/forth/gforth/Docs-html/Name-token.html 
+        ; FIND calls this word
         ; """
         
                 ; check for special case of an empty string (length zero)
@@ -1001,18 +1108,20 @@ _success:
                 bra _done
 
 _next_entry:
-                ; not the same, so we get the next worth. Next header
+                ; not the same, so we get the next word. Next header
                 ; address is two bytes down
                 ldy #2
                 lda (tmp1),y
-                sta tmp1
+                pha
                 iny
                 lda (tmp1),y
                 sta tmp1+1
+                pla
+                sta tmp1
 
                 ; if we got a zero, we've walked the whole Dictionary and
                 ; return as a failure, otherwise try again
-                ora tmp1
+                ora tmp1+1
                 bne _loop       ; fall through to _fail_done
 
 _fail_done:
@@ -1042,12 +1151,19 @@ xt_greater_than:
 z_greater_than: rts
 .scend
 
-; ## HERE ( -- ) "<TBA>"
-; ## "here"  src: ANSI core  b: TBA  c: TBA  status: TBA
-.scope
-xt_here:        nop
+
+; ## HERE ( -- addr ) "Put Compiler Pointer on Data Stack"
+; ## "here"  src: ANSI core  b: 10  c: TBA  status: coded
+xt_here:        
+                dex
+                dex
+                lda cp
+                sta 0,x
+                lda cp+1
+                sta 1,x
+
 z_here:         rts
-.scend
+
 
 ; ## HEX ( -- ) "<TBA>"
 ; ## "hex"  src: ANSI core ext  b: TBA  c: TBA  status: TBA
@@ -1244,12 +1360,24 @@ xt_min:         nop
 z_min:          rts
 .scend
 
-; ## MINUS ( -- ) "<TBA>"
-; ## "-"  src: ANSI core  b: TBA  c: TBA  status: TBA
-.scope
-xt_minus:       nop
+
+; ## MINUS ( n n -- n ) "Subtract TOS from NOS"
+; ## "-"  src: ANSI core  b: 15  c: TBA  status: coded
+xt_minus:       
+                sec
+                lda 2,x         ; LSB
+                sbc 0,x
+                sta 2,x
+
+                lda 3,x         ; MSB
+                sbc 1,x
+                sta 3,x
+                
+                inx
+                inx
+
 z_minus:        rts
-.scend
+
 
 ; ## MINUS_TRAILING ( -- ) "<TBA>"
 ; ## "-trailing"  src: ANSI string  b: TBA  c: TBA  status: TBA
@@ -1266,6 +1394,7 @@ z_minus_trailing:
 xt_mod:         nop
 z_mod:          rts
 .scend
+
 
 ; ## MOVE ( -- ) "<TBA>"
 ; ## "move"  src: ANSI core  b: TBA  c: TBA  status: TBA
@@ -1287,11 +1416,21 @@ xt_name_to_int:
                 lda 0,x
                 clc
                 adc #4
-                sta 0,x
+                sta tmp3
 
+                lda 1,x
                 bcc _done
-                inc 1,x 
+                inc
 _done:
+                sta tmp3+1
+
+                ldy #0
+                lda (tmp3),y
+                sta 0,x
+                iny
+                lda (tmp3),y
+                sta 1,x
+
 z_name_to_int:  rts
 .scend
 
@@ -1355,17 +1494,27 @@ xt_not_rote:    nop
 z_not_rote:     rts
 .scend
 
-; ## NUMBER ( -- ) "<TBA>"
+
+; ## NUMBER ( addr u -- u | d ) "<TBA>"
 ; ## "number"  src: Tali Forth  b: TBA  c: TBA  status: TBA
+; TODO replace by real routine
 .scope
-xt_number:      nop
+xt_number:      
+                ; This is a dummy routine to allow testing
+                inx
+                inx
+                lda #$ee
+                sta 0,x
+                sta 1,x
+                
 z_number:       rts
 .scend
 
 
 ; ## ONE ( -- n ) "Push the number 1 to the Data Stack"
 ; ## "1"  src: Tali Forth  b: 8  c: TBA  status: coded
-xt_one:         dex
+xt_one:         
+                dex
                 dex
                 lda #1
                 sta 0,x
@@ -1398,12 +1547,21 @@ z_one_plus:     rts
 .scend
 
 
-; ## OR ( -- ) "<TBA>"
-; ## "or"  src: ANSI core  b: TBA  c: TBA  status: TBA
-.scope
-xt_or:          nop
+; ## OR ( m n -- n ) "Logically OR TOS and NOS"
+; ## "or"  src: ANSI core  b: 14  c: TBA  status: coded
+xt_or:          
+                lda 0,x
+                ora 2,x
+                sta 2,x
+
+                lda 1,x
+                ora 3,x
+                sta 3,x
+
+                inx
+                inx
+
 z_or:           rts
-.scend
 
 
 ; ## OUTPUT ( -- addr ) "Return the address of the EMIT vector address"
@@ -1438,12 +1596,30 @@ xt_pad:         nop
 z_pad:          rts
 .scend
 
-; ## PAGE ( -- ) "<TBA>"
-; ## "page"  src: ANSI facility  b: TBA  c: TBA  status: TBA
-.scope
-xt_page:        nop
+
+; ## PAGE ( -- ) "Clear the screen"
+; ## "page"  src: ANSI facility  b: TBA  c: TBA  status: coded
+        ; """Clears a page if supported by ANSI terminal codes. This is 
+        ; Clear Screen ("ESC[2J") plus moving the cursor to the top
+        ; left of the screen
+        ; """
+xt_page:        
+                lda #AscESC
+                jsr emit_a
+                lda #$5B        ; ASCII for "["
+                jsr emit_a
+                lda #'2
+                jsr emit_a
+                lda #'J
+                jsr emit_a
+
+                ; move cursor to top left of screen 
+                jsr xt_zero 
+                jsr xt_zero
+                jsr xt_at_xy
+
 z_page:         rts
-.scend
+
 
 ; ## PAREN ( -- ) "<TBA>"
 ; ## "("  src: ANSI core  b: TBA  c: TBA  status: TBA
@@ -1593,10 +1769,10 @@ _found_delimiter:
                 ; a delimiter, we want >IN to point to the next character after
                 ; the delimiter, not the delimiter itself. This is what the
                 ; offset is for
-		inc tmp3
+                inc tmp3
 
 _eol:
-		; calculate length of string found
+                ; calculate length of string found
                 tya
                 sec
                 sbc tmp2        ; original value for >IN, index of first char
@@ -1625,15 +1801,16 @@ z_pick:         rts
 
 
 ; ## PLUS ( b a -- a+b ) "Add TOS and NOS"
-; ## "+"  src: ANSI core  b: 15  c: TBA  status: coded
-xt_plus:        clc
+; ## "+"  src: ANSI core  b: 15  c: TBA  status: tested
+xt_plus:        
+                clc
                 lda 0,x         ; LSB
                 adc 2,x
-                sta 0,x
+                sta 2,x
 
                 lda 1,x         ; MSB. No CLC, conserve carry bit
                 adc 3,x
-                sta 1,x
+                sta 3,x
 
                 inx
                 inx
@@ -2103,12 +2280,17 @@ xt_tuck:        dex
 z_tuck:         rts
 
 
-; ## TWO ( -- ) "<TBA>"
-; ## "2"  src: Tali Forth  b: TBA  c: TBA  status: TBA
-.scope
-xt_two:         nop
+; ## TWO ( -- u ) "Push the number 2 to stack"
+; ## "2"  src: Tali Forth  b: TBA  c: TBA  status: coded
+xt_two:
+                dex
+                dex
+                lda #2
+                sta 0,x
+                stz 1,x
+
 z_two:          rts
-.scend
+
 
 ; ## TWO_DROP ( -- ) "<TBA>"
 ; ## "2drop"  src: ANSI core  b: TBA  c: TBA  status: TBA
@@ -2254,12 +2436,22 @@ xt_unloop:      nop
 z_unloop:       rts
 .scend
 
-; ## UNUSED ( -- ) "<TBA>"
-; ## "unused"  src: ANSI core ext  b: TBA  c: TBA  status: TBA
-.scope
-xt_unused:      nop
+; ## UNUSED ( -- u ) "Return size of space available to Dictionary"
+; ## "unused"  src: ANSI core ext  b: 15  c: TBA  status: TBA
+xt_unused:      
+                dex
+                dex
+
+                lda #<cp_end
+                sec
+                sbc cp
+                sta 0,x
+
+                lda #>cp_end
+                sbc cp+1
+                sta 1,x
+                
 z_unused:       rts
-.scend
 
 ; ## VALUE ( -- ) "<TBA>"
 ; ## "value"  src: ANSI core ext  b: TBA  c: TBA  status: TBA
@@ -2306,25 +2498,42 @@ z_words_and_sizes:
 .scend
 
 ; ## WORDSIZE ( -- ) "<TBA>"
-; ## "wordsize"  src: ANSI searc  b: TBA  c: TBA  status: TBA
+; ## "wordsize"  src: ANSI search  b: TBA  c: TBA  status: TBA
 .scope
 xt_wordsize:    nop
 z_wordsize:     rts
 .scend
 
-; ## XOR ( -- ) "<TBA>"
-; ## "xor"  src: ANSI core  b: TBA  c: TBA  status: TBA
+
+; ## XOR ( n n -- n ) "Logically XOR TOS and NOS"
+; ## "xor"  src: ANSI core  b: 14  c: TBA  status: coded
 .scope
-xt_xor:         nop
+xt_xor:         
+                lda 0,x
+                eor 2,x
+                sta 2,x
+
+                lda 1,x
+                eor 3,x
+                sta 3,x
+
+                inx
+                inx
+
 z_xor:          rts
 .scend
 
-; ## ZERO ( -- ) "<TBA>"
-; ## "0"  src: Tali Forth  b: TBA  c: TBA  status: TBA
-.scope
-xt_zero:        nop
+
+; ## ZERO ( -- 0 ) "Push 0 to Data Stack"
+; ## "0"  src: Tali Forth  b: 6  c: TBA  status: coded
+xt_zero:        
+                dex             ; push
+                dex
+                stz 0,x
+                stz 1,x
+
 z_zero:         rts
-.scend
+
 
 ; ## ZERO_BRANCH ( -- ) "<TBA>"
 ; ## "0branch"  src: Tali Forth  b: TBA  c: TBA  status: TBA
