@@ -1,7 +1,7 @@
 ; Tali Forth 2 for the 65c02
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 19. Jan 2014 (Tali Forth)
-; This version: 12. Dec 2017
+; This version: 27. Jan 2018
 
 ; This is the main file for Tali Forth 2
 
@@ -80,7 +80,21 @@ dovar:
         ; routine that itself called DOVAR. This is the default 
         ; routine installed with CREATE.
         ; """
-        ; TODO
+                ; pull the return address off the machine's stack, adding
+                ; one because of the way the 65c02 handles subroutines
+                ply             ; LSB
+                pla             ; MSB
+                iny
+                bne +
+                inc
+*
+                dex
+                dex
+
+                sta 1,x
+                tya
+                sta 0,x
+                
                 rts
 
 

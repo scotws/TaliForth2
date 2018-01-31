@@ -1,7 +1,7 @@
 ; Dictionary Headers for Tali Forth 2
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 05. Dec 2016 (Liara Forth)
-; This version: 27. Jan 2018
+; This version: 31. Jan 2018
 
 ; Dictionary headers are kept separately from the code, which allows various
 ; tricks in the code. We roughly follow the Gforth terminology: The Execution
@@ -16,15 +16,15 @@
 ;              8 bit     8 bit
 ;               LSB       MSB
 ; nt_word ->  +--------+--------+
-;             | Length | Status |
-;          +2 +--------+--------+
-;             | Next Header     | -> nt_next_word
-;          +4 +-----------------+
-;             | Start of Code   | -> xt_word 
-;          +6 +-----------------+
-;             | End of Code     | -> z_word
-;          +8 +--------+--------+
-;             | Name   |        |
+;          +0 | Length | Status |
+;             +--------+--------+
+;          +2 | Next Header     | -> nt_next_word
+;             +-----------------+
+;          +4 | Start of Code   | -> xt_word 
+;             +-----------------+
+;          +6 | End of Code     | -> z_word
+;             +--------+--------+
+;          +8 | Name   |        |
 ;             +--------+--------+
 ;             |        |        |
 ;             +--------+--------+
@@ -62,8 +62,6 @@ nt_bye:
         .word z_bye     ; end of code (RTS)
         .byte "bye"     ; word name, always lower case
 
-; HIER HIER
-
 nt_cold:
         .byte 4, 0
         .word nt_bye, xt_cold, z_cold
@@ -74,9 +72,14 @@ nt_bell:
         .word nt_cold, xt_bell, z_bell
         .byte "bell"
 
+nt_words:
+        .byte 5, 0
+        .word nt_bell, xt_words, z_words
+        .byte "words"
+
 nt_at_xy:
         .byte 5, 0
-        .word nt_bell, xt_at_xy, z_at_xy
+        .word nt_words, xt_at_xy, z_at_xy
         .byte "at-xy"
 
 nt_page:
@@ -119,9 +122,24 @@ nt_parse_name:
         .word nt_parse, xt_parse_name, z_parse_name
         .byte "parse-name"
 
+nt_latestnt:
+        .byte 8, 0
+        .word nt_parse_name, xt_latestnt, z_latestnt
+        .byte "latestnt"
+
+nt_latestxt:
+        .byte 8, 0
+        .word nt_latestnt, xt_latestxt, z_latestxt
+        .byte "latestxt"
+
+nt_name_to_string:
+        .byte 11, 0
+        .word nt_latestxt, xt_name_to_string, z_name_to_string
+        .byte "name>string"
+
 nt_name_to_int:
         .byte 8, 0
-        .word nt_parse_name, xt_name_to_int, z_name_to_int
+        .word nt_name_to_string, xt_name_to_int, z_name_to_int
         .byte "name>int"
 
 nt_find_name:
@@ -129,9 +147,19 @@ nt_find_name:
         .word nt_name_to_int, xt_find_name, z_find_name
         .byte "find-name"
 
+nt_variable:
+        .byte 8, 0
+        .word nt_find_name, xt_variable, z_variable
+        .byte "variable"
+
+nt_create:
+        .byte 6, 0
+        .word nt_variable, xt_create, z_create
+        .byte "create"
+
 nt_allot:
         .byte 5, 0
-        .word nt_find_name, xt_allot, z_allot
+        .word nt_create, xt_allot, z_allot
         .byte "allot"
 
 nt_key:
@@ -179,9 +207,14 @@ nt_equal:
         .word nt_c_comma, xt_equal, z_equal
         .byte "="
 
+nt_two_star:
+        .byte 2, 0
+        .word nt_equal, xt_two_star, z_two_star
+        .byte "2*"
+
 nt_one_plus:
         .byte 2, 0
-        .word nt_equal, xt_one_plus, z_one_plus
+        .word nt_two_star, xt_one_plus, z_one_plus
         .byte "1+"
 
 nt_one_minus:
@@ -194,9 +227,24 @@ nt_here:
         .word nt_one_minus, xt_here, z_here
         .byte "here"
 
+nt_cells:
+        .byte 5, 0
+        .word nt_here, xt_two_star, z_two_star  ; same as 2*
+        .byte "cells"
+
+nt_chars:
+        .byte 5, AN                             ; deleted during compile
+        .word nt_cells, xt_chars, z_chars
+        .byte "chars"
+
+nt_char_plus:
+        .byte 5, 0
+        .word nt_chars, xt_one_plus, z_one_plus ; same as 1+
+        .byte "char+"
+
 nt_xor:
         .byte 3, 0
-        .word nt_here, xt_xor, z_xor
+        .word nt_char_plus, xt_xor, z_xor
         .byte "xor"
 
 nt_or:
@@ -264,9 +312,14 @@ nt_dot:
         .word nt_false, xt_dot, z_dot
         .byte "."
 
+nt_type:
+        .byte 4, 0
+        .word nt_dot, xt_type, z_type
+        .byte "type"
+
 nt_emit:
         .byte 4, NN
-        .word nt_dot, xt_emit, z_emit
+        .word nt_type, xt_emit, z_emit
         .byte "emit"
 
 nt_execute:
@@ -466,11 +519,6 @@ nt_zero_branch:
         .word 0000, xt_zero_branch, z_zero_branch
         .byte "0branch"
 
-nt_two_star:
-        .byte 2, 0
-        .word 0000, xt_two_star, z_two_star
-        .byte "2*"
-
 nt_two_to_r:
         .byte 3, 0
         .word 0000, xt_two_to_r, z_two_to_r
@@ -631,25 +679,10 @@ nt_cell_plus:
         .word 0000, xt_cell_plus, z_cell_plus
         .byte "cell+"
 
-nt_cells:
-        .byte 5, 0
-        .word 0000, xt_cells, z_cells
-        .byte "cells"
-
 nt_char:
         .byte 4, 0
         .word 0000, xt_char, z_char
         .byte "char"
-
-nt_char_plus:
-        .byte 5, 0
-        .word 0000, xt_char_plus, z_char_plus
-        .byte "char+"
-
-nt_chars:
-        .byte 5, 0
-        .word 0000, xt_chars, z_chars
-        .byte "chars"
 
 nt_cmove:
         .byte 5, 0
@@ -680,11 +713,6 @@ nt_count:
         .byte 5, 0
         .word 0000, xt_count, z_count
         .byte "count"
-
-nt_create:
-        .byte 6, 0
-        .word 0000, xt_create, z_create
-        .byte "create"
 
 nt_d_plus:
         .byte 2, 0
@@ -836,16 +864,6 @@ nt_key_question:
         .word 0000, xt_key_question, z_key_question
         .byte "key?"
 
-nt_latestnt:
-        .byte 8, 0
-        .word 0000, xt_latestnt, z_latestnt
-        .byte "latestnt"
-
-nt_latestxt:
-        .byte 8, 0
-        .word 0000, xt_latestxt, z_latestxt
-        .byte "latestxt"
-
 nt_leave:
         .byte 5, 0
         .word 0000, xt_leave, z_leave
@@ -895,11 +913,6 @@ nt_move:
         .byte 4, 0
         .word 0000, xt_move, z_move
         .byte "move"
-
-nt_name_to_string:
-        .byte 11, 0
-        .word 0000, xt_name_to_string, z_name_to_string
-        .byte "name>string"
 
 nt_nc_limit:
         .byte 8, 0
@@ -1021,11 +1034,6 @@ nt_to:
         .word 0000, xt_to, z_to
         .byte "to"
 
-nt_type:
-        .byte 4, 0
-        .word 0000, xt_type, z_type
-        .byte "type"
-
 nt_u_dot:
         .byte 2, 0
         .word 0000, xt_u_dot, z_u_dot
@@ -1071,11 +1079,6 @@ nt_value:
         .word 0000, xt_value, z_value
         .byte "value"
 
-nt_variable:
-        .byte 8, 0
-        .word 0000, xt_variable, z_variable
-        .byte "variable"
-
 nt_within:
         .byte 6, 0
         .word 0000, xt_within, z_within
@@ -1085,11 +1088,6 @@ nt_word:
         .byte 4, 0
         .word 0000, xt_word, z_word
         .byte "word"
-
-nt_words:
-        .byte 5, 0
-        .word 0000, xt_words, z_words
-        .byte "words"
 
 nt_words_and_sizes:
         .byte 11, 0
