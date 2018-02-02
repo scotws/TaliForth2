@@ -1,7 +1,7 @@
 ; Tali Forth 2 for the 65c02
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 19. Jan 2014 (Tali Forth)
-; This version: 27. Jan 2018
+; This version: 02. Feb 2018
 
 ; This is the main file for Tali Forth 2
 
@@ -50,9 +50,30 @@ cmpl_jump:
 
 doconst:
         ; """Execute a CONSTANT: Push the data in the first two bytes of
-        ; the Data Field onto the stack
+        ; the Data Field onto the Data Stack
         ; """
-        ; TODO
+                dex             ; make room for constant
+                dex
+
+                ; The value we need is stored in the two bytes after the
+                ; JSR return address, which in turn is what is on top of
+                ; the Return Stack
+                pla             ; LSB of return address
+                sta tmp1
+                pla             ; MSB of return address
+                sta tmp1+1
+
+                ; start LDY with 1 instead of 0 because of how JSR stores
+                ; the return address on the 65c02
+                ldy #1
+                lda (tmp1),y
+                sta 0,x
+                iny
+                lda (tmp1),y
+                sta 1,x
+
+                ; this takes us back to the original caller, not the
+                ; DOCONST caller
                 rts
 
 

@@ -1,7 +1,7 @@
 ; Dictionary Headers for Tali Forth 2
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 05. Dec 2016 (Liara Forth)
-; This version: 31. Jan 2018
+; This version: 02. Feb 2018
 
 ; Dictionary headers are kept separately from the code, which allows various
 ; tricks in the code. We roughly follow the Gforth terminology: The Execution
@@ -97,9 +97,19 @@ nt_backslash:
         .word nt_cr, xt_backslash, z_backslash
         .byte $5c
 
+nt_decimal:
+        .byte 7, 0
+        .word nt_backslash, xt_decimal, z_decimal
+        .byte "decimal"
+
+nt_hex:
+        .byte 3, 0
+        .word nt_decimal, xt_hex, z_hex
+        .byte "hex"
+
 nt_base:
         .byte 4, 0
-        .word nt_backslash, xt_base, z_base
+        .word nt_hex, xt_base, z_base
         .byte "base"
 
 nt_quit:
@@ -147,9 +157,14 @@ nt_find_name:
         .word nt_name_to_int, xt_find_name, z_find_name
         .byte "find-name"
 
+nt_constant:
+        .byte 8, 0
+        .word nt_find_name, xt_constant, z_constant
+        .byte "constant"
+
 nt_variable:
         .byte 8, 0
-        .word nt_find_name, xt_variable, z_variable
+        .word nt_constant, xt_variable, z_variable
         .byte "variable"
 
 nt_create:
@@ -202,9 +217,24 @@ nt_c_comma:
         .word nt_spaces, xt_c_comma, z_c_comma
         .byte "c,"
 
+nt_max:
+        .byte 3, 0
+        .word nt_c_comma, xt_max, z_max
+        .byte "max"
+
+nt_min:
+        .byte 3, 0
+        .word nt_max, xt_min, z_min
+        .byte "min"
+
+nt_zero_equal:
+        .byte 2, 0
+        .word nt_min, xt_zero_equal, z_zero_equal
+        .byte "0="
+
 nt_equal:
         .byte 1, 0
-        .word nt_c_comma, xt_equal, z_equal
+        .word nt_zero_equal, xt_equal, z_equal
         .byte "="
 
 nt_two_star:
@@ -307,9 +337,14 @@ nt_false:
         .word nt_true, xt_false, z_false
         .byte "false"
 
+nt_question:
+        .byte 1, 0
+        .word nt_false, xt_question, z_question
+        .byte "?"
+
 nt_dot:
         .byte 1, 0
-        .word nt_false, xt_dot, z_dot
+        .word nt_question, xt_dot, z_dot
         .byte "."
 
 nt_type:
@@ -504,11 +539,6 @@ nt_zero_unequal:
         .word 0000, xt_zero_unequal, z_zero_unequal
         .byte "0<>"
 
-nt_zero_equal:
-        .byte 2, 0
-        .word 0000, xt_zero_equal, z_zero_equal
-        .byte "0="
-
 nt_zero_greater:
         .byte 2, 0
         .word 0000, xt_zero_greater, z_zero_greater
@@ -603,11 +633,6 @@ nt_to_r:
         .byte 2, 0
         .word 0000, xt_to_r, z_to_r
         .byte ">r"
-
-nt_question:
-        .byte 1, 0
-        .word 0000, xt_question, z_question
-        .byte "?"
 
 nt_question_do:
         .byte 3, 0
@@ -704,11 +729,6 @@ nt_compile_only:
         .word 0000, xt_compile_only, z_compile_only
         .byte "compile-only"
 
-nt_constant:
-        .byte 8, 0
-        .word 0000, xt_constant, z_constant
-        .byte "constant"
-
 nt_count:
         .byte 5, 0
         .word 0000, xt_count, z_count
@@ -743,11 +763,6 @@ nt_dabs:
         .byte 4, 0
         .word 0000, xt_dabs, z_dabs
         .byte "dabs"
-
-nt_decimal:
-        .byte 7, 0
-        .word 0000, xt_decimal, z_decimal
-        .byte "decimal"
 
 nt_defer:
         .byte 5, 0
@@ -813,11 +828,6 @@ nt_fm_slash_mod:
         .byte 6, 0
         .word 0000, xt_fm_slash_mod, z_fm_slash_mod
         .byte "fm/mod"
-
-nt_hex:
-        .byte 3, 0
-        .word 0000, xt_hex, z_hex
-        .byte "hex"
 
 nt_hold:
         .byte 4, 0
@@ -893,16 +903,6 @@ nt_marker:
         .byte 6, 0
         .word 0000, xt_marker, z_marker
         .byte "marker"
-
-nt_max:
-        .byte 3, 0
-        .word 0000, xt_max, z_max
-        .byte "max"
-
-nt_min:
-        .byte 3, 0
-        .word 0000, xt_min, z_min
-        .byte "min"
 
 nt_mod:
         .byte 3, 0

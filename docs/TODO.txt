@@ -1,12 +1,12 @@
 TODO/CHANGES for Tali Forth 2 
 Scot W. Stevenson <scot.stevenson@gmail.com>
 First version: 19. Jan 2014
-This version: 27. Jan 2018
+This version: 02. Feb 2018
+
 
 TODO NEXT
         - Write all words
         - Write tools/validate_headers.py
-        - (... and so much more!) 
 
 
 TODO DURING CODING (STUFF FROM TALI FORTH 1)
@@ -29,12 +29,14 @@ TODO POST-RELEASE
 
 
 TODO SOMETIME
+        - See if MAX and MIN can be combined
         - Add multitasking (round-robin)
         - Add USER variables
         - Warn if word already in Dictionary
         - Add CASE, THROW/CATCH
 
 
+-----------------------------------------------------------------------
 ALREADY DONE (LAST ON TOP WITH DATE)
 
         - Jan 2018 - Get scaffolding CLI loop up and running
