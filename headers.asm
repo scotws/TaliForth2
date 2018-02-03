@@ -1,7 +1,7 @@
 ; Dictionary Headers for Tali Forth 2
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 05. Dec 2016 (Liara Forth)
-; This version: 02. Feb 2018
+; This version: 03. Feb 2018
 
 ; Dictionary headers are kept separately from the code, which allows various
 ; tricks in the code. We roughly follow the Gforth terminology: The Execution
@@ -97,9 +97,14 @@ nt_backslash:
         .word nt_cr, xt_backslash, z_backslash
         .byte $5c
 
+nt_um_star:
+        .byte 3, 0
+        .word nt_backslash, xt_um_star, z_um_star
+        .byte "um*"
+
 nt_decimal:
         .byte 7, 0
-        .word nt_backslash, xt_decimal, z_decimal
+        .word nt_um_star, xt_decimal, z_decimal
         .byte "decimal"
 
 nt_hex:
@@ -107,9 +112,24 @@ nt_hex:
         .word nt_decimal, xt_hex, z_hex
         .byte "hex"
 
+nt_to_number:
+        .byte 7, 0
+        .word nt_hex, xt_to_number, z_to_number
+        .byte ">number"
+
+nt_number:
+        .byte 6, 0
+        .word nt_to_number, xt_number, z_number
+        .byte "number"
+
+nt_digit_question:
+        .byte 6, 0
+        .word nt_number, xt_digit_question, z_digit_question
+        .byte "digit?"
+
 nt_base:
         .byte 4, 0
-        .word nt_hex, xt_base, z_base
+        .word nt_digit_question, xt_base, z_base
         .byte "base"
 
 nt_quit:
@@ -624,11 +644,6 @@ nt_to_in:
         .word 0000, xt_to_in, z_to_in
         .byte ">in"
 
-nt_to_number:
-        .byte 7, 0
-        .word 0000, xt_to_number, z_to_number
-        .byte ">number"
-
 nt_to_r:
         .byte 2, 0
         .word 0000, xt_to_r, z_to_r
@@ -768,11 +783,6 @@ nt_defer:
         .byte 5, 0
         .word 0000, xt_defer, z_defer
         .byte "defer"
-
-nt_digit_question:
-        .byte 6, 0
-        .word 0000, xt_digit_question, z_digit_question
-        .byte "digit?"
 
 nt_dnegate:
         .byte 7, 0
@@ -929,11 +939,6 @@ nt_never_compile:
         .word 0000, xt_never_compile, z_never_compile
         .byte "never-compile"
 
-nt_number:
-        .byte 6, 0
-        .word 0000, xt_number, z_number
-        .byte "number"
-
 nt_output:
         .byte 6, 0
         .word 0000, xt_output, z_output
@@ -1058,11 +1063,6 @@ nt_ud_slash_mod:
         .byte 6, 0
         .word 0000, xt_ud_slash_mod, z_ud_slash_mod
         .byte "ud/mod"
-
-nt_um_star:
-        .byte 3, 0
-        .word 0000, xt_um_star, z_um_star
-        .byte "um*"
 
 nt_um_slash_mod:
         .byte 6, 0

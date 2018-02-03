@@ -1,7 +1,7 @@
 TODO/CHANGES for Tali Forth 2 
 Scot W. Stevenson <scot.stevenson@gmail.com>
 First version: 19. Jan 2014
-This version: 02. Feb 2018
+This version: 03. Feb 2018
 
 
 TODO NEXT
@@ -21,6 +21,7 @@ TODO POST-ALPHA ("NOT ALL THERE YET")
 
 TODO POST-BETA ("ALL THERE, BUT PROBABLY BUGGY AS HELL")
         - In ALLOT, figure out how to handle release of too much memory
+        - Update documentation
 
 
 TODO POST-RELEASE
@@ -29,11 +30,12 @@ TODO POST-RELEASE
 
 
 TODO SOMETIME
+        - Warn if word already in Dictionary
         - See if MAX and MIN can be combined
         - Add multitasking (round-robin)
         - Add USER variables
-        - Warn if word already in Dictionary
         - Add CASE, THROW/CATCH
+        - Move UM* to table-based multiplication
 
 
 -----------------------------------------------------------------------
