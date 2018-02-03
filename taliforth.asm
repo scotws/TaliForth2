@@ -1,7 +1,7 @@
 ; Tali Forth 2 for the 65c02
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 19. Jan 2014 (Tali Forth)
-; This version: 02. Feb 2018
+; This version: 03. Feb 2018
 
 ; This is the main file for Tali Forth 2
 

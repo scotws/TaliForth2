@@ -101,7 +101,7 @@ xt_cold:
                 sta dp+1
  
                 ; Clear the screen, assumes vt100 terminal
-                ; jsr xt_page
+                jsr xt_page
      
                 ; Define high-level words via EVALUATE. At this point, whatever
                 ; is in Y (TOS) is garbage, so we don't have to push it to the 
@@ -1143,12 +1143,32 @@ z_digit_question:
 .scend
 
 
-; ## DNEGATE ( -- ) "<TBA>"
-; ## "dnegate"  src: ANSI double  b: TBA  c: TBA  status: TBA
-.scope
-xt_dnegate:     nop
+; ## DNEGATE ( d -- d ) "Negate double cell number"
+; ## "dnegate"  src: ANSI double  b: 33  c: TBA  status: coded
+xt_dnegate:     
+                lda 2,x         ; LSB of low cell
+                eor #$ff
+                clc
+                adc #1
+                sta 2,x
+
+                lda 3,x         ; MSB of low cell
+                eor #$ff
+                adc #0          ; just need carry
+                sta 3,x
+
+                lda 0,x         ; LSB of high cell
+                eor #$ff
+                adc #0          ; again, just need carry
+                sta 0,x
+
+                lda 1,x         ; MSB of high cell
+                eor #$ff
+                adc #0          ; again, just need carry
+                sta 1,x
+
 z_dnegate:      rts
-.scend
+
 
 ; ## DO ( -- ) "<TBA>"
 ; ## "do"  src: ANSI core  b: TBA  c: TBA  status: TBA
@@ -1924,12 +1944,23 @@ xt_nc_limit:    nop
 z_nc_limit:     rts
 .scend
 
-; ## NEGATE ( -- ) "<TBA>"
-; ## "negate"  src: ANSI core  b: TBA  c: TBA  status: TBA
-.scope
-xt_negate:      nop
+
+; ## NEGATE ( n -- n ) "Two's complement"
+; ## "negate"  src: ANSI core  b: 17  c: TBA  status: coded
+xt_negate:      
+                lda 0,x         ; LSB
+                eor #$ff
+                clc
+                adc #1
+                sta 0,x
+
+                lda 1,x         ; MSB
+                eor #$ff
+                adc #0          ; only need the carry
+                sta 1,x
+
 z_negate:       rts
-.scend
+
 
 ; ## NEVER_COMPILE ( -- ) "<TBA>"
 ; ## "never-compile"  src: Tali Forth  b: TBA  c: TBA  status: TBA

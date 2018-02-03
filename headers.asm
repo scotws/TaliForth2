@@ -237,9 +237,19 @@ nt_c_comma:
         .word nt_spaces, xt_c_comma, z_c_comma
         .byte "c,"
 
+nt_dnegate:
+        .byte 7, 0
+        .word nt_c_comma, xt_dnegate, z_dnegate
+        .byte "dnegate"
+
+nt_negate:
+        .byte 6, 0
+        .word nt_dnegate, xt_negate, z_negate
+        .byte "negate"
+
 nt_max:
         .byte 3, 0
-        .word nt_c_comma, xt_max, z_max
+        .word nt_negate, xt_max, z_max
         .byte "max"
 
 nt_min:
@@ -784,11 +794,6 @@ nt_defer:
         .word 0000, xt_defer, z_defer
         .byte "defer"
 
-nt_dnegate:
-        .byte 7, 0
-        .word 0000, xt_dnegate, z_dnegate
-        .byte "dnegate"
-
 nt_do:
         .byte 2, 0
         .word 0000, xt_do, z_do
@@ -928,11 +933,6 @@ nt_nc_limit:
         .byte 8, 0
         .word 0000, xt_nc_limit, z_nc_limit
         .byte "nc-limit"
-
-nt_negate:
-        .byte 6, 0
-        .word 0000, xt_negate, z_negate
-        .byte "negate"
 
 nt_never_compile:
         .byte 13, 0
