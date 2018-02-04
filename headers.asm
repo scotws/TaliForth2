@@ -1,7 +1,7 @@
 ; Dictionary Headers for Tali Forth 2
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 05. Dec 2016 (Liara Forth)
-; This version: 03. Feb 2018
+; This version: 04. Feb 2018
 
 ; Dictionary headers are kept separately from the code, which allows various
 ; tricks in the code. We roughly follow the Gforth terminology: The Execution
@@ -92,19 +92,64 @@ nt_cr:
         .word nt_page, xt_cr, z_cr
         .byte "cr"
 
+nt_sign:
+        .byte 4, 0
+        .word nt_cr, xt_sign, z_sign
+        .byte "sign"
+
+nt_hold:
+        .byte 4, 0
+        .word nt_sign, xt_hold, z_hold
+        .byte "hold"
+
+nt_number_sign_greater:
+        .byte 2, 0
+        .word nt_hold, xt_number_sign_greater, z_number_sign_greater
+        .byte "#>"
+
+nt_number_sign_s:
+        .byte 2, 0
+        .word nt_number_sign_greater, xt_number_sign_s, z_number_sign_s
+        .byte "#s"
+
+nt_number_sign:
+        .byte 1, 0
+        .word nt_number_sign_s, xt_number_sign, z_number_sign
+        .byte "#"
+
+nt_less_number_sign:
+        .byte 2, 0
+        .word nt_number_sign, xt_less_number_sign, z_less_number_sign
+        .byte "<#"
+
+nt_pad:
+        .byte 3, 0
+        .word nt_less_number_sign, xt_pad, z_pad
+        .byte "pad"
+
 nt_backslash:
         .byte 1, 0
-        .word nt_cr, xt_backslash, z_backslash
+        .word nt_pad, xt_backslash, z_backslash
         .byte $5c
+
+nt_um_slash_mod:
+        .byte 6, 0
+        .word nt_backslash, xt_um_slash_mod, z_um_slash_mod
+        .byte "um/mod"
 
 nt_um_star:
         .byte 3, 0
-        .word nt_backslash, xt_um_star, z_um_star
+        .word nt_um_slash_mod, xt_um_star, z_um_star
         .byte "um*"
+
+nt_m_star:
+        .byte 2, 0
+        .word nt_um_star, xt_m_star, z_m_star
+        .byte "m*"
 
 nt_decimal:
         .byte 7, 0
-        .word nt_um_star, xt_decimal, z_decimal
+        .word nt_m_star, xt_decimal, z_decimal
         .byte "decimal"
 
 nt_hex:
@@ -402,24 +447,39 @@ nt_c_fetch:
         .word nt_c_store, xt_c_fetch, z_c_fetch
         .byte "c@"
 
-nt_tuck:
-        .byte 4, 0
-        .word nt_c_fetch, xt_tuck, z_tuck
-        .byte "tuck"
-
 nt_comma:
         .byte 1, 0
-        .word nt_tuck, xt_comma, z_comma
+        .word nt_c_fetch, xt_comma, z_comma
         .byte ","
+
+nt_tuck:
+        .byte 4, 0
+        .word nt_comma, xt_tuck, z_tuck
+        .byte "tuck"
+
+nt_rot:
+        .byte 3, 0
+        .word nt_tuck, xt_rot, z_rot
+        .byte "rot"
 
 nt_nip:
         .byte 3, 0
-        .word nt_comma, xt_nip, z_nip
+        .word nt_rot, xt_nip, z_nip
         .byte "nip"
+
+nt_r_from:
+        .byte 2, CO
+        .word nt_nip, xt_r_from, z_r_from
+        .byte "r>"
+
+nt_to_r:
+        .byte 2, CO
+        .word nt_r_from, xt_to_r, z_to_r
+        .byte ">r"
 
 nt_over:
         .byte 4, 0
-        .word nt_nip, xt_over, z_over
+        .word nt_to_r, xt_over, z_over
         .byte "over"
 
 nt_fetch:
@@ -629,11 +689,6 @@ nt_less_than:
         .word 0000, xt_less_than, z_less_than
         .byte "<"
 
-nt_less_number_sign:
-        .byte 2, 0
-        .word 0000, xt_less_number_sign, z_less_number_sign
-        .byte "<#"
-
 nt_not_equals:
         .byte 2, 0
         .word 0000, xt_not_equals, z_not_equals
@@ -653,11 +708,6 @@ nt_to_in:
         .byte 3, 0
         .word 0000, xt_to_in, z_to_in
         .byte ">in"
-
-nt_to_r:
-        .byte 2, 0
-        .word 0000, xt_to_r, z_to_r
-        .byte ">r"
 
 nt_question_do:
         .byte 3, 0
@@ -844,11 +894,6 @@ nt_fm_slash_mod:
         .word 0000, xt_fm_slash_mod, z_fm_slash_mod
         .byte "fm/mod"
 
-nt_hold:
-        .byte 4, 0
-        .word 0000, xt_hold, z_hold
-        .byte "hold"
-
 nt_i:
         .byte 1, 0
         .word 0000, xt_i, z_i
@@ -909,11 +954,6 @@ nt_lshift:
         .word 0000, xt_lshift, z_lshift
         .byte "lshift"
 
-nt_m_star:
-        .byte 2, 0
-        .word 0000, xt_m_star, z_m_star
-        .byte "m*"
-
 nt_marker:
         .byte 6, 0
         .word 0000, xt_marker, z_marker
@@ -944,11 +984,6 @@ nt_output:
         .word 0000, xt_output, z_output
         .byte "output"
 
-nt_pad:
-        .byte 3, 0
-        .word 0000, xt_pad, z_pad
-        .byte "pad"
-
 nt_pick:
         .byte 4, 0
         .word 0000, xt_pick, z_pick
@@ -958,11 +993,6 @@ nt_postpone:
         .byte 8, 0
         .word 0000, xt_postpone, z_postpone
         .byte "postpone"
-
-nt_r_from:
-        .byte 2, 0
-        .word 0000, xt_r_from, z_r_from
-        .byte "r>"
 
 nt_r_fetch:
         .byte 2, 0
@@ -979,11 +1009,6 @@ nt_repeat:
         .word 0000, xt_repeat, z_repeat
         .byte "repeat"
 
-nt_rote:
-        .byte 3, 0
-        .word 0000, xt_rote, z_rote
-        .byte "rot"
-
 nt_rshift:
         .byte 6, 0
         .word 0000, xt_rshift, z_rshift
@@ -998,11 +1023,6 @@ nt_s_to_d:
         .byte 3, 0
         .word 0000, xt_s_to_d, z_s_to_d
         .byte "s>d"
-
-nt_sign:
-        .byte 4, 0
-        .word 0000, xt_sign, z_sign
-        .byte "sign"
 
 nt_sliteral:
         .byte 8, 0
@@ -1063,11 +1083,6 @@ nt_ud_slash_mod:
         .byte 6, 0
         .word 0000, xt_ud_slash_mod, z_ud_slash_mod
         .byte "ud/mod"
-
-nt_um_slash_mod:
-        .byte 6, 0
-        .word 0000, xt_um_slash_mod, z_um_slash_mod
-        .byte "um/mod"
 
 nt_unloop:
         .byte 6, 0

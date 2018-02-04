@@ -1,7 +1,7 @@
 ; List of Strings for Tali Forth 2
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 01. Apr 2016 (for Liara Forth)
-; This version: 31. Jan 2018
+; This version: 04. Feb 2017
 
 ; This file is included by taliforth.asm 
 
@@ -27,7 +27,6 @@ vt100_home: .byte 27, "[H", 0        ; cursor home
 ; ALPHABET STRINGS
 ; Leave alphastr as the last entry in the source code to make it easier to
 ; see where this section ends. This may be a zero-terminated string
-; TODO see if we need these at all
 s_abc_lower: .byte "0123456789abcdefghijklmnopqrstuvwyz"
 s_abc_upper: .byte "0123456789ABCDEFGHIJKLMNOPQRSTUVWYZ"
 

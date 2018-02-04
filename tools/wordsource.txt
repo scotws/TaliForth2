@@ -1,7 +1,7 @@
 # Raw word list for Tali Forth 2, adapted from Liara Forth 
 # Scot W. Stevenson <scot.stevenson@gmail.com>
 # First version: 21. Nov 2017
-# This version: 24. Nov 2017
+# This version: 04. Feb 2018
 
 # This file is used as the basis to generate the JSON word list
 # file via the Python tool text_to_json.py in the tools folder.
@@ -17,6 +17,9 @@
 # but the Ophis assembler chokes on this because it tries to do math. The
 # same problem occurs with the slash in "fm/mod". We use underscores for 
 # the labels instead ("number_sign", "fm_mod").
+
+# The three words that begin with a # are not recognized by the Python script
+# and must be added by hand
 
 !               store                   ANSI core
 #               number_sign             ANSI core
@@ -36,7 +39,7 @@
 +loop           plus_loop               ANSI core 
 ,               comma                   ANSI core
 -               minus                   ANSI core
--rot            not_rote                Gforth
+-rot            not_rot                 Gforth
 -trailing       minus_trailing          ANSI string
 .               dot                     ANSI core 
 ."              dot_quote               ANSI core
@@ -193,7 +196,7 @@ r@              r_fetch                 ANSI core
 recurse         recurse                 ANSI core 
 refill          refill                  ANSI core ext 
 repeat          repeat                  ANSI core
-rot             rote                    ANSI core
+rot             rot                     ANSI core
 rshift          rshift                  ANSI core
 s"              s_quote                 ANSI core
 s>d             s_to_d                  ANSI core 
