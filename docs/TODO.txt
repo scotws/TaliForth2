@@ -1,7 +1,7 @@
 TODO/CHANGES for Tali Forth 2 
 Scot W. Stevenson <scot.stevenson@gmail.com>
 First version: 19. Jan 2014
-This version: 03. Feb 2018
+This version: 04. Feb 2018
 
 
 TODO NEXT
@@ -15,8 +15,8 @@ TODO DURING CODING (STUFF FROM TALI FORTH 1)
         - Code D>S so it respects the sign
 
 
-TODO POST-ALPHA ("NOT ALL THERE YET")
-        - Write tools/generate_wordlist.py
+TODO POST-ALPHA ("ALL WORDS CODED, BUT ALL EDGES ARE ROUGH")
+        - Write complete version of tools/validate_headers.py
 
 
 TODO POST-BETA ("ALL THERE, BUT PROBABLY BUGGY AS HELL")
@@ -27,10 +27,11 @@ TODO POST-BETA ("ALL THERE, BUT PROBABLY BUGGY AS HELL")
 TODO POST-RELEASE
         - Add CTRL-c check to KEY (pre-empted by py65)
         - Add real Delete Key detection (ESC[3~)
+        - Add history function
+        - Warn if word already in Dictionary
 
 
 TODO SOMETIME
-        - Warn if word already in Dictionary
         - See if MAX and MIN can be combined
         - Add multitasking (round-robin)
         - Add USER variables

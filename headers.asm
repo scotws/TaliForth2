@@ -122,9 +122,14 @@ nt_less_number_sign:
         .word nt_number_sign, xt_less_number_sign, z_less_number_sign
         .byte "<#"
 
+nt_to_in:
+        .byte 3, 0
+        .word nt_less_number_sign, xt_to_in, z_to_in
+        .byte ">in"
+
 nt_pad:
         .byte 3, 0
-        .word nt_less_number_sign, xt_pad, z_pad
+        .word nt_to_in, xt_pad, z_pad
         .byte "pad"
 
 nt_backslash:
@@ -132,9 +137,14 @@ nt_backslash:
         .word nt_pad, xt_backslash, z_backslash
         .byte $5c
 
+nt_ud_slash_mod:
+        .byte 6, 0
+        .word nt_backslash, xt_ud_slash_mod, z_ud_slash_mod
+        .byte "ud/mod"
+
 nt_um_slash_mod:
         .byte 6, 0
-        .word nt_backslash, xt_um_slash_mod, z_um_slash_mod
+        .word nt_ud_slash_mod, xt_um_slash_mod, z_um_slash_mod
         .byte "um/mod"
 
 nt_um_star:
@@ -187,9 +197,19 @@ nt_abort:
         .word nt_quit, xt_abort, z_abort
         .byte "abort"
 
+nt_source_id:
+        .byte 9, 0
+        .word nt_abort, xt_source_id, z_source_id
+        .byte "source-id"
+
+nt_source:
+        .byte 6, 0
+        .word nt_source_id, xt_source, z_source
+        .byte "source"
+
 nt_parse:
         .byte 5, 0
-        .word nt_abort, xt_parse, z_parse
+        .word nt_source, xt_parse, z_parse
         .byte "parse"
 
 nt_parse_name:
@@ -292,9 +312,14 @@ nt_negate:
         .word nt_dnegate, xt_negate, z_negate
         .byte "negate"
 
+nt_two_drop:
+        .byte 5, 0
+        .word nt_negate, xt_two_drop, z_two_drop
+        .byte "2drop"
+
 nt_max:
         .byte 3, 0
-        .word nt_negate, xt_max, z_max
+        .word nt_two_drop, xt_max, z_max
         .byte "max"
 
 nt_min:
@@ -467,9 +492,14 @@ nt_nip:
         .word nt_rot, xt_nip, z_nip
         .byte "nip"
 
+nt_r_fetch:
+        .byte 2, 0
+        .word nt_nip, xt_r_fetch, z_r_fetch
+        .byte "r@"
+
 nt_r_from:
-        .byte 2, CO
-        .word nt_nip, xt_r_from, z_r_from
+        .byte 2, NN
+        .word nt_r_fetch, xt_r_from, z_r_from
         .byte "r>"
 
 nt_to_r:
@@ -644,11 +674,6 @@ nt_two_to_r:
         .word 0000, xt_two_to_r, z_two_to_r
         .byte "2>r"
 
-nt_two_drop:
-        .byte 5, 0
-        .word 0000, xt_two_drop, z_two_drop
-        .byte "2drop"
-
 nt_two_over:
         .byte 5, 0
         .word 0000, xt_two_over, z_two_over
@@ -703,11 +728,6 @@ nt_to_body:
         .byte 5, 0
         .word 0000, xt_to_body, z_to_body
         .byte ">body"
-
-nt_to_in:
-        .byte 3, 0
-        .word 0000, xt_to_in, z_to_in
-        .byte ">in"
 
 nt_question_do:
         .byte 3, 0
@@ -994,11 +1014,6 @@ nt_postpone:
         .word 0000, xt_postpone, z_postpone
         .byte "postpone"
 
-nt_r_fetch:
-        .byte 2, 0
-        .word 0000, xt_r_fetch, z_r_fetch
-        .byte "r@"
-
 nt_recurse:
         .byte 7, 0
         .word 0000, xt_recurse, z_recurse
@@ -1033,16 +1048,6 @@ nt_sm_slash_rem:
         .byte 6, 0
         .word 0000, xt_sm_slash_rem, z_sm_slash_rem
         .byte "sm/rem"
-
-nt_source:
-        .byte 6, 0
-        .word 0000, xt_source, z_source
-        .byte "source"
-
-nt_source_id:
-        .byte 9, 0
-        .word 0000, xt_source_id, z_source_id
-        .byte "source-id"
 
 nt_state:
         .byte 5, 0
@@ -1079,11 +1084,6 @@ nt_ud_dot_r:
         .word 0000, xt_ud_dot_r, z_ud_dot_r
         .byte "ud.r"
 
-nt_ud_slash_mod:
-        .byte 6, 0
-        .word 0000, xt_ud_slash_mod, z_ud_slash_mod
-        .byte "ud/mod"
-
 nt_unloop:
         .byte 6, 0
         .word 0000, xt_unloop, z_unloop
@@ -1113,5 +1113,3 @@ nt_wordsize:
         .byte 8, 0
         .word 0000, xt_wordsize, z_wordsize
         .byte "wordsize"
-
-

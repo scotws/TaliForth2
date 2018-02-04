@@ -708,11 +708,12 @@ z_colon:        rts
 
 ; ## COMMA ( n -- ) "Allot and store one cell in memory"
 ; ## ","  src: ANSI core  b: 22  c: TBA  status: coded
-.scope
-xt_comma:
         ; """Store TOS at current place in memory. Since this an eight-bit
         ; machine, we can ignore all alignment issures
         ; """
+        ; TODO make sure we don't allot more than we have
+.scope
+xt_comma:
                 lda 0,x
                 sta (cp)
 
@@ -743,6 +744,7 @@ z_compile_comma:
                 rts
 .scend
 
+
 ; ## COMPILE_ONLY ( -- ) "<TBA>"
 ; ## "compile-only"  src: Tali Forth  b: TBA  c: TBA  status: TBA
 .scope
@@ -750,6 +752,7 @@ xt_compile_only:
                 nop
 z_compile_only: rts
 .scend
+
 
 ; ## CONSTANT ( n "name" -- ) "Define a constant"
 ; ## "constant"  src: ANSI core  b: TBA  c: TBA  status: coded
@@ -1235,7 +1238,7 @@ z_dot_s:        rts
 
 
 ; ## DROP ( u -- ) "Pop top entry on Data Stack"
-; ## "drop"  src: ANSI core  b: 2  c: 4  status: coded
+; ## "drop"  src: ANSI core  b: 2  c: 4  status: tested
 xt_drop:        
                 inx             ; drop
                 inx
@@ -1252,8 +1255,10 @@ z_dump:         rts
 
 ; ## DUP ( u -- u u ) "Duplicate TOS"
 ; ## "dup"  src: ANSI core  b: TBA  c: TBA  status: coded
-xt_dup:         dex
+xt_dup:         
                 dex
+                dex
+
                 lda 2,x         ; LSB
                 sta 0,x
                 lda 3,x         ; MSB
@@ -1319,7 +1324,7 @@ z_equal:        rts
 .scend
 
 
-; ## ERASE ( -- ) "<TBA>"
+; ## ERASE ( addr u -- ) "<TBA>"
 ; ## "erase"  src: ANSI core ext  b: TBA  c: TBA  status: TBA
 .scope
 xt_erase:       nop
@@ -1377,7 +1382,8 @@ z_exit:         rts
 ;
 ; ## FALSE ( -- f ) "Push flag FALSE to Data Stack"
 ; ## "false"  src: ANSI core ext  b: TBA  c: TBA  status: coded
-xt_false:       dex
+xt_false:       
+                dex
                 dex
                 stz 0,x
                 stz 1,x
@@ -2037,7 +2043,8 @@ z_never_compile:
 
 ; ## NIP ( b a -- a ) "Delete NOS"
 ; ## "nip"  src: ANSI core ext  b: 10  c: TBA  status: coded
-xt_nip:         lda 0,x         ; LSB
+xt_nip:         
+                lda 0,x         ; LSB
                 sta 2,x
                 lda 1,x         ; MSB
                 sta 3,x
@@ -2300,7 +2307,8 @@ z_one:          rts
 ; ## ONE_MINUS ( u -- u-1 ) "Decrease TOS by one"
 ; ## "1-"  src: ANSI core  b: 8  c: TBA  status: coded
 .scope
-xt_one_minus:   lda 0,x
+xt_one_minus:   
+                lda 0,x
                 bne +
                 dec 1,x
 *               dec 0,x
@@ -2312,7 +2320,8 @@ z_one_minus:    rts
 ; ## ONE_PLUS ( u -- u+1 ) "Increase TOS by one"
 ; ## "1+"  src: ANSI core  b: 6  c: 14-15  status: coded
 .scope
-xt_one_plus:    inc 0,x
+xt_one_plus:    
+                inc 0,x
                 bne _done
                 inc 1,x
 _done:
@@ -2655,12 +2664,37 @@ xt_question_dup:
 z_question_dup: rts
 .scend
 
-; ## R_FETCH ( -- ) "<TBA>"
-; ## "r@"  src: ANSI core  b: TBA  c: TBA  status: TBA
-.scope
-xt_r_fetch:     nop
+
+; ## R_FETCH ( -- n ) "Get copy of top of Return Stack"
+; ## "r@"  src: ANSI core  b: TBA  c: TBA  status: coded
+        ; """We follow Gforth in that this word is not compiled only, because
+        ; it can be interesting to know what the top of R is in an interactive
+        ; setting. However, this causes all kinds of problems if we try
+        ; to natively compile the word, so it is flagged NN even though it is
+        ; actually short enough to make that reasonable.
+        ; """
+        ; TODO consider special case in COMPILE,
+xt_r_fetch:     
+                dex
+                dex
+
+                ; get the return address
+                ply             ; LSB
+                sty tmp1
+                ply             ; MSB
+
+                ; get the actual top of Return Stack
+                pla             ; LSB
+                sta 0,x
+                pla             ; MSB
+                sta 1,x
+
+                ; restore return value
+                phy             ; MSB
+                ldy tmp1
+                phy             ; LSB
+
 z_r_fetch:      rts
-.scend
 
 
 ; ## R_FROM ( -- n )(R: n --) "Move top of Return Stack to TOS"
@@ -2679,7 +2713,7 @@ xt_r_from:
                 ; on top of the Return Stack. If this word is natively 
                 ; compiled, this is a total waste of time
                 pla             ; LSB
-                sta tmp1
+                sta tmptos
                 ply             ; MSB
 
                 ; --- cut for native coding ---
@@ -2694,7 +2728,7 @@ xt_r_from:
                 
                 ; restore the return address
                 phy             ; MSB
-                lda tmp1
+                lda tmptos
                 pha             ; LSB
 
 z_r_from:       rts
@@ -2925,19 +2959,45 @@ xt_sm_slash_rem:
 z_sm_slash_rem: rts
 .scend
 
-; ## SOURCE ( -- ) "<TBA>"
-; ## "source"  src: ANSI core  b: TBA  c: TBA  status: TBA
-.scope
-xt_source:      nop
-z_source:       rts
-.scend
 
-; ## SOURCE_ID ( -- ) "<TBA>"
-; ## "source-id"  src: ANSI core ext  b: TBA  c: TBA  status: TBA
-.scope
-xt_source_id:   nop
+; ## SOURCE ( -- addr u ) "Return location and size of input buffer""
+; ## "source"  src: ANSI core  b: 20  c: TBA  status: coded
+xt_source:      
+                ; add address
+                dex
+                dex
+                lda cib
+                sta 0,x
+                lda cib+1
+                sta 1,x
+
+                ; add size
+                dex
+                dex
+                lda ciblen
+                sta 0,x
+                lda ciblen+1    ; paranoid, should be zero
+                sta 1,x
+
+z_source:       rts
+
+
+; ## SOURCE_ID ( -- n ) "Return source identifier"
+; ## "source-id"  src: ANSI core ext  b: 10  c: TBA  status: coded
+        ; """Identify the input source unless it is a block (s. Conklin &
+        ; Rather p. 156). Since we don't have blocks (yet), this will give
+        ; the input source: 0 is keyboard, -1 (0ffff) is character string,
+        ; and a text file gives the fileid.
+        ; """
+xt_source_id:   
+                dex
+                dex
+                lda insrc
+                sta 0,x
+                lda insrc+1
+                sta 1,x
+
 z_source_id:    rts
-.scend
 
 
 ; ## SPACE ( -- ) "Print a single space"
@@ -3113,12 +3173,19 @@ xt_to_body:     nop
 z_to_body:      rts
 .scend
 
-; ## TO_IN ( -- ) "<TBA>"
-; ## ">in"  src: ANSI core  b: TBA  c: TBA  status: TBA
-.scope
-xt_to_in:       nop
+
+; ## TO_IN ( -- addr ) "Return address of the input pointer"
+; ## ">in"  src: ANSI core  b: 10  c: TBA  status: coded
+xt_to_in:       
+                dex
+                dex
+
+                lda #<toin
+                sta 0,x
+                lda #>toin      ; paranoid, should be zero
+                sta 1,x
+
 z_to_in:        rts
-.scend
 
 
 ; ## TO_NUMBER ( ud addr u -- ud addr u ) "Convert a number"
@@ -3307,7 +3374,7 @@ xt_to_r:
                 ; coded, this is a complete waste of cycles, but
                 ; required for subroutine coding
                 pla             ; LSB
-                sta tmp1
+                sta tmptos
                 ply             ; MSB
 
                 ; --- cut line for native coding ---
@@ -3322,7 +3389,7 @@ xt_to_r:
 
                 ; restore return address
                 phy             ; MSB
-                lda tmp1
+                lda tmptos
                 pha             ; LSB
 
                 inx
@@ -3376,10 +3443,15 @@ xt_two:
 z_two:          rts
 
 
-; ## TWO_DROP ( -- ) "<TBA>"
-; ## "2drop"  src: ANSI core  b: TBA  c: TBA  status: TBA
+; ## TWO_DROP ( n n -- ) "Drop TOS and NOS"
+; ## "2drop"  src: ANSI core  b: 4  c: TBA  status: coded
 .scope
-xt_two_drop:    nop
+xt_two_drop:    
+                inx
+                inx
+                inx
+                inx
+
 z_two_drop:     rts
 .scend
 
@@ -3528,13 +3600,29 @@ xt_ud_dot_r:    nop
 z_ud_dot_r:     rts
 .scend
 
-; ## UD_SLASH_MOD ( -- ) "<TBA>"
-; ## "ud/mod"  src: Gforth  b: TBA  c: TBA  status: TBA
-.scope
+
+; ## UD_SLASH_MOD ( ud u1 -- u2 ud2 ) "32/16 --> 32 Division"
+; ## "ud/mod"  src: Gforth  b: TBA  c: TBA  status: coded
+        ; """Divide double cell number by a single-cell number and return
+        ; the quotient ud2 as TOS in double-cell form and remainder u2
+        ; Based on code from pForth, which is in the public domain. Original
+        ; Forth is  >R 0 R@ UM/MOD  ROT ROT R> UM/MOD ROT
+        ; """
+        ; TODO analyze and convert parts to assembler 
+        ; TODO test this, some results seem fishy
 xt_ud_slash_mod:
-                nop
+                
+                jsr xt_to_r
+                jsr xt_zero
+                jsr xt_r_fetch
+                jsr xt_um_slash_mod
+                jsr xt_rot
+                jsr xt_rot
+                jsr xt_r_from
+                jsr xt_um_slash_mod
+                jsr xt_rot
+
 z_ud_slash_mod: rts
-.scend
 
 
 ; ## UM_SLASH_MOD ( ud u -- ur u ) "32/16 -> 16 division"
