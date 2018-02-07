@@ -157,9 +157,14 @@ nt_m_star:
         .word nt_um_star, xt_m_star, z_m_star
         .byte "m*"
 
+nt_count:
+        .byte 5, 0
+        .word nt_m_star, xt_count, z_count
+        .byte "count"
+
 nt_decimal:
         .byte 7, 0
-        .word nt_m_star, xt_decimal, z_decimal
+        .word nt_count, xt_decimal, z_decimal
         .byte "decimal"
 
 nt_hex:
@@ -297,9 +302,14 @@ nt_spaces:
         .word nt_bl, xt_spaces, z_spaces
         .byte "spaces"
 
+nt_bounds:
+        .byte 6, 0
+        .word nt_spaces, xt_bounds, z_bounds
+        .byte "bounds"
+
 nt_c_comma:
         .byte 2, 0
-        .word nt_spaces, xt_c_comma, z_c_comma
+        .word nt_bounds, xt_c_comma, z_c_comma
         .byte "c,"
 
 nt_dnegate:
@@ -312,9 +322,14 @@ nt_negate:
         .word nt_dnegate, xt_negate, z_negate
         .byte "negate"
 
+nt_invert:
+        .byte 6, 0
+        .word nt_negate, xt_invert, z_invert
+        .byte "invert"
+
 nt_two_drop:
         .byte 5, 0
-        .word nt_negate, xt_two_drop, z_two_drop
+        .word nt_invert, xt_two_drop, z_two_drop
         .byte "2drop"
 
 nt_max:
@@ -357,9 +372,14 @@ nt_here:
         .word nt_one_minus, xt_here, z_here
         .byte "here"
 
+nt_cell_plus:
+        .byte 5, 0
+        .word nt_here, xt_cell_plus, z_cell_plus
+        .byte "cell+"
+
 nt_cells:
         .byte 5, 0
-        .word nt_here, xt_two_star, z_two_star  ; same as 2*
+        .word nt_cell_plus, xt_two_star, z_two_star  ; same as 2*
         .byte "cells"
 
 nt_chars:
@@ -372,9 +392,24 @@ nt_char_plus:
         .word nt_chars, xt_one_plus, z_one_plus ; same as 1+
         .byte "char+"
 
+nt_char:
+        .byte 4, 0
+        .word nt_char_plus, xt_char, z_char
+        .byte "char"
+
+nt_lshift:
+        .byte 6, 0
+        .word nt_char, xt_lshift, z_lshift
+        .byte "lshift"
+
+nt_rshift:
+        .byte 6, 0
+        .word nt_lshift, xt_rshift, z_rshift
+        .byte "rshift"
+
 nt_xor:
         .byte 3, 0
-        .word nt_char_plus, xt_xor, z_xor
+        .word nt_rshift, xt_xor, z_xor
         .byte "xor"
 
 nt_or:
@@ -784,25 +819,10 @@ nt_begin:
         .word 0000, xt_begin, z_begin
         .byte "begin"
 
-nt_bounds:
-        .byte 6, 0
-        .word 0000, xt_bounds, z_bounds
-        .byte "bounds"
-
 nt_branch:
         .byte 6, 0
         .word 0000, xt_branch, z_branch
         .byte "branch"
-
-nt_cell_plus:
-        .byte 5, 0
-        .word 0000, xt_cell_plus, z_cell_plus
-        .byte "cell+"
-
-nt_char:
-        .byte 4, 0
-        .word 0000, xt_char, z_char
-        .byte "char"
 
 nt_cmove:
         .byte 5, 0
@@ -823,11 +843,6 @@ nt_compile_only:
         .byte 12, 0
         .word 0000, xt_compile_only, z_compile_only
         .byte "compile-only"
-
-nt_count:
-        .byte 5, 0
-        .word 0000, xt_count, z_count
-        .byte "count"
 
 nt_d_plus:
         .byte 2, 0
@@ -939,11 +954,6 @@ nt_int_to_name:
         .word 0000, xt_int_to_name, z_int_to_name
         .byte "int>name"
 
-nt_invert:
-        .byte 6, 0
-        .word 0000, xt_invert, z_invert
-        .byte "invert"
-
 nt_j:
         .byte 1, 0
         .word 0000, xt_j, z_j
@@ -968,11 +978,6 @@ nt_loop:
         .byte 4, 0
         .word 0000, xt_loop, z_loop
         .byte "loop"
-
-nt_lshift:
-        .byte 6, 0
-        .word 0000, xt_lshift, z_lshift
-        .byte "lshift"
 
 nt_marker:
         .byte 6, 0
@@ -1023,11 +1028,6 @@ nt_repeat:
         .byte 6, 0
         .word 0000, xt_repeat, z_repeat
         .byte "repeat"
-
-nt_rshift:
-        .byte 6, 0
-        .word 0000, xt_rshift, z_rshift
-        .byte "rshift"
 
 nt_s_quote:
         .byte 2, 0
