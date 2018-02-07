@@ -126,6 +126,19 @@ xt_cold:
                 sbc #>high_level_start
                 sta 1,x
 
+                ; TESTING
+                jsr byte_to_ascii
+                lda 0,x
+                jsr byte_to_ascii
+                jsr xt_space
+
+                lda 2,x
+                jsr byte_to_ascii
+                lda 3,x
+                jsr byte_to_ascii
+                jsr xt_space
+
+
                 jsr xt_evaluate
                 
                 ; Define any user words via EVALUATE

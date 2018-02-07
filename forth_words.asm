@@ -79,10 +79,11 @@ high_level_start:
         ; Splash strings. We leave these as high-level words because they are
         ; generated at the end of the boot process and signal that the other
         ; high-level definitions worked (or at least didn't crash)
-        .byte ".( Tali Forth 2 for the 65c02) "
-        .byte "cr .( Version PRE-ALPHA 07. Feb 2018) "
-        .byte "cr .( Scot W. Stevenson <scot.stevenson@gmail.com>) "
-        .byte "cr .( Tali Forth 2 comes with absolutely NO WARRANTY) cr"
+;       .byte ".( Tali Forth 2 for the 65c02) "
+;       .byte "cr .( Version PRE-ALPHA 07. Feb 2018) "
+;       .byte "cr .( Scot W. Stevenson <scot.stevenson@gmail.com>) "
+;       .byte "cr .( Tali Forth 2 comes with absolutely NO WARRANTY) "
+;       .byte "cr .( Type 'bye' to end) cr "
 
 high_level_end:
 
