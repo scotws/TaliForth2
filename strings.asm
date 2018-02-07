@@ -1,7 +1,7 @@
 ; List of Strings for Tali Forth 2
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 01. Apr 2016 (for Liara Forth)
-; This version: 04. Feb 2017
+; This version: 07. Feb 2017
 
 ; This file is included by taliforth.asm 
 
@@ -37,7 +37,7 @@ s_abc_upper: .byte "0123456789ABCDEFGHIJKLMNOPQRSTUVWYZ"
 error_table:
         .word es_allot, es_componly, es_defer, es_divzero, es_error   ;  0-4
         .word es_intonly, es_noname, es_radix, es_refill1, es_refill2 ;  5-9
-        .word es_state, es_underflow, es_syntax                       ; 10-12
+        .word es_state, es_underflow, es_syntax, es_noxt              ; 10-13
 
 es_allot:     .byte "ALLOT using all available memory", 0 
 es_componly:  .byte "Interpreting a compile-only word", 0
@@ -46,6 +46,7 @@ es_divzero:   .byte "Division by zero", 0
 es_error:     .byte ">>>Error<<<", 0
 es_intonly:   .byte "Not in interpret mode", 0
 es_noname:    .byte "Parsing failure", 0
+es_noxt:      .byte "No such xt found in Dictionary", 0
 es_radix:     .byte "Digit larger than base", 0
 es_refill1:   .byte "QUIT could not get input (REFILL returned -1)", 0
 es_refill2:   .byte "Illegal SOURCE-ID during REFILL", 0

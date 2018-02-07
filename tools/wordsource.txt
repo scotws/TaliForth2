@@ -229,5 +229,5 @@ within          within                  ANSI core ext
 word            word                    ANSI core 
 words           words                   ANSI tools
 words&sizes     words_and_sizes         Tali Forth
-wordsize        wordsize                ANSI search
+wordsize        wordsize                Tali Forth
 xor             xor                     ANSI core

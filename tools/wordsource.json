@@ -207,6 +207,6 @@
 	{ "name": "word", "word": "word", "source": "ANSI core" },
 	{ "name": "words", "word": "words", "source": "ANSI tools" },
 	{ "name": "words_and_sizes", "word": "words&sizes", "source": "Tali Forth" },
-	{ "name": "wordsize", "word": "wordsize", "source": "ANSI search" },
+	{ "name": "wordsize", "word": "wordsize", "source": "Tali Forth" },
 	{ "name": "xor", "word": "xor", "source": "ANSI core" }
 ]

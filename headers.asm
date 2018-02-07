@@ -1,7 +1,7 @@
 ; Dictionary Headers for Tali Forth 2
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 05. Dec 2016 (Liara Forth)
-; This version: 04. Feb 2018
+; This version: 07. Feb 2018
 
 ; Dictionary headers are kept separately from the code, which allows various
 ; tricks in the code. We roughly follow the Gforth terminology: The Execution
@@ -67,14 +67,24 @@ nt_cold:
         .word nt_bye, xt_cold, z_cold
         .byte "cold"
 
+nt_dump:
+        .byte 4, 0
+        .word nt_cold, xt_dump, z_dump
+        .byte "dump"
+
 nt_bell:
         .byte 4, 0
-        .word nt_cold, xt_bell, z_bell
+        .word nt_dump, xt_bell, z_bell
         .byte "bell"
+
+nt_wordsize:
+        .byte 8, 0
+        .word nt_bell, xt_wordsize, z_wordsize
+        .byte "wordsize"
 
 nt_words:
         .byte 5, 0
-        .word nt_bell, xt_words, z_words
+        .word nt_wordsize, xt_words, z_words
         .byte "words"
 
 nt_at_xy:
@@ -202,9 +212,24 @@ nt_abort:
         .word nt_quit, xt_abort, z_abort
         .byte "abort"
 
+nt_compile_comma:
+        .byte 8, 0
+        .word nt_abort, xt_compile_comma, z_compile_comma
+        .byte "compile,"
+
+nt_semicolon:
+        .byte 1, CO+IM
+        .word nt_compile_comma, xt_semicolon, z_semicolon
+        .byte ";"
+
+nt_colon:
+        .byte 1, 0
+        .word nt_semicolon, xt_colon, z_colon
+        .byte ":"
+
 nt_source_id:
         .byte 9, 0
-        .word nt_abort, xt_source_id, z_source_id
+        .word nt_colon, xt_source_id, z_source_id
         .byte "source-id"
 
 nt_source:
@@ -237,9 +262,14 @@ nt_name_to_string:
         .word nt_latestxt, xt_name_to_string, z_name_to_string
         .byte "name>string"
 
+nt_int_to_name:
+        .byte 8, 0
+        .word nt_name_to_string, xt_int_to_name, z_int_to_name
+        .byte "int>name"
+
 nt_name_to_int:
         .byte 8, 0
-        .word nt_name_to_string, xt_name_to_int, z_name_to_int
+        .word nt_int_to_name, xt_name_to_int, z_name_to_int
         .byte "name>int"
 
 nt_find_name:
@@ -734,16 +764,6 @@ nt_two_variable:
         .word 0000, xt_two_variable, z_two_variable
         .byte "2variable"
 
-nt_colon:
-        .byte 1, 0
-        .word 0000, xt_colon, z_colon
-        .byte ":"
-
-nt_semicolon:
-        .byte 1, 0
-        .word 0000, xt_semicolon, z_semicolon
-        .byte ";"
-
 nt_less_than:
         .byte 1, 0
         .word 0000, xt_less_than, z_less_than
@@ -834,11 +854,6 @@ nt_cmove_up:
         .word 0000, xt_cmove_up, z_cmove_up
         .byte "cmove>"
 
-nt_compile_comma:
-        .byte 8, 0
-        .word 0000, xt_compile_comma, z_compile_comma
-        .byte "compile,"
-
 nt_compile_only:
         .byte 12, 0
         .word 0000, xt_compile_only, z_compile_only
@@ -888,11 +903,6 @@ nt_does:
         .byte 5, 0
         .word 0000, xt_does, z_does
         .byte "does>"
-
-nt_dump:
-        .byte 4, 0
-        .word 0000, xt_dump, z_dump
-        .byte "dump"
 
 nt_else:
         .byte 4, 0
@@ -948,11 +958,6 @@ nt_input:
         .byte 5, 0
         .word 0000, xt_input, z_input
         .byte "input"
-
-nt_int_to_name:
-        .byte 8, 0
-        .word 0000, xt_int_to_name, z_int_to_name
-        .byte "int>name"
 
 nt_j:
         .byte 1, 0
@@ -1108,8 +1113,3 @@ nt_words_and_sizes:
         .byte 11, 0
         .word 0000, xt_words_and_sizes, z_words_and_sizes
         .byte "words&sizes"
-
-nt_wordsize:
-        .byte 8, 0
-        .word 0000, xt_wordsize, z_wordsize
-        .byte "wordsize"

@@ -1,7 +1,7 @@
 ; Tali Forth 2 for the 65c02
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 19. Jan 2014 (Tali Forth)
-; This version: 03. Feb 2018
+; This version: 07. Feb 2018
 
 ; This is the main file for Tali Forth 2
 
@@ -200,7 +200,7 @@ _loop:
 
                 ; We're compiling, so there is a bit more work. Note this
                 ; doesn't work with double-cell numbers, only single-cell
-                lda #<literal_rt        ; TODO check if LSB or MSB first
+                lda #<literal_rt
                 pha
                 lda #>literal_rt
                 pha
