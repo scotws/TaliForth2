@@ -202,9 +202,14 @@ nt_base:
         .word nt_digit_question, xt_base, z_base
         .byte "base"
 
+nt_evaluate:
+        .byte 8, 0
+        .word nt_base, xt_evaluate, z_evaluate
+        .byte "evaluate"
+
 nt_quit:
         .byte 4, 0
-        .word nt_base, xt_quit, z_quit
+        .word nt_evaluate, xt_quit, z_quit
         .byte "quit"
 
 nt_abort:
@@ -212,9 +217,29 @@ nt_abort:
         .word nt_quit, xt_abort, z_abort
         .byte "abort"
 
+nt_immediate:
+        .byte 9, 0
+        .word nt_abort, xt_immediate, z_immediate
+        .byte "immediate"
+
+nt_literal:
+        .byte 7, CO+IM
+        .word nt_immediate, xt_literal, z_literal
+        .byte "literal"
+
+nt_right_bracket:
+        .byte 1, IM
+        .word nt_literal, xt_right_bracket, z_right_bracket
+        .byte "]"
+
+nt_left_bracket:
+        .byte 1, IM+CO
+        .word nt_right_bracket, xt_left_bracket, z_left_bracket
+        .byte "["
+
 nt_compile_comma:
         .byte 8, 0
-        .word nt_abort, xt_compile_comma, z_compile_comma
+        .word nt_left_bracket, xt_compile_comma, z_compile_comma
         .byte "compile,"
 
 nt_semicolon:
@@ -422,9 +447,14 @@ nt_char_plus:
         .word nt_chars, xt_one_plus, z_one_plus ; same as 1+
         .byte "char+"
 
+nt_bracket_char:
+        .byte 6, CO+IM
+        .word nt_char_plus, xt_bracket_char, z_bracket_char
+        .byte "[char]"
+
 nt_char:
         .byte 4, 0
-        .word nt_char_plus, xt_char, z_char
+        .word nt_bracket_char, xt_char, z_char
         .byte "char"
 
 nt_lshift:
@@ -794,25 +824,10 @@ nt_question_dup:
         .word 0000, xt_question_dup, z_question_dup
         .byte "?dup"
 
-nt_left_bracket:
-        .byte 1, 0
-        .word 0000, xt_left_bracket, z_left_bracket
-        .byte "["
-
 nt_bracket_tick:
         .byte 3, 0
         .word 0000, xt_bracket_tick, z_bracket_tick
         .byte "[']"
-
-nt_bracket_char:
-        .byte 6, 0
-        .word 0000, xt_bracket_char, z_bracket_char
-        .byte "[char]"
-
-nt_right_bracket:
-        .byte 1, 0
-        .word 0000, xt_right_bracket, z_right_bracket
-        .byte "]"
 
 nt_abort_quote:
         .byte 6, 0
@@ -914,11 +929,6 @@ nt_erase:
         .word 0000, xt_erase, z_erase
         .byte "erase"
 
-nt_evaluate:
-        .byte 8, 0
-        .word 0000, xt_evaluate, z_evaluate
-        .byte "evaluate"
-
 nt_exit:
         .byte 4, 0
         .word 0000, xt_exit, z_exit
@@ -949,11 +959,6 @@ nt_if:
         .word 0000, xt_if, z_if
         .byte "if"
 
-nt_immediate:
-        .byte 9, 0
-        .word 0000, xt_immediate, z_immediate
-        .byte "immediate"
-
 nt_input:
         .byte 5, 0
         .word 0000, xt_input, z_input
@@ -973,11 +978,6 @@ nt_leave:
         .byte 5, 0
         .word 0000, xt_leave, z_leave
         .byte "leave"
-
-nt_literal:
-        .byte 7, 0
-        .word 0000, xt_literal, z_literal
-        .byte "literal"
 
 nt_loop:
         .byte 4, 0

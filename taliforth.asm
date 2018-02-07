@@ -36,11 +36,45 @@ forth:
 ; subroutine jump, which means combining JSR/RTS to JMP in those cases is
 ; not okay.
 
-cmpl_word:
-
 cmpl_subroutine:
-
+                lda #$20        ; compile "JSR" opcode first
+                bra cmpl_common
 cmpl_jump:
+                lda #$4c        ; compile "JMP", fall through to common
+cmpl_common:
+                ; A contains the opcode that must be compiled
+                ; first. This is basically C, ("c-comma")
+                sta (cp)
+                inc cp
+                bne cmpl_word
+                inc cp+1
+cmpl_word:
+                ; The cmpl_word routine is the body of all these routines
+                ; and compiles the value on the Return Stack 
+                pla             ; LSB of return address
+                sta tmp1
+                pla
+                sta tmp1+1      ; MSB of return address
+
+                ldy #0
+                pla             ; LSB of word to compile
+                sta (cp),y
+                iny
+                pla             ; MSB of word to compile
+                sta (cp),y
+
+                lda cp
+                clc
+                adc #2
+                sta cp
+                bcc +
+                inc cp+1
+*
+                ; restore return address
+                lda tmp1+1      ; MSB
+                pha
+                lda tmp1        ; LSB
+                pha
 
 		rts
 

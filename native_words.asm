@@ -104,25 +104,29 @@ xt_cold:
                 ; Clear the screen, assumes vt100 terminal
                 jsr xt_page
      
-                ; Define high-level words via EVALUATE. At this point, whatever
-                ; is in Y (TOS) is garbage, so we don't have to push it to the 
-                ; stack first
-                ; dex
-                ; dex
-                ; dex
-                ; dex
+                ; Define high-level words in forth_words.asm via EVALUATE
+                dex
+                dex
+                dex
+                dex
                
-                ; lda #<high_level_start        ; start address goes TOS
-                ; sta 0,x
-                ; lda #>high_level_start  
-                ; sta 0,1
-                ;
-                ; lda #<(high_level_end-high_level_start)
-                ; sta 0,x
-                ; lda #>(high_level_end-high_level_start)
-                ; sta 1,x
+                ; start address goes NOS
+                lda #<high_level_start
+                sta 2,x
+                lda #>high_level_start  
+                sta 3,x
+                
+                ; length goes NOS
+                lda #<high_level_end
+                sec
+                sbc #<high_level_start
+                sta 0,x
 
-                ; jsr xt_evaluate
+                lda #>high_level_end
+                sbc #>high_level_start
+                sta 1,x
+
+                jsr xt_evaluate
                 
                 ; Define any user words via EVALUATE
                 ; dex
@@ -130,14 +134,15 @@ xt_cold:
                 ; dex
                 ; dex
                
-                ; lda #<user_words_start        ; start address goes TOS
-                ; sta 0,x
+                ; lda #<user_words_start        ; start address goes NOS
+                ; sta 2,x
                 ; lda #>user_words_start  
-                ; sta 0,1
-                ;
-                ; lda #<(user_words_end-user_words_start)
+                ; sta 3,1
+                
+                ; length goes TOS
+                ; lda #<user_words_end-<user_words_start
                 ; sta 0,x
-                ; lda #>(user_words_end-user_words_start)
+                ; lda #>user_words_end->user_words_start
                 ; sta 1,x
  
                 ; jsr xt_evaluate
@@ -610,13 +615,18 @@ xt_bounds:
 z_bounds:       rts
 
 
-; ## BRACKET_CHAR ( -- ) "<TBA>"
-; ## "[char]"  src: ANSI core  b: TBA  c: TBA  status: TBA
-.scope
+; ## BRACKET_CHAR ( "c" -- ) "Compile character"
+; ## "[char]"  src: ANSI core  b: TBA  c: TBA  status: coded
+        ; """Compile the ASCII value of a character as a literal. This is an
+        ; immediate, compile-only word. A definition given in 
+        ; http://forth-standard.org/standard/implement is 
+        ; : [CHAR]  CHAR POSTPONE LITERAL ; IMMEDIATE
+        ; """
 xt_bracket_char:
-                nop
+                jsr xt_char
+                jsr xt_literal
 z_bracket_char: rts
-.scend
+
 
 ; ## BRACKET_TICK ( -- ) "<TBA>"
 ; ## "[']"  src: ANSI core  b: TBA  c: TBA  status: TBA
@@ -1615,10 +1625,94 @@ xt_erase:       nop
 z_erase:        rts
 .scend
 
-; ## EVALUATE ( -- ) "<TBA>"
-; ## "evaluate"  src: ANSI core  b: TBA  c: TBA  status: TBA
+; ## EVALUATE ( addr u -- ) "Execute a string"
+; ## "evaluate"  src: ANSI core  b: TBA  c: TBA  status: coded
+        ; """Set SOURCE-ID to -1, make addr u the input source, set >IN to zero.
+        ; After processing the line, revert to old input source. We use this
+        ; to compile high-level Forth words and user-defined words during
+        ; start up and cold boot
+        ; """
 .scope
-xt_evaluate:    nop
+xt_evaluate:
+                ; if u is zero (which can happen a lot for the user-defined
+                ; words), just leave again
+                lda 0,x
+                ora 1,x
+                beq _done
+
+                ; We follow pforth's example of pushing SOURCE, SOURCE-ID,
+                ; and >IN to the Return Stack. All go MSB first
+                lda toin+1      ; >IN
+                pha
+                lda toin
+                pha
+
+                lda insrc+1     ; input source (SOURCE-ID)
+                pha
+                lda insrc
+                pha
+
+                lda cib+1       ; Current Input Buffer
+                pha
+                lda cib
+                pha
+
+                lda ciblen+1    ; Length of CIB
+                pha
+                lda ciblen
+                pha
+
+                ; set SOURCE-ID to -1
+                lda #$ff
+                sta insrc
+                sta insrc+1
+
+                ; set >IN to zero
+                stz toin
+                stz toin+1
+
+                ; move TOS and NOS to input buffers
+                lda 0,x
+                sta ciblen
+                lda 1,x
+                sta ciblen+1
+
+                lda 2,x
+                sta cib
+                lda 3,x
+                sta cib+1
+
+                ; We could clean up the Data Stack here but we might as well
+                ; just handle that later before we leave
+
+                jsr interpret
+
+                ; restore variables
+                pla
+                sta ciblen
+                pla
+                sta ciblen+1
+
+                pla
+                sta cib
+                pla
+                sta cib+1
+
+                pla
+                sta insrc
+                pla
+                sta insrc+1
+
+                pla
+                sta toin
+                pla
+                sta toin+1
+_done:
+                inx
+                inx
+                inx
+                inx
+
 z_evaluate:     rts
 .scend
 
@@ -1898,12 +1992,22 @@ xt_if:          nop
 z_if:           rts
 .scend
 
-; ## IMMEDIATE ( -- ) "<TBA>"
-; ## "immediate"  src: ANSI core  b: TBA  c: TBA  status: TBA
-.scope
-xt_immediate:   nop
+
+; ## IMMEDIATE ( -- ) "Mark most recent word as IMMEDIATE"
+; ## "immediate"  src: ANSI core  b: 8  c: TBA  status: coded
+        ; """Make sure the most recently defined word is immediate. Will only
+        ; affect the last word in the dictionary. Note that if the word is
+        ; defined in ROM, this will have no affect, but will not produce an
+        ; error message.
+        ; """
+xt_immediate:
+                ldy #1          ; offset for status byte
+                lda (dp),y
+                ora #IM        ; make sure bit 7 is set
+                sta (dp),y
+
 z_immediate:    rts
-.scend
+
 
 ; ## INPUT ( -- ) "<TBA>"
 ; ## "input"  src: Tali Forth  b: TBA  c: TBA  status: TBA
@@ -2077,13 +2181,17 @@ xt_leave:       nop
 z_leave:        rts
 .scend
 
-; ## LEFT_BRACKET ( -- ) "<TBA>"
-; ## "["  src: ANSI core  b: TBA  c: TBA  status: TBA
-.scope
+
+; ## LEFT_BRACKET ( -- ) "Enter interpretation state"
+; ## "["  src: ANSI core  b: TBA  c: TBA  status: coded
+        ; """This is an immediate and compile-only word
+        ; """
 xt_left_bracket:
-                nop
+                stz state
+                stz state+1
+
 z_left_bracket: rts
-.scend
+
 
 ; ## LESS_NUMBER_SIGN ( -- ) "Start number conversion"
 ; ## "<#"  src: ANSI core  b: TBA  c: TBA  status: coded
@@ -2119,13 +2227,69 @@ xt_less_than:   nop
 z_less_than:    rts
 .scend
 
-; ## LITERAL ( -- ) "<TBA>"
-; ## "literal"  src: ANSI core  b: TBA  c: TBA  status: TBA
-.scope
-xt_literal:     nop
+
+; ## LITERAL ( n -- ) "Store TOS to be push on stack during runtime"
+; ## "literal"  src: ANSI core  b: TBA  c: TBA  status: coded
+        ; """ Compile-only word to store TOS so that it is pushed on stack
+        ; during runtime. This is a immediate, compile-only word. At runtime,
+        ; it works by calling literal_rt by compling JSR LITERAL_RT . Note the 
+        ; cmpl_ routines use TMPTOS
+        ; """
+xt_literal:     
+                lda #>literal_rt
+                pha                     ; MSB
+                lda #<literal_rt
+                pha                     ; LSB
+
+                jsr cmpl_subroutine
+
+                ; Compile the value that is to be pushed on the Stack during
+                ; runtime
+                jsr xt_comma
+                
 z_literal:      rts
+
 literal_rt:
+.scope
+                ; During runtime, we push the value following this word back
+                ; on the Data Stack. The subroutine jump that brought us
+                ; here put the address to return to on the Return Stack -
+                ; this points to the data we need to get. This routine is
+                ; also called (LITERAL) in some Forths
+                dex
+                dex
+
+                ; The 65c02 stores <RETURN-ADDRESS>-1 on the Return Stack,
+                ; so we have to manipulate the address. First, we get the
+                ; value after the command
+                ply             ; LSB
+                pla             ; MSB
+                iny
+                bne +
+                inc
+*
+                sty tmp1        ; LSB
+                sta tmp1+1      ; MSB
+
+                ; Then we get the bytes after the the JSR address
+                lda (tmp1)      ; LSB
+                sta 0,x
+                inc tmp1
+                bne +
+                inc tmp1+1
+*
+                lda (tmp1)      ; MSB
+                sta 1,x
+
+                ; Replace return address on the Return Stack
+                lda tmp1+1
+                pha             ; MSB
+                lda tmp1
+                pha             ; LSB
+
+                rts
 .scend
+
 
 ; ## LOOP ( -- ) "<TBA>"
 ; ## "loop"  src: ANSI core  b: TBA  c: TBA  status: TBA
@@ -3202,14 +3366,17 @@ xt_repeat:      nop
 z_repeat:       rts
 .scend
 
-; ## RIGHT_BRACKET ( -- ) "<TBA>"
-; ## "]"  src: ANSI core  b: TBA  c: TBA  status: TBA
-.scope
+
+; ## RIGHT_BRACKET ( -- ) "Enter the compile state"
+; ## "]"  src: ANSI core  b: TBA  c: TBA  status: coded
+        ; """This is an immediate word."""
 xt_right_bracket:
-                nop
+                lda #$ff
+                sta state
+                sta state+1
 z_right_bracket:
                 rts
-.scend
+
 
 ; ## RIGHT_PAREN ( -- ) "<TBA>"
 ; ## ")"  src: ANSI core  b: TBA  c: TBA  status: TBA
