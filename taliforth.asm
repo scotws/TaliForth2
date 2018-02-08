@@ -1,7 +1,7 @@
 ; Tali Forth 2 for the 65c02
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 19. Jan 2014 (Tali Forth)
-; This version: 07. Feb 2018
+; This version: 08. Feb 2018
 
 ; This is the main file for Tali Forth 2
 
@@ -266,7 +266,7 @@ _got_name_token:
                 lda 1,x
                 sta tmpbranch+1
 
-                jsr xt_name_to_int
+                jsr xt_name_to_int      ; ( nt - xt ) 
 
                 ; See if we are in interpret or compile mode
                 lda state

@@ -23,23 +23,22 @@
 ;       use the 65c02 reset for that. Flows into ABORT.
 ;       """
 xt_cold:        
-                ; Since the default case for Tali is the py65mon
-                ; emulator, we have no use for interrupts. If you
-                ; are going to include them in your system in any
-                ; way, you're going to have to do it from scratch
+                ; Since the default case for Tali is the py65mon emulator, we
+                ; have no use for interrupts. If you are going to include
+                ; them in your system in any way, you're going to have to
+                ; do it from scratch. Sorry.
                 sei
 
                 ; initialize 65c02 stack (Return Stack)
                 ldx #rsp0
                 txs
 
-                ; Clear Data Stack. This is repeated in ABORT,
-                ; but this way we can load high-level words such
-                ; as EVALUATE
+                ; Clear Data Stack. This is repeated in ABORT, but this way we
+                ; can load high-level words with EVALUATE
                 ldx #dsp0
 
                 ; Start out with radix 10
-                lda #$0a
+                lda #10
                 sta base
                 stz base+1
 
@@ -125,18 +124,6 @@ xt_cold:
                 lda #>high_level_end
                 sbc #>high_level_start
                 sta 1,x
-
-                ; TESTING
-                jsr byte_to_ascii
-                lda 0,x
-                jsr byte_to_ascii
-                jsr xt_space
-
-                lda 2,x
-                jsr byte_to_ascii
-                lda 3,x
-                jsr byte_to_ascii
-                jsr xt_space
 
 
                 jsr xt_evaluate
@@ -1644,7 +1631,7 @@ z_erase:        rts
         ; """Set SOURCE-ID to -1, make addr u the input source, set >IN to zero.
         ; After processing the line, revert to old input source. We use this
         ; to compile high-level Forth words and user-defined words during
-        ; start up and cold boot. In constrast to ACCEPT, we need to, uh,
+        ; start up and cold boot. In contrast to ACCEPT, we need to, uh,
         ; accept more than 255 characters here, even though it's a pain in
         ; 8-bit.
         ; """
@@ -3007,8 +2994,6 @@ z_paren_q_do:   rts
 
 ; ## PARSE-NAME ( "name" -- addr u ) "Parse the input"
 ; ## "parse-name"  src: ANSI core ext  b: TBA  c: TBA  status: coded
-.scope
-xt_parse_name:
         ; """Find next word in input string, skipping leading spaces. This is 
         ; a special form of PARSE and drops through to that word. See PARSE 
         ; for more detail. We use this word internally for the interpreter
@@ -3017,12 +3002,8 @@ xt_parse_name:
         ; http://www.forth200x.org/reference-implementations/parse-name.fs
         ; Roughly, the word is comparable to BL WORD COUNT
         ; """
-
-                ; If u is zero, sidestep this whole mess
-                lda 0,x
-                ora 1,x
-                beq _empty_line
-
+.scope
+xt_parse_name:
                 ; To enable the compilation of the high-level Forth words
                 ; in forth-words.asm and user-words.asm at boot time,
                 ; PARSE-NAME and PARSE must be able to deal with 16-bit string
@@ -3034,21 +3015,22 @@ xt_parse_name:
                 sec
                 sbc toin
                 sta tmp1
-
                 lda ciblen+1            ; MSB of counter
                 sbc toin+1
                 sta tmp1+1
 
-                ; We then walk through CIB, so we save a temp version of that
-                ; in tmp2
+                ; We walk through the characters starting at CIB+TOIN, so we
+                ; save a temp version of that in tmp2
                 lda cib
-                sta tmp2
+                clc
+                adc toin
+                sta tmp2                ; LSB
                 lda cib+1
+                adc toin+1
                 sta tmp2+1
         
 _skip_loop:
-                ; First step is to skip leading spaces. We know that we have
-                ; at least one character because we've checked the length
+                ; First step is to skip leading spaces
                 lda (tmp2)              ; work copy of cib
                 cmp #AscSP
                 bne _char_found
@@ -3066,9 +3048,8 @@ _skip_loop:
 
                 lda tmp1
                 ora tmp1+1
-                bne _skip_loop          ; fall through to empty line
+                bne _skip_loop          ; fall through if empty line
 
-_empty_line:
                 ; Neither the ANSI Forth nor the Gforth documentation say
                 ; what to return as an address if a string with only 
                 ; spaces is given. For speed reasons, we just return junk
@@ -3087,8 +3068,11 @@ _char_found:
                 ; save index of where word really starts as new >IN. CIB and
                 ; CIBLEN are unchanged
                 lda tmp2
+                sec
+                sbc cib
                 sta toin
                 lda tmp2+1
+                sbc cib+1
                 sta toin+1
 
                 ; prepare Data Stack for PARSE by adding space
@@ -3102,7 +3086,6 @@ _char_found:
 
                 ; fall through to PARSE
 .scend
-
 
 ; ## PARSE ( "name" c -- addr u ) "Parse input with delimiter character"
 ; ## "parse"  src: ANSI core ext  b: TBA  c: TBA  status: coded
@@ -3230,9 +3213,10 @@ _eol:
                 ; calculate new >IN, which is the current location minus the
                 ; CIB, with the offset
                 lda tmp2
+                clc
+                adc tmptos+1    ; offset EOL vs delimiter
                 sec
                 sbc cib
-                adc tmptos+1    ; offset EOL vs delimiter
                 sta toin
 
                 lda tmp2+1
@@ -3433,7 +3417,7 @@ xt_refill:
                 
                 lda #bsize              ; max number of chars is TOS
                 sta 0,x
-                stz 1,x                 ; cheat: We only accept max 256
+                stz 1,x                 ; cheat: We only accept max 255
 
                 jsr xt_accept           ; ( addr n1 -- n2)
 
