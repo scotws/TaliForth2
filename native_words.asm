@@ -289,12 +289,12 @@ z_abs:          rts
 .scend
 
 
-; ## ACCEPT ( addr n -- n ) "Receive a string of characters"
+; ## ACCEPT ( addr n -- n ) "Receive a string of characters from the keyboard"
 ; ## "accept"  src: ANSI core  b: TBA  c: TBA  status: coded
         ; """ Receive a string of at most n1 characters, placing them at
         ; addr. Return the actual number of characters as n2. Characters
         ; are echoed as they are received. ACCEPT is called by REFILL in
-        ; modern Forths. This version accepts 256 chars max in the 
+        ; modern Forths. This version accepts 255 chars max in the 
         ; current implementation
         ; """
 .scope
@@ -310,12 +310,12 @@ xt_accept:
                 stz 0,x
                 stz 1,x
 
-                bra z_accept    ; no RTS so we can native compile
+                bra _done       ; no RTS so we can native compile
 
 _not_zero:
                 lda 0,x         ; number of chars to get in tmp2 ...
                 sta tmp2
-                stz tmp2+1      ; ... but we only accept max 256 chars
+                stz tmp2+1      ; ... but we only accept max 255 chars
 
                 lda 2,x         ; address of buffer is NOS, to tmp1
                 sta tmp1 
@@ -383,7 +383,7 @@ _bs:
                 jsr emit_a
 
                 bra _loop
-
+_done:
 z_accept:       rts
 .scend
 
@@ -471,10 +471,11 @@ _negative:
                 adc 1,x
                 sta cp+1
 
-                ; free at most to the beginning of the Dictionary space. Note
+                ; Free at most to the beginning of the Dictionary space. Note
                 ; this completely destroys the user's Dictionary. Currently,
                 ; this leaves the Dictionary Pointer dangling, so this is probably
                 ; not the best solution
+                ; TODO find the best solution
                 sec
                 lda #<cp0
                 sbc cp                  ; only need carry
@@ -1643,11 +1644,13 @@ z_erase:        rts
         ; """Set SOURCE-ID to -1, make addr u the input source, set >IN to zero.
         ; After processing the line, revert to old input source. We use this
         ; to compile high-level Forth words and user-defined words during
-        ; start up and cold boot
+        ; start up and cold boot. In constrast to ACCEPT, we need to, uh,
+        ; accept more than 255 characters here, even though it's a pain in
+        ; 8-bit.
         ; """
 .scope
 xt_evaluate:
-                ; if u is zero (which can happen a lot for the user-defined
+                ; If u is zero (which can happen a lot for the user-defined
                 ; words), just leave again
                 lda 0,x
                 ora 1,x
@@ -1696,7 +1699,8 @@ xt_evaluate:
                 sta cib+1
 
                 ; We could clean up the Data Stack here but we might as well
-                ; just handle that later before we leave
+                ; just handle that later before we leave and avoid the
+                ; code duplication
 
                 jsr interpret
 
@@ -1754,10 +1758,10 @@ xt_execute:
 
                 jmp (ip)
 
-_done:          ; keep the NOP here as the landing site for the indirect 
+_done:          ; Keep the NOP here as the landing site for the indirect 
                 ; subroutine jump (easier and quicker than adjusting the
                 ; return address on the stack)
-                nop             ; never reached
+                nop             ; never actually reached
 
 z_execute:      rts
 .scend
@@ -1772,7 +1776,7 @@ z_exit:         rts
 
 ;
 ; ## FALSE ( -- f ) "Push flag FALSE to Data Stack"
-; ## "false"  src: ANSI core ext  b: TBA  c: TBA  status: coded
+; ## "false"  src: ANSI core ext  b: 6  c: TBA  status: tested
 xt_false:       
                 dex
                 dex
@@ -1894,7 +1898,7 @@ _string_loop:
                 bne _string_loop
 
 _success:
-                ; the strings match. Put correct nt NOS, because we'll drop
+                ; The strings match. Put correct nt NOS, because we'll drop
                 ; TOS before we leave
                 lda tmp1
                 sta 2,x
@@ -1904,7 +1908,7 @@ _success:
                 bra _done
 
 _next_entry:
-                ; not the same, so we get the next word. Next header
+                ; Not the same, so we get the next word. Next header
                 ; address is two bytes down
                 ldy #2
                 lda (tmp1),y
@@ -1915,7 +1919,7 @@ _next_entry:
                 pla
                 sta tmp1
 
-                ; if we got a zero, we've walked the whole Dictionary and
+                ; If we got a zero, we've walked the whole Dictionary and
                 ; return as a failure, otherwise try again
                 ora tmp1+1
                 bne _loop       ; fall through to _fail_done
@@ -1964,9 +1968,10 @@ z_here:         rts
 ; ## HEX ( -- ) "Change base radix to hexadecimal"
 ; ## "hex"  src: ANSI core ext  b: 6  c: TBA  status: coded
 xt_hex:         
-                lda #$10
+                lda #16
                 sta base
                 stz base+1              ; paranoid
+
 z_hex:          rts
 
 
@@ -2033,7 +2038,7 @@ z_input:        rts
 ; ## INT_TO_NAME ( xt -- nt ) "Get name token from execution token"
 ; ## "int>name"  src: Tali Forth  b: TBA  c: TBA  status: coded
         ; """This is called >NAME in Gforth, but we change it to 
-        ; INT>NAME to fit better with NAME>INT
+        ; INT>NAME to match NAME>INT
         ; """
 .scope
 xt_int_to_name: 
@@ -2083,13 +2088,11 @@ _no_match:
                 pla
                 sta tmp2
                 bra _loop
-
 _zero:
                 ; if next word is zero, something is wrong and we
                 ; return with an error
                 lda #13         ; xt not found
                 jmp error 
-
 _match:
                 ; It's a match! Replace TOS with nt
                 lda tmp2
@@ -2196,7 +2199,7 @@ z_leave:        rts
 
 
 ; ## LEFT_BRACKET ( -- ) "Enter interpretation state"
-; ## "["  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## "["  src: ANSI core  b: 4  c: TBA  status: coded
         ; """This is an immediate and compile-only word
         ; """
 xt_left_bracket:
@@ -2215,7 +2218,7 @@ z_left_bracket: rts
         ; in the space between the end of the Dictionary (as defined by CP)
         ; and the PAD. This allows us to satisfy the ANS Forth condition that
         ; programs don't fool around with the PAD but still use its address.
-        ; Code based on pForth, see
+        ; Based on pForth
         ; http://pforth.googlecode.com/svn/trunk/fth/numberio.fth
         ; pForth is in the pubic domain. Forth is : <# PAD HLD ! ; we use the
         ; internal variable tohold instead of HLD.
@@ -2340,9 +2343,8 @@ z_lshift:       rts
         ; """Multiply two 16 bit numbers, producing a 32 bit result. All
         ; values are signed. Adapted from FIG Forth for Tali Forth. The
         ; original Forth is : M* OVER OVER XOR >R ABS SWAP ABS UM* R> D+- ;
-        ; with  : D+- O< IF DNEGATE THEN ;  FIG Forth is in the public domain
+        ; with  : D+- O< IF DNEGATE THEN ;
         ; """
-        
 .scope
 xt_m_star:
                 ; figure out the sign
@@ -2401,7 +2403,6 @@ xt_max:
 
                 ; handle overflow, because we use signed numbers
                 eor #$80        ; complement negative flag
-
 _no_overflow:
                 ; if negative, NOS is larger and needs to be kept
                 bmi _keep_nos
@@ -2411,7 +2412,6 @@ _no_overflow:
                 sta 2,x
                 lda 1,x
                 sta 3,x
-
 _keep_nos:
                 inx
                 inx
@@ -2437,7 +2437,6 @@ xt_min:         ; compare LSB. We do this first to set the carry flag
 
                 ; handle overflow because we use signed numbers
                 eor #$80
-
 _no_overflow:
                 ; if negative, NOS is larger and needs to be dumped
                 bpl _keep_nos
@@ -2447,7 +2446,6 @@ _no_overflow:
                 sta 2,x
                 lda 1,x
                 sta 3,x
-
 _keep_nos:
                 inx
                 inx
@@ -2502,11 +2500,11 @@ z_move:         rts
 ; ## NAME_TO_INT ( nt -- xt ) "Convert Name Token to Execute Token"
 ; ## "name>int"  src: Gforth  b: 11  c: TBA  status: coded
 ; TODO deal with compile-only words
-.scope
-xt_name_to_int: 
         ; """See
         ; https://www.complang.tuwien.ac.at/forth/gforth/Docs-html/Name-token.html
         ; """ 
+.scope
+xt_name_to_int: 
                 ; The xt starts four bytes down from the nt
                 lda 0,x
                 clc
@@ -2534,7 +2532,6 @@ z_name_to_int:  rts
 ; ## "name>string"  src: Gforth  b: TBA  c: TBA  status: coded
 .scope
 xt_name_to_string:
-
                 dex
                 dex
 
@@ -2850,7 +2847,7 @@ z_number_sign_s:
 
 
 ; ## ONE ( -- n ) "Push the number 1 to the Data Stack"
-; ## "1"  src: Tali Forth  b: 8  c: TBA  status: coded
+; ## "1"  src: Tali Forth  b: 8  c: TBA  status: tested
 xt_one:         
                 dex
                 dex
@@ -2919,8 +2916,10 @@ z_output:       rts
 
 ; ## OVER ( b a -- b a b ) "Copy NOS to TOS"
 ; ## "over"  src: ANSI core  b: 10  c: TBA  status: coded
-xt_over:        dex
+xt_over:        
                 dex
+                dex
+
                 lda 4,x         ; LSB
                 sta 0,x
                 lda 5,x         ; MSB
@@ -3019,23 +3018,61 @@ xt_parse_name:
         ; Roughly, the word is comparable to BL WORD COUNT
         ; """
 
-                ; skip leading spaces. We only use the LSB of toin, so the
-                ; maximal input size again is 256 chars
-                ldy toin
+                ; If u is zero, sidestep this whole mess
+                lda 0,x
+                ora 1,x
+                beq _empty_line
+
+                ; To enable the compilation of the high-level Forth words
+                ; in forth-words.asm and user-words.asm at boot time,
+                ; PARSE-NAME and PARSE must be able to deal with 16-bit string
+                ; lengths. This is a pain on an 8-bit machine. The pointer
+                ; to the current location is in toin (>IN). We need to check, 
+                ; worst case, the characters from cib+toin to cib+ciblen. 
+                ; The counter is toin-ciblen and stored in tmp1
+                lda ciblen              ; LSB of counter
+                sec
+                sbc toin
+                sta tmp1
+
+                lda ciblen+1            ; MSB of counter
+                sbc toin+1
+                sta tmp1+1
+
+                ; We then walk through CIB, so we save a temp version of that
+                ; in tmp2
+                lda cib
+                sta tmp2
+                lda cib+1
+                sta tmp2+1
         
 _skip_loop:
-                cpy ciblen              ; end of line?
-                beq _empty_line
-                lda (cib),y
+                ; First step is to skip leading spaces. We know that we have
+                ; at least one character because we've checked the length
+                lda (tmp2)              ; work copy of cib
                 cmp #AscSP
-                bne _found
-                iny
-                bra _skip_loop
+                bne _char_found
+                
+                ; Char is a space, continue
+                inc tmp2
+                bne +
+                inc tmp2+1
+*
+                ; Adjust counter
+                lda tmp1
+                bne +
+                dec tmp1+1
+*               dec tmp1
+
+                lda tmp1
+                ora tmp1+1
+                bne _skip_loop          ; fall through to empty line
 
 _empty_line:
-                ; Neither the ANSI Forth nor the Gforth documentation seem to
-                ; say what to return as an address if a string with only 
+                ; Neither the ANSI Forth nor the Gforth documentation say
+                ; what to return as an address if a string with only 
                 ; spaces is given. For speed reasons, we just return junk
+                ; NOS, with the TOS zero as per standard
                 dex
                 dex
                 dex
@@ -3046,33 +3083,33 @@ _empty_line:
 
                 jmp z_parse_name        ; skip over PARSE
 
-_found:
-                ; save index of where words starts
-                sty toin
+_char_found:
+                ; save index of where word really starts as new >IN. CIB and
+                ; CIBLEN are unchanged
+                lda tmp2
+                sta toin
+                lda tmp2+1
+                sta toin+1
 
                 ; prepare Data Stack for PARSE by adding space
                 ; as the delimiter
                 dex
                 dex
-                lda #AscSP
 
+                lda #AscSP
                 sta 0,x
-                stz 1,x         ; paranoid
+                stz 1,x                 ; paranoid, now ( "name" c ) 
 
                 ; fall through to PARSE
 .scend
 
 
-; ## PARSE ( c "name" -- addr u ) "Parse input with delimiter character"
+; ## PARSE ( "name" c -- addr u ) "Parse input with delimiter character"
 ; ## "parse"  src: ANSI core ext  b: TBA  c: TBA  status: coded
-.scope
-xt_parse:
-        ; """Find word in input string delimited by character given. Do not skip 
-        ; leading delimiters, this is the main difference to PARSE-NAME. PARSE
-        ; and PARSE-NAME replace WORD in modern systems. See the ANSI
-        ; documentation at
+        ; """Find word in input string delimited by character given. Do not
+        ; skip leading delimiters -- this is the main difference to PARSE-NAME.
+        ; PARSE and PARSE-NAME replace WORD in modern systems. ANSI discussion
         ; http://www.forth200x.org/documents/html3/rationale.html#rat:core:PARSE 
-        ; PARSE-NAME drops through to here
         ;
         ;    cib   cib+toin    cib+ciblen
         ;     v       v             v
@@ -3085,38 +3122,91 @@ xt_parse:
         ; Input Buffer (CIB), the length of which is in CIBLEN. While searching
         ; for the delimiter, TOIN (>IN) points to the where we currently are.
         ; Since PARSE does not skip leading delimiters, we assume we are on a
-        ; useful string.
+        ; useful string. As wit PARSE-NAME, we must be able to handle strings
+        ; with a length of 16-bit for EVALUTE, which is a pain on an 8-bit
+        ; machine.
         ; """
+.scope
+xt_parse:
+                ; If PARSE is called directly (not through PARSE-NAME) we
+                ; might have an empty string with length zero. This is the
+                ; case when toin and ciblen are the same
+                lda ciblen
+                sec
+                sbc toin
+                bne _have_chars         ; not zero, have some characters
 
+                lda ciblen+1
+                sbc toin+1
+                bne _have_chars
+
+                ; If we were given a zero-length string, leave junk NOS (see
+                ; PARSE-NAME for discussion) and send back a zero length
+                dex
+                dex
+                stz 0,x
+                stz 1,x
+                
+                bra _done
+
+_have_chars:
                 lda 0,x         ; save delimiter
-                sta tmp1
+                sta tmptos
 
-                lda toin        ; save original >IN for length calculation
-                sta tmp2        
+                stz tmptos+1    ; offset for EOL/char found adjustment of >IN
 
-                ; save beginning of word (cib+toin) to NOS as the return value
                 dex
                 dex
 
+                ; save beginning of new word (cib+toin) to NOS as the return
+                ; value for the word's address. Half of our work is done
                 clc
-                adc cib
-                sta 2,x
+                lda cib
+                adc toin
+                sta 2,x         ; LSB of NOS
+
                 lda cib+1
-                adc #0          ; we only need the carry
-                sta 3,x
+                adc toin+1
+                sta 3,x         ; LSB of NOS
 
-                stz tmp3        ; offset for EOL/char found adjustment of >IN
+                ; The last character in the buffer is at CIB+CIBLEN. We store
+                ; that address in tmp1 to make comparisons easier
+                lda cib         
+                clc
+                adc ciblen
+                sta tmp1
+                lda cib+1
+                adc ciblen+1
+                sta tmp1+1
 
-                ldy toin
+                ; Set up counter to walk through. We start at CIB+TOIN and
+                ; store that value in tmp2
+                lda cib
+                clc
+                adc toin
+                sta tmp2
+                lda cib+1
+                adc toin+1
+                sta tmp2+1
 
 _parse_loop:
-                cpy ciblen
+                lda (tmp2)
+                cmp tmptos      ; current character the delimiter?
+                beq _found_delimiter
+
+                ; nope, next char
+                inc tmp2
+                bne +
+                inc tmp2+1
+*
+                ; end of line?
+                lda tmp2
+                cmp tmp1
+                bne _parse_loop
+                lda tmp2+1
+                cmp tmp1+1
                 beq _eol
 
-                lda (cib),y
-                cmp tmp1        ; found delimiter?
-                beq _found_delimiter
-                iny
                 bra _parse_loop
                 
 _found_delimiter:
@@ -3124,24 +3214,31 @@ _found_delimiter:
                 ; a delimiter, we want >IN to point to the next character after
                 ; the delimiter, not the delimiter itself. This is what the
                 ; offset is for
-                inc tmp3
-
+                inc tmptos+1
 _eol:
-                ; calculate length of string found
-                tya
+                ; calculate length of string found. The current address is in
+                ; tmp2, the original address is in NOS
+                lda tmp2        ; LSB
                 sec
-                sbc tmp2        ; original value for >IN, index of first char
+                sbc 2,x
+                sta 0,x
 
-                sta 0,x         ; length goes TOS
-                stz 1,x
+                lda tmp2+1      ; MSB
+                sbc 3,x
+                sta 1,x
 
-                ; calculate new >IN
-                tya
-                clc
-                adc tmp3        ; offset for EOL vs delimiter found
+                ; calculate new >IN, which is the current location minus the
+                ; CIB, with the offset
+                lda tmp2
+                sec
+                sbc cib
+                adc tmptos+1    ; offset EOL vs delimiter
                 sta toin
-                stz toin+1      ; paranoid
 
+                lda tmp2+1
+                sbc cib+1
+                sta toin+1
+_done:                
 z_parse_name:
 z_parse:        rts
 .scend
