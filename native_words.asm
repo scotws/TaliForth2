@@ -205,7 +205,7 @@ _success:
                 ; Assume we have successfully accepted a string of input from
                 ; a source, with address cib and length of input in ciblen. We
                 ; arrive here still with the TRUE flag from REFILL as TOS
-                inx                     ; DROP
+                inx                     ; drop
                 inx
      
                 ; make >IN point to begining of buffer
@@ -217,12 +217,11 @@ _success:
 
                 ; Test for Data Stack underflow. We don't check for
                 ; overflow
-                ; TODO enable
-                ; cpx #dsp0
-                ; bcc _stack_ok           ; DSP must always be smaller (!) than DSP0
+                cpx #dsp0
+                bcs _stack_ok           ; DSP must always be smaller (!) than DSP0
 
-                ; lda #11                 ; code for underflow es_underflow
-                ; jmp error
+                lda #11                 ; code for underflow es_underflow
+                jmp error
 
 _stack_ok:
                 ; Display system prompt if all went well. If we're interpreting,
@@ -291,7 +290,7 @@ xt_accept:
                 ora 1,x
                 bne _not_zero
      
-                ; return 0
+                ; yes, we were, so return 0
                 inx
                 inx
                 stz 0,x
@@ -331,14 +330,12 @@ _loop:
                 cmp #AscDEL     ; (CTRL-h)
                 beq _bs
 
-                ; CTRL-c aborts. At some point, consider moving this to the
-                ; KEY routine
-                cmp #AscCC     
-                bne + 
-                jmp xt_abort
-*
-                ; That's quite enough, echo character. EMIT_A sidesteps all the
-                ; fooling around with the Data Stack
+                ; (CTRL-c should abort, but it is pre-empted by the py65mon
+                ; emulator. Also, CTRL-p should give the previous command
+                ; out of the history, but we don't support that yet.)
+                
+                ; That's enough for now, echo character. EMIT_A sidesteps
+                ; all the fooling around with the Data Stack
                 jsr emit_a
 
                 sta (tmp1),y
@@ -351,7 +348,7 @@ _eol:
                 stz 1,x         ; we only accept 256 chars
 
                 jsr xt_space    ; print final space
-                bra z_accept
+                bra _done
 
 _bs:
                 cpy #0          ; buffer empty?
@@ -3383,8 +3380,6 @@ z_recurse:      rts
 
 ; ## REFILL ( -- f ) "Refill the input buffer"
 ; ## "refill"  src: ANSI core ext  b: TBA  c: TBA  status: coded
-.scope
-xt_refill:      
         ; """Attempt to fill the input buffer from the input source, returning
         ; a true flag if successful. When the input source is the user input
         ; device, attempt to receive input into the terminal input buffer. If
@@ -3396,6 +3391,8 @@ xt_refill:
         ; https://www.complang.tuwien.ac.at/forth/gforth/Docs-html/The-Input-Stream.html
         ; and Conklin & Rather p. 156
         ; """"
+.scope
+xt_refill:      
                 ; Get input source from SOURCE-ID. We don't have blocks in this
                 ; version, or else we would have to check BLK first. This is an
                 ; optimized version of a subroutine jump to SOURCE-ID
@@ -3425,7 +3422,7 @@ xt_refill:
                 ; belong in CIBLEN
                 lda 0,x
                 sta ciblen
-                stz ciblen+1            ; we only accept 256 chars
+                stz ciblen+1            ; we only accept 255 chars
                 
                 lda #$ff                ; overwrite with TRUE flag
                 sta 0,x
@@ -3438,7 +3435,7 @@ _src_not_kbd:
                 ; memory or a file (remember, no blocks in this version).
                 ; If source is a string, we were given the flag -1 ($ffff)
                 inc
-                bne _source_is_not_string
+                bne _src_not_string
 
                 ; Simply return FALSE flag as per specification
                 dex
@@ -3448,7 +3445,7 @@ _src_not_kbd:
 
                 bra z_refill
 
-_source_is_not_string:
+_src_not_string:
                 ; Since we don't have blocks, this must mean that we are trying
                 ; to read from a file. However, we don't have files yet, so we 
                 ; report an error and jump to ABORT.

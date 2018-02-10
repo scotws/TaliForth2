@@ -80,7 +80,7 @@ high_level_start:
         ; generated at the end of the boot process and signal that the other
         ; high-level definitions worked (or at least didn't crash)
         .byte ".( Tali Forth 2 for the 65c02) "
-        .byte "cr .( Version PRE-ALPHA 07. Feb 2018) "
+        .byte "cr .( Version PRE-ALPHA 10. Feb 2018) "
         .byte "cr .( Scot W. Stevenson <scot.stevenson@gmail.com>) "
         .byte "cr .( Tali Forth 2 comes with absolutely NO WARRANTY) "
         .byte "cr .( Type 'bye' to exit) cr"
