@@ -1,7 +1,7 @@
 ; List of Strings for Tali Forth 2
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 01. Apr 2016 (for Liara Forth)
-; This version: 07. Feb 2017
+; This version: 10. Feb 2017
 
 ; This file is included by taliforth.asm 
 
@@ -10,12 +10,12 @@
 ; we use indexes as offsets to tables as error and string numbers
 string_table:
         .word s_ok, s_compiled, vt100_page, vt100_home, s_abc_lower ; 0-4
-        .word s_abc_upper                                           ; 5
+        .word s_abc_upper                                           ; 5-7
 
 ; GENERAL
 ; All general strings must be zero-terminated, names start with "s_"
-s_ok:        .byte " ok", 0             ; note space at beginning
-s_compiled:  .byte " compiled", 0
+s_ok:           .byte " ok", 0          ; note space at beginning
+s_compiled:     .byte " compiled", 0    ; note space at beginning
 
 
 ; ANSI VT-100 SEQUENCES
@@ -43,7 +43,7 @@ es_allot:     .byte "ALLOT using all available memory", 0
 es_componly:  .byte "Interpreting a compile-only word", 0
 es_defer:     .byte "DEFERed word not defined yet", 0
 es_divzero:   .byte "Division by zero", 0
-es_error:     .byte ">>>Error<<<", 0
+es_error:     .byte ">>>Error<<<", 0                    ; TODO see if used
 es_intonly:   .byte "Not in interpret mode", 0
 es_noname:    .byte "Parsing failure", 0
 es_noxt:      .byte "No such xt found in Dictionary", 0

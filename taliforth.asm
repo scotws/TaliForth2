@@ -372,14 +372,6 @@ _done:
         	rts
 .scend
 
-print_u:
-        ; """Print unsigned number on TOS. This is the equvalent to Forth's
-        ; U. or 0 <# S# #> TYPE without the SPACE at the end. TODO convert
-        ; this to more assembler for speed.
-        ; """
-        ; TODO
-        	rts
-
 
 ; =====================================================================
 ; FINALLY
