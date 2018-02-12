@@ -1,12 +1,11 @@
 TODO/CHANGES for Tali Forth 2 
 Scot W. Stevenson <scot.stevenson@gmail.com>
 First version: 19. Jan 2014
-This version: 10. Feb 2018
+This version: 12. Feb 2018
 
 
 TODO NEXT
         - Write all words
-        - Write tools/validate_headers.py
 
 
 TODO DURING CODING (STUFF FROM TALI FORTH 1)
@@ -16,7 +15,6 @@ TODO DURING CODING (STUFF FROM TALI FORTH 1)
 
 
 TODO POST-ALPHA ("ALL WORDS CODED, BUT EDGES ARE ROUGH")
-        - Write complete version of tools/validate_headers.py
         - Check if we really use all the strings (ie ">>>ERROR<<<")
 
 
@@ -30,11 +28,11 @@ TODO POST-BETA ("ALL THERE, BUT PROBABLY BUGGY AS HELL")
 TODO SOMETIME
         - Add line editor (ed) in 65c02 assembler
         - Add multitasking (round-robin)
-        - Add USER variables
+        - Add real USER variables
         - Add handling for multi-byte keyboard input
-        - Add CTRL-c check to KEY (pre-empted by py65)
         - Add real Delete Key detection (ESC[3~)
-        - Add history function, at least one line
+        - Add CTRL-c check to KEY (now pre-empted by py65)
+        - Add history function, at least one line, with CTRL-p
         - See if MAX and MIN can be combined
         - Add CASE, THROW/CATCH
         - Move UM* to table-based multiplication
@@ -43,6 +41,7 @@ TODO SOMETIME
 -----------------------------------------------------------------------
 ALREADY DONE (LAST ON TOP WITH DATE)
 
+        - 12. Feb 2018 - Make PARSE work with 16-bit string lengths
         - Jan 2018 - Get scaffolding CLI loop up and running
         - Jan 2018 - Get Dictionary search up and running
         - early Dec 2017 - Write/review docs for memory map, hang on wall
