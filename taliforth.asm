@@ -205,7 +205,8 @@ _loop:
 
                 ; If PARSE-NAME returns 0 (empty line), no characters were left
                 ; in the line and we need to go get a new line
-                lda 0,x                 ; force flag check
+                lda 0,x
+                ora 1,x
                 beq _line_done
      
                 ; Go to FIND-NAME to see if this is a word we know. We have to
@@ -228,7 +229,7 @@ _loop:
                 ; complaining for us
                 jsr xt_number           ; ( addr u -- u|d ) 
 
-                ; If we're interpreting, we're done
+                ; Otherweise, if we're interpreting, we're done
                 lda state
                 beq _loop
 
@@ -255,6 +256,7 @@ _got_name_token:
                 sta 4,x
                 lda 1,x
                 sta 5,x
+
                 inx
                 inx
                 inx

@@ -174,7 +174,7 @@ xt_quit:
                 stz ip
                 stz ip+1
 
-                ; SOURCE-ID is keyboard import
+                ; SOURCE-ID is zero (keyboard input)
                 stz insrc
                 stz insrc+1
 
@@ -183,7 +183,7 @@ xt_quit:
                 stz state+1
 
 _get_line:
-                ; empty current input buffer
+                ; Size of current input buffer (CIB) is zero
                 stz ciblen
                 stz ciblen+1
 
@@ -216,7 +216,7 @@ _success:
                 jsr interpret
 
                 ; Test for Data Stack underflow. We don't check for
-                ; overflow
+                ; overflow because it is so rare
                 cpx #dsp0
                 bcs _stack_ok           ; DSP must always be smaller (!) than DSP0
 
@@ -3006,33 +3006,41 @@ xt_parse_name:
                 ; PARSE-NAME and PARSE must be able to deal with 16-bit string
                 ; lengths. This is a pain on an 8-bit machine. The pointer
                 ; to the current location is in toin (>IN). We need to check, 
-                ; worst case, the characters from cib+toin to cib+ciblen. 
-                ; The counter is toin-ciblen and stored in tmp1
+                ; worst case, the characters from cib+toin to cib+ciblen, and
+                ; we can't just use Y as an index. 
+
+                ; The counter is CIBLEN-TOIN and stored in tmp1
                 lda ciblen              ; LSB of counter
                 sec
                 sbc toin
                 sta tmp1
-                lda ciblen+1            ; MSB of counter
+                lda ciblen+1            ; MSB
                 sbc toin+1
                 sta tmp1+1
+
+                ; However, TOIN is an index and CIBLEN is a length, so we
+                ; have to subtract one
+                lda tmp1
+                beq +
+                dec tmp1+1
+*               dec tmp1
 
                 ; We walk through the characters starting at CIB+TOIN, so we
                 ; save a temp version of that in tmp2
                 lda cib
                 clc
                 adc toin
-                sta tmp2                ; LSB
+                sta tmp2                ; LSB of first character
                 lda cib+1
                 adc toin+1
-                sta tmp2+1
+                sta tmp2+1              ; MSB
         
 _skip_loop:
-                ; First step is to skip leading spaces
                 lda (tmp2)              ; work copy of cib
                 cmp #AscSP
                 bne _char_found
                 
-                ; Char is a space, continue
+                ; Char is still a space, continue
                 inc tmp2
                 bne +
                 inc tmp2+1
@@ -3047,6 +3055,7 @@ _skip_loop:
                 ora tmp1+1
                 bne _skip_loop          ; fall through if empty line
 
+_empty_line:
                 ; Neither the ANSI Forth nor the Gforth documentation say
                 ; what to return as an address if a string with only 
                 ; spaces is given. For speed reasons, we just return junk
@@ -3062,8 +3071,9 @@ _skip_loop:
                 jmp z_parse_name        ; skip over PARSE
 
 _char_found:
-                ; save index of where word really starts as new >IN. CIB and
-                ; CIBLEN are unchanged
+                ; We arrive here with tmp2 pointing to the first non-space
+                ; character. This is where the word really starts, so 
+                ; we use it to calculate the new >IN by subtracting
                 lda tmp2
                 sec
                 sbc cib
@@ -3091,138 +3101,132 @@ _char_found:
         ; PARSE and PARSE-NAME replace WORD in modern systems. ANSI discussion
         ; http://www.forth200x.org/documents/html3/rationale.html#rat:core:PARSE 
         ;
-        ;    cib   cib+toin    cib+ciblen
-        ;     v       v             v
-        ;     |#####################|
+        ;     cib  cib+toin   cib+ciblen
+        ;      v      v            v
+        ;     |###################|  
         ;                           
         ;     |------>|  toin (>IN)
-        ;     |-------------------->|  ciblen
+        ;     |------------------->|  ciblen
         ;
         ; The input string is stored starting at the address in the Current
         ; Input Buffer (CIB), the length of which is in CIBLEN. While searching
         ; for the delimiter, TOIN (>IN) points to the where we currently are.
         ; Since PARSE does not skip leading delimiters, we assume we are on a
-        ; useful string. As wit PARSE-NAME, we must be able to handle strings
-        ; with a length of 16-bit for EVALUTE, which is a pain on an 8-bit
-        ; machine.
+        ; useful string if there are any characters at all. As with
+        ; PARSE-NAME, we must be able to handle strings with a length of
+        ; 16-bit for EVALUTE, which is a pain on an 8-bit machine.
         ; """
 .scope
 xt_parse:
-                ; If PARSE is called directly (not through PARSE-NAME) we
-                ; might have an empty string with length zero. This is the
-                ; case when toin and ciblen are the same
-                lda ciblen
-                sec
-                sbc toin
-                bne _have_chars         ; not zero, have some characters
-
-                lda ciblen+1
-                sbc toin+1
-                bne _have_chars
-
-                ; If we were given a zero-length string, leave junk NOS (see
-                ; PARSE-NAME for discussion) and send back a zero length
-                dex
-                dex
-                stz 0,x
-                stz 1,x
-                
-                bra _done
-
-_have_chars:
-                lda 0,x         ; save delimiter
+                ; Save a copy of the delimiter character
+                lda 0,x
                 sta tmptos
 
-                stz tmptos+1    ; offset for EOL/char found adjustment of >IN
-
+                ; We can now prepare the Data Stack for the return value
                 dex
                 dex
 
-                ; save beginning of new word (cib+toin) to NOS as the return
-                ; value for the word's address. Half of our work is done
-                clc
+                ; If the input buffer is empty, we just return
+                lda ciblen
+                ora ciblen+1
+                bne _got_chars
+
+                stz 0,x
+                stz 1,x
+
+                bra _done
+_got_chars: 
+                ; tmp1 is CIB+TOIN, the beginning of the current string
+                ; tmp2 is initially the same as tmp1, then the work index
+                ; tmp3 is CIB+CIBLEN, one char past the end of the string
+                
+                ; Calculate the beginning of the string, which is also the
+                ; address to return
                 lda cib
-                adc toin
-                sta 2,x         ; LSB of NOS
-
+                clc
+                adc toin        ; LSB
+                sta tmp1
+                sta tmp2
+                sta 2,x
+                
                 lda cib+1
-                adc toin+1
-                sta 3,x         ; LSB of NOS
+                adc toin+1      ; MSB
+                sta tmp1+1
+                sta tmp2+1
+                sta 3,x
 
-                ; The last character in the buffer is at CIB+CIBLEN. We store
-                ; that address in tmp1 to make comparisons easier
-                lda cib         
+                ; Calculate the address where the input buffer ends plus 1, so
+                ; we can compare it with TOIN, which is an index
+                lda cib
                 clc
                 adc ciblen
-                sta tmp1
+                sta tmp3
                 lda cib+1
                 adc ciblen+1
-                sta tmp1+1
+                sta tmp3+1
 
-                ; Set up counter to walk through. We start at CIB+TOIN and
-                ; store that value in tmp2
-                lda cib
-                clc
-                adc toin
-                sta tmp2
-                lda cib+1
-                adc toin+1
-                sta tmp2+1
+                ; Initialize the offset we use to adjust EOL or found delimiter
+                stz tmptos+1
+_loop:
+                ; If we are at the end of the string, quit
+                lda tmp2
+                cmp tmp3
+                bne _not_empty
 
-_parse_loop:
+                lda tmp2+1
+                cmp tmp3+1
+                beq _eol
+_not_empty:
+                ; We have to do this the hard way
                 lda (tmp2)
-                cmp tmptos      ; current character the delimiter?
+                cmp tmptos
                 beq _found_delimiter
 
-                ; nope, next char
+                ; Not a delimiter, next character
                 inc tmp2
-                bne +
+                bne _loop
                 inc tmp2+1
-*
-                ; end of line?
-                lda tmp2
-                cmp tmp1
-                bne _parse_loop
-                lda tmp2+1
-                cmp tmp1+1
-                beq _eol
+                bra _loop
 
-                bra _parse_loop
-                
 _found_delimiter:
-                ; If we haven't reached the end of the line, but found
-                ; a delimiter, we want >IN to point to the next character after
-                ; the delimiter, not the delimiter itself. This is what the
-                ; offset is for
+                ; Increase the offset: If we've found a delimiter, we want
+                ; TOIN to point to the character after it, not the delimiter
+                ; itself
                 inc tmptos+1
 _eol:
-                ; calculate length of string found. The current address is in
-                ; tmp2, the original address is in NOS
-                lda tmp2        ; LSB
+                ; The length of the new string is tmp2-tmp1
+                lda tmp2
                 sec
-                sbc 2,x
+                sbc tmp1
                 sta 0,x
 
-                lda tmp2+1      ; MSB
-                sbc 3,x
+                lda tmp2+1
+                sbc tmp1+1
                 sta 1,x
 
-                ; calculate new >IN, which is the current location minus the
-                ; CIB, with the offset
+                ; The new offset is tmp2-cib
                 lda tmp2
-                clc
-                adc tmptos+1    ; offset EOL vs delimiter
                 sec
                 sbc cib
                 sta toin
-
                 lda tmp2+1
                 sbc cib+1
                 sta toin+1
-_done:                
+
+                ; Add in the delimiter
+                lda tmptos+1
+                clc
+                adc toin
+                sta toin
+                lda toin+1
+                adc #0          ; we only need the carry
+                sta toin+1
+_done:
 z_parse_name:
 z_parse:        rts
 .scend
+
+
 
 
 ; ## PICK ( -- ) "<TBA>"
@@ -3422,13 +3426,14 @@ xt_refill:
                 ; belong in CIBLEN
                 lda 0,x
                 sta ciblen
-                stz ciblen+1            ; we only accept 255 chars
+                lda 1,x
+                sta ciblen+1            ; though we only accept 255 chars
                 
                 lda #$ff                ; overwrite with TRUE flag
                 sta 0,x
                 sta 1,x
 
-                bra z_refill
+                bra _done
 
 _src_not_kbd:
                 ; If SOURCE-ID doesn't return a zero, it must be a string in
@@ -3452,6 +3457,7 @@ _src_not_string:
                 lda #9                  ; error code for illegal source id
                 jmp error
 
+_done:
 z_refill:       rts
 .scend
 
