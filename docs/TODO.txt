@@ -23,6 +23,9 @@ TODO POST-ALPHA ("ALL WORDS DO SOMETHING, SOMETIMES EVEN THE RIGHT THING")
 TODO POST-BETA ("ALL THERE, BUT PROBABLY BUGGY AS HELL")
         - Warn if word already in Dictionary
         - Update documentation
+        - Add SEE as a native word
+        - Add underflow check to PICK
+        - Check where all "STY 0,X" etc can be used
 
 
 TODO SOMETIME

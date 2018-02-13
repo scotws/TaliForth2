@@ -1,7 +1,7 @@
 ; Default kernel file for Tali Forth 2 
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 19. Jan 2014
-; This version: 27. Dec 2017
+; This version: 13. Feb 2018
 ;
 ; This section attempts to isolate the hardware-dependent parts of Tali Forth
 ; to make it easier for people to port it to their own machines. Ideally, you
@@ -75,7 +75,7 @@ kernel_putc:
 ; is easier to see where the kernel ends in hex dumps. This string is
 ; displayed after a successful boot
 
-s_kernel_id: .byte "Tali default kernel for py65mon (27. Dec 2017)", AscLF, 0
+s_kernel_id: .byte "Tali Forth 2 default kernel for py65mon (13. Feb 2018)", AscLF, 0
 
 ; --------------------------------------------------------------------- 
 ; INTERRUPT VECTORS

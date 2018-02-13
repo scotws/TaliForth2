@@ -1,7 +1,7 @@
 ; Dictionary Headers for Tali Forth 2
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 05. Dec 2016 (Liara Forth)
-; This version: 12. Feb 2018
+; This version: 13. Feb 2018
 
 ; Dictionary headers are kept separately from the code, which allows various
 ; tricks in the code. We roughly follow the Gforth terminology: The Execution
@@ -107,9 +107,19 @@ nt_cr:
         .word nt_page, xt_cr, z_cr
         .byte "cr"
 
+nt_input:
+        .byte 5, 0
+        .word nt_cr, xt_input, z_input
+        .byte "input"
+
+nt_output:
+        .byte 6, 0
+        .word nt_input, xt_output, z_output
+        .byte "output"
+
 nt_sign:
         .byte 4, 0
-        .word nt_cr, xt_sign, z_sign
+        .word nt_output, xt_sign, z_sign
         .byte "sign"
 
 nt_hold:
@@ -167,9 +177,14 @@ nt_um_slash_mod:
         .word nt_ud_slash_mod, xt_um_slash_mod, z_um_slash_mod
         .byte "um/mod"
 
+nt_star:
+        .byte 1, 0
+        .word nt_um_slash_mod, xt_star, z_star
+        .byte "*"
+
 nt_um_star:
         .byte 3, 0
-        .word nt_um_slash_mod, xt_um_star, z_um_star
+        .word nt_star, xt_um_star, z_um_star
         .byte "um*"
 
 nt_m_star:
@@ -322,14 +337,39 @@ nt_find_name:
         .word nt_tick, xt_find_name, z_find_name
         .byte "find-name"
 
+nt_fill:
+        .byte 4, 0
+        .word nt_find_name, xt_fill, z_fill
+        .byte "fill"
+
+nt_erase:
+        .byte 5, 0
+        .word nt_fill, xt_erase, z_erase
+        .byte "erase"
+
+nt_d_plus:
+        .byte 2, 0
+        .word nt_erase, xt_d_plus, z_d_plus
+        .byte "d+"
+
+nt_d_minus:
+        .byte 2, 0
+        .word nt_d_plus, xt_d_minus, z_d_minus
+        .byte "d-"
+
 nt_s_to_d:
         .byte 3, 0
-        .word nt_find_name, xt_s_to_d, z_s_to_d
+        .word nt_d_minus, xt_s_to_d, z_s_to_d
         .byte "s>d"
+
+nt_value:               ; some routine as CONSTANT
+        .byte 5, 0
+        .word nt_s_to_d, xt_constant, z_constant
+        .byte "value"
 
 nt_constant:
         .byte 8, 0
-        .word nt_s_to_d, xt_constant, z_constant
+        .word nt_value, xt_constant, z_constant
         .byte "constant"
 
 nt_variable:
@@ -407,9 +447,19 @@ nt_invert:
         .word nt_negate, xt_invert, z_invert
         .byte "invert"
 
+nt_two_over:
+        .byte 5, 0
+        .word nt_invert, xt_two_over, z_two_over
+        .byte "2over"
+
+nt_two_swap:
+        .byte 5, 0
+        .word nt_two_over, xt_two_swap, z_two_swap
+        .byte "2swap"
+
 nt_two_drop:
         .byte 5, 0
-        .word nt_invert, xt_two_drop, z_two_drop
+        .word nt_two_swap, xt_two_drop, z_two_drop
         .byte "2drop"
 
 nt_max:
@@ -502,9 +552,14 @@ nt_char:
         .word nt_bracket_char, xt_char, z_char
         .byte "char"
 
+nt_pick:
+        .byte 4, 0
+        .word nt_char, xt_pick, z_pick
+        .byte "pick"
+
 nt_lshift:
         .byte 6, 0
-        .word nt_char, xt_lshift, z_lshift
+        .word nt_pick, xt_lshift, z_lshift
         .byte "lshift"
 
 nt_rshift:
@@ -607,9 +662,14 @@ nt_execute:
         .word nt_emit, xt_execute, z_execute
         .byte "execute"
 
+nt_plus_store:
+        .byte 2, 0
+        .word nt_execute, xt_plus_store, z_plus_store
+        .byte "+!"
+
 nt_c_store:
         .byte 2, 0
-        .word nt_execute, xt_c_store, z_c_store
+        .word nt_plus_store, xt_c_store, z_c_store
         .byte "c!"
 
 nt_c_fetch:
@@ -710,16 +770,6 @@ nt_paren_do:
         .word 0000, xt_paren_do, z_paren_do
         .byte "(do)"
 
-nt_star:
-        .byte 1, 0
-        .word 0000, xt_star, z_star
-        .byte "*"
-
-nt_plus_store:
-        .byte 2, 0
-        .word 0000, xt_plus_store, z_plus_store
-        .byte "+!"
-
 nt_plus_loop:
         .byte 5, 0
         .word 0000, xt_plus_loop, z_plus_loop
@@ -765,11 +815,6 @@ nt_two_to_r:
         .word 0000, xt_two_to_r, z_two_to_r
         .byte "2>r"
 
-nt_two_over:
-        .byte 5, 0
-        .word 0000, xt_two_over, z_two_over
-        .byte "2over"
-
 nt_two_r_from:
         .byte 3, 0
         .word 0000, xt_two_r_from, z_two_r_from
@@ -779,11 +824,6 @@ nt_two_r_fetch:
         .byte 3, 0
         .word 0000, xt_two_r_fetch, z_two_r_fetch
         .byte "2r@"
-
-nt_two_swap:
-        .byte 5, 0
-        .word 0000, xt_two_swap, z_two_swap
-        .byte "2swap"
 
 nt_two_variable:
         .byte 9, 0
@@ -855,16 +895,6 @@ nt_compile_only:
         .word 0000, xt_compile_only, z_compile_only
         .byte "compile-only"
 
-nt_d_plus:
-        .byte 2, 0
-        .word 0000, xt_d_plus, z_d_plus
-        .byte "d+"
-
-nt_d_minus:
-        .byte 2, 0
-        .word 0000, xt_d_minus, z_d_minus
-        .byte "d-"
-
 nt_d_to_s:
         .byte 3, 0
         .word 0000, xt_d_to_s, z_d_to_s
@@ -890,20 +920,10 @@ nt_else:
         .word 0000, xt_else, z_else
         .byte "else"
 
-nt_erase:
-        .byte 5, 0
-        .word 0000, xt_erase, z_erase
-        .byte "erase"
-
 nt_exit:
         .byte 4, 0
         .word 0000, xt_exit, z_exit
         .byte "exit"
-
-nt_fill:
-        .byte 4, 0
-        .word 0000, xt_fill, z_fill
-        .byte "fill"
 
 nt_find:
         .byte 4, 0
@@ -924,11 +944,6 @@ nt_if:
         .byte 2, 0
         .word 0000, xt_if, z_if
         .byte "if"
-
-nt_input:
-        .byte 5, 0
-        .word 0000, xt_input, z_input
-        .byte "input"
 
 nt_j:
         .byte 1, 0
@@ -975,16 +990,6 @@ nt_never_compile:
         .word 0000, xt_never_compile, z_never_compile
         .byte "never-compile"
 
-nt_output:
-        .byte 6, 0
-        .word 0000, xt_output, z_output
-        .byte "output"
-
-nt_pick:
-        .byte 4, 0
-        .word 0000, xt_pick, z_pick
-        .byte "pick"
-
 nt_postpone:
         .byte 8, 0
         .word 0000, xt_postpone, z_postpone
@@ -1024,11 +1029,6 @@ nt_unloop:
         .byte 6, 0
         .word 0000, xt_unloop, z_unloop
         .byte "unloop"
-
-nt_value:
-        .byte 5, 0
-        .word 0000, xt_value, z_value
-        .byte "value"
 
 nt_word:
         .byte 4, 0

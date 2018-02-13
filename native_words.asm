@@ -1252,19 +1252,76 @@ z_create:       rts
 .scend
 
 
-; ## D_MINUS ( -- ) "<TBA>"
-; ## "d-"  src: ANSI double  b: TBA  c: TBA  status: TBA
+; ## D_MINUS ( d d -- d ) "Subtract two double-celled numbers"
+; ## "d-"  src: ANSI double  b: TBA  c: TBA  status: coded
 .scope
-xt_d_minus:     nop
+xt_d_minus:
+                cpx #dsp0-7
+                bmi +
+                lda #11         ; underflow
+                jmp error
+*
+                sec
+
+                lda 6,x         ; LSB of lower word
+                sbc 2,x
+                sta 6,x
+
+                lda 7,x         ; MSB of lower word
+                sbc 3,x
+                sta 7,x
+
+                lda 4,x         ; LSB of upper word
+                sbc 0,x
+                sta 4,x
+
+                lda 5,x         ; MSB of upper word
+                sbc 1,x
+                sta 5,x
+
+                inx
+                inx
+                inx
+                inx
+
 z_d_minus:      rts
 .scend
 
-; ## D_PLUS ( -- ) "<TBA>"
-; ## "d+"  src: ANSI double  b: TBA  c: TBA  status: TBA
+
+; ## D_PLUS ( d d -- d ) "Add two double-celled numbers"
+; ## "d+"  src: ANSI double  b: TBA  c: TBA  status: coded
 .scope
-xt_d_plus:      nop
+xt_d_plus:
+                cpx #dsp0-7
+                bmi +
+                lda #11         ; underflow
+                jmp error
+*
+                clc
+                lda 2,x         ; LSB of lower word
+                adc 6,x
+                sta 6,x
+
+                lda 3,x         ; MSB of lower word
+                adc 7,x
+                sta 7,x
+
+                lda 0,x         ; LSB of upper word
+                adc 4,x
+                sta 4,x
+
+                lda 1,x         ; MSB of upper word
+                adc 5,x
+                sta 5,x
+                
+                inx
+                inx
+                inx
+                inx
+
 z_d_plus:       rts
 .scend
+
 
 ; ## D_TO_S ( -- ) "<TBA>"
 ; ## "d>s"  src: ANSI double  b: TBA  c: TBA  status: TBA
@@ -1273,7 +1330,7 @@ xt_d_to_s:      nop
 z_d_to_s:       rts
 .scend
 
-; ## DABS ( d -- ud ) "Return absolute value of double number"
+
 ; ## "dabs"  src: ANSI double  b: TBA  c: TBA  status: coded
 .scope
 xt_dabs:
@@ -1705,12 +1762,95 @@ z_equal:        rts
 .scend
 
 
-; ## ERASE ( addr u -- ) "<TBA>"
-; ## "erase"  src: ANSI core ext  b: TBA  c: TBA  status: TBA
+; ## ERASE ( addr u -- ) "Fill memory region with zeros"
+; ## "erase"  src: ANSI core ext  b: TBA  c: TBA  status: coded
 .scope
-xt_erase:       nop
-z_erase:        rts
+xt_erase:
+                ; We don't check for underflow here because
+                ; we deal with that in FILL
+                dex
+                dex
+                stz 0,x
+                stz 1,x
+
+                ; fall through to FILL
+
+; ## FILL ( addr u char -- ) "Fill a memory region with a character"
+; ## "fill"  src: ANSI core  b: TBA  c: TBA  status: coded
+        ; """Fill u bytes of memory with char starting at addr. Note that
+        ; this works on bytes, not on cells. On an 8-bit machine such as the
+        ; 65c02, this is a serious pain in the rear. It is not defined what
+        ; happens when we reach the end of the address space
+        ; """
+xt_fill:        
+                cpx #dsp0-5
+                bmi +
+                lda #11         ; underflow
+                jmp error
+*
+                ; We use tmp1 to hold the address
+                lda 4,x         ; LSB
+                sta tmp1
+                lda 5,x
+                sta tmp1+1
+
+                ; We use tmp2 to hold the counter
+                lda 2,x
+                sta tmp2
+                lda 3,x
+                sta tmp2+1
+                
+                ; We use Y to hold the character
+                lda 0,x
+                tay
+_loop:
+                ; Unfortunately, we also need to make sure that we don't
+                ; write further than the end of the RAM. So RAM_END must
+                ; be larger or equal to the current address
+                lda #>ram_end           ; MSB
+                cmp tmp1+1
+                bcc _done               ; RAM_END < TMP1, so leave
+                bne _check_counter      ; RAM_END is not smaller and not equal
+
+                lda #<ram_end           ; LSB, because MSBs were equal
+                cmp tmp1
+                bcc _done               ; RAM_END < TMP1, so leave
+
+_check_counter:                
+                ; See if our counter has reached zero
+                lda tmp2
+                eor tmp2+1
+                beq _done
+
+                ; We're not in ROM and we still have stuff on the counter, so
+                ; let's actually do what we came here to do
+                tya
+                sta (tmp1)
+
+                ; Adjust the counter
+                lda tmp2
+                bne +
+                dec tmp2+1
+*               dec tmp2
+
+                ; Next address
+                inc tmp1
+                bne _loop
+                inc tmp1+1
+
+                bra _loop
+
+_done:
+                ; Drop three cells off the Data Stack. This uses one byte
+                ; less than six times INX
+                txa
+                clc
+                adc #6
+                tax
+z_erase:
+z_fill:         rts
 .scend
+
 
 ; ## EVALUATE ( addr u -- ) "Execute a string"
 ; ## "evaluate"  src: ANSI core  b: TBA  c: TBA  status: coded
@@ -1881,13 +2021,6 @@ xt_fetch:
 
 z_fetch:        rts
 
-
-; ## FILL ( -- ) "<TBA>"
-; ## "fill"  src: ANSI core  b: TBA  c: TBA  status: TBA
-.scope
-xt_fill:        nop
-z_fill:         rts
-.scend
 
 ; ## FIND ( -- ) "<TBA>"
 ; ## "find"  src: ANSI core  b: TBA  c: TBA  status: TBA
@@ -2130,10 +2263,17 @@ xt_immediate:
 z_immediate:    rts
 
 
-; ## INPUT ( -- ) "<TBA>"
-; ## "input"  src: Tali Forth  b: TBA  c: TBA  status: TBA
+; ## INPUT ( -- addr ) "Return address of input vector"
+; ## "input"  src: Tali Forth  b: TBA  c: TBA  status: coded
 .scope
-xt_input:       nop
+xt_input:       
+                dex
+                dex
+                lda #<input
+                sta 0,x
+                lda #>input
+                sta 1,x
+
 z_input:        rts
 .scend
 
@@ -3067,6 +3207,11 @@ z_one_plus:     rts
 ; ## OR ( m n -- n ) "Logically OR TOS and NOS"
 ; ## "or"  src: ANSI core  b: 14  c: TBA  status: coded
 xt_or:          
+                cpx #dsp0-3
+                bmi +
+                lda #11         ; underflow
+                jmp error
+*
                 lda 0,x
                 ora 2,x
                 sta 2,x
@@ -3082,15 +3227,20 @@ z_or:           rts
 
 
 ; ## OUTPUT ( -- addr ) "Return the address of the EMIT vector address"
-; ## "output"  src: Tali Forth  b: TBA  c: TBA  status: fragment
+; ## "output"  src: Tali Forth  b: TBA  c: TBA  status: coded
 xt_output:      
         ; """Return the address where the jump target for EMIT is stored (but
         ; not the vector itself). By default, this will hold the value of 
         ; kernel_putc routine, but this can be changed by the user, hence this
         ; routine.
         ; """
-                ; TODO
-                ; push value of output to TOS
+                dex
+                dex
+                lda #<output
+                sta 0,x
+                lda #>output
+                sta 1,x
+                
 z_output:       rts
 
 
@@ -3437,17 +3587,46 @@ z_parse:        rts
 
 
 
-; ## PICK ( -- ) "<TBA>"
-; ## "pick"  src: ANSI core ext  b: TBA  c: TBA  status: TBA
+; ## PICK ( n n u -- n n n ) "Move element u of the stack to TOS"
+; ## "pick"  src: ANSI core ext  b: TBA  c: TBA  status: coded
+        ; """Take the u-th element out of the stack and put it on TOS,
+        ; overwriting the original TOS. 0 PICK is equivalent to DUP, 1 PICK to
+        ; OVER. Note that using PICK is considered poor coding form. Also note
+        ; that FIG Forth has a different behavior for PICK than ANS Forth. 
+        ; """
 .scope
-xt_pick:        nop
+xt_pick:
+                ; Checking for underflow is difficult because it depends on
+                ; which element we want to grab. This should be added at
+                ; a later date
+
+                lda 0,x         ; we only use LSB (stack is small)
+                asl
+                clc
+                adc #2
+                tay
+
+                stx tmp1
+                stz tmp1+1
+
+                lda (tmp1),y    ; MSB
+                sta 0,x
+                iny
+                lda (tmp1),y    ; LSB
+                sta 1,x
+               
 z_pick:         rts
 .scend
 
 
-; ## PLUS ( b a -- a+b ) "Add TOS and NOS"
-; ## "+"  src: ANSI core  b: 15  c: TBA  status: tested
+; ## PLUS ( n n -- n ) "Add TOS and NOS"
+; ## "+"  src: ANSI core  b: TBA  c: TBA  status: coded
 xt_plus:        
+                cpx #dsp0-3
+                bmi +
+                lda #11         ; underflow
+                jmp error
+*
                 clc
                 lda 0,x         ; LSB
                 adc 2,x
@@ -3470,11 +3649,39 @@ xt_plus_loop:   nop
 z_plus_loop:    rts
 .scend
 
-; ## PLUS_STORE ( -- ) "<TBA>"
-; ## "+!"  src: ANSI core  b: TBA  c: TBA  status: TBA
+
+; ## PLUS_STORE ( n addr -- ) "Add number to value at given address"
+; ## "+!"  src: ANSI core  b: TBA  c: TBA  status: coded
 xt_plus_store:
+                cpx #dsp0-3
+                bmi +
+                lda #11         ; underflow
+                jmp error
+*
+                ; move address to tmp1 so we can work with it
+                lda 0,x
+                sta tmp1
+                lda 1,x
+                sta tmp1+1
+
+                ldy #0          ; LSB
+                lda (tmp1),y
+                clc
+                adc 2,x
+                sta (tmp1),y
+
+                iny             ; MSB
+                lda (tmp1),y
+                adc 3,x
+                sta (tmp1),y
+
+                inx
+                inx
+                inx
+                inx
                 
 z_plus_store:   rts
+
 
 ; ## POSTPONE ( -- ) "<TBA>"
 ; ## "postpone"  src: ANSI core  b: TBA  c: TBA  status: TBA
@@ -4023,10 +4230,22 @@ _done:
 z_spaces:       rts 
 .scend
 
-; ## STAR ( -- ) "<TBA>"
-; ## "*"  src: ANSI core  b: TBA  c: TBA  status: TBA
+; ## STAR ( n n -- n ) "16*16 --> 16 "
+; ## "*"  src: ANSI core  b: TBA  c: TBA  status: coded
+        ; """Multiply two signed 16 bit numbers, returning a 16 bit result.
+        ; This is nothing  more than UM* DROP
+        ; """
 .scope
-xt_star:        nop
+xt_star:
+                cpx #dsp0-3
+                bmi +
+                lda #11                 ; underflow
+                jmp error
+*
+                jsr xt_um_star
+                inx
+                inx
+
 z_star:         rts
 .scend
 
@@ -4467,12 +4686,35 @@ z_two_dup:      rts
 .scend
 
 
-; ## TWO_OVER ( -- ) "<TBA>"
-; ## "2over"  src: ANSI core  b: TBA  c: TBA  status: TBA
+; ## TWO_OVER ( d1 d2 -- d1 d2 d1 ) "Copy double word NOS to TOS"
+; ## "2over"  src: ANSI core  b: TBA  c: TBA  status: coded
 .scope
-xt_two_over:    nop
+xt_two_over:
+                cpx #dsp0-7
+                bmi +
+                lda #11
+                jmp error
+*
+                dex
+                dex
+                dex
+                dex
+
+                lda 8,x
+                sta 0,x
+
+                lda 9,x
+                sta 1,x
+
+                lda 10,x
+                sta 2,x
+
+                lda 11,x
+                sta 3,x
+
 z_two_over:     rts
 .scend
+
 
 ; ## TWO_R_FETCH ( -- ) "<TBA>"
 ; ## "2r@"  src: ANSI core ext  b: TBA  c: TBA  status: TBA
@@ -4494,17 +4736,52 @@ z_two_r_from:   rts
         ; """Also used for CELLS
         ; """
 xt_two_star:
+                cpx #dsp0-1
+                bmi +
+                lda #11         ; underflow
+                jmp error
+*
                 asl 0,x
                 rol 1,x
 z_two_star:     rts
 
 
-; ## TWO_SWAP ( -- ) "<TBA>"
+; ## TWO_SWAP ( n1 n2 n3 n4 -- n3 n4 n1 n1 ) "Exchange two double words"
 ; ## "2swap"  src: ANSI core  b: TBA  c: TBA  status: TBA
 .scope
-xt_two_swap:    nop
+xt_two_swap:
+                cpx #dsp0-7
+                bmi +
+                lda #11         ; underflow
+                jmp error
+*
+                ; 0 <-> 4
+                lda 0,x
+                ldy 4,x
+                sta 4,x
+                sty 0,x
+
+                ; 1 <-> 5
+                lda 1,x
+                ldy 5,x
+                sta 5,x
+                sty 1,x
+
+                ; 2 <-> 6
+                lda 2,x
+                ldy 6,x
+                sta 6,x
+                sty 2,x
+
+                ; 3 <-> 7
+                lda 3,x
+                ldy 7,x
+                sta 7,x
+                sty 3,x
+                
 z_two_swap:     rts
 .scend
+
 
 ; ## TWO_TO_R ( -- ) "<TBA>"
 ; ## "2>r"  src: ANSI core ext  b: TBA  c: TBA  status: TBA
