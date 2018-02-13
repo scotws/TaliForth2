@@ -188,6 +188,47 @@ _nibble_to_ascii:
         	rts
 .scend
 
+compare_16bit:
+        ; """Compare TOS/NOS and return results in form of the 65c02 flags
+        ; Adapted from Leventhal "6502 Assembly Language Subroutines", see
+        ; also http://www.6502.org/tutorials/compare_beyond.html
+        ; For signed numbers, Z signals equality and N which number is larger: 
+        ;       if TOS = NOS: Z=1 and N=0
+        ;       if TOS > NOS: Z=0 and N=0
+        ;       if TOS < NOS: Z=0 and N=1
+        ; For unsigned numbers, Z signals equality and C which number is larger:
+        ;       if TOS = NOS: Z=1 and N=0
+        ;       if TOS > NOS: Z=0 and C=1
+        ;       if TOS < NOS: Z=0 and C=0
+        ; Compared to the book routine, WORD1 (MINUED) is TOS 
+        ;                               WORD2 (SUBTRAHEND) is NOS
+        ; """
+.scope
+                ; Compare LSB first to set the carry flag
+                lda 0,x                 ; LSB of TOS
+                cmp 2,x                 ; LSB of NOS
+                beq _equal
+
+                ; LSBs are not equal, compare MSB
+                lda 1,x                 ; MSB of TOS
+                sbc 3,x                 ; MSB of NOS
+                ora #1                  ; Make zero flag 0 because not equal
+                bvs _overflow
+                bra _not_equal
+_equal:
+                ; low bytes are equal, so we compare high bytes
+                lda 1,x                 ; MSB of TOS
+                sbc 3,x                 ; MSB of NOS
+                bvc _done
+_overflow:
+                ; handle overflow because we use signed numbers
+                eor #$80                ; complement negative flag
+_not_equal:     
+                ora #1                  ; if overflow, we can't be eqal
+_done:
+                rts
+.scend
+
 
 interpret:
 .scope
@@ -320,7 +361,6 @@ _line_done:
 
                 rts
 .scend
-
 
 error: 
         ; """Given the error number in A, print the associated error string and 

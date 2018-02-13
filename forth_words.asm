@@ -57,7 +57,7 @@ high_level_start:
         .byte ": d.r >r tuck dabs <# #s rot sign #> r> over - spaces type ; "
 
         ; Temporary high-level words. Convert these to assembler.
-;       .byte ": within ( n1 n2 n3 -- f ) rot tuck > -rot > invert and ; "
+        .byte ": within ( n1 n2 n3 -- f ) rot tuck > -rot > invert and ; "
 
         ; DUMP. A longish word we'll want to modify for a while until we are
         ; happy with the format

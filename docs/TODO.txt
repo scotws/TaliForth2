@@ -33,6 +33,7 @@ TODO SOMETIME
         - Add real USER variables
         - Add multitasking (round-robin)
         - See if MAX and MIN can be combined
+        - See if > and < etc can be combined
         - Add CASE, THROW/CATCH
         - Move UM* to table-based multiplication
 

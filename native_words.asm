@@ -1252,13 +1252,6 @@ z_create:       rts
 .scend
 
 
-; ## D_DOT ( -- ) "<TBA>"
-; ## "d."  src: ANSI double  b: TBA  c: TBA  status: TBA
-.scope
-xt_d_dot:       nop
-z_d_dot:        rts
-.scend
-
 ; ## D_MINUS ( -- ) "<TBA>"
 ; ## "d-"  src: ANSI double  b: TBA  c: TBA  status: TBA
 .scope
@@ -1271,13 +1264,6 @@ z_d_minus:      rts
 .scope
 xt_d_plus:      nop
 z_d_plus:       rts
-.scend
-
-; ## D_R ( -- ) "<TBA>"
-; ## "d.r"  src: ANSI double  b: TBA  c: TBA  status: TBA
-.scope
-xt_d_r:         nop
-z_d_r:          rts
 .scend
 
 ; ## D_TO_S ( -- ) "<TBA>"
@@ -1496,12 +1482,6 @@ xt_dot_byte:    nop
 z_dot_byte:     rts
 .scend
 
-; ## DOT_PAREN ( -- ) "<TBA>"
-; ## ".("  src: ANSI core  b: TBA  c: TBA  status: TBA
-.scope
-xt_dot_paren:   nop
-z_dot_paren:    rts
-.scend
 
 ; ## DOT_QUOTE ( -- ) "<TBA>"
 ; ## ".""  src: ANSI core  b: TBA  c: TBA  status: TBA
@@ -1510,12 +1490,6 @@ xt_dot_quote:   nop
 z_dot_quote:    rts
 .scend
 
-; ## DOT_R ( -- ) "<TBA>"
-; ## ".r"  src: ANSI core ext  b: TBA  c: TBA  status: TBA
-.scope
-xt_dot_r:       nop
-z_dot_r:        rts
-.scend
 
 ; ## DOT_S ( -- ) "Print content of Data Stack"
 ; ## ".s"  src: ANSI tools  b: TBA  c: TBA  status: coded
@@ -1700,9 +1674,14 @@ z_emit:         ; never reached
 
 
 ; ## EQUAL ( n n -- f ) "See if TOS and NOS are equal"
-; ## "="  src: ANSI core  b: 24  c: TBA  status: coded
+; ## "="  src: ANSI core  b: TBA c: TBA  status: coded
 .scope
 xt_equal:       
+                cpx #dsp0-3
+                bmi +
+                lda #11                 ; underflow
+                jmp error
+*               
                 lda 0,x                 ; LSB
                 cmp 2,x
                 bne _false
@@ -2043,11 +2022,32 @@ xt_fm_slash_mod:
 z_fm_slash_mod: rts
 .scend
 
-; ## GREATER_THAN ( -- ) "<TBA>"
-; ## ">"  src: ANSI core  b: TBA  c: TBA  status: TBA
+; ## GREATER_THAN ( n n -- f ) "See if NOS is greater than TOS"
+; ## ">"  src: ANSI core  b: TBA  c: TBA  status: coded
 .scope
 xt_greater_than:
-                nop
+                cpx #dsp0-3
+                bmi +
+                lda #11         ; underflow
+                jmp error
+*               
+                ldy #0          ; default false
+                jsr compare_16bit
+
+                ; for signed numbers, NOS>TOS gives us Z=0 and N=1
+                beq _false
+                bpl _false
+
+                ; true
+                dey
+_false:
+                tya
+
+                inx
+                inx
+                sta 0,x
+                sta 1,x
+                
 z_greater_than: rts
 .scend
 
@@ -2339,10 +2339,32 @@ xt_less_number_sign:
 z_less_number_sign:
                 rts
 
-; ## LESS_THAN ( -- ) "<TBA>"
-; ## "<"  src: ANSI core  b: TBA  c: TBA  status: TBA
+; ## LESS_THAN ( n m -- f ) "Return true if NOS < TOS"
+; ## "<"  src: ANSI core  b: TBA  c: TBA  status: coded
 .scope
-xt_less_than:   nop
+xt_less_than:
+                cpx #dsp0-3
+                bmi +
+                lda #11         ; underflow
+                jmp error
+*
+                ldy #0          ; default false
+                jsr compare_16bit
+
+                ; for signed numbers, NOS < TOS if Z=0 and N=0
+                beq _false
+                bmi _false
+
+                ; true
+                dey
+_false:
+                tya
+
+                inx
+                inx
+                sta 0,x
+                sta 1,x
+                
 z_less_than:    rts
 .scend
 
@@ -2706,10 +2728,41 @@ xt_nip:
 z_nip:          rts
 
 
-; ## NOT_EQUALS ( -- ) "<TBA>"
+; ## NOT_EQUALS ( n m -- f ) "Return a true flag if TOS != NOS"
 ; ## "<>"  src: ANSI core ext  b: TBA  c: TBA  status: TBA
+        ; """This is just a variant of EQUAL, we code it separately
+        ; for speed.
+        ; """
 .scope
-xt_not_equals:  nop
+xt_not_equals:
+                cpx #dsp0-3
+                bmi +
+                lda #11                 ; underflow
+                jmp error
+*               
+                ldy #0                  ; default is true
+
+                lda 0,x                 ; LSB
+                cmp 2,x
+                bne _not_equal
+
+                ; LSB is equal
+                lda 1,x                 ; MSB
+                cmp 3,x
+                bne _not_equal
+
+                lda #$ff
+                bra _done
+_not_equal:     
+                dey                     ; drop thru to done
+_done:          
+                tya
+
+                inx
+                inx
+                sta 0,x
+                sta 1,x
+
 z_not_equals:   rts
 .scend
 
@@ -3101,13 +3154,6 @@ xt_page:
 
 z_page:         rts
 
-
-; ## PAREN ( -- ) "<TBA>"
-; ## "("  src: ANSI core  b: TBA  c: TBA  status: TBA
-.scope
-xt_paren:       nop
-z_paren:        rts
-.scend
 
 ; ## PAREN_DO ( -- ) "<TBA>"
 ; ## "(do)"  src: Tali Forth  b: TBA  c: TBA  status: TBA
@@ -3984,22 +4030,6 @@ xt_star:        nop
 z_star:         rts
 .scend
 
-; ## STAR_SLASH ( -- ) "<TBA>"
-; ## "*/"  src: ANSI core  b: TBA  c: TBA  status: TBA
-.scope
-xt_star_slash:  nop
-z_star_slash:   rts
-.scend
-
-; ## STAR_SLASH_MOD ( -- ) "<TBA>"
-; ## "*/mod"  src: ANSI core  b: TBA  c: TBA  status: TBA
-.scope
-xt_star_slash_mod:
-                nop
-z_star_slash_mod:
-                rts
-.scend
-
 
 ; ## STATE ( -- addr ) "Return the address of compilation state flag"
 ; ## "state"  src: ANSI core  b: 10  c: TBA  status: coded
@@ -4008,11 +4038,12 @@ z_star_slash_mod:
         ; it lives. The state should not be changed directly by the user; see
         ; http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.2250
         ; """
-xt_state:       dex
+xt_state:       
+                dex
                 dex
                 lda #<state
                 sta 0,x
-                lda #>state     ; paranoid, should always be zero
+                lda #>state
                 sta 1,x
 
 z_state:        rts
@@ -4072,12 +4103,37 @@ xt_then:        nop
 z_then:         rts
 .scend
 
-; ## TICK ( -- ) "<TBA>"
-; ## "'"  src: ANSI core  b: TBA  c: TBA  status: TBA
+
+; ## TICK ( "name" -- xt ) "Return a word's execution token (xt)"
+; ## "'"  src: ANSI core  b: TBA  c: TBA  status: coded
 .scope
-xt_tick:        nop
+xt_tick:        
+                jsr xt_parse_name       ; ( -- addr u )
+
+                ; if we got a zero, there was a problem getting the
+                ; name of the word
+                lda 0,x
+                ora 1,x
+                bne +
+
+                lda #6                  ; parsing failure
+                jmp error
+*
+                jsr xt_find_name        ; ( addr u -- nt )
+
+                ; If we didn't find the word in the Dictionary, abort
+                lda 0,x
+                ora 1,x
+                bne +
+
+                lda #12                 ; word not defined
+                jmp error
+*
+                jsr xt_name_to_int      ; ( nt -- xt ) 
+
 z_tick:         rts
 .scend
+
 
 ; ## TO ( -- ) "<TBA>"
 ; ## "to"  src: ANSI core ext  b: TBA  c: TBA  status: TBA
@@ -4506,35 +4562,6 @@ z_type:         rts
 .scend
 
 
-; ## U_DOT ( -- ) "<TBA>"
-; ## "u."  src: ANSI core  b: TBA  c: TBA  status: TBA
-.scope
-xt_u_dot:       nop
-z_u_dot:        rts
-.scend
-
-; ## U_DOT_R ( -- ) "<TBA>"
-; ## "u.r"  src: ANSI core ext  b: TBA  c: TBA  status: TBA
-.scope
-xt_u_dot_r:     nop
-z_u_dot_r:      rts
-.scend
-
-; ## UD_DOT ( -- ) "<TBA>"
-; ## "ud."  src: Gforth  b: TBA  c: TBA  status: TBA
-.scope
-xt_ud_dot:      nop
-z_ud_dot:       rts
-.scend
-
-; ## UD_DOT_R ( -- ) "<TBA>"
-; ## "ud.r"  src: Gforth  b: TBA  c: TBA  status: TBA
-.scope
-xt_ud_dot_r:    nop
-z_ud_dot_r:     rts
-.scend
-
-
 ; ## UD_SLASH_MOD ( ud u -- rem ud ) "32/16 --> 32 Division"
 ; ## "ud/mod"  src: Gforth  b: TBA  c: TBA  status: coded
         ; """Divide double cell number by a single-cell number and return
@@ -4761,13 +4788,6 @@ xt_variable:
 z_variable:     rts
 
 
-; ## WITHIN ( -- ) "<TBA>"
-; ## "within"  src: ANSI core ext  b: TBA  c: TBA  status: TBA
-.scope
-xt_within:      nop
-z_within:       rts
-.scend
-
 ; ## WORD ( -- ) "<TBA>"
 ; ## "word"  src: ANSI core  b: TBA  c: TBA  status: TBA
 .scope
@@ -4902,9 +4922,15 @@ z_zero_branch:  rts
 
 
 ; ## ZERO_EQUAL ( n -- f ) "Check if TOS is zero"
-; ## "0="  src: ANSI core  b: 16  c: TBA  status: coded
+; ## "0="  src: ANSI core  b: TBA  c: TBA  status: coded
+; TODO Rewrite to the form of 0<>
 .scope
 xt_zero_equal:  
+                cpx #dsp0-1
+                bmi +
+                lda #11         ; underflow
+                jmp error
+*
                 lda 0,x
                 ora 1,x
                 beq _zero
@@ -4938,11 +4964,28 @@ xt_zero_less:   nop
 z_zero_less:    rts
 .scend
 
-; ## ZERO_UNEQUAL ( -- ) "<TBA>"
-; ## "0<>"  src: ANSI core ext  b: TBA  c: TBA  status: TBA
+
+; ## ZERO_UNEQUAL ( m -- f ) "<TBA>"
+; ## "0<>"  src: ANSI core ext  b: TBA  c: TBA  status: coded
 .scope
 xt_zero_unequal:
-                nop
+                cpx #dsp0-1
+                bmi +
+                lda #11         ; underflow
+                jmp error
+*
+                ldy #0          ; default false
+
+                lda 0,x
+                ora 1,x
+                beq _got_zero
+
+                dey
+_got_zero:      
+                tya
+                sta 0,x
+                sta 1,x
+               
 z_zero_unequal: rts
 .scend
 
