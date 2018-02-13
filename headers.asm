@@ -1,7 +1,7 @@
 ; Dictionary Headers for Tali Forth 2
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 05. Dec 2016 (Liara Forth)
-; This version: 07. Feb 2018
+; This version: 12. Feb 2018
 
 ; Dictionary headers are kept separately from the code, which allows various
 ; tricks in the code. We roughly follow the Gforth terminology: The Execution
@@ -67,9 +67,14 @@ nt_cold:
         .word nt_bye, xt_cold, z_cold
         .byte "cold"
 
+nt_dot_s:
+        .byte 2, 0
+        .word nt_cold, xt_dot_s, z_dot_s
+        .byte ".s"
+
 nt_dump:
         .byte 4, 0
-        .word nt_cold, xt_dump, z_dump
+        .word nt_dot_s, xt_dump, z_dump
         .byte "dump"
 
 nt_bell:
@@ -147,9 +152,14 @@ nt_backslash:
         .word nt_pad, xt_backslash, z_backslash
         .byte $5c
 
+nt_sm_slash_rem:
+        .byte 6, 0
+        .word nt_backslash, xt_sm_slash_rem, z_sm_slash_rem
+        .byte "sm/rem"
+
 nt_ud_slash_mod:
         .byte 6, 0
-        .word nt_backslash, xt_ud_slash_mod, z_ud_slash_mod
+        .word nt_sm_slash_rem, xt_ud_slash_mod, z_ud_slash_mod
         .byte "ud/mod"
 
 nt_um_slash_mod:
@@ -302,9 +312,14 @@ nt_find_name:
         .word nt_name_to_int, xt_find_name, z_find_name
         .byte "find-name"
 
+nt_s_to_d:
+        .byte 3, 0
+        .word nt_find_name, xt_s_to_d, z_s_to_d
+        .byte "s>d"
+
 nt_constant:
         .byte 8, 0
-        .word nt_find_name, xt_constant, z_constant
+        .word nt_s_to_d, xt_constant, z_constant
         .byte "constant"
 
 nt_variable:
@@ -482,9 +497,14 @@ nt_and:
         .word nt_or, xt_and, z_and
         .byte "and"
 
+nt_dabs:
+        .byte 4, 0
+        .word nt_and, xt_dabs, z_dabs
+        .byte "dabs"
+
 nt_abs:
         .byte 3, 0
-        .word nt_and, xt_abs, z_abs
+        .word nt_dabs, xt_abs, z_abs
         .byte "abs"
 
 nt_minus:
@@ -577,9 +597,14 @@ nt_tuck:
         .word nt_comma, xt_tuck, z_tuck
         .byte "tuck"
 
+nt_not_rote:
+        .byte 4, 0
+        .word nt_tuck, xt_not_rote, z_not_rote
+        .byte "-rot"
+
 nt_rot:
         .byte 3, 0
-        .word nt_tuck, xt_rot, z_rot
+        .word nt_not_rote, xt_rot, z_rot
         .byte "rot"
 
 nt_nip:
@@ -588,7 +613,7 @@ nt_nip:
         .byte "nip"
 
 nt_r_fetch:
-        .byte 2, 0
+        .byte 2, NN
         .word nt_nip, xt_r_fetch, z_r_fetch
         .byte "r@"
 
@@ -694,11 +719,6 @@ nt_plus_loop:
         .word 0000, xt_plus_loop, z_plus_loop
         .byte "+loop"
 
-nt_not_rote:
-        .byte 4, 0
-        .word 0000, xt_not_rote, z_not_rote
-        .byte "-rot"
-
 nt_minus_trailing:
         .byte 9, 0
         .word 0000, xt_minus_trailing, z_minus_trailing
@@ -723,21 +743,6 @@ nt_dot_r:
         .byte 2, 0
         .word 0000, xt_dot_r, z_dot_r
         .byte ".r"
-
-nt_dot_s:
-        .byte 2, 0
-        .word 0000, xt_dot_s, z_dot_s
-        .byte ".s"
-
-nt_slash:
-        .byte 1, 0
-        .word 0000, xt_slash, z_slash
-        .byte "/"
-
-nt_slash_mod:
-        .byte 4, 0
-        .word 0000, xt_slash_mod, z_slash_mod
-        .byte "/mod"
 
 nt_slash_string:
         .byte 7, 0
@@ -899,11 +904,6 @@ nt_d_to_s:
         .word 0000, xt_d_to_s, z_d_to_s
         .byte "d>s"
 
-nt_dabs:
-        .byte 4, 0
-        .word 0000, xt_dabs, z_dabs
-        .byte "dabs"
-
 nt_defer:
         .byte 5, 0
         .word 0000, xt_defer, z_defer
@@ -1039,20 +1039,10 @@ nt_s_quote:
         .word 0000, xt_s_quote, z_s_quote
         .byte "s", $22
 
-nt_s_to_d:
-        .byte 3, 0
-        .word 0000, xt_s_to_d, z_s_to_d
-        .byte "s>d"
-
 nt_sliteral:
         .byte 8, 0
         .word 0000, xt_sliteral, z_sliteral
         .byte "sliteral"
-
-nt_sm_slash_rem:
-        .byte 6, 0
-        .word 0000, xt_sm_slash_rem, z_sm_slash_rem
-        .byte "sm/rem"
 
 nt_state:
         .byte 5, 0

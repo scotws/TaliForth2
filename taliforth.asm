@@ -1,7 +1,7 @@
 ; Tali Forth 2 for the 65c02
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 19. Jan 2014 (Tali Forth)
-; This version: 08. Feb 2018
+; This version: 12. Feb 2018
 
 ; This is the main file for Tali Forth 2
 
@@ -188,6 +188,8 @@ _nibble_to_ascii:
         	rts
 .scend
 
+; =====================================================================
+; INTERPRET ROUTINES
 
 interpret:
 .scope
@@ -208,7 +210,7 @@ _loop:
                 lda 0,x
                 ora 1,x
                 beq _line_done
-     
+
                 ; Go to FIND-NAME to see if this is a word we know. We have to
                 ; make a copy of the address in case it isn't a word we know and
                 ; we have to go see if it is a number
@@ -355,11 +357,11 @@ print_string:
                 ; falls through to print_common
 
 print_common:
-.scope
         ; """Common print loop for print_string and print_error. Assumes
         ; zero-terminated address of string to be printed is in tmp3. 
         ; Adds LF
         ; """
+.scope
                 ldy #00
 _loop:
                 lda (tmp3),y

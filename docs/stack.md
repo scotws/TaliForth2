@@ -1,7 +1,7 @@
 # Stack Structure of Tali Forth 2 for the 65c02
 Scot W. Stevenson <scot.stevenson@gmail.com> 
 First version: 19. Jan 2014 
-This version:  27. Nov 2017 
+This version:  12. Feb 2018
 
 Tali Forth 2 uses the lowest part of the top half of Zero Page for the Data
 Stack (DS). This leaves the lower half of the Zero Page for any kernel stuff the
@@ -63,6 +63,30 @@ basic structure is the same for both stacks.
 
 Because of this stack design, the second entry ("next on stack", NOS) starts at
 `02,X` and the third entry ("third on stack", 3OS) at `04,X`. 
+
+**Underflow detection** In contrast to Tali Forth 1, this version contains
+underflow detection for most words. It does this by comparing the Data Stack
+Pointer (X) to values that it must be smaller than (because the stack grows
+towards 0000). For instance, to make sure we have one element on the stack, we
+write
+
+```
+                cpx #dsp0-1
+                bmi okay
+
+                lda #11         ; error string for underflow
+                jmp error
+okay:
+                (...)
+```
+For the most common cases, we have:
+```
+           1 cell       dsp0-1
+           2 cells      dsp0-3
+           3 cells      dsp0-5
+```
+Though underflow detection slows the code down slighly, it adds enormously to
+the stability of the program.
 
 **Double cell values:** The double cell is stored on top of the single cell.
 Note this places the sign bit at the beginning of the byte below the DSP.

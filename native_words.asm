@@ -28,6 +28,27 @@ xt_cold:
                 ; them in your system in any way, you're going to have to
                 ; do it from scratch. Sorry.
                 sei
+ 
+                ; Set the OUTPUT vector to the default kernel_putc
+                ; We do this really early so we can print error messages
+                ; during debugging
+                lda #<kernel_putc
+                sta output
+                lda #>kernel_putc
+                sta output+1
+
+                ; set the INPUT vector to the default kernel_getc
+                lda #<kernel_getc
+                sta input
+                lda #>kernel_getc
+                sta input+1
+     
+                ; set the HAVE_KEY vector to the default kernel_getc
+                ; TODO see how this works with py65mon and if we need it
+                lda #<kernel_getc
+                sta havekey
+                lda #>kernel_getc
+                sta havekey+1
 
                 ; initialize 65c02 stack (Return Stack)
                 ldx #rsp0
@@ -48,28 +69,7 @@ xt_cold:
                 lda #00
                 sta nc_limit
                 stz nc_limit+1
-
      
-                ; set the OUTPUT vector to the default kernel_putc
-                ; but may have synonyms
-                lda #<kernel_putc
-                sta output
-                lda #>kernel_putc
-                sta output+1
-
-                ; set the INPUT vector to the default kernel_getc
-                lda #<kernel_getc
-                sta input
-                lda #>kernel_getc
-                sta input+1
-     
-                ; set the HAVE_KEY vector to the default kernel_getc
-                ; TODO see how this works with py65mon and if we need it
-                lda #<kernel_getc
-                sta havekey
-                lda #>kernel_getc
-                sta havekey+1
-
                 ; The compiler pointer (CP) points to the first free byte
                 ; in the Dictionary
                 lda #<cp0
@@ -99,16 +99,15 @@ xt_cold:
                 sta dp
                 lda #>dictionary_start
                 sta dp+1
- 
-                ; Clear the screen, assumes vt100 terminal
-                jsr xt_page
-     
+
+                jsr xt_cr
+
                 ; Define high-level words in forth_words.asm via EVALUATE
                 dex
                 dex
                 dex
                 dex
-               
+
                 ; start address goes NOS
                 lda #<high_level_start
                 sta 2,x
@@ -125,9 +124,8 @@ xt_cold:
                 sbc #>high_level_start
                 sta 1,x
 
-
                 jsr xt_evaluate
-                
+
                 ; Define any user words via EVALUATE
                 ; dex
                 ; dex
@@ -160,15 +158,20 @@ xt_cold:
 xt_abort:       ldx #dsp0
 
 
-; ## QUIT ( _- ) "Reset the input and get new input"
+; ## QUIT ( -- ) "Reset the input and get new input"
 ; ## "quit"  src: ANSI core  b: TBA  c: TBA  status: fragment
         ; """Rest the input and start command loop.
         ; """
 .scope
 xt_quit:        
-                ; clear Return Stack
+                ; Clear the Return Stack. This is a little screwed up
+                ; because the 65c02 can only set the Return Stack via X,
+                ; which is our Data Stack pointer. The ANSI specification
+                ; demands, however, that ABORT reset the Data Stack pointer
+                txa             ; Save the DSP that we just defined
                 ldx #rsp0
                 txs
+                tax             ; Restore the DSP. Dude, seriously.
 
                 ; make sure instruction pointer is empty
                 stz ip
@@ -183,6 +186,11 @@ xt_quit:
                 stz state+1
 
 _get_line:
+                lda #<buffer0   ; input buffer, this is paranoid
+                sta cib
+                lda #>buffer0
+                sta cib+1 
+
                 ; Size of current input buffer (CIB) is zero
                 stz ciblen
                 stz ciblen+1
@@ -218,7 +226,8 @@ _success:
                 ; Test for Data Stack underflow. We don't check for
                 ; overflow because it is so rare
                 cpx #dsp0
-                bcs _stack_ok           ; DSP must always be smaller (!) than DSP0
+                beq _stack_ok
+                bcc _stack_ok           ; DSP must always be smaller (!) than DSP0
 
                 lda #11                 ; code for underflow es_underflow
                 jmp error
@@ -1271,10 +1280,33 @@ xt_d_to_s:      nop
 z_d_to_s:       rts
 .scend
 
-; ## DABS ( -- ) "<TBA>"
-; ## "dabs"  src: ANSI double  b: TBA  c: TBA  status: TBA
+; ## DABS ( d -- ud ) "Return absolute value of double number"
+; ## "dabs"  src: ANSI double  b: TBA  c: TBA  status: coded
 .scope
-xt_dabs:        nop
+xt_dabs:
+                lda 1,x         ; MSB of high cell
+                bpl _done       ; positive, we get off light
+
+                ; negative, calculate 0 - d
+                ldy #0
+                sec
+
+                tya
+                sbc 2,x         ; LSB of low cell
+                sta 2,x
+
+                tya
+                sbc 3,x         ; MSB of low cell
+                sta 3,x
+
+                tya
+                sbc 0,x         ; LSB of high cell
+                sta 0,x
+
+                tya
+                sbc 1,x         ; MSB of high cell
+                sta 1,x
+_done:
 z_dabs:         rts
 .scend
 
@@ -1300,8 +1332,8 @@ z_defer:        rts
 ; ## DEPTH ( -- u ) "Get number of cells (not bytes) used by stack"
 ; ## "depth"  src: ANSI core  b: 14  c: TBA  status: coded
 xt_depth:       
+                lda #dsp0
                 stx tmpdsp
-                lda dsp0
                 sec
                 sbc tmpdsp
 
@@ -1439,8 +1471,6 @@ xt_dot:
                 inx
                 inx
 
-; THIS IS THE REAL VERSION
-
 ;               jsr xt_dup                      ; ( n n )
 ;               jsr xt_abs                      ; ( n u )
 ;               jsr xt_zero                     ; ( n u 0 )
@@ -1483,18 +1513,80 @@ xt_dot_r:       nop
 z_dot_r:        rts
 .scend
 
-; ## DOT_S ( -- ) "<TBA>"
-; ## ".s"  src: ANSI tools  b: TBA  c: TBA  status: TBA
+; ## DOT_S ( -- ) "Print content of Data Stack"
+; ## ".s"  src: ANSI tools  b: TBA  c: TBA  status: coded
+        ; """Print content of Data Stack non-distructively. Since this is for
+        ; humans, we don't have to worry about speed. We follow the format
+        ; of Gforth and print the number of elements first in brackets,
+        ; followed by the Data Stack content (if any).
+        ; """
 .scope
-xt_dot_s:       nop
+xt_dot_s:
+                jsr xt_depth    ; ( -- u ) 
+
+                ; Print stack depth in brackets
+                lda #$3c        ; ASCII for "<"
+                jsr emit_a
+
+                ; We keep a copy of the number of the things on the stack
+                ; to use as a counter later down. This assumes that there
+                ; are less than 255 elements on the stack
+                lda 0,x
+                tay
+
+                ; print unsigned number without the trailing space
+                ; TODO replace this by a real routine
+                jsr byte_to_ascii
+ 
+                lda #$3e        ; ASCII for ">"
+                jsr emit_a
+
+                lda #AscSP      ; ASCII for SPACE
+                jsr emit_a
+
+                inx
+                inx
+
+                ; There will be lots of cases where the stack is empty. If that
+                ; is so, get out of here quickly
+                cpx #dsp0
+                beq _done
+
+                ; We have at least one element on the stack. The depth of the
+                ; stack is in Y and A, where we can use it as a counter. We go
+                ; from bottom to top
+                sty tmp1        ; counter
+
+                lda #dsp0-1     ; go up one to avoid garbage
+                sta tmp2
+                stz tmp2+1      ; must be zero page on the 65c02
+_loop:
+                lda (tmp2)
+                jsr byte_to_ascii       ; TODO replace by real routine
+                dec tmp2
+                lda (tmp2)
+                jsr byte_to_ascii       ; TODO replace by real routine
+                dec tmp2
+
+                jsr xt_space
+
+                dec tmp1
+                bne _loop
+_done:
 z_dot_s:        rts
 .scend
 
 
 ; ## DROP ( u -- ) "Pop top entry on Data Stack"
-; ## "drop"  src: ANSI core  b: 2  c: 4  status: tested
+; ## "drop"  src: ANSI core  b: TBA  c: TBA  status: tested
 xt_drop:        
-                inx             ; drop
+                cpx #dsp0-1
+                bmi +
+
+                lda #11
+                jmp error
+*
+                inx
                 inx
 z_drop:         rts
 
@@ -1548,6 +1640,12 @@ z_dump:         rts
 ; ## DUP ( u -- u u ) "Duplicate TOS"
 ; ## "dup"  src: ANSI core  b: TBA  c: TBA  status: coded
 xt_dup:         
+                cpx #dsp0-1
+                bmi +
+
+                lda #11         ; underflow
+                jmp error
+*
                 dex
                 dex
 
@@ -1685,7 +1783,7 @@ xt_evaluate:
                 ; We could clean up the Data Stack here but we might as well
                 ; just handle that later before we leave and avoid the
                 ; code duplication
-
+                
                 jsr interpret
 
                 ; restore variables
@@ -1969,11 +2067,14 @@ z_hex:          rts
         ; variable tohold instead of HLD.
         ; """
 xt_hold:        
-                dec tohold
+                lda tohold
                 bne +
                 dec tohold+1
-*
+*               dec tohold
+
+                lda 0,x
                 sta (tohold)
+
                 inx
                 inx
 
@@ -2208,7 +2309,7 @@ z_left_bracket: rts
         ; internal variable tohold instead of HLD.
         ; """
 xt_less_number_sign:
-                jsr xt_pad
+                jsr xt_pad      ; ( addr )
 
                 lda 0,x
                 sta tohold
@@ -2594,10 +2695,31 @@ xt_not_equals:  nop
 z_not_equals:   rts
 .scend
 
-; ## NOT_ROTE ( -- ) "<TBA>"
-; ## "-rot"  src: Gforth  b: TBA  c: TBA  status: TBA
+
+; ## NOT_ROTE ( a b c -- c a b ) "Rotate upwards"
+; ## "-rot"  src: Gforth  b: TBA  c: TBA  status: coded
 .scope
-xt_not_rote:    nop
+xt_not_rote:    
+		lda 1,x         ; MSB first
+                tay
+                lda 3,x
+                sta 1,x
+
+                lda 5,x
+                sta 3,x
+                tya
+                sta 5,x
+
+                lda 0,x         ; LSB second
+                tay
+                lda 2,x
+                sta 0,x
+
+                lda 4,x
+                sta 2,x
+                tya
+                sta 4,x
+
 z_not_rote:     rts
 .scend
 
@@ -2705,6 +2827,7 @@ _main:
                 lda #$3c        ; ASCII for "<"
                 jsr emit_a
                 jsr xt_space
+
                 lda #12         ; code for Syntax error
                 jmp error
                 
@@ -2764,7 +2887,7 @@ xt_number_sign:
                 tay
                 lda s_abc_upper,y
                 sta 0,x
-                stz 1,x                 ; paranoid; now (ud char) 
+                stz 1,x                 ; paranoid; now ( ud char ) 
 
                 jsr xt_hold
 
@@ -2783,21 +2906,23 @@ xt_number_sign_greater:
                 
                 ; The start address lives in tohold
                 lda tohold
+                sta 0,x         ; LSB of tohold
                 sta 2,x
                 lda tohold+1
-                sta 3,x         ; ( addr ud )
+                sta 1,x         ; MSB of addr
+                sta 3,x         ; ( addr addr ) 
 
                 ; The length of the string is pad - addr
-                jsr xt_pad      ; ( addr ud pad ) 
+                jsr xt_pad      ; ( addr addr pad ) 
 
-                lda 0,x         ; LSB
+                lda 0,x         ; LSB of pad address
                 sec
-                sbc 4,x
-                sta 2,x
+                sbc 2,x
+                sta 0,x
 
                 lda 1,x         ; MSB, which should always be zero
-                sbc 4,x
-                sta 3,x
+                sbc 3,x
+                sta 1,x         ; ( addr u pad )
 
                 inx
                 inx
@@ -3314,15 +3439,15 @@ z_question_dup: rts
         ; """
         ; TODO consider special case in COMPILE,
 xt_r_fetch:     
-                dex
-                dex
-
                 ; get the return address
                 ply             ; LSB
                 sty tmp1
                 ply             ; MSB
 
                 ; get the actual top of Return Stack
+                dex
+                dex
+
                 pla             ; LSB
                 sta 0,x
                 pla             ; MSB
@@ -3544,15 +3669,27 @@ xt_s_quote:     nop
 z_s_quote:      rts
 .scend
 
-; ## S_TO_D ( -- ) "<TBA>"
-; ## "s>d"  src: ANSI core  b: TBA  c: TBA  status: TBA
+; ## S_TO_D ( d -- n ) "Convert single cell number to double cell"
+; ## "s>d"  src: ANSI core  b: TBA  c: TBA  status: coded
 .scope
-xt_s_to_d:      nop
+xt_s_to_d:
+                dex
+                dex
+                stz 0,x
+                stz 1,x
+
+                lda 2,x
+                bpl _done
+
+                ; negative, extend sign
+                dec 0,x
+                dec 1,x
+_done:                
 z_s_to_d:       rts
 .scend
 
 
-; ## SEMICOLON ( -- ) "<TBA>"
+; ## SEMICOLON ( -- ) "End compilation of new word"
 ; ## ";"  src: ANSI core  b: TBA  c: TBA  status: coded
         ; """End the compilation of a new word into the Dictionary. When we
         ; enter this, WORKWORD is pointing to the nt_ of this word in the
@@ -3598,6 +3735,10 @@ z_semicolon:    rts
 
 ; ## SIGN ( n -- ) "Add minus to pictured output"
 ; ## "sign"  src: ANSI core  b: TBA  c: TBA  status: coded
+        ; """Code based on 
+        ; http://pforth.googlecode.com/svn/trunk/fth/numberio.fth
+        ; Original Forth code is   0< IF ASCII - HOLD THEN 
+        ; """
 .scope
 xt_sign:        
                 lda 1,x         ; check MSB of TOS
@@ -3605,6 +3746,7 @@ xt_sign:
 
                 inx
                 inx
+
                 bra _done
 _minus:
                 lda #$2d        ; ASCII for "-"
@@ -3616,20 +3758,6 @@ _done:
 z_sign:         rts
 .scend
 
-
-; ## SLASH ( -- ) "<TBA>"
-; ## "/"  src: ANSI core  b: TBA  c: TBA  status: TBA
-.scope
-xt_slash:       nop
-z_slash:        rts
-.scend
-
-; ## SLASH_MOD ( -- ) "<TBA>"
-; ## "/mod"  src: ANSI core  b: TBA  c: TBA  status: TBA
-.scope
-xt_slash_mod:   nop
-z_slash_mod:    rts
-.scend
 
 ; ## SLASH_STRING ( -- ) "<TBA>"
 ; ## "/string"  src: ANSI string  b: TBA  c: TBA  status: TBA
@@ -3646,11 +3774,54 @@ xt_sliteral:    nop
 z_sliteral:     rts
 .scend
 
-; ## SM_SLASH_REM ( -- ) "<TBA>"
-; ## "sm/rem"  src: ANSI core  b: TBA  c: TBA  status: TBA
+; ## SM_SLASH_REM ( d n1 -- n2 n3 ) "Symmetic signed division"
+; ## "sm/rem"  src: ANSI core  b: TBA  c: TBA  status: tested
+        ; """; Symmetic signed division. Compare FM/MOD. Based on F-PC 3.6
+        ; by Ulrich Hoffmann. See http://www.xlerb.de/uho/ansi.seq Forth:
+        ; OVER >R 2DUP XOR 0< >R ABS >R DABS R> UM/MOD R> ?NEGATE SWAP
+        ; R> ?NEGATE SWAP
+        ; """
 .scope
 xt_sm_slash_rem:
-                nop
+                ; push MSB of high cell of d to Data Stack so we can check
+                ; its sign later
+                lda 3,x
+                pha
+
+                ; XOR the MSB of the high cell of d and n1 so we figure out
+                ; its sign later as well
+                lda 1,x
+                eor 3,x
+                pha
+
+                ; Prepare division by getting absolute of n1 and d
+                jsr xt_abs
+                inx             ; pretend we pushed n1 to R
+                inx
+
+                jsr xt_dabs
+                dex
+                dex
+
+                jsr xt_um_slash_mod     ; UM/MOD
+
+                ; if the XOR compiled above is negative, negate the
+                ; quotient (n3)
+                pla
+                bpl +
+                jsr xt_negate
+*
+                ; if d was negative, negate the remainder (n2)
+                pla
+                bpl _done
+
+                inx             ; pretend we pushed quotient to R
+                inx
+                jsr xt_negate
+                dex
+                dex
+
+_done:
 z_sm_slash_rem: rts
 .scend
 
@@ -3826,8 +3997,16 @@ z_store:        rts
 
 
 ; ## SWAP ( b a -- a b ) "Exchange TOS and NOS"
-; ## "swap"  src: ANSI core  b: 16  c: TBA  status: coded
-xt_swap:        lda 0,x         ; LSB
+; ## "swap"  src: ANSI core  b: TBA  c: TBA  status: coded
+xt_swap:        
+.scope
+                cpx #dsp0-3
+                bmi +
+
+                lda #11         ; underflow
+                jsr error 
+*
+                lda 0,x         ; LSB
                 ldy 2,x
                 sta 2,x
                 sty 0,x
@@ -3838,6 +4017,7 @@ xt_swap:        lda 0,x         ; LSB
                 sty 1,x
 
 z_swap:         rts
+.scend
 
 
 ; ## THEN ( -- ) "<TBA>"
@@ -4159,8 +4339,15 @@ z_two_drop:     rts
 
 ; ## TWO_DUP ( a b -- a b a b ) "Duplicate first two stack elements"
 ; ## "2dup"  src: ANSI core  b: 20  c: TBA  status: coded
+.scope
 xt_two_dup:
-                dex
+                cpx #dsp0-3
+                bmi +
+
+                lda #11
+                jmp error
+
+*               dex
                 dex
                 dex
                 dex
@@ -4176,6 +4363,7 @@ xt_two_dup:
                 sta 3,x
 
 z_two_dup:      rts
+.scend
 
 
 ; ## TWO_OVER ( -- ) "<TBA>"
@@ -4302,28 +4490,29 @@ z_ud_dot_r:     rts
 .scend
 
 
-; ## UD_SLASH_MOD ( ud u1 -- u2 ud2 ) "32/16 --> 32 Division"
+; ## UD_SLASH_MOD ( ud u -- rem ud ) "32/16 --> 32 Division"
 ; ## "ud/mod"  src: Gforth  b: TBA  c: TBA  status: coded
         ; """Divide double cell number by a single-cell number and return
-        ; the quotient ud2 as TOS in double-cell form and remainder u2
+        ; the quotient ud as TOS in double-cell form and remainder rem
         ; Based on code from pForth, which is in the public domain. Original
         ; Forth is  >R 0 R@ UM/MOD  ROT ROT R> UM/MOD ROT
         ; """
         ; TODO analyze and convert parts to assembler 
         ; TODO test this, some results seem fishy
+.scope
 xt_ud_slash_mod:
-                
-                jsr xt_to_r
-                jsr xt_zero
-                jsr xt_r_fetch
-                jsr xt_um_slash_mod
-                jsr xt_rot
-                jsr xt_rot
-                jsr xt_r_from
-                jsr xt_um_slash_mod
-                jsr xt_rot
+                jsr xt_to_r             ; >r
+                jsr xt_zero             ; 0
+                jsr xt_r_fetch          ; r@
+                jsr xt_um_slash_mod     ; um/mod
+                jsr xt_rot              ; rot
+                jsr xt_rot              ; rot
+                jsr xt_r_from           ; r>
+                jsr xt_um_slash_mod     ; um/mod
+                jsr xt_rot              ; rot
 
 z_ud_slash_mod: rts
+.scend
 
 
 ; ## UM_SLASH_MOD ( ud u -- ur u ) "32/16 -> 16 division"
@@ -4336,9 +4525,7 @@ z_ud_slash_mod: rts
         ; """
 .scope
 xt_um_slash_mod:
-                ; TODO make sure we have enough stuff on the stack
-                
-                ; prevent division by zero
+                ; catch division by zero
                 lda 0,x
                 ora 1,x
                 bne _not_zero
