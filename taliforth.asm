@@ -188,8 +188,6 @@ _nibble_to_ascii:
         	rts
 .scend
 
-; =====================================================================
-; INTERPRET ROUTINES
 
 interpret:
 .scope
