@@ -1467,7 +1467,6 @@ z_does:         rts
 
 ; ## DOT ( u -- ) "Print TOS"
 ; ## "."  src: ANSI core  b: TBA  c: TBA  status: TBA
-; TODO This is a temporary version
 .scope
 xt_dot:         
                 cpx #dsp0-1
@@ -1476,24 +1475,16 @@ xt_dot:
                 lda #11         ; underflow
                 jmp error
 *
-                lda 1,x
-                jsr byte_to_ascii
-                lda 0,x
-                jsr byte_to_ascii
-
-                inx
-                inx
-
-;               jsr xt_dup                      ; ( n n )
-;               jsr xt_abs                      ; ( n u )
-;               jsr xt_zero                     ; ( n u 0 )
-;               jsr xt_less_number_sign         ; ( n u 0 )
-;               jsr xt_number_sign              ; ( n ud )
-;               jsr xt_rot                      ; ( ud n )
-;               jsr xt_sign                     ; ( ud )
-;               jsr xt_number_sign_greater      ; ( addr u )
-;               jsr xt_type
-;               jsr xt_space
+                jsr xt_dup                      ; ( n n )
+                jsr xt_abs                      ; ( n u )
+                jsr xt_zero                     ; ( n u 0 )
+                jsr xt_less_number_sign         ; ( n u 0 )
+                jsr xt_number_sign_s            ; ( n ud )
+                jsr xt_rot                      ; ( ud n )
+                jsr xt_sign                     ; ( ud )
+                jsr xt_number_sign_greater      ; ( addr u )
+                jsr xt_type
+                jsr xt_space
 
 z_dot:          rts
 .scend
@@ -2942,14 +2933,14 @@ xt_number_sign_greater:
                 ; The length of the string is pad - addr
                 jsr xt_pad      ; ( addr addr pad ) 
 
-                lda 0,x         ; LSB of pad address
                 sec
+                lda 0,x         ; LSB of pad address
                 sbc 2,x
-                sta 0,x
+                sta 2,x
 
                 lda 1,x         ; MSB, which should always be zero
                 sbc 3,x
-                sta 1,x         ; ( addr u pad )
+                sta 3,x         ; ( addr u pad )
 
                 inx
                 inx
@@ -3498,6 +3489,11 @@ xt_r_fetch:
                 sta 0,x
                 pla             ; MSB
                 sta 1,x
+
+                ; now we have to put that value back
+                pha
+                lda 0,x
+                pha
 
                 ; restore return value
                 phy             ; MSB

@@ -45,7 +45,8 @@ high_level_start:
         .byte ": */mod >r m* r> sm/rem ; "
 
         ; Output definitions. Since these usually involve the user, and humans
-        ; are slow, these can stay high-level for the moment. Based on
+        ; are slow, these can stay high-level for the moment. However, in this
+        ; state they don't check for underflow. Based on
         ; https://github.com/philburk/pforth/blob/master/fth/numberio.fth
         .byte ": u. 0 <# #s #> type space ; "
         .byte ": u.r >r 0 <# #s #> r> over - spaces type ; "
