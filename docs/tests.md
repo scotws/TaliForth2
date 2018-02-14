@@ -1,7 +1,7 @@
 # A collection of tests for Forth words
 Scot W. Stevenson <scot.stevenson@gmail.com>
-First version 15. March 2014
-This version 26. Nov 2017
+First version 15. Mar 2014
+This version 14. Feb 2018
 
 This list is adapted from [Tali Forth](https://github.com/scotws/TaliForth)
 
@@ -22,6 +22,13 @@ char & parse jack& type                 \ should print "jack"
 
 ```
 : aaa \[ 1 \] literal ;         \ should put 1 on the stack during runtime
+```
+
+
+### BRACKET-TICK test
+
+```
+: aaa \['\] words execute ;     \ should print all words known
 ```
 
 

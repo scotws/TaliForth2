@@ -1,7 +1,7 @@
 ; Dictionary Headers for Tali Forth 2
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 05. Dec 2016 (Liara Forth)
-; This version: 13. Feb 2018
+; This version: 14. Feb 2018
 
 ; Dictionary headers are kept separately from the code, which allows various
 ; tricks in the code. We roughly follow the Gforth terminology: The Execution
@@ -162,9 +162,14 @@ nt_backslash:
         .word nt_pad, xt_backslash, z_backslash
         .byte $5c
 
+nt_fm_slash_mod:
+        .byte 6, 0
+        .word nt_backslash, xt_fm_slash_mod, z_fm_slash_mod
+        .byte "fm/mod"
+
 nt_sm_slash_rem:
         .byte 6, 0
-        .word nt_backslash, xt_sm_slash_rem, z_sm_slash_rem
+        .word nt_fm_slash_mod, xt_sm_slash_rem, z_sm_slash_rem
         .byte "sm/rem"
 
 nt_ud_slash_mod:
@@ -327,9 +332,14 @@ nt_name_to_int:
         .word nt_int_to_name, xt_name_to_int, z_name_to_int
         .byte "name>int"
 
+nt_bracket_tick:
+        .byte 3, CO+IM
+        .word nt_name_to_int, xt_bracket_tick, z_bracket_tick
+        .byte "[']"
+
 nt_tick:
         .byte 1, 0
-        .word nt_int_to_name, xt_tick, z_tick
+        .word nt_bracket_tick, xt_tick, z_tick
         .byte "'"
 
 nt_find_name:
@@ -357,9 +367,14 @@ nt_d_minus:
         .word nt_d_plus, xt_d_minus, z_d_minus
         .byte "d-"
 
+nt_d_to_s:
+        .byte 3, 0
+        .word nt_d_minus, xt_d_to_s, z_d_to_s
+        .byte "d>s"
+
 nt_s_to_d:
         .byte 3, 0
-        .word nt_d_minus, xt_s_to_d, z_s_to_d
+        .word nt_d_to_s, xt_s_to_d, z_s_to_d
         .byte "s>d"
 
 nt_value:               ; some routine as CONSTANT
@@ -845,11 +860,6 @@ nt_question_dup:
         .word 0000, xt_question_dup, z_question_dup
         .byte "?dup"
 
-nt_bracket_tick:
-        .byte 3, 0
-        .word 0000, xt_bracket_tick, z_bracket_tick
-        .byte "[']"
-
 nt_abort_quote:
         .byte 6, 0
         .word 0000, xt_abort_quote, z_abort_quote
@@ -895,11 +905,6 @@ nt_compile_only:
         .word 0000, xt_compile_only, z_compile_only
         .byte "compile-only"
 
-nt_d_to_s:
-        .byte 3, 0
-        .word 0000, xt_d_to_s, z_d_to_s
-        .byte "d>s"
-
 nt_defer:
         .byte 5, 0
         .word 0000, xt_defer, z_defer
@@ -929,11 +934,6 @@ nt_find:
         .byte 4, 0
         .word 0000, xt_find, z_find
         .byte "find"
-
-nt_fm_slash_mod:
-        .byte 6, 0
-        .word 0000, xt_fm_slash_mod, z_fm_slash_mod
-        .byte "fm/mod"
 
 nt_i:
         .byte 1, 0
