@@ -112,22 +112,100 @@ doconst:
 
 
 dodefer:
+.scope
         ; """Execute a DEFER statement at runtime: Execute the address we
         ; find after the caller in the Data Field
         ; """
-        ; TODO
-                rts
+                ; The xt we need is stored in the two bytes after the JSR
+                ; return address, which is what is on top of the Return
+                ; Stack. So all we have to do is replace our return jump
+                ; with what we find there
+                ply             ; LSB
+                pla             ; MSB
 
+                iny
+                bne +
+                inc
+*
+                sty tmp1
+                sta tmp1+1
+
+                ldy #0
+                lda (tmp1),y
+                sta tmp2
+                iny
+                lda (tmp1),y
+                sta tmp2+1
+                
+                ; now we move one byte back
+                lda tmp2        ; LSB
+                sec
+                sbc #1
+                tay
+
+                lda tmp2+1      ; MSB
+                sbc #0          ; we only care about the borrow
+                pha
+
+                phy             ; LSB
+
+                rts             ; This is actually a jump to the new target
+.scend
+
+defer_error:
+.scope
+                ; """Error routine for undefined DEFER: Complain and go
+                ; abort
+                ; """
+                lda #2          ; DEFER not defined yet
+                jmp error
+.scend
 
 dodoes:
+.scope
         ; """Execute the runtime portion of DOES>. See DOES> and
-        ; docs/create-does.txt for details
+        ; docs/create-does.txt for details and
+        ; http://www.bradrodriguez.com/papers/moving3.htm
         ; """
-        ; TODO
-                rts
+  		; Assumes the address of the CFA of the original defining word
+                ; (say, CONSTANT) is on the top of the Return Stack. Save it
+                ; for a later jump, adding one byte because of the way the
+                ; 6502 works
+                ply             ; LSB
+                pla             ; MSB
+
+                iny
+                bne +
+                inc
+*
+                sty tmp2
+                sta tmp2+1
+               
+                ; Next on the Return Stack should be the address of the PFA of
+                ; the calling defined word (say, the name of whatever constant we
+                ; just defined). Move this to the Data Stack, again adding one.
+                dex
+                dex
+                
+                pla
+                clc
+                adc #1
+                sta 0,x         ; LSB
+
+                pla
+                adc #0          ; only care about the carry
+                sta 1,x
+
+                ; This leaves the return address from the original main routine
+                ; on top of the Return Stack. We leave that untouched and jump
+                ; to the special code of the defining word. It's RTS instruction
+                ; will take us back to the main routine
+                jmp (tmp2)
+.scend
 
 
 dovar:
+.scope
         ; """Execute a variable: Push the address of the first bytes of
         ; the Data Field onto the stack. This is called with JSR so we
         ; can pick up the address of the calling variable off the 65c02's
@@ -151,7 +229,7 @@ dovar:
                 sta 0,x
                 
                 rts
-
+.scend
 
 ; =====================================================================
 ; LOW LEVEL HELPER FUNCTIONS
@@ -160,7 +238,6 @@ dovar:
 byte_to_ascii:
         ; """Convert byte in A to two ASCII hex digits and EMIT them.
         ; """
-        ; TODO test routine
 .scope
                 pha
                 lsr             ; convert high nibble first
@@ -418,8 +495,9 @@ _done:
 ; =====================================================================
 ; FINALLY
 
-; Of the 32 KiB we use, 24 are reserved for Tali (from $8000 to $DFFF) and the
-; last eight are left for whatever the user wants to use them for.
+; Of the 32 KiB we use, 24 KiB are reserved for Tali (from $8000 to $DFFF)
+; and the last eight (from $E000 to $FFFF) are left for whatever the user
+; wants to use them for.
 
 .advance $e000
 .require "kernel.asm"

@@ -252,14 +252,29 @@ nt_abort:
         .word nt_quit, xt_abort, z_abort
         .byte "abort"
 
+nt_compile_only:
+        .byte 12, 0
+        .word nt_abort, xt_compile_only, z_compile_only
+        .byte "compile-only"
+
 nt_immediate:
         .byte 9, 0
-        .word nt_abort, xt_immediate, z_immediate
+        .word nt_compile_only, xt_immediate, z_immediate
         .byte "immediate"
+
+nt_dot_quote:
+        .byte 2, CO+IM
+        .word nt_immediate, xt_dot_quote, z_dot_quote
+        .byte ".", $22
+
+nt_sliteral:
+        .byte 8, CO+IM
+        .word nt_dot_quote, xt_sliteral, z_sliteral
+        .byte "sliteral"
 
 nt_literal:
         .byte 7, CO+IM
-        .word nt_immediate, xt_literal, z_literal
+        .word nt_sliteral, xt_literal, z_literal
         .byte "literal"
 
 nt_right_bracket:
@@ -317,9 +332,19 @@ nt_latestxt:
         .word nt_latestnt, xt_latestxt, z_latestxt
         .byte "latestxt"
 
+nt_defer:
+        .byte 5, 0
+        .word nt_latestxt, xt_defer, z_defer
+        .byte "defer"
+
+nt_to_body:
+        .byte 5, 0
+        .word nt_defer, xt_to_body, z_to_body
+        .byte ">body"
+
 nt_name_to_string:
         .byte 11, 0
-        .word nt_latestxt, xt_name_to_string, z_name_to_string
+        .word nt_to_body, xt_name_to_string, z_name_to_string
         .byte "name>string"
 
 nt_int_to_name:
@@ -392,9 +417,14 @@ nt_variable:
         .word nt_constant, xt_variable, z_variable
         .byte "variable"
 
+nt_does:
+        .byte 5, CO+IM
+        .word nt_variable, xt_does, z_does
+        .byte "does>"
+
 nt_create:
         .byte 6, 0
-        .word nt_variable, xt_create, z_create
+        .word nt_does, xt_create, z_create
         .byte "create"
 
 nt_allot:
@@ -795,11 +825,6 @@ nt_minus_trailing:
         .word 0000, xt_minus_trailing, z_minus_trailing
         .byte "-trailing"
 
-nt_dot_quote:
-        .byte 2, 0
-        .word 0000, xt_dot_quote, z_dot_quote
-        .byte ".", $22
-
 nt_dot_byte:
         .byte 5, 0
         .word 0000, xt_dot_byte, z_dot_byte
@@ -844,11 +869,6 @@ nt_two_variable:
         .byte 9, 0
         .word 0000, xt_two_variable, z_two_variable
         .byte "2variable"
-
-nt_to_body:
-        .byte 5, 0
-        .word 0000, xt_to_body, z_to_body
-        .byte ">body"
 
 nt_question_do:
         .byte 3, 0
@@ -900,25 +920,10 @@ nt_cmove_up:
         .word 0000, xt_cmove_up, z_cmove_up
         .byte "cmove>"
 
-nt_compile_only:
-        .byte 12, 0
-        .word 0000, xt_compile_only, z_compile_only
-        .byte "compile-only"
-
-nt_defer:
-        .byte 5, 0
-        .word 0000, xt_defer, z_defer
-        .byte "defer"
-
 nt_do:
         .byte 2, 0
         .word 0000, xt_do, z_do
         .byte "do"
-
-nt_does:
-        .byte 5, 0
-        .word 0000, xt_does, z_does
-        .byte "does>"
 
 nt_else:
         .byte 4, 0
@@ -1009,11 +1014,6 @@ nt_s_quote:
         .byte 2, 0
         .word 0000, xt_s_quote, z_s_quote
         .byte "s", $22
-
-nt_sliteral:
-        .byte 8, 0
-        .word 0000, xt_sliteral, z_sliteral
-        .byte "sliteral"
 
 nt_then:
         .byte 4, 0

@@ -1,7 +1,7 @@
 # A collection of tests for Forth words
 Scot W. Stevenson <scot.stevenson@gmail.com>
 First version 15. Mar 2014
-This version 14. Feb 2018
+This version 15. Feb 2018
 
 This list is adapted from [Tali Forth](https://github.com/scotws/TaliForth)
 
@@ -17,6 +17,13 @@ From
 
 char & parse jack& type                 \ should print "jack"    
 ```
+
+### CREATE/DOES>
+The simplest test is to redefine CONSTANT:
+```
+: myconst create , does> @ ; 
+```
+
 
 ### LITERAL test
 
