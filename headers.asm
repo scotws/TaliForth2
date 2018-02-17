@@ -167,9 +167,24 @@ nt_pad:
         .word nt_to_in, xt_pad, z_pad
         .byte "pad"
 
+nt_cmove:
+        .byte 5, 0
+        .word nt_pad, xt_cmove, z_cmove
+        .byte "cmove"
+
+nt_cmove_up:
+        .byte 6, 0
+        .word nt_cmove, xt_cmove_up, z_cmove_up
+        .byte "cmove>"
+
+nt_move:
+        .byte 4, NN
+        .word nt_cmove_up, xt_move, z_move
+        .byte "move"
+
 nt_backslash:
         .byte 1, 0
-        .word nt_pad, xt_backslash, z_backslash
+        .word nt_move,  xt_backslash, z_backslash
         .byte $5c
 
 nt_fm_slash_mod:
@@ -252,24 +267,39 @@ nt_state:
         .word nt_evaluate, xt_state, z_state
         .byte "state"
 
+nt_again:
+        .byte 5, AN+CO+IM
+        .word nt_state, xt_again, z_again
+        .byte "again"
+
+nt_begin:
+        .byte 5, AN+CO+IM
+        .word nt_again, xt_begin, z_begin
+        .byte "begin"
+
 nt_quit:
         .byte 4, 0
-        .word nt_state, xt_quit, z_quit
+        .word nt_begin, xt_quit, z_quit
         .byte "quit"
 
 nt_leave:
-        .byte 5, CO+AN
+        .byte 5, AN+CO
         .word nt_quit, xt_leave, z_leave
         .byte "leave"
 
 nt_unloop:
-        .byte 6, CO+AN
+        .byte 6, AN+CO
         .word nt_leave, xt_unloop, z_unloop
         .byte "unloop"
 
+nt_exit:
+        .byte 4, AN+CO
+        .word nt_unloop, xt_exit, z_exit
+        .byte "exit"
+
 nt_plus_loop:
         .byte 5, CO+IM
-        .word nt_unloop, xt_plus_loop, z_plus_loop
+        .word nt_exit, xt_plus_loop, z_plus_loop
         .byte "+loop"
 
 nt_loop:
@@ -278,12 +308,12 @@ nt_loop:
         .byte "loop"
 
 nt_j:
-        .byte 1, CO+AN
+        .byte 1, AN+CO
         .word nt_loop, xt_j, z_j
         .byte "j"
 
 nt_i:
-        .byte 1, CO+AN
+        .byte 1, AN+CO
         .word nt_j, xt_i, z_i
         .byte "i"
 
@@ -930,31 +960,6 @@ nt_two_variable:
         .word 0000, xt_two_variable, z_two_variable
         .byte "2variable"
 
-nt_again:
-        .byte 5, 0
-        .word 0000, xt_again, z_again
-        .byte "again"
-
-nt_begin:
-        .byte 5, 0
-        .word 0000, xt_begin, z_begin
-        .byte "begin"
-
-nt_cmove:
-        .byte 5, 0
-        .word 0000, xt_cmove, z_cmove
-        .byte "cmove"
-
-nt_cmove_up:
-        .byte 6, 0
-        .word 0000, xt_cmove_up, z_cmove_up
-        .byte "cmove>"
-
-nt_exit:
-        .byte 4, 0
-        .word 0000, xt_exit, z_exit
-        .byte "exit"
-
 nt_find:
         .byte 4, 0
         .word 0000, xt_find, z_find
@@ -975,11 +980,6 @@ nt_mod:
         .word 0000, xt_mod, z_mod
         .byte "mod"
 
-nt_move:
-        .byte 4, 0
-        .word 0000, xt_move, z_move
-        .byte "move"
-
 nt_nc_limit:
         .byte 8, 0
         .word 0000, xt_nc_limit, z_nc_limit
@@ -999,11 +999,6 @@ nt_repeat:
         .byte 6, 0
         .word 0000, xt_repeat, z_repeat
         .byte "repeat"
-
-nt_then:
-        .byte 4, 0
-        .word 0000, xt_then, z_then
-        .byte "then"
 
 nt_to:
         .byte 2, 0

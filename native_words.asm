@@ -425,10 +425,37 @@ z_accept:       rts
 .scend
 
 
-; ## AGAIN ( -- ) "<TBA>"
-; ## "again"  src: ANSI core ext  b: TBA  c: TBA  status: TBA
+; ## AGAIN ( addr -- ) "Code backwards branch to address left by BEGIN"
+; ## "again"  src: ANSI core ext  b: TBA  c: TBA  status: coded
 .scope
-xt_again:       nop
+xt_again:
+                ; Add the opcode for a JMP. We use JMP instead of BRA
+                ; so we have the range and don't have to calculate the
+                ; offset.
+                ldy #0
+                lda #$4c        ; JMP
+                sta (cp),y
+                iny
+
+                lda 0,x         ; LSB of address
+                sta (CP),y
+                iny
+
+                lda 1,x         ; MSB of address
+                sta (CP),y
+                iny
+
+                ; Allot the space we just used
+                tya
+                clc
+                adc cp
+                sta cp
+                bcc _done
+                inc cp+1
+_done:
+                inx
+                inx
+
 z_again:        rts
 .scend
 
@@ -598,10 +625,22 @@ xt_base:
 z_base:         rts
 
 
-; ## BEGIN ( -- ) "<TBA>"
-; ## "begin"  src: ANSI core  b: TBA  c: TBA  status: TBA
+; ## BEGIN ( -- addr ) "Mark entry point for loop"
+; ## "begin"  src: ANSI core  b: TBA  c: TBA  status: coded
+        ; """This is just an immediate version of here which
+        ; could just as welle be coded as
+        ;       : BEGIN HERE ; IMMEDIATE COMPILE-ONLY
+        ; but we code it in assembler for speed
+        ; """
 .scope
-xt_begin:       nop
+xt_begin:
+                dex
+                dex
+                lda cp
+                sta 0,x
+                lda cp+1
+                sta 1,x
+
 z_begin:        rts
 .scend
 
@@ -846,24 +885,173 @@ z_char:         rts
         ; compatibility with other Forth versions
         ; """
 .scope
-xt_chars:       nop             ; removed during native compile
+xt_chars:
+                ; Even if this does nothing, we catch underflows for
+                ; stability
+                cpx #dsp0-1
+                bmi +
+                lda #11         ; underflow
+                jmp error
+*
 z_chars:        rts
 .scend
 
 
-; ## CMOVE ( -- ) "<TBA>"
-; ## "cmove"  src: ANSI string  b: TBA  c: TBA  status: TBA
+; ## CMOVE ( addr1 addr 2 u -- ) "Copy bytes going from low to high"
+; ## "cmove"  src: ANSI string  b: TBA  c: TBA  status: coded
+        ; """Copy u bytes from addr1 to addr2, going low to high (addr2 is
+        ; larger than addr1). Based on code in Leventhal, Lance A. 
+        ; "6502 Assembly Language Routines", p. 201
+        ; """
 .scope
-xt_cmove:       nop
+xt_cmove:
+		cpx #dsp0-5
+                bmi +
+                lda #11         ; underflow
+                jmp error
+*
+		; abort if number of bytes to move is zero 
+                lda 0,x
+                ora 1,x
+                beq _abort
+
+                ; move addresses to where we can work with them 
+                lda 0,x
+                sta tmptos
+                lda 1,x
+                sta tmptos+1
+
+                lda 2,x
+                sta tmp2        ; use tmp2 because easier to remember
+                lda 3,x
+                sta tmp2+1
+
+                lda 4,x
+                sta tmp1        ; use tmp1 because easier to remember 
+                lda 5,x
+                sta tmp1+1
+
+                phx             ; we'll need all the registers we have 
+
+                ldy #0
+                ldx tmptos+1    ; number of pages to move 
+                beq _dopartial
+
+_page:          lda (tmp1),y
+                sta (tmp2),y
+                iny
+                bne _page
+
+                inc tmp1+1
+                inc tmp2+1
+                dex
+                bne _page
+
+
+_dopartial:     ldx tmptos      ; length of last page
+                beq _done
+
+_partial:       lda (tmp1),y
+                sta (tmp2),y
+                iny
+    
+		dex
+                bne _partial
+
+_done:          plx             ; drops through to _abort
+
+_abort:         ; clear the stack  
+                txa
+                clc
+                adc #6
+                tax
+
 z_cmove:        rts
 .scend
 
-; ## CMOVE_UP ( -- ) "<TBA>"
-; ## "cmove>"  src: ANSI string  b: TBA  c: TBA  status: TBA
+
+; ## CMOVE_UP ( add1 add2 u -- ) "Copy bytes from high to low"
+; ## "cmove>"  src: ANSI string  b: TBA  c: TBA  status: coded
+        ; """Note addr1 is larger than ; ; addr2). Based on code in
+        ; Leventhal, Lance A. "6502 Assembly Language Routines", p. 201.
+        ; """
 .scope
-xt_cmove_up:    nop
+xt_cmove_up:
+ 		cpx #dsp0-5
+                bmi +
+                lda #11         ; underflow
+                jmp error
+*
+		; abort if number of bytes to move is zero 
+                lda 0,x
+                ora 1,x
+                beq _abort
+
+		; move addresses to where we can work with them 
+                lda 0,x
+                sta tmptos
+                lda 1,x
+                sta tmptos+1
+
+                lda 2,x
+                sta tmp2     	; use tmp2 because easier to remember
+                lda 3,x
+                sta tmp2+1
+
+                lda 4,x
+                sta tmp1     	; use tmp1 because easier to remember 
+                lda 5,x
+                sta tmp1+1
+
+                phx             ; we'll need all the registers we have 
+
+                ; move partial page first 
+                lda tmptos+1
+                clc
+                adc tmp1+1
+                sta tmp1+1   	; point to last page of source 
+
+                lda tmptos+1
+                clc
+                adc tmp2+1
+                sta tmp2+1   	; point to last page of destination 
+
+                ; move the last partial page first
+                ldy tmptos      ; length of last page
+                beq _fullpage
+
+_partial:       dey
+                lda (tmp1),y
+                sta (tmp2),y
+                cpy #0
+                bne _partial
+
+_fullpage:      ; use the MSB of counter as our page counter 
+                ldx tmptos+1    ; X is safe on the stack 
+                beq _done
+
+_outerloop:     dec tmp1+1   ; back up to previous pages 
+                dec tmp2+1
+_innerloop:     dey
+                lda (tmp1),y
+                sta (tmp2),y
+                cpy #$00
+                bne _innerloop
+
+                dex
+                bne _outerloop
+
+_done:          plx             ; drops through to _abort 
+
+_abort:         ; clear up the stack and leave 
+                txa
+                clc
+                adc #6
+                tax
+               
 z_cmove_up:     rts
 .scend
+
 
 ; ## COLON ( "name" -- ) "Start compilation of a new word""
 ; ## ":"  src: ANSI core  b: TBA  c: TBA  status: coded
@@ -972,7 +1160,7 @@ xt_compile_comma:
                 ; See if this is an Always Native word by checking the
                 ; AN flag. We need nt for this.
 
-                ; Save a copy of xt
+                ; Save a copy of xt to the Return Stack
                 lda 1,x                 ; MSB
                 pha
                 lda 0,x
@@ -993,7 +1181,7 @@ xt_compile_comma:
 *
                 lda (0,x)
                 sta tmp1                ; keep copy of status byte for NN
-                and #AN                 ; mask all but Allays Native bit
+                and #AN                 ; mask all but Always Native (AN bit
                 beq _compile_check
 
                 ; We're natively compiling no matter what. Get length and
@@ -1027,14 +1215,43 @@ _compile_as_code:
                 ; We arrive here with the length of the word's code TOS and
                 ; xt on top of the Return Stack. MOVE will need ( xt cp u )
                 ; on the data stack
-                
-                ; TODO code as code
-                lda #'c
-                jsr emit_a
-                jsr emit_a
-                brk 
+                dex
+                dex                     ; ( -- u ? )
+                dex
+                dex                     ; ( -- u ? ? ) 
 
-                ; brk
+                lda 4,x
+                sta 0,x                 ; LSB
+                lda 5,x
+                sta 1,x                 ; ( -- u ? u )
+
+                pla
+                sta 4,x                 ; LSB
+                pla
+                sta 5,x                 ; ( -- xt ? u )
+
+                lda cp                  ; LSB
+                pha                     ; save copy for new CP calculcation
+                sta 2,x
+                lda cp+1
+                pha                     ; note MSB on top!
+                sta 3,x                 ; ( -- xt cp u )
+
+                ; TODO add special cases
+
+                ; Enough of this, move the bytes already
+                jsr xt_move
+
+                ; Update CP. Remeber that we pushed the MSB to the stack first
+                ply                     ; MSB !
+                pla                     ; LSB
+                clc
+                adc cp
+                sta cp
+                tya
+                adc cp+1
+                sta cp+1
+                bra _done
                 
 _compile_as_jump:
                 ; Compile xt as a subroutine jump
@@ -1058,7 +1275,7 @@ _compile_as_jump:
 *
                 inx             ; drop xt
                 inx
-                
+_done:                
 z_compile_comma:
                 rts
 .scend
@@ -2248,7 +2465,7 @@ _loop:
 _check_counter:                
                 ; See if our counter has reached zero
                 lda tmp2
-                eor tmp2+1
+                ora tmp2+1
                 beq _done
 
                 ; We're not in ROM and we still have stuff on the counter, so
@@ -2415,11 +2632,16 @@ z_execute:      rts
 .scend
 
 
-; ## EXIT ( -- ) "<TBA>"
-; ## "exit"  src: ANSI core  b: TBA  c: TBA  status: TBA
+; ## EXIT ( -- ) "Return control to the calling word immediately"
+; ## "exit"  src: ANSI core  b: TBA  c: TBA  status: coded
+        ; """ If we're in a loop, we need to UNLOOP first and get everything
+        ; we we might have put on the Return Stack off as well. This should
+        ; be natively compiled
+        ; """
 .scope
-xt_exit:        nop
-z_exit:         rts
+xt_exit:        
+                rts             ; keep before z_exit
+z_exit:                         ; never reached
 .scend
 
 ;
@@ -3440,10 +3662,42 @@ z_mod:          rts
 .scend
 
 
-; ## MOVE ( -- ) "<TBA>"
+; ## MOVE ( addr1 addr2 u -- ) "Copy bytes"
 ; ## "move"  src: ANSI core  b: TBA  c: TBA  status: TBA
+	; """Copy u "address units" from addr1 to addr2. Since our address
+        ; units are bytes, this is just a front-end for CMOVE and CMOVE>. This
+        ; is actually the only one of these three words that is in the CORE
+        ; set. This word must not be natively compiled
+        ; """
 .scope
-xt_move:        nop
+xt_move:
+                ; We let CMOVE and CMOVE> check if there is underflow or
+                ; we've been told to copy zero bytes
+
+                ; compare MSB first
+                lda 3,x                 ; MSB of addr2
+                cmp 5,x                 ; MSB of addr1
+                beq _lsb                ; wasn't not helpful, move to LSB
+
+                bcc _to_move_up ; we want CMOVE>
+                jmp xt_cmove            ; JSR/RTS
+_lsb:        
+                ; MSB were equal, so do the whole thing over with LSB
+                lda 2,x                 ; LSB of addr2
+                cmp 4,x                 ; LSB of addr1
+                beq _equal              ; LSB is equal as well 
+
+                bcc _to_move_up         ; we want CMOVE>
+                jmp xt_cmove            ; JSR/RTS
+_to_move_up:
+                jmp xt_cmove_up         ; JSR/RTS
+_equal:         
+                ; drop three entries from Data Stack
+                txa
+                clc
+                adc #6
+                tax
+
 z_move:         rts
 .scend
 
@@ -4464,7 +4718,7 @@ xt_question_dup:
 *
                 ; Check if TOS is zero
                 lda 0,x
-                eor 1,x
+                ora 1,x
                 beq _done
 
                 ; not zero, duplicate
