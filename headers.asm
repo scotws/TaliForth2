@@ -368,7 +368,7 @@ nt_sliteral:
         .byte "sliteral"
 
 nt_literal:
-        .byte 7, CO+IM
+        .byte 7, IM+CO
         .word nt_sliteral, xt_literal, z_literal
         .byte "literal"
 

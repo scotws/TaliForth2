@@ -45,7 +45,7 @@ xt_cold:
                 sta input+1
      
                 ; set the HAVE_KEY vector to the default kernel_getc
-                ; TODO see how this works with py65mon and if we need it
+                ; TODO see how this works with py65mon
                 lda #<kernel_getc
                 sta havekey
                 lda #>kernel_getc
@@ -65,8 +65,8 @@ xt_cold:
                 stz base+1
 
                 ; We start out with smaller words with less than 20 bytes being
-                ; natively compiled, because this includes words like LSHIFT and MAX. 
-                ; TODO change this to 20 after testing
+                ; natively compiled
+                ; TODO TESTING
                 lda #00
                 sta nc_limit
                 stz nc_limit+1
@@ -429,6 +429,11 @@ z_accept:       rts
 ; ## "again"  src: ANSI core ext  b: TBA  c: TBA  status: coded
 .scope
 xt_again:
+                cpx #dsp0-1
+                bmi +
+                lda #11         ; underflow
+                jmp error
+*
                 ; Add the opcode for a JMP. We use JMP instead of BRA
                 ; so we have the range and don't have to calculate the
                 ; offset.
@@ -438,11 +443,11 @@ xt_again:
                 iny
 
                 lda 0,x         ; LSB of address
-                sta (CP),y
+                sta (cp),y
                 iny
 
                 lda 1,x         ; MSB of address
-                sta (CP),y
+                sta (cp),y
                 iny
 
                 ; Allot the space we just used
@@ -1157,7 +1162,7 @@ z_comma:        rts
         ; """
 .scope
 xt_compile_comma:
-                ; See if this is an Always Native word by checking the
+                ; See if this is an Always Native (AN) word by checking the
                 ; AN flag. We need nt for this.
 
                 ; Save a copy of xt to the Return Stack
@@ -1177,7 +1182,7 @@ xt_compile_comma:
                 ; status byte is one further down
                 inc 0,x
                 bne +
-                inc 1,x
+                inc 1,x                 ; ( nt -- nt+1 )
 *
                 lda (0,x)
                 sta tmp1                ; keep copy of status byte for NN
@@ -1185,8 +1190,14 @@ xt_compile_comma:
                 beq _compile_check
 
                 ; We're natively compiling no matter what. Get length and
-                ; compile in code
+                ; compile in code. Get the original nt back
+                lda tmptos
+                sta 0,x
+                lda tmptos+1
+                sta 1,x
+
                 jsr xt_wordsize         ; ( nt -- u )
+
                 bra _compile_as_code
 
 _compile_check:
@@ -1221,16 +1232,16 @@ _compile_as_code:
                 dex                     ; ( -- u ? ? ) 
 
                 lda 4,x
-                sta 0,x                 ; LSB
+                sta 0,x                 ; LSB of u 
                 lda 5,x
                 sta 1,x                 ; ( -- u ? u )
 
                 pla
-                sta 4,x                 ; LSB
+                sta 4,x                 ; LSB of xt
                 pla
                 sta 5,x                 ; ( -- xt ? u )
 
-                lda cp                  ; LSB
+                lda cp                  ; LSB of cp
                 pha                     ; save copy for new CP calculcation
                 sta 2,x
                 lda cp+1
@@ -1245,12 +1256,14 @@ _compile_as_code:
                 ; Update CP. Remeber that we pushed the MSB to the stack first
                 ply                     ; MSB !
                 pla                     ; LSB
+
                 clc
                 adc cp
                 sta cp
                 tya
                 adc cp+1
                 sta cp+1
+
                 bra _done
                 
 _compile_as_jump:
@@ -1867,25 +1880,21 @@ xt_question_do:
                 sta tmp1
                 bra do_common
 
-; ## DO ( limit start -- )(R: limit start)  "Start a loop"
+; ## DO ( limit start -- )(R: -- limit start)  "Start a loop"
 ; ## "do"  src: ANSI core  b: TBA  c: TBA  status: coded
         ; """Compile-time part of DO. Could be realized in Forth as
         ;       : DO POSTPONE (DO) HERE ; IMMEDIATE COMPILE-ONLY
         ; but we do it in assembler for speed. To work with LEAVE, we compile
         ; a routine that pushes the end address to the Return Stack at run
         ; time. This is based on a suggestion by Garth Wilson, see
-        ; docs/loops.txt for details. This may not be native compile.
+        ; docs/loops.txt for details. This may not be native compile. Don't
+        ; check for a stack underflow
         ; """
 .scope
 xt_do:
                 ; DO and ?DO share most of their code, use tmp1 as a flag.
                 stz tmp1                ; 0 is DO, drop through to DO_COMMON
 do_common:
-                cpx #dsp0-3
-                bmi +
-                lda #11                 ; underflow
-                jmp error
-*
                 ; We push HERE to the Data Stack so LOOP/+LOOP knows where to
                 ; compile the address we need to LDA at runtime
                 dex
@@ -6496,7 +6505,7 @@ z_words_and_sizes:
 ; ## "wordsize"  src: Tali Forth  b: 29  c: TBA  status: coded
         ; """Given an word's name token (nt), return the size of the word's
         ; payload size in bytes (CFA plus PFA) in bytes. Does not count the
-        ; final RTS. Specific to Liara Forth. Uses tmp1.
+        ; final RTS.
         ; """
 .scope
 xt_wordsize:    
@@ -6513,6 +6522,7 @@ xt_wordsize:
                 lda (tmp1),y    ; LSB of z
                 dey
                 dey
+
                 sec
                 sbc (tmp1),y    ; LSB of xt
                 sta 0,x
@@ -6521,9 +6531,10 @@ xt_wordsize:
                 lda (tmp1),y    ; MSB of z
                 dey
                 dey
+
                 sbc (tmp1),y    ; MSB of xt
                 sta 1,x
-                
+
 z_wordsize:     rts
 .scend
 

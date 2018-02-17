@@ -15,8 +15,9 @@ TODO POST-ALPHA ("ALL WORDS DO SOMETHING, SOMETIMES EVEN THE RIGHT THING")
         - In ALLOT, figure out how to handle release of too much memory
 
 
-TODO POST-BETA ("ALL THERE, BUT PROBABLY BUGGY AS HELL")
+TODO POST-BETA ("ALL THERE, BUT SNEAKY BUGS EXPECTED")
         - Warn if word already in Dictionary
+        - Add special cases to native compile routine
         - Add SEE as a native word
         - Add underflow check to PICK
         - Check where all "STY 0,X" can be used to good effect
