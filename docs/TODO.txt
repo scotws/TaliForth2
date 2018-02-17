@@ -1,7 +1,7 @@
 TODO/CHANGES for Tali Forth 2 
 Scot W. Stevenson <scot.stevenson@gmail.com>
 First version: 19. Jan 2014
-This version: 15. Feb 2018
+This version: 17. Feb 2018
 
 
 TODO NEXT
@@ -9,12 +9,11 @@ TODO NEXT
 
 
 TODO DURING CODING (STUFF FROM TALI FORTH 1)
-        - Check if DOVAR needlessly uses temporary storage
         - Check if f_postpo_int is ever used at all
-        - Code D>S so it respects the sign
 
 
 TODO POST-ALPHA ("ALL WORDS DO SOMETHING, SOMETIMES EVEN THE RIGHT THING")
+        - Add native compile depending on word size
         - Check if we really use all the strings (ie ">>>ERROR<<<")
         - Add all underflow checks
         - In ALLOT, figure out how to handle release of too much memory
@@ -22,26 +21,29 @@ TODO POST-ALPHA ("ALL WORDS DO SOMETHING, SOMETIMES EVEN THE RIGHT THING")
 
 TODO POST-BETA ("ALL THERE, BUT PROBABLY BUGGY AS HELL")
         - Warn if word already in Dictionary
-        - Update documentation
         - Add SEE as a native word
         - Add underflow check to PICK
-        - Check where all "STY 0,X" etc can be used
-        - Add STRIP-UNDERFLOW option to remove underflow checks during native
-          compilation (UF flag in headers)
-        - Allow SLITERAL to store strings longer than 255 chars
+        - Check where all "STY 0,X" can be used to good effect
+        - Figure out how to wrap multi-line strings with TYPE
+        - Update documentation
 
 
 TODO SOMETIME
         - Write line editor (ed) in 65c02 assembler
-        - Add handling for multi-byte keyboard input
-        - Add real Delete Key detection (ESC[3~)
+        - Add handling for multi-byte keyboard input (if possible with py65)
+        - See if we can add real Delete Key detection (ESC[3~)
         - Add history function, at least one line, with CTRL-p
+        - Add STRIP-UNDERFLOW option to remove underflow checks during native
+          compilation (new UF flag in headers)
         - Add real USER variables
         - Add multitasking (round-robin)
         - See if MAX and MIN can be combined
         - See if > and < etc can be combined
-        - Add CASE, THROW/CATCH
+        - Consider adding CASE
+        - Consider adding THROW/CATCH
         - Move UM* to table-based multiplication
+        - Allow SLITERAL to store strings longer than 255 chars
+        - Allow S" and ." to handle strings longer than 255 chars
 
 
 -----------------------------------------------------------------------

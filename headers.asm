@@ -1,7 +1,7 @@
 ; Dictionary Headers for Tali Forth 2
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 05. Dec 2016 (Liara Forth)
-; This version: 14. Feb 2018
+; This version: 17. Feb 2018
 
 ; Dictionary headers are kept separately from the code, which allows various
 ; tricks in the code. We roughly follow the Gforth terminology: The Execution
@@ -82,9 +82,19 @@ nt_bell:
         .word nt_dump, xt_bell, z_bell
         .byte "bell"
 
+nt_align:
+        .byte 5, 0
+        .word nt_bell, xt_align, z_align
+        .byte "align"
+
+nt_aligned:             ; same code as ALIGN
+        .byte 7, 0
+        .word nt_align, xt_align, z_align
+        .byte "aligned"
+
 nt_wordsize:
         .byte 8, 0
-        .word nt_bell, xt_wordsize, z_wordsize
+        .word nt_aligned, xt_wordsize, z_wordsize
         .byte "wordsize"
 
 nt_words:
@@ -247,9 +257,14 @@ nt_quit:
         .word nt_state, xt_quit, z_quit
         .byte "quit"
 
+nt_abort_quote:
+        .byte 6, CO+IM
+        .word nt_quit, xt_abort_quote, z_abort_quote
+        .byte "abort", $22
+
 nt_abort:
         .byte 5, 0
-        .word nt_quit, xt_abort, z_abort
+        .word nt_abort_quote, xt_abort, z_abort
         .byte "abort"
 
 nt_compile_only:
@@ -262,9 +277,14 @@ nt_immediate:
         .word nt_compile_only, xt_immediate, z_immediate
         .byte "immediate"
 
+nt_s_quote:
+        .byte 2, IM
+        .word nt_immediate, xt_s_quote, z_s_quote
+        .byte "s", $22
+
 nt_dot_quote:
         .byte 2, CO+IM
-        .word nt_immediate, xt_dot_quote, z_dot_quote
+        .word nt_s_quote, xt_dot_quote, z_dot_quote
         .byte ".", $22
 
 nt_sliteral:
@@ -880,25 +900,10 @@ nt_question_dup:
         .word 0000, xt_question_dup, z_question_dup
         .byte "?dup"
 
-nt_abort_quote:
-        .byte 6, 0
-        .word 0000, xt_abort_quote, z_abort_quote
-        .byte "abort", $22
-
 nt_again:
         .byte 5, 0
         .word 0000, xt_again, z_again
         .byte "again"
-
-nt_align:
-        .byte 5, 0
-        .word 0000, xt_align, z_align
-        .byte "align"
-
-nt_aligned:
-        .byte 7, 0
-        .word 0000, xt_aligned, z_aligned
-        .byte "aligned"
 
 nt_begin:
         .byte 5, 0
@@ -1009,11 +1014,6 @@ nt_repeat:
         .byte 6, 0
         .word 0000, xt_repeat, z_repeat
         .byte "repeat"
-
-nt_s_quote:
-        .byte 2, 0
-        .word 0000, xt_s_quote, z_s_quote
-        .byte "s", $22
 
 nt_then:
         .byte 4, 0

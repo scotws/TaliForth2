@@ -255,12 +255,48 @@ z_quit:         ; no RTS required
 .scend
 
 
-; ## ABORT_QUOTE ( -- ) "<TBA>"
-; ## "abort""  src: ANSI core  b: TBA  c: TBA  status: TBA
+; ## ABORT_QUOTE ( "string" -- ) "If flag TOS is true, MESSAGE with message"
+; ## "abort""  src: ANSI core  b: TBA  c: TBA  status: coded
 .scope
-xt_abort_quote: nop
-z_abort_quote:  rts
+xt_abort_quote:
+                ; save the string
+                jsr xt_s_quote 
+
+                ; compile run-time part
+                lda #>abort_quote_runtime       ; MSB
+                pha
+                lda #<abort_quote_runtime       ; LSB
+                pha
+                jsr cmpl_subroutine
+
+                rts
+
+z_abort_quote:  
 .scend
+
+
+abort_quote_runtime:
+        ; """Runtime aspect of ABORT_QUOTE
+        ; """
+.scope
+                ; We arrive here with ( f addr u )                
+                lda 4,x
+                ora 5,x
+                beq _done       ; if FALSE, we're done
+
+                ; We're true, so print string and ABORT
+                jsr xt_type
+                jmp xt_abort    ; not JSR, so never come back
+_done:
+                ; Drop three entries from the Data Stack
+                txa
+                clc
+                adc #6
+                tax
+
+                rts
+.scend
+
 
 
 ; ## ABS ( n -- u ) "Return absolute value of a number"
@@ -396,18 +432,14 @@ xt_again:       nop
 z_again:        rts
 .scend
 
-; ## ALIGN ( -- ) "<TBA>"
-; ## "align"  src: ANSI core  b: TBA  c: TBA  status: TBA
-.scope
-xt_align:       nop
-z_align:        rts
-.scend
 
-; ## ALIGNED ( -- ) "<TBA>"
-; ## "aligned"  src: ANSI core  b: TBA  c: TBA  status: TBA
+; ## ALIGN ( -- ) "Make sure CP is aligned on word size"
+; ## "align"  src: ANSI core  b: TBA  c: TBA  status: coded
+        ; """On a 8-bit machine, this does nothing. ALIGNED uses
+        ; this routine as well"""
 .scope
-xt_aligned:     nop
-z_aligned:      rts
+xt_align:
+z_align:        rts             ; stripped out during native compile
 .scend
 
 
@@ -1683,7 +1715,7 @@ z_dot_byte:     rts
 .scend
 
 
-; ## DOT_QUOTE ( -- ) "Print string from compiled word"
+; ## DOT_QUOTE ( "string" -- ) "Print string from compiled word"
 ; ## ".""  src: ANSI core  b: TBA  c: TBA  status: coded
         ; """Compile string that is printed during run time. ANSI Forth wants
         ; this to be compile-only, even though everybody and their friend
@@ -1692,15 +1724,10 @@ z_dot_byte:     rts
         ; """
 .scope
 xt_dot_quote:
-                dex
-                dex
-
-                lda #$22                ; ASCII for "
-                sta 0,x
-                stz 1,x                 ; paranoid
-
-                jsr xt_parse            ; ( "string" -- addr u )
-                jsr xt_sliteral         ; ( addr u -- )
+                ; we let S" do the heavy lifting. Since we're in
+                ; compile mode, it will save the string and reproduce it
+                ; during runtime
+                jsr xt_s_quote
 
                 ; We then let TYPE do the actual printing
                 lda #>xt_type           ; MSB
@@ -3798,8 +3825,6 @@ z_parse:        rts
 .scend
 
 
-
-
 ; ## PICK ( n n u -- n n n ) "Move element u of the stack to TOS"
 ; ## "pick"  src: ANSI core ext  b: TBA  c: TBA  status: coded
         ; """Take the u-th element out of the stack and put it on TOS,
@@ -3810,8 +3835,7 @@ z_parse:        rts
 .scope
 xt_pick:
                 ; Checking for underflow is difficult because it depends on
-                ; which element we want to grab. This should be added at
-                ; a later date
+                ; which element we want to grab
 
                 lda 0,x         ; we only use LSB (stack is small)
                 asl
@@ -4130,7 +4154,13 @@ z_right_paren:  rts
         ; """Remember "R for 'Revolution' - the bottom entry comes out
         ; on top!
         ; """
+.scope
 xt_rot:         
+                cpx #dsp0-5
+                bmi +
+                lda #11         ; underflow
+                jmp error 
+*
                 lda 5,x         ; MSB first
                 tay
                 lda 3,x
@@ -4150,6 +4180,7 @@ xt_rot:
                 sta 0,x
 
 z_rot:          rts
+.scend
 
 
 ; ## RSHIFT ( x u -- x ) "Shift TOS to the right"
@@ -4173,10 +4204,89 @@ _done:
 z_rshift:       rts
 
 
-; ## S_QUOTE ( -- ) "<TBA>"
-; ## "s""  src: ANSI core  b: TBA  c: TBA  status: TBA
+; ## S_QUOTE ( "string" -- )( -- addr u ) "Store string in memory"
+; ## "s""  src: ANSI core  b: TBA  c: TBA  status: coded
+        ; """Store address and length of string given, returning ( addr u ).
+        ; ANSI core claims this is compile-only, but the file set expands it
+        ; to be interpreted, so it is a state-sensitive word, which in theory
+        ; are evil. We follow general usage. Can also be realized as 
+        ;     : S" [CHAR] " PARSE POSTPONE SLITERAL ; IMMEDIATE
+        ; but it is used so much we want it in code. Note we limit strings
+        ; to a length of 255 chars for this routine
+        ; """
 .scope
-xt_s_quote:     nop
+xt_s_quote:
+                dex
+                dex
+
+                ; First, find the end of the string and save it
+                lda #$22                ; ASCII for "
+                sta 0,x
+                stz 1,x                 ; paranoid
+
+                jsr xt_parse            ; ( "string" -- addr u )
+
+                ; if we were given an empty string, just leave
+                lda 0,x
+                ora 1,x
+                bne +
+
+                ; Zero length string, dump stack and run
+                inx
+                inx
+                inx
+                inx
+                bra _done
+*
+                ; What happens next depends on the state (which is bad, but
+                ; that's the way it works at the moment). If we are
+                ; interpretating, we save the string to a transient buffer
+                ; and return that address (used for file calls, see
+                ; https://forth-standard.org/standard/file/Sq . If we're
+                ; compiling, we just need SLITERAL
+                lda state
+                ora state+1             ; paranoid
+                beq _interpreted
+
+                jsr xt_sliteral         ; ( addr u -- )
+                bra _done
+_interpreted:
+                ; We should move this string to a safe place. This is a pain
+                ; on an 8-bit machine, even though we're going to limit this
+                ; to 255 characters
+                lda 2,x                 ; current address of string
+                sta tmp1
+                lda 3,x
+                sta tmp1+1
+
+                lda cp                  ; HERE in quicker
+                sta tmp2
+                lda cp+1
+                sta tmp2+1
+
+                ldy 0,x                ; length of string
+_loop:
+                dey
+                lda (tmp1),y
+                sta (tmp2),y
+                bne _loop
+
+                ; We can keep the length of the string in TOS, but
+                ; need to replace the address in NOS by the new one
+                lda cp
+                sta 2,x
+                lda cp+1
+                sta 3,x
+
+                ; Adjust CP to point past the string
+                lda 0,x
+                clc
+                adc cp
+                sta cp
+                lda cp+1
+                adc #0                  ; only care about the carry
+                sta cp+1
+_done:
 z_s_quote:      rts
 .scend
 
