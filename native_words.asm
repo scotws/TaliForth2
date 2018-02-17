@@ -927,16 +927,20 @@ z_colon:        rts
         ; """Store TOS at current place in memory. Since this an eight-bit
         ; machine, we can ignore all alignment issures
         ; """
-        ; TODO make sure we don't allot more than we have
 .scope
 xt_comma:
+                cpx #dsp0-1
+                bne +
+                lda #11         ; underflow
+                jmp error
+*
                 lda 0,x
                 sta (cp)
 
                 inc cp
-                bne _msb
+                bne +
                 inc cp+1
-_msb:
+*
                 lda 1,x
                 sta (cp)
 
@@ -1637,11 +1641,197 @@ xt_dnegate:
 z_dnegate:      rts
 
 
-; ## DO ( -- ) "<TBA>"
-; ## "do"  src: ANSI core  b: TBA  c: TBA  status: TBA
+; ## QUESTION_DO ( limit start -- )(R: -- limit start) "Conditional loop start"
+; ## "?do"  src: ANSI core ext  b: TBA  c: TBA  status: coded
+xt_question_do:
+                ; ?DO shares most of its code with DO. We use the tmp1 flag
+                ; to mark which is which
+                lda #$ff                ; -1 is ?DO, jump to common code
+                sta tmp1
+                bra do_common
+
+; ## DO ( limit start -- )(R: limit start)  "Start a loop"
+; ## "do"  src: ANSI core  b: TBA  c: TBA  status: coded
+        ; """Compile-time part of DO. Could be realized in Forth as
+        ;       : DO POSTPONE (DO) HERE ; IMMEDIATE COMPILE-ONLY
+        ; but we do it in assembler for speed. To work with LEAVE, we compile
+        ; a routine that pushes the end address to the Return Stack at run
+        ; time. This is based on a suggestion by Garth Wilson, see
+        ; docs/loops.txt for details. This may not be native compile.
+        ; """
 .scope
-xt_do:          nop
+xt_do:
+                ; DO and ?DO share most of their code, use tmp1 as a flag.
+                stz tmp1                ; 0 is DO, drop through to DO_COMMON
+do_common:
+                cpx #dsp0-3
+                bmi +
+                lda #11                 ; underflow
+                jmp error
+*
+                ; We push HERE to the Data Stack so LOOP/+LOOP knows where to
+                ; compile the address we need to LDA at runtime
+                dex
+                dex
+                lda cp
+                sta 0,x                 ; LSB
+                lda cp+1
+                sta 1,x                 ; MSB   ( limit start here ) 
+                
+    		; now we compile six dummy bytes that LOOP/+LOOP will
+                ; replace by the actual LDA/PHA instructions
+                lda #5        		; we don't really care about the value 
+                tay			; so we use 5 to be tricky
+_loop:
+                sta (CP),y
+                dey
+                bpl _loop
+
+                ; update CP
+                inc             ; we used 5 as a dummy value, this is why 
+                clc
+                adc CP
+                sta CP
+                bcc +
+                inc CP+1
+*
+		; compile the (?DO) portion of ?DO if appropriate
+                lda tmp1
+                beq _compile_do
+
+                ; We came from ?DO, so compile its runtime first. We do
+                ; this with a quick loop because we know it has to be
+                ; Always Native anyway
+                ldy #question_do_runtime_end-question_do_runtime
+                phy             ; save counter to calculate new CP
+*
+                lda question_do_runtime,y
+                sta (cp),y
+                dey
+                bne -
+
+                ; adjust CP
+                pla             ; retrieve counter
+                clc
+                adc cp
+                sta cp
+                lda cp+1
+                adc #0          ; only care about carry
+                sta cp+1        ; fall through to _compile_do
+_compile_do:
+                ; compile runtime part of DO. 
+                ldy #do_runtime_end-do_runtime  ; counter
+                phy             ; save counter to calculate new CP
+*
+                lda do_runtime,y
+                sta (cp),y
+                dey
+                bne -
+
+                ; adjust CP
+                pla             ; retrieve counter
+                clc
+                adc cp
+                sta cp
+                lda cp+1
+                adc #0          ; only care about carry
+                sta cp+1   
+
+                ; HERE, hardcoded for speed. We put it on the Data Stack
+                ; where LOOP/+LOOP takes it from. Note this has nothing to
+                ; do with the HERE we're saving for LEAVE
+                dex
+                dex
+                lda CP          ; LSB
+                sta 0,x
+                lda CP+1        ; MSB
+                sta 1,x
+z_question_do:                          
 z_do:           rts
+.scend
+
+do_runtime:
+        ; """Runtime routine for DO loop. Note that ANSI loops quit when the
+        ; boundry of limit-1 and limit is reached, a different mechanism than
+        ; the FIG Forth loop (you can see which version you have by running
+        ; a loop with start and limit as the same value, for instance
+        ; 0 0 DO -- these will walk through the number space). We use a 
+        ; "fudge factor" for the limit that makes the Overflow Flag trip when
+        ; it is reached; see http://forum.6502.org/viewtopic.php?f=9&t=2026 
+        ; for further discussion of this. The source given there for 
+        ; this idea is Laxen & Perry F83. -- This routine is called (DO) 
+        ; in some Forths. Usually, we would define this as a separate word
+        ; and compile it with COMPILE, and the Always Native (AN) flag.
+        ; However, we can do it faster if we just copy the bytes
+        ; of this routine with a simple loop in DO.
+        ; """
+                ; First step: create fudge factor (FUFA) by subtracting the
+                ; limit from $8000, the number that will trip the overflow
+                ; flag
+                sec
+                lda #0
+                sbc 2,x         ; LSB of limit
+                sta 2,x         ; save FUFA for later use
+
+                lda #$80
+                sbc 3,x         ; MSB of limit
+                sta 3,x         ; save FUFA for later use
+                pha             ; FUFA replaces limit on R stack
+                lda 2,x         ; LSB of limit
+                pha
+
+                ; Second step: index is FUFA plus original index
+                clc
+                lda 0,x         ; LSB of original index
+                adc 2,x         ; add LSB of FUFA
+                sta 0,x
+                lda 1,x         ; MSB of orginal index
+                adc 3,x         ; add MSB of FUFA
+                pha
+                lda 0,x         ; LSB of index
+                pha
+
+                ; we've saved the FUFA on the NOS of the R stack, so we can
+                ; use it later. Clean the Data Stack
+                inx
+                inx
+                inx
+                inx
+do_runtime_end:
+
+
+question_do_runtime:
+.scope
+        ; """This is called (?DO) in some Forths. See the explanation at
+        ; do_runtime for the background on this design
+        ; """
+		; see if TOS and NOS are equal. Change this to assembler
+                ; for speed
+                jsr xt_two_dup          ; ( n1 n2 n1 n2 )
+                jsr xt_equal            ; ( -- n1 n2 f ) 
+
+                lda 0,x
+                ora 1,x
+                beq _do_do
+
+                ; We're equal, so dump everything and jump beyond the loop.
+                ; But first, dump six entries off of the Data Stack
+                txa
+                clc
+                adc #6        
+                tax
+
+                ; Second, abort the whole loop. We don't have the 
+                ; limit/start parameters on the Return Stack yet, just the 
+                ; address that points to the end of the loop. Dump the 
+                ; RTS of ?DO and then just RTS ourselves
+                pla
+                pla
+                rts
+_do_do:         
+                inx             ; clear flag from EQUAL off stack
+                inx
+question_do_runtime_end:
 .scend
 
 
@@ -2519,18 +2709,38 @@ xt_hold:
 z_hold:         rts
 
 
-; ## I ( -- ) "<TBA>"
-; ## "i"  src: ANSI core  b: TBA  c: TBA  status: TBA
+; ## I ( -- n )(R: n -- n)  "Copy loop counter to stack"
+; ## "i"  src: ANSI core  b: TBA  c: TBA  status: coded
+        ; """Note that this is not the same as R@ because we use a fudge
+        ; factor for loop control; see docs/loop.txt for details. We
+        ; should make this native compile for speed. 
+        ; """
 .scope
-xt_i:           nop
-z_i:            rts
-.scend
+xt_i:           
+                dex
+                dex
 
-; ## IF ( -- ) "<TBA>"
-; ## "if"  src: ANSI core  b: TBA  c: TBA  status: TBA
-.scope
-xt_if:          nop
-z_if:           rts
+                ; Get the fudged index off of the top of the stack. It's
+                ; easier to do math on the stack directly than to pop and
+                ; push stuff around
+                stx tmpdsp
+                tsx
+
+                sec
+                lda $0100,x     ; LSB
+                sbc $0102,x
+                sta tmp1
+
+                lda $0101,x     ; MSB
+                sbc $0103,x
+
+                ldx tmpdsp
+
+                sta 1,x         ; MSB of de-fudged index
+                lda tmp1
+                sta 0,x         ; LSB of de-fudged index
+
+z_i:            rts
 .scend
 
 
@@ -2651,10 +2861,40 @@ xt_invert:
 z_invert:       rts
 
 
-; ## J ( -- ) "<TBA>"
-; ## "j"  src: ANSI core  b: TBA  c: TBA  status: TBA
+; ## J ( -- n ) (R: n -- n ) "Copy second loop counter to stack"
+; ## "j"  src: ANSI core  b: TBA  c: TBA  status: coded
+        ; """Copy second loop counter from Return Stack to stack. Note we use
+        ; a fudge factor for loop control; see docs/loop.txt for more details.
+        ; At this point, we have the "I" counter/limit and the LEAVE address
+        ; on the stack above this (three entries), whereas the ideal Forth
+        ; implementation would just have two. Make this native compiled for
+        ; speed
+        ; """
 .scope
-xt_j:           nop
+xt_j:
+                dex
+                dex
+
+                ; Get the fudged index off from the stack. It's easier to
+		; do math on the stack directly than to pop and push stuff 
+                ; around
+                stx tmpdsp
+                tsx
+
+                sec
+                lda $0106,x     ; LSB
+                sbc $0108,x
+                sta tmp1
+
+                lda $0107,x     ; MSB
+                sbc $0109,x
+
+                ldx tmpdsp
+
+                sta 1,x         ; MSB of de-fudged index
+                lda tmp1
+                sta 0,x         ; LSB of de-fudged index
+
 z_j:            rts
 .scend
 
@@ -2720,11 +2960,26 @@ xt_latestxt:
 z_latestxt:     rts
 
 
-; ## LEAVE ( -- ) "<TBA>"
-; ## "leave"  src: ANSI core  b: TBA  c: TBA  status: TBA
+; ## LEAVE ( -- ) "Leave DO/LOOP construct"
+; ## "leave"  src: ANSI core  b: TBA  c: TBA  status: coded
+        ; """Note that this does not work with  anything but a DO/LOOP in
+        ; contrast to other versions such as discussed at
+        ; http://blogs.msdn.com/b/ashleyf/archive/2011/02/06/loopty-do-i-loop.aspx
+        ;       : LEAVE POSTPONE BRANCH HERE SWAP 0 , ; IMMEDIATE COMPILE-ONLY
+        ; See docs/loops.txt on details of how this works. This must be native
+        ; compile and not IMMEDIATE
+        ; """
 .scope
-xt_leave:       nop
-z_leave:        rts
+xt_leave:
+                ; We dump the limit/start entries off the Return Stack
+                ; (four bytes)
+                pla
+                pla
+                pla
+                pla
+
+                rts             ; this must be compiled, so keep before z_leave
+z_leave:                        ; not reached, not compiled
 .scend
 
 
@@ -2859,12 +3114,156 @@ literal_runtime:
 .scend
 
 
-; ## LOOP ( -- ) "<TBA>"
-; ## "loop"  src: ANSI core  b: TBA  c: TBA  status: TBA
+; ## LOOP ( -- ) "Finish loop construct"
+; ## "loop"  src: ANSI core  b: TBA  c: TBA  status: coded
+        ; """Compile-time part of LOOP. This does nothing more but push 1 on
+        ; the stack and then call +LOOP. In Forth, this is 
+        ;       : LOOP  POSTPONE 1 POSTPONE (+LOOP) , POSTPONE UNLOOP ;
+        ;       IMMEDIATE ; COMPILE-ONLY
+        ; This drops through to +LOOP
+        ; """
+xt_loop:
+                ; Have the finished word push 1 on the stack
+                lda #>xt_one
+                pha
+                lda #<xt_one
+                pha
+                jsr cmpl_subroutine     ; drop through to +LOOP
+
+; ## PLUS_LOOP ( -- ) "Finish loop construct"
+; ## "+loop"  src: ANSI core  b: TBA  c: TBA  status: coded
+        ; """Compile-time part of +LOOP, also used for LOOP. Is usually
+        ;       : +LOOP POSTPONE (+LOOP) , POSTPONE UNLOOP ; IMMEDIATE
+        ;       COMPILE-ONLY 
+        ; in Forth. LOOP uses this routine as well. We jump here with the
+        ; address for looping as TOS and the address for aborting the loop
+        ; (LEAVE) as the second double-byte entry on the Return Stack (see
+        ; DO and docs/loops.txt for details).
+        ; """
 .scope
-xt_loop:        nop
-z_loop:         rts
+xt_plus_loop:
+                ; Compile the run-time part. We do this with a short loop
+                ; and not a call to COMPILE, because it has to be natively
+                ; coded anyway. 
+                ldy #plus_loop_runtime_end-plus_loop_runtime
+                phy             ; save counter to adjust CP
+*
+                lda plus_loop_runtime,y
+                sta (cp),y
+                dey
+                bne -
+
+                ; Adjust CP
+                pla
+                clc
+                adc cp
+                sta cp
+                lda cp+1
+                adc #0          ; only need carry
+                sta cp+1
+
+                ; The address we need to loop back to is TOS. Store it so
+                ; the runtime part of +LOOP jumps back up there
+                jsr xt_comma
+
+                ; Compile an UNLOOP for when we're all done. This is a series
+                ; of six PLA, so we just do it here instead jumping around
+                ; all over the place
+                lda #$68                ; opcode for PLA
+                ldy #6
+*
+                sta (cp),y
+                dey
+                bne -
+
+                ; Adjust CP
+                lda #6
+                clc
+                adc cp
+                sta cp
+                lda cp+1
+                adc #0                  ; only need carry
+                sta cp+1
+
+                ; Complete compile of DO/?DO by replacing the six
+                ; dummy bytes by PHA instructions. The address where 
+                ; they are located is on the Data Stack
+                lda 0,x
+                sta tmp1
+                lda 1,x
+                sta tmp1+1
+                inx
+                inx
+
+                ; Because of the way that RTS works we don't need to 
+                ; save CP, but CP-1
+                sec
+                lda tmp1
+                bne +
+                dec tmp1+1
+*               dec tmp1
+
+                ; now compile this in the DO/?DO routine
+                ldy #0
+
+                lda #$a9        ; opcode for LDA immediate
+                sta (tmp1),y
+                iny
+                lda tmp1+1   ; MSB
+                sta (tmp1),y
+                iny
+                lda #$48        ; Opcode for PHA
+                sta (tmp1),y
+                iny
+
+                lda #$a9        ; opcode for LDA immediate
+                sta (tmp1),y
+                iny
+                lda tmp1        ; LSB
+                sta (tmp1),y
+                iny
+                lda #$48        ; Opcode for PHA
+                sta (tmp1),y
+z_loop:
+z_plus_loop:    rts
 .scend
+
+plus_loop_runtime:
+        ; """Runtime compile for loop control. This is used for both +LOOP and
+        ; LOOP which are defined at high level. Note we use a fudge factor for
+        ; loop  control so we can test with the Overflow Flag. See 
+        ; docs/loop.txt for details. The step value is TOS in the loop. This
+        ; musst always be native compiled. In some Forths, this is a separate
+        ; word called (+LOOP) or (LOOP)
+        ; """
+.scope
+                clc
+                pla             ; LSB of index
+                adc 0,x         ; LSB of step
+                tay             ; temporary storage of LSB
+
+                clv
+                pla             ; MSB of index
+                adc 1,x         ; MSB of step
+                pha             ; put MSB of index back on stack
+
+                tya             ; put LSB of index back on stack
+                pha
+
+                inx             ; dump step from TOS 
+                inx
+
+                ; if V flag is set, we're done looping and continue
+                ; after the +LOOP instruction
+                bvs _hack+3     ; skip over JMP instruction
+
+_hack:          ; This is why this routine must be natively compiled: We 
+                ; compile the opcode for JMP here without an address to 
+                ; go to, which is added by the next next instruction of
+                ; LOOP/+LOOP during compile time
+                .byte $4c
+.scend
+plus_loop_runtime_end:
 
 
 ; ## LSHIFT ( x u -- u ) "Shift TOS left"
@@ -3926,13 +4325,6 @@ xt_plus:
 z_plus:         rts
 
 
-; ## PLUS_LOOP ( -- ) "<TBA>"
-; ## "+loop"  src: ANSI core  b: TBA  c: TBA  status: TBA
-.scope
-xt_plus_loop:   nop
-z_plus_loop:    rts
-.scend
-
 
 ; ## PLUS_STORE ( n addr -- ) "Add number to value at given address"
 ; ## "+!"  src: ANSI core  b: TBA  c: TBA  status: coded
@@ -4061,18 +4453,28 @@ xt_question:
 z_question:     rts
 
 
-; ## QUESTION_DO ( -- ) "<TBA>"
-; ## "?do"  src: ANSI core ext  b: TBA  c: TBA  status: TBA
-.scope
-xt_question_do: nop
-z_question_do:  rts
-.scend
-
-; ## QUESTION_DUP ( -- ) "<TBA>"
-; ## "?dup"  src: ANSI core  b: TBA  c: TBA  status: TBA
+; ## QUESTION_DUP ( n -- 0 | n n ) "Duplicate TOS non-zero"
+; ## "?dup"  src: ANSI core  b: TBA  c: TBA  status: coded
 .scope
 xt_question_dup:
-                nop
+		cpx #dsp0-1
+                bmi +
+                lda #11         ; underflow
+                jmp error
+*
+                ; Check if TOS is zero
+                lda 0,x
+                eor 1,x
+                beq _done
+
+                ; not zero, duplicate
+                dex
+                dex
+                lda 2,x
+                sta 0,x
+                lda 3,x
+                sta 1,x
+_done:
 z_question_dup: rts
 .scend
 
@@ -5701,12 +6103,26 @@ z_um_star:      rts
 .scend
 
 
-; ## UNLOOP ( -- ) "<TBA>"
-; ## "unloop"  src: ANSI core  b: TBA  c: TBA  status: TBA
+; ## UNLOOP ( -- )(R: n1 n2 n3 ---) "Drop loop control from Return stack"
+; ## "unloop"  src: ANSI core  b: TBA  c: TBA  status: coded
+        ; """Note that 6xPLA uses just as many bytes as a loop would
+        ; """
 .scope
-xt_unloop:      nop
+xt_unloop: 
+                ; Drop fudge number (limit/start from DO/?DO off the
+                ; return stack
+                pla
+                pla
+                pla
+
+                ; Now drop the LEAVE address that was below them off
+                ; the Return Stack as well
+                pla
+                pla
+
 z_unloop:       rts
 .scend
+
 
 ; ## UNUSED ( -- u ) "Return size of space available to Dictionary"
 ; ## "unused"  src: ANSI core ext  b: 15  c: TBA  status: TBA

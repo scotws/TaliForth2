@@ -234,7 +234,6 @@ dovar:
 ; =====================================================================
 ; LOW LEVEL HELPER FUNCTIONS
 
-
 byte_to_ascii:
         ; """Convert byte in A to two ASCII hex digits and EMIT them.
         ; """
@@ -353,9 +352,9 @@ _loop:
 
                 ; We're compiling, so there is a bit more work. Note this
                 ; doesn't work with double-cell numbers, only single-cell
-                lda #<literal_runtime
+                lda #>literal_runtime   ; MSB first
                 pha
-                lda #>literal_runtime
+                lda #<literal_runtime
                 pha
                 jsr cmpl_subroutine
 

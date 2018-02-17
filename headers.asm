@@ -257,9 +257,49 @@ nt_quit:
         .word nt_state, xt_quit, z_quit
         .byte "quit"
 
+nt_leave:
+        .byte 5, CO+AN
+        .word nt_quit, xt_leave, z_leave
+        .byte "leave"
+
+nt_unloop:
+        .byte 6, CO+AN
+        .word nt_leave, xt_unloop, z_unloop
+        .byte "unloop"
+
+nt_plus_loop:
+        .byte 5, CO+IM
+        .word nt_unloop, xt_plus_loop, z_plus_loop
+        .byte "+loop"
+
+nt_loop:
+        .byte 4, CO+IM
+        .word nt_plus_loop, xt_loop, z_loop
+        .byte "loop"
+
+nt_j:
+        .byte 1, CO+AN
+        .word nt_loop, xt_j, z_j
+        .byte "j"
+
+nt_i:
+        .byte 1, CO+AN
+        .word nt_j, xt_i, z_i
+        .byte "i"
+
+nt_question_do:
+        .byte 3, CO+IM+NN
+        .word nt_i, xt_question_do, z_question_do
+        .byte "?do"
+
+nt_do:
+        .byte 2, CO+IM+NN
+        .word nt_question_do, xt_do, z_do
+        .byte "do"
+
 nt_abort_quote:
         .byte 6, CO+IM
-        .word nt_quit, xt_abort_quote, z_abort_quote
+        .word nt_do, xt_abort_quote, z_abort_quote
         .byte "abort", $22
 
 nt_abort:
@@ -682,9 +722,14 @@ nt_plus:
         .word nt_minus, xt_plus, z_plus
         .byte "+"
 
+nt_question_dup:
+        .byte 4, 0
+        .word nt_plus, xt_question_dup, z_question_dup
+        .byte "?dup"
+
 nt_two_dup:
         .byte 4, 0
-        .word nt_plus, xt_two_dup, z_two_dup
+        .word nt_question_dup, xt_two_dup, z_two_dup
         .byte "2dup"
 
 nt_two:
@@ -840,21 +885,6 @@ nt_paren_plus_loop:
         .word 0000, xt_paren_plus_loop, z_paren_plus_loop
         .byte "(+loop)"
 
-nt_paren_q_do:
-        .byte 5, 0
-        .word 0000, xt_paren_q_do, z_paren_q_do
-        .byte "(?do)"
-
-nt_paren_do:
-        .byte 4, 0
-        .word 0000, xt_paren_do, z_paren_do
-        .byte "(do)"
-
-nt_plus_loop:
-        .byte 5, 0
-        .word 0000, xt_plus_loop, z_plus_loop
-        .byte "+loop"
-
 nt_minus_trailing:
         .byte 9, 0
         .word 0000, xt_minus_trailing, z_minus_trailing
@@ -900,16 +930,6 @@ nt_two_variable:
         .word 0000, xt_two_variable, z_two_variable
         .byte "2variable"
 
-nt_question_do:
-        .byte 3, 0
-        .word 0000, xt_question_do, z_question_do
-        .byte "?do"
-
-nt_question_dup:
-        .byte 4, 0
-        .word 0000, xt_question_dup, z_question_dup
-        .byte "?dup"
-
 nt_again:
         .byte 5, 0
         .word 0000, xt_again, z_again
@@ -930,16 +950,6 @@ nt_cmove_up:
         .word 0000, xt_cmove_up, z_cmove_up
         .byte "cmove>"
 
-nt_do:
-        .byte 2, 0
-        .word 0000, xt_do, z_do
-        .byte "do"
-
-nt_else:
-        .byte 4, 0
-        .word 0000, xt_else, z_else
-        .byte "else"
-
 nt_exit:
         .byte 4, 0
         .word 0000, xt_exit, z_exit
@@ -950,35 +960,10 @@ nt_find:
         .word 0000, xt_find, z_find
         .byte "find"
 
-nt_i:
-        .byte 1, 0
-        .word 0000, xt_i, z_i
-        .byte "i"
-
-nt_if:
-        .byte 2, 0
-        .word 0000, xt_if, z_if
-        .byte "if"
-
-nt_j:
-        .byte 1, 0
-        .word 0000, xt_j, z_j
-        .byte "j"
-
 nt_key_question:
         .byte 4, 0
         .word 0000, xt_key_question, z_key_question
         .byte "key?"
-
-nt_leave:
-        .byte 5, 0
-        .word 0000, xt_leave, z_leave
-        .byte "leave"
-
-nt_loop:
-        .byte 4, 0
-        .word 0000, xt_loop, z_loop
-        .byte "loop"
 
 nt_marker:
         .byte 6, 0
@@ -1024,11 +1009,6 @@ nt_to:
         .byte 2, 0
         .word 0000, xt_to, z_to
         .byte "to"
-
-nt_unloop:
-        .byte 6, 0
-        .word 0000, xt_unloop, z_unloop
-        .byte "unloop"
 
 nt_word:
         .byte 4, 0
