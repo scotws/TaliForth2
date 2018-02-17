@@ -277,9 +277,14 @@ nt_immediate:
         .word nt_compile_only, xt_immediate, z_immediate
         .byte "immediate"
 
+nt_postpone:
+        .byte 8, IM+CO
+        .word nt_immediate, xt_postpone, z_postpone
+        .byte "postpone"
+
 nt_s_quote:
         .byte 2, IM
-        .word nt_immediate, xt_s_quote, z_s_quote
+        .word nt_postpone, xt_s_quote, z_s_quote
         .byte "s", $22
 
 nt_dot_quote:
@@ -297,9 +302,19 @@ nt_literal:
         .word nt_sliteral, xt_literal, z_literal
         .byte "literal"
 
+nt_branch:
+        .byte 6, CO+IM+NN
+        .word nt_literal, xt_branch, z_branch
+        .byte "branch"
+
+nt_zero_branch:
+        .byte 7, CO+IM+NN
+        .word nt_branch, xt_zero_branch, z_zero_branch
+        .byte "0branch"
+
 nt_right_bracket:
         .byte 1, IM
-        .word nt_literal, xt_right_bracket, z_right_bracket
+        .word nt_zero_branch, xt_right_bracket, z_right_bracket
         .byte "]"
 
 nt_left_bracket:
@@ -865,11 +880,6 @@ nt_zero_greater:
         .word 0000, xt_zero_greater, z_zero_greater
         .byte "0>"
 
-nt_zero_branch:
-        .byte 7, 0
-        .word 0000, xt_zero_branch, z_zero_branch
-        .byte "0branch"
-
 nt_two_to_r:
         .byte 3, 0
         .word 0000, xt_two_to_r, z_two_to_r
@@ -909,11 +919,6 @@ nt_begin:
         .byte 5, 0
         .word 0000, xt_begin, z_begin
         .byte "begin"
-
-nt_branch:
-        .byte 6, 0
-        .word 0000, xt_branch, z_branch
-        .byte "branch"
 
 nt_cmove:
         .byte 5, 0
@@ -999,11 +1004,6 @@ nt_never_compile:
         .byte 13, 0
         .word 0000, xt_never_compile, z_never_compile
         .byte "never-compile"
-
-nt_postpone:
-        .byte 8, 0
-        .word 0000, xt_postpone, z_postpone
-        .byte "postpone"
 
 nt_recurse:
         .byte 7, 0

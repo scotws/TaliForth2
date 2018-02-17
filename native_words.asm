@@ -683,11 +683,58 @@ xt_bracket_tick:
 z_bracket_tick: rts
 
 
-; ## BRANCH ( -- ) "<TBA>"
-; ## "branch"  src: Tali Forth  b: TBA  c: TBA  status: TBA
+; ## BRANCH ( -- ) "Always branch"
+; ## "branch"  src: Tali Forth  b: TBA  c: TBA  status: closed
+        ; """Expects offset in next two bytes. This cannot be natively
+        ; compiled because we need the return address provided on the
+        ; 65c02 stack by JSR. 
+        ; """
 .scope
-xt_branch:      nop
+xt_branch:
+                ; encode subroutine branch to runtime component
+                lda #>branch_runtime    ; MSB first
+                pha
+                lda #<branch_runtime
+                pha
+                jsr cmpl_subroutine
+                
 z_branch:       rts
+.scend
+
+
+branch_runtime:
+.scope
+                ; The value on the Return Stack determines where to go
+                ; to
+                pla
+                sta tmpbranch
+                pla
+                sta tmpbranch+1
+
+ 		; Note that the address on the 65c02 stack points to the 
+                ; last byte of the JSR instruction, not the next byte 
+                ; afterwards
+                ldy #1
+                lda (tmpbranch),y  ; LSB
+                sta tmp1
+                iny
+                lda (tmpbranch),y  ; MSB
+                sta tmp1+1
+
+                ; We have to subtract one byte from the address 
+                ; given because of the effect of RTS
+                lda tmp1
+                bne +
+                dec tmp1+1
+*               dec tmp1
+
+		; now we can finally push the address to the stack
+                lda tmp1+1   	; MSB first
+                pha
+                lda tmp1     	; LSB on top 
+                pha
+
+		rts
 .scend
 
 
@@ -2753,13 +2800,13 @@ z_less_than:    rts
 ; ## "literal"  src: ANSI core  b: TBA  c: TBA  status: coded
         ; """ Compile-only word to store TOS so that it is pushed on stack
         ; during runtime. This is a immediate, compile-only word. At runtime,
-        ; it works by calling literal_rt by compling JSR LITERAL_RT . Note the 
-        ; cmpl_ routines use TMPTOS
+        ; it works by calling literal_runtime by compling JSR LITERAL_RT.
+        ; Note the cmpl_ routines use TMPTOS
         ; """
 xt_literal:     
-                lda #>literal_rt
-                pha                     ; MSB
-                lda #<literal_rt
+                lda #>literal_runtime
+                pha                     ; MSB first
+                lda #<literal_runtime
                 pha                     ; LSB
 
                 jsr cmpl_subroutine
@@ -2770,7 +2817,7 @@ xt_literal:
                 
 z_literal:      rts
 
-literal_rt:
+literal_runtime:
 .scope
                 ; During runtime, we push the value following this word back
                 ; on the Data Stack. The subroutine jump that brought us
@@ -3922,8 +3969,82 @@ z_plus_store:   rts
 
 ; ## POSTPONE ( -- ) "<TBA>"
 ; ## "postpone"  src: ANSI core  b: TBA  c: TBA  status: TBA
+        ; """Add the compilation behavior of a word to a new word at
+        ; compile time. If the word that follows it is immediate, include
+        ; it so that it will be compiled when the word being defined is
+        ; itself used for a new word. Tricky, but very useful. Because
+        ; POSTPONE expects a word (not an xt) in the input stream (not
+        ; on the Data Stack). This means we cannot build words with
+        ; "jsr xt_postpone, jsr <word>" directly.
+        ; """
 .scope
-xt_postpone:    nop
+xt_postpone:
+                jsr xt_parse_name               ; ( -- addr n )
+
+                ; if there was no word provided, complain and quit
+                lda 0,x
+                ora 1,x
+                bne +
+
+                lda #6          ; no name
+                jmp error
+*
+                jsr xt_find_name                ; ( -- nt | 0 )
+
+                ; if word not in Dictionary, complain and quit
+                bne +
+                lda #12         ; no name
+                jmp error
+*
+                ; keep a copy of nt for later
+                lda 0,x
+                sta tmp1
+                lda 1,x
+                sta tmp1+1
+
+                ; We need the xt instead of the nt
+                jsr xt_name_to_int              ; ( nt -- xt ) 
+
+                ; See if this is an immediate word. This is easier
+                ; with nt than with xt. The status byte of the word
+                ; is nt+1
+                inc tmp1
+                bne +
+                inc tmp1+1
+*
+                lda (tmp1)
+                and #IM         ; mask all but Intermediate flag
+                beq _not_immediate
+
+                ; we're immediate, so instead of executing it right now, we
+                ; compile it. xt is TOS, so this is easy. The RTS at the end
+                ; takes us back to the original caller
+                jsr xt_compile_comma
+                bra _done
+
+_not_immediate:
+                ; This is not an immediate word, so we enact "deferred
+                ; compilation" by including ' <NAME> COMPILE, which we do by
+                ; compiling the run-time routine of LITERAL, the xt itself, and
+                ; a subroutine jump to COMPILE,
+                lda #>literal_runtime   ; MSB first
+                pha
+                lda #<literal_runtime
+                pha
+                jsr cmpl_subroutine
+
+                ; The xt is TOS. We can't use COMPILE, here because it might
+                ; decided to do something silly like compile it as a native word
+                ; and ruin everything
+                jsr xt_comma
+
+                ; Last, compile COMPILE, 
+                lda #>xt_compile_comma  ; MSB first
+                pha
+                lda #<xt_compile_comma 
+                pha
+                jsr cmpl_subroutine
+_done:
 z_postpone:     rts
 .scend
 
@@ -5767,11 +5888,81 @@ xt_zero:
 z_zero:         rts
 
 
-; ## ZERO_BRANCH ( -- ) "<TBA>"
-; ## "0branch"  src: Tali Forth  b: TBA  c: TBA  status: TBA
+; ## ZERO_BRANCH ( f -- ) "Branch if TOS is zero"
+; ## "0branch"  src: Tali Forth  b: TBA  c: TBA  status: coded 
+        ; """This exects the next two bytes to be the address of where to
+        ; branch to if the test fails. The code may not be natively compiled
+        ; because we need the return address provided by JSR's push to the
+        ; Return Stack This routine uses tmpbranch
+        ; """
 .scope
-xt_zero_branch: nop
+xt_zero_branch:
+                ; The actual word is short: Just compile the runtime
+                ; behavior
+                lda #>zero_branch_runtime       ; MSB first
+                pha
+                lda #<zero_branch_runtime       ; MSB first
+                pha
+                jsr cmpl_subroutine
+                
 z_zero_branch:  rts
+.scend
+
+zero_branch_runtime:
+        ; """In some Forths, this is called (0BRANCH)"""
+.scope
+                ; See if the flag is zero, which is the whole purpose of
+                ; this all
+                lda 0,x
+                ora 1,x
+                beq _zero
+
+                ; Flag is TRUE, so we skip over the next two bytes. This is
+                ; the part between IF and THEN
+                pla             ; LSB
+                clc
+                adc #2
+                sta tmp1
+                pla             ; MSB
+                adc #0          ; only need carry
+                sta tmp1+1
+                bra _done
+_zero:
+                ; Flag is FALSE, so we take the jump to the address given
+                ; in the next two bytes
+                pla
+                sta tmpbranch
+                pla
+                sta tmpbranch+1
+
+                ; However, the address points to the last byte of the
+                ; JSR instruction, not to the next byte afterwards
+                ldy #1
+                lda (tmpbranch),y
+                sta tmp1
+                iny
+                lda (tmpbranch),y
+                sta tmp1+1
+                
+                ; Now we have to subtract one byte from the address
+                ; given because of the way the 6502 calculates RTS
+                lda tmp1
+                bne +
+                dec tmp1+1
+*               dec tmp1
+_done:
+                ; However we got here, tmp1 has the value we push to jump
+                ; to
+                lda tmp1+1
+                pha             ; MSB first
+                lda tmp1
+                pha
+
+                ; clean up the stack and jump
+                inx
+                inx
+
+                rts
 .scend
 
 

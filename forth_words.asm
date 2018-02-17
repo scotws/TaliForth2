@@ -21,19 +21,19 @@ high_level_start:
 
         ; Flow control. Some of these could be realized with CS-ROLL and
         ; CS-PICK instead, which seems to be all the rage these days.
-;       .byte ": if postpone 0branch here 0 , ; immediate compile-only "
+        .byte ": if postpone 0branch here 0 , ; immediate compile-only "
         .byte ": then here swap ! ; immediate compile-only "
-;       .byte ": else postpone branch here 0 , here rot ! ; immediate compile-only "
-;       .byte ": repeat postpone again here swap ! ; immediate compile-only "
-;       .byte ": until postpone 0branch , ; immediate compile-only "
-;       .byte ": while postpone 0branch here 0 , swap ; immediate compile-only "
+        .byte ": else postpone branch here 0 , here rot ! ; immediate compile-only "
+        .byte ": repeat postpone again here swap ! ; immediate compile-only "
+        .byte ": until postpone 0branch , ; immediate compile-only "
+        .byte ": while postpone 0branch here 0 , swap ; immediate compile-only "
 
         ; DEFER and friends. Code taken from ANSI Forth specification. Many of
         ; these will be moved to assembler code in due course
         .byte ": defer! >body ! ; "
         .byte ": defer@ >body @ ; "
-;       .byte ": is state @ if postpone ['] postpone defer! else ' defer! then ; immediate "
-;       .byte ": action-of state @ if postpone ['] postpone defer@ else ' defer@ then ; immediate "
+        .byte ": is state @ if postpone ['] postpone defer! else ' defer! then ; immediate "
+        .byte ": action-of state @ if postpone ['] postpone defer@ else ' defer@ then ; immediate "
 
         ; High level math definitions. The should be moved to actual 65c02 code
         ; for speed at some point. Note we use SM/REM instead of FM/MOD for most
