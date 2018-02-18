@@ -2,7 +2,7 @@
 ; Tali Forth 2 for the 65c02
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 01. Apr 2016 (Liara Forth)
-; This version: 17. Feb 2018
+; This version: 18. Feb 2018
 
 ; These words are too complicated (at the moment) or would be too long
 ; to be included as assembler code. So at startup, we have the basic
@@ -59,16 +59,11 @@ high_level_start:
         ; Temporary high-level words. Convert these to assembler.
         .byte ": within ( n1 n2 n3 -- f ) rot tuck > -rot > invert and ; "
 
-        ; DUMP. A longish word we'll want to modify for a while until we are
-        ; happy with the format
-;       .byte ": dump ( addr u -- ) bounds ?do cr i 4 u.r space "
-;       .byte "16 0 do i j + c@ 0 <# # #s #> type space loop 16 +loop ; "   
-
         ; Splash strings. We leave these as high-level words because they are
         ; generated at the end of the boot process and signal that the other
         ; high-level definitions worked (or at least didn't crash)
         .byte ".( Tali Forth 2 for the 65c02) "
-        .byte "cr .( Version PRE-ALPHA 17. Feb 2018) "
+        .byte "cr .( Version PRE-ALPHA 18. Feb 2018) "
         .byte "cr .( Copyright 2014-2018 Scot W. Stevenson) "
         .byte "cr .( Tali Forth 2 comes with absolutely NO WARRANTY) "
         .byte "cr .( Type 'bye' to exit) cr "
