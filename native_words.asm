@@ -902,7 +902,7 @@ z_chars:        rts
 .scend
 
 
-; ## CMOVE ( addr1 addr 2 u -- ) "Copy bytes going from low to high"
+; ## CMOVE ( addr1 addr2 u -- ) "Copy bytes going from low to high"
 ; ## "cmove"  src: ANSI string  b: TBA  c: TBA  status: coded
         ; """Copy u bytes from addr1 to addr2, going low to high (addr2 is
         ; larger than addr1). Based on code in Leventhal, Lance A. 
@@ -941,8 +941,8 @@ xt_cmove:
                 ldy #0
                 ldx tmptos+1    ; number of pages to move 
                 beq _dopartial
-
-_page:          lda (tmp1),y
+_page:          
+                lda (tmp1),y
                 sta (tmp2),y
                 iny
                 bne _page
@@ -951,12 +951,11 @@ _page:          lda (tmp1),y
                 inc tmp2+1
                 dex
                 bne _page
-
-
-_dopartial:     ldx tmptos      ; length of last page
+_dopartial:     
+                ldx tmptos      ; length of last page
                 beq _done
-
-_partial:       lda (tmp1),y
+_partial:       
+                lda (tmp1),y
                 sta (tmp2),y
                 iny
     
@@ -1024,20 +1023,21 @@ xt_cmove_up:
                 ; move the last partial page first
                 ldy tmptos      ; length of last page
                 beq _fullpage
-
-_partial:       dey
+_partial:       
+                dey
                 lda (tmp1),y
                 sta (tmp2),y
                 cpy #0
                 bne _partial
-
-_fullpage:      ; use the MSB of counter as our page counter 
+_fullpage:      
+                ; use the MSB of counter as our page counter 
                 ldx tmptos+1    ; X is safe on the stack 
                 beq _done
-
-_outerloop:     dec tmp1+1   ; back up to previous pages 
+_outerloop:     
+                dec tmp1+1   ; back up to previous pages 
                 dec tmp2+1
-_innerloop:     dey
+_innerloop:     
+                dey
                 lda (tmp1),y
                 sta (tmp2),y
                 cpy #$00
@@ -1045,10 +1045,10 @@ _innerloop:     dey
 
                 dex
                 bne _outerloop
-
-_done:          plx             ; drops through to _abort 
-
-_abort:         ; clear up the stack and leave 
+_done:          
+                plx             ; drops through to _abort 
+_abort:         
+                ; clear up the stack and leave 
                 txa
                 clc
                 adc #6
@@ -1242,25 +1242,28 @@ _compile_as_code:
                 sta 5,x                 ; ( -- xt ? u )
 
                 lda cp                  ; LSB of cp
-                pha                     ; save copy for new CP calculcation
                 sta 2,x
                 lda cp+1
-                pha                     ; note MSB on top!
                 sta 3,x                 ; ( -- xt cp u )
+
+                ; Store size of area copied for calculation of new CP
+                lda 1,x                 ; MSB
+                pha
+                lda 0,x                 ; LSB
+                pha
 
                 ; TODO add special cases
 
                 ; Enough of this, move the bytes already
                 jsr xt_move
 
-                ; Update CP. Remeber that we pushed the MSB to the stack first
-                ply                     ; MSB !
-                pla                     ; LSB
-
+                ; Update CP
                 clc
+                pla                     ; LSB
                 adc cp
                 sta cp
-                tya
+
+                pla                     ; MSB
                 adc cp+1
                 sta cp+1
 
@@ -1934,7 +1937,7 @@ _loop:
                 lda question_do_runtime,y
                 sta (cp),y
                 dey
-                bne -
+                bpl -
 
                 ; adjust CP
                 pla             ; retrieve counter
@@ -1952,7 +1955,7 @@ _compile_do:
                 lda do_runtime,y
                 sta (cp),y
                 dey
-                bne -
+                bpl -
 
                 ; adjust CP
                 pla             ; retrieve counter
@@ -2289,8 +2292,18 @@ z_drop:         rts
 xt_dump:        
 _row:
                 ; start counter for 16 numbers per row
-                jsr xt_cr
                 ldy #16
+
+                jsr xt_cr
+
+                ; print address number
+                lda 3,x
+                jsr byte_to_ascii
+                lda 2,x
+                jsr byte_to_ascii
+
+                jsr xt_space
+                jsr xt_space
 _loop:
                 ; if there are zero bytes left to display, we're done
                 lda 0,x
@@ -2301,6 +2314,12 @@ _loop:
                 lda (2,x)
                 jsr byte_to_ascii
                 jsr xt_space
+                
+                ; extra space after eight bytes
+                cpy #9
+                bne _next_char
+                jsr xt_space
+
 _next_char:
                 inc 2,x
                 bne _counter
@@ -2315,8 +2334,9 @@ _counter:
                 dec 0,x
                 
                 dey
-                bne _loop
-                bra _row
+                bne _loop               ; next byte
+
+                bra _row                ; new row
 _done:
                 inx
                 inx
@@ -2958,12 +2978,12 @@ xt_i:
                 tsx
 
                 sec
-                lda $0100,x     ; LSB
-                sbc $0102,x
+                lda $0101,x     ; LSB
+                sbc $0103,x
                 sta tmp1
 
-                lda $0101,x     ; MSB
-                sbc $0103,x
+                lda $0102,x     ; MSB
+                sbc $0104,x
 
                 ldx tmpdsp
 
@@ -3382,7 +3402,7 @@ xt_plus_loop:
                 lda plus_loop_runtime,y
                 sta (cp),y
                 dey
-                bne -
+                bpl -
 
                 ; Adjust CP
                 pla
@@ -3405,7 +3425,7 @@ xt_plus_loop:
 *
                 sta (cp),y
                 dey
-                bne -
+                bpl -
 
                 ; Adjust CP
                 lda #6
@@ -3425,14 +3445,6 @@ xt_plus_loop:
                 sta tmp1+1
                 inx
                 inx
-
-                ; Because of the way that RTS works we don't need to 
-                ; save CP, but CP-1
-                sec
-                lda tmp1
-                bne +
-                dec tmp1+1
-*               dec tmp1
 
                 ; now compile this in the DO/?DO routine
                 ldy #0
@@ -3688,7 +3700,8 @@ xt_move:
                 cmp 5,x                 ; MSB of addr1
                 beq _lsb                ; wasn't not helpful, move to LSB
 
-                bcc _to_move_up ; we want CMOVE>
+                bcc _to_move_up         ; we want CMOVE>
+
                 jmp xt_cmove            ; JSR/RTS
 _lsb:        
                 ; MSB were equal, so do the whole thing over with LSB
