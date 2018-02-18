@@ -30,7 +30,6 @@ high_level_start:
 
         ; DEFER and friends. Code taken from ANSI Forth specification. Many of
         ; these will be moved to assembler code in due course
-;       .byte ": defer create ['] abort , does> @ execute ; "
         .byte ": defer! >body ! ; "
         .byte ": defer@ >body @ ; "
         .byte ": is state @ if postpone ['] postpone defer! else ' defer! then ; immediate "

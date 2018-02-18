@@ -1,13 +1,13 @@
 ; List of Strings for Tali Forth 2
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 01. Apr 2016 (for Liara Forth)
-; This version: 10. Feb 2017
+; This version: 18. Feb 2017
 
 ; This file is included by taliforth.asm 
 
 ; STRING TABLE
-; Since we can't fit a 16-bit address in a register as with Liara Forth,
-; we use indexes as offsets to tables as error and string numbers
+; Since we can't fit a 16-bit address in a register, we use indexes as offsets
+; to tables as error and string numbers
 string_table:
         .word s_ok, s_compiled, vt100_page, vt100_home, s_abc_lower ; 0-4
         .word s_abc_upper                                           ; 5-7
@@ -25,15 +25,12 @@ vt100_home: .byte 27, "[H", 0        ; cursor home
 
 
 ; ALPHABET STRINGS
-; Leave alphastr as the last entry in the source code to make it easier to
-; see where this section ends. This may be a zero-terminated string
 s_abc_lower: .byte "0123456789abcdefghijklmnopqrstuvwyz"
 s_abc_upper: .byte "0123456789ABCDEFGHIJKLMNOPQRSTUVWYZ"
 
 
 ; ERROR STRINGS
-; All error strings must be zero-terminated, names start with "es_"
-
+; All error strings must be zero-terminated, all names start with "es_"
 error_table:
         .word es_allot, es_componly, es_defer, es_divzero, es_error   ;  0-4
         .word es_intonly, es_noname, es_radix, es_refill1, es_refill2 ;  5-9
