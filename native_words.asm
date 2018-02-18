@@ -1724,19 +1724,20 @@ xt_defer:
                 lda cp          ; LSB 
                 sec
                 sbc #2
-                sta cp
+                sta tmp1
 
                 lda cp+1        ; MSB
                 sbc #0          ; we only care about the borrow
-                sta cp+1
+                sta tmp1+1
 
-                ; Pass the target on the Return Stack
-                lda #>dodefer   ; MSB
-                pha
+                ; Save the target address
+                ldy #0
                 lda #<dodefer   ; LSB
-                pha
+                sta (tmp1),y
+                iny
+                lda #>dodefer   ; MSB
+                sta (tmp1),y
 
-                jsr cmpl_word
 
                 ; DODEFER executes the next address it finds after
                 ; its call. As default, we include the error
@@ -5679,7 +5680,7 @@ xt_to_body:
                 lda 0,x
                 sta tmp1
                 lda 1,x
-                sta tmp1
+                sta tmp1+1
 
                 ldy# 1
 
@@ -5696,14 +5697,26 @@ _check_doconst:
                 ; Wasn't DOVAR, how about DOCONST
                 lda (tmp1),y
                 cmp #<doconst
-                bne _check_dodoes
+                bne _check_dodefer
                 iny
                 lda (tmp1),y
                 cmp #>doconst
                 beq _got_cfa
 
                 dey
+_check_dodefer:
+                ; Wasn't DOCONST, how about DODEFER
+                lda (tmp1),y
+                cmp #<dodefer
+                bne _check_dodoes
+                iny
+                lda (tmp1),y
+                cmp #>dodefer
+                beq _got_cfa
+
+                dey
 _check_dodoes:
+                ; Wasn't DODEFER either, how about DODOES
                 lda (tmp1),y
                 cmp #<dodoes
                 bne _no_jsr
@@ -5712,7 +5725,7 @@ _check_dodoes:
                 cmp #>dodoes
                 bne _no_jsr
 _got_cfa:
-                ; We've got a DOVAR, DOCONST or DODOES, so we add three
+                ; We've got a DOVAR, DOCONST, DODEFER or DODOES, so we add three
                 ; to the xt 
                 clc
                 lda 0,x         ; LSB

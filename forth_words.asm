@@ -30,6 +30,7 @@ high_level_start:
 
         ; DEFER and friends. Code taken from ANSI Forth specification. Many of
         ; these will be moved to assembler code in due course
+;       .byte ": defer create ['] abort , does> @ execute ; "
         .byte ": defer! >body ! ; "
         .byte ": defer@ >body @ ; "
         .byte ": is state @ if postpone ['] postpone defer! else ' defer! then ; immediate "
@@ -59,7 +60,7 @@ high_level_start:
         ; Temporary high-level words. Convert these to assembler ASAP.
         .byte ": within ( n1 n2 n3 -- f ) rot tuck > -rot > invert and ; "
         .byte ": /string ( addr u n -- addr u ) rot over + rot rot - ; "
-        .byte ": buffer: ( u "name" ) create allot ; "
+        .byte ": buffer: ( u 'name' ) create allot ; "
 
         ; Splash strings. We leave these as high-level words because they are
         ; generated at the end of the boot process and signal that the other

@@ -138,16 +138,16 @@ dodefer:
                 sta tmp2+1
                 
                 ; now we move one byte back
+                lda tmp2
+                bne +
+                dec tmp2+1
+*               dec tmp2
+
+                ; push address to the Return Stack
+                lda tmp2+1      ; MSB first
+                pha 
                 lda tmp2        ; LSB
-                sec
-                sbc #1
-                tay
-
-                lda tmp2+1      ; MSB
-                sbc #0          ; we only care about the borrow
-                pha
-
-                phy             ; LSB
+                pha 
 
                 rts             ; This is actually a jump to the new target
 .scend
