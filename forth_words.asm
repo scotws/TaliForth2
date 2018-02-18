@@ -8,10 +8,11 @@
 ; to be included as assembler code. So at startup, we have the basic
 ; Forth system add them to the Dictionary the hard way. This increases
 ; start-up time but makes it easier to work with the code. Also, these
-; function as built-in systems tests.
+; do double-duty as built-in systems tests: If you see the boot strings
+; defined at the end, the basic structure is up and running.
 
 ; The following strings should not be zero-terminated and do not need
-; CR/LF at the end. They do, however, require a space at the end.
+; CR/LF at the end. They do, however, require a trailing space.
 
 high_level_start:
         ; Output and comment. Because it still blows my mind that we can
@@ -28,7 +29,7 @@ high_level_start:
         .byte ": until postpone 0branch , ; immediate compile-only "
         .byte ": while postpone 0branch here 0 , swap ; immediate compile-only "
 
-        ; DEFER and friends. Code taken from ANSI Forth specification. Many of
+        ; DEFER and friends. Code taken from ANSI Forth specification. Some of
         ; these will be moved to assembler code in due course
         .byte ": defer! >body ! ; "
         .byte ": defer@ >body @ ; "
@@ -56,7 +57,7 @@ high_level_start:
         .byte ": d. tuck dabs <# #s rot sign #> type space ; "
         .byte ": d.r >r tuck dabs <# #s rot sign #> r> over - spaces type ; "
 
-        ; Temporary high-level words. Convert these to assembler
+        ; Temporary high-level words. TODO convert these to assembler
         .byte ": to ( n -- 'name') ' >body ! ; "
         .byte ": within ( n1 n2 n3 -- f ) rot tuck > -rot > invert and ; "
         .byte ": /string ( addr u n -- addr u ) rot over + rot rot - ; "
@@ -66,7 +67,7 @@ high_level_start:
         ; generated at the end of the boot process and signal that the other
         ; high-level definitions worked (or at least didn't crash)
         .byte ".( Tali Forth 2 for the 65c02) "
-        .byte "cr .( Version PRE-ALPHA 18. Feb 2018) "
+        .byte "cr .( Version ALPHA 18. Feb 2018) "
         .byte "cr .( Copyright 2014-2018 Scot W. Stevenson) "
         .byte "cr .( Tali Forth 2 comes with absolutely NO WARRANTY) "
         .byte "cr .( Type 'bye' to exit) cr "

@@ -21,21 +21,21 @@ char & parse jack& type                 \ should print "jack"
 ### CREATE/DOES>
 The simplest test is to redefine CONSTANT:
 ```
-: myconst create , does> @ ; 
+: aaa create , does> @ ; 
 ```
 
 
 ### LITERAL test
 
 ```
-: aaa \[ 1 \] literal ;         \ should put 1 on the stack during runtime
+: aaa [ 1 ] literal ;         \ should put 1 on the stack during runtime
 ```
 
 
 ### BRACKET-TICK test
 
 ```
-: aaa \['\] words execute ;     \ should print all words known
+: aaa ['] words execute ;     \ should print all words known
 ```
 
 

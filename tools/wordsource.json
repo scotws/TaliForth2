@@ -140,7 +140,6 @@
 	{ "name": "invert", "word": "invert", "source": "ANSI core" },
 	{ "name": "j", "word": "j", "source": "ANSI core" },
 	{ "name": "key", "word": "key", "source": "ANSI core" },
-	{ "name": "key_question", "word": "key?", "source": "ANSI facility" },
 	{ "name": "latestnt", "word": "latestnt", "source": "Tali Forth" },
 	{ "name": "latestxt", "word": "latestxt", "source": "Gforth" },
 	{ "name": "leave", "word": "leave", "source": "ANSI core" },

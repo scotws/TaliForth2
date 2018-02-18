@@ -1,7 +1,7 @@
 ; Dictionary Headers for Tali Forth 2
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 05. Dec 2016 (Liara Forth)
-; This version: 17. Feb 2018
+; This version: 18. Feb 2018
 
 ; Dictionary headers are kept separately from the code, which allows various
 ; tricks in the code. We roughly follow the Gforth terminology: The Execution
@@ -542,7 +542,7 @@ nt_s_to_d:
         .word nt_d_to_s, xt_s_to_d, z_s_to_d
         .byte "s>d"
 
-nt_value:               ; some routine as CONSTANT
+nt_value:               ; same code as CONSTANT
         .byte 5, 0
         .word nt_s_to_d, xt_constant, z_constant
         .byte "value"
@@ -637,9 +637,24 @@ nt_invert:
         .word nt_negate, xt_invert, z_invert
         .byte "invert"
 
+nt_two_to_r:
+        .byte 3, CO+NN          ; native is special case, leave NN for now
+        .word nt_invert, xt_two_to_r, z_two_to_r
+        .byte "2>r"
+
+nt_two_r_from:
+        .byte 3, CO+NN          ; native is special case, leave NN for now
+        .word nt_two_to_r, xt_two_r_from, z_two_r_from
+        .byte "2r>"
+
+nt_two_r_fetch:
+        .byte 3, CO+NN          ; native is special case, leave NN for now
+        .word nt_two_r_from, xt_two_r_fetch, z_two_r_fetch
+        .byte "2r@"
+
 nt_two_variable:
         .byte 9, 0
-        .word nt_invert, xt_two_variable, z_two_variable
+        .word nt_two_r_fetch, xt_two_variable, z_two_variable
         .byte "2variable"
 
 nt_two_over:
@@ -952,33 +967,11 @@ nt_dup:
         .word nt_swap, xt_dup, z_dup
         .byte "dup"
 
-; DROP is always the first word
+; DROP is always the first native word in the Dictionary
 dictionary_start:
 nt_drop:
         .byte 4, 0
         .word nt_dup, xt_drop, z_drop
         .byte "drop"
 
-
-; ====== TODO UNSORTED BELOW THIS LINE TODO =====
-
-
-nt_two_to_r:
-        .byte 3, 0
-        .word 0000, xt_two_to_r, z_two_to_r
-        .byte "2>r"
-
-nt_two_r_from:
-        .byte 3, 0
-        .word 0000, xt_two_r_from, z_two_r_from
-        .byte "2r>"
-
-nt_two_r_fetch:
-        .byte 3, 0
-        .word 0000, xt_two_r_fetch, z_two_r_fetch
-        .byte "2r@"
-
-nt_key_question:
-        .byte 4, 0
-        .word 0000, xt_key_question, z_key_question
-        .byte "key?"
+; END

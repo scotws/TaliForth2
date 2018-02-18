@@ -11,7 +11,7 @@
 
 ; Label used to calculate UNUSED. Silly for Tali Forth, where we assume 32 KiB
 ; RAM and 32 KiB ROM, but required for Liara Forth, and kept here to make the
-; code compatible
+; code more useful for other scenarios.
 code0:
 
 .require "definitions.asm"      ; Top-level definitions, memory map

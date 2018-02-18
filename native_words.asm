@@ -44,13 +44,6 @@ xt_cold:
                 lda #>kernel_getc
                 sta input+1
      
-                ; set the HAVE_KEY vector to the default kernel_getc
-                ; TODO see how this works with py65mon
-                lda #<kernel_getc
-                sta havekey
-                lda #>kernel_getc
-                sta havekey+1
-
                 ; initialize 65c02 stack (Return Stack)
                 ldx #rsp0
                 txs
@@ -161,13 +154,11 @@ xt_cold:
         ; stack pointer (the Return Stack) anyway during QUIT. Note we don't
         ; actually delete the stuff on the Data Stack
         ; """
-xt_abort:       ldx #dsp0
-
+xt_abort:       ldx #dsp0               ; fall through to QUIT
 
 ; ## QUIT ( -- ) "Reset the input and get new input"
 ; ## "quit"  src: ANSI core  b: TBA  c: TBA  status: fragment
-        ; """Rest the input and start command loop.
-        ; """
+        ; """Rest the input and start command loop."""
 .scope
 xt_quit:        
                 ; Clear the Return Stack. This is a little screwed up
@@ -190,7 +181,6 @@ xt_quit:
                 ; STATE is zero (interpret, not compile)
                 stz state
                 stz state+1
-
 _get_line:
                 lda #<buffer0   ; input buffer, this is paranoid
                 sta cib
@@ -274,9 +264,7 @@ xt_abort_quote:
                 pha
                 jsr cmpl_subroutine
 
-                rts
-
-z_abort_quote:  
+z_abort_quote:  rts
 .scend
 
 abort_quote_runtime:
@@ -300,7 +288,6 @@ _done:
 
                 rts
 .scend
-
 
 
 ; ## ABS ( n -- u ) "Return absolute value of a number"
@@ -372,7 +359,6 @@ _not_zero:
                 inx
 
                 ldy #0
-
 _loop:
                 ; Out of the box, py65mon catches some CTRL sequences such as
                 ; CTRL-c. We also don't need to check for CTRL-l because a
@@ -2070,7 +2056,6 @@ do_runtime:
                 inx
 do_runtime_end:
 
-
 question_do_runtime:
 .scope
         ; """This is called (?DO) in some Forths. See the explanation at
@@ -2197,7 +2182,6 @@ does_runtime:
 xt_dot:         
                 cpx #dsp0-1
                 bmi +
-
                 lda #11         ; underflow
                 jmp error
 *
@@ -2213,13 +2197,6 @@ xt_dot:
                 jsr xt_space
 
 z_dot:          rts
-.scend
-
-; ## DOT_BYTE ( -- ) "<TBA>"
-; ## ".byte"  src: Tali Forth  b: TBA  c: TBA  status: TBA
-.scope
-xt_dot_byte:    nop
-z_dot_byte:     rts
 .scend
 
 
@@ -2327,8 +2304,6 @@ z_drop:         rts
 
 ; ## DUMP ( addr u -- ) "Display a memory region"
 ; ## "dump"  src: ANSI tools  b: TBA  c: TBA  status: coded
-; TODO This is a primitive low-level version for testing, replace
-; by high-level version
 .scope
 xt_dump:        
 _row:
@@ -2393,7 +2368,6 @@ z_dump:         rts
 xt_dup:         
                 cpx #dsp0-1
                 bmi +
-
                 lda #11         ; underflow
                 jmp error
 *
@@ -2410,13 +2384,13 @@ z_dup:          rts
 
 ; ## EMIT ( char -- ) "Print character to current output"
 ; ## "emit"  src: ANSI core  b: TBA  c: TBA  status: tested
-.scope
-xt_emit:
         ; """Run-time default for EMIT. The user can revector this by changing
         ; the value of the OUTPUT variable. We ignore the MSB completely, and 
         ; do not check to see if we have been given a valid ASCII character. 
         ; Don't make this native compile
         ; """
+.scope
+xt_emit:
                 cpx #dsp0-1
                 bmi +
 
@@ -2719,15 +2693,20 @@ z_false:        rts
 
 
 ; ## FETCH ( addr -- n ) "Push cell content from memory to stack"
-; ## "@"  src: ANSI core  b: 16  c: TBA  status: coded
+; ## "@"  src: ANSI core  b: TBA  c: TBA  status: coded
 xt_fetch:       
-                lda (0,x)       ; LSB
+                cpx #dsp0-1
+                bmi +
+                lda #11                 ; underflow
+                jmp error
+*
+                lda (0,x)               ; LSB
                 tay
                 inc 0,x
                 bne +
                 inc 1,x
 *
-                lda (0,x)       ; MSB
+                lda (0,x)               ; MSB
                 sta 1,x
                 tya
                 sta 0,x
@@ -2737,7 +2716,7 @@ z_fetch:        rts
 
 ; ## FIND ( caddr -- addr 0 | xt 1 | xt -1 ) "Find word in Dictionary"
 ; ## "find"  src: ANSI core  b: TBA  c: TBA  status: coded
-	; """Included for backwards compatibility only, because it still
+        ; """Included for backwards compatibility only, because it still
         ; can be found in so may examples. It should, however, be replaced
         ; by FIND-NAME. Counted string either returns address with a FALSE
         ; flag if not found in the Dictionary, or the xt with a flag to
@@ -3043,7 +3022,6 @@ xt_hex:
 z_hex:          rts
 
 
-
 ; ## HOLD ( char -- ) "Insert character at current output"
 ; ## "hold"  src: ANSI core  b: TBA  c: TBA  status: coded
         ; """Insert a character at the current position of a pictured numeric
@@ -3204,7 +3182,6 @@ z_int_to_name:  rts
 
 ; ## INVERT ( u -- u ) "Complement of TOS"
 ; ## "invert"  src: ANSI core  b: 10  c: TBA  status: coded
-; TODO see if TAY really faster than second LDA #$FF
 xt_invert:
                 lda #$FF
                 tay
@@ -3285,15 +3262,6 @@ z_key:          ; never reached
 .scend
 
 
-; ## KEY_QUESTION ( -- ) "<TBA>"
-; ## "key?"  src: ANSI facility  b: TBA  c: TBA  status: TBA
-.scope
-xt_key_question:
-                nop
-z_key_question: rts
-.scend
-
-
 ; ## LATESTNT ( -- nt ) "Push most recent nt to stack"
 ; ## "latestnt"  src: Tali Forth  b: 10  c: TBA  status: coded
         ; """The Gforth version of this word is called LATEST
@@ -3343,8 +3311,7 @@ z_leave:                        ; not reached, not compiled
 
 ; ## LEFT_BRACKET ( -- ) "Enter interpretation state"
 ; ## "["  src: ANSI core  b: 4  c: TBA  status: coded
-        ; """This is an immediate and compile-only word
-        ; """
+        ; """This is an immediate and compile-only word"""
 xt_left_bracket:
                 stz state
                 stz state+1
@@ -3659,7 +3626,6 @@ xt_m_star:
 
                 ; get the absolute value of both numbers so we can feed
                 ; them to UM*, which does the real work
-                ; TODO convert this to assembler for speed
                 jsr xt_abs
                 jsr xt_swap
                 jsr xt_abs
@@ -3759,6 +3725,11 @@ z_marker:       rts
         ; """
 .scope
 xt_max:         
+                cpx #dsp0-3
+                bmi +
+                lda #11                 ; underflow
+                jmp error
+*
                 ; Compare LSB. We do this first to set the carry flag
                 lda 0,x         ; LSB of TOS
                 cmp 2,x         ; LSB of NOS, this sets the carry
@@ -3793,7 +3764,13 @@ z_max:          rts
         ; http://www.righto.com/2012/12/the-6502-overflow-flag-explained.html 
         ; """
 .scope
-xt_min:         ; compare LSB. We do this first to set the carry flag
+xt_min:         
+                cpx #dsp0-3
+                bmi +
+                lda #11                 ; underflow
+                jmp error
+*
+                ; compare LSB. We do this first to set the carry flag
                 lda 0,x         ; LSB of TOS
                 cmp 2,x         ; LSB of NOS, this sets carry
 
@@ -3823,6 +3800,11 @@ z_min:          rts
 ; ## MINUS ( n n -- n ) "Subtract TOS from NOS"
 ; ## "-"  src: ANSI core  b: 15  c: TBA  status: coded
 xt_minus:       
+                cpx #dsp0-3
+                bmi +
+                lda #11                 ; underflow
+                jmp error
+*
                 sec
                 lda 2,x         ; LSB
                 sbc 0,x
@@ -3882,13 +3864,6 @@ _clean_up:
 _done:
 z_minus_trailing:
                 rts
-.scend
-
-; ## MOD ( -- ) "<TBA>"
-; ## "mod"  src: ANSI core  b: TBA  c: TBA  status: TBA
-.scope
-xt_mod:         nop
-z_mod:          rts
 .scend
 
 
@@ -4037,6 +4012,11 @@ z_never_native:
 ; ## NIP ( b a -- a ) "Delete NOS"
 ; ## "nip"  src: ANSI core ext  b: 10  c: TBA  status: coded
 xt_nip:         
+                cpx #dsp0-3
+                bmi +
+                lda #11                 ; underflow
+                jmp error
+* 
                 lda 0,x         ; LSB
                 sta 2,x
                 lda 1,x         ; MSB
@@ -4357,11 +4337,15 @@ xt_one:
 z_one:          rts
 
 
-
 ; ## ONE_MINUS ( u -- u-1 ) "Decrease TOS by one"
 ; ## "1-"  src: ANSI core  b: 8  c: TBA  status: coded
 .scope
 xt_one_minus:   
+                cpx #dsp0-1
+                bmi +
+                lda #11         ; underflow
+                jmp error
+*
                 lda 0,x
                 bne +
                 dec 1,x
@@ -4375,6 +4359,11 @@ z_one_minus:    rts
 ; ## "1+"  src: ANSI core  b: 6  c: 14-15  status: coded
 .scope
 xt_one_plus:    
+                cpx #dsp0-1
+                bmi +
+                lda #11         ; underflow
+                jmp error
+*
                 inc 0,x
                 bne _done
                 inc 1,x
@@ -4483,29 +4472,6 @@ xt_page:
 
 z_page:         rts
 
-
-; ## PAREN_DO ( -- ) "<TBA>"
-; ## "(do)"  src: Tali Forth  b: TBA  c: TBA  status: TBA
-.scope
-xt_paren_do:    nop
-z_paren_do:     rts
-.scend
-
-; ## PAREN_PLUS_LOOP ( -- ) "<TBA>"
-; ## "(+loop)"  src: Tali Forth  b: TBA  c: TBA  status: TBA
-.scope
-xt_paren_plus_loop:
-                nop
-z_paren_plus_loop:
-                rts
-.scend
-
-; ## PAREN_Q_DO ( -- ) "<TBA>"
-; ## "(?do)"  src: Tali Forth  b: TBA  c: TBA  status: TBA
-.scope
-xt_paren_q_do:  nop
-z_paren_q_do:   rts
-.scend
 
 ; ## PARSE-NAME ( "name" -- addr u ) "Parse the input"
 ; ## "parse-name"  src: ANSI core ext  b: TBA  c: TBA  status: coded
@@ -5051,7 +5017,7 @@ z_r_from:       rts
         ; """This word may not be natively compiled"""
 .scope
 xt_recurse:
-		; The whole routine amounts to compiling a reference to 
+                ; The whole routine amounts to compiling a reference to 
                 ; the word that is being compiled. First, we save the JSR
                 ; instruction
                 ldy #0 
@@ -5173,14 +5139,6 @@ xt_right_bracket:
                 sta state+1
 z_right_bracket:
                 rts
-
-
-; ## RIGHT_PAREN ( -- ) "<TBA>"
-; ## ")"  src: ANSI core  b: TBA  c: TBA  status: TBA
-.scope
-xt_right_paren: nop
-z_right_paren:  rts
-.scend
 
 
 ; ## ROT ( a b c -- b c a ) "Rotate first three stack entries downwards"
@@ -5839,14 +5797,6 @@ z_swap:         rts
 .scend
 
 
-; ## THEN ( -- ) "<TBA>"
-; ## "then"  src: ANSI core  b: TBA  c: TBA  status: TBA
-.scope
-xt_then:        nop
-z_then:         rts
-.scend
-
-
 ; ## TICK ( "name" -- xt ) "Return a word's execution token (xt)"
 ; ## "'"  src: ANSI core  b: TBA  c: TBA  status: coded
 .scope
@@ -6178,7 +6128,7 @@ xt_to_r:
                 sta tmptos
                 ply             ; MSB
 
-                ; --- cut line for native coding ---
+                ; --- CUT HERE FOR NATIVE CODING ---
  
                 ; now we can do the actual work
                 lda 1,x         ; MSB
@@ -6186,7 +6136,7 @@ xt_to_r:
                 lda 0,x         ; LSB
                 pha
 
-                ; --- cut line for native coding ---
+                ; --- CUT HERE FOR NATIVE CODING ---
 
                 ; restore return address
                 phy             ; MSB
@@ -6316,25 +6266,102 @@ z_two_over:     rts
 .scend
 
 
-; ## TWO_R_FETCH ( -- ) "<TBA>"
-; ## "2r@"  src: ANSI core ext  b: TBA  c: TBA  status: TBA
+; ## TWO_R_FETCH ( -- n n ) "Copy top two entries from Return Stack"
+; ## "2r@"  src: ANSI core ext  b: TBA  c: TBA  status: coded
+        ; """This is R> R> 2DUP >R >R SWAP but we can do it a lot faster in
+        ; assembler This routine may not be natively compiled without 
+        ; special trickery because it accessed by a JSR, the first element
+        ; on the Return Stack is the return address.
+        ; """
 .scope
-xt_two_r_fetch: nop
+xt_two_r_fetch:
+		; make room on the Data Stack
+                dex
+                dex
+                dex
+                dex
+
+                ; Get four bytes off of Return Stack. This assumes that 
+                ; we took a subroutine jump here so the first two entries
+                ; are the return address
+                txa
+                tsx
+                phx             ; 65c02 has no TXY, so do it the hard way
+                ply
+                tax
+
+                ; The Return Stack addreses $0101 and $0102 are occupied by
+                ; the return address for this word. This is a whole lot
+                ; easier on the 65816
+
+                lda $0103,y     ; LSB of top entry
+                sta 0,x
+                lda $0104,y     ; MSB of top entry
+                sta 1,x
+                lda $0105,y     ; LSB of bottom entry
+                sta 2,x
+                lda $0106,y     ; MSB of top entry
+                sta 3,x
+
 z_two_r_fetch:  rts
 .scend
 
-; ## TWO_R_FROM ( -- ) "<TBA>"
-; ## "2r>"  src: ANSI core ext  b: TBA  c: TBA  status: TBA
+
+; ## TWO_R_FROM ( -- n1 n2 ) (R: n1 n2 -- ) "Pull two cells from Return Stack"
+; ## "2r>"  src: ANSI core ext  b: TBA  c: TBA  status: coded
+	; """Pull top two entries from Return Stack. Is the same as
+        ; R> R> SWAP. As with R>, the problem with the is word is that
+        ; the top value on the ReturnStack for a STC Forth is the
+        ; return address, which we need to get out of the way first.
+        ; Native compile needs to be handled as a special case.
+        ; """
 .scope
-xt_two_r_from:  nop
+xt_two_r_from:
+                ; save the return address
+                pla                     ; LSB
+                sta tmp1
+                pla                     ; MSB
+                sta tmp1+1
+
+                ; --- CUT HERE FOR NATIVE CODING ---
+
+		; make room on stack 
+                dex
+                dex
+                dex
+                dex
+
+                ; In theory, we should test for underflow on the Return
+                ; Stack. However, given the traffic there with an STC
+                ; Forth, that's probably not really useful
+
+                ; now we can access the data
+                pla                     ; LSB
+                sta 0,x
+                pla                     ; MSB
+                sta 1,x
+
+                pla                     ; LSB
+                sta 2,x
+                pla                     ; MSB
+                sta 3,x
+
+                ; --- CUT HERE FOR NATIVE CODING ---
+
+                ; restore return address
+                lda tmp1+1              ; MSB
+                pha
+                lda tmp1                ; LSB
+                pha
+
+                
 z_two_r_from:   rts
 .scend
 
 
 ; ## TWO_STAR ( n -- n ) "Multiply TOS by two"
 ; ## "2*"  src: ANSI core  b: TBA  c: TBA  status: coded
-        ; """Also used for CELLS
-        ; """
+        ; """Also used for CELLS"""
 xt_two_star:
                 cpx #dsp0-1
                 bmi +
@@ -6347,7 +6374,7 @@ z_two_star:     rts
 
 
 ; ## TWO_SWAP ( n1 n2 n3 n4 -- n3 n4 n1 n1 ) "Exchange two double words"
-; ## "2swap"  src: ANSI core  b: TBA  c: TBA  status: TBA
+; ## "2swap"  src: ANSI core  b: TBA  c: TBA  status: coded
 .scope
 xt_two_swap:
                 cpx #dsp0-7
@@ -6383,10 +6410,48 @@ z_two_swap:     rts
 .scend
 
 
-; ## TWO_TO_R ( -- ) "<TBA>"
-; ## "2>r"  src: ANSI core ext  b: TBA  c: TBA  status: TBA
+; ## TWO_TO_R ( n1 n2 -- )(R: -- n1 n2 "Push top two entries to Return Stack"
+; ## "2>r"  src: ANSI core ext  b: TBA  c: TBA  status: coded
+        ; """Push top two entries to Return Stack. The same as SWAP >R >R
+        ; except that if we jumped here, the return address will be in the
+        ; way. May not be natively compiled unless we're clever and use
+        ; special routines.
+        ; """
 .scope
-xt_two_to_r:    nop
+xt_two_to_r:
+                ; save the return address
+                pla             ; LSB
+                sta tmp1
+                pla             ; MSB
+                sta tmp1+1      
+
+                ; --- CUT HERE FOR NATIVE CODING ---
+
+                ; now we can move the data 
+                lda 3,x         ; MSB
+                pha
+                lda 2,x         ; LSB
+                pha
+
+                ; now we can move the data 
+                lda 1,x         ; MSB
+                pha
+                lda 0,x         ; LSB
+                pha
+
+                inx
+                inx
+                inx
+                inx
+
+                ; --- CUT HERE FOR NATIVE CODING ---
+ 
+                ; restore return address
+                lda tmp1+1      ; MSB
+                pha
+                lda tmp1        ; LSB
+                pha
+                
 z_two_to_r:     rts
 .scend
 
@@ -6662,13 +6727,6 @@ xt_unused:
                 
 z_unused:       rts
 
-; ## VALUE ( -- ) "<TBA>"
-; ## "value"  src: ANSI core ext  b: TBA  c: TBA  status: TBA
-.scope
-xt_value:       nop
-z_value:        rts
-.scend
-
 
 ; ## VARIABLE ( "name" -- ) "Define a variable"
 ; ## "variable"  src: ANSI core  b: TBA  c: TBA  status: coded
@@ -6777,14 +6835,13 @@ z_word:
 
 
 ; ## WORDS ( -- ) "Print known words from Dictionary"
-; ## "words"  src: ANSI tools  b: TBA  c: TBA  status: tested
+; ## "words"  src: ANSI tools  b: TBA  c: TBA  status: coded
         ; """This is pretty much only used at the command line so we can
         ; be slow and try to save space. DROP must always be the first word in a
         ; clean system (without Forth words), BYE the last. There is no reason
         ; why we couldn't define this as a high level word except that it is
         ; really useful for testing
         ; """
-        ; TODO make output respect line length on screen
 .scope
 xt_words:       
                 ; we follow Gforth by starting on the next
@@ -7066,3 +7123,4 @@ _got_zero:
 z_zero_unequal: rts
 .scend
 
+; END

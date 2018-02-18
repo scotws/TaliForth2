@@ -54,8 +54,7 @@
 ; Some of these are somewhat silly for the 65c02, where for example
 ; the location of the Zero Page is fixed by hardware. However, we keep
 ; these for easier comparisons with Liara Forth's structure and to 
-; help people new to these things. Note that on Liara Forth, some of 
-; these are soft addresses, not hard addresses
+; help people new to these things.
 
 .alias ram_start $0000       ; start of installed 32 KiB of RAM
 .alias ram_end   $8000-1     ; end of installed RAM

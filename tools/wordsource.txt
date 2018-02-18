@@ -162,7 +162,6 @@ int>name        int_to_name             Tali Forth
 invert          invert                  ANSI core 
 j               j                       ANSI core 
 key             key                     ANSI core 
-key?            key_question            ANSI facility
 latestnt        latestnt                Tali Forth
 latestxt        latestxt                Gforth
 leave           leave                   ANSI core

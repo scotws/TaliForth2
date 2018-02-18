@@ -2,7 +2,7 @@
 This version: 18. Feb 2018  
 Scot W. Stevenson <scot.stevenson@gmail.com> 
 
-(THIS TEXT IS UNDER DEVELOPMENT AND INCOMPLETE, IF NOT DOWNRIGHT WRONG)
+(THIS TEXT IS UNDER DEVELOPMENT. SOME PARTS ARE INCOMPLETE, OTHERS DOWNRIGHT WRONG)
 
 ## Overview
 
@@ -29,7 +29,7 @@ py65mon --mpu 65c02 -r ophis.bin
 
 ## Assembly
 
-Tali Forth was written with vim (of course) and the [Ophis 2.1
+Tali Forth was written with vim (well, obviously) and the [Ophis 2.1
 cross-assembler](http://michaelcmartin.github.io/Ophis/). Ophis uses a slightly
 different format than other assemblers, but is in Python and therefore will run
 on almost any operating system. To install Ophis on Windows, use the link
@@ -52,7 +52,7 @@ The script also automatically updates the file listings in the `docs` folder.
 
 Note that Ophis will not accept math operation characters (`-*/+`) in label
 names because it will try to perform those operations. Because of this, 
-we use underscores in the label names. This is a major difference to Liara
+we use underscores for label names. This is a major difference to Liara
 Forth.
 
 
@@ -146,6 +146,14 @@ source file the way gofmt does for Go (golang), I work with the following rules:
 
 ## Frequently (and Infrequently) Asked Questions
 
+### Why does Tali Forth 2 take so long to start up?
+
+After the default kernel string is printed, you'll notice a short pause that
+didn't occur with Tali Forth 1. This is because Tali Forth 2 has more words
+defined in high-level Forth (see `forth-words.asm`) than Tali did. The pause
+happens because they are being compiled on the fly.
+
+
 ### Why "Tali" Forth?
 
 I like the name, and we're probably not going to have anymore kids I can give it
@@ -162,5 +170,6 @@ do have some issues with _Andromeda_. Like what happened to the quarian ark?)
 
 Liara Forth is a STC Forth for the big sibling of the 6502, the 65816. Tali 1
 came first, then I wrote Liara with that knowledge and learned even more, and
-now Tali 2 is such much better for the experience.
+now Tali 2 is such much better for the experience. Oh, and it's another "Mass
+Effect" character.
 
