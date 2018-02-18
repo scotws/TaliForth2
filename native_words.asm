@@ -3676,10 +3676,75 @@ z_m_star:       rts
 .scend
 
 
-; ## MARKER ( -- ) "<TBA>"
-; ## "marker"  src: ANSI core ext  b: TBA  c: TBA  status: TBA
+; ## MARKER ( "name" -- ) "Create a deletion boundry"
+; ## "marker"  src: ANSI core ext  b: TBA  c: TBA  status: coded
+        ; """This word replaces FORGET in earlier Forths. Old entries are not
+        ; actually deleted, but merely overwritten by restoring CP and DP.
+        ; """
 .scope
-xt_marker:      nop
+xt_marker:
+                ; This is a defining word
+                jsr xt_create
+
+                ; Add current DP as payload - this is the DP of the 
+                ; marker itself
+                ldy #0
+                lda dp
+                sta (cp),y
+                iny
+                lda dp+1
+                sta (cp),y
+                iny
+
+                ; Adjust CP
+                tya
+                clc
+                adc cp
+                sta cp
+                bcc +
+                inc cp+1
+*
+                ; continue with normal Forth word
+                jsr does_runtime        ; DOES> by hand
+                jsr dodoes
+
+                ; This is the DOES> payload
+                jsr xt_fetch            ; get the old DP
+
+                ; What we get on the stack is the DP of the marker itself, 
+                ; but we need the DP of the previous word
+                lda 0,x
+                sta tmp1
+                lda 1,x
+                sta tmp1+1
+                inx
+                inx
+
+                ; The link to the previous DP is three bytes down
+                ldy #3
+                lda (tmp1),y
+                sta dp 
+                iny
+                lda (tmp1),y
+                sta dp+1
+
+                ; Adjust CP to the byte after end of this new word
+                ; at offset 5 (the sixth byte) we have the z_* link to 
+                ; the end of this word. Use this to get the new Compiler
+                ; Pointer (CP) ...
+                ldy #5
+                lda (dp),y              ; LSB
+                sta cp
+                iny
+                lda (dp),y              ; MSB
+                sta cp+1
+
+                ; ... except that the RAM available points to the address
+                ; one byte after that
+                inc cp
+                bne _done
+                inc cp+1
+_done: 
 z_marker:       rts
 .scend
 
@@ -3773,11 +3838,48 @@ xt_minus:
 z_minus:        rts
 
 
-; ## MINUS_TRAILING ( -- ) "<TBA>"
-; ## "-trailing"  src: ANSI string  b: TBA  c: TBA  status: TBA
+; ## MINUS_TRAILING ( addr u1 -- addr u2 ) "Remove trailing spaces"
+; ## "-trailing"  src: ANSI string  b: TBA  c: TBA  status: coded
+        ; """We assume that string is at most 255 chars long"""
 .scope
 xt_minus_trailing:
-                nop
+                cpx #dsp0-3
+                bmi +
+                lda #11                 ; underflow
+                jmp error
+*
+                ; if length entry is zero, return a zero and leave the 
+                ; address part untouched
+                lda 0,x                 ; LSB of n
+                ora 1,x                 ; MSB of n (should be zero anyway) 
+                beq _done
+
+                lda 2,x                 ; LSB of addr 
+                sta tmp1
+                lda 3,x                 ; MSB of addr
+                sta tmp1+1
+
+                ; Ignore MSB of length 
+                lda 0,x
+                tay
+                dey                     ; u is length, but we need the offset 
+_loop:          
+                lda (tmp1),y
+                cmp #AscSP
+                bne _clean_up
+                dey
+                bne _loop
+
+                ; If it was spaces all the way down, fall through to the
+                ; clean-up routine. This is probably a rare case, so we use
+                ; DEY as a hack so we can use the more common routine
+                dey
+_clean_up:
+                iny             ; Y is offset, we need the length 
+                tya             ; store new n in LSB
+                sta 0,x
+                stz 1,x         ; always zero 
+_done:
 z_minus_trailing:
                 rts
 .scend
@@ -3889,10 +3991,17 @@ z_name_to_string:
                 rts
 .scend
 
-; ## NC_LIMIT ( -- ) "<TBA>"
-; ## "nc-limit"  src: Tali Forth  b: TBA  c: TBA  status: TBA
+; ## NC_LIMIT ( -- addr ) "Return address where NC-LIMIT value is kept"
+; ## "nc-limit"  src: Tali Forth  b: TBA  c: TBA  status: coded
 .scope
-xt_nc_limit:    nop
+xt_nc_limit:
+                dex
+                dex
+                lda #<nc_limit
+                sta 0,x
+                lda #>nc_limit
+                sta 1,x
+
 z_nc_limit:     rts
 .scend
 
@@ -4937,11 +5046,37 @@ xt_r_from:
 z_r_from:       rts
 
 
-
-; ## RECURSE ( -- ) "<TBA>"
-; ## "recurse"  src: ANSI core  b: TBA  c: TBA  status: TBA
+; ## RECURSE ( -- ) "Copy recursive call to word being defined"
+; ## "recurse"  src: ANSI core  b: TBA  c: TBA  status: coded
+        ; """This word may not be natively compiled"""
 .scope
-xt_recurse:     nop
+xt_recurse:
+		; The whole routine amounts to compiling a reference to 
+                ; the word that is being compiled. First, we save the JSR
+                ; instruction
+                ldy #0 
+
+                lda #$20        ; opcode for JSR
+                sta (CP),y
+                iny
+
+                ; Next, we save the LSB and MSB of the xt of the word 
+                ; we are currently working on, which is saved in WRKWRD
+                lda workword      ; LSB
+                sta (CP),y
+                iny
+                lda workword+1    ; MSB
+                sta (CP),y
+                iny
+
+                ; update CP
+                tya
+                clc
+                adc CP
+                sta CP
+                bcc _done
+                inc CP+1 
+_done:                
 z_recurse:      rts
 .scend
 
@@ -5026,14 +5161,6 @@ _src_not_string:
 
 _done:
 z_refill:       rts
-.scend
-
-
-; ## REPEAT ( -- ) "<TBA>"
-; ## "repeat"  src: ANSI core  b: TBA  c: TBA  status: TBA
-.scope
-xt_repeat:      nop
-z_repeat:       rts
 .scend
 
 
@@ -5751,14 +5878,6 @@ z_tick:         rts
 .scend
 
 
-; ## TO ( -- ) "<TBA>"
-; ## "to"  src: ANSI core ext  b: TBA  c: TBA  status: TBA
-.scope
-xt_to:          nop
-z_to:           rts
-.scend
-
-
 ; ## TO_BODY ( xt -- addr ) "Return a word's Code Field Area (CFA)"
 ; ## ">body"  src: ANSI core  b: TBA  c: TBA  status: coded
         ; """Given a word's execution token (xt), return the address of the
@@ -6271,11 +6390,26 @@ xt_two_to_r:    nop
 z_two_to_r:     rts
 .scend
 
-; ## TWO_VARIABLE ( -- ) "<TBA>"
-; ## "2variable"  src: ANSI double  b: TBA  c: TBA  status: TBA
+
+; ## TWO_VARIABLE ( "name" -- ) "Create a variable for a double word"
+; ## "2variable"  src: ANSI double  b: TBA  c: TBA  status: coded
+        ; """This can be realized in Forth as either 
+        ; CREATE 2 CELLS ALLOT  or just  CREATE 0 , 0 , 
+        ; Note that in this case, the variable is not initialized to
+        ; zero"""
 .scope
 xt_two_variable:
-                nop
+                ; We just let CRATE and ALLOT do the heavy lifting
+                jsr xt_create
+
+                dex
+                dex
+                lda #4
+                sta 0,x
+                stz 1,x
+
+                jsr xt_allot
+                
 z_two_variable: rts
 .scend
 

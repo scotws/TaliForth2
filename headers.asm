@@ -112,9 +112,14 @@ nt_words:
         .word nt_wordsize, xt_words, z_words
         .byte "words"
 
+nt_marker:
+        .byte 6, IM
+        .word nt_words, xt_marker, z_marker
+        .byte "marker"
+
 nt_at_xy:
         .byte 5, 0
-        .word nt_words, xt_at_xy, z_at_xy
+        .word nt_marker, xt_at_xy, z_at_xy
         .byte "at-xy"
 
 nt_page:
@@ -292,9 +297,14 @@ nt_quit:
         .word nt_begin, xt_quit, z_quit
         .byte "quit"
 
+nt_recurse:
+        .byte 7, CO+IM+NN
+        .word nt_quit, xt_recurse, z_recurse
+        .byte "recurse"
+
 nt_leave:
         .byte 5, AN+CO
-        .word nt_quit, xt_leave, z_leave
+        .word nt_recurse, xt_leave, z_leave
         .byte "leave"
 
 nt_unloop:
@@ -347,9 +357,14 @@ nt_abort:
         .word nt_abort_quote, xt_abort, z_abort
         .byte "abort"
 
+nt_nc_limit:
+        .byte 8, 0
+        .word nt_abort, xt_nc_limit, z_nc_limit
+        .byte "nc-limit"
+
 nt_always_native:
         .byte 13, 0
-        .word nt_abort, xt_always_native, z_always_native
+        .word nt_nc_limit, xt_always_native, z_always_native
         .byte "always-native"
 
 nt_never_native:
@@ -582,9 +597,14 @@ nt_refill:
         .word nt_accept, xt_refill, z_refill
         .byte "refill"
 
+nt_minus_trailing:
+        .byte 9, 0
+        .word nt_refill, xt_minus_trailing, z_minus_trailing
+        .byte "-trailing"
+
 nt_bl:
         .byte 2, 0
-        .word nt_refill, xt_bl, z_bl
+        .word nt_minus_trailing, xt_bl, z_bl
         .byte "bl"
 
 nt_spaces:
@@ -617,9 +637,14 @@ nt_invert:
         .word nt_negate, xt_invert, z_invert
         .byte "invert"
 
+nt_two_variable:
+        .byte 9, 0
+        .word nt_invert, xt_two_variable, z_two_variable
+        .byte "2variable"
+
 nt_two_over:
         .byte 5, 0
-        .word nt_invert, xt_two_over, z_two_over
+        .word nt_two_variable, xt_two_over, z_two_over
         .byte "2over"
 
 nt_two_swap:
@@ -935,15 +960,8 @@ nt_drop:
         .byte "drop"
 
 
-
-
 ; ====== TODO UNSORTED BELOW THIS LINE TODO =====
 
-
-nt_minus_trailing:
-        .byte 9, 0
-        .word 0000, xt_minus_trailing, z_minus_trailing
-        .byte "-trailing"
 
 nt_two_to_r:
         .byte 3, 0
@@ -960,37 +978,7 @@ nt_two_r_fetch:
         .word 0000, xt_two_r_fetch, z_two_r_fetch
         .byte "2r@"
 
-nt_two_variable:
-        .byte 9, 0
-        .word 0000, xt_two_variable, z_two_variable
-        .byte "2variable"
-
 nt_key_question:
         .byte 4, 0
         .word 0000, xt_key_question, z_key_question
         .byte "key?"
-
-nt_marker:
-        .byte 6, 0
-        .word 0000, xt_marker, z_marker
-        .byte "marker"
-
-nt_nc_limit:
-        .byte 8, 0
-        .word 0000, xt_nc_limit, z_nc_limit
-        .byte "nc-limit"
-
-nt_recurse:
-        .byte 7, 0
-        .word 0000, xt_recurse, z_recurse
-        .byte "recurse"
-
-nt_repeat:
-        .byte 6, 0
-        .word 0000, xt_repeat, z_repeat
-        .byte "repeat"
-
-nt_to:
-        .byte 2, 0
-        .word 0000, xt_to, z_to
-        .byte "to"

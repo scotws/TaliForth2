@@ -56,7 +56,8 @@ high_level_start:
         .byte ": d. tuck dabs <# #s rot sign #> type space ; "
         .byte ": d.r >r tuck dabs <# #s rot sign #> r> over - spaces type ; "
 
-        ; Temporary high-level words. Convert these to assembler ASAP.
+        ; Temporary high-level words. Convert these to assembler
+        .byte ": to ( n -- 'name') ' >body ! ; "
         .byte ": within ( n1 n2 n3 -- f ) rot tuck > -rot > invert and ; "
         .byte ": /string ( addr u n -- addr u ) rot over + rot rot - ; "
         .byte ": buffer: ( u 'name' ) create allot ; "

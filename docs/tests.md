@@ -111,13 +111,23 @@ Test UNLOOP:
 ```
 should produce "1 2 3 4 5 6 7" (no "Done" printed)
 
-Test LEAVE
+Test LEAVE:
 ```
 : ggg 11 1 do i dup 8 = if leave then . loop ." Done" drop ; 
 ```
 should produce "1 2 3 4 5 6 7 Done" (note "Done" printed)
 
 The Data Stack should be empty after all of these words, check with .S
+
+
+TEST RECURSE:
+```
+: hhh ( a b -- gcd ) ?dup if tuck mod recurse then ;
+```
+Which should produce `16` for `784 48 hhh` . Source: 
+[http://galileo.phys.virginia.edu/classes/551.jvn.fall01/primer.htm]
+(http://galileo.phys.virginia.edu/classes/551.jvn.fall01/primer.htm)
+
 
 ## Mandelbrot Set (ex Martin-H1)
 

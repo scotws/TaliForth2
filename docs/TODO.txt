@@ -9,9 +9,10 @@ TODO NEXT
 
 
 TODO POST-ALPHA ("ALL WORDS DO SOMETHING, SOMETIMES EVEN THE RIGHT THING")
+        - Test all words
+        - Add all underflow checks
         - Add native compile depending on word size
         - Check if we really use all the strings (ie ">>>ERROR<<<")
-        - Add all underflow checks
         - In ALLOT, figure out how to handle release of too much memory
 
 
@@ -42,7 +43,7 @@ TODO SOMETIME
         - Consider moving UM* to table-based multiplication
         - Allow SLITERAL to store strings longer than 255 chars
         - Allow S" and ." to handle strings longer than 255 chars
-        - Allow /STRING and TRAILING- to handle strings longer than 255 chars
+        - Allow /STRING and -TRAILING to handle strings longer than 255 chars
 
 
 -----------------------------------------------------------------------
