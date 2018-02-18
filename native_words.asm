@@ -5179,15 +5179,6 @@ z_sign:         rts
 .scend
 
 
-; ## SLASH_STRING ( -- ) "<TBA>"
-; ## "/string"  src: ANSI string  b: TBA  c: TBA  status: TBA
-.scope
-xt_slash_string:
-                nop
-z_slash_string: rts
-.scend
-
-
 ; ## SLITERAL ( addr u -- )( -- addr u ) "Compile a string for runtime"
 ; ## "sliteral"  src: ANSI string  b: TBA  c: TBA  status: TBA
         ; """Currently, we only copy strings of up to 255 characters

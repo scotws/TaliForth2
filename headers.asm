@@ -910,25 +910,10 @@ nt_drop:
 ; ====== TODO UNSORTED BELOW THIS LINE TODO =====
 
 
-nt_paren_plus_loop:
-        .byte 7, 0
-        .word 0000, xt_paren_plus_loop, z_paren_plus_loop
-        .byte "(+loop)"
-
 nt_minus_trailing:
         .byte 9, 0
         .word 0000, xt_minus_trailing, z_minus_trailing
         .byte "-trailing"
-
-nt_dot_byte:
-        .byte 5, 0
-        .word 0000, xt_dot_byte, z_dot_byte
-        .byte ".byte"
-
-nt_slash_string:
-        .byte 7, 0
-        .word 0000, xt_slash_string, z_slash_string
-        .byte "/string"
 
 nt_zero_less:
         .byte 2, 0
@@ -974,11 +959,6 @@ nt_marker:
         .byte 6, 0
         .word 0000, xt_marker, z_marker
         .byte "marker"
-
-nt_mod:
-        .byte 3, 0
-        .word 0000, xt_mod, z_mod
-        .byte "mod"
 
 nt_nc_limit:
         .byte 8, 0
