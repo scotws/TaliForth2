@@ -574,6 +574,17 @@ z_allot:        rts
 .scend
 
 
+; ## ALWAYS_NATIVE ( -- ) "Flag last word as always natively compiled"
+; ## "never-compile"  src: Tali Forth  b: TBA  c: TBA  status: coded
+xt_always_native:
+                ldy #1          ; offset for status byte
+                lda (dp),y
+                ora #AN         ; make sure flag is set
+                sta (dp),y
+z_always_native:
+                rts
+
+
 ; ## AND ( n n -- n ) "Logically AND TOS and NOS"
 ; ## "and"  src: ANSI core  b: TBA  c: TBA  status: coded
 xt_and:         
@@ -782,7 +793,7 @@ branch_runtime:
                 pla
                 sta tmpbranch+1
 
- 		; Note that the address on the 65c02 stack points to the 
+                ; Note that the address on the 65c02 stack points to the 
                 ; last byte of the JSR instruction, not the next byte 
                 ; afterwards
                 ldy #1
@@ -799,13 +810,13 @@ branch_runtime:
                 dec tmp1+1
 *               dec tmp1
 
-		; now we can finally push the address to the stack
-                lda tmp1+1   	; MSB first
+                ; now we can finally push the address to the stack
+                lda tmp1+1      ; MSB first
                 pha
-                lda tmp1     	; LSB on top 
+                lda tmp1        ; LSB on top 
                 pha
 
-		rts
+                rts
 .scend
 
 
@@ -937,12 +948,12 @@ z_chars:        rts
         ; """
 .scope
 xt_cmove:
-		cpx #dsp0-5
+                cpx #dsp0-5
                 bmi +
                 lda #11         ; underflow
                 jmp error
 *
-		; abort if number of bytes to move is zero 
+                ; abort if number of bytes to move is zero 
                 lda 0,x
                 ora 1,x
                 beq _abort
@@ -986,7 +997,7 @@ _partial:
                 sta (tmp2),y
                 iny
     
-		dex
+                dex
                 bne _partial
 
 _done:          plx             ; drops through to _abort
@@ -1008,29 +1019,29 @@ z_cmove:        rts
         ; """
 .scope
 xt_cmove_up:
- 		cpx #dsp0-5
+                cpx #dsp0-5
                 bmi +
                 lda #11         ; underflow
                 jmp error
 *
-		; abort if number of bytes to move is zero 
+                ; abort if number of bytes to move is zero 
                 lda 0,x
                 ora 1,x
                 beq _abort
 
-		; move addresses to where we can work with them 
+                ; move addresses to where we can work with them 
                 lda 0,x
                 sta tmptos
                 lda 1,x
                 sta tmptos+1
 
                 lda 2,x
-                sta tmp2     	; use tmp2 because easier to remember
+                sta tmp2        ; use tmp2 because easier to remember
                 lda 3,x
                 sta tmp2+1
 
                 lda 4,x
-                sta tmp1     	; use tmp1 because easier to remember 
+                sta tmp1        ; use tmp1 because easier to remember 
                 lda 5,x
                 sta tmp1+1
 
@@ -1040,12 +1051,12 @@ xt_cmove_up:
                 lda tmptos+1
                 clc
                 adc tmp1+1
-                sta tmp1+1   	; point to last page of source 
+                sta tmp1+1      ; point to last page of source 
 
                 lda tmptos+1
                 clc
                 adc tmp2+1
-                sta tmp2+1   	; point to last page of destination 
+                sta tmp2+1      ; point to last page of destination 
 
                 ; move the last partial page first
                 ldy tmptos      ; length of last page
@@ -1104,7 +1115,7 @@ xt_colon:
                 dec state
                 dec state+1
 
-   		; CREATE is going to change DP to point to the new word's
+                ; CREATE is going to change DP to point to the new word's
                 ; header. While this is fine for (say) variables, it would mean
                 ; that FIND-NAME etc would find a half-finished word when
                 ; looking in the Dictionary. To prevent this, we save the old
@@ -1377,7 +1388,7 @@ xt_constant:
                 jsr xt_comma            ; drop through to adjust_z
 
 adjust_z:
-    		; Now the length of the complete word (z_word) has increased by
+                ; Now the length of the complete word (z_word) has increased by
                 ; two. We need to update that number or else words such as SEE
                 ; will ignore the PFA. We use this same routine for VARIABLE,
                 ; VALUE and DEFER
@@ -1423,7 +1434,7 @@ z_constant:     rts
         ; character. 
         ; """
 xt_count:
- 		lda (0,x)       ; Get number of characters (255 max)
+                lda (0,x)       ; Get number of characters (255 max)
                 tay
 
                 ; move start address up by one 
@@ -1938,10 +1949,10 @@ do_common:
                 lda cp+1
                 sta 1,x                 ; MSB   ( limit start here ) 
                 
-    		; now we compile six dummy bytes that LOOP/+LOOP will
+                ; now we compile six dummy bytes that LOOP/+LOOP will
                 ; replace by the actual LDA/PHA instructions
-                lda #5        		; we don't really care about the value 
-                tay			; so we use 5 to be tricky
+                lda #5                  ; we don't really care about the value 
+                tay                     ; so we use 5 to be tricky
 _loop:
                 sta (CP),y
                 dey
@@ -1955,7 +1966,7 @@ _loop:
                 bcc +
                 inc CP+1
 *
-		; compile the (?DO) portion of ?DO if appropriate
+                ; compile the (?DO) portion of ?DO if appropriate
                 lda tmp1
                 beq _compile_do
 
@@ -2065,7 +2076,7 @@ question_do_runtime:
         ; """This is called (?DO) in some Forths. See the explanation at
         ; do_runtime for the background on this design
         ; """
-		; see if TOS and NOS are equal. Change this to assembler
+                ; see if TOS and NOS are equal. Change this to assembler
                 ; for speed
                 jsr xt_two_dup          ; ( n1 n2 n1 n2 )
                 jsr xt_equal            ; ( -- n1 n2 f ) 
@@ -2302,12 +2313,11 @@ z_dot_s:        rts
 
 
 ; ## DROP ( u -- ) "Pop top entry on Data Stack"
-; ## "drop"  src: ANSI core  b: TBA  c: TBA  status: tested
+; ## "drop"  src: ANSI core  b: 11  c: TBA  status: tested
 xt_drop:        
                 cpx #dsp0-1
                 bmi +
-
-                lda #11
+                lda #11         ; underflow
                 jmp error
 *
                 inx
@@ -2379,7 +2389,7 @@ z_dump:         rts
 
 
 ; ## DUP ( u -- u u ) "Duplicate TOS"
-; ## "dup"  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## "dup"  src: ANSI core  b: 19  c: TBA  status: coded
 xt_dup:         
                 cpx #dsp0-1
                 bmi +
@@ -2396,14 +2406,6 @@ xt_dup:
                 sta 1,x
 
 z_dup:          rts
-
-
-; ## ELSE ( -- ) "<TBA>"
-; ## "else"  src: ANSI core  b: TBA  c: TBA  status: TBA
-.scope
-xt_else:        nop
-z_else:         rts
-.scend
 
 
 ; ## EMIT ( char -- ) "Print character to current output"
@@ -2733,10 +2735,84 @@ xt_fetch:
 z_fetch:        rts
 
 
-; ## FIND ( -- ) "<TBA>"
-; ## "find"  src: ANSI core  b: TBA  c: TBA  status: TBA
+; ## FIND ( caddr -- addr 0 | xt 1 | xt -1 ) "Find word in Dictionary"
+; ## "find"  src: ANSI core  b: TBA  c: TBA  status: coded
+	; """Included for backwards compatibility only, because it still
+        ; can be found in so may examples. It should, however, be replaced
+        ; by FIND-NAME. Counted string either returns address with a FALSE
+        ; flag if not found in the Dictionary, or the xt with a flag to
+        ; indicate if this is immediate or not. FIND is a wrapper around
+        ; FIND-NAME, we get this all over with as quickly as possible. See
+        ; https://www.complang.tuwien.ac.at/forth/gforth/Docs-html/Word-Lists.html
+        ; https://www.complang.tuwien.ac.at/forth/gforth/Docs-html/Name-token.html
+        ; """
 .scope
-xt_find:        nop
+xt_find:
+                cpx #dsp0-1
+                bmi +
+                lda #11                 ; underflow
+                jmp error
+*
+                ; Convert ancient-type counted string address to 
+                ; modern format
+                jsr xt_count            ; ( caddr -- addr u )
+
+                ; Save address in case conversion fails. We use the
+                ; Return Stack instead of temporary variables like TMP1
+                ; because this is shorter and anybody still using FIND
+                ; can't be worried about speed anyway
+                lda 3,x                 ; MSB
+                pha
+                lda 2,x                 ; LSB
+                pha
+
+                jsr xt_find_name        ; ( addr u -- nt | 0 )
+
+                lda 0,x
+                ora 1,x
+                bne _found_word
+
+                ; No word found. Return address of the string and a false
+                ; flag
+                jsr xt_false            ; ( 0 0 ) 
+
+                pla                     ; LSB of address
+                sta 2,x
+                pla
+                sta 3,x                 ; MSB of address
+
+                bra _done               ; ( addr 0 ) 
+_found_word:
+                ; We don't need the address after all, dump
+                pla
+                pla
+
+                ; We arrive here with ( nt ) on the TOS. Now we have to
+                ; convert the return values to FIND's format
+                jsr xt_dup              ; ( nt nt ) 
+                jsr xt_name_to_int      ; ( nt xt )
+                jsr xt_swap             ; ( xt nt ) 
+
+                ldy #0                  ; Prepare flag
+
+                ; The flags are in the second byte of the header
+                inc 0,x
+                bne +
+                inc 1,x                 ; ( xt nt+1 )
+*
+                lda (0,x)               ; ( xt char )
+                and #IM
+                bne _immediate          ; bit set, we're immediate
+
+                lda #$ff                ; We're not immediate, return -1
+                sta 0,x
+                sta 1,x
+                bra _done
+_immediate:
+                lda #1                  ; We're immediate, return 1
+                sta 0,x
+                stz 1,x
+_done:
 z_find:         rts
 .scend
 
@@ -2899,9 +2975,9 @@ _check_d:       ; if d is negative, add n1 to high cell of d
                 adc 3,x         ; MSB of dh
                 sta 3,x
 _multiply:
-		jsr xt_um_slash_mod     ; ( d n1 -- rem n2 )
+                jsr xt_um_slash_mod     ; ( d n1 -- rem n2 )
 
-		; if n was negative, negate the result
+                ; if n was negative, negate the result
                 lda tmp2
                 beq _done
 
@@ -3158,7 +3234,7 @@ xt_j:
                 dex
 
                 ; Get the fudged index off from the stack. It's easier to
-		; do math on the stack directly than to pop and push stuff 
+                ; do math on the stack directly than to pop and push stuff 
                 ; around
                 stx tmpdsp
                 tsx
@@ -3716,7 +3792,7 @@ z_mod:          rts
 
 ; ## MOVE ( addr1 addr2 u -- ) "Copy bytes"
 ; ## "move"  src: ANSI core  b: TBA  c: TBA  status: TBA
-	; """Copy u "address units" from addr1 to addr2. Since our address
+        ; """Copy u "address units" from addr1 to addr2. Since our address
         ; units are bytes, this is just a front-end for CMOVE and CMOVE>. This
         ; is actually the only one of these three words that is in the CORE
         ; set. This word must not be natively compiled
@@ -3838,14 +3914,15 @@ xt_negate:
 z_negate:       rts
 
 
-; ## NEVER_COMPILE ( -- ) "<TBA>"
-; ## "never-compile"  src: Tali Forth  b: TBA  c: TBA  status: TBA
-.scope
-xt_never_compile:
-                nop
-z_never_compile:
+; ## NEVER_NATIVE ( -- ) "Flag last word as never natively compiled"
+; ## "never-compile"  src: Tali Forth  b: TBA  c: TBA  status: coded
+xt_never_native:
+                ldy #1          ; offset for status byte
+                lda (dp),y
+                ora #NN         ; make sure flag is set
+                sta (dp),y
+z_never_native:
                 rts
-.scend
 
 
 ; ## NIP ( b a -- a ) "Delete NOS"
@@ -3904,7 +3981,7 @@ z_not_equals:   rts
 ; ## "-rot"  src: Gforth  b: TBA  c: TBA  status: coded
 .scope
 xt_not_rote:    
-		lda 1,x         ; MSB first
+                lda 1,x         ; MSB first
                 tay
                 lda 3,x
                 sta 1,x
@@ -4096,7 +4173,7 @@ xt_number_sign:
                 jsr xt_hold
 
 z_number_sign:
-		rts
+                rts
 
 
 ; ## NUMBER_SIGN_GREATER ( d -- addr u ) "Finish pictured number conversion"
@@ -4764,7 +4841,7 @@ z_question:     rts
 ; ## "?dup"  src: ANSI core  b: TBA  c: TBA  status: coded
 .scope
 xt_question_dup:
-		cpx #dsp0-1
+                cpx #dsp0-1
                 bmi +
                 lda #11         ; underflow
                 jmp error
@@ -5295,7 +5372,7 @@ _loop:
 
                 ; Compile a subroutine jump to the runtime of SLITERAL that
                 ; pushes the new ( addr u ) pair to the Data Stack.
-		; When we're done, the code will look like this:
+                ; When we're done, the code will look like this:
  
                 ; xt -->    jmp a
                 ;           <string data bytes>
@@ -5306,9 +5383,9 @@ _loop:
 
                 ; This means we'll have to adjust the return address for two
                 ; cells, not just one
-		lda #>sliteral_runtime	; MSB
+                lda #>sliteral_runtime  ; MSB
                 pha
-		lda #<sliteral_runtime	; LSB
+                lda #<sliteral_runtime  ; LSB
                 pha
 
                 jsr cmpl_subroutine
@@ -6489,11 +6566,79 @@ xt_variable:
 z_variable:     rts
 
 
-; ## WORD ( -- ) "<TBA>"
-; ## "word"  src: ANSI core  b: TBA  c: TBA  status: TBA
+; ## WORD ( char "name " -- caddr ) "Parse input stream"
+; ## "word"  src: ANSI core  b: TBA  c: TBA  status: coded
+        ; """Obsolete parsing word included for backwards compatibility only.
+        ; Do not use this, use PARSE or PARSE-NAME. Skips leading delimiters
+        ; and copies word to storage area for a maximum size of 255 bytes.
+        ; Returns the result as a counted string (requires COUNT to convert
+        ; to modern format), and inserts a space after the string. See "Forth
+        ; Programmer's Handbook" 3rd edition p. 159 and
+        ; http://www.forth200x.org/documents/html/rationale.html#rat:core:PARSE 
+        ; for discussions of why you shouldn't be using WORD anymore. Forth
+        ; would be   PARSE DUP BUFFER1 C! OUTPUT 1+ SWAP MOVE BUFFER1
+        ; We only allow input of 255 chars. Seriously, use PARSE-NAME.
+        ; """
 .scope
-xt_word:        nop
-z_word:         rts
+xt_word:
+                cpx #dsp0-1
+                bmi +
+                lda #11                 ; underflow
+                jmp error
+*
+                ; Skip over leading delimiters - this is like PARSE-NAME,
+                ; but unlike PARSE
+                ldy toin                ; >IN
+_loop:
+                cpy ciblen              ; quit if end of input
+                beq _found_char
+                lda (cib),y
+                cmp 0,x                 ; ASCII of delimiter
+                bne _found_char
+
+                iny
+                bra _loop
+_found_char:
+                ; Save index of where word starts
+                sty toin
+
+                ; The real work is done by parse
+                jsr xt_parse            ; Returns ( addr u ) 
+
+                ; Convert the modern ( addr u ) string format to obsolete
+                ; ( caddr ) format. We just do this in the Dictionary
+                lda 0,x
+                sta (cp)                ; Save length of string
+                pha                     ; Keep copy of length for later
+
+                jsr xt_dup              ; ( addr u u )
+                lda cp
+                clc
+                adc #1
+                sta 2,x                 ; LSB of CP
+                lda cp+1
+                adc #0
+                sta 3,x                 ; ( addr cp+1 u )
+                
+                jsr xt_move 
+
+                ; Return caddr
+                dex
+                dex
+                lda cp
+                sta 0,x
+                lda cp+1
+                sta 1,x
+
+                ; Adjust CP
+                pla                     ; length of string
+                clc
+                adc cp
+                sta cp
+                lda cp+1
+                adc #0                  ; we only need the carry
+                sta cp+1
+z_word:         
 .scend
 
 
@@ -6538,15 +6683,6 @@ _loop:
 z_words:        rts
 .scend
 
-
-; ## WORDS_AND_SIZES ( -- ) "<TBA>"
-; ## "words&sizes"  src: Tali Forth  b: TBA  c: TBA  status: TBA
-.scope
-xt_words_and_sizes:
-                nop
-z_words_and_sizes:
-                rts
-.scend
 
 ; ## WORDSIZE ( nt -- u ) "Get size of word in bytes"
 ; ## "wordsize"  src: Tali Forth  b: 29  c: TBA  status: coded
@@ -6722,18 +6858,52 @@ z_zero_equal:   rts
 .scend
 
 
-; ## ZERO_GREATER ( -- ) "<TBA>"
-; ## "0>"  src: ANSI core ext  b: TBA  c: TBA  status: TBA
+; ## ZERO_GREATER ( n -- f ) "Return a TRUE flag if TOS is positive"
+; ## "0>"  src: ANSI core ext  b: TBA  c: TBA  status: coded
 .scope
 xt_zero_greater:
-                nop
+                cpx #dsp0-1
+                bmi +
+                lda #11
+                jmp error
+*
+                ldy #0          ; Default is FALSE (TOS is negative)
+
+                lda 1,x         ; MSB
+                bmi _done       ; TOS is negative, keep FLASE
+                ora 0,x
+                beq _done       ; TOS is zero, keep FALSE
+
+                dey             ; TOS is postive, make true
+_done:          
+                tya
+                sta 0,x
+                sta 1,x
+
 z_zero_greater: rts
 .scend
 
-; ## ZERO_LESS ( -- ) "<TBA>"
-; ## "0<"  src: ANSI core  b: TBA  c: TBA  status: TBA
+
+; ## ZERO_LESS ( n -- f ) "Return a TRUE flag if TOS negative"
+; ## "0<"  src: ANSI core  b: TBA  c: TBA  status: tested
 .scope
-xt_zero_less:   nop
+xt_zero_less:
+                cpx #dsp0-1
+                bmi +
+                lda #11
+                jmp error
+*
+                ldy #0          ; Default is FALSE (TOS positive)
+
+                lda 1,x         ; MSB
+                bpl _done       ; TOS is positive, so keep FALSE
+
+                dey             ; TOS is negative, make TRUE
+_done:          
+                tya
+                sta 0,x
+                sta 1,x
+
 z_zero_less:    rts
 .scend
 

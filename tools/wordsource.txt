@@ -1,7 +1,7 @@
 # Raw word list for Tali Forth 2, adapted from Liara Forth 
 # Scot W. Stevenson <scot.stevenson@gmail.com>
 # First version: 21. Nov 2017
-# This version: 04. Feb 2018
+# This version: 18. Feb 2018
 
 # This file is used as the basis to generate the JSON word list
 # file via the Python tool text_to_json.py in the tools folder.
@@ -97,6 +97,7 @@ again           again                   ANSI core ext
 align           align                   ANSI core 
 aligned         aligned                 ANSI core 
 allot           allot                   ANSI core 
+always-native   always_native           Tali Forth
 and             and                     ANSI core 
 at-xy           at_xy                   ANSI facility
 base            base                    ANSI core 
@@ -178,7 +179,7 @@ name>int        name_to_int             Gforth
 name>string     name_to_string          Gforth
 nc-limit        nc_limit                Tali Forth
 negate          negate                  ANSI core
-never-compile   never_compile           Tali Forth
+never-native    never_native            Tali Forth
 nip             nip                     ANSI core ext
 number          number                  Tali Forth
 or              or                      ANSI core

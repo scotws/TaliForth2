@@ -8,7 +8,11 @@
 ; as forth_words.asm - add an extra space in the strings.
 
 user_words_start:
-        .byte ".( No user words defined ) cr "
+        ; WORDS&SIZES prints all known words and the sizes of their codes
+        ; in bytes. It can be used to test the effects of different native
+        ; compile parameters. When not testing, leave it commented out.
+        ; .byte ": words&sizes  latestnt begin dup 0<> while dup name>string "
+        ; .byte "type space  dup wordsize u. cr  2 + @ repeat drop ; "
 user_words_end:
 
 ; END 

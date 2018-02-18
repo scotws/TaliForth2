@@ -1,8 +1,8 @@
-# Manual for Tali Forth 2 for the 65c02 
-This version: 04. Dec 2017
+# Manual for Tali Forth 2 for the 65c02  
+This version: 18. Feb 2018  
 Scot W. Stevenson <scot.stevenson@gmail.com> 
 
-(THIS TEXT IS UNDER DEVELOPMENT AND MERELY A COLLECTION OF NOTES)
+(THIS TEXT IS UNDER DEVELOPMENT AND INCOMPLETE, IF NOT DOWNRIGHT WRONG)
 
 ## Overview
 
@@ -24,12 +24,12 @@ sudo apt-get install python-pip
 There is a setup.py script as part of the package, too. To start the emulator,
 run:
 ```
-py65mon --mpu 65C02 -r ophis.bin
+py65mon --mpu 65c02 -r ophis.bin
 ```
 
 ## Assembly
 
-Tali Forth was written with vim and the [Ophis 2.1
+Tali Forth was written with vim (of course) and the [Ophis 2.1
 cross-assembler](http://michaelcmartin.github.io/Ophis/). Ophis uses a slightly
 different format than other assemblers, but is in Python and therefore will run
 on almost any operating system. To install Ophis on Windows, use the link
@@ -41,15 +41,19 @@ cd src
 sudo python setup.py install
 ```
 
-Switch to the folder where the Tali code lives, and assemble with
+Switch to the folder where the Tali code lives, and assemble with the primitive
+shell script provided:
 
 ```
-ophis -c taliforth.asm
+./assemble.sh
 ```
+
+The script also automatically updates the file listings in the `docs` folder.
 
 Note that Ophis will not accept math operation characters (`-*/+`) in label
 names because it will try to perform those operations. Because of this, 
-we use underscores in the label names.
+we use underscores in the label names. This is a major difference to Liara
+Forth.
 
 
 ## Gotchas
@@ -68,9 +72,26 @@ via a DROP instruction, this will produce different results.
 
 ## Testing
 
-There is no automatic or formal test suite available at this time. The file
-docs/testwords.md includes a list of words that will help with some general
-cases.
+There is no automatic or formal test suite available at this time, and due to
+space considerations, there probably never will be. The file `docs/testwords.md`
+includes a collection of words that will help with some general cases.
+
+To experiment with various parameters for native compiling, the Forth word
+WORDS&SIZES is included in user_words.txt (but commented out by default). The
+Forth is:
+```
+: words&sizes ( --) 
+        latestnt 
+        begin 
+                dup 
+        0<> while
+                dup name>string type space
+                dup wordsize u. cr      \ calculates and prints size of word
+                2 + @
+        repeat
+        drop ; 
+```
+Changing the NC-LIMIT should show differences in the Forth words.
 
 
 ## For Developers 
@@ -85,6 +106,13 @@ system - this is why the source code is perversely overcommented.
 
 - The Y register is free to be changed by subroutines. This means it should not
   be expected to survive subroutines unchanged.
+
+- All words should have one point of entry - the `xt_word` link - and one point
+  of exit at `z_word`. In may cases, this means a branch to an internal label
+  `_done` right before `z_word`.
+
+- Because of the way native compiling works, the usual trick of combining
+  JSR/RTS pairs to a single JMP (usually) doesn't work. 
 
 
 ### Coding style
@@ -116,7 +144,7 @@ source file the way gofmt does for Go (golang), I work with the following rules:
   and 6502 assembler.
 
 
-## Frequently and Infrequently Asked Questions
+## Frequently (and Infrequently) Asked Questions
 
 ### Why "Tali" Forth?
 
@@ -130,7 +158,7 @@ and neither do I, expect that I've played the games and enjoyed them, though I
 do have some issues with _Andromeda_. Like what happened to the quarian ark?)
 
 
-### Then who is "Liara"?
+### Then who was "Liara"?
 
 Liara Forth is a STC Forth for the big sibling of the 6502, the 65816. Tali 1
 came first, then I wrote Liara with that knowledge and learned even more, and

@@ -67,9 +67,19 @@ nt_cold:
         .word nt_bye, xt_cold, z_cold
         .byte "cold"
 
+nt_word:
+        .byte 4, 0
+        .word nt_cold, xt_word, z_word
+        .byte "word"
+
+nt_find:
+        .byte 4, 0
+        .word nt_word, xt_find, z_find
+        .byte "find"
+
 nt_dot_s:
         .byte 2, 0
-        .word nt_cold, xt_dot_s, z_dot_s
+        .word nt_find, xt_dot_s, z_dot_s
         .byte ".s"
 
 nt_dump:
@@ -337,9 +347,19 @@ nt_abort:
         .word nt_abort_quote, xt_abort, z_abort
         .byte "abort"
 
+nt_always_native:
+        .byte 13, 0
+        .word nt_abort, xt_always_native, z_always_native
+        .byte "always-native"
+
+nt_never_native:
+        .byte 12, 0
+        .word nt_always_native, xt_never_native, z_never_native
+        .byte "never-native"
+
 nt_compile_only:
         .byte 12, 0
-        .word nt_abort, xt_compile_only, z_compile_only
+        .word nt_never_native, xt_compile_only, z_compile_only
         .byte "compile-only"
 
 nt_immediate:
@@ -622,9 +642,19 @@ nt_min:
         .word nt_max, xt_min, z_min
         .byte "min"
 
+nt_zero_less:
+        .byte 2, 0
+        .word nt_min, xt_zero_less, z_zero_less
+        .byte "0<"
+
+nt_zero_greater:
+        .byte 2, 0
+        .word nt_zero_less, xt_zero_greater, z_zero_greater
+        .byte "0>"
+
 nt_zero_unequal:
         .byte 3, 0
-        .word nt_min, xt_zero_unequal, z_zero_unequal
+        .word nt_zero_greater, xt_zero_unequal, z_zero_unequal
         .byte "0<>"
 
 nt_zero_equal:
@@ -915,16 +945,6 @@ nt_minus_trailing:
         .word 0000, xt_minus_trailing, z_minus_trailing
         .byte "-trailing"
 
-nt_zero_less:
-        .byte 2, 0
-        .word 0000, xt_zero_less, z_zero_less
-        .byte "0<"
-
-nt_zero_greater:
-        .byte 2, 0
-        .word 0000, xt_zero_greater, z_zero_greater
-        .byte "0>"
-
 nt_two_to_r:
         .byte 3, 0
         .word 0000, xt_two_to_r, z_two_to_r
@@ -945,11 +965,6 @@ nt_two_variable:
         .word 0000, xt_two_variable, z_two_variable
         .byte "2variable"
 
-nt_find:
-        .byte 4, 0
-        .word 0000, xt_find, z_find
-        .byte "find"
-
 nt_key_question:
         .byte 4, 0
         .word 0000, xt_key_question, z_key_question
@@ -965,11 +980,6 @@ nt_nc_limit:
         .word 0000, xt_nc_limit, z_nc_limit
         .byte "nc-limit"
 
-nt_never_compile:
-        .byte 13, 0
-        .word 0000, xt_never_compile, z_never_compile
-        .byte "never-compile"
-
 nt_recurse:
         .byte 7, 0
         .word 0000, xt_recurse, z_recurse
@@ -984,13 +994,3 @@ nt_to:
         .byte 2, 0
         .word 0000, xt_to, z_to
         .byte "to"
-
-nt_word:
-        .byte 4, 0
-        .word 0000, xt_word, z_word
-        .byte "word"
-
-nt_words_and_sizes:
-        .byte 11, 0
-        .word 0000, xt_words_and_sizes, z_words_and_sizes
-        .byte "words&sizes"
