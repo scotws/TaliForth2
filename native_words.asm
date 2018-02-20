@@ -5291,7 +5291,7 @@ xt_s_to_d:
                 stz 0,x
                 stz 1,x
 
-                lda 2,x
+                lda 3,x
                 bpl _done
 
                 ; negative, extend sign
