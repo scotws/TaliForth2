@@ -157,8 +157,8 @@ xt_cold:
 xt_abort:       ldx #dsp0               ; fall through to QUIT
 
 ; ## QUIT ( -- ) "Reset the input and get new input"
-; ## "quit"  src: ANSI core  b: TBA  c: TBA  status: fragment
-        ; """Rest the input and start command loop."""
+; ## "quit"  src: ANSI core  b: TBA  c: TBA  status: coded
+        ; """Rest the input and start command loop"""
 .scope
 xt_quit:        
                 ; Clear the Return Stack. This is a little screwed up
@@ -268,8 +268,7 @@ z_abort_quote:  rts
 .scend
 
 abort_quote_runtime:
-        ; """Runtime aspect of ABORT_QUOTE
-        ; """
+        ; """Runtime aspect of ABORT_QUOTE"""
 .scope
                 ; We arrive here with ( f addr u )                
                 lda 4,x
@@ -820,6 +819,11 @@ z_bye:          rts             ; never reached
 ; TODO make sure we haven't allocated more than we have
 .scope
 xt_c_comma:     
+                cpx #dsp0-1
+                bmi +
+                lda #11
+                jmp error
+*
                 lda 0,x
                 sta (cp)
 
@@ -836,8 +840,13 @@ z_c_comma:      rts
 
 
 ; ## C_FETCH ( addr -- c ) "Get a character/byte from given address"
-; ## "c@"  src: ANSI core  b: 6  c: TBA  status: coded
+; ## "c@"  src: ANSI core  b: TBA  c: TBA  status: coded
 xt_c_fetch:     
+                cpx #dsp0-1
+                bmi +
+                lda #11
+                jmp error
+*
                 lda (0,x)
                 sta 0,x
                 stz 1,x
@@ -848,6 +857,11 @@ z_c_fetch:      rts
 ; ## C_STORE ( c addr -- ) "Store character at address given"
 ; ## "c!"  src: ANSI core  b: TBA  c: TBA  status: coded
 xt_c_store:     
+                cpx #dsp0-3
+                bmi +
+                lda #11
+                jmp error
+*
                 lda 2,x
                 sta (0,x)
 
@@ -866,6 +880,11 @@ z_c_store:      rts
         ; """
 .scope
 xt_cell_plus:
+                cpx #dsp0-1
+                bmi +
+                lda #11
+                jmp error
+*
                 lda 0,x
                 clc
                 adc #2
@@ -908,13 +927,22 @@ z_char:         rts
 
 
 ; ## CHARS ( n -- n ) "Number of bytes that n chars need"
-; ## "chars"  src: ANSI core  b: 0  c: TBA  status: tested
+; ## "chars"  src: ANSI core  b: TBA  c: TBA  status: tested
         ; """Return how many address units n chars are. Since this is an 8 bit
         ; machine, this does absolutely nothing and is included for
         ; compatibility with other Forth versions
         ; """
 .scope
 xt_chars:
+                ; Checking for underflow seems a bit stupid because this 
+                ; routine does nothing on this machine. However, the user
+                ; should be warned that there is something wrong with the
+                ; code if this occurs.
+                cpx #dsp0-1
+                bmi +
+                lda #11
+                jmp error
+*
                 ; Even if this does nothing, we catch underflows for
                 ; stability
                 cpx #dsp0-1
@@ -1084,8 +1112,7 @@ z_cmove_up:     rts
 
 ; ## COLON ( "name" -- ) "Start compilation of a new word""
 ; ## ":"  src: ANSI core  b: TBA  c: TBA  status: coded
-        ; """Use the CREATE routine and fill in the rest by hand.
-        ; """
+        ; """Use the CREATE routine and fill in the rest by hand."""
 .scope
 xt_colon:       
                 ; if we're already in the compile state, complain
@@ -1349,6 +1376,11 @@ z_compile_only: rts
         ; a primer on how this works in various Forths.
         ; """
 xt_constant:    
+                cpx #dsp0-1
+                bmi +
+                lda #11
+                jmp error
+*
                 jsr xt_create
 
                 ; CREATE by default installs a subroutine jump to DOVAR,
@@ -1420,6 +1452,11 @@ z_constant:     rts
         ; character. 
         ; """
 xt_count:
+                cpx #dsp0-1
+                bmi +
+                lda #11
+                jmp error
+*
                 lda (0,x)       ; Get number of characters (255 max)
                 tay
 
@@ -1698,6 +1735,11 @@ z_d_to_s:       rts
 ; ## "dabs"  src: ANSI double  b: TBA  c: TBA  status: coded
 .scope
 xt_dabs:
+                cpx #dsp0-3
+                bmi +
+                lda #11
+                jmp error
+*
                 lda 1,x         ; MSB of high cell
                 bpl _done       ; positive, we get off light
 
@@ -1817,6 +1859,11 @@ z_depth:        rts
         ; """
 .scope
 xt_digit_question:
+                cpx #dsp0-1
+                bmi +
+                lda #11
+                jmp error
+*
                 ; one way or another, we're going to need room for the
                 ; flag on the stack
                 dex
@@ -1878,6 +1925,11 @@ z_digit_question:
 ; ## DNEGATE ( d -- d ) "Negate double cell number"
 ; ## "dnegate"  src: ANSI double  b: 33  c: TBA  status: coded
 xt_dnegate:     
+                cpx #dsp0-3
+                bmi +
+                lda #11
+                jmp error
+*
                 lda 2,x         ; LSB of low cell
                 eor #$ff
                 clc
@@ -1911,6 +1963,8 @@ xt_question_do:
                 sta tmp1
                 bra do_common
 
+                ; We check for underflow in DO
+
 ; ## DO ( limit start -- )(R: -- limit start)  "Start a loop"
 ; ## "do"  src: ANSI core  b: TBA  c: TBA  status: coded
         ; """Compile-time part of DO. Could be realized in Forth as
@@ -1923,6 +1977,11 @@ xt_question_do:
         ; """
 .scope
 xt_do:
+                cpx #dsp0-3
+                bmi +
+                lda #11
+                jmp error
+*
                 ; DO and ?DO share most of their code, use tmp1 as a flag.
                 stz tmp1                ; 0 is DO, drop through to DO_COMMON
 do_common:
@@ -2307,6 +2366,11 @@ z_drop:         rts
 .scope
 xt_dump:        
 _row:
+                cpx #dsp0-3
+                bmi +
+                lda #11
+                jmp error
+*
                 ; start counter for 16 numbers per row
                 ldy #16
 
@@ -2547,7 +2611,6 @@ z_fill:         rts
 xt_evaluate:
                 cpx #dsp0-3
                 bmi +
-
                 lda #11         ; underflow
                 jmp error
 *
@@ -2639,6 +2702,11 @@ z_evaluate:     rts
 ; ## "execute"  src: ANSI core  b: 19  c: TBA  status: tested
 .scope
 xt_execute:     
+                cpx #dsp0-1
+                bmi +
+                lda #11
+                jmp error
+*
                 lda 0,x
                 sta ip
                 lda 1,x
@@ -2808,7 +2876,11 @@ xt_find_name:
         ; https://www.complang.tuwien.ac.at/forth/gforth/Docs-html/Name-token.html 
         ; FIND calls this word
         ; """
-        
+                cpx #dsp0-3
+                bmi +
+                lda #11
+                jmp error
+*
                 ; check for special case of an empty string (length zero)
                 lda 0,x
                 ora 1,x
@@ -3031,6 +3103,11 @@ z_hex:          rts
         ; variable tohold instead of HLD.
         ; """
 xt_hold:        
+                cpx #dsp0-1
+                bmi +
+                lda #11
+                jmp error
+*
                 lda tohold
                 bne +
                 dec tohold+1
@@ -3118,6 +3195,11 @@ z_input:        rts
         ; """
 .scope
 xt_int_to_name: 
+                cpx #dsp0-1
+                bmi +
+                lda #11
+                jmp error
+*
                 ; Unfortunately, to find the header, we have to walk through
                 ; the whole Dictonary
                 lda dp
@@ -3384,6 +3466,11 @@ z_less_than:    rts
         ; Note the cmpl_ routines use TMPTOS
         ; """
 xt_literal:     
+                cpx #dsp0-1
+                bmi +
+                lda #11
+                jmp error
+*
                 lda #>literal_runtime
                 pha                     ; MSB first
                 lda #<literal_runtime
@@ -3587,6 +3674,11 @@ plus_loop_runtime_end:
 ; ## "lshift"  src: ANSI core  b: TBA  c: TBA  status: coded
 .scope
 xt_lshift:
+                cpx #dsp0-3
+                bmi +
+                lda #11
+                jmp error
+*
                 ; max shift 16 times
                 lda 0,x
                 and #%00001111
@@ -3615,6 +3707,11 @@ z_lshift:       rts
         ; """
 .scope
 xt_m_star:
+                cpx #dsp0-3
+                bmi +
+                lda #11
+                jmp error
+*
                 ; figure out the sign
                 lda 1,x         ; MSB of n1
                 eor 3,x         ; MSB of n2
@@ -3916,6 +4013,11 @@ z_move:         rts
         ; """ 
 .scope
 xt_name_to_int: 
+                cpx #dsp0-1
+                bmi +
+                lda #11
+                jmp error
+*
                 ; The xt starts four bytes down from the nt
                 lda 0,x
                 clc
@@ -3943,6 +4045,11 @@ z_name_to_int:  rts
 ; ## "name>string"  src: Gforth  b: TBA  c: TBA  status: coded
 .scope
 xt_name_to_string:
+                cpx #dsp0-1
+                bmi +
+                lda #11
+                jmp error
+*
                 dex
                 dex
 
@@ -3984,6 +4091,11 @@ z_nc_limit:     rts
 ; ## NEGATE ( n -- n ) "Two's complement"
 ; ## "negate"  src: ANSI core  b: 17  c: TBA  status: coded
 xt_negate:      
+                cpx #dsp0-1
+                bmi +
+                lda #11
+                jmp error
+*
                 lda 0,x         ; LSB
                 eor #$ff
                 clc
@@ -4070,6 +4182,11 @@ z_not_equals:   rts
 ; ## "-rot"  src: Gforth  b: TBA  c: TBA  status: coded
 .scope
 xt_not_rote:    
+                cpx #dsp0-5
+                bmi +
+                lda #11
+                jmp error
+*
                 lda 1,x         ; MSB first
                 tay
                 lda 3,x
@@ -4111,6 +4228,11 @@ z_not_rote:     rts
         ;"""
 .scope
 xt_number:      
+                cpx #dsp0-3
+                bmi +
+                lda #11
+                jmp error
+*
                 ; we keep the flags for sign and double in tmpdsp because
                 ; we've run out of temporary variables
                 stz tmpdsp      ; flag for double
@@ -4245,6 +4367,11 @@ z_number:       rts
         ; TODO convert more parts to assembler
         
 xt_number_sign:        
+                cpx #dsp0-3
+                bmi +
+                lda #11
+                jmp error
+*
                 jsr xt_base
                 jsr xt_fetch            ; ( ud1 base )
                 jsr xt_ud_slash_mod     ; ( rem ud )
@@ -4274,6 +4401,11 @@ z_number_sign:
         ; """
 xt_number_sign_greater:
                 
+                cpx #dsp0-3
+                bmi +
+                lda #11
+                jmp error
+*
                 ; The start address lives in tohold
                 lda tohold
                 sta 0,x         ; LSB of tohold
@@ -4309,6 +4441,11 @@ z_number_sign_greater:
         ; """
 .scope
 xt_number_sign_s:
+                cpx #dsp0-3
+                bmi +
+                lda #11
+                jmp error
+*
 _loop:
                 ; convert a single number ("#")
                 jsr xt_number_sign
@@ -4415,6 +4552,11 @@ z_output:       rts
 ; ## OVER ( b a -- b a b ) "Copy NOS to TOS"
 ; ## "over"  src: ANSI core  b: 10  c: TBA  status: coded
 xt_over:        
+                cpx #dsp0-3
+                bmi +
+                lda #11
+                jmp error
+*
                 dex
                 dex
 
@@ -4906,6 +5048,7 @@ z_postpone:     rts
         ; save size and just go for the subroutine jumps
         ; """
 xt_question:    
+                ; FETCH takes care of underflow check
                 jsr xt_fetch
                 jsr xt_dot
 
@@ -5178,6 +5321,11 @@ z_rot:          rts
 ; ## RSHIFT ( x u -- x ) "Shift TOS to the right"
 ; ## "rshift"  src: ANSI core  b: TBA  c: TBA  status: coded
 xt_rshift:      
+                cpx #dsp0-3
+                bmi +
+                lda #11
+                jmp error
+*
                 ; We shift maximal by 16 bits, mask everything else
                 lda 0,x
                 and #%00001111
@@ -5286,6 +5434,11 @@ z_s_quote:      rts
 ; ## "s>d"  src: ANSI core  b: TBA  c: TBA  status: coded
 .scope
 xt_s_to_d:
+                cpx #dsp0-3
+                bmi +
+                lda #11
+                jmp error
+*
                 dex
                 dex
                 stz 0,x
@@ -5354,6 +5507,11 @@ z_semicolon:    rts
         ; """
 .scope
 xt_sign:        
+                cpx #dsp0-1
+                bmi +
+                lda #11
+                jmp error
+*
                 lda 1,x         ; check MSB of TOS
                 bmi _minus
 
@@ -5557,6 +5715,11 @@ sliteral_runtime:
         ; """
 .scope
 xt_sm_slash_rem:
+                cpx #dsp0-5
+                bmi +
+                lda #11
+                jmp error
+*
                 ; push MSB of high cell of d to Data Stack so we can check
                 ; its sign later
                 lda 3,x
@@ -5654,6 +5817,11 @@ z_space:        rts
 ; TODO test with TOS > 256
 .scope
 xt_spaces:      
+                cpx #dsp0-1
+                bmi +
+                lda #11
+                jmp error
+*
                 ; catch any zero in TOS fast
                 lda 0,x
                 ora 1,x
@@ -5968,6 +6136,11 @@ z_to_in:        rts
 
 .scope
 xt_to_number:
+                cpx #dsp0-7
+                bmi +
+                lda #11
+                jmp error
+*
                 ; Fill the scratchpad. We arrive with ( ud-lo ud-hi addr u ).
                 ; After this step, the original ud-lo and ud-hi will still be on
                 ; the Data Stack, but will be ignored and later overwritten
@@ -6129,7 +6302,13 @@ xt_to_r:
                 ply             ; MSB
 
                 ; --- CUT HERE FOR NATIVE CODING ---
- 
+
+                ; We check for underflow later
+                cpx #dsp0-1
+                bmi +
+                lda #11
+                jmp error
+*
                 ; now we can do the actual work
                 lda 1,x         ; MSB
                 pha
@@ -6162,7 +6341,13 @@ z_true:         rts
 
 ; ## TUCK ( b a -- a b a ) "Copy TOS below NOS"
 ; ## "tuck"  src: ANSI core ext  b: 24  c: TBA  status: coded
-xt_tuck:        dex
+xt_tuck:        
+                cpx #dsp0-3
+                bmi +
+                lda #11
+                jmp error
+*
+                dex
                 dex             ; ba- 
 
                 lda 2,x
@@ -6198,6 +6383,11 @@ z_two:          rts
 ; ## "2drop"  src: ANSI core  b: 4  c: TBA  status: coded
 .scope
 xt_two_drop:    
+                cpx #dsp0-3
+                bmi +
+                lda #11
+                jmp error
+*
                 inx
                 inx
                 inx
@@ -6427,6 +6617,11 @@ xt_two_to_r:
 
                 ; --- CUT HERE FOR NATIVE CODING ---
 
+                cpx #dsp0-3
+                bmi +
+                lda #11
+                jmp error
+*
                 ; now we can move the data 
                 lda 3,x         ; MSB
                 pha
@@ -6532,9 +6727,13 @@ z_type:         rts
         ; Forth is  >R 0 R@ UM/MOD  ROT ROT R> UM/MOD ROT
         ; """
         ; TODO analyze and convert parts to assembler 
-        ; TODO test this, some results seem fishy
 .scope
 xt_ud_slash_mod:
+                cpx #dsp0-5
+                bmi +
+                lda #11
+                jmp error
+*
                 jsr xt_to_r             ; >r
                 jsr xt_zero             ; 0
                 jsr xt_r_fetch          ; r@
@@ -6560,6 +6759,11 @@ z_ud_slash_mod: rts
         ; """
 .scope
 xt_um_slash_mod:
+                cpx #dsp0-5
+                bmi +
+                lda #11
+                jmp error
+*
                 ; catch division by zero
                 lda 0,x
                 ora 1,x
@@ -6636,6 +6840,11 @@ z_um_slash_mod: rts
         ; """
 .scope
 xt_um_star:     
+                cpx #dsp0-3
+                bmi +
+                lda #11
+                jmp error
+*
                 ; to eliminate clc inside the loop, the value at 
                 ; tmp1 is reduced by 1 in advance
                 clc     
@@ -6883,6 +7092,11 @@ z_words:        rts
         ; """
 .scope
 xt_wordsize:    
+                cpx #dsp0-1
+                bmi +
+                lda #11
+                jmp error
+*
                 ; We get the start address of the word from its header entry
                 ; for the start of the actual code (execution token, xt)
                 ; which is four bytes down, and the pointer to the end of the
@@ -6917,6 +7131,11 @@ z_wordsize:     rts
 ; ## "xor"  src: ANSI core  b: 14  c: TBA  status: coded
 .scope
 xt_xor:         
+                cpx #dsp0-3
+                bmi +
+                lda #11
+                jmp error
+*
                 lda 0,x
                 eor 2,x
                 sta 2,x
