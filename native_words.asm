@@ -3294,12 +3294,12 @@ xt_j:
                 tsx
 
                 sec
-                lda $0106,x     ; LSB
-                sbc $0108,x
+                lda $0107,x     ; LSB
+                sbc $0109,x
                 sta tmp1
 
-                lda $0107,x     ; MSB
-                sbc $0109,x
+                lda $0108,x     ; MSB
+                sbc $010A,x
 
                 ldx tmpdsp
 
