@@ -61,7 +61,6 @@ high_level_start:
         .byte ": to ( n -- 'name') ' >body ! ; "
         .byte ": within ( n1 n2 n3 -- f ) rot tuck > -rot > invert and ; "
         .byte ": /string ( addr u n -- addr u ) rot over + rot rot - ; "
-        .byte ": buffer: ( u 'name' ) create allot ; "
 
         ; Splash strings. We leave these as high-level words because they are
         ; generated at the end of the boot process and signal that the other
