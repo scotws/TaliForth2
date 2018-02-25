@@ -129,11 +129,12 @@
 
 ; DICTIONARY FLAGS
 
-; The first four bits are currently unused
+; The first three bits are currently unused
 
 .alias CO 1  ; Compile Only
 .alias AN 2  ; Always Native Compile
 .alias IM 4  ; Immediate Word
 .alias NN 8  ; Never Native Compile
+.alias UF 16 ; Includes Underflow Check (RESERVED)
 
 ; END

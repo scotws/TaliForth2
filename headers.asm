@@ -36,8 +36,9 @@
 ;
 ;       CO - Compile Only
 ;       IM - Immediate Word
-;       NN - Never Native Compile 
+;       NN - Never Native Compile (must always be called by JSR)
 ;       AN - Always Native Compile (may not be called by JSR)
+;       UF - Contains underflow check (RESERVED FOR FUTURE USE)
 
 ; Note there are currently four bits unused. By default, all words can be
 ; natively compiled (compiled inline) or as a subroutine jump target; the system

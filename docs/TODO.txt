@@ -1,7 +1,7 @@
 TODO/CHANGES for Tali Forth 2 
 Scot W. Stevenson <scot.stevenson@gmail.com>
 First version: 19. Jan 2014
-This version: 18. Feb 2018
+This version: 25. Feb 2018
 
 
 TODO POST-ALPHA ("ALL WORDS DO SOMETHING, USUALLY EVEN THE RIGHT THING")
@@ -21,17 +21,16 @@ TODO POST-BETA ("ALL THERE, BUT BEWARE OF SNEAKY BUGS")
         - Make output of WORDS wrap at EOL cleanly
         - In ALLOT, figure out how to handle release of too much memory
         - Code temporary high-level Fort words like WITHIN natively
+        - Add SEARCH (prepares for inclusion of editor)
         - Update documentation
 
 
 TODO AFTER FIRST FULL RELEASE
         - Add history function, at least one line, best with CTRL-p (hex $10?)
-        - Write line editor (ed) in 65c02 assembler
+        - Add Editor based on ed
         - Add handling for multi-byte keyboard input (if possible with py65)
         - See if we can add real Delete Key detection (ESC[3~)
         - Add more words from the ANSI String list
-        - Add STRIP-UNDERFLOW-CHECK option to remove underflow checks during native
-          compilation (add a new UF flag in headers)
         - Add real USER variables
         - Add multitasking (round-robin)
         - See if MAX and MIN can be combined
@@ -40,6 +39,7 @@ TODO AFTER FIRST FULL RELEASE
         - Consider adding THROW/CATCH
         - Consider moving UM* to table-based multiplication
         - Consider adding KEY? if we can make it work with py65mon
+        - Consider switching 0BRANCH/BRANCH to CS-PICK/CS-ROLL
         - Add ASCII output to DUMP
         - Allow SLITERAL to store strings longer than 255 chars
         - Allow S" and ." to handle strings longer than 255 chars
