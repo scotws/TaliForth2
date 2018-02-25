@@ -5,7 +5,6 @@ This version: 25. Feb 2018
 
 
 TODO POST-ALPHA ("ALL WORDS DO SOMETHING, USUALLY EVEN THE RIGHT THING")
-        - Add all underflow checks
         - Handle native compile special cases (R>, >R, 2R>, 2>R, etc)
         - Check if we really use all the strings (ie ">>>ERROR<<<")
         - Make output of .S pretty
@@ -49,6 +48,7 @@ TODO AFTER FIRST FULL RELEASE
 -----------------------------------------------------------------------
 ALREADY DONE (LAST ON TOP WITH DATE)
 
+        - 25. Feb 2018 - Added underflow checks
         - 18. Feb 2018 - All words coded, releasing as ALPHA
         - 12. Feb 2018 - Make PARSE work with 16-bit string lengths
         - Jan 2018 - Get scaffolding CLI loop up and running

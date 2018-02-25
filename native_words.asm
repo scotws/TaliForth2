@@ -1977,11 +1977,6 @@ xt_question_do:
         ; """
 .scope
 xt_do:
-                cpx #dsp0-3
-                bmi +
-                lda #11
-                jmp error
-*
                 ; DO and ?DO share most of their code, use tmp1 as a flag.
                 stz tmp1                ; 0 is DO, drop through to DO_COMMON
 do_common:
