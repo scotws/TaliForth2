@@ -5166,11 +5166,25 @@ xt_recurse:
                 iny
 
                 ; Next, we save the LSB and MSB of the xt of the word 
-                ; we are currently working on, which is saved in WORKWORD
-                lda workword      ; LSB
+                ; we are currently working on, which is four bytes down
+                ; from the nt which we saved in WORKWORD. We could probably
+                ; use NAME>INT here but this is going to be faster, and 
+                ; fast counts with recursion
+                lda workword            ; LSB
+                clc
+                adc #4
+                sta tmp1
+                lda workword+1          ; MSB
+                adc #0
+                sta tmp1+1
+
+                lda (tmp1)
                 sta (cp),y
+                phy 
+                ldy #1
+                lda (tmp1),y
+                ply
                 iny
-                lda workword+1    ; MSB
                 sta (cp),y
                 iny
 
