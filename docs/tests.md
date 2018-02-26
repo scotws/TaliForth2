@@ -131,8 +131,7 @@ Which should produce `16` for `784 48 hhh` . Source:
 
 ## Mandelbrot Set (ex Martin-H1)
 
-See
-[https://github.com/Martin-H1/Forth-CS-101/blob/master/mandlebrot.fs](https://github.com/Martin-H1/Forth-CS-101/blob/master/mandlebrot.fs)
+[https://github.com/Martin-H1/Forth-CS-101/blob/master/mandelbrot.fs](https://github.com/Martin-H1/Forth-CS-101/blob/master/mandelbrot.fs)
 
 
 ### TEST MATH STUFF

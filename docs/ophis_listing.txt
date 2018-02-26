@@ -1844,13 +1844,13 @@
  8D3A  85 1F     STA  $1F
  8D3C  E8        INX  
  8D3D  E8        INX  
- 8D3E  A0 03     LDY  #$03
+ 8D3E  A0 02     LDY  #$02
  8D40  B1 1E     LDA  ($1E), Y
  8D42  85 02     STA  $02
  8D44  C8        INY  
  8D45  B1 1E     LDA  ($1E), Y
  8D47  85 03     STA  $03
- 8D49  A0 05     LDY  #$05
+ 8D49  A0 06     LDY  #$06
  8D4B  B1 02     LDA  ($02), Y
  8D4D  85 00     STA  $00
  8D4F  C8        INY  

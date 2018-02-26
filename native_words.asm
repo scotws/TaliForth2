@@ -3778,8 +3778,8 @@ xt_marker:
                 inx
                 inx
 
-                ; The link to the previous DP is three bytes down
-                ldy #3
+                ; The link to the previous DP is two bytes down
+                ldy #2
                 lda (tmp1),y
                 sta dp 
                 iny
@@ -3787,10 +3787,10 @@ xt_marker:
                 sta dp+1
 
                 ; Adjust CP to the byte after end of this new word
-                ; at offset 5 (the sixth byte) we have the z_* link to 
+                ; six bytes down we have the z_* link to 
                 ; the end of this word. Use this to get the new Compiler
                 ; Pointer (CP) ...
-                ldy #5
+                ldy #6
                 lda (dp),y              ; LSB
                 sta cp
                 iny

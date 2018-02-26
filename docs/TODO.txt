@@ -21,7 +21,7 @@ TODO POST-BETA ("ALL THERE, BUT BEWARE OF SNEAKY BUGS")
         - In ALLOT, figure out how to handle release of too much memory
         - Code temporary high-level Fort words like WITHIN natively
         - Add SEARCH (prepares for inclusion of editor)
-        - Update documentation
+        - Update documentation: Add size of words to source code
 
 
 TODO AFTER FIRST FULL RELEASE
