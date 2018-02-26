@@ -2108,6 +2108,7 @@ do_runtime:
                 inx
                 inx
                 inx
+
 do_runtime_end:
 
 question_do_runtime:
@@ -5161,25 +5162,25 @@ xt_recurse:
                 ldy #0 
 
                 lda #$20        ; opcode for JSR
-                sta (CP),y
+                sta (cp),y
                 iny
 
                 ; Next, we save the LSB and MSB of the xt of the word 
-                ; we are currently working on, which is saved in WRKWRD
+                ; we are currently working on, which is saved in WORKWORD
                 lda workword      ; LSB
-                sta (CP),y
+                sta (cp),y
                 iny
                 lda workword+1    ; MSB
-                sta (CP),y
+                sta (cp),y
                 iny
 
                 ; update CP
                 tya
                 clc
-                adc CP
-                sta CP
+                adc cp
+                sta cp
                 bcc _done
-                inc CP+1 
+                inc cp+1 
 _done:                
 z_recurse:      rts
 .scend

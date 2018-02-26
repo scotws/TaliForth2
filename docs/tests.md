@@ -1,7 +1,7 @@
 # A collection of tests for Forth words
 Scot W. Stevenson <scot.stevenson@gmail.com>
 First version 15. Mar 2014
-This version 15. Feb 2018
+This version 26. Feb 2018
 
 This list is adapted from [Tali Forth](https://github.com/scotws/TaliForth)
 
@@ -83,7 +83,18 @@ Then, try this as multi-line loop because that can be tricky:
   i . loop ; 
 ```
 
-Put IF in the loop:
+Test other variants (ex Gforth):
+```
+: bbb1 -1 0 ?do i . -1 +loop ;
+```
+which should produce "0 -1". However, 
+```
+: bbb2 0 0 ?do i . -1 +loop ;
+```
+should print nothing.
+
+
+Now put IF in the loop:
 ```
 : ccc 11 1 do  i 5 > if i . then loop ; 
 ```
@@ -127,6 +138,15 @@ TEST RECURSE:
 Which should produce `16` for `784 48 hhh` . Source: 
 [http://galileo.phys.virginia.edu/classes/551.jvn.fall01/primer.htm]
 (http://galileo.phys.virginia.edu/classes/551.jvn.fall01/primer.htm)
+
+Also, the classic (here from the ANSI Forth documentation):
+```
+: factorial ( u -- u ) 
+   dup 2 < if drop 1 exit then 
+   dup 1- recurse * ;
+```
+For 5, the result should be 120.
+
 
 
 ## Mandelbrot Set (ex Martin-H1)

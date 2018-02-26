@@ -2,7 +2,7 @@
 ; Tali Forth 2 for the 65c02
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 01. Apr 2016 (Liara Forth)
-; This version: 18. Feb 2018
+; This version: 26. Feb 2018
 
 ; These words are too complicated (at the moment) or would be too long
 ; to be included as assembler code. So at startup, we have the basic
@@ -66,7 +66,7 @@ high_level_start:
         ; generated at the end of the boot process and signal that the other
         ; high-level definitions worked (or at least didn't crash)
         .byte ".( Tali Forth 2 for the 65c02) "
-        .byte "cr .( Version ALPHA 18. Feb 2018) "
+        .byte "cr .( Version ALPHA 26. Feb 2018) "
         .byte "cr .( Copyright 2014-2018 Scot W. Stevenson) "
         .byte "cr .( Tali Forth 2 comes with absolutely NO WARRANTY) "
         .byte "cr .( Type 'bye' to exit) cr "
