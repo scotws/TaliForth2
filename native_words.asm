@@ -6904,6 +6904,7 @@ xt_unloop:
                 pla
                 pla
                 pla
+                pla
 
                 ; Now drop the LEAVE address that was below them off
                 ; the Return Stack as well
