@@ -3603,13 +3603,23 @@ xt_plus_loop:
                 inx
                 inx
 
+                ; Because of the way that CP works, we don't have to save
+                ; CP, but CP-1
+                lda cp
+                sec
+                sbc #1
+                sta tmp2
+                lda cp+1
+                sbc #0
+                sta tmp2+1
+
                 ; now compile this in the DO/?DO routine
                 ldy #0
 
                 lda #$a9        ; opcode for LDA immediate
                 sta (tmp1),y
                 iny
-                lda tmp1+1   ; MSB
+                lda tmp2+1      ; MSB
                 sta (tmp1),y
                 iny
                 lda #$48        ; Opcode for PHA
@@ -3619,7 +3629,7 @@ xt_plus_loop:
                 lda #$a9        ; opcode for LDA immediate
                 sta (tmp1),y
                 iny
-                lda tmp1        ; LSB
+                lda tmp2        ; LSB
                 sta (tmp1),y
                 iny
                 lda #$48        ; Opcode for PHA
