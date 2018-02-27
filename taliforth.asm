@@ -11,7 +11,7 @@
 
 ; Label used to calculate UNUSED. Silly for Tali Forth, where we assume 32 KiB
 ; RAM and 32 KiB ROM, but required for Liara Forth, and kept here to make the
-; code more useful for other scenarios.
+; code more useful for other hardware configurations
 code0:
 
 .require "definitions.asm"      ; Top-level definitions, memory map
@@ -30,7 +30,7 @@ forth:
 ; COMPILE WORDS, JUMPS and SUBROUTINE JUMPS INTO CODE
 
 ; These three routines compile instructions such as "jsr xt_words" into a 
-; word at compile time so they are available at run time.  Words that use 
+; word at compile time so they are available at run time. Words that use 
 ; this routine may not be natively compiled. We use "cmpl" as not to 
 ; confuse these routines with the COMPILE, word. Always call this with a 
 ; subroutine jump, which means combining JSR/RTS to JMP in those cases is
@@ -153,13 +153,9 @@ dodefer:
 .scend
 
 defer_error:
-.scope
-                ; """Error routine for undefined DEFER: Complain and go
-                ; abort
-                ; """
+                ; """Error routine for undefined DEFER: Complain and abort"""
                 lda #2          ; DEFER not defined yet
                 jmp error
-.scend
 
 dodoes:
 .scope
@@ -213,7 +209,7 @@ dovar:
         ; routine that itself called DOVAR. This is the default 
         ; routine installed with CREATE.
         ; """
-                ; pull the return address off the machine's stack, adding
+                ; Pull the return address off the machine's stack, adding
                 ; one because of the way the 65c02 handles subroutines
                 ply             ; LSB
                 pla             ; MSB
@@ -235,8 +231,7 @@ dovar:
 ; LOW LEVEL HELPER FUNCTIONS
 
 byte_to_ascii:
-        ; """Convert byte in A to two ASCII hex digits and EMIT them.
-        ; """
+        ; """Convert byte in A to two ASCII hex digits and EMIT them"""
 .scope
                 pha
                 lsr             ; convert high nibble first
@@ -247,7 +242,6 @@ byte_to_ascii:
                 pla
 
                 ; fall through to _nibble_to_ascii
-
 
 _nibble_to_ascii:
         ; """Private helper function for byte_to_ascii: Print lower nibble
@@ -387,7 +381,7 @@ _got_name_token:
 
                 jsr xt_name_to_int      ; ( nt - xt ) 
 
-                ; See if we are in interpret or compile mode
+                ; See if we are in interpret or compile mode, 0 is interpret
                 lda state
                 bne _compile
 
@@ -476,7 +470,7 @@ print_common:
         ; Adds LF
         ; """
 .scope
-                ldy #00
+                ldy #0
 _loop:
                 lda (tmp3),y
                 beq _done               ; strings are zero-terminated
