@@ -1,5 +1,5 @@
 # Manual for Tali Forth 2 for the 65c02  
-This version: 18. Feb 2018  
+This version: 27. Feb 2018  
 Scot W. Stevenson <scot.stevenson@gmail.com> 
 
 (THIS TEXT IS UNDER DEVELOPMENT. SOME PARTS ARE INCOMPLETE, OTHERS DOWNRIGHT WRONG)
@@ -54,6 +54,92 @@ Note that Ophis will not accept math operation characters (`-*/+`) in label
 names because it will try to perform those operations. Because of this, 
 we use underscores for label names. This is a major difference to Liara
 Forth.
+
+
+## Native compiling
+
+In a pure subroutine-threaded Forth, higher-level words are merely a series of
+subroutine jumps. For instances, the Forth word `[char]`, formal Forth definition
+```
+: [char] char postpone literal ; immediate
+```
+in assembler is simply
+```
+                jsr xt_char
+                jsr xt_literal
+```
+as an immediate, compile-only word. Theare are two obvious problems with this
+method: First, it is slow, because each JSR/RTS pair consumes four bytes and
+12 cycles overhead. Second, for smaller words, it uses far more bytes. Take
+for instance DROP, which in its naive form is simply
+```
+                inx
+                inx
+```
+for two bytes and four cycles. The jump to drop uses more space and takes far
+longer than the word itself. (In practice, DROP checks for underflow, so the
+actual assembler code is 
+```
+		cpx #dsp0-3
+		bmi +
+		lda #11         ; error code for underflow
+		jmp error
+*
+                inx
+                inx
+```
+for eleven bytes. We'll discuss the underflow check further below.)
+
+To get rid of this problem, Tali Forth supports _native compiling._ The system
+variable `nc-limit` sets the threshhold up to which a word will be included not
+as a subroutine jump, but machine language. Let's start with an example where
+`nc-limit` is set to zero, that is, all words are compiled as subroutine jumps.
+Take a simple word such as
+```
+        : aaa 0 drop ;
+```
+and check the actual code with SEE:
+```
+        see aaa 
+          nt: 7CD  xt: 7D8 
+         size (decimal): 6 
+         
+        07D8  20 52 99 20 6B 88  ok
+```
+(The actual addresses might be different, this is from the ALPHA release).
+Our word `aaa` consists of two subroutine jumps, one to zero and one to DROP.
+Now, if we increase the threshhold to 20, we get different code, as this
+console session shows:
+```
+        20 nc-limit !  ok
+        : bbb 0 drop ;  ok
+        see bbb 
+          nt: 7DF  xt: 7EA 
+         size (decimal): 17 
+         
+        07EA  CA CA 74 00 74 01 E0 77  30 05 A9 0B 4C C7 AC E8 
+        07FA  E8  ok
+```
+Even though the definition of `bbb` is the same as `aaa`, we have totally
+different code: The number `0001` is pushed to the Data Stack (the first six
+bytes), then we check for underflow (the next nine bytes), and finally we
+DROP by moving X, the Data Stack Pointer. Our word is definitely longer, but
+have just saved 12 cycles.
+
+### Underflow stripping
+
+Checking for underflow helps during the design and debug phases of writing Forth
+code, but once it ready to ship, those nine bytes per check hurt, as we see in
+the case above. To allow those checks to be stripped, we can set the system
+variable `uf-strip` to TRUE. 
+
+( Check code )
+( UF flag in header ) 
+
+### Other special cases
+
+( R> and >R are a problem )
+( Stack manipulation is stripped first, then underflow checking)
 
 
 ## Gotchas

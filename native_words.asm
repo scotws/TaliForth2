@@ -1214,10 +1214,14 @@ z_comma:        rts
         ; """
 .scope
 xt_compile_comma:
+                cpx #dsp0-1
+                bmi +
+                lda #11                 ; underflow
+                jmp error
+*
                 ; See if this is an Always Native (AN) word by checking the
-                ; AN flag. We need nt for this.
-
-                ; Save a copy of xt to the Return Stack
+                ; AN flag. We need nt for this. First, save a copy of xt to
+                ; the Return Stack
                 lda 1,x                 ; MSB
                 pha
                 lda 0,x
