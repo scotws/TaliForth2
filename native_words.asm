@@ -16,7 +16,6 @@
 ;
 ;       TBA --> fragment --> coded --> tested
 
-
 ; ## COLD ( -- ) "Reset the Forth system"
 ; ## "cold"  src: Tali Forth  b: TBA  c: TBA  status: fragment
 ;       """Reset the Forth system. Does not restart the kernel,
@@ -562,7 +561,7 @@ z_allot:        rts
 
 
 ; ## ALWAYS_NATIVE ( -- ) "Flag last word as always natively compiled"
-; ## "never-compile"  src: Tali Forth  b: TBA  c: TBA  status: coded
+; ## "always-native"  src: Tali Forth  b: TBA  c: TBA  status: coded
 xt_always_native:
                 ldy #1          ; offset for status byte
                 lda (dp),y
@@ -628,7 +627,7 @@ z_at_xy:        rts
 
 
 ; ## BACKSLASH ( -- ) "Ignore rest of line"
-; ## "\"  src: ANSI core ext  b: 8  c: TBA  status: coded
+; ## "\"  src: ANSI core ext  b: 8  c: TBA  status: tested
 xt_backslash:   
                 lda ciblen
                 sta toin
@@ -639,7 +638,7 @@ z_backslash:    rts
 
 
 ; ## BASE ( -- addr ) "Push address of radix base to stack"
-; ## "base"  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## "base"  src: ANSI core  b: TBA  c: TBA  status: tested
 xt_base:        
                 dex
                 dex
@@ -681,7 +680,7 @@ z_bell:         rts
 
 
 ; ## BL ( -- c ) "Push ASCII value of SPACE to stack"
-; ## "bl"  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## "bl"  src: ANSI core  b: TBA  c: TBA  status: tested
 .scope
 xt_bl:          
                 dex

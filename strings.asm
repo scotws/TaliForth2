@@ -1,7 +1,7 @@
 ; List of Strings for Tali Forth 2
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 01. Apr 2016 (for Liara Forth)
-; This version: 18. Feb 2017
+; This version: 26. Feb 2017
 
 ; This file is included by taliforth.asm 
 
@@ -16,12 +16,6 @@ string_table:
 ; All general strings must be zero-terminated, names start with "s_"
 s_ok:           .byte " ok", 0          ; note space at beginning
 s_compiled:     .byte " compiled", 0    ; note space at beginning
-
-
-; ANSI VT-100 SEQUENCES
-; TODO see if we need these at all
-vt100_page: .byte 27, "[2J", 0       ; clear screen
-vt100_home: .byte 27, "[H", 0        ; cursor home
 
 
 ; ALPHABET STRINGS

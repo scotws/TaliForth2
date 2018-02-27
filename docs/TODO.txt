@@ -1,7 +1,7 @@
 TODO/CHANGES for Tali Forth 2 
 Scot W. Stevenson <scot.stevenson@gmail.com>
 First version: 19. Jan 2014
-This version: 25. Feb 2018
+This version: 26. Feb 2018
 
 
 TODO POST-ALPHA ("ALL WORDS DO SOMETHING, USUALLY EVEN THE RIGHT THING")
@@ -14,7 +14,6 @@ TODO POST-ALPHA ("ALL WORDS DO SOMETHING, USUALLY EVEN THE RIGHT THING")
 
 TODO POST-BETA ("ALL THERE, BUT BEWARE OF SNEAKY BUGS")
         - Warn if newly defined word already in Dictionary
-        - Add SEE as a native word
         - Add underflow check to PICK
         - Check where all "STY 0,X" can be used to good effect
         - Make output of WORDS wrap at EOL cleanly
@@ -24,7 +23,7 @@ TODO POST-BETA ("ALL THERE, BUT BEWARE OF SNEAKY BUGS")
         - Update documentation: Add size of words to source code
 
 
-TODO AFTER FIRST FULL RELEASE
+TODO AT SOME POINT
         - Add history function, at least one line, best with CTRL-p (hex $10?)
         - Add Editor based on ed
         - Add handling for multi-byte keyboard input (if possible with py65)
@@ -48,6 +47,7 @@ TODO AFTER FIRST FULL RELEASE
 -----------------------------------------------------------------------
 ALREADY DONE (LAST ON TOP WITH DATE)
 
+        - 26. Feb 2018 - Added Prime, Fact, Fib, Mandelbrot as tests
         - 25. Feb 2018 - Added underflow checks
         - 18. Feb 2018 - All words coded, releasing as ALPHA
         - 12. Feb 2018 - Make PARSE work with 16-bit string lengths
