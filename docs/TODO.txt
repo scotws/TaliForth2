@@ -1,14 +1,12 @@
 TODO/CHANGES for Tali Forth 2 
 Scot W. Stevenson <scot.stevenson@gmail.com>
 First version: 19. Jan 2014
-This version: 26. Feb 2018
+This version: 27. Feb 2018
 
 
 TODO POST-ALPHA ("ALL WORDS DO SOMETHING, USUALLY EVEN THE RIGHT THING")
         - Handle native compile special cases (R>, >R, 2R>, 2>R, etc)
-        - Check if we really use all the strings (ie ">>>ERROR<<<")
         - Make output of .S pretty
-        - Make output of WORDS pretty
         - Test all words, adding tests to docs/tests.md
 
 
@@ -16,7 +14,6 @@ TODO POST-BETA ("ALL THERE, BUT BEWARE OF SNEAKY BUGS")
         - Warn if newly defined word already in Dictionary
         - Add underflow check to PICK
         - Check where all "STY 0,X" can be used to good effect
-        - Make output of WORDS wrap at EOL cleanly
         - In ALLOT, figure out how to handle release of too much memory
         - Code temporary high-level Fort words like WITHIN natively
         - Add SEARCH (prepares for inclusion of editor)
@@ -25,10 +22,10 @@ TODO POST-BETA ("ALL THERE, BUT BEWARE OF SNEAKY BUGS")
 
 TODO AT SOME POINT
         - Add history function, at least one line, best with CTRL-p (hex $10?)
+        - Add more words from the ANSI String list (also for Editor)
         - Add Editor based on ed
         - Add handling for multi-byte keyboard input (if possible with py65)
         - See if we can add real Delete Key detection (ESC[3~)
-        - Add more words from the ANSI String list
         - Add real USER variables
         - Add multitasking (round-robin)
         - See if MAX and MIN can be combined
@@ -45,9 +42,9 @@ TODO AT SOME POINT
 
 
 -----------------------------------------------------------------------
-ALREADY DONE (LAST ON TOP WITH DATE)
+ALREADY DONE MAJOR CHANGES (LAST ON TOP WITH DATE)
 
-        - 26. Feb 2018 - Added Prime, Fact, Fib, Mandelbrot as tests
+        - 26. Feb 2018 - Added Prime, Fact, Fib, Mandelbrot to user_words.asm
         - 25. Feb 2018 - Added underflow checks
         - 18. Feb 2018 - All words coded, releasing as ALPHA
         - 12. Feb 2018 - Make PARSE work with 16-bit string lengths

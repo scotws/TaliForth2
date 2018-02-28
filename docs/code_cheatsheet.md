@@ -3,16 +3,14 @@ Scot W. Stevenson <scot.stevenson@gmail.com>
 First version: 28. Nov 2017
 This version: 28. Nov 2017
 
-While coding a Forth, there are certain assembler fragments that
-get repeated over and over again. These could be included as
-macros, but that can make the code harder to read for somebody
-only familiar with basic assembly.
+While coding a Forth, there are certain assembler fragments that get repeated
+over and over again. These could be included as macros, but that can make the
+code harder to read for somebody only familiar with basic assembly.
 
-Some of these fragments could be written in other variants, such as
-the "Push value" version, which could increment the DSP twice before
-storing a value. We try to keep these in the same sequence (a "dialect"
-or "code mannerism" if you will) so we have the option of adding code
-analysis tools later.
+Some of these fragments could be written in other variants, such as the "Push
+value" version, which could increment the DSP twice before storing a value. We
+try to keep these in the same sequence (a "dialect" or "code mannerism" if you
+will) so we have the option of adding code analysis tools later.
 
 But first:
 
@@ -47,7 +45,6 @@ It should probably go on your wall or something.
                 inx
 ```
 
-
 ### PUSH a value to the Data Stack
 
 Remember the Data Stack Pointer (DSP, the X register of the 65c02)
@@ -59,7 +56,6 @@ points to the LSB of the TOS value.
                 sta $00,x
                 lda $<LSB>      ; or pla, jsr kernel_getc, etc.
                 sta $01,x
-
 ```
 
 ### POP a value off the Data Stack
@@ -86,4 +82,3 @@ ab drop# inx<tab><tab>; drop<cr>inx<cr><left>
 ab push# dex<tab><tab>; push<cr>dex<cr>lda $<LSB><cr>sta $00,x<cr>lda $<MSB><cr>sta $01,x<cr><up><up><up><up><end>
 ab pop# lda $00,x<tab><tab>; pop<cr>sta $<LSB><cr>lda $01,x<cr>sta $<MSB><cr>inx<cr>inx<cr><up><up><up><up><up><end>
 ```
-

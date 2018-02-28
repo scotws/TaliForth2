@@ -1,7 +1,7 @@
 ; Definitions for Tali Forth 2
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 01. Apr 2016 (Liara Forth)
-; This version: 07. Dec 2017
+; This version: 27. Feb 2018
 
 ; This file is included by taliforth.asm
 
@@ -136,5 +136,10 @@
 .alias IM 4  ; Immediate Word
 .alias NN 8  ; Never Native Compile
 .alias UF 16 ; Includes Underflow Check (RESERVED)
+
+
+; VARIOUS
+
+.alias MAX_LINE_LENGTH  79      ; assumes 80 character lines
 
 ; END
