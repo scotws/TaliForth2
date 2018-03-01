@@ -11,17 +11,18 @@ TODO POST-ALPHA ("ALL WORDS DO SOMETHING, USUALLY EVEN THE RIGHT THING")
 
 
 TODO POST-BETA ("ALL THERE, BUT BEWARE OF SNEAKY BUGS")
+        - Code temporary high-level Forth words such as WITHIN natively
         - Warn if newly defined word already in Dictionary
         - Add underflow check to PICK
         - Check where all "STY 0,X" can be used to good effect
         - In ALLOT, figure out how to handle release of too much memory
-        - Code temporary high-level Fort words like WITHIN natively
         - Add SEARCH (prepares for inclusion of editor)
         - Test all words, adding new tests to docs/tests.md
         - Update documentation
 
 
 TODO AT SOME POINT
+        - Add ASCII output to DUMP
         - Add history function, at least one line, best with CTRL-p (hex $10?)
         - Add more words from the ANSI String list
         - Add Editor based on ed
@@ -36,10 +37,9 @@ TODO AT SOME POINT
         - Consider moving UM* to table-based multiplication
         - Consider adding KEY? if we can make it work with py65mon
         - Consider switching 0BRANCH/BRANCH to CS-PICK/CS-ROLL
-        - Add ASCII output to DUMP
         - Allow SLITERAL to store strings longer than 255 chars
         - Allow S" and ." to handle strings longer than 255 chars
-        - Allow /STRING and -TRAILING to handle strings longer than 255 chars
+        - Allow -TRAILING to handle strings longer than 255 chars
 
 
 -----------------------------------------------------------------------

@@ -5584,6 +5584,44 @@ z_sign:         rts
 .scend
 
 
+; ## SLASH-STRING ( addr u n -- addr u ) "Shorten string by n"
+; ## "/string"  src: ANSI string b: TBA  c: TBA  status: coded
+        ; """Forth code is
+        ; : /STRING ( ADDR U N -- ADDR U ) ROT OVER + ROT ROT - ; 
+        ; Put differently, we need to add TOS and 3OS, and subtract
+        ; TOS from NOS, and then drop TOS
+        ; """
+.scope
+xt_slash_string:
+                cpx #dsp0-5
+                bmi +
+                lda #11
+                jmp error
+*
+                clc             ; 3OS+TOS
+                lda 0,x
+                adc 4,x
+                sta 4,x
+
+                lda 1,x
+                adc 5,x
+                sta 5,x
+
+                sec             ; NOS-TOS
+                lda 2,x
+                sbc 0,x
+                sta 2,x
+
+                lda 3,x
+                sbc 1,x
+                sta 3,x
+
+                inx
+                inx
+               
+z_slash_string: rts
+.scend
+
 ; ## SLITERAL ( addr u -- )( -- addr u ) "Compile a string for runtime"
 ; ## "sliteral"  src: ANSI string  b: TBA  c: TBA  status: TBA
         ; """Currently, we only copy strings of up to 255 characters

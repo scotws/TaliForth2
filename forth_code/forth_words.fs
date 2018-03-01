@@ -50,7 +50,6 @@
 \ Temporary high-level words. TODO convert these to assembler
         : to ( n -- 'name') ' >body ! ;
         : within ( n1 n2 n3 -- f ) rot tuck > -rot > invert and ;
-        : /string ( addr u n -- addr u ) rot over + rot rot - ;
 
 \ Splash strings. We leave these as high-level words because they are
 \ generated at the end of the boot process and signal that the other

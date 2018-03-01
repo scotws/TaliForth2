@@ -603,9 +603,14 @@ nt_refill:
         .word nt_accept, xt_refill, z_refill
         .byte "refill"
 
+nt_slash_string:
+        .byte 7,0
+        .word nt_refill, xt_slash_string, z_slash_string
+        .byte "/string"
+
 nt_minus_trailing:
         .byte 9, 0
-        .word nt_refill, xt_minus_trailing, z_minus_trailing
+        .word nt_slash_string, xt_minus_trailing, z_minus_trailing
         .byte "-trailing"
 
 nt_bl:
