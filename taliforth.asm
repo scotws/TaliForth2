@@ -1,7 +1,7 @@
 ; Tali Forth 2 for the 65c02
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 19. Jan 2014 (Tali Forth)
-; This version: 17. Feb 2018
+; This version: 01. Mar 2018
 
 ; This is the main file for Tali Forth 2
 
@@ -491,6 +491,26 @@ _done:
                 jsr emit_a
 
         	rts
+.scend
+
+
+print_u:
+        ; """Basic printing routine used by higher-level constructs,
+        ; the equivalent of the Forth word  0 <# #S #> TYPE  which is
+        ; basically U. without the SPACE at the end. Used for various
+        ; outputs
+.scope
+                dex                     ; 0
+                dex
+                stz 0,x
+                stz 1,x
+
+                jsr xt_less_number_sign         ; <#
+                jsr xt_number_sign_s            ; #S
+                jsr xt_number_sign_greater      ; #>
+                jsr xt_type                     ; TYPE
+        
+                rts
 .scend
 
 

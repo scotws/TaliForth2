@@ -2304,11 +2304,15 @@ xt_dot_s:
                 ; to use as a counter later down. This assumes that there
                 ; are less than 255 elements on the stack
                 lda 0,x
-                tay
+                pha
 
                 ; print unsigned number without the trailing space
-                ; TODO replace this by a real routine
-                jsr byte_to_ascii
+                dex             ; DUP
+                dex
+                sta 0,x
+                stz 1,x
+
+                jsr print_u
  
                 lda #$3e        ; ASCII for ">"
                 jsr emit_a
@@ -2325,26 +2329,36 @@ xt_dot_s:
                 beq _done
 
                 ; We have at least one element on the stack. The depth of the
-                ; stack is in Y and A, where we can use it as a counter. We go
+                ; stack is on the stack, we can use it as a counter. We go
                 ; from bottom to top
-                sty tmp1        ; counter
+_have_stack:
+                ply
 
                 lda #dsp0-1     ; go up one to avoid garbage
-                sta tmp2
-                stz tmp2+1      ; must be zero page on the 65c02
+                sta tmp3
+                stz tmp3+1      ; must be zero page on the 65c02
 _loop:
-                lda (tmp2)
-                jsr byte_to_ascii       ; TODO replace by real routine
-                dec tmp2
-                lda (tmp2)
-                jsr byte_to_ascii       ; TODO replace by real routine
-                dec tmp2
+                dex
+                dex
 
-                jsr xt_space
+                lda (tmp3)
+                sta 1,x
+                dec tmp3
 
-                dec tmp1
+                lda (tmp3)
+                sta 0,x
+                dec tmp3
+                phy
+
+                jsr xt_dot
+
+                ply
+                dey
                 bne _loop
+
+                pha             ; dummy to balance stack
 _done:
+                pla
 z_dot_s:        rts
 .scend
 
