@@ -6773,6 +6773,23 @@ z_type:         rts
 .scend
 
 
+; ## U_DOT ( u -- ) "Print TOS as unsigned number"
+; ## "u."  src: ANSI core  b: TBA  c: TBA  status: coded
+        ; """This is : U. 0 <# #S #> TYPE SPACE ; in Forth"""
+.scope
+xt_u_dot:         
+                cpx #dsp0-1
+                bmi +
+                lda #11         ; underflow
+                jmp error
+*
+                jsr print_u
+                lda #AscSP
+                jsr emit_a
+
+z_u_dot:        rts 
+.scend
+
 ; ## UD_SLASH_MOD ( ud u -- rem ud ) "32/16 --> 32 Division"
 ; ## "ud/mod"  src: Gforth  b: TBA  c: TBA  status: coded
         ; """Divide double cell number by a single-cell number and return

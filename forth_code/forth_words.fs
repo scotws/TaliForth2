@@ -1,7 +1,6 @@
 \ List of high-level Forth words for Tali Forth 2 for the 65c02
 \ Scot W. Stevenson <scot.stevenson@gmail.com>
-\ First version: FEHLT
-\ This version: 27. Feb 2018
+\ This version: 01. Mar 2018
 
 \ When changing these words, edit them here and then use the 
 \ forth_to_dotbyte.py tool to convert them to the required format
@@ -41,7 +40,6 @@
 \ are slow, these can stay high-level for the moment. However, in this
 \ state they don't check for underflow. Based on
 \ https://github.com/philburk/pforth/blob/master/fth/numberio.fth
-        : u. 0 <# #s #> type space ;
         : u.r >r 0 <# #s #> r> over - spaces type ;
         : .r >r dup abs 0 <# #s rot sign #> r> over - spaces type ;
         : ud. <# #s #> type space ;
@@ -58,7 +56,7 @@
 \ generated at the end of the boot process and signal that the other
 \ high-level definitions worked (or at least didn't crash)
         .( Tali Forth 2 for the 65c02)
-        cr .( Version ALPHA 27. Feb 2018)
+        cr .( Version ALPHA 01. Mar 2018 )
         cr .( Copyright 2014-2018 Scot W. Stevenson)
         cr .( Tali Forth 2 comes with absolutely NO WARRANTY)
         cr .( Type 'bye' to exit) cr

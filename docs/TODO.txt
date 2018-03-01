@@ -6,7 +6,7 @@ This version: 01. Mar 2016
 
 TODO POST-ALPHA ("ALL WORDS DO SOMETHING, USUALLY EVEN THE RIGHT THING")
         - Handle native compile special cases (R>, >R, 2R>, 2>R, etc)
-        - Make output of .S pretty (U. instead of raw hex formatting)
+        - Allow stripping of underflow checks based on UF flag
         - Add size of words to source code
 
 

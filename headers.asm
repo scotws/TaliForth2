@@ -873,9 +873,14 @@ nt_question:
         .word nt_false, xt_question, z_question
         .byte "?"
 
+nt_u_dot:
+        .byte 2, 0
+        .word nt_question, xt_u_dot, z_u_dot
+        .byte "u."
+
 nt_dot:
         .byte 1, 0
-        .word nt_question, xt_dot, z_dot
+        .word nt_u_dot, xt_dot, z_dot
         .byte "."
 
 nt_type:
