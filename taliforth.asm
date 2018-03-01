@@ -20,8 +20,17 @@ code0:
 forth:
 
 .require "native_words.asm"     ; Native Forth words. Starts with COLD
-.require "forth_words.asm"      ; High-level Forth words
-.require "user_words.asm"       ; User-defined words (optional)
+
+; High-level Forth words, see forth_code/README.md
+forth_words_start:
+.incbin "forth_words.asc"
+forth_words_end:
+
+; User-defined Forth words, see forth_code/README.md
+user_words_start:
+.incbin "user_words.asc"
+user_words_end:
+
 .require "headers.asm"          ; Headers of native words
 .require "strings.asm"          ; Strings and error messages
 

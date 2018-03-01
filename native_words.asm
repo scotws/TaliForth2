@@ -102,19 +102,19 @@ xt_cold:
                 dex
 
                 ; start address goes NOS
-                lda #<high_level_start
+                lda #<forth_words_start
                 sta 2,x
-                lda #>high_level_start  
+                lda #>forth_words_start 
                 sta 3,x
                 
                 ; length goes TOS
-                lda #<high_level_end
+                lda #<forth_words_end
                 sec
-                sbc #<high_level_start
+                sbc #<forth_words_start
                 sta 0,x
 
-                lda #>high_level_end
-                sbc #>high_level_start
+                lda #>forth_words_end
+                sbc #>forth_words_start
                 sta 1,x
 
                 jsr xt_evaluate
