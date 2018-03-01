@@ -12,6 +12,7 @@ with the .inclbin command. Outputs result on standard output
 """
 
 import argparse
+import sys
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-i', '--input', dest='source', required=True,
@@ -80,8 +81,11 @@ def main():
     # Merge everything into one big line for compact printing
     # Add final space because we might be adding another batch of
     # Forth words after this one (say, forth_words and user_words
-    one_line = ' '.join(all_words)+' '
-    print(one_line)
+    one_line = ' '.join(all_words)
+
+    # Use sys.stdout.write() instead of print() because we don't want
+    # the line feed at the end
+    sys.stdout.write(' '+one_line+' ')
 
 if __name__ == '__main__':
     main()

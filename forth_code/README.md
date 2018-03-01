@@ -4,12 +4,12 @@ First version: 27. Feb 2018
 This version: 01. Mar 2018
 
 Tali Forth 2 uses a bunch of high-level Forth words that are compiled at
-run-time, some defined by the system, some addition defined by the user. To
-making using them easier, we create the original Forth files with `.fs` suffix
-in this directory, and then use the `forth_to_ophisbin.py` tool in this
-directory to convert them to ASCII versions that have been stripped of all
-comment. These can be placed as `.asc` files in the parent folder, from where
-they are imported by Ophis with the `.incbin` directive.
+run-time, some defined by the system, some defined by the user. To make it
+easier to use them, we can create the original Forth files with `.fs` suffix in
+this directory, and then use the `forth_to_ophisbin.py` tool in this directory
+to convert them to ASCII versions that have been stripped of all comment. These
+can be placed as `.asc` files in the parent folder, from where they are imported
+by Ophis with the `.incbin` directive.
 
 For example, given the Forth routine for SEE in `forth_code/user_words.py`:
 ```
@@ -50,3 +50,5 @@ user_words_start:
 user_words_end:
 ```
 
+This methode allows testing of the Forth word to be defined with Gforth (though
+note that the exampe above will fail because of `wordsize`, a Tali Forth word). 

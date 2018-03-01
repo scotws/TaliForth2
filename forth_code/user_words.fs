@@ -18,7 +18,7 @@
 \ can be added to the native words to save on size
         : see parse-name find-name dup 0= abort" No such name" 
         base @ >r  hex  dup cr space ."  nt: " u.
-        dup 4 + @ space ." xt: " u. "
+        dup 4 + @ space ." xt: " u.
         dup 1+ c@ 1 and if space ." CO " then
         dup 1+ c@ 2 and if space ." AN " then
         dup 1+ c@ 4 and if space ." IM " then
