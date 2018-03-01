@@ -40,13 +40,13 @@ decimal wordsize dup . swap name>int swap hex cr space dump r> base ! ;
 ```
 (In the file, this is all one line with spaces which might have been cut off
 here to do formatting). We copy this to the parent directory, and then include
-it with the directive `.incbin user_words.asc`
+it with the directive `.incbin "user_words.asc"`
 
 Note that the labels for the user words must be included around this directive
 in `taliforth.asm` as in
 ```
 user_words_start:
-.incbin user_words.asc
+.incbin "user_words.asc"
 user_words_end:
 ```
 

@@ -1,14 +1,13 @@
 TODO/CHANGES for Tali Forth 2 
 Scot W. Stevenson <scot.stevenson@gmail.com>
 First version: 19. Jan 2014
-This version: 27. Feb 2018
+This version: 01. Mar 2016
 
 
 TODO POST-ALPHA ("ALL WORDS DO SOMETHING, USUALLY EVEN THE RIGHT THING")
         - Handle native compile special cases (R>, >R, 2R>, 2>R, etc)
         - Make output of .S pretty (U. instead of raw hex formatting)
         - Add size of words to source code
-        - Create tool to import Forth source code to .byte assembler lists
 
 
 TODO POST-BETA ("ALL THERE, BUT BEWARE OF SNEAKY BUGS")
@@ -46,6 +45,7 @@ TODO AT SOME POINT
 -----------------------------------------------------------------------
 ALREADY DONE MAJOR CHANGES (LAST ON TOP WITH DATE)
 
+        - 01. Mar 2018 - Enable assembly of Forth text files
         - 26. Feb 2018 - Added Prime, Fact, Fib, Mandelbrot to user_words.asm
         - 25. Feb 2018 - Added underflow checks
         - 18. Feb 2018 - All words coded, releasing as ALPHA
