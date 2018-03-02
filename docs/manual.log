@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.3.2)  3 MAR 2018 00:14
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.3.2)  3 MAR 2018 00:20
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -457,13 +457,20 @@ Package atveryend Info: Empty hook `AfterLastShipout' on input line 82.
  (./manual.aux)
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 82.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 82.
-Package rerunfilecheck Info: File `manual.out' has not changed.
-(rerunfilecheck)             Checksum: 4664A7F70ACAB5C5D815A8C32108929F;1706.
+
+
+Package rerunfilecheck Warning: File `manual.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+Package rerunfilecheck Info: Checksums for `manual.out':
+(rerunfilecheck)             Before: 4664A7F70ACAB5C5D815A8C32108929F;1706
+(rerunfilecheck)             After:  59718F2046751C33D17ABD66767D03B9;1783.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 82.
  ) 
 Here is how much of TeX's memory you used:
- 6894 strings out of 494953
- 101799 string characters out of 6180978
+ 6895 strings out of 494953
+ 101810 string characters out of 6180978
  257468 words of memory out of 5000000
  9997 multiletter control sequences out of 15000+600000
  65418 words of font info for 47 fonts, out of 8000000 for 9000
@@ -478,10 +485,10 @@ mf/fonts/type1/public/lm/lmr10.pfb></usr/share/texmf/fonts/type1/public/lm/lmr1
 /type1/public/lm/lmr9.pfb></usr/share/texmf/fonts/type1/public/lm/lmri10.pfb></
 usr/share/texmf/fonts/type1/public/lm/lmro10.pfb></usr/share/texmf/fonts/type1/
 public/lm/lmsy10.pfb></usr/share/texmf/fonts/type1/public/lm/lmtt10.pfb>
-Output written on manual.pdf (17 pages, 288392 bytes).
+Output written on manual.pdf (17 pages, 289309 bytes).
 PDF statistics:
- 346 PDF objects out of 1000 (max. 8388607)
- 312 compressed objects within 4 object streams
- 99 named destinations out of 1000 (max. 500000)
+ 347 PDF objects out of 1000 (max. 8388607)
+ 313 compressed objects within 4 object streams
+ 100 named destinations out of 1000 (max. 500000)
  225 words of extra memory for PDF output out of 10000 (max. 10000000)
 

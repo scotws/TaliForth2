@@ -9,11 +9,12 @@
 \contentsline {section}{\numberline {2.2}Running the binary}{7}{section.2.2}
 \contentsline {chapter}{\numberline {3}Running Tali Forth}{8}{chapter.3}
 \contentsline {section}{\numberline {3.1}Native compiling}{8}{section.3.1}
-\contentsline {section}{\numberline {3.2}Gotchas}{9}{section.3.2}
-\contentsline {section}{\numberline {3.3}Reporting a problem}{9}{section.3.3}
+\contentsline {section}{\numberline {3.2}Underflow stripping}{9}{section.3.2}
+\contentsline {section}{\numberline {3.3}Gotchas}{9}{section.3.3}
+\contentsline {section}{\numberline {3.4}Reporting a problem}{9}{section.3.4}
 \contentsline {chapter}{\numberline {4}The Editor}{10}{chapter.4}
 \contentsline {part}{III\hspace {1em}The Internals}{11}{part.3}
-\contentsline {chapter}{\numberline {5}Internals}{12}{chapter.5}
+\contentsline {chapter}{\numberline {5}How Tali Forth works}{12}{chapter.5}
 \contentsline {chapter}{\numberline {6}Developing}{13}{chapter.6}
 \contentsline {section}{\numberline {6.1}Adding new words}{13}{section.6.1}
 \contentsline {section}{\numberline {6.2}Deeper changes}{13}{section.6.2}

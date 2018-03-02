@@ -9,20 +9,21 @@
 \BOOKMARK [1][-]{section.2.2}{Running the binary}{chapter.2}% 9
 \BOOKMARK [0][-]{chapter.3}{Running Tali Forth}{part.2}% 10
 \BOOKMARK [1][-]{section.3.1}{Native compiling}{chapter.3}% 11
-\BOOKMARK [1][-]{section.3.2}{Gotchas}{chapter.3}% 12
-\BOOKMARK [1][-]{section.3.3}{Reporting a problem}{chapter.3}% 13
-\BOOKMARK [0][-]{chapter.4}{The Editor}{part.2}% 14
-\BOOKMARK [-1][-]{part.3}{III The Internals}{}% 15
-\BOOKMARK [0][-]{chapter.5}{Internals}{part.3}% 16
-\BOOKMARK [0][-]{chapter.6}{Developing}{part.3}% 17
-\BOOKMARK [1][-]{section.6.1}{Adding new words}{chapter.6}% 18
-\BOOKMARK [1][-]{section.6.2}{Deeper changes}{chapter.6}% 19
-\BOOKMARK [2][-]{subsection.6.2.1}{The Ophis Assembler}{section.6.2}% 20
-\BOOKMARK [1][-]{section.6.3}{General notes}{chapter.6}% 21
-\BOOKMARK [1][-]{section.6.4}{Coding style}{chapter.6}% 22
-\BOOKMARK [1][-]{section.6.5}{Testing}{chapter.6}% 23
-\BOOKMARK [0][-]{appendix.A}{FAQ}{part.3}% 24
-\BOOKMARK [1][-]{section.A.1}{Why does Tali Forth take so long to start up?}{appendix.A}% 25
-\BOOKMARK [1][-]{section.A.2}{Why `Tali' Forth?}{appendix.A}% 26
-\BOOKMARK [1][-]{section.A.3}{Then who is `Lara'?}{appendix.A}% 27
-\BOOKMARK [0][-]{appendix.B}{Thanks}{part.3}% 28
+\BOOKMARK [1][-]{section.3.2}{Underflow stripping}{chapter.3}% 12
+\BOOKMARK [1][-]{section.3.3}{Gotchas}{chapter.3}% 13
+\BOOKMARK [1][-]{section.3.4}{Reporting a problem}{chapter.3}% 14
+\BOOKMARK [0][-]{chapter.4}{The Editor}{part.2}% 15
+\BOOKMARK [-1][-]{part.3}{III The Internals}{}% 16
+\BOOKMARK [0][-]{chapter.5}{How Tali Forth works}{part.3}% 17
+\BOOKMARK [0][-]{chapter.6}{Developing}{part.3}% 18
+\BOOKMARK [1][-]{section.6.1}{Adding new words}{chapter.6}% 19
+\BOOKMARK [1][-]{section.6.2}{Deeper changes}{chapter.6}% 20
+\BOOKMARK [2][-]{subsection.6.2.1}{The Ophis Assembler}{section.6.2}% 21
+\BOOKMARK [1][-]{section.6.3}{General notes}{chapter.6}% 22
+\BOOKMARK [1][-]{section.6.4}{Coding style}{chapter.6}% 23
+\BOOKMARK [1][-]{section.6.5}{Testing}{chapter.6}% 24
+\BOOKMARK [0][-]{appendix.A}{FAQ}{part.3}% 25
+\BOOKMARK [1][-]{section.A.1}{Why does Tali Forth take so long to start up?}{appendix.A}% 26
+\BOOKMARK [1][-]{section.A.2}{Why `Tali' Forth?}{appendix.A}% 27
+\BOOKMARK [1][-]{section.A.3}{Then who is `Lara'?}{appendix.A}% 28
+\BOOKMARK [0][-]{appendix.B}{Thanks}{part.3}% 29
