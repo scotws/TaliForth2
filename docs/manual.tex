@@ -1,0 +1,82 @@
+% Manual for Tali Forth for the 65c02
+% Scot W. Stevenson <scot.stevenson@gmail.com>
+% First version: 02. Mar 2018
+% This version: 02. Mar 2018
+% See:
+% - https://en.wikibooks.org/wiki/LaTeX/Document_Structure#Document_classes
+% - https://www.sharelatex.com/blog/2013/08/02/thesis-series-pt1.html
+\documentclass[a4paper,notitlepage]{report}
+\usepackage[width=150mm,top=25mm,bottom=25mm]{geometry}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+
+\usepackage{lmodern}    % for typewriter
+\usepackage{listings}
+\lstset{basicstyle=\ttfamily,breaklines=true} % use monospace
+
+\usepackage{color}
+\usepackage[colorlinks=true]{hyperref}   % must be last
+
+\title{The Tali Forth 2 Manual}
+\author{Scot W.~Stevenson}
+\date{2. March 2018}
+
+
+% --------------------------------
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Tali Forth 2 is a bare-metal ANSI(ish) Forth for the 65c02 8-bit MPU.
+\end{abstract}
+
+% --------------------------------
+\tableofcontents
+\listoftables
+
+% --------------------------------
+\part{Introduction}
+
+\chapter{Overview}
+        \input{ch_overview}
+
+% --------------------------------
+\part{Using Tali Forth}
+
+\chapter{Installation}
+        \input{ch_installation}
+
+\chapter{Running Tali Forth}
+        \input{ch_running}
+
+\chapter{The Editor}
+\textit{(Currently, there is no editor installed.)}
+
+
+% --------------------------------
+\part{The Internals}
+
+\chapter{How Tali Forth works}
+        \input{ch_internals}
+
+\chapter{Developing}
+        \input{ch_developing}
+
+
+
+% --------------------------------
+
+\appendix
+
+\chapter{FAQ}
+        \input{ch_faq}
+
+\chapter{Thanks}
+Tali Forth 2 would not have been possible without the kind support of a very
+large number of individuals.
+
+\begin{theindex}
+\end{theindex}
+
+\end{document}

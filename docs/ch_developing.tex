@@ -1,0 +1,96 @@
+\section{Adding new words}
+
+The easiest way to add new words to Tali Forth is to include them in the file
+\texttt{forth\_code/user\_words.fs}. 
+
+
+\section{Deeper changes}
+
+Tali Forth was not only placed in the public domain to honor the tradition of
+giving the code away freely. It is also to let people play around with it and
+adapt it to their own machines. This is also the reason it is (perversely)
+overcommented.
+
+To work on the internals of Tali Forth, you will need the Ophis assembler.
+
+\subsection{The Ophis Assembler}
+
+Michael Martin's Ophis Cross-Assember can be downloaded from
+\href{http://michaelcmartin.github.io/Ophis/}{http://michaelcmartin.github.io/Ophis/}.
+It uses a slightly different format than other assemblers, but is in Python and
+therefore will run on almost any operating system. To install Ophis on Windows,
+use the link provided above. For Linux:
+
+\begin{lstlisting}[frame=single]
+git clone https://github.com/michaelcmartin/Ophis
+cd src
+sudo python setup.py install
+\end{lstlisting}
+
+Switch to the folder where the Tali code lives, and assemble with the primitive
+shell script provided: \texttt{./assemble.sh} The script also automatically
+updates the file listings in the \texttt{docs} folder. Note that Ophis will not
+accept math operation characters in label names because it will try to perform
+those operations. Because of this, we use underscores for label names. This is a
+major difference to Liara Forth.
+
+
+
+\section{General notes}
+
+\begin{itemize}
+\item The X register should not be changed without saving its pointer status.
+
+\item The Y register is free to be changed by subroutines. This means it should
+not be expected to survive subroutines unchanged.
+
+\item All words should have one point of entry -- the \texttt{xt\_word} link --
+and one point of exit at \texttt{z\_word}. In may cases, this means a branch to an
+internal label \texttt{done} right before \texttt{z\_word}.
+
+\item Because of the way native compiling works, the usual trick of combining
+JSR/RTS pairs to a single JMP (usually) doesn't work.
+\end{itemize}
+
+
+\section{Coding style}
+
+Until I get around to writing a tool for Ophis assembler code that formats the
+source file the way gofmt does for Go (golang), I work with the following
+rules:
+
+\begin{itemize}
+\item Actual opcodes are indented by \textbf{two tabs}
+
+\item Tabs are \textbf{eight characters long} and converted to spaces
+
+\item Function-like routines are followed by a one-tab indented `function doc'
+based on the Python 3 model: Three quotation marks at the start, three at the
+end it its own line, unless it is a one-liner. This should make it easier to
+automatically extract the docs for them at some point.
+
+\item The native words have a special commentary format that allows the automatic
+  generation of word list by a tool in the tools folder, see there for details.
+
+\item Assembler mnenomics are lower case. I get enough uppercase insanity writing
+  German, thank you very much.
+
+\item Hex numbers are also lower case, such as \texttt{\$FFFE}
+
+\item Numbers in mnemonics are a stripped-down as possible to reduce visual clutter:
+  \texttt{lda 0,x} instead of \texttt{lda \$00,x}.
+
+\item Comments are included like popcorn to help readers who are new both to Forth
+  and 6502 assembler.
+
+\end{itemize}
+
+
+\section{Testing}
+
+There is no automatic or formal test suite available at this time, and due to
+space considerations, there probably never will be. The file
+\texttt{docs/testwords.md} includes a collection of words that will help with
+some general cases.
+
+
