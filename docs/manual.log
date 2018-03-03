@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.3.2)  3 MAR 2018 00:20
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.3.2)  3 MAR 2018 18:31
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -375,49 +375,64 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <7> on input line 3.
 LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <5> on input line 3.
+LaTeX Font Info:    Try loading font information for OT1+lmtt on input line 29.
+
+ (/usr/share/texmf/tex/latex/lm/ot1lmtt.fd
+File: ot1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
+[2
+
+])
 \tf@toc=\write4
 \openout4 = `manual.toc'.
 
- [2
-
-] (./manual.lot)
+ [3] (./manual.lot)
 \tf@lot=\write5
 \openout5 = `manual.lot'.
 
- [3
+ [4
 
-] [4
+] [5
 
 ]
 Chapter 1.
-(./ch_overview.tex) [5
+(./ch_overview.tex) [6
 
-] [6
+] [7
 
 ]
 Chapter 2.
-(./ch_installation.tex
-LaTeX Font Info:    Try loading font information for OT1+lmtt on input line 4.
- (/usr/share/texmf/tex/latex/lm/ot1lmtt.fd
-File: ot1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
-)) [7
+(./ch_installation.tex) [8
 
 ]
 Chapter 3.
-(./ch_running.tex [8
+(./ch_running.tex [9
 
-]) [9]
+]) [10]
 Chapter 4.
-[10
+[11
 
-] [11
+] [12
 
 ]
 Chapter 5.
-(./ch_internals.tex) [12
+(./ch_internals.tex [13
 
-]
+] [14] [15] [16]
+LaTeX Font Info:    Font shape `OT1/lmtt/bx/n' in size <10> not available
+(Font)              Font shape `OT1/lmtt/b/n' tried instead on input line 292.
+LaTeX Font Info:    Font shape `OT1/lmtt/bx/n' in size <12> not available
+(Font)              Font shape `OT1/lmtt/b/n' tried instead on input line 319.
+ [17] [18] [19]
+LaTeX Font Info:    Try loading font information for OMS+lmr on input line 609.
+
+
+(/usr/share/texmf/tex/latex/lm/omslmr.fd
+File: omslmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
+)
+LaTeX Font Info:    Font shape `OMS/lmr/m/n' in size <10> not available
+(Font)              Font shape `OMS/lmsy/m/n' tried instead on input line 609.
+ [20]) [21]
 Chapter 6.
 (./ch_developing.tex
 Overfull \hbox (20.85101pt too wide) in paragraph at lines 3--5
@@ -432,63 +447,58 @@ Overfull \hbox (32.06885pt too wide) in paragraph at lines 18--23
 [][]http://michaelcmartin.github.io/Ophis/[][].
  []
 
-LaTeX Font Info:    Try loading font information for OMS+lmr on input line 42.
-(/usr/share/texmf/tex/latex/lm/omslmr.fd
-File: omslmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
-)
-LaTeX Font Info:    Font shape `OMS/lmr/m/n' in size <10> not available
-(Font)              Font shape `OMS/lmsy/m/n' tried instead on input line 42.
- [13
+[22
 
-]) [14]
+]) [23]
 Appendix A.
-(./ch_faq.tex) [15
+(./ch_faq.tex) [24
 
 ]
 Appendix B.
-[16
+[25
 
-] [17
+]
+Appendix C.
+[26
+
+] [27
 
 
 ]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 82.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 82.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 85.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 85.
  (./manual.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 82.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 82.
-
-
-Package rerunfilecheck Warning: File `manual.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
-Package rerunfilecheck Info: Checksums for `manual.out':
-(rerunfilecheck)             Before: 4664A7F70ACAB5C5D815A8C32108929F;1706
-(rerunfilecheck)             After:  59718F2046751C33D17ABD66767D03B9;1783.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 82.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 85.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 85.
+Package rerunfilecheck Info: File `manual.out' has not changed.
+(rerunfilecheck)             Checksum: C4365ACB6AE825A1E2473DE3183B0EFB;3013.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 85.
  ) 
 Here is how much of TeX's memory you used:
- 6895 strings out of 494953
- 101810 string characters out of 6180978
- 257468 words of memory out of 5000000
- 9997 multiletter control sequences out of 15000+600000
- 65418 words of font info for 47 fonts, out of 8000000 for 9000
+ 7129 strings out of 494953
+ 105226 string characters out of 6180978
+ 333468 words of memory out of 5000000
+ 10025 multiletter control sequences out of 15000+600000
+ 70258 words of font info for 50 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 29i,11n,43p,252b,1650s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 33i,12n,43p,252b,1672s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texmf/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/share/texmf/fonts/en
-c/dvips/lm/lm-rm.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-rmtt.enc}</usr/sha
+c/dvips/lm/lm-rmtt.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-rm.enc}</usr/sha
 re/texmf/fonts/type1/public/lm/lmbx10.pfb></usr/share/texmf/fonts/type1/public/
 lm/lmbx12.pfb></usr/share/texmf/fonts/type1/public/lm/lmbx9.pfb></usr/share/tex
 mf/fonts/type1/public/lm/lmr10.pfb></usr/share/texmf/fonts/type1/public/lm/lmr1
 2.pfb></usr/share/texmf/fonts/type1/public/lm/lmr17.pfb></usr/share/texmf/fonts
-/type1/public/lm/lmr9.pfb></usr/share/texmf/fonts/type1/public/lm/lmri10.pfb></
-usr/share/texmf/fonts/type1/public/lm/lmro10.pfb></usr/share/texmf/fonts/type1/
-public/lm/lmsy10.pfb></usr/share/texmf/fonts/type1/public/lm/lmtt10.pfb>
-Output written on manual.pdf (17 pages, 289309 bytes).
+/type1/public/lm/lmr6.pfb></usr/share/texmf/fonts/type1/public/lm/lmr7.pfb></us
+r/share/texmf/fonts/type1/public/lm/lmr8.pfb></usr/share/texmf/fonts/type1/publ
+ic/lm/lmr9.pfb></usr/share/texmf/fonts/type1/public/lm/lmri10.pfb></usr/share/t
+exmf/fonts/type1/public/lm/lmri8.pfb></usr/share/texmf/fonts/type1/public/lm/lm
+ro10.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy10.pfb></usr/share/texmf/f
+onts/type1/public/lm/lmtk10.pfb></usr/share/texmf/fonts/type1/public/lm/lmtt10.
+pfb>
+Output written on manual.pdf (27 pages, 439612 bytes).
 PDF statistics:
- 347 PDF objects out of 1000 (max. 8388607)
- 313 compressed objects within 4 object streams
- 100 named destinations out of 1000 (max. 500000)
- 225 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 732 PDF objects out of 1000 (max. 8388607)
+ 680 compressed objects within 7 object streams
+ 304 named destinations out of 1000 (max. 500000)
+ 385 words of extra memory for PDF output out of 10000 (max. 10000000)
 

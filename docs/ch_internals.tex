@@ -31,32 +31,32 @@ two \texttt{dex} instructions, and then the new value is placed on the stack. Th
 means that the initial byte is garbage and can be considered part of the floodplain. 
 
 \begin{lstlisting}[frame=single]
-               +--------------+           
-               |          ... |  
-               +-            -+ 
-               |              |   ...
-               +-  (empty)   -+
-               |              |  FE,X
-               +-            -+ 
-         ...   |              |  FF,X
-               +==============+  
-       \$0076  |           LSB|  00,X   <-- DSP (X Register)
-               +-    TOS     -+ 
-       \$0077  |           MSB|  01,X
-               +==============+ 
-       \$0078  |  (garbage)   |  02,X   <-- DSP0 
-               +--------------+           
-       \$0079  |              |  03,X
-               + (floodplain) + 
-       \$007A  |              |  04,X
-               +--------------+           
+%              +--------------+           
+%              |          ... |  
+%              +-            -+ 
+%              |              |   ...
+%              +-  (empty)   -+
+%              |              |  FE,X
+%              +-            -+ 
+%        ...   |              |  FF,X
+%              +==============+  
+%      \$0076  |           LSB|  00,X   <-- DSP (X Register)
+%              +-    TOS     -+ 
+%      \$0077  |           MSB|  01,X
+%              +==============+ 
+%      \$0078  |  (garbage)   |  02,X   <-- DSP0 
+%              +--------------+           
+%      \$0079  |              |  03,X
+%              + (floodplain) + 
+%      \$007A  |              |  04,X
+%              +--------------+           
 \end{lstlisting}
 
 \textit{Snapshot of the Data Stack with one entry as Top of the Stack (TOS). The
 DSP has been increased by one and the value written.}
 
 Note that the 65c02 system stack -- used as the Return Stack (RS) by Tali --
-pushes the MSB on first and then the LSB (preserving little endian), so the_
+pushes the MSB on first and then the LSB (preserving little endian), so the
 basic structure is the same for both stacks. 
 
 Because of this stack design, the second entry (`next on stack', NOS) starts at
@@ -95,17 +95,17 @@ The double cell is stored on top of the single cell.
 Note this places the sign bit at the beginning of the byte below the DSP.
 
 \begin{lstlisting}[frame=single]
-               +---------------+
-               |               |  
-               +===============+  
-               |            LSB|  \$0,x   <-- DSP (X Register) 
-               +-+  Top Cell  -+         
-               |S|          MSB|  \$1,x
-               +-+-------------+ 
-               |            LSB|  \$2,x
-               +- Bottom Cell -+         
-               |            MSB|  \$3,x   
-               +===============+ 
+%              +---------------+
+%              |               |  
+%              +===============+  
+%              |            LSB|  \$0,x   <-- DSP (X Register) 
+%              +-+  Top Cell  -+         
+%              |S|          MSB|  \$1,x
+%              +-+-------------+ 
+%              |            LSB|  \$2,x
+%              +- Bottom Cell -+         
+%              |            MSB|  \$3,x   
+%              +===============+ 
 \end{lstlisting}
 
 Tali Forth 2 does not check for overflow, which in normal operation is too rare to
@@ -127,21 +127,21 @@ Each header is at least eight bytes long:
 \begin{lstlisting}[frame=single]
               8 bit     8 bit
                LSB       MSB
- nt\_word ->  +--------+--------+
-          +0 | Length | Status |
-             +--------+--------+
-          +2 | Next Header     | nt\_next\_word
-             +-----------------+
-          +4 | Start of Code   | xt\_word 
-             +-----------------+
-          +6 | End of Code     | z\_word
-             +--------+--------+
-          +8 | Name   |        |
-             +--------+--------+
-             |        |        |
-             +--------+--------+
-             |        |  ...   |
-          +n +--------+--------+
+%nt\_word ->  +--------+--------+
+%         +0 | Length | Status |
+%            +--------+--------+
+%         +2 | Next Header     | nt\_next\_word
+%            +-----------------+
+%         +4 | Start of Code   | xt\_word 
+%            +-----------------+
+%         +6 | End of Code     | z\_word
+%            +--------+--------+
+%         +8 | Name   |        |
+%            +--------+--------+
+%            |        |        |
+%            +--------+--------+
+%            |        |  ...   |
+%         +n +--------+--------+
 \end{lstlisting}
 
 Each word has a \texttt{name token} (nt, \texttt{nt\_word} in the code) that
@@ -203,55 +203,55 @@ compilation of the Forth words worked.
 Tali Forth 2 was developed with a simple 32 KiB RAM, 32 KiB ROM design. 
 
 \begin{lstlisting}[frame=single]
-    \$0000  +-------------------+  ram\_start, zpage, user0
-           |  User varliables  |
-           +-------------------+  
-           |                   |
-           |  \^  Data Stack    |  <-- dsp
-           |  |                |
-    \$0078  +-------------------+  dsp0, stack
-           |                   |
-           |   (Reserved for   |
-           |      kernel)      |
-           |                   |
-    \$0100  +===================+  
-           |                   |
-           |  \^  Return Stack  |  <-- rsp 
-           |  |                |
-    \$0200  +-------------------+  rsp0, buffer, buffer0
-           |  |                |
-           |  v  Input Buffer  |
-           |                   |
-    \$0300  +-------------------+  cp0
-           |  |                |
-           |  v  Dictionary    |
-           |       (RAM)       |
-           |                   |
-           ~~~~~~~~~~~~~~~~~~~~~  <-- cp
-           |                   |
-           |                   |
-           |                   |
-    \$7fff  #####################  ram\_end
-    \$8000  |                   |  forth, code0
-           |                   |
-           |                   |
-           |    Tali Forth     |
-           |     (24 KiB)      |
-           |                   |
-           |                   |
-    \$e000  +-------------------+
-           |                   |  kernel\_putc, kernel\_getc   
-           |      Kernel       |
-           |                   |
-    \$f000  +-------------------+  
-           |   I/O addresses   |
-           +-------------------+     
-           |                   |
-           |      Kernel       |
-           |                   |
-    \$fffa  +-------------------+     
-           |  65c02 vectors    |
-    \$ffff  +-------------------+     
+%   \$0000  +-------------------+  ram\_start, zpage, user0
+%          |  User varliables  |
+%          +-------------------+  
+%          |                   |
+%          |  \^  Data Stack    |  <-- dsp
+%          |  |                |
+%   \$0078  +-------------------+  dsp0, stack
+%          |                   |
+%          |   (Reserved for   |
+%          |      kernel)      |
+%          |                   |
+%   \$0100  +===================+  
+%          |                   |
+%          |  \^  Return Stack  |  <-- rsp 
+%          |  |                |
+%   \$0200  +-------------------+  rsp0, buffer, buffer0
+%          |  |                |
+%          |  v  Input Buffer  |
+%          |                   |
+%   \$0300  +-------------------+  cp0
+%          |  |                |
+%          |  v  Dictionary    |
+%          |       (RAM)       |
+%          |                   |
+%          ~~~~~~~~~~~~~~~~~~~~~  <-- cp
+%          |                   |
+%          |                   |
+%          |                   |
+%   \$7fff  #####################  ram\_end
+%   \$8000  |                   |  forth, code0
+%          |                   |
+%          |                   |
+%          |    Tali Forth     |
+%          |     (24 KiB)      |
+%          |                   |
+%          |                   |
+%   \$e000  +-------------------+
+%          |                   |  kernel\_putc, kernel\_getc   
+%          |      Kernel       |
+%          |                   |
+%   \$f000  +-------------------+  
+%          |   I/O addresses   |
+%          +-------------------+     
+%          |                   |
+%          |      Kernel       |
+%          |                   |
+%   \$fffa  +-------------------+     
+%          |  65c02 vectors    |
+%   \$ffff  +-------------------+     
 \end{lstlisting}
 
 
@@ -267,7 +267,7 @@ sources in Forth (see C\&D p. 155):
         \item A character string in memory
         \item A block file
         \item A text file
-\end{enumberate}
+\end{enumerate}
 
 To check which one is being used, we first call \texttt{blk} which gives us the
 number of a mass storage block being used, or 0 for the `user input device'
@@ -304,33 +304,33 @@ buffer is stored in \texttt{ciblen} -- this is the address that \texttt{>in}
 returns. 
 
 When a new line is entered, the address in \texttt{cib} is swapped, and the
-contents of \texttt{ciblen} are moved to \texttt{`piblen} (for "previous input
-buffer"). \texttt{`ciblen} is set to zero.  When the previous entry is
+contents of \texttt{ciblen} are moved to \texttt{piblen} (for `previous input
+buffer'). \texttt{ciblen} is set to zero.  When the previous entry is
 requested, the address in \texttt{cib} is swapped back, and \texttt{ciblen} and
-\texttt{piblen} are swapped as well.  \texttt{SOURCE}by default returns
+\texttt{piblen} are swapped as well. \texttt{source} by default returns
 \texttt{cib} and \texttt{ciblen} as the address and length of the input buffer. 
 
-(http://forth.sourceforge.net/standard/dpans/a0006.htm)
-(http://forth.sourceforge.net/standard/dpans/dpansa6.htm#A.6.1.2216)
+%(http://forth.sourceforge.net/standard/dpans/a0006.htm)
+%(http://forth.sourceforge.net/standard/dpans/dpansa6.htm
 
 At some point, this system might be expanded to a real history list.
 
 
 \subsection{\texttt{save-input} and \texttt{restore-input}}
 
-(see http://forth.sourceforge.net/standard/dpans/dpansa6.htm#A.6.2.2182)
+%(see http://forth.sourceforge.net/standard/dpans/dpansa6.htm)
 
 
 
 \subsection{evaluate}
 
 (Automatically calls SAVE-INPUT and RESTORE-INPUT)
-(http://forth.sourceforge.net/standard/dpans/a0006.htm)
+%(http://forth.sourceforge.net/standard/dpans/a0006.htm)
 
 
 \subsection{state}
 
-(http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.2250)
+%http://forth.sourceforge.net/standard/dpans/dpans6.htm)
 
 
 
@@ -342,11 +342,12 @@ Understanding how it works in Tali Forth is important if you want to be able to
 modify the code. In this text, we walk through the generation process for a
 Subroutine Threaded Code (STC) such as Tali Forth. For a more general take, see
 Brad Rodriguez' series of articles at
-\href{http://www.bradrodriguez.com/papers/moving3.htm}{http://www.bradrodriguez.com/papers/moving3.htm}.
+%\href{http://www.bradrodriguez.com/papers/moving3.htm}{http://www.bradrodriguez.com/papers/moving3.htm}.
 There is a discussion of this walkthrough at
-\href{http://forum.6502.org/viewtopic.php?f=9&t=3153}{http://forum.6502.org/viewtopic.php?f=9&t=3153}. 
+%\href{http://forum.6502.org/viewtopic.php?f=9\&t=3153}{http://forum.6502.org/viewtopic.php?f=9{\&t=3153}. 
 
-We start with the following standard example, the Forth version of \texttt{CONSTANT: 
+We start with the following standard example, the Forth version of
+\texttt{constant}: 
 
 \begin{lstlisting}[frame=single]
         : constant create , does> @ ; 
@@ -375,7 +376,7 @@ the listing. Note that \texttt{does>} is an immediate word that adds not one, bu
 subroutine jumps, one to \texttt{(does>)} and one to \texttt{dodoes}, which is a pre-defined
 system routine like \texttt{dovar}. we'll get to it later.
 
-\footnote{In Tali Forth, a number of words such as \texttt{defer} are
+In Tali Forth, a number of words such as \texttt{defer} are
 `hand-compiled', that is, instead of using forth such (in this case, 
 
 \begin{lstlisting}[frame=single]
@@ -384,7 +385,7 @@ system routine like \texttt{dovar}. we'll get to it later.
 
 we write an opimized assembler version ourselves (see the actual \texttt{defer}
 code). In these cases, we need to use \texttt{(does>)} and \texttt{dodoes}
-instead of \texttt{does>} as well.}
+instead of \texttt{does>} as well.
 
 
 \subsubsection{SEQUENCE II: Executing the word CONSTANT / creating LIFE }
@@ -429,7 +430,7 @@ it to replace the \texttt{dovar jsr} target in the CFA of our freshly created
    c:   4200                    ; in PFA (little-endian)
 \end{lstlisting}
 
-Note we added a label `c'. Now, when \texttt{(does>) reaches its own
+Note we added a label `c'. Now, when \texttt{(does>)} reaches its own
 \texttt{rts}, it finds the RTS to the main routine on its stack. This is Good
 Thingi\textsuperscript{TM}, because it aborts the execution of the rest of
 \texttt{constant}, and we don't want to do \texttt{dodoes} or \texttt{fetch}
@@ -474,7 +475,7 @@ on the 65c02's stack:
 
 \texttt{dodoes} pops address `b' off the 65c02's stack and puts it in a nice
 safe place on Zero Page, which we'll call `z'. More on that in a moment. First,
-\texttt{dodoes}.  pops the \texttt{RTS} to \texttt{life}. This is `c', the
+\texttt{dodoes}.  pops the \texttt{rts} to \texttt{life}. This is `c', the
 address of the PFA or \texttt{life}, where we stored the payload of this
 constant. Basically, \texttt{dodoes} performs a \texttt{dovar} here, and
 pushes `c' on the Data Stack. Now all we have left on the 65c02's stack is the
@@ -508,9 +509,9 @@ Put together, this is what we have to code:
         \item [\texttt{does>}:] Compiles a subroutine jump to \texttt{(does>)},
                 then compiles a subroutine jump to \texttt{dodoes}.
 
-        \item [\texttt{(does>}):] Pops the stack (address of subroutine jump to
-                \texttt{DODOES in \texttt{constant), increase this by one,
-                replace the original \texttt{dovar jump target in \texttt{life}. 
+        \item [\texttt{(does>)}:] Pops the stack (address of subroutine jump to
+                \texttt{dodoes} in \texttt{constant}, increase this by one,
+                replace the original \texttt{dovar} jump target in \texttt{life}. 
 
         \item [\texttt{dodoes}:] Pop stack (\texttt{constant}'s PFA), increase
                 address by one, store on Zero Page; pop stack (\texttt{life}'s
@@ -540,10 +541,10 @@ really makes sense.
 % ---------------------------------------
 \section{Branches} 
 \footnote{This section and the next one are based on a discussion at
-\href{http://forum.6502.org/viewtopic.php?f=9&t=3176}
-{http://forum.6502.org/viewtopic.php?f=9&t=3176}, see there for more details.
+\href{http://forum.6502.org/viewtopic.php?f=9\&t=3176}
+{http://forum.6502.org/viewtopic.php?f=9\&t=3176}, see there for more details.
 Another take on this subject that handles things a bit differently is at
-\href{http://blogs.msdn.com/b/ashleyf/archive/2011/02/06/loopty-do-i-loop.aspx}{http://blogs.msdn.com/b/ashleyf/archive/2011/02/06/loopty-do-i-loop.aspx}
+%\href{http://blogs.msdn.com/b/ashleyf/archive/2011/02/06/loopty-do-i-loop.aspx}{http://blogs.msdn.com/b/ashleyf/archive/2011/02/06/loopty-do-i-loop.aspx}
 }
 
 For \texttt{if/then}, we need to compile something called a `conditional forward
@@ -666,5 +667,5 @@ This is good, because we only have to do that once for each loop.
 In Tali Forth, these routines are coded in assembler. With this setup,
 \texttt{unloop} becomes simple (six PLAs -- four for the limit/count of
 \texttt{do}, two for the address pushed to the stack just before it) and
-\texttt{leave} even simpler (four PLAs for the} address). 
+\texttt{leave} even simpler (four PLAs for the address). 
 
