@@ -3524,33 +3524,30 @@ literal_runtime:
                 dex
                 dex
 
-                ; The 65c02 stores <RETURN-ADDRESS>-1 on the Return Stack,
-                ; so we have to manipulate the address. First, we get the
-                ; value after the command
-                ply             ; LSB
+            	; The 65c02 stores <RETURN-ADDRESS>-1 on the Return Stack,
+                ; so we are actually popping the address-1 of the literal
+                pla             ; LSB
+                sta tmp1
                 pla             ; MSB
-                iny
-                bne +
-                inc
-*
-                sty tmp1        ; LSB
-                sta tmp1+1      ; MSB
+                sta tmp1+1
 
-                ; Then we get the bytes after the the JSR address
-                lda (tmp1)      ; LSB
+                ; Fetch the actual literal value and push it on Data stack
+                ldy #1
+                lda (tmp1),y    ; LSB
                 sta 0,x
-                inc tmp1
-                bne +
-                inc tmp1+1
-*
-                lda (tmp1)      ; MSB
+                iny
+                lda (tmp1),y    ; MSB
                 sta 1,x
 
-                ; Replace return address on the Return Stack
+                ; Adjust return address and push back on the Return Stack
+                tya
+                clc
+                adc tmp1
+                tay
                 lda tmp1+1
-                pha             ; MSB
-                lda tmp1
-                pha             ; LSB
+                adc #0
+                pha
+                phy
 
                 rts
 .scend

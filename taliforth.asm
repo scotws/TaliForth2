@@ -1,7 +1,7 @@
 ; Tali Forth 2 for the 65c02
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 19. Jan 2014 (Tali Forth)
-; This version: 01. Mar 2018
+; This version: 04. Mar 2018
 
 ; This is the main file for Tali Forth 2
 
@@ -129,36 +129,19 @@ dodefer:
                 ; return address, which is what is on top of the Return
                 ; Stack. So all we have to do is replace our return jump
                 ; with what we find there
-                ply             ; LSB
+		pla             ; LSB
+                sta tmp1
                 pla             ; MSB
-
-                iny
-                bne +
-                inc
-*
-                sty tmp1
                 sta tmp1+1
 
-                ldy #0
+                ldy #1
                 lda (tmp1),y
                 sta tmp2
                 iny
                 lda (tmp1),y
                 sta tmp2+1
-                
-                ; now we move one byte back
-                lda tmp2
-                bne +
-                dec tmp2+1
-*               dec tmp2
 
-                ; push address to the Return Stack
-                lda tmp2+1      ; MSB first
-                pha 
-                lda tmp2        ; LSB
-                pha 
-
-                rts             ; This is actually a jump to the new target
+                jmp (tmp2)      ; This is actually a jump to the new target
 .scend
 
 defer_error:
@@ -178,7 +161,6 @@ dodoes:
                 ; 6502 works
                 ply             ; LSB
                 pla             ; MSB
-
                 iny
                 bne +
                 inc
@@ -192,14 +174,15 @@ dodoes:
                 dex
                 dex
                 
+                ply
                 pla
+                iny
                 clc
-                adc #1
-                sta 0,x         ; LSB
-
-                pla
-                adc #0          ; only care about the carry
-                sta 1,x
+                bne +
+                inc
+*
+                sty 0,x         ; LSB
+                sta 1,x         ; MSB
 
                 ; This leaves the return address from the original main routine
                 ; on top of the Return Stack. We leave that untouched and jump
