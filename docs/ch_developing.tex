@@ -22,9 +22,9 @@ therefore will run on almost any operating system. To install Ophis on Windows,
 use the link provided above. For Linux:
 
 \begin{lstlisting}[frame=single]
-git clone https://github.com/michaelcmartin/Ophis
-cd src
-sudo python setup.py install
+        git clone https://github.com/michaelcmartin/Ophis
+        cd src
+        sudo python setup.py install
 \end{lstlisting}
 
 Switch to the folder where the Tali code lives, and assemble with the primitive
@@ -39,17 +39,21 @@ major difference to Liara Forth.
 \section{General notes}
 
 \begin{itemize}
-\item The X register should not be changed without saving its pointer status.
 
-\item The Y register is free to be changed by subroutines. This means it should
-not be expected to survive subroutines unchanged.
+        \item The X register should not be changed without saving its pointer
+                status.
 
-\item All words should have one point of entry -- the \texttt{xt\_word} link --
-and one point of exit at \texttt{z\_word}. In may cases, this means a branch to an
-internal label \texttt{done} right before \texttt{z\_word}.
+        \item The Y register is free to be changed by subroutines. This means it
+                should not be expected to survive subroutines unchanged.
 
-\item Because of the way native compiling works, the usual trick of combining
-JSR/RTS pairs to a single JMP (usually) doesn't work.
+        \item All words should have one point of entry -- the \texttt{xt\_word}
+                link -- and one point of exit at \texttt{z\_word}. In may cases,
+                this means a branch to an internal label \texttt{done} right
+                before \texttt{z\_word}.
+
+        \item Because of the way native compiling works, the usual trick of
+                combining JSR/RTS pairs to a single JMP (usually) doesn't work.
+
 \end{itemize}
 
 
@@ -60,28 +64,31 @@ source file the way gofmt does for Go (golang), I work with the following
 rules:
 
 \begin{itemize}
-\item Actual opcodes are indented by \textbf{two tabs}
 
-\item Tabs are \textbf{eight characters long} and converted to spaces
+        \item Actual opcodes are indented by \textbf{two tabs}
 
-\item Function-like routines are followed by a one-tab indented `function doc'
-based on the Python 3 model: Three quotation marks at the start, three at the
-end it its own line, unless it is a one-liner. This should make it easier to
-automatically extract the docs for them at some point.
+        \item Tabs are \textbf{eight characters long} and converted to spaces
 
-\item The native words have a special commentary format that allows the automatic
-  generation of word list by a tool in the tools folder, see there for details.
+        \item Function-like routines are followed by a one-tab indented
+                `function doc' based on the Python 3 model: Three quotation
+                marks at the start, three at the end it its own line, unless it
+                is a one-liner. This should make it easier to automatically
+                extract the docs for them at some point.
 
-\item Assembler mnenomics are lower case. I get enough uppercase insanity writing
-  German, thank you very much.
+        \item The native words have a special commentary format that allows the
+                automatic generation of word list by a tool in the tools folder,
+                see there for details.
 
-\item Hex numbers are also lower case, such as \texttt{\$FFFE}
+        \item Assembler mnenomics are lower case. I get enough uppercase
+                insanity writing German, thank you very much.
 
-\item Numbers in mnemonics are a stripped-down as possible to reduce visual clutter:
-  \texttt{lda 0,x} instead of \texttt{lda \$00,x}.
+        \item Hex numbers are also lower case, such as \texttt{\$FFFE}
 
-\item Comments are included like popcorn to help readers who are new both to Forth
-  and 6502 assembler.
+        \item Numbers in mnemonics are a stripped-down as possible to reduce
+                visual clutter: \texttt{lda 0,x} instead of \texttt{lda \$00,x}.
+
+        \item Comments are included like popcorn to help readers who are new
+                both to Forth and 6502 assembler.
 
 \end{itemize}
 
@@ -93,88 +100,91 @@ space considerations, there probably never will be. The file
 \texttt{docs/testwords.md} includes a collection of words that will help with
 some general cases.
 
-
-
 \section{Code Cheat Sheet}
 
+\subsection{The Stack Drawing}
+This is your friend and should probably go on your wall or something.
 
+\begin{lstlisting}[frame=single]
+                +--------------+
+                |          ... |
+                +-            -+
+                |              |   ...
+                +-  (empty)   -+
+                |              |  FE,X
+                +-            -+
+          ...   |              |  FF,X
+                +==============+
+         $0076  |           LSB|  00,X   <-- DSP (X Register)
+                +-    TOS     -+
+         $0077  |           MSB|  01,X
+                +==============+
+         $0078  |  (garbage)   |  02,X   <-- DSP0
+                +--------------+
+         $0079  |              |  03,X
+                + (floodplain) +
+         $007A  |              |  04,X
+                +--------------+
+\end{lstlisting}
+
+\subsection{Coding idioms}
 While coding a Forth, there are certain assembler fragments that get repeated
 over and over again. These could be included as macros, but that can make the
 code harder to read for somebody only familiar with basic assembly.
 
-Some of these fragments could be written in other variants, such as the "Push
-value" version, which could increment the DSP twice before storing a value. We
+Some of these fragments could be written in other variants, such as the `push
+value' version, which could increment the DSP twice before storing a value. We
 try to keep these in the same sequence (a "dialect" or "code mannerism" if you
 will) so we have the option of adding code analysis tools later.
 
-But first:
+\begin{description}
 
-% ### The stack drawing is your friend
-% ```
-%                +--------------+
-%                |          ... |
-%                +-            -+
-%                |              |   ...
-%                +-  (empty)   -+
-%                |              |  FE,X
-%                +-            -+
-%          ...   |              |  FF,X
-%                +==============+
-%         $0076  |           LSB|  00,X   <-- DSP (X Register)
-%                +-    TOS     -+
-%         $0077  |           MSB|  01,X
-%                +==============+
-%         $0078  |  (garbage)   |  02,X   <-- DSP0
-%                +--------------+
-%         $0079  |              |  03,X
-%                + (floodplain) +
-%         $007A  |              |  04,X
-%                +--------------+
-% 
-% ```
-% It should probably go on your wall or something.
-% 
-% ### Drop TOS
-% ```
-%                 inx
-%                 inx
-% ```
-% 
-% ### PUSH a value to the Data Stack
-% 
-% Remember the Data Stack Pointer (DSP, the X register of the 65c02)
-% points to the LSB of the TOS value.
-% ```
-%                 dex
-%                 dex
-%                 lda $<LSB>      ; or pla, jsr kernel_getc, etc.
-%                 sta $00,x
-%                 lda $<LSB>      ; or pla, jsr kernel_getc, etc.
-%                 sta $01,x
-% ```
-% 
-% ### POP a value off the Data Stack
-% ```
-%                 lda $00,x
-%                 sta $<LSB>      ; or pha, jsr kernel_putc, etc
-%                 lda $01,x
-%                 sta $<MSB>      ; or pha, jsr kernel_putc, etc
-%                 inx
-%                 inx
-% ```
-% 
-% ## Vim abbreviations
-% 
-% One option for these is to add abbreviations to your favorite editor, which
-% should of course be vim, because vim is cool. There are examples for
-% that further down. They all assume that auto-indent is on and we are
-% two tabs in with the code, and use `#` at the end of the abbreviation
-% to keep them separate from the normal words. My `~/.vimrc` file contains
-% the following lines for work on `.asm` files:
-% 
-% ```
-% ab drop# inx<tab><tab>; drop<cr>inx<cr><left>
-% ab push# dex<tab><tab>; push<cr>dex<cr>lda $<LSB><cr>sta $00,x<cr>lda $<MSB><cr>sta $01,x<cr><up><up><up><up><end>
-% ab pop# lda $00,x<tab><tab>; pop<cr>sta $<LSB><cr>lda $01,x<cr>sta $<MSB><cr>inx<cr>inx<cr><up><up><up><up><up><end>
-% ```
-% 
+        \item [\texttt{drop}] cell of top of the Data Stack 
+
+                \begin{lstlisting}[frame=single]
+                inx
+                inx
+                \end{lstlisting}
+
+        \item [\texttt{push}] a value to the Data Stack.  Remember the Data Stack
+                Pointer (DSP, the X register of the 65c02) points to the LSB of
+                the TOS value.
+
+                \begin{lstlisting}[frame=single]
+                dex
+                dex
+                lda $<LSB>      ; or pla, jsr kernel_getc, etc.
+                sta 0,x
+                lda $<LSB>      ; or pla, jsr kernel_getc, etc.
+                sta 1,x
+                \end{lstlisting}
+
+        \item [\texttt{pop}] a value off the Data Stack
+
+                \begin{lstlisting}[frame=single]
+                lda 0,x
+                sta $<LSB>      ; or pha, jsr kernel_putc, etc
+                lda 1,x
+                sta $<MSB>      ; or pha, jsr kernel_putc, etc
+                inx
+                inx
+                \end{lstlisting}
+
+\end{description}
+
+\subsection{vi shortcuts}
+
+One option for these is to add abbreviations to your favorite editor, which
+should of course be vim, because vim is cool. There are examples for that
+further down. They all assume that auto-indent is on and we are two tabs in with
+the code, and use \texttt{\#} at the end of the abbreviation to keep them
+separate from the normal words. My \texttt{\textasciitilde/.vimrc} file contains the following
+lines for work on \texttt{.asm} files:
+ 
+
+\begin{lstlisting}[frame=single]
+ ab drop# inx<tab><tab>; drop<cr>inx<cr><left>
+ ab push# dex<tab><tab>; push<cr>dex<cr>lda $<LSB><cr>sta $00,x<cr>lda $<MSB><cr>sta $01,x<cr><up><up><up><up><end>
+ ab pop# lda $00,x<tab><tab>; pop<cr>sta $<LSB><cr>lda $01,x<cr>sta $<MSB><cr>inx<cr>inx<cr><up><up><up><up><up><end>
+\end{lstlisting}
+ 

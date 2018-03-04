@@ -1,177 +1,240 @@
+% Tests for Forth
+% Scot W. Stevenson
 
+Tali Forth 2 operates in a hardware environment that makes built-in tests
+pretty much impossible. The following collection of Forth snippets provides a
+basic way of testing at least some party by hand.
 
-This list is adapted from [Tali Forth](https://github.com/scotws/TaliForth)
+For stress testing, the \texttt{user\_words.fs} routines contain routines such as
+a Mandelbrot program that can be uncommented and run.
 
-## Text interpreter
+% ----------------------------------------
+\section{The interpreter}
 
-### >IN tests
+\subsection{\texttt{>in} tests}
 
 From
-[https://www.complang.tuwien.ac.at/forth/gforth/Docs-html/The-Text-Interpreter.html](https://www.complang.tuwien.ac.at/forth/gforth/Docs-html/The-Text-Interpreter.html):
-```
-: lat ." <foo>" ;
-: flat ." <bar>" >in dup @ 3 - swap ! ; \ flat prints "<bar><foo>"
+https://www.complang.tuwien.ac.at/forth/gforth/Docs-html/The-Text-Interpreter.html
 
-char & parse jack& type                 \ should print "jack"    
-```
+\begin{lstlisting}
+        : lat ." <foo>" ;
+        : flat ." <bar>" >in dup @ 3 - swap ! ; 
+\end{lstlisting}
 
-### CREATE/DOES>
-The simplest test is to redefine CONSTANT:
-```
-: aaa create , does> @ ; 
-```
+A simple \texttt{flat} should print \texttt{<bar><foo>}. A bit more complicated:
 
+\begin{lstlisting}
+        char & parse jack& type
+\end{lstlisting}
 
-### LITERAL test
-
-```
-: aaa [ 1 ] literal ;         \ should put 1 on the stack during runtime
-```
+This should print \texttt{jack}.
 
 
-### BRACKET-TICK test
+% ----------------------------------------
+\section{Defining words}
 
-```
-: aaa ['] words execute ;     \ should print all words known
-```
+\subsection{\texttt{create} and \texttt{does>}}
+The simplest test is to redefine \texttt{constant}:
+
+\begin{lstlisting}
+        : aaa create , does> @ ; 
+\end{lstlisting}
 
 
-### POSTPONE test
+\subsection{\texttt{literal}}
+
+\begin{lstlisting}
+        : aaa [ 1 ] literal ;
+\end{lstlisting}
+
+This should put 1 on the Data Stack at run time.
+
+
+\subsection{\texttt{bracket-tick}}
+
+\begin{lstlisting}
+        : aaa ['] words execute ;     \ should print all words known
+\end{lstlisting}
+
+
+\subsection{\texttt{postpone}}
+
+\begin{lstlisting}
+        : say-hello ." Hello" ; immediate
+        : greet postpone say-hello ." I speak Forth" ;
+\end{lstlisting}
+
+Note that \texttt{greet} won't print \texttt{Hello} right away
 
 Based on https://www.forth.com/starting-forth/11-forth-compiler-defining-words/
-```
-: say-hello ." Hello" ; immediate
-: greet postpone say-hello ." I speak Forth" ; \ won't print "Hello" right away
-```
 
 
-### FIND-NAME test
+\subsection{\texttt{find-name}}
 
-```
-s" words" find-name name>string type
-``` 
-should print `words`
+\begin{lstlisting}
+        s" words" find-name name>string type
+\end{lstlisting}
+
+should print \texttt{words}
 
 
-### WORD vs PARSE test 
+\subsection{\texttt{words} vs \texttt{parse}}
 
-Taken from Conklin & Rather p. 160
-```
-: test1 ( "name" -- )  32 word  count type ; 
-: test2 ( "name" -- )  32 parse  type ; 
-```
+Taken from Conklin \& Rather p. 160
 
-Results of calls with "ABC" should give identical result if there are no
+\begin{lstlisting}
+        : test1 ( "name" -- )  32 word  count type ; 
+        : test2 ( "name" -- )  32 parse  type ; 
+\end{lstlisting}
+
+Results of calls with `ABC' should give identical result if there are no
 leading spaces. However, with leading spaces, TEST2 will find an empty string
 and abort, then throw an error because ABC will not be found in the dictionary.
 
+% ----------------------------------------
+\section{Looping}
 
-## LOOP testing
+\subsection{Basic looping}
 
 Test normal loop:
-```
-: aaa 11 1 do i . loop ;        
-```
+\begin{lstlisting}
+        : aaa 11 1 do i . loop ;        
+\end{lstlisting}
+
 Should produce numbers 1 - 10
 
 Then, try this as multi-line loop because that can be tricky:
-```
-: bbb 11 1 do 
-  i . loop ; 
-```
+\begin{lstlisting}
+        : bbb 11 1 do 
+          i . loop ; 
+\end{lstlisting}
 
 Test other variants (ex Gforth):
-```
-: bbb1 -1 0 ?do i . -1 +loop ;
-```
-which should produce "0 -1". However, 
-```
-: bbb2 0 0 ?do i . -1 +loop ;
-```
+
+\begin{lstlisting}
+        : bbb1 -1 0 ?do i . -1 +loop ;
+\end{lstlisting}
+
+which should produce `0 -1'. However, 
+
+\begin{lstlisting}
+        : bbb2 0 0 ?do i . -1 +loop ;
+\end{lstlisting}
+
 should print nothing.
 
 
-Now put IF in the loop:
-```
-: ccc 11 1 do  i 5 > if i . then loop ; 
-```
-should produce "6 7 8 9 10"
+\subsection{Looping with \texttt{if}}
 
-Test nested loops [https://www.forth.com/starting-forth/6-forth-do-loops/](see https://www.forth.com/starting-forth/6-forth-do-loops/):
-```
-: ddd cr 11 1 do
-    11 1 do 
-        i j * 5 u.r 
-    loop cr loop ;
-```
+\begin{lstlisting}
+        : ccc 11 1 do  i 5 > if i . then loop ; 
+\end{lstlisting}
+
+should produce \texttt{6 7 8 9 10}
+
+
+\subsection{Nested loops}
+
+https://www.forth.com/starting-forth/6-forth-do-loops/
+
+\begin{lstlisting}
+        : ddd cr 11 1 do
+            11 1 do 
+                i j * 5 u.r 
+            loop cr loop ;
+\end{lstlisting}
+
 should produce math table from 1x1 to 10x10
 
-Test EXIT:
-```
-: eee1 true if exit then ." true" ; 
-: eee2 false if exit then ."false" ; 
-```
-First word should just return with "ok", second word prints "false".
 
-Test UNLOOP: 
-```
-: fff 11 1 do i dup 8 = if drop unloop exit then . loop ." Done" ; 
-```
-should produce "1 2 3 4 5 6 7" (no "Done" printed)
+\subsection{\texttt{exit}}
 
-Test LEAVE:
-```
-: ggg 11 1 do i dup 8 = if leave then . loop ." Done" drop ; 
-```
-should produce "1 2 3 4 5 6 7 Done" (note "Done" printed)
+\begin{lstlisting}
+        : eee1 true if exit then ." true" ; 
+        : eee2 false if exit then ."false" ; 
+\end{lstlisting}
 
-The Data Stack should be empty after all of these words, check with .S
+First word should just return with \texttt{ok}, second word prints \texttt{false}.
 
 
-TEST RECURSE:
-```
-: hhh ( a b -- gcd ) ?dup if tuck mod recurse then ;
-```
-Which should produce `16` for `784 48 hhh` . Source: 
-[http://galileo.phys.virginia.edu/classes/551.jvn.fall01/primer.htm]
-(http://galileo.phys.virginia.edu/classes/551.jvn.fall01/primer.htm)
+\subsection{\texttt{unloop}}
+
+\begin{lstlisting}
+        : fff 11 1 do i dup 8 = if drop unloop exit then . loop ." Done" ; 
+\end{lstlisting}
+
+should produce \texttt{1 2 3 4 5 6 7} (with no \texttt{Done})
+
+
+\subsection{\texttt{leave}}
+
+\begin{lstlisting}
+        : ggg 11 1 do i dup 8 = if leave then . loop ." Done" drop ; 
+\end{lstlisting}
+
+should produce \texttt{1 2 3 4 5 6 7 Done} (note \texttt{Done} printed)
+
+The Data Stack should be empty after all of these words, check with \texttt{.s}
+
+
+\subsection{\texttt{recurse}}
+
+\begin{lstlisting}
+        : hhh ( a b -- gcd ) ?dup if tuck mod recurse then ;
+\end{lstlisting}
+
+Which should produce 16 for 784 48 hhh. 
+
+% Source: 
+% [http://galileo.phys.virginia.edu/classes/551.jvn.fall01/primer.htm]
+% (http://galileo.phys.virginia.edu/classes/551.jvn.fall01/primer.htm)
 
 Also, the classic (here from the ANSI Forth documentation):
-```
-: factorial ( u -- u ) 
-   dup 2 < if drop 1 exit then 
-   dup 1- recurse * ;
-```
+
+\begin{lstlisting}
+        : factorial ( u -- u ) 
+           dup 2 < if drop 1 exit then 
+           dup 1- recurse * ;
+\end{lstlisting}
+
 For 5, the result should be 120.
 
 
+% ----------------------------------------
 
-## Mandelbrot Set (ex Martin-H1)
+\section{Math routines}
 
-[https://github.com/Martin-H1/Forth-CS-101/blob/master/mandelbrot.fs](https://github.com/Martin-H1/Forth-CS-101/blob/master/mandelbrot.fs)
+% TODO For examples of interger divsion, see
+% [http://www.forth200x.org/documents/html/usage.html#usage:div]
 
 
-### TEST MATH STUFF
+\subsection{\texttt{fm/mod}}
 
-For examples of interger divsion, see
-[http://www.forth200x.org/documents/html/usage.html#usage:div](http://www.forth200x.org/documents/html/usage.html#usage:div)
+\begin{lstlisting}
+        : fm swap s>d rot fm/mod swap . . ; 
+\end{lstlisting}
 
-For **FM/MOD**
-```
-: fm swap s>d rot fm/mod swap . . ; 
-```
 Should give you: 
-10 7 --> 3 1
--10 7 --> 4 -2 
-10 -7 --> -4 -2
--10 -7 --> -3 1
+% TODO convert to table
+\begin{lstlisting}
+        10 7 --> 3 1
+        -10 7 --> 4 -2 
+        10 -7 --> -4 -2
+        -10 -7 --> -3 1
+\end{lstlisting}
 
-For **SM/REM**
-```
-: sm swap s>d rot sm/rem swap . . ; 
-```
+
+\subsection{\texttt{sm/rem}}
+
+\begin{lstlisting}
+        : sm swap s>d rot sm/rem swap . . ; 
+\end{lstlisting}
+
 Should give you: 
-10 7 --> 3 1
--10 7 --> -3 -1 
-10 -7 --> 3 -1
--10 -7 --> -3 1
+% TODO convert to table
+\begin{lstlisting}
+        10 7 --> 3 1
+        -10 7 --> -3 -1 
+        10 -7 --> 3 -1
+        -10 -7 --> -3 1
+\end{lstlisting}

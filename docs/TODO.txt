@@ -3,7 +3,6 @@ Scot W. Stevenson <scot.stevenson@gmail.com>
 First version: 19. Jan 2014
 This version: 07. Mar 2016
 
-
 TODO POST-ALPHA ("ALL WORDS DO SOMETHING, USUALLY EVEN THE RIGHT THING")
         - Handle native compile special cases (R>, >R, 2R>, 2>R, etc)
         - Add size of words to source code
