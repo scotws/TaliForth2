@@ -12,6 +12,7 @@
 \indexentry{instruction set!architecture|hyperpage}{7}
 \indexentry{ISA|hyperindexformat{\see {instruction set}}}{7}
 \indexentry{Z80|hyperpage}{7}
+\indexentry{Wilson, Garth|hyperpage}{7}
 \indexentry{Williams, Elliot|hyperpage}{8}
 \indexentry{Forth|hyperindexformat{\textbf}}{8}
 \indexentry{Moore, Chuck|hyperpage}{8}
@@ -55,9 +56,12 @@
 \indexentry{Linux|hyperpage}{12}
 \indexentry{PIP|hyperpage}{12}
 \indexentry{compiling, native|hyperindexformat{\textbf}}{13}
+\indexentry{[char]@\texttt{[char]}|hyperpage}{13}
 \indexentry{drop@\texttt{drop}|hyperpage}{13}
 \indexentry{underflow|hyperpage}{13}
 \indexentry{compiling, native|hyperpage}{13}
+\indexentry{nc-limit@\texttt{nc-limit}|hyperpage}{13}
+\indexentry{see@\texttt{see}|hyperpage}{13}
 \indexentry{underflow|hyperpage}{14}
 \indexentry{X register|hyperpage}{14}
 \indexentry{underflow!detection|hyperpage}{14}

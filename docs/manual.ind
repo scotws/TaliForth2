@@ -1,6 +1,7 @@
 \begin{theindex}
 
   \item \texttt{>in}, \hyperpage{21}
+  \item \texttt{[char]}, \hyperpage{13}
   \item 6502.org, \hyperpage{7}, \hyperpage{34}
   \item 65c02, \hyperpage{7}, \hyperpage{19}
 
@@ -112,6 +113,7 @@
   \item NASA, \hyperpage{8}
   \item native compilation, \hyperpage{10}
   \item native words, \hyperpage{9}, \hyperpage{19}
+  \item \texttt{nc-limit}, \hyperpage{13}
   \item nt, \hyperindexformat{\see {name token}}{19}
 
   \indexspace
@@ -139,6 +141,7 @@
 
   \indexspace
 
+  \item \texttt{see}, \hyperpage{13}
   \item self-test, \hyperpage{19}
   \item \texttt{sm/rem}, \hyperindexformat{\textbf}{33}
   \item stack, \hyperindexformat{\textbf}{17}, \hyperpage{27}

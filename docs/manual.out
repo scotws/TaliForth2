@@ -13,74 +13,76 @@
 \BOOKMARK [2][-]{subsection.2.1.3}{Threading technique}{section.2.1}% 13
 \BOOKMARK [2][-]{subsection.2.1.4}{Register use}{section.2.1}% 14
 \BOOKMARK [2][-]{subsection.2.1.5}{Data Stack design}{section.2.1}% 15
-\BOOKMARK [-1][-]{part.2}{II User Guide}{}% 16
-\BOOKMARK [0][-]{chapter.3}{Installing}{part.2}% 17
-\BOOKMARK [1][-]{section.3.1}{Downloading}{chapter.3}% 18
-\BOOKMARK [2][-]{subsection.3.1.1}{Downloading Tali Forth}{section.3.1}% 19
-\BOOKMARK [2][-]{subsection.3.1.2}{Downloading the py65mon Simulator}{section.3.1}% 20
-\BOOKMARK [1][-]{section.3.2}{Running the binary}{chapter.3}% 21
-\BOOKMARK [0][-]{chapter.4}{Running}{part.2}% 22
-\BOOKMARK [1][-]{section.4.1}{Native compiling}{chapter.4}% 23
-\BOOKMARK [1][-]{section.4.2}{Underflow stripping}{chapter.4}% 24
-\BOOKMARK [1][-]{section.4.3}{Gotchas}{chapter.4}% 25
-\BOOKMARK [1][-]{section.4.4}{Reporting a problem}{chapter.4}% 26
-\BOOKMARK [0][-]{chapter.5}{The Editor}{part.2}% 27
-\BOOKMARK [-1][-]{part.3}{III Developer Guide}{}% 28
-\BOOKMARK [0][-]{chapter.6}{How Tali Forth works}{part.3}% 29
-\BOOKMARK [1][-]{section.6.1}{Stack}{chapter.6}% 30
-\BOOKMARK [2][-]{subsection.6.1.1}{Single cell values}{section.6.1}% 31
-\BOOKMARK [2][-]{subsection.6.1.2}{Underflow detection}{section.6.1}% 32
-\BOOKMARK [2][-]{subsection.6.1.3}{Double cell values}{section.6.1}% 33
-\BOOKMARK [1][-]{section.6.2}{Dictionary}{chapter.6}% 34
-\BOOKMARK [2][-]{subsection.6.2.1}{Elements of the Header}{section.6.2}% 35
-\BOOKMARK [2][-]{subsection.6.2.2}{Structure of the Header List}{section.6.2}% 36
-\BOOKMARK [1][-]{section.6.3}{Memory Map}{chapter.6}% 37
-\BOOKMARK [1][-]{section.6.4}{Input}{chapter.6}% 38
-\BOOKMARK [2][-]{subsection.6.4.1}{Starting up}{section.6.4}% 39
-\BOOKMARK [2][-]{subsection.6.4.2}{The Command Line Interface}{section.6.4}% 40
-\BOOKMARK [2][-]{subsection.6.4.3}{save-input and restore-input}{section.6.4}% 41
-\BOOKMARK [2][-]{subsection.6.4.4}{evaluate}{section.6.4}% 42
-\BOOKMARK [2][-]{subsection.6.4.5}{state}{section.6.4}% 43
-\BOOKMARK [1][-]{section.6.5}{create/does>}{chapter.6}% 44
-\BOOKMARK [1][-]{section.6.6}{Control Flow}{chapter.6}% 45
-\BOOKMARK [2][-]{subsection.6.6.1}{Branches}{section.6.6}% 46
-\BOOKMARK [2][-]{subsection.6.6.2}{Loops}{section.6.6}% 47
-\BOOKMARK [0][-]{chapter.7}{Developing}{part.3}% 48
-\BOOKMARK [1][-]{section.7.1}{Adding new words}{chapter.7}% 49
-\BOOKMARK [1][-]{section.7.2}{Deeper changes}{chapter.7}% 50
-\BOOKMARK [2][-]{subsection.7.2.1}{The Ophis Assembler}{section.7.2}% 51
-\BOOKMARK [2][-]{subsection.7.2.2}{General notes}{section.7.2}% 52
-\BOOKMARK [2][-]{subsection.7.2.3}{Coding style}{section.7.2}% 53
-\BOOKMARK [1][-]{section.7.3}{Testing}{chapter.7}% 54
-\BOOKMARK [1][-]{section.7.4}{Code Cheat Sheet}{chapter.7}% 55
-\BOOKMARK [2][-]{subsection.7.4.1}{The Stack Drawing}{section.7.4}% 56
-\BOOKMARK [2][-]{subsection.7.4.2}{Coding idioms}{section.7.4}% 57
-\BOOKMARK [2][-]{subsection.7.4.3}{vi shortcuts}{section.7.4}% 58
-\BOOKMARK [0][-]{chapter.8}{Future plans}{part.3}% 59
-\BOOKMARK [0][-]{appendix.A}{FAQ}{part.3}% 60
-\BOOKMARK [1][-]{section.A.1}{What happened to Tali Forth 1?}{appendix.A}% 61
-\BOOKMARK [1][-]{section.A.2}{Why does Tali Forth take so long to start up?}{appendix.A}% 62
-\BOOKMARK [1][-]{section.A.3}{Why `Tali' Forth?}{appendix.A}% 63
-\BOOKMARK [1][-]{section.A.4}{Who is `Liara'?}{appendix.A}% 64
-\BOOKMARK [0][-]{appendix.B}{Forth tests}{part.3}% 65
-\BOOKMARK [1][-]{section.B.1}{The interpreter}{appendix.B}% 66
-\BOOKMARK [2][-]{subsection.B.1.1}{>in tests}{section.B.1}% 67
-\BOOKMARK [1][-]{section.B.2}{Defining words}{appendix.B}% 68
-\BOOKMARK [2][-]{subsection.B.2.1}{create and does>}{section.B.2}% 69
-\BOOKMARK [2][-]{subsection.B.2.2}{literal}{section.B.2}% 70
-\BOOKMARK [2][-]{subsection.B.2.3}{bracket-tick}{section.B.2}% 71
-\BOOKMARK [2][-]{subsection.B.2.4}{postpone}{section.B.2}% 72
-\BOOKMARK [2][-]{subsection.B.2.5}{find-name}{section.B.2}% 73
-\BOOKMARK [2][-]{subsection.B.2.6}{words vs parse}{section.B.2}% 74
-\BOOKMARK [1][-]{section.B.3}{Looping}{appendix.B}% 75
-\BOOKMARK [2][-]{subsection.B.3.1}{Basic looping}{section.B.3}% 76
-\BOOKMARK [2][-]{subsection.B.3.2}{Looping with if}{section.B.3}% 77
-\BOOKMARK [2][-]{subsection.B.3.3}{Nested loops}{section.B.3}% 78
-\BOOKMARK [2][-]{subsection.B.3.4}{exit}{section.B.3}% 79
-\BOOKMARK [2][-]{subsection.B.3.5}{unloop}{section.B.3}% 80
-\BOOKMARK [2][-]{subsection.B.3.6}{leave}{section.B.3}% 81
-\BOOKMARK [2][-]{subsection.B.3.7}{recurse}{section.B.3}% 82
-\BOOKMARK [1][-]{section.B.4}{Math routines}{appendix.B}% 83
-\BOOKMARK [2][-]{subsection.B.4.1}{fm/mod}{section.B.4}% 84
-\BOOKMARK [2][-]{subsection.B.4.2}{sm/rem}{section.B.4}% 85
-\BOOKMARK [0][-]{appendix.C}{Thanks}{part.3}% 86
+\BOOKMARK [2][-]{subsection.2.1.6}{Dictionary structure}{section.2.1}% 16
+\BOOKMARK [2][-]{subsection.2.1.7}{Even deeper down the rabbit hole}{section.2.1}% 17
+\BOOKMARK [-1][-]{part.2}{II User Guide}{}% 18
+\BOOKMARK [0][-]{chapter.3}{Installing}{part.2}% 19
+\BOOKMARK [1][-]{section.3.1}{Downloading}{chapter.3}% 20
+\BOOKMARK [2][-]{subsection.3.1.1}{Downloading Tali Forth}{section.3.1}% 21
+\BOOKMARK [2][-]{subsection.3.1.2}{Downloading the py65mon Simulator}{section.3.1}% 22
+\BOOKMARK [1][-]{section.3.2}{Running the binary}{chapter.3}% 23
+\BOOKMARK [0][-]{chapter.4}{Running}{part.2}% 24
+\BOOKMARK [1][-]{section.4.1}{Native compiling}{chapter.4}% 25
+\BOOKMARK [1][-]{section.4.2}{Underflow stripping}{chapter.4}% 26
+\BOOKMARK [1][-]{section.4.3}{Gotchas}{chapter.4}% 27
+\BOOKMARK [1][-]{section.4.4}{Reporting a problem}{chapter.4}% 28
+\BOOKMARK [0][-]{chapter.5}{The Editor}{part.2}% 29
+\BOOKMARK [-1][-]{part.3}{III Developer Guide}{}% 30
+\BOOKMARK [0][-]{chapter.6}{How Tali Forth works}{part.3}% 31
+\BOOKMARK [1][-]{section.6.1}{Stack}{chapter.6}% 32
+\BOOKMARK [2][-]{subsection.6.1.1}{Single cell values}{section.6.1}% 33
+\BOOKMARK [2][-]{subsection.6.1.2}{Underflow detection}{section.6.1}% 34
+\BOOKMARK [2][-]{subsection.6.1.3}{Double cell values}{section.6.1}% 35
+\BOOKMARK [1][-]{section.6.2}{Dictionary}{chapter.6}% 36
+\BOOKMARK [2][-]{subsection.6.2.1}{Elements of the Header}{section.6.2}% 37
+\BOOKMARK [2][-]{subsection.6.2.2}{Structure of the Header List}{section.6.2}% 38
+\BOOKMARK [1][-]{section.6.3}{Memory Map}{chapter.6}% 39
+\BOOKMARK [1][-]{section.6.4}{Input}{chapter.6}% 40
+\BOOKMARK [2][-]{subsection.6.4.1}{Starting up}{section.6.4}% 41
+\BOOKMARK [2][-]{subsection.6.4.2}{The Command Line Interface}{section.6.4}% 42
+\BOOKMARK [2][-]{subsection.6.4.3}{save-input and restore-input}{section.6.4}% 43
+\BOOKMARK [2][-]{subsection.6.4.4}{evaluate}{section.6.4}% 44
+\BOOKMARK [2][-]{subsection.6.4.5}{state}{section.6.4}% 45
+\BOOKMARK [1][-]{section.6.5}{create/does>}{chapter.6}% 46
+\BOOKMARK [1][-]{section.6.6}{Control Flow}{chapter.6}% 47
+\BOOKMARK [2][-]{subsection.6.6.1}{Branches}{section.6.6}% 48
+\BOOKMARK [2][-]{subsection.6.6.2}{Loops}{section.6.6}% 49
+\BOOKMARK [0][-]{chapter.7}{Developing}{part.3}% 50
+\BOOKMARK [1][-]{section.7.1}{Adding new words}{chapter.7}% 51
+\BOOKMARK [1][-]{section.7.2}{Deeper changes}{chapter.7}% 52
+\BOOKMARK [2][-]{subsection.7.2.1}{The Ophis Assembler}{section.7.2}% 53
+\BOOKMARK [2][-]{subsection.7.2.2}{General notes}{section.7.2}% 54
+\BOOKMARK [2][-]{subsection.7.2.3}{Coding style}{section.7.2}% 55
+\BOOKMARK [1][-]{section.7.3}{Testing}{chapter.7}% 56
+\BOOKMARK [1][-]{section.7.4}{Code Cheat Sheet}{chapter.7}% 57
+\BOOKMARK [2][-]{subsection.7.4.1}{The Stack Drawing}{section.7.4}% 58
+\BOOKMARK [2][-]{subsection.7.4.2}{Coding idioms}{section.7.4}% 59
+\BOOKMARK [2][-]{subsection.7.4.3}{vi shortcuts}{section.7.4}% 60
+\BOOKMARK [0][-]{chapter.8}{Future plans}{part.3}% 61
+\BOOKMARK [0][-]{appendix.A}{FAQ}{part.3}% 62
+\BOOKMARK [1][-]{section.A.1}{What happened to Tali Forth 1?}{appendix.A}% 63
+\BOOKMARK [1][-]{section.A.2}{Why does Tali Forth take so long to start up?}{appendix.A}% 64
+\BOOKMARK [1][-]{section.A.3}{Why `Tali' Forth?}{appendix.A}% 65
+\BOOKMARK [1][-]{section.A.4}{Who is `Liara'?}{appendix.A}% 66
+\BOOKMARK [0][-]{appendix.B}{Forth tests}{part.3}% 67
+\BOOKMARK [1][-]{section.B.1}{The interpreter}{appendix.B}% 68
+\BOOKMARK [2][-]{subsection.B.1.1}{>in tests}{section.B.1}% 69
+\BOOKMARK [1][-]{section.B.2}{Defining words}{appendix.B}% 70
+\BOOKMARK [2][-]{subsection.B.2.1}{create and does>}{section.B.2}% 71
+\BOOKMARK [2][-]{subsection.B.2.2}{literal}{section.B.2}% 72
+\BOOKMARK [2][-]{subsection.B.2.3}{bracket-tick}{section.B.2}% 73
+\BOOKMARK [2][-]{subsection.B.2.4}{postpone}{section.B.2}% 74
+\BOOKMARK [2][-]{subsection.B.2.5}{find-name}{section.B.2}% 75
+\BOOKMARK [2][-]{subsection.B.2.6}{words vs parse}{section.B.2}% 76
+\BOOKMARK [1][-]{section.B.3}{Looping}{appendix.B}% 77
+\BOOKMARK [2][-]{subsection.B.3.1}{Basic looping}{section.B.3}% 78
+\BOOKMARK [2][-]{subsection.B.3.2}{Looping with if}{section.B.3}% 79
+\BOOKMARK [2][-]{subsection.B.3.3}{Nested loops}{section.B.3}% 80
+\BOOKMARK [2][-]{subsection.B.3.4}{exit}{section.B.3}% 81
+\BOOKMARK [2][-]{subsection.B.3.5}{unloop}{section.B.3}% 82
+\BOOKMARK [2][-]{subsection.B.3.6}{leave}{section.B.3}% 83
+\BOOKMARK [2][-]{subsection.B.3.7}{recurse}{section.B.3}% 84
+\BOOKMARK [1][-]{section.B.4}{Math routines}{appendix.B}% 85
+\BOOKMARK [2][-]{subsection.B.4.1}{fm/mod}{section.B.4}% 86
+\BOOKMARK [2][-]{subsection.B.4.2}{sm/rem}{section.B.4}% 87
+\BOOKMARK [0][-]{appendix.C}{Thanks}{part.3}% 88

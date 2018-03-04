@@ -80,7 +80,7 @@ okay:
                 (...)
 \end{lstlisting}
 
-For the most common cases, this gives us:
+\noindent For the most common cases, this gives us:
 
 \begin{table}[h!]
 \centering
@@ -387,7 +387,7 @@ We start with the following standard example, the Forth version of
         : constant create , does> @ ; 
 \end{lstlisting}
 
-We examine this in three phases or "sequences", based on Derick and Baker (see
+\noindent We examine this in three phases or "sequences", based on Derick and Baker (see
 Rodriguez for details):   
 
 
@@ -405,7 +405,7 @@ ignoring any compilation to native 65c02 assembler, the above compiles to:
         rts
 \end{lstlisting}
 
-To make things easier to explain later, we've added the labels `a' and `b' in
+\noindent To make things easier to explain later, we've added the labels `a' and `b' in
 the listing. Note that \texttt{does>} is an immediate word that adds not one, but two
 subroutine jumps, one to \texttt{(does>)} and one to \texttt{dodoes}, which is a pre-defined
 system routine like \texttt{dovar}. we'll get to it later.
@@ -417,7 +417,7 @@ In Tali Forth, a number of words such as \texttt{defer} are
         : defer create ['] abort , does> @ execute ; 
 \end{lstlisting}
 
-we write an opimized assembler version ourselves (see the actual \texttt{defer}
+\noindent we write an opimized assembler version ourselves (see the actual \texttt{defer}
 code). In these cases, we need to use \texttt{(does>)} and \texttt{dodoes}
 instead of \texttt{does>} as well.
 
@@ -430,14 +430,14 @@ Now when we execute
         42 constant life
 \end{lstlisting}
 
-this pushes the RTS of the calling routine -- call it `main' -- to the 65c02's
+\noindent this pushes the RTS of the calling routine -- call it `main' -- to the 65c02's
 stack (the Return Stack, as Forth calls it), which now looks like this:
 
 \begin{lstlisting}[frame=single]
         ((1)) RTS               ; to main routine 
 \end{lstlisting}
 
-Without going into detail, the first two subroutine jumps of \texttt{constant} give us
+\noindent Without going into detail, the first two subroutine jumps of \texttt{constant} give us
 this word: 
 
 \begin{lstlisting}[frame=single]
@@ -446,7 +446,7 @@ this word:
         4200                    ; in PFA (little-endian)
 \end{lstlisting}
 
-Next, we \texttt{jsr} to \texttt{(does>)}. The address that this pushes on the Return Stack is
+\noindent Next, we \texttt{jsr} to \texttt{(does>)}. The address that this pushes on the Return Stack is
 the instruction of \texttt{constant} we had labeled `a'. 
 
 \begin{lstlisting}[frame=single]
@@ -454,7 +454,7 @@ the instruction of \texttt{constant} we had labeled `a'.
         ((1)) RTS to main routine 
 \end{lstlisting}
 
-Now the tricks start. \texttt{(does>)} takes this address off the stack and uses
+\noindent Now the tricks start. \texttt{(does>)} takes this address off the stack and uses
 it to replace the \texttt{dovar jsr} target in the CFA of our freshly created
 \texttt{life} word. We now have this: 
 
@@ -464,7 +464,7 @@ it to replace the \texttt{dovar jsr} target in the CFA of our freshly created
    c:   4200                    ; in PFA (little-endian)
 \end{lstlisting}
 
-Note we added a label `c'. Now, when \texttt{(does>)} reaches its own
+\noindent Note we added a label `c'. Now, when \texttt{(does>)} reaches its own
 \texttt{rts}, it finds the RTS to the main routine on its stack. This is Good
 Thingi\textsuperscript{TM}, because it aborts the execution of the rest of
 \texttt{constant}, and we don't want to do \texttt{dodoes} or \texttt{fetch}
@@ -480,14 +480,14 @@ such as Tali Forth, this executes a subroutine jump.
         jsr LIFE
 \end{lstlisting}
 
-The first thing this call does is push the return address to the main routine
+\noindent The first thing this call does is push the return address to the main routine
 on the 65c02's stack: 
 
 \begin{lstlisting}[frame=single]
         ((1)) RTS to main
 \end{lstlisting}
 
-The CFA of \texttt{life} executes a subroutine jump to label `a' in
+\noindent The CFA of \texttt{life} executes a subroutine jump to label `a' in
 \texttt{constant}. This pushes the \texttt{rts} of \texttt{life} on the 65c02's
 stack:
 
@@ -496,7 +496,7 @@ stack:
         ((1)) RTS to main
 \end{lstlisting}
 
-This \texttt{jsr} to a lands us at the subroutine jump to \texttt{dodoes}, so
+\noindent This \texttt{jsr} to a lands us at the subroutine jump to \texttt{dodoes}, so
 the return address to \texttt{constant} gets pushed on the stack as well. We had
 given this instruction the label `b'. After all of this, we have three addresses
 on the 65c02's stack: 
@@ -507,7 +507,7 @@ on the 65c02's stack:
         ((1)) RTS to main
 \end{lstlisting}
 
-\texttt{dodoes} pops address `b' off the 65c02's stack and puts it in a nice
+\noindent \texttt{dodoes} pops address `b' off the 65c02's stack and puts it in a nice
 safe place on Zero Page, which we'll call `z'. More on that in a moment. First,
 \texttt{dodoes}.  pops the \texttt{rts} to \texttt{life}. This is `c', the
 address of the PFA or \texttt{life}, where we stored the payload of this
@@ -519,7 +519,7 @@ pushes `c' on the Data Stack. Now all we have left on the 65c02's stack is the
         [1] RTS to main
 \end{lstlisting}
 
-This is where `z' comes in, the location in Zero Page where we stored address
+\noindent This is where `z' comes in, the location in Zero Page where we stored address
 `b' of \texttt{constant}. Remember, this is where \texttt{constant}'s own PFA
 begins, the \texttt{fetch} command we had originally codes after \texttt{does>}
 in the very first definition. The really clever part: We perform an indirect
@@ -529,7 +529,7 @@ in the very first definition. The really clever part: We perform an indirect
         jmp (z) 
 \end{lstlisting}
 
-Now \texttt{constant}'s little payload programm is executed, the subroutine jump
+\noindent Now \texttt{constant}'s little payload programm is executed, the subroutine jump
 to \texttt{fetch}. Since we just put the PFA (`c') on the Data Stack,
 \texttt{fetch} replaces this by 42, which is what we were aiming for all along.
 And since \texttt{constant} ends with a \texttt{rts}, we pull the last remaining
@@ -567,7 +567,7 @@ like:
 *       (...) 
 \end{lstlisting}
 
-Note that with most words in Tali Forth, as any STC Forth, the distinction
+\noindent Note that with most words in Tali Forth, as any STC Forth, the distinction
 between PFA and CFA is meaningless or at least blurred, because we go native
 anyway. It is only with words generated by \texttt{create/does>} where this
 really makes sense.
@@ -604,13 +604,13 @@ In Forth, this can be realized by
         : if  postpone 0branch here 0 , ; immediate
 \end{lstlisting}
 
-and 
+\noindent and 
 
 \begin{lstlisting}[frame=single]
         : then here swap ! ; immediate
 \end{lstlisting}
 
-Note \texttt{then} doesn't actually compile anything at the location in memory
+\noindent Note \texttt{then} doesn't actually compile anything at the location in memory
 where it is at. It's job is simply to help \texttt{if} out of the mess it
 created.  If we have an \texttt{else}, we have to add an unconditional
 \texttt{branch} and manipulate the address that \texttt{if} left on the Data
@@ -620,7 +620,7 @@ Stack. The Forth for this is:
         : else  postpone branch here 0 , here rot ! ; immediate
 \end{lstlisting}
 
-Note that \texttt{then} has no idea what has just happened, and just like before
+\noindent Note that \texttt{then} has no idea what has just happened, and just like before
 compiles its address where the value on the top of the Data Stack told it to --
 except that this value now comes from \texttt{else}, not \texttt{if}. 
 
@@ -663,10 +663,10 @@ start with a simple \texttt{do}/\texttt{loop}.
 \subsubsection{\texttt{do} at run-time:}
 
 \begin{itemize}
-        \item - Take limit and start off Data Stack and push them to the Return Stack
+        \item Take limit and start off Data Stack and push them to the Return Stack
 \end{itemize}
 
-Since \texttt{loop} is just a special case of \texttt{+loop} with an index of
+\noindent Since \texttt{loop} is just a special case of \texttt{+loop} with an index of
 one, we can get away with considering them at the same time. 
 
 
@@ -706,7 +706,8 @@ At one glance, we can see that the complicated stuff happens at compile-time.
 This is good, because we only have to do that once for each loop. 
 
 In Tali Forth, these routines are coded in assembler. With this setup,
-\texttt{unloop} becomes simple (six PLAs -- four for the limit/count of
-\texttt{do}, two for the address pushed to the stack just before it) and
-\texttt{leave} even simpler (four PLAs for the address). 
+\texttt{unloop} becomes simple (six \texttt{pla} instructions -- four for the
+limit/count of \texttt{do}, two for the address pushed to the stack just before
+it) and \texttt{leave} even simpler (four \texttt{pla} instructions for the
+address). 
 

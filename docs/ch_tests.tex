@@ -21,13 +21,13 @@ https://www.complang.tuwien.ac.at/forth/gforth/Docs-html/The-Text-Interpreter.ht
         : flat ." <bar>" >in dup @ 3 - swap ! ; 
 \end{lstlisting}
 
-A simple \texttt{flat} should print \texttt{<bar><foo>}. A bit more complicated:
+\noindent A simple \texttt{flat} should print \texttt{<bar><foo>}. A bit more complicated:
 
 \begin{lstlisting}
         char & parse jack& type
 \end{lstlisting}
 
-This should print \texttt{jack}.
+\noindent This should print \texttt{jack}.
 
 
 % ----------------------------------------
@@ -47,7 +47,7 @@ The simplest test is to redefine \texttt{constant}:
         : aaa [ 1 ] literal ;
 \end{lstlisting}
 
-This should put 1 on the Data Stack at run time.
+\noindent This should put 1 on the Data Stack at run time.
 
 
 \subsection{\texttt{bracket-tick}}
@@ -64,9 +64,9 @@ This should put 1 on the Data Stack at run time.
         : greet postpone say-hello ." I speak Forth" ;
 \end{lstlisting}
 
-Note that \texttt{greet} won't print \texttt{Hello} right away
+\noindent Note that \texttt{greet} won't print \texttt{Hello} right away
 
-Based on https://www.forth.com/starting-forth/11-forth-compiler-defining-words/
+\noindent Based on https://www.forth.com/starting-forth/11-forth-compiler-defining-words/
 
 
 \subsection{\texttt{find-name}}
@@ -75,7 +75,7 @@ Based on https://www.forth.com/starting-forth/11-forth-compiler-defining-words/
         s" words" find-name name>string type
 \end{lstlisting}
 
-should print \texttt{words}
+\noindent should print \texttt{words}
 
 
 \subsection{\texttt{words} vs \texttt{parse}}
@@ -87,7 +87,7 @@ Taken from Conklin \& Rather p. 160
         : test2 ( "name" -- )  32 parse  type ; 
 \end{lstlisting}
 
-Results of calls with `ABC' should give identical result if there are no
+\noindent Results of calls with `ABC' should give identical result if there are no
 leading spaces. However, with leading spaces, TEST2 will find an empty string
 and abort, then throw an error because ABC will not be found in the dictionary.
 
@@ -101,7 +101,7 @@ Test normal loop:
         : aaa 11 1 do i . loop ;        
 \end{lstlisting}
 
-Should produce numbers 1 - 10
+\noindent Should produce numbers 1 - 10
 
 Then, try this as multi-line loop because that can be tricky:
 \begin{lstlisting}
@@ -109,19 +109,19 @@ Then, try this as multi-line loop because that can be tricky:
           i . loop ; 
 \end{lstlisting}
 
-Test other variants (ex Gforth):
+\noindent Test other variants (ex Gforth):
 
 \begin{lstlisting}
         : bbb1 -1 0 ?do i . -1 +loop ;
 \end{lstlisting}
 
-which should produce `0 -1'. However, 
+\noindent which should produce `0 -1'. However, 
 
 \begin{lstlisting}
         : bbb2 0 0 ?do i . -1 +loop ;
 \end{lstlisting}
 
-should print nothing.
+\noindent should print nothing.
 
 
 \subsection{Looping with \texttt{if}}
@@ -130,12 +130,12 @@ should print nothing.
         : ccc 11 1 do  i 5 > if i . then loop ; 
 \end{lstlisting}
 
-should produce \texttt{6 7 8 9 10}
+\noindent should produce \texttt{6 7 8 9 10}
 
 
 \subsection{Nested loops}
 
-https://www.forth.com/starting-forth/6-forth-do-loops/
+\noindent https://www.forth.com/starting-forth/6-forth-do-loops/
 
 \begin{lstlisting}
         : ddd cr 11 1 do
@@ -144,7 +144,7 @@ https://www.forth.com/starting-forth/6-forth-do-loops/
             loop cr loop ;
 \end{lstlisting}
 
-should produce math table from 1x1 to 10x10
+\noindent should produce math table from 1x1 to 10x10
 
 
 \subsection{\texttt{exit}}
@@ -154,7 +154,7 @@ should produce math table from 1x1 to 10x10
         : eee2 false if exit then ."false" ; 
 \end{lstlisting}
 
-First word should just return with \texttt{ok}, second word prints \texttt{false}.
+\noindent First word should just return with \texttt{ok}, second word prints \texttt{false}.
 
 
 \subsection{\texttt{unloop}}
@@ -163,7 +163,7 @@ First word should just return with \texttt{ok}, second word prints \texttt{false
         : fff 11 1 do i dup 8 = if drop unloop exit then . loop ." Done" ; 
 \end{lstlisting}
 
-should produce \texttt{1 2 3 4 5 6 7} (with no \texttt{Done})
+\noindent should produce \texttt{1 2 3 4 5 6 7} (with no \texttt{Done})
 
 
 \subsection{\texttt{leave}}
@@ -172,7 +172,7 @@ should produce \texttt{1 2 3 4 5 6 7} (with no \texttt{Done})
         : ggg 11 1 do i dup 8 = if leave then . loop ." Done" drop ; 
 \end{lstlisting}
 
-should produce \texttt{1 2 3 4 5 6 7 Done} (note \texttt{Done} printed)
+\noindent should produce \texttt{1 2 3 4 5 6 7 Done} (note \texttt{Done} printed)
 
 The Data Stack should be empty after all of these words, check with \texttt{.s}
 
@@ -185,7 +185,7 @@ The Data Stack should be empty after all of these words, check with \texttt{.s}
         : hhh ( a b -- gcd ) ?dup if tuck mod recurse then ;
 \end{lstlisting}
 
-Which should produce 16 for 784 48 hhh. 
+\noindent Which should produce 16 for 784 48 hhh. 
 
 % Source: 
 % [http://galileo.phys.virginia.edu/classes/551.jvn.fall01/primer.htm]
@@ -199,7 +199,7 @@ Also, the classic (here from the ANSI Forth documentation):
            dup 1- recurse * ;
 \end{lstlisting}
 
-For 5, the result should be 120.
+\noindent For 5, the result should be 120.
 
 
 % ----------------------------------------
@@ -217,7 +217,7 @@ For 5, the result should be 120.
         : fm swap s>d rot fm/mod swap . . ; 
 \end{lstlisting}
 
-Should give you: 
+\noindent Should give you: 
 % TODO convert to table
 \begin{lstlisting}
         10 7 --> 3 1
@@ -234,7 +234,7 @@ Should give you:
         : sm swap s>d rot sm/rem swap . . ; 
 \end{lstlisting}
 
-Should give you: 
+\noindent Should give you: 
 % TODO convert to table
 \begin{lstlisting}
         10 7 --> 3 1

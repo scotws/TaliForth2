@@ -7,22 +7,21 @@
 When creating a new Forth, there are a bunch of design decisions to be
 made.\footnote{The best introduction to these questions is found in
 \href{http://www.bradrodriguez.com/papers/moving1.htm}{\textit{Design Decisions
-in the Forth Kernel}} by Brad Rodriguez\index{Rodriguez, Brad}}
-
+in the Forth Kernel}} by Brad Rodriguez\index{Rodriguez, Brad}} Spoiler alert:
 Tali Forth ended up as a subroutine-threaded variant with a 16-bit cell size and
 a dictionary that keeps headers and code separate. If you don't care and just
-want to use the problem, skip this. 
+want to use the program, skip ahead. 
 
 \subsection{Characteristics of the 65c02}
 
-The main reason for this is the target processor. The 65c02 only has one full
-register, the accumulator A\index{accumulator}, and two secondary registers
-X\index{X register} and Y\index{Y register}. All are 8-bit wide, which is half a
-cell. There are 255 bytes that are more easily addressable on the Zero
-Page\index{Zero Page}. A single hardware stack is used for subroutine jumps. The
-address bus\index{address bus} is 16 bits wide for a maximum of 64 KiB of
-RAM\index{RAM} and \index{ROM} -- for a simple setup, we should assume 32 KiB of
-each. 
+Since this is a bare-metal Forth, the most important consideration is the target
+processor. The 65c02 only has one full register, the accumulator
+A\index{accumulator}, and two secondary registers X\index{X register} and
+Y\index{Y register}. All are 8-bit wide. There are 256 bytes that are more
+easily addressable on the Zero Page\index{Zero Page}. A single hardware stack is
+used for subroutine jumps. The address bus\index{address bus} is 16 bits wide
+for a maximum of 64 KiB of RAM\index{RAM} and \index{ROM} -- for a simple setup,
+we should assume 32 KiB of each. 
 
 \subsection{Cell size}
 
@@ -40,15 +39,15 @@ Kelly\index{Kelly, Guy} compared various Forth implementations in
 1992\cite{kelly92}}
 
 \begin{description}
-        \item [Indirect (ITC)] The oldest, original variant, used by FIG
+        \item [Indirect threaded (ITC)] The oldest, original variant, used by FIG
                 Forth\index{FIG Forth} for instance. All other versions are
                 modifications of this model
-        \item [Direct (DTC)] Includes more assembler code to become faster, but
+        \item [Direct threaded (DTC)] Includes more assembler code to become faster, but
                 slightly larger than ITC. 
-        \item [Token (TTC)] The reverse of DTC in that it is slower, but uses
+        \item [Token threaded (TTC)] The reverse of DTC in that it is slower, but uses
                 less space than the other Forths. Words are created as a table
                 of tokens.
-        \item [Subroutine (STC)] This technique converts the words to a simple
+        \item [Subroutine threaded (STC)] This technique converts the words to a simple
                 series of \texttt{jsr} combinations. 
 \end{description}
 
@@ -74,6 +73,7 @@ you realize that Forth classically uses at least four `virtual' registers:
                 RSP & Return Stack Pointer\\
                 \hline
         \end{tabular}
+        \caption{The classic Forth registers}
 \end{table}
 
 On a modern processor like the RISC-V\index{RISC-V} RV32I with its 32 registers
@@ -95,7 +95,7 @@ checks\index{underflow!detection} in the relevant words, but give the user the
 option of stripping it out for native compilation\index{native compilation}.
 
 
-\subsubsection{Dictionary structure}
+\subsection{Dictionary structure}
 
 Each Forth word consists of the actual code and the header\index{header} which
 keeps the meta-data. Part of this data is the single-linked list of words which
@@ -104,3 +104,8 @@ is searched.
 In constrast to Tali Forth 1\index{Tali Forth 1}, which kept the header and body
 of the words together, Tali Forth 2 keeps them separate. This lets us play
 various tricks with the code to make it more effective.
+
+\subsection{Even deeper down the rabbit hole}
+
+This concludes our overview of the basic Tali Forth 2 structure. For those
+interested, a later chapter will provide far more detail.
