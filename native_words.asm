@@ -3295,6 +3295,11 @@ z_int_to_name:  rts
 ; ## INVERT ( u -- u ) "Complement of TOS"
 ; ## "invert"  src: ANSI core  b: 10  c: TBA  status: coded
 xt_invert:
+                cpx #dsp0-1
+                bmi +
+                lda #11
+                jmp error
+*
                 lda #$FF
                 tay
 
