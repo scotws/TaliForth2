@@ -4,6 +4,8 @@
 \contentsline {subsection}{\numberline {1.1.1}The 6502 MPU}{7}{subsection.1.1.1}
 \contentsline {subsection}{\numberline {1.1.2}Forth}{8}{subsection.1.1.2}
 \contentsline {section}{\numberline {1.2}Writing your own Forth}{8}{section.1.2}
+\contentsline {subsection}{\numberline {1.2.1}FIG Forth}{8}{subsection.1.2.1}
+\contentsline {subsection}{\numberline {1.2.2}The need for a modern Forth for the 6502}{8}{subsection.1.2.2}
 \contentsline {chapter}{\numberline {2}Overview of Tali Forth}{9}{chapter.2}
 \contentsline {section}{\numberline {2.1}Design considerations}{9}{section.2.1}
 \contentsline {subsection}{\numberline {2.1.1}Types of Forth}{9}{subsection.2.1.1}
