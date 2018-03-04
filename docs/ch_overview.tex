@@ -4,23 +4,103 @@
 % -------------------------------------
 \section{Design considerations}
 
-\subsection{Types of Forth}
+When creating a new Forth, there are a bunch of design decisions to be
+made.\footnote{The best introduction to these questions is found in
+\href{http://www.bradrodriguez.com/papers/moving1.htm}{\textit{Design Decisions
+in the Forth Kernel}} by Brad Rodriguez\index{Rodriguez, Brad}}
 
-\subsubsection{ANSI Forth}\index{ANSI Forth|textbf}
+Tali Forth ended up as a subroutine-threaded variant with a 16-bit cell size and
+a dictionary that keeps headers and code separate. If you don't care and just
+want to use the problem, skip this. 
 
-FIG Forth\index{FIG Forth|textbf}
+\subsection{Characteristics of the 65c02}
+
+The main reason for this is the target processor. The 65c02 only has one full
+register, the accumulator A\index{accumulator}, and two secondary registers
+X\index{X register} and Y\index{Y register}. All are 8-bit wide, which is half a
+cell. There are 255 bytes that are more easily addressable on the Zero
+Page\index{Zero Page}. A single hardware stack is used for subroutine jumps. The
+address bus\index{address bus} is 16 bits wide for a maximum of 64 KiB of
+RAM\index{RAM} and \index{ROM} -- for a simple setup, we should assume 32 KiB of
+each. 
+
+\subsection{Cell size}
+
+This is relatively easy: The 16 bit address bus\index{address bus} suggests the
+cell size should be 16 bits as well. This is still easy enough to realize with a
+8-bit MPU, though not as comfortable as working with the 65816\index{65816}, the
+65c02's big brother with a 16 bit register size.
 
 
-\subsubsection{Threadding model}
+\subsection{Threading technique}\index{threading}
+
+A `thread' in Forth is simply a list of addresses of words to be executed. 
+There are four basic threading techniques:\footnote{For the 8086 MPU, Guy
+Kelly\index{Kelly, Guy} compared various Forth implementations in
+1992\cite{kelly92}}
+
+\begin{description}
+        \item [Indirect (ITC)] The oldest, original variant, used by FIG
+                Forth\index{FIG Forth} for instance. All other versions are
+                modifications of this model
+        \item [Direct (DTC)] Includes more assembler code to become faster, but
+                slightly larger than ITC. 
+        \item [Token (TTC)] The reverse of DTC in that it is slower, but uses
+                less space than the other Forths. Words are created as a table
+                of tokens.
+        \item [Subroutine (STC)] This technique converts the words to a simple
+                series of \texttt{jsr} combinations. 
+\end{description}
+
+Our lack of registers and the goal of creating a simple and easy to understand
+Forth makes subroutine threading the most attractive solution. We will try to
+mitigate the pain of the 12 cycle cost of every \texttt{jsr/rts} combination by
+including a relatively large number of native words\index{native words}. 
 
 
-\subsubsection{Cell size}\index{cell!size}
+\subsection{Register use}
+
+The lack of registers -- and 16 bit registers at that -- becomes apparent when
+you realize that Forth classically uses at least four `virtual' registers:
+
+\begin{table}[h !]
+        \centering
+        \label{tab:registers}
+        \begin{tabular}{| c | l |}
+                \hline
+                W   & Working register\\
+                IP  & Interpreter Pointer\\
+                DSP & Data Stack Pointer\\
+                RSP & Return Stack Pointer\\
+                \hline
+        \end{tabular}
+\end{table}
+
+On a modern processor like the RISC-V\index{RISC-V} RV32I with its 32 registers
+of 32 bit each, this wouldn't be a problem. In fact, we'd be trying to figure
+out what else we could keep in a register. On the 65c02, at least we get the RSP
+for free with the built-in stack pointer. This still leaves three registers. We
+cut that number down by one through subroutine threading, which gets rid of the
+IP. For the DSP, we use the 65c02's Zero Page\index{Zero Page} indirect
+addressing mode with the X register\index{X register}. This leaves W, which we
+put on the Zero Page as well. 
 
 
+\subsection{Data Stack design}
 
-% -------------------------------------
-\section{Design decisions}
+We'll go into greater detail on how the Data Stack works in a later chapter when
+we look at the internals. Put briefly, the stack is realized on the Zero
+Page\index{Zero Page} for speed. For stability, we provid underflow
+checks\index{underflow!detection} in the relevant words, but give the user the
+option of stripping it out for native compilation\index{native compilation}.
 
-\subsection{Where to put the TOS}
 
-\subsection{Implementation of the Data Stack}
+\subsubsection{Dictionary structure}
+
+Each Forth word consists of the actual code and the header\index{header} which
+keeps the meta-data. Part of this data is the single-linked list of words which
+is searched. 
+
+In constrast to Tali Forth 1\index{Tali Forth 1}, which kept the header and body
+of the words together, Tali Forth 2 keeps them separate. This lets us play
+various tricks with the code to make it more effective.
