@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.3.2)  4 MAR 2018 16:14
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.3.2)  4 MAR 2018 20:23
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -94,6 +94,14 @@ Package: ltxcmds 2011/11/09 v1.22 LaTeX kernel commands for general use (HO)
 \Gin@req@height=\dimen111
 \Gin@req@width=\dimen112
 )
+(/usr/share/texlive/texmf-dist/tex/latex/base/makeidx.sty
+Package: makeidx 2014/09/29 v1.0m Standard LaTeX package
+)
+\@indexfile=\write3
+\openout3 = `manual.idx'.
+
+
+Writing index file manual.idx
 (/usr/share/texmf/tex/latex/lm/lmodern.sty
 Package: lmodern 2009/10/30 v1.6 Latin Modern Fonts
 LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
@@ -276,21 +284,21 @@ Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
 (./manual.aux)
 \openout1 = `manual.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 28.
-LaTeX Font Info:    ... okay on input line 28.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 28.
-LaTeX Font Info:    ... okay on input line 28.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 28.
-LaTeX Font Info:    ... okay on input line 28.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 28.
-LaTeX Font Info:    ... okay on input line 28.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 28.
-LaTeX Font Info:    ... okay on input line 28.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 28.
-LaTeX Font Info:    ... okay on input line 28.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 28.
-LaTeX Font Info:    ... okay on input line 28.
-LaTeX Font Info:    Try loading font information for OT1+lmr on input line 28.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Try loading font information for OT1+lmr on input line 32.
  (/usr/share/texmf/tex/latex/lm/ot1lmr.fd
 File: ot1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
@@ -358,7 +366,7 @@ e
 ))
 \c@lstlisting=\count116
 \AtBeginShipoutBox=\box29
-Package hyperref Info: Link coloring ON on input line 28.
+Package hyperref Info: Link coloring ON on input line 32.
 
 (/usr/share/texlive/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2012/10/27 v2.43 Cross-referencing by name of section
@@ -368,38 +376,38 @@ Package: gettitlestring 2010/12/03 v1.4 Cleanup title references (HO)
 )
 \c@section@level=\count117
 )
-LaTeX Info: Redefining \ref on input line 28.
-LaTeX Info: Redefining \pageref on input line 28.
-LaTeX Info: Redefining \nameref on input line 28.
+LaTeX Info: Redefining \ref on input line 32.
+LaTeX Info: Redefining \pageref on input line 32.
+LaTeX Info: Redefining \nameref on input line 32.
 
 (./manual.out) (./manual.out)
-\@outlinefile=\write3
-\openout3 = `manual.out'.
+\@outlinefile=\write4
+\openout4 = `manual.out'.
 
-LaTeX Font Info:    Try loading font information for OML+lmm on input line 31.
+LaTeX Font Info:    Try loading font information for OML+lmm on input line 35.
  (/usr/share/texmf/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Try loading font information for OMS+lmsy on input line 31.
+LaTeX Font Info:    Try loading font information for OMS+lmsy on input line 35.
 
 
 (/usr/share/texmf/tex/latex/lm/omslmsy.fd
 File: omslmsy.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Try loading font information for OMX+lmex on input line 31.
+LaTeX Font Info:    Try loading font information for OMX+lmex on input line 35.
 
 
 (/usr/share/texmf/tex/latex/lm/omxlmex.fd
 File: omxlmex.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <12> on input line 31.
+(Font)              <12> on input line 35.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <8> on input line 31.
+(Font)              <8> on input line 35.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <6> on input line 31.
+(Font)              <6> on input line 35.
 
-Overfull \hbox (72.12628pt too wide) in paragraph at lines 62--67
+Overfull \hbox (72.12628pt too wide) in paragraph at lines 68--73
 \OT1/lmr/m/n/9 ver-sion can be found. The dis-cus-sion thread is at 6502.org at
  [][]http://forum.6502.org/viewtopic.php?f=9&t=2926[][]. 
  []
@@ -413,7 +421,7 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <7> on input line 3.
 LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <5> on input line 3.
-LaTeX Font Info:    Try loading font information for OT1+lmtt on input line 39.
+LaTeX Font Info:    Try loading font information for OT1+lmtt on input line 41.
 
 
 (/usr/share/texmf/tex/latex/lm/ot1lmtt.fd
@@ -421,19 +429,19 @@ File: ot1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
 ) [2
 
 ])
-\tf@toc=\write4
-\openout4 = `manual.toc'.
+\tf@toc=\write5
+\openout5 = `manual.toc'.
 
  [3] (./manual.lof)
-\tf@lof=\write5
-\openout5 = `manual.lof'.
+\tf@lof=\write6
+\openout6 = `manual.lof'.
 
  [4
 
 ]
 (./manual.lot)
-\tf@lot=\write6
-\openout6 = `manual.lot'.
+\tf@lot=\write7
+\openout7 = `manual.lot'.
 
  [5
 
@@ -441,15 +449,15 @@ File: ot1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
 
 ]
 Chapter 1.
-(./ch_why.tex <pics/W65c02.jpg, id=468, 301.125pt x 301.125pt>
+(./ch_why.tex <pics/W65c02.jpg, id=469, 301.125pt x 301.125pt>
 File: pics/W65c02.jpg Graphic file (type jpg)
 
 <use pics/W65c02.jpg>
-Package pdftex.def Info: pics/W65c02.jpg used on input line 20.
+Package pdftex.def Info: pics/W65c02.jpg used on input line 22.
 (pdftex.def)             Requested size: 213.39566pt x 213.40508pt.
-) [7
+ [7
 
- <./pics/W65c02.jpg>] [8]
+ <./pics/W65c02.jpg>]) [8]
 Chapter 2.
 (./ch_overview.tex) [9
 
@@ -475,60 +483,62 @@ Chapter 6.
 
 ] [17] [18] [19]
 LaTeX Font Info:    Font shape `OT1/lmtt/bx/n' in size <10> not available
-(Font)              Font shape `OT1/lmtt/b/n' tried instead on input line 311.
+(Font)              Font shape `OT1/lmtt/b/n' tried instead on input line 322.
 
-Overfull \hbox (103.26408pt too wide) in paragraph at lines 332--334
+Overfull \hbox (103.26408pt too wide) in paragraph at lines 344--346
 []\OT1/lmr/m/n/10 (http://forth.sourceforge.net/standard/dpans/a0006.htm) (http
 ://forth.sourceforge.net/standard/dpans/dpansa6.htm 
  []
 
 LaTeX Font Info:    Font shape `OT1/lmtt/bx/n' in size <12> not available
-(Font)              Font shape `OT1/lmtt/b/n' tried instead on input line 338.
+(Font)              Font shape `OT1/lmtt/b/n' tried instead on input line 351.
 
-Overfull \hbox (89.2331pt too wide) in paragraph at lines 346--348
+Overfull \hbox (89.2331pt too wide) in paragraph at lines 359--361
 \OT1/lmr/m/n/10 (Automatically calls SAVE-INPUT and RESTORE-INPUT) (http://fort
 h.sourceforge.net/standard/dpans/a0006.htm) 
  []
 
+LaTeX Font Info:    Font shape `OT1/lmtt/bx/n' in size <14.4> not available
+(Font)              Font shape `OT1/lmtt/b/n' tried instead on input line 370.
 
-Overfull \hbox (58.42946pt too wide) in paragraph at lines 359--367
+Overfull \hbox (58.42946pt too wide) in paragraph at lines 374--382
 \OT1/lmr/m/n/10 more gen-eral take, see Brad Ro-driguez' se-ries of ar-ti-cles 
 at [][]http://www.bradrodriguez.com/papers/moving3.htm[][].
  []
 
 [20] [21] [22]
-Underfull \hbox (badness 6332) in paragraph at lines 571--571
+Underfull \hbox (badness 6332) in paragraph at lines 586--586
 [][][]\OT1/lmr/m/n/8 Many Forths now use the words \OT1/lmtt/m/n/8 cs-pick \OT1
 /lmr/m/n/8 and \OT1/lmtt/m/n/8 cs-roll \OT1/lmr/m/n/8 in-stead of the \OT1/lmtt
 /m/n/8 branch \OT1/lmr/m/n/8 vari-ants, see
  []
 
 
-Underfull \hbox (badness 1460) in paragraph at lines 584--584
+Underfull \hbox (badness 1460) in paragraph at lines 599--599
 \OT1/lmr/m/n/8 see there for more de-tails. An-other take on this sub-ject that
  han-dles things a bit dif-fer-ently is at
  []
 
-LaTeX Font Info:    Try loading font information for OMS+lmr on input line 635.
+LaTeX Font Info:    Try loading font information for OMS+lmr on input line 650.
 
 (/usr/share/texmf/tex/latex/lm/omslmr.fd
 File: omslmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    Font shape `OMS/lmr/m/n' in size <10> not available
-(Font)              Font shape `OMS/lmsy/m/n' tried instead on input line 635.
+(Font)              Font shape `OMS/lmsy/m/n' tried instead on input line 650.
  [23]) [24]
 Chapter 7.
 (./ch_developing.tex
-Overfull \hbox (20.85101pt too wide) in paragraph at lines 3--5
+Overfull \hbox (20.85101pt too wide) in paragraph at lines 7--9
 \OT1/lmr/m/n/10 The eas-i-est way to add new words to Tali Forth is to in-clude
  them in the file \OT1/lmtt/m/n/10 forth[]code/user[]words.fs\OT1/lmr/m/n/10 . 
 
  []
 
 
-Overfull \hbox (32.06885pt too wide) in paragraph at lines 18--23
-\OT1/lmr/m/n/10 Michael Mar-tin's Ophis Cross-Assember can be down-loaded from 
-[][]http://michaelcmartin.github.io/Ophis/[][].
+Overfull \hbox (32.06885pt too wide) in paragraph at lines 23--29
+\OT1/lmr/m/n/10 Michael Mar-tin's[] Ophis Cross-Assember can be down-loaded fro
+m [][]http://michaelcmartin.github.io/Ophis/[][].
  []
 
 [25
@@ -547,29 +557,45 @@ Appendix B.
 
 ] [31]) [32]
 Appendix C.
-(./ch_thanks.tex) [33
-
-] [34
-
+(./ch_thanks.tex) (./bibliography.tex [33
 
 ]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 126.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 126.
+Underfull \hbox (badness 10000) in paragraph at lines 17--21
+[]\OT1/lmr/m/n/10 Leo \OT1/lmr/bx/n/10 Brodie\OT1/lmr/m/n/10 , \OT1/lmr/m/it/10
+ Think-ing in Forth\OT1/lmr/m/n/10 , 1st edi-tion 1984, [][]http://thinking-
+ []
+
+
+Overfull \hbox (65.80014pt too wide) in paragraph at lines 29--32
+[]\OT1/lmr/m/n/10 J.V. \OT1/lmr/bx/n/10 No-bel\OT1/lmr/m/n/10 , \OT1/lmr/m/it/1
+0 A Be-gin-ner's Guide to Forth\OT1/lmr/m/n/10 , [][]http://galileo.phys.virgin
+ia.edu/classes/551.jvn.fall01/primer.htm[][]. 
+ []
+
+) (./manual.ind [34
+
+] [35
+
+] [36
+
+])
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 133.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 133.
  (./manual.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 126.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 126.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 133.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 133.
 Package rerunfilecheck Info: File `manual.out' has not changed.
-(rerunfilecheck)             Checksum: 27D339C06218FAC29A04A602C26731DE;5244.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 126.
+(rerunfilecheck)             Checksum: DFF0332E2E6BD36D94DDA9E19416B135;5256.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 133.
  ) 
 Here is how much of TeX's memory you used:
- 7610 strings out of 494953
- 112572 string characters out of 6180978
- 312994 words of memory out of 5000000
- 10317 multiletter control sequences out of 15000+600000
- 70571 words of font info for 51 fonts, out of 8000000 for 9000
+ 7647 strings out of 494953
+ 113091 string characters out of 6180978
+ 313202 words of memory out of 5000000
+ 10333 multiletter control sequences out of 15000+600000
+ 71194 words of font info for 53 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 30i,12n,43p,232b,1650s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 37i,12n,43p,238b,1650s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texmf/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/share/texmf/fonts/en
 c/dvips/lm/lm-rmtt.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-rm.enc}</usr/sha
 re/texmf/fonts/type1/public/lm/lmbx10.pfb></usr/share/texmf/fonts/type1/public/
@@ -582,11 +608,12 @@ ic/lm/lmr9.pfb></usr/share/texmf/fonts/type1/public/lm/lmri10.pfb></usr/share/t
 exmf/fonts/type1/public/lm/lmri8.pfb></usr/share/texmf/fonts/type1/public/lm/lm
 ro10.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy10.pfb></usr/share/texmf/f
 onts/type1/public/lm/lmtk10.pfb></usr/share/texmf/fonts/type1/public/lm/lmtt10.
-pfb></usr/share/texmf/fonts/type1/public/lm/lmtt8.pfb>
-Output written on manual.pdf (34 pages, 547287 bytes).
+pfb></usr/share/texmf/fonts/type1/public/lm/lmtt8.pfb></usr/share/texmf/fonts/t
+ype1/public/lm/lmtto10.pfb>
+Output written on manual.pdf (36 pages, 583346 bytes).
 PDF statistics:
- 1098 PDF objects out of 1200 (max. 8388607)
- 1033 compressed objects within 11 object streams
- 455 named destinations out of 1000 (max. 500000)
+ 1247 PDF objects out of 1440 (max. 8388607)
+ 1178 compressed objects within 12 object streams
+ 466 named destinations out of 1000 (max. 500000)
  670 words of extra memory for PDF output out of 10000 (max. 10000000)
 

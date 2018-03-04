@@ -1,12 +1,11 @@
 % Chapter Running Tali Forth
 % Scot W. Stevenson
 
+\section{Native compiling}\index{compiling, native|textbf}
 
-\section{Native compiling}
-
-In a pure subroutine-threaded Forth, higher-level words are merely a series of
-subroutine jumps. For instances, the Forth word \texttt{[char]}, formal Forth
-definition
+In a pure subroutine-threaded (STC) Forth, higher-level words are merely a
+series of subroutine jumps. For instances, the Forth word \texttt{[char]},
+formal Forth definition
 
 \begin{lstlisting}[frame=single]
 : [char] char postpone literal ; immediate
@@ -22,7 +21,8 @@ in assembler is simply
 as an immediate, compile-only word. Theare are two obvious problems with this
 method: First, it is slow, because each \texttt{jsr/rts} pair consumes four
 bytes and 12 cycles overhead. Second, for smaller words, it uses far more bytes.
-Take for instance \texttt{drop}, which in its naive form is simply
+Take for instance \texttt{drop}\index{drop@\texttt{drop}}, which in its naive
+form is simply
 
 \begin{lstlisting}[frame=single]
                 inx
@@ -31,7 +31,7 @@ Take for instance \texttt{drop}, which in its naive form is simply
 
 for two bytes and four cycles. The jump to \texttt{drop} uses more space and
 takes far longer than the word itself. (In practice, \texttt{drop} checks for
-underflow, so the actual assembler code is
+underflow\index{underflow}, so the actual assembler code is
 
 \begin{lstlisting}[frame=single]
                 cpx #dsp0-3
@@ -45,11 +45,12 @@ underflow, so the actual assembler code is
 
 for eleven bytes. We'll discuss the underflow check further below.)
 
-To get rid of this problem, Tali Forth supports \textbf{native compiling}. The
-system variable \texttt{nc-limit} sets the threshhold up to which a word will be
-included not as a subroutine jump, but machine language. Let's start with an
-example where \texttt{nc-limit} is set to zero, that is, all words are compiled
-as subroutine jumps.  Take a simple word such as
+To get rid of this problem, Tali Forth supports \textbf{native
+compiling}\index{compiling, native}. The system variable \texttt{nc-limit} sets
+the threshhold up to which a word will be included not as a subroutine jump, but
+machine language. Let's start with an example where \texttt{nc-limit} is set to
+zero, that is, all words are compiled as subroutine jumps. Take a simple word
+such as
 
 \begin{lstlisting}[frame=single]
         : aaa 0 drop ;
@@ -65,10 +66,10 @@ and check the actual code with SEE:
         07D8  20 52 99 20 6B 88  ok
 \end{lstlisting}
 
-(The actual addresses might be different, this is from the ALPHA release).
-Our word \texttt{aaa} consists of two subroutine jumps, one to zero and one to DROP.
-Now, if we increase the threshhold to 20, we get different code, as this
-console session shows:
+(The actual addresses might be different, this is from the ALPHA release).  Our
+word \texttt{aaa} consists of two subroutine jumps, one to zero and one to
+\texttt{drop}. Now, if we increase the threshhold to 20, we get different code,
+as this console session shows:
 
 \begin{lstlisting}[frame=single]
         20 nc-limit !  ok
@@ -83,9 +84,9 @@ console session shows:
 
 Even though the definition of \texttt{bbb} is the same as \texttt{aaa}, we have
 totally different code: The number 0001 is pushed to the Data Stack (the first
-six bytes), then we check for underflow (the next nine bytes), and finally we
-\texttt{drop} by moving X, the Data Stack Pointer. Our word is definitely longer, but
-have just saved 12 cycles.
+six bytes), then we check for underflow\index{underflow} (the next nine bytes),
+and finally we \texttt{drop} by moving X\index{X register}, the Data Stack
+Pointer. Our word is definitely longer, but have just saved 12 cycles.
 
 To experiment with various parameters for native compiling, the Forth word
 \texttt{words\&sizes} is included in \texttt{user\_words.fs} (but commented out 
@@ -108,7 +109,7 @@ Changing \texttt{nc-limit} should show differences in the Forth words.
 
 
 
-\section{Underflow stripping}
+\section{Underflow stripping}\index{underflow!detection}
 
 Checking for underflow helps during the design and debug phases of writing Forth
 code, but once it ready to ship, those nine bytes per check hurt, as we see in
@@ -124,21 +125,22 @@ variable \texttt{uf-strip} to \texttt{true}.
 
 Tali has a 16-bit cell size (use \texttt{1 cells 8 \* .} to get the cells size in
 bits with any Forth), which can trip up calculations when compared to the
-\textit{de facto} standard Gforth with 64 bits. Take this example:
+\textit{de facto} standard Gforth\index{Gforth} with 64 bits. Take this example:
 
 \begin{lstlisting}[frame=single]
 ( Gforth )      decimal 1000 100 um* hex swap u. u.  186a0 0  ok
 ( Tali Forth)   decimal 1000 100 um* hex swap u. u.  86a0 1  ok
 \end{lstlisting}
 
-Tali has to use the upper cell of a double-celled number to correctly report the
-result, while Gforth doesn't. If the conversion from double to single is only
-via a \texttt{drop} instruction, this will produce different results.
+Tali has to use the upper cell of a double-celled\index{double cell} number to
+correctly report the result, while Gforth doesn't. If the conversion from double
+to single is only via a \texttt{drop} instruction, this will produce different
+results.
 
 
 % -------------------------------------
 
-\section{Reporting a problem}
+\section{Reporting a problem}\index{feedback|textbf}\index{bugs}
 
 
 

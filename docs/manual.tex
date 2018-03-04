@@ -11,6 +11,8 @@
 \pagestyle{fancy}
 
 \usepackage{graphicx}
+\usepackage{makeidx}
+\makeindex
 
 \usepackage{lmodern}    % for typewriter
 \usepackage{listings}
@@ -19,9 +21,11 @@
 \usepackage{color}
 \usepackage[colorlinks=true]{hyperref}   % must be last
 
+% Add real titlepage
+
 \title{The Tali Forth 2 Manual}
 \author{Scot W.~Stevenson}
-\date{2. March 2018}
+\date{\today}
 
 
 % --------------------------------
@@ -35,10 +39,12 @@
 
         \begin{description}
 
-        \item [Easy to try.] Download the source -- or even just the binary --
-                and you can immediately run it in an emulater. This lets
-                you experiment with a working 8-bit Forth for the 65c02
-                without any special configuration.
+        \item [Easy to try.]
+                \href{https://github.com/scotws/TaliForth2}{Download the source}
+                -- or even just the binary -- and you can immediately
+                run it in an emulater. This lets you experiment with a
+                working 8-bit Forth for the 65c02 without any special
+                configuration.
 
         \item [Simple.] The subroutine-threaded (STC) design and happily
                 overcommented source code give hobbyists the chance to study a
@@ -118,9 +124,10 @@
 \chapter{Thanks}
         \input{ch_thanks}
 
-input{bibliography}
+\input{bibliography}
 
-\begin{theindex}
-\end{theindex}
+% See https://en.wikibooks.org/wiki/LaTeX/Indexing#Sophisticated_indexing for
+% details
+\printindex
 
 \end{document}

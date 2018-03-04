@@ -1,29 +1,31 @@
 
 % ---------------------------------------
-\section{Stack}
+\section{Stack}\index{stack|textbf}
 
-Tali Forth 2 uses the lowest part of the top half of Zero Page for the Data
-Stack (DS). This leaves the lower half of the Zero Page for any kernel stuff the
-user might require. The DS therefore grows towards the initial user variables.
-See the file \texttt{definitions.asm} for details.  Because of the danger of
-underflow, it is recommended that the user kernel's variables are keep closer to
-\texttt{\$0100} than to \texttt{\$007f}.
+Tali Forth 2 uses the lowest part of the top half of Zero Page\index{Zero Page}
+for the Data Stack (DS). This leaves the lower half of the Zero Page for any
+kernel stuff the user might require. The DS therefore grows towards the initial
+user variables. See the file \texttt{definitions.asm} for details.  Because of
+the danger of underflow\index{underflow}, it is recommended that the user
+kernel's variables are keep closer to \texttt{\$0100} than to \texttt{\$007f}.
 
-The X register is used as the Data Stack Pointer (DSP). It points to the least
-significant byte of the current top element of the stack (`Top of the Stack',
-TOS).\footnote{In the first versions of Tali, the DSP pointed to the next
-\textit{free} element of the stack. The new system makes detecting underflow
-easier and parallels the structure of Liara Forth.}
+The X register\index{X register} is used as the Data Stack Pointer (DSP). It
+points to the least significant byte of the current top element of the stack
+(`Top of the Stack', TOS).\footnote{In the first versions of Tali\index{Tali
+Forth 1}, the DSP pointed to the next \textit{free} element of the stack. The
+new system makes detecting underflow easier and parallels the structure of Liara
+Forth\index{Liara Forth}.}
 
 Initially, the DSP points to \texttt{\$78}, not \texttt{\$7F} as might be
-expected. This provides a few bytes as a `floodplain' in case of underflow. The
-initial value of the DSP is defined as \texttt{dsp0} in the code.
+expected. This provides a few bytes as a `floodplain'\index{floodplain (stack)}
+in case of underflow\index{underflow}. The initial value of the DSP is defined
+as \texttt{dsp0} in the code.
 
 \subsection{Single cell values} Since the cell size is 16 bits, each stack entry
-consists of two bytes. They are stored little endian (least significant byte
-first). Therefore, the DSP points to the LSB of the current TOS.\footnote{Try
-reading that last sentence to a friend who isn't into computers. Aren't
-abbreviations fun?}
+consists of two bytes. They are stored little endian\index{little endian} (least
+significant byte first). Therefore, the DSP points to the LSB of the current
+TOS.\footnote{Try reading that last sentence to a friend who isn't into
+computers. Aren't abbreviations fun?}
 
 Because the DSP points to the current top of the stack, the byte it points to
 after boot -- \texttt{dsp0} -- will never be accessed: The DSP is decremented first with
@@ -62,11 +64,11 @@ basic structure is the same for both stacks.
 Because of this stack design, the second entry (`next on stack', NOS) starts at
 \texttt{02,X} and the third entry (`third on stack', 3OS) at \texttt{04,X}. 
 
-\subsection{Underflow detection} 
-In contrast to Tali Forth 1, this version contains underflow detection for most
-words. It does this by comparing the Data Stack Pointer (X) to values that it
-must be smaller than (because the stack grows towards 0000). For instance, to
-make sure we have one element on the stack, we write
+\subsection{Underflow detection}\index{underflow!detection} In contrast to Tali
+Forth 1\index{Tali Forth 1}, this version contains underflow detection for most
+words. It does this by comparing the Data Stack Pointer (X)\index{X register} to
+values that it must be smaller than (because the stack grows towards 0000). For
+instance, to make sure we have one element on the stack, we write
 
 \begin{lstlisting}[frame=single]
                 cpx \#dsp0-1
@@ -96,13 +98,13 @@ For the most common cases, this gives us:
         \label{table_uf}
 \end{table}
 
-Though underflow detection slows the code down slighly, it adds enormously to
-the stability of the program.
+Though underflow detection\index{underflow detection} slows the code down
+slighly, it adds enormously to the stability of the program.
 
-\subsection{Double cell values}
+\subsection{Double cell values}\index{double cell}
 
-The double cell is stored on top of the single cell.
-Note this places the sign bit at the beginning of the byte below the DSP.
+The double cell is stored on top of the single cell.  Note this places the sign
+bit at the beginning of the byte below the DSP.
 
 \begin{lstlisting}[frame=single]
               +---------------+
@@ -118,19 +120,18 @@ Note this places the sign bit at the beginning of the byte below the DSP.
               +===============+ 
 \end{lstlisting}
 
-Tali Forth 2 does not check for overflow, which in normal operation is too rare to
-justify the computing expense. 
+Tali Forth 2 does not check for overflow\index{overflow}, which in normal
+operation is too rare to justify the computing expense. 
 
 % ---------------------------------------
-\section{Dictionary}
-
+\section{Dictionary}\index{dictionary|textbf}
 
 Tali Forth 2 follows the traditional model of a Forth dictionary -- a linked list
 of words terminated with a zero pointer. The headers and code are kept separate
 to allow various tricks in the code.
 
 
-\subsection{Elements of the Header}
+\subsection{Elements of the Header}\index{header|textbf}
 
 Each header is at least eight bytes long:
 
@@ -154,15 +155,19 @@ nt_word ->  +--------+--------+
          +n +--------+--------+
 \end{lstlisting}
 
-Each word has a \texttt{name token} (nt, \texttt{nt\_word} in the code) that
+Each word has a \texttt{name token}\index{name token} (nt\index{nt|see {name
+token}}, \texttt{nt\_word} in the code) that
 points to the first byte of the header. This is the length of the word's name
 string, which is limited to 255 characters. 
 
 The second byte in the header (index 1) is the \texttt{status byte}. It is created by
-the flags defined in the file \texttt{definitions.asm}: 
+the flags\index{header!flags} defined in the file \texttt{definitions.asm}: 
 
 \begin{table}[h!]
-\begin{tabular}{ | c | c | }
+        \label{tab:table_flags}
+        \centering
+\begin{tabular}{ | c | l | }
+        \hline
         Flag & Function\\
         \hline
         CO & Compile Only\\
@@ -170,55 +175,60 @@ the flags defined in the file \texttt{definitions.asm}:
         NN & Never Native Compile\\
         AN & Always Native Compile\\
         UF & Underflow dectection\\
+        \hline
 \end{tabular}
         \caption{Header flags}
-        \label{table_flags}
 \end{table}
 
-Note there are currently four bits unused. The status byte is followed by the
-\textbf{pointer to the next header} in the linked list, which makes it the named
-token of the next word. A \texttt{0000} in this position signales the end of the
-linked list, which by convention is the word \texttt{bye}. 
+Note there are currently three bits unused. The status byte\index{status byte}
+is followed by the \textbf{pointer to the next header} in the linked list, which
+makes it the name token\index{name token} of the next word. A \texttt{0000} in
+this position signales the end of the linked list, which by convention is the
+word \texttt{bye}. 
 
-This is followed by the current word's \textbf{execution token} (xt,
+This is followed by the current word's \textbf{execution token}\index{execution
+token} (xt\index{xt|see {execution token}},
 \texttt{xt\_word}) that points to the start of the actual code. Some words that
 have the same functionality point to the same code block. The \textbf{end of the
 code} is referenced through the next pointer (\texttt{z\_word}) to enable native
 compilation of the word if allowed. 
 
 The \textbf{name string} starts at the eighth byte. The string is \textit{not}
-zero-terminated. By default, the strings of Tali Forth 2 are lower case, but
-case is respected for words the user defines, so `quarian' is a different words
-than `QUARIAN'. 
+zero-terminated. By default, the strings of Tali Forth 2 are lower
+case\index{case, lower}, but case is respected for words the user defines, so
+`quarian' is a different words than `QUARIAN'. 
 
 
 \subsection{Structure of the Header List}
 
 Tali Forth 2 distinguishes between three different list sources: The
-\textbf{native words} that are hard-coded in the file
-\texttt{native\_words.asm}, the \textbf{forth words} which are defined as
-high-level words and then generated at run-time when Tali Forth starts up, and
-\textbf{user words} in the file \texttt{user\_words.asm} which is empty when
-Tali Forth ships. 
+\textbf{native words}\index{native words} that are hard-coded in the file
+\texttt{native\_words.asm}, the \textbf{Forth words}\index{Forth words} which
+are defined as high-level words and then generated at run-time when Tali Forth
+starts up, and \textbf{user words} in the file
+\texttt{user\_words.asm}\index{user words}. 
 
 Tali has an unusually high number of native words in an attempt to make the
-Forth as fast as possible on the 65c02. The first word in the list -- the one
-that is checked first -- is always \texttt{drop}, the last one -- the one
-checked for last -- is always \texttt{bye}. The words which are (or are assumed
-to be) used more than others come first. Since humans are slow, words that are
-used more interactively like \texttt{words} come later. 
+Forth as fast as possible on the 65c02\index{65c02}. The first word in the list
+-- the one that is checked first -- is always
+\texttt{drop}\index{drop@\texttt{drop}}, the last one -- the one checked for
+last -- is always \texttt{bye}\index{bye@\texttt{bye}}. The words which are (or
+are assumed to be) used more than others come first. Since humans are slow,
+words that are used more interactively like
+\texttt{words}\index{words@\texttt{words}} come later. 
 
-The list of Forth words ends with the intro string. This functions as a
-primitive form of a self-test: If you see the string and only the string, the
-compilation of the Forth words worked.
+The list of Forth words ends with the intro strings\index{intro string}. This
+functions as a primitive form of a self-test\index{self-test}: If you see the
+string and only the string, the compilation of the Forth words worked.
 
 \pagebreak
 
 % ---------------------------------------
-\section{Memory Map}
+\section{Memory Map}\index{memory map|textbf}
 
 
-Tali Forth 2 was developed with a simple 32 KiB RAM, 32 KiB ROM design. 
+Tali Forth 2 was developed with a simple 32 KiB RAM\index{RAM}, 32 KiB
+ROM\index{ROM} design. 
 
 \begin{lstlisting}[frame=single]
    $0000  +-------------------+  ram_start, zpage, user0
@@ -277,26 +287,27 @@ Tali Forth 2 was developed with a simple 32 KiB RAM, 32 KiB ROM design.
 % ---------------------------------------
 \section{Input}
 
-Tali Forth 2, like Liara Forth, follows the ANSI input model with
-\texttt{refill} instead of older forms. There are up to four possible input
+Tali Forth 2, like Liara Forth, follows the ANSI\index{ANSI Forth} input model
+with \texttt{refill} instead of older forms. There are up to four possible input
 sources in Forth (see C\&D p. 155):
 
 \begin{enumerate}
-        \item The keyboard (`user input device')
+        \item The keyboard (`user input device')\index{keyboard}
         \item A character string in memory
-        \item A block file
-        \item A text file
+        \item A block file\index{file!block}
+        \item A text file\index{file!text}
 \end{enumerate}
 
-To check which one is being used, we first call \texttt{blk} which gives us the
-number of a mass storage block being used, or 0 for the `user input device'
-(keyboard). In the second case, we use SOURCE-ID to find out where input is
-coming from: 0 for the keyboard, \texttt{-1 (\$FFFF)} for a string in memory,
-and a number \texttt{n} for a file-id. Since Tali currently doesn't support
-blocks, we can skip the \texttt{blk} instruction and go right to \texttt{source-id}. 
+To check which one is being used, we first call
+\texttt{blk}\index{blk@\texttt{blk}} which gives us the number of a mass storage
+block being used, or 0 for the `user input device' (keyboard). In the second
+case, we use SOURCE-ID to find out where input is coming from: 0 for the
+keyboard, \texttt{-1 (\$FFFF)} for a string in memory, and a number \texttt{n}
+for a file-id\index{file-id}. Since Tali currently doesn't support blocks, we
+can skip the \texttt{blk} instruction and go right to \texttt{source-id}. 
 
 
-\subsection{Starting up}
+\subsection{Starting up}\index{booting}
 
 The intial commands after reboot flow into each other: \texttt{cold} to
 \texttt{abort} to \texttt{quit}. This is the same as with pre-ANSI Forths.
@@ -308,19 +319,20 @@ However, \texttt{quit} now calls \texttt{refill} to get the input.
         \item [Keyboard entry] This is the default. Get line of input via
                 \texttt{accept} and return \texttt{true} even if the input string was
                 empty.
-        \item [\texttt{evaluate} string] Return a FALSE flag.
+        \item [\texttt{evaluate} string] Return a \texttt{false} flag.
         \item [Input from a buffer] Not implemented at this time.
         \item [Input from a file] Not implemented at this time.
 \end{description}
 
 
-\subsection{The Command Line Interface}
+\subsection{The Command Line Interface}\index{command line interface}
 
-Tali Forth accepts input lines of up to 256 characters. The address of the
-current input buffer is stored in \texttt{cib} and is either \texttt{ibuffer1}
-or \texttt{ibuffer2}, each of which is 256 bytes long. The length of the current
-buffer is stored in \texttt{ciblen} -- this is the address that \texttt{>in}
-returns. 
+Tali Forth accepts input\index{input|textbf} lines of up to 256 characters. The
+address of the current input buffer\index{current input buffer} is stored in
+\texttt{cib}\index{cib|see {current input buffer}} and is either
+\texttt{ibuffer1} or \texttt{ibuffer2}, each of which is 256 bytes long. The
+length of the current buffer is stored in \texttt{ciblen} -- this is the address
+that \texttt{>in}\index{>in@\texttt{>in}} returns. 
 
 When a new line is entered, the address in \texttt{cib} is swapped, and the
 contents of \texttt{ciblen} are moved to \texttt{piblen} (for `previous input
@@ -332,7 +344,8 @@ requested, the address in \texttt{cib} is swapped back, and \texttt{ciblen} and
 (http://forth.sourceforge.net/standard/dpans/a0006.htm)
 (http://forth.sourceforge.net/standard/dpans/dpansa6.htm
 
-At some point, this system might be expanded to a real history list.
+At some point, this system might be expanded to a real history
+list.\index{history list}
 
 
 \subsection{\texttt{save-input} and \texttt{restore-input}}
@@ -354,7 +367,9 @@ http://forth.sourceforge.net/standard/dpans/dpans6.htm)
 
 
 % ---------------------------------------
-\section{Create/Does}
+\section{\texttt{create}/\texttt{does>}}
+\index{create@\texttt{create}|textbf}
+\index{does>@\texttt{does>}|textbf}
 
 \texttt{create/does>} is the most complex, but also most powerful part of Forth.
 Understanding how it works in Tali Forth is important if you want to be able to

@@ -1,15 +1,15 @@
 % Tests for Forth
 % Scot W. Stevenson
 
-Tali Forth 2 operates in a hardware environment that makes built-in tests
-pretty much impossible. The following collection of Forth snippets provides a
-basic way of testing at least some party by hand.
+Tali Forth 2 operates in a hardware environment that makes built-in
+tests\index{testing|textbf} pretty much impossible. The following collection of
+Forth snippets provides a basic way of testing at least some party by hand.
 
 For stress testing, the \texttt{user\_words.fs} routines contain routines such as
-a Mandelbrot program that can be uncommented and run.
+a Mandelbrot\index{Mandelbrot} program that can be uncommented and run.
 
 % ----------------------------------------
-\section{The interpreter}
+\section{The interpreter}\index{interpreter}
 
 \subsection{\texttt{>in} tests}
 
@@ -178,6 +178,8 @@ The Data Stack should be empty after all of these words, check with \texttt{.s}
 
 
 \subsection{\texttt{recurse}}
+\index{recursion}
+\index{recurse@\texttt{recurse}}
 
 \begin{lstlisting}
         : hhh ( a b -- gcd ) ?dup if tuck mod recurse then ;
@@ -202,13 +204,14 @@ For 5, the result should be 120.
 
 % ----------------------------------------
 
-\section{Math routines}
+\section{Math routines}\index{math}
 
 % TODO For examples of interger divsion, see
 % [http://www.forth200x.org/documents/html/usage.html#usage:div]
 
 
 \subsection{\texttt{fm/mod}}
+\index{fm/mod@\texttt{fm/mod}|textbf}
 
 \begin{lstlisting}
         : fm swap s>d rot fm/mod swap . . ; 
@@ -225,6 +228,7 @@ Should give you:
 
 
 \subsection{\texttt{sm/rem}}
+\index{sm/rem@\texttt{sm/rem}|textbf}
 
 \begin{lstlisting}
         : sm swap s>d rot sm/rem swap . . ; 

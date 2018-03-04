@@ -21,20 +21,25 @@
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \@writefile{toc}{\contentsline {section}{\numberline {1.1}The big picture}{7}{section.1.1}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.1.1}The 6502 CPU}{7}{subsection.1.1.1}}
-\@writefile{lof}{\contentsline {figure}{\numberline {1.1}{\ignorespaces \textit  {The 65c02 CPU.} Photographer: Anthony King, released in the public domain}}{7}{figure.1.1}}
-\newlabel{fig:65c02}{{1.1}{7}{\textit {The 65c02 CPU.} Photographer: Anthony King, released in the public domain}{figure.1.1}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.1.2}Forth}{7}{subsection.1.1.2}}
-\@writefile{toc}{\contentsline {section}{\numberline {1.2}On writing your own Forth}{8}{section.1.2}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.1.1}The 6502 MPU}{7}{subsection.1.1.1}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1.1}{\ignorespaces \textit  {The 65c02 MPU.} Photographer: Anthony King, released in the public domain}}{7}{figure.1.1}}
+\newlabel{fig:65c02}{{1.1}{7}{\textit {The 65c02 MPU.} Photographer: Anthony King, released in the public domain}{figure.1.1}{}}
+\citation{nobel}
+\citation{brodie03}
+\citation{brodie84}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.1.2}Forth}{8}{subsection.1.1.2}}
+\@writefile{toc}{\contentsline {section}{\numberline {1.2}Writing your own Forth}{8}{section.1.2}}
 \@writefile{toc}{\contentsline {chapter}{\numberline {2}Overview of Tali Forth}{9}{chapter.2}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \@writefile{toc}{\contentsline {section}{\numberline {2.1}Design considerations}{9}{section.2.1}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.1.1}Types of Forth}{9}{subsection.2.1.1}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.1.2}Implementation of the Data Stack}{9}{subsection.2.1.2}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.1.3}Where to put the TOS}{9}{subsection.2.1.3}}
+\@writefile{toc}{\contentsline {subsubsection}{ANSI Forth}{9}{section*.4}}
+\@writefile{toc}{\contentsline {subsubsection}{Threadding model}{9}{section*.5}}
+\@writefile{toc}{\contentsline {subsubsection}{Cell size}{9}{section*.6}}
 \@writefile{toc}{\contentsline {section}{\numberline {2.2}Design decisions}{9}{section.2.2}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.2.1}Where to put the TOS}{9}{subsection.2.2.1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.2}Implementation of the Data Stack}{9}{subsection.2.2.2}}
 \@writefile{toc}{\contentsline {part}{II\hspace  {1em}User Guide}{10}{part.2}}
 \@writefile{toc}{\contentsline {chapter}{\numberline {3}Installing}{11}{chapter.3}}
 \@writefile{lof}{\addvspace {10\p@ }}
@@ -65,8 +70,8 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {6.1.3}Double cell values}{17}{subsection.6.1.3}}
 \@writefile{toc}{\contentsline {section}{\numberline {6.2}Dictionary}{17}{section.6.2}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {6.2.1}Elements of the Header}{18}{subsection.6.2.1}}
+\newlabel{tab:table_flags}{{6.2.1}{18}{Elements of the Header}{lstnumber.-13.17}{}}
 \@writefile{lot}{\contentsline {table}{\numberline {6.2}{\ignorespaces Header flags}}{18}{table.6.2}}
-\newlabel{table_flags}{{6.2}{18}{Header flags}{table.6.2}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {6.2.2}Structure of the Header List}{18}{subsection.6.2.2}}
 \@writefile{toc}{\contentsline {section}{\numberline {6.3}Memory Map}{19}{section.6.3}}
 \@writefile{toc}{\contentsline {section}{\numberline {6.4}Input}{20}{section.6.4}}
@@ -75,39 +80,40 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {6.4.3}\texttt  {save-input} and \texttt  {restore-input}}{20}{subsection.6.4.3}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {6.4.4}\texttt  {evaluate}}{20}{subsection.6.4.4}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {6.4.5}\texttt  {state}}{20}{subsection.6.4.5}}
-\@writefile{toc}{\contentsline {section}{\numberline {6.5}Create/Does}{21}{section.6.5}}
-\@writefile{toc}{\contentsline {subsubsection}{SEQUENCE I: Compiling the word \texttt  {CONSTANT}}{21}{section*.4}}
-\@writefile{toc}{\contentsline {subsubsection}{SEQUENCE II: Executing the word CONSTANT / creating LIFE }{21}{section*.5}}
-\@writefile{toc}{\contentsline {subsubsection}{SEQUENCE III: Executing LIFE}{22}{section*.6}}
+\@writefile{toc}{\contentsline {section}{\numberline {6.5}\texttt  {create}/\texttt  {does>}}{21}{section.6.5}}
+\@writefile{toc}{\contentsline {subsubsection}{SEQUENCE I: Compiling the word \texttt  {CONSTANT}}{21}{section*.7}}
+\@writefile{toc}{\contentsline {subsubsection}{SEQUENCE II: Executing the word CONSTANT / creating LIFE }{21}{section*.8}}
+\@writefile{toc}{\contentsline {subsubsection}{SEQUENCE III: Executing LIFE}{22}{section*.9}}
 \@writefile{toc}{\contentsline {section}{\numberline {6.6}Control Flow}{23}{section.6.6}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {6.6.1}Branches}{23}{subsection.6.6.1}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {6.6.2}Loops}{23}{subsection.6.6.2}}
-\@writefile{toc}{\contentsline {subsubsection}{\texttt  {do} at compile-time:}{24}{section*.7}}
-\@writefile{toc}{\contentsline {subsubsection}{\texttt  {do} at run-time:}{24}{section*.8}}
-\@writefile{toc}{\contentsline {subsubsection}{\texttt  {loop} at compile time:}{24}{section*.9}}
-\@writefile{toc}{\contentsline {subsubsection}{\texttt  {loop} at run-time (which is \texttt  {(+loop)}) }{24}{section*.10}}
+\@writefile{toc}{\contentsline {subsubsection}{\texttt  {do} at compile-time:}{24}{section*.10}}
+\@writefile{toc}{\contentsline {subsubsection}{\texttt  {do} at run-time:}{24}{section*.11}}
+\@writefile{toc}{\contentsline {subsubsection}{\texttt  {loop} at compile time:}{24}{section*.12}}
+\@writefile{toc}{\contentsline {subsubsection}{\texttt  {loop} at run-time (which is \texttt  {(+loop)}) }{24}{section*.13}}
 \@writefile{toc}{\contentsline {chapter}{\numberline {7}Developing}{25}{chapter.7}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \@writefile{toc}{\contentsline {section}{\numberline {7.1}Adding new words}{25}{section.7.1}}
 \@writefile{toc}{\contentsline {section}{\numberline {7.2}Deeper changes}{25}{section.7.2}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {7.2.1}The Ophis Assembler}{25}{subsection.7.2.1}}
-\@writefile{toc}{\contentsline {section}{\numberline {7.3}General notes}{25}{section.7.3}}
-\@writefile{toc}{\contentsline {section}{\numberline {7.4}Coding style}{26}{section.7.4}}
-\@writefile{toc}{\contentsline {section}{\numberline {7.5}Testing}{26}{section.7.5}}
-\@writefile{toc}{\contentsline {section}{\numberline {7.6}Code Cheat Sheet}{26}{section.7.6}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {7.6.1}The Stack Drawing}{26}{subsection.7.6.1}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {7.6.2}Coding idioms}{27}{subsection.7.6.2}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {7.6.3}vi shortcuts}{27}{subsection.7.6.3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.2.2}General notes}{25}{subsection.7.2.2}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.2.3}Coding style}{26}{subsection.7.2.3}}
+\@writefile{toc}{\contentsline {section}{\numberline {7.3}Testing}{26}{section.7.3}}
+\@writefile{toc}{\contentsline {section}{\numberline {7.4}Code Cheat Sheet}{26}{section.7.4}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.4.1}The Stack Drawing}{26}{subsection.7.4.1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.4.2}Coding idioms}{27}{subsection.7.4.2}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.4.3}vi shortcuts}{27}{subsection.7.4.3}}
 \@writefile{toc}{\contentsline {chapter}{\numberline {8}Future plans}{28}{chapter.8}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \@writefile{toc}{\contentsline {chapter}{\numberline {A}FAQ}{29}{appendix.A}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {section}{\numberline {A.1}Why does Tali Forth take so long to start up?}{29}{section.A.1}}
-\@writefile{toc}{\contentsline {section}{\numberline {A.2}Why `Tali' Forth?}{29}{section.A.2}}
-\@writefile{toc}{\contentsline {section}{\numberline {A.3}Then who is `Lara'?}{29}{section.A.3}}
+\@writefile{toc}{\contentsline {section}{\numberline {A.1}What happened to Tali Forth 1?}{29}{section.A.1}}
+\@writefile{toc}{\contentsline {section}{\numberline {A.2}Why does Tali Forth take so long to start up?}{29}{section.A.2}}
+\@writefile{toc}{\contentsline {section}{\numberline {A.3}Why `Tali' Forth?}{29}{section.A.3}}
+\@writefile{toc}{\contentsline {section}{\numberline {A.4}Who is `Liara'?}{29}{section.A.4}}
 \@writefile{toc}{\contentsline {chapter}{\numberline {B}Forth tests}{30}{appendix.B}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
@@ -134,3 +140,8 @@
 \@writefile{toc}{\contentsline {chapter}{\numberline {C}Thanks}{33}{appendix.C}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
+\bibcite{biancuzzi09}{1}
+\bibcite{brodie03}{2}
+\bibcite{brodie84}{3}
+\bibcite{leventhal79}{4}
+\bibcite{nobel}{5}
