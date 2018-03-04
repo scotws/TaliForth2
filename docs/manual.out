@@ -23,26 +23,19 @@
 \BOOKMARK [2][-]{subsection.5.2.1}{Elements of the Header}{section.5.2}% 23
 \BOOKMARK [2][-]{subsection.5.2.2}{Structure of the Header List}{section.5.2}% 24
 \BOOKMARK [1][-]{section.5.3}{Memory Map}{chapter.5}% 25
-\BOOKMARK [1][-]{section.5.4}{Input}{chapter.5}% 26
-\BOOKMARK [2][-]{subsection.5.4.1}{Starting up}{section.5.4}% 27
-\BOOKMARK [2][-]{subsection.5.4.2}{The Command Line Interface}{section.5.4}% 28
-\BOOKMARK [2][-]{subsection.5.4.3}{save-input and restore-input}{section.5.4}% 29
-\BOOKMARK [2][-]{subsection.5.4.4}{evaluate}{section.5.4}% 30
-\BOOKMARK [2][-]{subsection.5.4.5}{state}{section.5.4}% 31
-\BOOKMARK [1][-]{section.5.5}{Create/Does}{chapter.5}% 32
-\BOOKMARK [1][-]{section.5.6}{Branches}{chapter.5}% 33
-\BOOKMARK [2][-]{subsection.5.6.1}{Loops}{section.5.6}% 34
-\BOOKMARK [0][-]{chapter.6}{Developing}{part.3}% 35
-\BOOKMARK [1][-]{section.6.1}{Adding new words}{chapter.6}% 36
-\BOOKMARK [1][-]{section.6.2}{Deeper changes}{chapter.6}% 37
-\BOOKMARK [2][-]{subsection.6.2.1}{The Ophis Assembler}{section.6.2}% 38
-\BOOKMARK [1][-]{section.6.3}{General notes}{chapter.6}% 39
-\BOOKMARK [1][-]{section.6.4}{Coding style}{chapter.6}% 40
-\BOOKMARK [1][-]{section.6.5}{Testing}{chapter.6}% 41
-\BOOKMARK [1][-]{section.6.6}{Code Cheat Sheet}{chapter.6}% 42
-\BOOKMARK [0][-]{appendix.A}{FAQ}{part.3}% 43
-\BOOKMARK [1][-]{section.A.1}{Why does Tali Forth take so long to start up?}{appendix.A}% 44
-\BOOKMARK [1][-]{section.A.2}{Why `Tali' Forth?}{appendix.A}% 45
-\BOOKMARK [1][-]{section.A.3}{Then who is `Lara'?}{appendix.A}% 46
-\BOOKMARK [0][-]{appendix.B}{Forth tests}{part.3}% 47
-\BOOKMARK [0][-]{appendix.C}{Thanks}{part.3}% 48
+\BOOKMARK [1][-]{section.5.4}{Branches}{chapter.5}% 26
+\BOOKMARK [2][-]{subsection.5.4.1}{Loops}{section.5.4}% 27
+\BOOKMARK [0][-]{chapter.6}{Developing}{part.3}% 28
+\BOOKMARK [1][-]{section.6.1}{Adding new words}{chapter.6}% 29
+\BOOKMARK [1][-]{section.6.2}{Deeper changes}{chapter.6}% 30
+\BOOKMARK [2][-]{subsection.6.2.1}{The Ophis Assembler}{section.6.2}% 31
+\BOOKMARK [1][-]{section.6.3}{General notes}{chapter.6}% 32
+\BOOKMARK [1][-]{section.6.4}{Coding style}{chapter.6}% 33
+\BOOKMARK [1][-]{section.6.5}{Testing}{chapter.6}% 34
+\BOOKMARK [1][-]{section.6.6}{Code Cheat Sheet}{chapter.6}% 35
+\BOOKMARK [0][-]{appendix.A}{FAQ}{part.3}% 36
+\BOOKMARK [1][-]{section.A.1}{Why does Tali Forth take so long to start up?}{appendix.A}% 37
+\BOOKMARK [1][-]{section.A.2}{Why `Tali' Forth?}{appendix.A}% 38
+\BOOKMARK [1][-]{section.A.3}{Then who is `Lara'?}{appendix.A}% 39
+\BOOKMARK [0][-]{appendix.B}{Forth tests}{part.3}% 40
+\BOOKMARK [0][-]{appendix.C}{Thanks}{part.3}% 41

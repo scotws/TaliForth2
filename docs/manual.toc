@@ -23,33 +23,26 @@
 \contentsline {subsection}{\numberline {5.2.1}Elements of the Header}{14}{subsection.5.2.1}
 \contentsline {subsection}{\numberline {5.2.2}Structure of the Header List}{15}{subsection.5.2.2}
 \contentsline {section}{\numberline {5.3}Memory Map}{15}{section.5.3}
-\contentsline {section}{\numberline {5.4}Input}{16}{section.5.4}
-\contentsline {subsection}{\numberline {5.4.1}Starting up}{17}{subsection.5.4.1}
-\contentsline {subsection}{\numberline {5.4.2}The Command Line Interface}{17}{subsection.5.4.2}
-\contentsline {subsection}{\numberline {5.4.3}\texttt {save-input} and \texttt {restore-input}}{17}{subsection.5.4.3}
-\contentsline {subsection}{\numberline {5.4.4}evaluate}{17}{subsection.5.4.4}
-\contentsline {subsection}{\numberline {5.4.5}state}{17}{subsection.5.4.5}
-\contentsline {section}{\numberline {5.5}Create/Does}{17}{section.5.5}
-\contentsline {subsubsection}{SEQUENCE I: Compiling the word \texttt {CONSTANT}}{17}{section*.3}
-\contentsline {subsubsection}{SEQUENCE II: Executing the word CONSTANT / creating LIFE }{18}{section*.4}
-\contentsline {subsubsection}{SEQUENCE III: Executing LIFE}{18}{section*.5}
-\contentsline {section}{\numberline {5.6}Branches}{19}{section.5.6}
-\contentsline {subsection}{\numberline {5.6.1}Loops}{20}{subsection.5.6.1}
-\contentsline {subsubsection}{\texttt {do} at compile-time:}{20}{section*.6}
-\contentsline {subsubsection}{\texttt {do} at run-time:}{20}{section*.7}
-\contentsline {subsubsection}{\texttt {loop} at compile time:}{20}{section*.8}
-\contentsline {subsubsection}{\texttt {loop} at run-time (which is \texttt {(+loop)}) }{21}{section*.9}
-\contentsline {chapter}{\numberline {6}Developing}{22}{chapter.6}
-\contentsline {section}{\numberline {6.1}Adding new words}{22}{section.6.1}
-\contentsline {section}{\numberline {6.2}Deeper changes}{22}{section.6.2}
-\contentsline {subsection}{\numberline {6.2.1}The Ophis Assembler}{22}{subsection.6.2.1}
-\contentsline {section}{\numberline {6.3}General notes}{22}{section.6.3}
-\contentsline {section}{\numberline {6.4}Coding style}{23}{section.6.4}
-\contentsline {section}{\numberline {6.5}Testing}{23}{section.6.5}
-\contentsline {section}{\numberline {6.6}Code Cheat Sheet}{23}{section.6.6}
-\contentsline {chapter}{\numberline {A}FAQ}{24}{appendix.A}
-\contentsline {section}{\numberline {A.1}Why does Tali Forth take so long to start up?}{24}{section.A.1}
-\contentsline {section}{\numberline {A.2}Why `Tali' Forth?}{24}{section.A.2}
-\contentsline {section}{\numberline {A.3}Then who is `Lara'?}{24}{section.A.3}
-\contentsline {chapter}{\numberline {B}Forth tests}{25}{appendix.B}
-\contentsline {chapter}{\numberline {C}Thanks}{26}{appendix.C}
+\contentsline {subsubsection}{SEQUENCE I: Compiling the word \texttt {CONSTANT}}{19}{section*.3}
+\contentsline {subsubsection}{SEQUENCE II: Executing the word CONSTANT / creating LIFE }{19}{section*.4}
+\contentsline {subsubsection}{SEQUENCE III: Executing LIFE}{19}{section*.5}
+\contentsline {section}{\numberline {5.4}Branches}{21}{section.5.4}
+\contentsline {subsection}{\numberline {5.4.1}Loops}{21}{subsection.5.4.1}
+\contentsline {subsubsection}{\texttt {do} at compile-time:}{21}{section*.6}
+\contentsline {subsubsection}{\texttt {do} at run-time:}{21}{section*.7}
+\contentsline {subsubsection}{\texttt {loop} at compile time:}{22}{section*.8}
+\contentsline {subsubsection}{\texttt {loop} at run-time (which is \texttt {(+loop)}) }{22}{section*.9}
+\contentsline {chapter}{\numberline {6}Developing}{23}{chapter.6}
+\contentsline {section}{\numberline {6.1}Adding new words}{23}{section.6.1}
+\contentsline {section}{\numberline {6.2}Deeper changes}{23}{section.6.2}
+\contentsline {subsection}{\numberline {6.2.1}The Ophis Assembler}{23}{subsection.6.2.1}
+\contentsline {section}{\numberline {6.3}General notes}{23}{section.6.3}
+\contentsline {section}{\numberline {6.4}Coding style}{24}{section.6.4}
+\contentsline {section}{\numberline {6.5}Testing}{24}{section.6.5}
+\contentsline {section}{\numberline {6.6}Code Cheat Sheet}{24}{section.6.6}
+\contentsline {chapter}{\numberline {A}FAQ}{25}{appendix.A}
+\contentsline {section}{\numberline {A.1}Why does Tali Forth take so long to start up?}{25}{section.A.1}
+\contentsline {section}{\numberline {A.2}Why `Tali' Forth?}{25}{section.A.2}
+\contentsline {section}{\numberline {A.3}Then who is `Lara'?}{25}{section.A.3}
+\contentsline {chapter}{\numberline {B}Forth tests}{26}{appendix.B}
+\contentsline {chapter}{\numberline {C}Thanks}{27}{appendix.C}
