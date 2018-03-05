@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.3.2)  4 MAR 2018 23:53
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.3.2)  5 MAR 2018 22:17
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -406,13 +406,7 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <8> on input line 35.
 LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <6> on input line 35.
-
-Overfull \hbox (72.12628pt too wide) in paragraph at lines 68--73
-\OT1/lmr/m/n/9 ver-sion can be found. The dis-cus-sion thread is at 6502.org at
- [][]http://forum.6502.org/viewtopic.php?f=9&t=2926[][]. 
- []
-
-[1
+ [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] (./manual.toc
 LaTeX Font Info:    External font `lmex10' loaded for size
@@ -426,8 +420,7 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 ]
 LaTeX Font Info:    Try loading font information for OT1+lmtt on input line 43.
 
-
-(/usr/share/texmf/tex/latex/lm/ot1lmtt.fd
+ (/usr/share/texmf/tex/latex/lm/ot1lmtt.fd
 File: ot1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
 ))
 \tf@toc=\write5
@@ -439,8 +432,7 @@ File: ot1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
 
  [4
 
-]
-(./manual.lot)
+] (./manual.lot)
 \tf@lot=\write7
 \openout7 = `manual.lot'.
 
@@ -574,19 +566,19 @@ ia.edu/classes/551.jvn.fall01/primer.htm[][].
 ] [37
 
 ])
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 133.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 133.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 132.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 132.
  (./manual.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 133.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 133.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 132.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 132.
 Package rerunfilecheck Info: File `manual.out' has not changed.
 (rerunfilecheck)             Checksum: 8840E876C3CA8C874298213D645AE4E8;5637.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 133.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 132.
  ) 
 Here is how much of TeX's memory you used:
  7665 strings out of 494953
  113361 string characters out of 6180978
- 314303 words of memory out of 5000000
+ 313303 words of memory out of 5000000
  10341 multiletter control sequences out of 15000+600000
  71194 words of font info for 53 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
@@ -605,7 +597,7 @@ ro10.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy10.pfb></usr/share/texmf/f
 onts/type1/public/lm/lmtk10.pfb></usr/share/texmf/fonts/type1/public/lm/lmtt10.
 pfb></usr/share/texmf/fonts/type1/public/lm/lmtt8.pfb></usr/share/texmf/fonts/t
 ype1/public/lm/lmtto10.pfb>
-Output written on manual.pdf (37 pages, 602625 bytes).
+Output written on manual.pdf (37 pages, 602734 bytes).
 PDF statistics:
  1327 PDF objects out of 1440 (max. 8388607)
  1256 compressed objects within 13 object streams
