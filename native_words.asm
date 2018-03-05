@@ -7318,6 +7318,13 @@ z_zero_branch:  rts
 zero_branch_runtime:
         ; """In some Forths, this is called (0BRANCH)"""
 .scope
+                ; we use the return value on the 65c02 stack to determine
+                ; where we want to return to.
+                pla
+                sta tmpbranch
+                pla
+                sta tmpbranch+1
+
                 ; See if the flag is zero, which is the whole purpose of
                 ; this all
                 lda 0,x
@@ -7326,24 +7333,22 @@ zero_branch_runtime:
 
                 ; Flag is TRUE, so we skip over the next two bytes. This is
                 ; the part between IF and THEN
-                pla             ; LSB
+                lda tmpbranch   ; LSB
                 clc
                 adc #2
                 sta tmp1
-                pla             ; MSB
-                adc #0          ; only need carry
+                lda tmpbranch+1 ; MSB
+                bcc +
+                inc tmp1+1
+*
+                lda tmpbranch+1
                 sta tmp1+1
+
                 bra _done
 _zero:
-                ; Flag is FALSE, so we take the jump to the address given
-                ; in the next two bytes
-                pla
-                sta tmpbranch
-                pla
-                sta tmpbranch+1
-
-                ; However, the address points to the last byte of the
-                ; JSR instruction, not to the next byte afterwards
+                ; flag is FALSE (0) so we take the jump to the address given in the next
+                ; two bytes.  However, the address points to the last byte of the JSR
+                ; instruction, not to the next byte afterwards
                 ldy #1
                 lda (tmpbranch),y
                 sta tmp1
