@@ -1,7 +1,7 @@
 TODO/CHANGES for Tali Forth 2 
 Scot W. Stevenson <scot.stevenson@gmail.com>
 First version: 19. Jan 2014
-This version: 01. Mar 2016
+This version: 05. Mar 2016
 
 
 TODO POST-ALPHA ("ALL WORDS DO SOMETHING, USUALLY EVEN THE RIGHT THING")
@@ -18,14 +18,15 @@ TODO POST-BETA ("ALL THERE, BUT BEWARE OF SNEAKY BUGS")
         - In ALLOT, figure out how to handle release of too much memory
         - Add SEARCH (prepares for inclusion of editor)
         - Test all words, adding new tests to docs/tests.md
+        - Add Editor based on ed
         - Update documentation
 
 
 TODO AT SOME POINT
         - Add ASCII output to DUMP
+        - Consider switching 0BRANCH/BRANCH to CS-PICK/CS-ROLL
         - Add history function, at least one line, best with CTRL-p (hex $10?)
         - Add more words from the ANSI String list
-        - Add Editor based on ed
         - Add handling for multi-byte keyboard input (if possible with py65)
         - See if we can add real Delete Key detection (ESC[3~)
         - Add real USER variables
@@ -36,7 +37,6 @@ TODO AT SOME POINT
         - Consider adding THROW/CATCH
         - Consider moving UM* to table-based multiplication
         - Consider adding KEY? if we can make it work with py65mon
-        - Consider switching 0BRANCH/BRANCH to CS-PICK/CS-ROLL
         - Allow SLITERAL to store strings longer than 255 chars
         - Allow S" and ." to handle strings longer than 255 chars
         - Allow -TRAILING to handle strings longer than 255 chars
