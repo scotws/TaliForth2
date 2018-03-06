@@ -5484,11 +5484,11 @@ _done:
 z_s_quote:      rts
 .scend
 
-; ## S_TO_D ( d -- n ) "Convert single cell number to double cell"
+; ## S_TO_D ( u -- d ) "Convert single cell number to double cell"
 ; ## "s>d"  src: ANSI core  b: TBA  c: TBA  status: coded
 .scope
 xt_s_to_d:
-                cpx #dsp0-3
+                cpx #dsp0-1
                 bmi +
                 lda #11
                 jmp error
