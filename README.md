@@ -1,7 +1,7 @@
 # Tali Forth 2 for the 65c02  
 Scot W. Stevenson <scot.stevenson@gmail.com>   
 First version: 19. Jan 2014 (original Tali Forth)  
-This version: 26. Feb 2018 
+This version: 06. Mar 2018 
 
 **(THIS IS AN ALPHA VERSION OF TALI FORTH. SOME THINGS DON'T WORK)**
 
@@ -62,7 +62,7 @@ parts of their internal logic.
 
 ## Seriously super lots more detail 
 
-See `docs\MANUAL.md` for the Tali Forth manual, which covers the installation,
+See `docs\manual.pdf` for the Tali Forth manual, which covers the installation,
 setup and internal structure. The central discussion forum is
 [http://forum.6502.org/viewtopic.php?f=9&t=2926](http://forum.6502.org/viewtopic.php?f=9&t=2926)
 at 6502.org.

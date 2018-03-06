@@ -7,20 +7,20 @@ TODO POST-ALPHA ("ALL WORDS DO SOMETHING, USUALLY EVEN THE RIGHT THING")
         - Handle native compile special cases (R>, >R, 2R>, 2>R, etc)
         - Add size of words to source code
         - Invent tests for CMOVE, CMOVE>, COUNT (and others)
+        - Test all words, adding new tests to docs/tests.md
 
 
 TODO POST-BETA ("ALL THERE, BUT BEWARE OF SNEAKY BUGS")
         - Allow stripping of underflow checks based on UF flag
         - Move adjust_z from CONSTANT to taliforth.asm (it's too long!)
         - Code temporary high-level Forth words such as WITHIN natively
+        - Allow stripping of underflow checks based on UF flag
         - Warn if newly defined word already in Dictionary
         - Add underflow check to PICK
         - Check where all "STY 0,X" can be used to good effect
         - In ALLOT, figure out how to handle release of too much memory
         - Add SEARCH (prepares for inclusion of editor)
-        - Test all words, adding new tests to docs/tests.md
-        - Add Editor based on ed
-        - Update documentation
+        - Add Editor in Forth based on ed
 
 
 TODO AT SOME POINT

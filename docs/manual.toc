@@ -85,8 +85,8 @@
 \contentsline {subsection}{\numberline {B.3.1}Basic looping}{32}{subsection.B.3.1}
 \contentsline {subsection}{\numberline {B.3.2}Looping with \texttt {if}}{32}{subsection.B.3.2}
 \contentsline {subsection}{\numberline {B.3.3}Nested loops}{32}{subsection.B.3.3}
-\contentsline {subsection}{\numberline {B.3.4}\texttt {exit}}{32}{subsection.B.3.4}
-\contentsline {subsection}{\numberline {B.3.5}\texttt {unloop}}{32}{subsection.B.3.5}
+\contentsline {subsection}{\numberline {B.3.4}\texttt {exit}}{33}{subsection.B.3.4}
+\contentsline {subsection}{\numberline {B.3.5}\texttt {unloop}}{33}{subsection.B.3.5}
 \contentsline {subsection}{\numberline {B.3.6}\texttt {leave}}{33}{subsection.B.3.6}
 \contentsline {subsection}{\numberline {B.3.7}\texttt {recurse}}{33}{subsection.B.3.7}
 \contentsline {section}{\numberline {B.4}Math routines}{33}{section.B.4}
