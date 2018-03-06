@@ -1,5 +1,6 @@
 % Tests for Forth
 % Scot W. Stevenson
+% TODO rename examples so letters coincide with themes
 
 Tali Forth 2 operates in a hardware environment that makes built-in
 tests\index{testing|textbf} pretty much impossible. The following collection of
@@ -83,8 +84,8 @@ The simplest test is to redefine \texttt{constant}:
 Taken from Conklin \& Rather p. 160
 
 \begin{lstlisting}
-        : test1 ( "name" -- )  32 word  count type ; 
-        : test2 ( "name" -- )  32 parse  type ; 
+        : test1 ( "name" -- )  32 word count type ; 
+        : test2 ( "name" -- )  32 parse type ; 
 \end{lstlisting}
 
 \noindent Results of calls with `ABC' should give identical result if there are no
@@ -94,6 +95,10 @@ and abort, then throw an error because ABC will not be found in the dictionary.
 % ----------------------------------------
 \section{Looping}
 
+The looping constructs are the most complicated parts of Tali Forth. Currently,
+we use the Return Stack instead of the more traditional Data Stack as the
+mythical Forth `Control Stack'.
+
 \subsection{Basic looping}
 
 Test normal loop:
@@ -101,21 +106,21 @@ Test normal loop:
         : aaa 11 1 do i . loop ;        
 \end{lstlisting}
 
-\noindent Should produce numbers 1 - 10
+\noindent This should simply produce the numbers 1 to 10. Then, break up the
+loop over multiple lines because it turns out this can be tricky:
 
-Then, try this as multi-line loop because that can be tricky:
 \begin{lstlisting}
         : bbb 11 1 do 
           i . loop ; 
 \end{lstlisting}
 
-\noindent Test other variants (ex Gforth):
+\noindent Following Gforth\index{Gforth}, we then should test other variants:
 
 \begin{lstlisting}
         : bbb1 -1 0 ?do i . -1 +loop ;
 \end{lstlisting}
 
-\noindent which should produce `0 -1'. However, 
+\noindent This should produce `0 -1', while
 
 \begin{lstlisting}
         : bbb2 0 0 ?do i . -1 +loop ;
@@ -126,16 +131,28 @@ Then, try this as multi-line loop because that can be tricky:
 
 \subsection{Looping with \texttt{if}}
 
+Including \texttt{if} in a loop is the ultimate test if everything is correct
+with our stack machanics. First, a simple version will do:
+
 \begin{lstlisting}
-        : ccc 11 1 do  i 5 > if i . then loop ; 
+        : ccc 11 1 do i dup 5 > if . then loop ; 
 \end{lstlisting}
 
-\noindent should produce \texttt{6 7 8 9 10}
+\noindent This should produce \texttt{6 7 8 9 10}. The next step is to continue
+with some instructions after the \texttt{then} -- this actually revealed a
+stupid bug in the ALPHA version of Tali Forth 2.
 
+\begin{lstlisting}
+        : ccc 11 1 do i dup 2 = if ." two! " then . loop ;
+\end{lstlisting}
+
+\noindent This should print the string right before the number two.
 
 \subsection{Nested loops}
 
-\noindent https://www.forth.com/starting-forth/6-forth-do-loops/
+\noindent A simple test of nested loops is found in
+\href{https://www.forth.com/starting-forth/6-forth-do-loops/}{\textit{Starting
+Forth}}:
 
 \begin{lstlisting}
         : ddd cr 11 1 do
@@ -144,8 +161,7 @@ Then, try this as multi-line loop because that can be tricky:
             loop cr loop ;
 \end{lstlisting}
 
-\noindent should produce math table from 1x1 to 10x10
-
+\noindent This should print a multiplication table from 1x1 to 10x10.
 
 \subsection{\texttt{exit}}
 
