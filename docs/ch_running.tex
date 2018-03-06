@@ -21,18 +21,20 @@ Forth as
 
 \noindent as an immediate, compile-only word. Theare are two obvious problems
 with this method: First, it is slow, because each \texttt{jsr/rts} pair consumes
-four bytes and 12 cycles overhead. Second, for smaller words, it uses far more
-bytes. Take for instance \texttt{drop}\index{drop@\texttt{drop}}, which in its
-naive form is simply
+four bytes and 12 cycles overhead. Second, for smaller words, the jumps use far
+more bytes than the actual code. Take for instance
+\texttt{drop}\index{drop@\texttt{drop}}, which in its naive form is simply
 
 \begin{lstlisting}[frame=single]
                 inx
                 inx
 \end{lstlisting}
 
-\noindent for two bytes and four cycles. The jump to \texttt{drop} uses more
-space and takes far longer than the word itself. (In practice, \texttt{drop}
-checks for underflow\index{underflow}, so the actual assembler code is
+\noindent for two bytes and four cycles. If we jump to this word as is assumed
+with pure subroutine threaded Forth, we add four bytes and 12 cycles -- double
+the space and three times the time required by the actual working code. (In
+practice, it's even worse, because \texttt{drop} checks for
+underflow\index{underflow}. The actual assembler code is
 
 \begin{lstlisting}[frame=single]
                 cpx #dsp0-1

@@ -54,23 +54,30 @@ The simplest test is to redefine \texttt{constant}:
 \subsection{\texttt{bracket-tick}}
 
 \begin{lstlisting}
-        : aaa ['] words execute ;     \ should print all words known
+        : aaa ['] words execute ;
 \end{lstlisting}
+
+\noindent This should print all words in the dictionary.
 
 
 \subsection{\texttt{postpone}}
+
+\texttt{postpone} is aord that is complicated to code, but very useful. The
+following simple test is from
+\href{https://www.forth.com/starting-forth/11-forth-compiler-defining-words/}{\textif{Starting
+Forth}}:
 
 \begin{lstlisting}
         : say-hello ." Hello" ; immediate
         : greet postpone say-hello ." I speak Forth" ;
 \end{lstlisting}
 
-\noindent Note that \texttt{greet} won't print \texttt{Hello} right away
-
-\noindent Based on https://www.forth.com/starting-forth/11-forth-compiler-defining-words/
+\noindent Here, \texttt{greet} won't print \texttt{Hello} right away.
 
 
 \subsection{\texttt{find-name}}
+
+This word walks through the dictionary until it finds the word presented. 
 
 \begin{lstlisting}
         s" words" find-name name>string type
@@ -79,7 +86,10 @@ The simplest test is to redefine \texttt{constant}:
 \noindent should print \texttt{words}
 
 
-\subsection{\texttt{words} vs \texttt{parse}}
+\subsection{\texttt{word} vs \texttt{parse}}
+
+\texttt{word}\index{word@\texttt{word}} was used in ancient Forths and should be
+considered obsolete today. The following piece of code shows the differences:
 
 Taken from Conklin \& Rather p. 160
 
@@ -88,8 +98,8 @@ Taken from Conklin \& Rather p. 160
         : test2 ( "name" -- )  32 parse type ; 
 \end{lstlisting}
 
-\noindent Results of calls with `ABC' should give identical result if there are no
-leading spaces. However, with leading spaces, TEST2 will find an empty string
+\noindent Results of calls with `abc' should give identical result if there are no
+leading spaces. However, with leading spaces, \texttt{test2} will find an empty string
 and abort, then throw an error because ABC will not be found in the dictionary.
 
 % ----------------------------------------
