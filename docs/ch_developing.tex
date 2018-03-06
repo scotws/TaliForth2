@@ -27,7 +27,7 @@ Python\index{Python} and
 therefore will run on almost any operating system. To install Ophis on Windows,
 use the link provided above. For Linux\index{Linux}:
 
-\begin{lstlisting}[frame=single]
+\begin{lstlisting}[frame=lines]
         git clone https://github.com/michaelcmartin/Ophis
         cd src
         sudo python setup.py install
@@ -146,7 +146,7 @@ will) so we have the option of adding code analysis tools later.
 
         \item [\texttt{drop}] cell of top of the Data Stack 
 
-                \begin{lstlisting}[frame=single]
+                \begin{lstlisting}[frame=lines]
                 inx
                 inx
                 \end{lstlisting}
@@ -155,7 +155,7 @@ will) so we have the option of adding code analysis tools later.
                 Pointer (DSP, the X register of the 65c02) points to the LSB of
                 the TOS value.
 
-                \begin{lstlisting}[frame=single]
+                \begin{lstlisting}[frame=lines]
                 dex
                 dex
                 lda $<LSB>      ; or pla, jsr kernel_getc, etc.
@@ -166,7 +166,7 @@ will) so we have the option of adding code analysis tools later.
 
         \item [\texttt{pop}] a value off the Data Stack
 
-                \begin{lstlisting}[frame=single]
+                \begin{lstlisting}[frame=lines]
                 lda 0,x
                 sta $<LSB>      ; or pha, jsr kernel_putc, etc
                 lda 1,x
@@ -187,7 +187,7 @@ separate from the normal words. My \texttt{\textasciitilde/.vimrc} file contains
 lines for work on \texttt{.asm} files:
  
 
-\begin{lstlisting}[frame=single]
+\begin{lstlisting}[frame=lines]
  ab drop# inx<tab><tab>; drop<cr>inx<cr><left>
  ab push# dex<tab><tab>; push<cr>dex<cr>lda $<LSB><cr>sta $00,x<cr>lda $<MSB><cr>sta $01,x<cr><up><up><up><up><end>
  ab pop# lda $00,x<tab><tab>; pop<cr>sta $<LSB><cr>lda $01,x<cr>sta $<MSB><cr>inx<cr>inx<cr><up><up><up><up><up><end>

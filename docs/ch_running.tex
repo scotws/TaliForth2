@@ -8,13 +8,13 @@ subroutine jumps. For instance, the Forth word
 \texttt{[char]}\index{[char]@\texttt{[char]}}, formally defined in high-level
 Forth as
 
-\begin{lstlisting}[frame=single]
+\begin{lstlisting}[frame=lines]
         : [char] char postpone literal ; immediate
 \end{lstlisting}
 
 \noindent in assembler is simply
 
-\begin{lstlisting}[frame=single]
+\begin{lstlisting}[frame=lines]
                 jsr xt_char
                 jsr xt_literal
 \end{lstlisting}
@@ -25,7 +25,7 @@ four bytes and 12 cycles overhead. Second, for smaller words, the jumps use far
 more bytes than the actual code. Take for instance
 \texttt{drop}\index{drop@\texttt{drop}}, which in its naive form is simply
 
-\begin{lstlisting}[frame=single]
+\begin{lstlisting}[frame=lines]
                 inx
                 inx
 \end{lstlisting}
@@ -36,7 +36,7 @@ the space and three times the time required by the actual working code. (In
 practice, it's even worse, because \texttt{drop} checks for
 underflow\index{underflow}. The actual assembler code is
 
-\begin{lstlisting}[frame=single]
+\begin{lstlisting}[frame=lines]
                 cpx #dsp0-1
                 bmi +
                 lda #11         ; error code for underflow
@@ -56,13 +56,13 @@ machine language. Let's start with an example where \texttt{nc-limit} is set to
 zero, that is, all words are compiled as subroutine jumps. Take a simple word
 such as
 
-\begin{lstlisting}[frame=single]
+\begin{lstlisting}[frame=lines]
         : aaa 0 drop ;
 \end{lstlisting}
 
 \noindent and check the actual code with \texttt{see}\index{see@\texttt{see}}
 
-\begin{lstlisting}[frame=single]
+\begin{lstlisting}[frame=lines]
         see aaa
           nt: 7CD  xt: 7D8
          size (decimal): 6
@@ -75,7 +75,7 @@ word \texttt{aaa} consists of two subroutine jumps, one to zero and one to
 \texttt{drop}. Now, if we increase the threshhold to 20, we get different code,
 as this console session shows:
 
-\begin{lstlisting}[frame=single]
+\begin{lstlisting}[frame=lines]
         20 nc-limit !  ok
         : bbb 0 drop ;  ok
         see bbb
@@ -96,7 +96,7 @@ To experiment with various parameters for native compiling, the Forth word
 \texttt{words\&sizes} is included in \texttt{user\_words.fs} (but commented out 
 by default). The Forth is:
 
-\begin{lstlisting}[frame=single]
+\begin{lstlisting}[frame=lines]
 : words&sizes ( --)
         latestnt
         begin
@@ -131,7 +131,7 @@ Tali has a 16-bit cell size (use \texttt{1 cells 8 \* .} to get the cells size i
 bits with any Forth), which can trip up calculations when compared to the
 \textit{de facto} standard Gforth\index{Gforth} with 64 bits. Take this example:
 
-\begin{lstlisting}[frame=single]
+\begin{lstlisting}[frame=lines]
 ( Gforth )      decimal 1000 100 um* hex swap u. u.  186a0 0  ok
 ( Tali Forth)   decimal 1000 100 um* hex swap u. u.  86a0 1  ok
 \end{lstlisting}

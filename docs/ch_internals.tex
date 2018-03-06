@@ -70,7 +70,7 @@ words. It does this by comparing the Data Stack Pointer (X)\index{X register} to
 values that it must be smaller than (because the stack grows towards 0000). For
 instance, to make sure we have one element on the stack, we write
 
-\begin{lstlisting}[frame=single]
+\begin{lstlisting}[frame=lines]
                 cpx \#dsp0-1
                 bmi okay
 
@@ -383,7 +383,7 @@ There is a discussion of this walkthrough at
 We start with the following standard example, the Forth version of
 \texttt{constant}: 
 
-\begin{lstlisting}[frame=single]
+\begin{lstlisting}[frame=lines]
         : constant create , does> @ ; 
 \end{lstlisting}
 
@@ -395,7 +395,7 @@ Rodriguez for details):
 
 CONSTANT is a "defining word", one that makes new words. In pseudocode, and
 ignoring any compilation to native 65c02 assembler, the above compiles to: 
-\begin{lstlisting}[frame=single]
+\begin{lstlisting}[frame=lines]
         ((Header "CONSTANT")) 
         jsr CREATE
         jsr COMMA
@@ -413,7 +413,7 @@ system routine like \texttt{dovar}. we'll get to it later.
 In Tali Forth, a number of words such as \texttt{defer} are
 `hand-compiled', that is, instead of using forth such (in this case, 
 
-\begin{lstlisting}[frame=single]
+\begin{lstlisting}[frame=lines]
         : defer create ['] abort , does> @ execute ; 
 \end{lstlisting}
 
@@ -426,21 +426,21 @@ instead of \texttt{does>} as well.
 
 Now when we execute
 
-\begin{lstlisting}[frame=single]
+\begin{lstlisting}[frame=lines]
         42 constant life
 \end{lstlisting}
 
 \noindent this pushes the RTS of the calling routine -- call it `main' -- to the 65c02's
 stack (the Return Stack, as Forth calls it), which now looks like this:
 
-\begin{lstlisting}[frame=single]
+\begin{lstlisting}[frame=lines]
         ((1)) RTS               ; to main routine 
 \end{lstlisting}
 
 \noindent Without going into detail, the first two subroutine jumps of \texttt{constant} give us
 this word: 
 
-\begin{lstlisting}[frame=single]
+\begin{lstlisting}[frame=lines]
         ((Header "LIFE"))
         jsr DOVAR               ; in CFA, from LIFE's CREATE
         4200                    ; in PFA (little-endian)
@@ -449,7 +449,7 @@ this word:
 \noindent Next, we \texttt{jsr} to \texttt{(does>)}. The address that this pushes on the Return Stack is
 the instruction of \texttt{constant} we had labeled `a'. 
 
-\begin{lstlisting}[frame=single]
+\begin{lstlisting}[frame=lines]
         ((2)) RTS to CONSTANT ("a") 
         ((1)) RTS to main routine 
 \end{lstlisting}
@@ -458,7 +458,7 @@ the instruction of \texttt{constant} we had labeled `a'.
 it to replace the \texttt{dovar jsr} target in the CFA of our freshly created
 \texttt{life} word. We now have this: 
 
-\begin{lstlisting}[frame=single]
+\begin{lstlisting}[frame=lines]
         ((Header "LIFE"))
         jsr a                   ; in CFA, modified by (DOES>)
    c:   4200                    ; in PFA (little-endian)
@@ -476,14 +476,14 @@ now.  We're back at the main routine.
 Now we execute the word \texttt{life} from our `main' program. In a STC Forth
 such as Tali Forth, this executes a subroutine jump.
 
-\begin{lstlisting}[frame=single]
+\begin{lstlisting}[frame=lines]
         jsr LIFE
 \end{lstlisting}
 
 \noindent The first thing this call does is push the return address to the main routine
 on the 65c02's stack: 
 
-\begin{lstlisting}[frame=single]
+\begin{lstlisting}[frame=lines]
         ((1)) RTS to main
 \end{lstlisting}
 
@@ -491,7 +491,7 @@ on the 65c02's stack:
 \texttt{constant}. This pushes the \texttt{rts} of \texttt{life} on the 65c02's
 stack:
 
-\begin{lstlisting}[frame=single]
+\begin{lstlisting}[frame=lines]
         ((2)) RTS to LIFE ("c")
         ((1)) RTS to main
 \end{lstlisting}
@@ -501,7 +501,7 @@ the return address to \texttt{constant} gets pushed on the stack as well. We had
 given this instruction the label `b'. After all of this, we have three addresses
 on the 65c02's stack: 
 
-\begin{lstlisting}[frame=single]
+\begin{lstlisting}[frame=lines]
         ((3)) RTS to CONSTANT ("b") 
         ((2)) RTS to LIFE ("c") 
         ((1)) RTS to main
@@ -515,7 +515,7 @@ constant. Basically, \texttt{dodoes} performs a \texttt{dovar} here, and
 pushes `c' on the Data Stack. Now all we have left on the 65c02's stack is the
 \texttt{rts} to the main routine.  
  
-\begin{lstlisting}[frame=single]
+\begin{lstlisting}[frame=lines]
         [1] RTS to main
 \end{lstlisting}
 
@@ -525,7 +525,7 @@ begins, the \texttt{fetch} command we had originally codes after \texttt{does>}
 in the very first definition. The really clever part: We perform an indirect
 \texttt{jmp} -- not a \texttt{jsr}! -- to this address.
 
-\begin{lstlisting}[frame=single]
+\begin{lstlisting}[frame=lines]
         jmp (z) 
 \end{lstlisting}
 
@@ -560,7 +560,7 @@ Remember we have to increase the addresses by one because of the way
 the actual return address.  This can be annoying, because it requires a sequence
 like:
 
-\begin{lstlisting}[frame=single]
+\begin{lstlisting}[frame=lines]
         inc z
         bne +
         inc z+1 
@@ -600,13 +600,13 @@ Another take on this subject that handles things a bit differently is at
 
 In Forth, this can be realized by
 
-\begin{lstlisting}[frame=single]
+\begin{lstlisting}[frame=lines]
         : if  postpone 0branch here 0 , ; immediate
 \end{lstlisting}
 
 \noindent and 
 
-\begin{lstlisting}[frame=single]
+\begin{lstlisting}[frame=lines]
         : then here swap ! ; immediate
 \end{lstlisting}
 
@@ -616,7 +616,7 @@ created.  If we have an \texttt{else}, we have to add an unconditional
 \texttt{branch} and manipulate the address that \texttt{if} left on the Data
 Stack. The Forth for this is: 
 
-\begin{lstlisting}[frame=single]
+\begin{lstlisting}[frame=lines]
         : else  postpone branch here 0 , here rot ! ; immediate
 \end{lstlisting}
 

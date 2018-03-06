@@ -9,10 +9,10 @@
 \indexentry{6502.org|hyperpage}{7}
 \indexentry{Wilson, Garth|hyperpage}{7}
 \indexentry{65c02|hyperpage}{7}
-\indexentry{instruction set!architecture|hyperpage}{7}
-\indexentry{ISA|hyperindexformat{\see {instruction set}}}{7}
 \indexentry{Z80|hyperpage}{7}
 \indexentry{Wilson, Garth|hyperpage}{7}
+\indexentry{instruction set!architecture|hyperpage}{8}
+\indexentry{ISA|hyperindexformat{\see {instruction set}}}{8}
 \indexentry{Williams, Elliot|hyperpage}{8}
 \indexentry{Forth|hyperindexformat{\textbf}}{8}
 \indexentry{Moore, Chuck|hyperpage}{8}
@@ -145,11 +145,12 @@
 \indexentry{testing|hyperindexformat{\textbf}}{31}
 \indexentry{Mandelbrot|hyperpage}{31}
 \indexentry{interpreter|hyperpage}{31}
+\indexentry{word@\texttt{word}|hyperpage}{32}
 \indexentry{Gforth|hyperpage}{32}
 \indexentry{recursion|hyperpage}{33}
 \indexentry{recurse@\texttt{recurse}|hyperpage}{33}
-\indexentry{math|hyperpage}{33}
-\indexentry{fm/mod@\texttt{fm/mod}|hyperindexformat{\textbf}}{33}
-\indexentry{sm/rem@\texttt{sm/rem}|hyperindexformat{\textbf}}{33}
-\indexentry{6502.org|hyperpage}{34}
-\indexentry{Barry, Mike|hyperpage}{34}
+\indexentry{math|hyperpage}{34}
+\indexentry{fm/mod@\texttt{fm/mod}|hyperindexformat{\textbf}}{34}
+\indexentry{sm/rem@\texttt{sm/rem}|hyperindexformat{\textbf}}{34}
+\indexentry{6502.org|hyperpage}{35}
+\indexentry{Barry, Mike|hyperpage}{35}

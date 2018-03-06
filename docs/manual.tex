@@ -5,6 +5,8 @@
 % See:
 % - https://en.wikibooks.org/wiki/LaTeX/Document_Structure#Document_classes
 % - https://www.sharelatex.com/blog/2013/08/02/thesis-series-pt1.html
+% Install additional fonds with "sudo apt-get install texlive-fonts-extra"
+% https://launchpad.net/ubuntu/xenial/+package/texlive-fonts-extra
 \documentclass[a4paper,notitlepage]{report}
 \usepackage[width=150mm,top=25mm,bottom=25mm]{geometry}
 \usepackage{fancyhdr}
@@ -14,7 +16,8 @@
 \usepackage{makeidx}
 \makeindex
 
-\usepackage{lmodern}    % for typewriter
+\usepackage{sourcecodepro}      % for monospaced
+
 \usepackage{listings}
 \lstset{basicstyle=\ttfamily,breaklines=true} % use monospace
 

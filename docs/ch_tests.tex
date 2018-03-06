@@ -17,14 +17,14 @@ a Mandelbrot\index{Mandelbrot} program that can be uncommented and run.
 From
 https://www.complang.tuwien.ac.at/forth/gforth/Docs-html/The-Text-Interpreter.html
 
-\begin{lstlisting}
+\begin{lstlisting}[frame=lines]
         : lat ." <foo>" ;
         : flat ." <bar>" >in dup @ 3 - swap ! ; 
 \end{lstlisting}
 
 \noindent A simple \texttt{flat} should print \texttt{<bar><foo>}. A bit more complicated:
 
-\begin{lstlisting}
+\begin{lstlisting}[frame=lines]
         char & parse jack& type
 \end{lstlisting}
 
@@ -37,14 +37,14 @@ https://www.complang.tuwien.ac.at/forth/gforth/Docs-html/The-Text-Interpreter.ht
 \subsection{\texttt{create} and \texttt{does>}}
 The simplest test is to redefine \texttt{constant}:
 
-\begin{lstlisting}
+\begin{lstlisting}[frame=lines]
         : aaa create , does> @ ; 
 \end{lstlisting}
 
 
 \subsection{\texttt{literal}}
 
-\begin{lstlisting}
+\begin{lstlisting}[frame=lines]
         : aaa [ 1 ] literal ;
 \end{lstlisting}
 
@@ -53,7 +53,7 @@ The simplest test is to redefine \texttt{constant}:
 
 \subsection{\texttt{bracket-tick}}
 
-\begin{lstlisting}
+\begin{lstlisting}[frame=lines]
         : aaa ['] words execute ;
 \end{lstlisting}
 
@@ -64,10 +64,10 @@ The simplest test is to redefine \texttt{constant}:
 
 \texttt{postpone} is aord that is complicated to code, but very useful. The
 following simple test is from
-\href{https://www.forth.com/starting-forth/11-forth-compiler-defining-words/}{\textif{Starting
+\href{https://www.forth.com/starting-forth/11-forth-compiler-defining-words/}{\textit{Starting
 Forth}}:
 
-\begin{lstlisting}
+\begin{lstlisting}[frame=lines]
         : say-hello ." Hello" ; immediate
         : greet postpone say-hello ." I speak Forth" ;
 \end{lstlisting}
@@ -79,7 +79,7 @@ Forth}}:
 
 This word walks through the dictionary until it finds the word presented. 
 
-\begin{lstlisting}
+\begin{lstlisting}[frame=lines]
         s" words" find-name name>string type
 \end{lstlisting}
 
@@ -93,7 +93,7 @@ considered obsolete today. The following piece of code shows the differences:
 
 Taken from Conklin \& Rather p. 160
 
-\begin{lstlisting}
+\begin{lstlisting}[frame=lines]
         : test1 ( "name" -- )  32 word count type ; 
         : test2 ( "name" -- )  32 parse type ; 
 \end{lstlisting}
@@ -112,27 +112,27 @@ mythical Forth `Control Stack'.
 \subsection{Basic looping}
 
 Test normal loop:
-\begin{lstlisting}
+\begin{lstlisting}[frame=lines]
         : aaa 11 1 do i . loop ;        
 \end{lstlisting}
 
 \noindent This should simply produce the numbers 1 to 10. Then, break up the
 loop over multiple lines because it turns out this can be tricky:
 
-\begin{lstlisting}
+\begin{lstlisting}[frame=lines]
         : bbb 11 1 do 
           i . loop ; 
 \end{lstlisting}
 
 \noindent Following Gforth\index{Gforth}, we then should test other variants:
 
-\begin{lstlisting}
+\begin{lstlisting}[frame=lines]
         : bbb1 -1 0 ?do i . -1 +loop ;
 \end{lstlisting}
 
 \noindent This should produce `0 -1', while
 
-\begin{lstlisting}
+\begin{lstlisting}[frame=lines]
         : bbb2 0 0 ?do i . -1 +loop ;
 \end{lstlisting}
 
@@ -144,7 +144,7 @@ loop over multiple lines because it turns out this can be tricky:
 Including \texttt{if} in a loop is the ultimate test if everything is correct
 with our stack machanics. First, a simple version will do:
 
-\begin{lstlisting}
+\begin{lstlisting}[frame=lines]
         : ccc 11 1 do i dup 5 > if . then loop ; 
 \end{lstlisting}
 
@@ -152,7 +152,7 @@ with our stack machanics. First, a simple version will do:
 with some instructions after the \texttt{then} -- this actually revealed a
 stupid bug in the ALPHA version of Tali Forth 2.
 
-\begin{lstlisting}
+\begin{lstlisting}[frame=lines]
         : ccc 11 1 do i dup 2 = if ." two! " then . loop ;
 \end{lstlisting}
 
@@ -164,7 +164,7 @@ stupid bug in the ALPHA version of Tali Forth 2.
 \href{https://www.forth.com/starting-forth/6-forth-do-loops/}{\textit{Starting
 Forth}}:
 
-\begin{lstlisting}
+\begin{lstlisting}[frame=lines]
         : ddd cr 11 1 do
             11 1 do 
                 i j * 5 u.r 
@@ -175,7 +175,7 @@ Forth}}:
 
 \subsection{\texttt{exit}}
 
-\begin{lstlisting}
+\begin{lstlisting}[frame=lines]
         : eee1 true if exit then ." true" ; 
         : eee2 false if exit then ."false" ; 
 \end{lstlisting}
@@ -185,7 +185,7 @@ Forth}}:
 
 \subsection{\texttt{unloop}}
 
-\begin{lstlisting}
+\begin{lstlisting}[frame=lines]
         : fff 11 1 do i dup 8 = if drop unloop exit then . loop ." Done" ; 
 \end{lstlisting}
 
@@ -194,7 +194,7 @@ Forth}}:
 
 \subsection{\texttt{leave}}
 
-\begin{lstlisting}
+\begin{lstlisting}[frame=lines]
         : ggg 11 1 do i dup 8 = if leave then . loop ." Done" drop ; 
 \end{lstlisting}
 
@@ -207,7 +207,7 @@ The Data Stack should be empty after all of these words, check with \texttt{.s}
 \index{recursion}
 \index{recurse@\texttt{recurse}}
 
-\begin{lstlisting}
+\begin{lstlisting}[frame=lines]
         : hhh ( a b -- gcd ) ?dup if tuck mod recurse then ;
 \end{lstlisting}
 
@@ -219,7 +219,7 @@ The Data Stack should be empty after all of these words, check with \texttt{.s}
 
 Also, the classic (here from the ANSI Forth documentation):
 
-\begin{lstlisting}
+\begin{lstlisting}[frame=lines]
         : factorial ( u -- u ) 
            dup 2 < if drop 1 exit then 
            dup 1- recurse * ;
@@ -239,13 +239,13 @@ Also, the classic (here from the ANSI Forth documentation):
 \subsection{\texttt{fm/mod}}
 \index{fm/mod@\texttt{fm/mod}|textbf}
 
-\begin{lstlisting}
+\begin{lstlisting}[frame=lines]
         : fm swap s>d rot fm/mod swap . . ; 
 \end{lstlisting}
 
 \noindent Should give you: 
 % TODO convert to table
-\begin{lstlisting}
+\begin{lstlisting}[frame=lines]
         10 7 --> 3 1
         -10 7 --> 4 -2 
         10 -7 --> -4 -2
@@ -256,13 +256,13 @@ Also, the classic (here from the ANSI Forth documentation):
 \subsection{\texttt{sm/rem}}
 \index{sm/rem@\texttt{sm/rem}|textbf}
 
-\begin{lstlisting}
+\begin{lstlisting}[frame=lines]
         : sm swap s>d rot sm/rem swap . . ; 
 \end{lstlisting}
 
 \noindent Should give you: 
 % TODO convert to table
-\begin{lstlisting}
+\begin{lstlisting}[frame=lines]
         10 7 --> 3 1
         -10 7 --> -3 -1 
         10 -7 --> 3 -1

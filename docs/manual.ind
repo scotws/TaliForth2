@@ -2,7 +2,7 @@
 
   \item \texttt{>in}, \hyperpage{21}
   \item \texttt{[char]}, \hyperpage{13}
-  \item 6502.org, \hyperpage{7}, \hyperpage{34}
+  \item 6502.org, \hyperpage{7}, \hyperpage{35}
   \item 65c02, \hyperpage{7}, \hyperpage{19}
 
   \indexspace
@@ -20,7 +20,7 @@
 
   \indexspace
 
-  \item Barry, Mike, \hyperpage{34}
+  \item Barry, Mike, \hyperpage{35}
   \item \texttt{blk}, \hyperpage{21}
   \item booting, \hyperpage{21}
   \item Brodie, Leo, \hyperpage{8}
@@ -61,7 +61,7 @@
     \subitem text, \hyperpage{21}
   \item file-id, \hyperpage{21}
   \item floodplain (stack), \hyperpage{17}
-  \item \texttt{fm/mod}, \hyperindexformat{\textbf}{33}
+  \item \texttt{fm/mod}, \hyperindexformat{\textbf}{34}
   \item Forth, \hyperindexformat{\textbf}{8}
   \item Forth words, \hyperpage{19}
 
@@ -81,10 +81,10 @@
 
   \item input, \hyperindexformat{\textbf}{21}
   \item instruction set
-    \subitem architecture, \hyperpage{7}
+    \subitem architecture, \hyperpage{8}
   \item interpreter, \hyperpage{31}
   \item intro string, \hyperpage{19}
-  \item ISA, \hyperindexformat{\see {instruction set}}{7}
+  \item ISA, \hyperindexformat{\see {instruction set}}{8}
 
   \indexspace
 
@@ -103,7 +103,7 @@
   \item Mandelbrot, \hyperpage{31}
   \item Martin, Michael, \hyperpage{26}
   \item \textit{Mass Effect}, \hyperpage{30}
-  \item math, \hyperpage{33}
+  \item math, \hyperpage{34}
   \item memory map, \hyperindexformat{\textbf}{20}
   \item Mensch, Bill, \hyperpage{7}
   \item Moore, Chuck, \hyperpage{8}
@@ -144,7 +144,7 @@
 
   \item \texttt{see}, \hyperpage{13}
   \item self-test, \hyperpage{19}
-  \item \texttt{sm/rem}, \hyperindexformat{\textbf}{33}
+  \item \texttt{sm/rem}, \hyperindexformat{\textbf}{34}
   \item stack, \hyperindexformat{\textbf}{17}, \hyperpage{27}
   \item status byte, \hyperpage{19}
   \item style, coding, \hyperpage{27}
@@ -173,6 +173,7 @@
   \item WDC, \hyperpage{7}
   \item Williams, Elliot, \hyperpage{8}
   \item Wilson, Garth, \hyperpage{7}
+  \item \texttt{word}, \hyperpage{32}
   \item \texttt{words}, \hyperpage{19}
 
   \indexspace
