@@ -51,6 +51,16 @@ The simplest test is to redefine \texttt{constant}:
 \noindent This should put 1 on the Data Stack at run time.
 
 
+\subsection{\texttt{bracket-char}}
+\index{[char]@\texttt{[char]}}
+
+\begin{lstlisting}[frame=lines]
+        : aaa [char] q emit ;
+\end{lstlisting}
+
+\noindent This should print the letter `q'.
+
+
 \subsection{\texttt{bracket-tick}}
 
 \begin{lstlisting}[frame=lines]
@@ -138,7 +148,6 @@ loop over multiple lines because it turns out this can be tricky:
 
 \noindent should print nothing.
 
-
 \subsection{Looping with \texttt{if}}
 
 Including \texttt{if} in a loop is the ultimate test if everything is correct
@@ -201,6 +210,17 @@ Forth}}:
 \noindent should produce \texttt{1 2 3 4 5 6 7 Done} (note \texttt{Done} printed)
 
 The Data Stack should be empty after all of these words, check with \texttt{.s}
+
+\subsection{\texttt{bounds}}\index{bounds@\texttt{bounds}} 
+
+This is a word we took from Gforth\index{Gforth} because it is just too useful.
+
+\begin{lstlisting}[frame=lines]
+        : ggg s" tali" bounds do i c@ emit loop ;
+\end{lstlisting}
+
+\noindent When this is run, it should print `tali'.
+
 
 
 \subsection{\texttt{recurse}}

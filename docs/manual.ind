@@ -1,7 +1,7 @@
 \begin{theindex}
 
   \item \texttt{>in}, \hyperpage{21}
-  \item \texttt{[char]}, \hyperpage{13}
+  \item \texttt{[char]}, \hyperpage{13}, \hyperpage{31}
   \item 6502.org, \hyperpage{7}, \hyperpage{35}
   \item 65c02, \hyperpage{7}, \hyperpage{19}
 
@@ -23,6 +23,7 @@
   \item Barry, Mike, \hyperpage{35}
   \item \texttt{blk}, \hyperpage{21}
   \item booting, \hyperpage{21}
+  \item \texttt{bounds}, \hyperpage{33}
   \item Brodie, Leo, \hyperpage{8}
   \item bugs, \hyperpage{14}
   \item \texttt{bye}, \hyperpage{19}
@@ -67,7 +68,7 @@
 
   \indexspace
 
-  \item Gforth, \hyperpage{8}, \hyperpage{14}, \hyperpage{32}
+  \item Gforth, \hyperpage{8}, \hyperpage{14}, \hyperpage{32, 33}
   \item GitHub, \hyperpage{12}, \hyperpage{30}
   \item Go, \hyperpage{27}
 

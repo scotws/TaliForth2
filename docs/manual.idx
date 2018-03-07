@@ -145,8 +145,11 @@
 \indexentry{testing|hyperindexformat{\textbf}}{31}
 \indexentry{Mandelbrot|hyperpage}{31}
 \indexentry{interpreter|hyperpage}{31}
+\indexentry{[char]@\texttt{[char]}|hyperpage}{31}
 \indexentry{word@\texttt{word}|hyperpage}{32}
 \indexentry{Gforth|hyperpage}{32}
+\indexentry{bounds@\texttt{bounds}|hyperpage}{33}
+\indexentry{Gforth|hyperpage}{33}
 \indexentry{recursion|hyperpage}{33}
 \indexentry{recurse@\texttt{recurse}|hyperpage}{33}
 \indexentry{math|hyperpage}{34}

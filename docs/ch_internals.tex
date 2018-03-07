@@ -71,10 +71,10 @@ values that it must be smaller than (because the stack grows towards 0000). For
 instance, to make sure we have one element on the stack, we write
 
 \begin{lstlisting}[frame=lines]
-                cpx \#dsp0-1
+                cpx #dsp0-1
                 bmi okay
 
-                lda \#11         ; error string for underflow
+                lda #11         ; error string for underflow
                 jmp error
 okay:
                 (...)
