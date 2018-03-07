@@ -929,7 +929,7 @@ z_chars:        rts
 
 
 ; ## CMOVE ( addr1 addr2 u -- ) "Copy bytes going from low to high"
-; ## "cmove"  src: ANSI string  b: 78  c: TBA  status: coded
+; ## "cmove"  src: ANSI string  b: 78  c: TBA  status: tested
         ; """Copy u bytes from addr1 to addr2, going low to high (addr2 is
         ; larger than addr1). Based on code in Leventhal, Lance A. 
         ; "6502 Assembly Language Routines", p. 201
@@ -1001,9 +1001,9 @@ z_cmove:        rts
 
 
 ; ## CMOVE_UP ( add1 add2 u -- ) "Copy bytes from high to low"
-; ## "cmove>"  src: ANSI string  b: 93  c: TBA  status: coded
-        ; """Note addr1 is larger than ; ; addr2). Based on code in
-        ; Leventhal, Lance A. "6502 Assembly Language Routines", p. 201.
+; ## "cmove>"  src: ANSI string  b: 93  c: TBA  status: tested
+        ; """Based on code in Leventhal, Lance A. "6502 Assembly Language
+        ; Routines", p. 201.
         ; """
 .scope
 xt_cmove_up:
@@ -1462,7 +1462,7 @@ z_cr:           rts
 
 
 ; ## CREATE ( "name" -- ) "Create Dictionary entry for 'name'"
-; ## "create"  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## "create"  src: ANSI core  b: 142  c: TBA  status: tested
         ; """See the drawing in headers.asm for details on the header
         ; """
 .scope
