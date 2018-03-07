@@ -113,6 +113,56 @@ leading spaces. However, with leading spaces, \texttt{test2} will find an empty 
 and abort, then throw an error because ABC will not be found in the dictionary.
 
 % ----------------------------------------
+\section{Movement words}
+
+ANSI Forth comes with three words to move characters:
+\texttt{cmove}\index{cmove@\texttt{cmove}},
+\texttt{cmove>}\index{cmove>@\texttt{cmove>}}, and
+\texttt{move}\index{move@\texttt{move}}. Testing them is somewhat annoying, but
+this is how to start. Note we're mostly concerned with the correct overlapping
+behavior. 
+
+First, clear a region to work the tests in and define a word that saves the
+numbers 1 to 5 in memory:
+
+\begin{lstlisting}[frame=lines]
+        here 1000 + constant start
+        start 20 erase
+        : save-five 6 1 do i dup start + c! loop ;
+\end{lstlisting}
+
+\noindent To check the initial state, run
+
+\begin{lstlisting}[frame=lines]
+        start 10 dump
+\end{lstlisting}
+
+\noindent which should give the number sequence
+
+\begin{lstlisting}[frame=lines]
+        00 01 02 03 04 05 00 00 00 00
+\end{lstlisting}
+
+\noindent The test routine for \texttt{cmove} and its correct output is:
+
+\begin{lstlisting}[frame=lines]
+        start  start 3 +  5  cmove
+        00 01 02 00 01 02 00 01 00 00
+\end{lstlisting}
+
+\indent For \texttt{cmove>}, we have: 
+
+\begin{lstlisting}[frame=lines]
+        start  start 3 +  5  cmove>
+        00 01 02 00 01 02 03 04 00 00
+\end{lstlisting}
+
+The trick to interpreting these moves is to remember that \texttt{cmove>} start
+with the high bytes of the source string (`on the right' here), and
+\texttt{cmove} starts with lower bytes (`on the left'). When there is overlap,
+some of the string has already been overwritten and is then copied itself.
+
+% ----------------------------------------
 \section{Looping}
 
 The looping constructs are the most complicated parts of Tali Forth. Currently,

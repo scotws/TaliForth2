@@ -82,16 +82,17 @@
 \contentsline {subsection}{\numberline {B.2.5}\texttt {postpone}}{32}{subsection.B.2.5}
 \contentsline {subsection}{\numberline {B.2.6}\texttt {find-name}}{32}{subsection.B.2.6}
 \contentsline {subsection}{\numberline {B.2.7}\texttt {word} vs \texttt {parse}}{32}{subsection.B.2.7}
-\contentsline {section}{\numberline {B.3}Looping}{32}{section.B.3}
-\contentsline {subsection}{\numberline {B.3.1}Basic looping}{32}{subsection.B.3.1}
-\contentsline {subsection}{\numberline {B.3.2}Looping with \texttt {if}}{33}{subsection.B.3.2}
-\contentsline {subsection}{\numberline {B.3.3}Nested loops}{33}{subsection.B.3.3}
-\contentsline {subsection}{\numberline {B.3.4}\texttt {exit}}{33}{subsection.B.3.4}
-\contentsline {subsection}{\numberline {B.3.5}\texttt {unloop}}{33}{subsection.B.3.5}
-\contentsline {subsection}{\numberline {B.3.6}\texttt {leave}}{33}{subsection.B.3.6}
-\contentsline {subsection}{\numberline {B.3.7}\texttt {bounds}}{33}{subsection.B.3.7}
-\contentsline {subsection}{\numberline {B.3.8}\texttt {recurse}}{33}{subsection.B.3.8}
-\contentsline {section}{\numberline {B.4}Math routines}{34}{section.B.4}
-\contentsline {subsection}{\numberline {B.4.1}\texttt {fm/mod}}{34}{subsection.B.4.1}
-\contentsline {subsection}{\numberline {B.4.2}\texttt {sm/rem}}{34}{subsection.B.4.2}
-\contentsline {chapter}{\numberline {C}Thanks}{35}{appendix.C}
+\contentsline {section}{\numberline {B.3}Movement words}{32}{section.B.3}
+\contentsline {section}{\numberline {B.4}Looping}{33}{section.B.4}
+\contentsline {subsection}{\numberline {B.4.1}Basic looping}{33}{subsection.B.4.1}
+\contentsline {subsection}{\numberline {B.4.2}Looping with \texttt {if}}{33}{subsection.B.4.2}
+\contentsline {subsection}{\numberline {B.4.3}Nested loops}{33}{subsection.B.4.3}
+\contentsline {subsection}{\numberline {B.4.4}\texttt {exit}}{34}{subsection.B.4.4}
+\contentsline {subsection}{\numberline {B.4.5}\texttt {unloop}}{34}{subsection.B.4.5}
+\contentsline {subsection}{\numberline {B.4.6}\texttt {leave}}{34}{subsection.B.4.6}
+\contentsline {subsection}{\numberline {B.4.7}\texttt {bounds}}{34}{subsection.B.4.7}
+\contentsline {subsection}{\numberline {B.4.8}\texttt {recurse}}{34}{subsection.B.4.8}
+\contentsline {section}{\numberline {B.5}Math routines}{34}{section.B.5}
+\contentsline {subsection}{\numberline {B.5.1}\texttt {fm/mod}}{34}{subsection.B.5.1}
+\contentsline {subsection}{\numberline {B.5.2}\texttt {sm/rem}}{35}{subsection.B.5.2}
+\contentsline {chapter}{\numberline {C}Thanks}{36}{appendix.C}

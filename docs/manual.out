@@ -75,16 +75,17 @@
 \BOOKMARK [2][-]{subsection.B.2.5}{postpone}{section.B.2}% 75
 \BOOKMARK [2][-]{subsection.B.2.6}{find-name}{section.B.2}% 76
 \BOOKMARK [2][-]{subsection.B.2.7}{word vs parse}{section.B.2}% 77
-\BOOKMARK [1][-]{section.B.3}{Looping}{appendix.B}% 78
-\BOOKMARK [2][-]{subsection.B.3.1}{Basic looping}{section.B.3}% 79
-\BOOKMARK [2][-]{subsection.B.3.2}{Looping with if}{section.B.3}% 80
-\BOOKMARK [2][-]{subsection.B.3.3}{Nested loops}{section.B.3}% 81
-\BOOKMARK [2][-]{subsection.B.3.4}{exit}{section.B.3}% 82
-\BOOKMARK [2][-]{subsection.B.3.5}{unloop}{section.B.3}% 83
-\BOOKMARK [2][-]{subsection.B.3.6}{leave}{section.B.3}% 84
-\BOOKMARK [2][-]{subsection.B.3.7}{bounds}{section.B.3}% 85
-\BOOKMARK [2][-]{subsection.B.3.8}{recurse}{section.B.3}% 86
-\BOOKMARK [1][-]{section.B.4}{Math routines}{appendix.B}% 87
-\BOOKMARK [2][-]{subsection.B.4.1}{fm/mod}{section.B.4}% 88
-\BOOKMARK [2][-]{subsection.B.4.2}{sm/rem}{section.B.4}% 89
-\BOOKMARK [0][-]{appendix.C}{Thanks}{part.3}% 90
+\BOOKMARK [1][-]{section.B.3}{Movement words}{appendix.B}% 78
+\BOOKMARK [1][-]{section.B.4}{Looping}{appendix.B}% 79
+\BOOKMARK [2][-]{subsection.B.4.1}{Basic looping}{section.B.4}% 80
+\BOOKMARK [2][-]{subsection.B.4.2}{Looping with if}{section.B.4}% 81
+\BOOKMARK [2][-]{subsection.B.4.3}{Nested loops}{section.B.4}% 82
+\BOOKMARK [2][-]{subsection.B.4.4}{exit}{section.B.4}% 83
+\BOOKMARK [2][-]{subsection.B.4.5}{unloop}{section.B.4}% 84
+\BOOKMARK [2][-]{subsection.B.4.6}{leave}{section.B.4}% 85
+\BOOKMARK [2][-]{subsection.B.4.7}{bounds}{section.B.4}% 86
+\BOOKMARK [2][-]{subsection.B.4.8}{recurse}{section.B.4}% 87
+\BOOKMARK [1][-]{section.B.5}{Math routines}{appendix.B}% 88
+\BOOKMARK [2][-]{subsection.B.5.1}{fm/mod}{section.B.5}% 89
+\BOOKMARK [2][-]{subsection.B.5.2}{sm/rem}{section.B.5}% 90
+\BOOKMARK [0][-]{appendix.C}{Thanks}{part.3}% 91

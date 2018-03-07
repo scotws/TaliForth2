@@ -147,13 +147,16 @@
 \indexentry{interpreter|hyperpage}{31}
 \indexentry{[char]@\texttt{[char]}|hyperpage}{31}
 \indexentry{word@\texttt{word}|hyperpage}{32}
-\indexentry{Gforth|hyperpage}{32}
-\indexentry{bounds@\texttt{bounds}|hyperpage}{33}
+\indexentry{cmove@\texttt{cmove}|hyperpage}{32}
+\indexentry{cmove>@\texttt{cmove>}|hyperpage}{32}
+\indexentry{move@\texttt{move}|hyperpage}{32}
 \indexentry{Gforth|hyperpage}{33}
-\indexentry{recursion|hyperpage}{33}
-\indexentry{recurse@\texttt{recurse}|hyperpage}{33}
+\indexentry{bounds@\texttt{bounds}|hyperpage}{34}
+\indexentry{Gforth|hyperpage}{34}
+\indexentry{recursion|hyperpage}{34}
+\indexentry{recurse@\texttt{recurse}|hyperpage}{34}
 \indexentry{math|hyperpage}{34}
 \indexentry{fm/mod@\texttt{fm/mod}|hyperindexformat{\textbf}}{34}
-\indexentry{sm/rem@\texttt{sm/rem}|hyperindexformat{\textbf}}{34}
-\indexentry{6502.org|hyperpage}{35}
-\indexentry{Barry, Mike|hyperpage}{35}
+\indexentry{sm/rem@\texttt{sm/rem}|hyperindexformat{\textbf}}{35}
+\indexentry{6502.org|hyperpage}{36}
+\indexentry{Barry, Mike|hyperpage}{36}
