@@ -1,7 +1,6 @@
 \ List of optional Forth words for Tali Forth 2 for the 65c02
 \ Scot W. Stevenson <scot.stevenson@gmail.com>
-\ First version: FEHLT
-\ This version: 27. Feb 2018
+\ This version: 07. March 2018
 
 \ When changing these words, edit them here and then use the 
 \ forth_to_dotbyte.py tool to convert them to the required format
@@ -34,14 +33,10 @@
         \ type space  dup wordsize u. cr  2 + @ repeat drop ;
 
 \ -------------------------------------------------------
-\ FIBONACCI from
-\ https://atariwiki.org/wiki/Wiki.jsp?page=Forth%20Benchmark
-\ See also http://cubbi.com/fibonacci/forth.html
-\ TODO replace by a version that prints them one-by-one
-        \ : fib  ( n1 -- n2 )
-        \          dup 2 < if drop 1 exit then 
-        \          dup 1- recurse 
-        \          swap 2 - recurse + ;
+\ FIBONACCI, contributed by leepivonka at
+\ http://forum.6502.org/viewtopic.php?f=9&t=2926&start=90#p58899
+\ Prints fibonacci numbers up to and including 28657
+         \ : fib ( -- ) 0 1 begin dup . swap over + dup 0< until 2drop ;
         
 \ -------------------------------------------------------
 \ FACTORIAL from 

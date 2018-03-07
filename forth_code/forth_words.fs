@@ -55,7 +55,7 @@
 \ generated at the end of the boot process and signal that the other
 \ high-level definitions worked (or at least didn't crash)
         .( Tali Forth 2 for the 65c02)
-        cr .( Version ALPHA 01. Mar 2018 )
+        cr .( Version ALPHA 07. Mar 2018 )
         cr .( Copyright 2014-2018 Scot W. Stevenson)
         cr .( Tali Forth 2 comes with absolutely NO WARRANTY)
         cr .( Type 'bye' to exit) cr
