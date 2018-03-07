@@ -929,7 +929,7 @@ z_chars:        rts
 
 
 ; ## CMOVE ( addr1 addr2 u -- ) "Copy bytes going from low to high"
-; ## "cmove"  src: ANSI string  b: TBA  c: TBA  status: coded
+; ## "cmove"  src: ANSI string  b: 78  c: TBA  status: coded
         ; """Copy u bytes from addr1 to addr2, going low to high (addr2 is
         ; larger than addr1). Based on code in Leventhal, Lance A. 
         ; "6502 Assembly Language Routines", p. 201
@@ -1001,7 +1001,7 @@ z_cmove:        rts
 
 
 ; ## CMOVE_UP ( add1 add2 u -- ) "Copy bytes from high to low"
-; ## "cmove>"  src: ANSI string  b: TBA  c: TBA  status: coded
+; ## "cmove>"  src: ANSI string  b: 93  c: TBA  status: coded
         ; """Note addr1 is larger than ; ; addr2). Based on code in
         ; Leventhal, Lance A. "6502 Assembly Language Routines", p. 201.
         ; """
@@ -1085,7 +1085,7 @@ z_cmove_up:     rts
 
 
 ; ## COLON ( "name" -- ) "Start compilation of a new word""
-; ## ":"  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## ":"  src: ANSI core  b: 49  c: TBA  status: tested
         ; """Use the CREATE routine and fill in the rest by hand."""
 .scope
 xt_colon:       
@@ -1141,7 +1141,7 @@ z_colon:        rts
 
 
 ; ## COMMA ( n -- ) "Allot and store one cell in memory"
-; ## ","  src: ANSI core  b: 22  c: TBA  status: coded
+; ## ","  src: ANSI core  b: 31  c: TBA  status: tested
         ; """Store TOS at current place in memory. Since this an eight-bit
         ; machine, we can ignore all alignment issures
         ; """
@@ -1174,7 +1174,7 @@ z_comma:        rts
 
 
 ; ## COMPILE_COMMA ( xt -- ) "Compile xt"
-; ## "compile,"  src: ANSI core ext  b: TBA  c: TBA  status: coded
+; ## "compile,"  src: ANSI core ext  b: TBA  c: TBA  status: fragment
         ; """Compile the given xt in the current word definition. It is an
         ; error if we are not in the compile state. Because we are using
         ; subroutine threading, we can't use , (COMMA) to compile new words
@@ -1330,7 +1330,7 @@ z_compile_comma:
 
 
 ; ## COMPILE_ONLY ( -- ) "Mark most recent word as COMPILE-ONLY"
-; ## "compile-only"  src: Tali Forth  b: 8  c: TBA  status: coded
+; ## "compile-only"  src: Tali Forth  b: 8  c: TBA  status: tested
         ; """Set the Compile Only flag (CO) of the most recently defined
         ; word. The alternative way to do this is to define a word 
         ; ?COMPILE that makes sure  we're in compile mode
@@ -1347,7 +1347,7 @@ z_compile_only: rts
 
 
 ; ## CONSTANT ( n "name" -- ) "Define a constant"
-; ## "constant"  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## "constant"  src: ANSI core  b: 82  c: TBA  status: tested
         ; """Forth equivalent is  CREATE , DOES> @  but we do
         ; more in assembler and let CREATE do the heavy lifting.
         ; See http://www.bradrodriguez.com/papers/moving3.htm for
@@ -1422,7 +1422,7 @@ z_constant:     rts
 
 
 ; ## COUNT ( c-addr -- addr u ) "Convert character string to normal format"
-; ## "count"  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## "count"  src: ANSI core  b: 25  c: TBA  status: coded
         ; """; Convert old-style character string to address-length pair. Note
         ; that the length of the string c-addr ist stored in character length
         ; (8 bit), not cell length (16 bit). This is rarely used these days,

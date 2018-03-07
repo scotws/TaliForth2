@@ -1,16 +1,18 @@
 TODO/CHANGES for Tali Forth 2 
 Scot W. Stevenson <scot.stevenson@gmail.com>
 First version: 19. Jan 2014
-This version: 05. Mar 2016
+This version: 07. Mar 2016
 
 
 TODO POST-ALPHA ("ALL WORDS DO SOMETHING, USUALLY EVEN THE RIGHT THING")
         - Handle native compile special cases (R>, >R, 2R>, 2>R, etc)
-        - Allow stripping of underflow checks based on UF flag
         - Add size of words to source code
+        - Invent tests for CMOVE, CMOVE>, COUNT (and others)
 
 
 TODO POST-BETA ("ALL THERE, BUT BEWARE OF SNEAKY BUGS")
+        - Allow stripping of underflow checks based on UF flag
+        - Move adjust_z from CONSTANT to taliforth.asm (it's too long!)
         - Code temporary high-level Forth words such as WITHIN natively
         - Warn if newly defined word already in Dictionary
         - Add underflow check to PICK
