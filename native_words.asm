@@ -632,7 +632,7 @@ z_backslash:    rts
 
 
 ; ## BASE ( -- addr ) "Push address of radix base to stack"
-; ## "base"  src: ANSI core  b: TBA  c: TBA  status: tested
+; ## "base"  src: ANSI core  b: 10  c: TBA  status: tested
 xt_base:        
                 dex
                 dex
@@ -645,7 +645,7 @@ z_base:         rts
 
 
 ; ## BEGIN ( -- addr ) "Mark entry point for loop"
-; ## "begin"  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## "begin"  src: ANSI core  b: 10  c: TBA  status: tested
         ; """This is just an immediate version of here which
         ; could just as welle be coded as
         ;       : BEGIN HERE ; IMMEDIATE COMPILE-ONLY
@@ -665,7 +665,7 @@ z_begin:        rts
 
 
 ; ## BELL ( -- ) "Emit ASCII BELL"
-; ## "bell"  src: Tali Forth  b: TBA  c: TBA  status: tested
+; ## "bell"  src: Tali Forth  b: 5  c: TBA  status: tested
 xt_bell:        
                 lda #7          ; ASCII value for BELl
                 jsr emit_a
@@ -674,7 +674,7 @@ z_bell:         rts
 
 
 ; ## BL ( -- c ) "Push ASCII value of SPACE to stack"
-; ## "bl"  src: ANSI core  b: TBA  c: TBA  status: tested
+; ## "bl"  src: ANSI core  b: 8  c: TBA  status: tested
 .scope
 xt_bl:          
                 dex
@@ -687,8 +687,8 @@ z_bl:           rts
 .scend
 
 
-; ## BOUNDS ( addr u -- addr+u addr ) "<TBA>"
-; ## "bounds"  src: Gforth  b: TBA  c: TBA  status: coded
+; ## BOUNDS ( addr u -- addr+u addr ) "Prepare address for looping"
+; ## "bounds"  src: Gforth  b: 36  c: TBA  status: tested
         ; """Given a string, return the correct Data Stack parameters for
         ; a DO/LOOP loop; over its characters. This is realized as
         ; OVER + SWAP in Forth, but we do it a lot faster in assembler
@@ -726,7 +726,7 @@ z_bounds:       rts
 
 
 ; ## BRACKET_CHAR ( "c" -- ) "Compile character"
-; ## "[char]"  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## "[char]"  src: ANSI core  b: 6  c: TBA  status: tested
         ; """Compile the ASCII value of a character as a literal. This is an
         ; immediate, compile-only word. A definition given in 
         ; http://forth-standard.org/standard/implement is 
@@ -739,7 +739,7 @@ z_bracket_char: rts
 
 
 ; ## BRACKET_TICK ( -- ) "Store xt of following word during compilation"
-; ## "[']"  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## "[']"  src: ANSI core  b: 6  c: TBA  status: tested
 xt_bracket_tick:
                 jsr xt_tick
                 jsr xt_literal
@@ -747,7 +747,7 @@ z_bracket_tick: rts
 
 
 ; ## BRANCH ( -- ) "Always branch"
-; ## "branch"  src: Tali Forth  b: TBA  c: TBA  status: closed
+; ## "branch"  src: Tali Forth  b: 9  c: TBA  status: tested
         ; """Expects offset in next two bytes. This cannot be natively
         ; compiled because we need the return address provided on the
         ; 65c02 stack by JSR. 
@@ -787,7 +787,7 @@ branch_runtime:
 
 
 ; ## BYE ( -- ) "Break"
-; ## "bye"  src: ANSI tools ext  b: TBA  c: TBA  status: coded
+; ## "bye"  src: ANSI tools ext  b: 1  c: TBA  status: tested
 .scope
 xt_bye:         
                 brk
@@ -796,7 +796,7 @@ z_bye:          rts             ; never reached
 
 
 ; ## C_COMMA ( c -- ) "Store one byte/char in the Dictionary"
-; ## "c,"  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## "c,"  src: ANSI core  b: 21  c: TBA  status: tested
 ; TODO make sure we haven't allocated more than we have
 .scope
 xt_c_comma:     
@@ -821,7 +821,7 @@ z_c_comma:      rts
 
 
 ; ## C_FETCH ( addr -- c ) "Get a character/byte from given address"
-; ## "c@"  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## "c@"  src: ANSI core  b: 15  c: TBA  status: tested
 xt_c_fetch:     
                 cpx #dsp0-1
                 bmi +
@@ -836,7 +836,7 @@ z_c_fetch:      rts
 
 
 ; ## C_STORE ( c addr -- ) "Store character at address given"
-; ## "c!"  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## "c!"  src: ANSI core  b: 17  c: TBA  status: tested
 xt_c_store:     
                 cpx #dsp0-3
                 bmi +
@@ -855,7 +855,7 @@ z_c_store:      rts
 
 
 ; ## CELL_PLUS ( u -- u ) "Add cell size in bytes"
-; ## "cell+"  src: ANSI core  b: TBA  c: TBA  status: TBA
+; ## "cell+"  src: ANSI core  b: 22  c: TBA  status: tested
         ; """Add the number of bytes ("address units") that one cell needs.
         ; Since this is an 8 bit machine with 16 bit cells, we add two bytes.
         ; """
@@ -880,7 +880,7 @@ z_cell_plus:    rts
 
 
 ; ## CHAR ( "c" -- u ) "Convert character to ASCII value"
-; ## "char"  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## "char"  src: ANSI core  b: 22  c: TBA  status: tested
 .scope
 xt_char:        
                 ; get character from string, returns ( addr u )
@@ -908,7 +908,7 @@ z_char:         rts
 
 
 ; ## CHARS ( n -- n ) "Number of bytes that n chars need"
-; ## "chars"  src: ANSI core  b: TBA  c: TBA  status: tested
+; ## "chars"  src: ANSI core  b: 18  c: TBA  status: tested
         ; """Return how many address units n chars are. Since this is an 8 bit
         ; machine, this does absolutely nothing and is included for
         ; compatibility with other Forth versions
@@ -922,13 +922,6 @@ xt_chars:
                 cpx #dsp0-1
                 bmi +
                 lda #11
-                jmp error
-*
-                ; Even if this does nothing, we catch underflows for
-                ; stability
-                cpx #dsp0-1
-                bmi +
-                lda #11         ; underflow
                 jmp error
 *
 z_chars:        rts
