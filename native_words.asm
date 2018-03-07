@@ -250,7 +250,7 @@ z_quit:         ; no RTS required
 
 
 ; ## ABORT_QUOTE ( "string" -- ) "If flag TOS is true, MESSAGE with message"
-; ## "abort""  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## "abort""  src: ANSI core  b: 12  c: TBA  status: tested
 .scope
 xt_abort_quote:
                 ; save the string
@@ -291,7 +291,7 @@ _done:
 
 
 ; ## ABS ( n -- u ) "Return absolute value of a number"
-; ## "abs"  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## "abs"  src: ANSI core  b: 26  c: TBA  status: tested
 .scope
 xt_abs:         
                 cpx #dsp0-1
@@ -318,7 +318,7 @@ z_abs:          rts
 
 
 ; ## ACCEPT ( addr n -- n ) "Receive a string of characters from the keyboard"
-; ## "accept"  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## "accept"  src: ANSI core  b: 107  c: TBA  status: tested
         ; """ Receive a string of at most n1 characters, placing them at
         ; addr. Return the actual number of characters as n2. Characters
         ; are echoed as they are received. ACCEPT is called by REFILL in
@@ -421,7 +421,7 @@ z_accept:       rts
 
 
 ; ## AGAIN ( addr -- ) "Code backwards branch to address left by BEGIN"
-; ## "again"  src: ANSI core ext  b: TBA  c: TBA  status: coded
+; ## "again"  src: ANSI core ext  b: 38  c: TBA  status: tested
 .scope
 xt_again:
                 cpx #dsp0-1
@@ -461,9 +461,10 @@ z_again:        rts
 
 
 ; ## ALIGN ( -- ) "Make sure CP is aligned on word size"
-; ## "align"  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## "align"  src: ANSI core  b: 0  c: TBA  status: tested
         ; """On a 8-bit machine, this does nothing. ALIGNED uses
-        ; this routine as well"""
+        ; this routine as well
+        ; """
 .scope
 xt_align:
 z_align:        rts             ; stripped out during native compile
@@ -471,7 +472,7 @@ z_align:        rts             ; stripped out during native compile
 
 
 ; ## ALLOT ( n -- ) "Reserve or release memory"
-; ## "allot"  src: ANSI core  b: TBA  c: TBA  status: tested
+; ## "allot"  src: ANSI core  b: 90  c: TBA  status: tested
         ; """Reserve a certain number of bytes (not cells) or release them.
         ; If n = 0, do nothing. If n is negative, release n bytes, but only
         ; to the beginning of the Dictionary. If n is positive (the most
@@ -561,7 +562,7 @@ z_allot:        rts
 
 
 ; ## ALWAYS_NATIVE ( -- ) "Flag last word as always natively compiled"
-; ## "always-native"  src: Tali Forth  b: TBA  c: TBA  status: coded
+; ## "always-native"  src: Tali Forth  b: 8  c: TBA  status: tested
 xt_always_native:
                 ldy #1          ; offset for status byte
                 lda (dp),y
@@ -572,7 +573,7 @@ z_always_native:
 
 
 ; ## AND ( n n -- n ) "Logically AND TOS and NOS"
-; ## "and"  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## "and"  src: ANSI core  b: 23  c: TBA  status: tested
 xt_and:         
                 cpx #dsp0-3
                 bmi +
@@ -594,7 +595,7 @@ z_and:          rts
 
 
 ; ## AT_XY ( n m -- ) "Move cursor to position given"
-; ## "at-xy"  src: ANSI facility  b: TBA  c: TBA  status: TBA
+; ## "at-xy"  src: ANSI facility  b: 35  c: TBA  status: tested
         ; """On an ANSI compatible terminal, place cursor at row n colum m. 
         ; Code is ESC[<n>;<m>H Do not use U. to print the numbers because the 
         ; trailing space will not work with xterm 
@@ -609,20 +610,13 @@ xt_at_xy:
                 jsr emit_a
                 lda #$5B        ; ASCII for "["
                 jsr emit_a
-                lda 3,x         ; n (x) is in MSB
-                jsr byte_to_ascii
+                jsr print_u
                 lda #$3B        ; ASCII for ";"
                 jsr emit_a
-                lda 1,x         ; m (y) is in LSB
-                jsr byte_to_ascii
+                jsr print_u
                 lda #'H         ; for Mac OS X 
                 jsr emit_a
 
-                inx             ; 2DROP
-                inx
-                inx
-                inx
-        
 z_at_xy:        rts
 
 
