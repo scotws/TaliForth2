@@ -11,8 +11,8 @@
 \section{Booting}\texttt{booting}
 
 Out of the box, Tali Forth boots a minimal kernel\texttt{kernel}\index{kernel}
-to connect to the py65mon\index{py65mon} simulator. By default, this ends with a
-line such as
+to connect to the py65mon\index{py65mon} simulator. By default, this stage ends
+with a line such as
 
 \begin{lstlisting}[frame=lines]
         Tali Forth 2 default kernel for py65mon (18. Feb 2018)
@@ -31,10 +31,10 @@ boot string, something to the effect of
         Type 'bye' to exit
 \end{lstlisting}
 
-\noindent If you have modified the high level Forth words\index{Forth words} in
-either \texttt{forth\_words.fs} or \texttt{user\_words.fs}, the boot process might
-fail with a variant of the error message `unknown word'. The built-in, native
-words should still work.
+\noindent This functions as a primitive self-test. If you have modified the high
+level Forth words\index{Forth words} in either \texttt{forth\_words.fs} or
+\texttt{user\_words.fs}, the boot process might fail with a variant of the error
+message `unknown word'. The built-in, native words should still work.
 
 \section{Available words}
 
@@ -64,8 +64,8 @@ box:
         find word cold bye
 \end{lstlisting}
 
-(Call \texttt{words}\index{words@\texttt{words}} in Tali Forth for the current
-list.)
+\noindent (Call \texttt{words}\index{words@\texttt{words}} in Tali Forth for the
+current list.)
 
 Though the list might look unsorted, it actually reflects the priority in the
 dictionary\index{dictionary}, that is, which words are found first. For
@@ -187,8 +187,6 @@ by default). The Forth is:
 
 \noindent Changing \texttt{nc-limit} should show differences in the Forth words.
 
-
-
 \section{Underflow stripping}\index{underflow!detection}
 
 Checking for underflow helps during the design and debug phases of writing Forth
@@ -196,7 +194,12 @@ code, but once it ready to ship, those nine bytes per check hurt, as we see in
 the case above. To allow those checks to be stripped, we can set the system
 variable \texttt{uf-strip} to \texttt{true}.
 
+\section{Restarting}
 
+Tali Forth has a non-standard word \texttt{cold}\index{cold@\texttt{cold}} that
+resets the system. Note that this doesn't erase any data in memory, but just
+moves the pointers back. When in doubt, you might be better off quitting and
+restarting completely.
 
 
 % -------------------------------------

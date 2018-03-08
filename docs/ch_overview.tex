@@ -30,7 +30,6 @@ cell size should be 16 bits as well. This is still easy enough to realize with a
 8-bit MPU, though not as comfortable as working with the 65816\index{65816}, the
 65c02's big brother with a 16 bit register size.
 
-
 \subsection{Threading technique}\index{threading}
 
 A `thread' in Forth is simply a list of addresses of words to be executed. 
@@ -55,7 +54,6 @@ Our lack of registers and the goal of creating a simple and easy to understand
 Forth makes subroutine threading the most attractive solution. We will try to
 mitigate the pain of the 12 cycle cost of every \texttt{jsr/rts} combination by
 including a relatively large number of native words\index{native words}. 
-
 
 \subsection{Register use}
 
@@ -105,7 +103,7 @@ In constrast to Tali Forth 1\index{Tali Forth 1}, which kept the header and body
 of the words together, Tali Forth 2 keeps them separate. This lets us play
 various tricks with the code to make it more effective.
 
-\subsection{Even deeper down the rabbit hole}
+\subsection{Deeper down the rabbit hole}
 
 This concludes our overview of the basic Tali Forth 2 structure. For those
 interested, a later chapter will provide far more detail.
