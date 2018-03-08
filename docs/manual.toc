@@ -22,11 +22,12 @@
 \contentsline {subsection}{\numberline {3.1.2}Downloading the py65mon Simulator}{13}{subsection.3.1.2}
 \contentsline {section}{\numberline {3.2}Running the binary}{13}{section.3.2}
 \contentsline {chapter}{\numberline {4}Running}{14}{chapter.4}
-\contentsline {section}{\numberline {4.1}Available words}{14}{section.4.1}
-\contentsline {section}{\numberline {4.2}Native compiling}{14}{section.4.2}
-\contentsline {section}{\numberline {4.3}Underflow stripping}{16}{section.4.3}
-\contentsline {section}{\numberline {4.4}Gotchas}{16}{section.4.4}
-\contentsline {section}{\numberline {4.5}Reporting a problem}{16}{section.4.5}
+\contentsline {section}{\numberline {4.1}Booting}{14}{section.4.1}
+\contentsline {section}{\numberline {4.2}Available words}{14}{section.4.2}
+\contentsline {section}{\numberline {4.3}Native compiling}{15}{section.4.3}
+\contentsline {section}{\numberline {4.4}Underflow stripping}{16}{section.4.4}
+\contentsline {section}{\numberline {4.5}Gotchas}{16}{section.4.5}
+\contentsline {section}{\numberline {4.6}Reporting a problem}{16}{section.4.6}
 \contentsline {chapter}{\numberline {5}The Editor}{17}{chapter.5}
 \contentsline {part}{III\hspace {1em}Developer Guide}{18}{part.3}
 \contentsline {chapter}{\numberline {6}How Tali Forth works}{19}{chapter.6}

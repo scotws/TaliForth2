@@ -8,6 +8,34 @@
         -- Charles Moore,\index{Moore, Charles} \textit{Masterminds of Programming}\cite{biancuzzi09}
 \end{flushright}
 
+\section{Booting}\texttt{booting}
+
+Out of the box, Tali Forth boots a minimal kernel\texttt{kernel}\index{kernel}
+to connect to the py65mon\index{py65mon} simulator. By default, this ends with a
+line such as
+
+\begin{lstlisting}[frame=lines]
+        Tali Forth 2 default kernel for py65mon (18. Feb 2018)
+\end{lstlisting}
+
+\noindent Tali Forth itself boots next, and after setting up various internal
+things, compiles the high level words. This causes a slight delay, depending on
+the number and length of these words. As the last step, Forth should spit out a
+boot string, something to the effect of
+
+\begin{lstlisting}[frame=lines]
+        Tali Forth 2 for the 65c02
+        Version ALPHA 07. Mar 2018 
+        Copyright 2014-2018 Scot W. Stevenson
+        Tali Forth 2 comes with absolutely NO WARRANTY
+        Type 'bye' to exit
+\end{lstlisting}
+
+\noindent If you have modified the high level Forth words\index{Forth words} in
+either \texttt{forth\_words.fs} or \texttt{user\_words.fs}, the boot process might
+fail with a variant of the error message `unknown word'. The built-in, native
+words should still work.
+
 \section{Available words}
 
 Tali Forth comes with the following Forth words\index{Forth words} out of the

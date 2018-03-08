@@ -57,22 +57,25 @@
 \indexentry{Linux|hyperpage}{13}
 \indexentry{PIP|hyperpage}{13}
 \indexentry{Moore, Charles|hyperpage}{14}
+\indexentry{kernel|hyperpage}{14}
+\indexentry{py65mon|hyperpage}{14}
 \indexentry{Forth words|hyperpage}{14}
-\indexentry{words@\texttt{words}|hyperpage}{14}
-\indexentry{dictionary|hyperpage}{14}
-\indexentry{native words|hyperpage}{14}
-\indexentry{drop@\texttt{drop}|hyperpage}{14}
-\indexentry{bye@\texttt{bye}|hyperpage}{14}
-\indexentry{see@\texttt{see}|hyperpage}{14}
-\indexentry{compiling, native|hyperindexformat{\textbf}}{14}
-\indexentry{[char]@\texttt{[char]}|hyperpage}{14}
+\indexentry{Forth words|hyperpage}{14}
+\indexentry{words@\texttt{words}|hyperpage}{15}
+\indexentry{dictionary|hyperpage}{15}
+\indexentry{native words|hyperpage}{15}
+\indexentry{drop@\texttt{drop}|hyperpage}{15}
+\indexentry{bye@\texttt{bye}|hyperpage}{15}
+\indexentry{see@\texttt{see}|hyperpage}{15}
+\indexentry{compiling, native|hyperindexformat{\textbf}}{15}
+\indexentry{[char]@\texttt{[char]}|hyperpage}{15}
 \indexentry{drop@\texttt{drop}|hyperpage}{15}
 \indexentry{underflow|hyperpage}{15}
 \indexentry{compiling, native|hyperpage}{15}
 \indexentry{nc-limit@\texttt{nc-limit}|hyperpage}{15}
 \indexentry{see@\texttt{see}|hyperpage}{15}
-\indexentry{underflow|hyperpage}{15}
-\indexentry{X register|hyperpage}{15}
+\indexentry{underflow|hyperpage}{16}
+\indexentry{X register|hyperpage}{16}
 \indexentry{underflow!detection|hyperpage}{16}
 \indexentry{Gforth|hyperpage}{16}
 \indexentry{double cell|hyperpage}{16}

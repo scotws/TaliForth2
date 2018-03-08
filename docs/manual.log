@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.3.2)  8 MAR 2018 01:26
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.3.2)  8 MAR 2018 12:31
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -414,14 +414,14 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 
 ]
 LaTeX Font Info:    Try loading font information for T1+SourceCodePro-TLF on in
-put line 44.
+put line 45.
 
 (/usr/share/texlive/texmf-dist/tex/latex/sourcecodepro/T1SourceCodePro-TLF.fd
 File: T1SourceCodePro-TLF.fd 2015/01/11 (autoinst) Font definitions for T1/Sour
 ceCodePro-TLF.
 )
 LaTeX Font Info:    Font shape `T1/SourceCodePro-TLF/m/n' will be
-(Font)              scaled to size 10.0pt on input line 44.
+(Font)              scaled to size 10.0pt on input line 45.
 
 [3])
 \tf@toc=\write5
@@ -443,7 +443,7 @@ LaTeX Font Info:    Font shape `T1/SourceCodePro-TLF/m/n' will be
 
 ]
 Chapter 1.
-(./ch_why.tex <pics/W65c02.jpg, id=539, 301.125pt x 301.125pt>
+(./ch_why.tex <pics/W65c02.jpg, id=544, 301.125pt x 301.125pt>
 File: pics/W65c02.jpg Graphic file (type jpg)
 
 <use pics/W65c02.jpg>
@@ -597,17 +597,21 @@ Package atveryend Info: Empty hook `AfterLastShipout' on input line 136.
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 136.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 136.
 Package rerunfilecheck Info: File `manual.out' has not changed.
-(rerunfilecheck)             Checksum: 54A0839BF34E6A052565949C8AA41787;5983.
+(rerunfilecheck)             Checksum: C7E4BC84759A0FAEC606AB3C8CD06BE3;6037.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 136.
  ) 
 Here is how much of TeX's memory you used:
- 8376 strings out of 494953
- 123623 string characters out of 6180978
- 324779 words of memory out of 5000000
- 10977 multiletter control sequences out of 15000+600000
+ 8386 strings out of 494953
+ 123781 string characters out of 6180978
+ 325778 words of memory out of 5000000
+ 10978 multiletter control sequences out of 15000+600000
  26350 words of font info for 55 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 43i,12n,43p,246b,1704s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 43i,12n,43p,246b,1712s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texlive/texmf-dist/fonts/enc/dvips/sourcecodepro/a_mqb3sg.enc} </
 home/scot/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecti0800.600pk> </home/scot/.t
 exmf-var/fonts/pk/ljfour/jknappen/ec/ecrm0800.600pk> </home/scot/.texmf-var/fon
@@ -627,10 +631,10 @@ type1/adobe/sourcecodepro/SourceCodePro-Bold.pfb></usr/share/texlive/texmf-dist
 /fonts/type1/adobe/sourcecodepro/SourceCodePro-It.pfb></usr/share/texlive/texmf
 -dist/fonts/type1/adobe/sourcecodepro/SourceCodePro-Regular.pfb></usr/share/tex
 live/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
-Output written on manual.pdf (41 pages, 425927 bytes).
+Output written on manual.pdf (41 pages, 427674 bytes).
 PDF statistics:
- 2061 PDF objects out of 2073 (max. 8388607)
- 1397 compressed objects within 14 object streams
- 521 named destinations out of 1000 (max. 500000)
- 758 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 2078 PDF objects out of 2487 (max. 8388607)
+ 1413 compressed objects within 15 object streams
+ 530 named destinations out of 1000 (max. 500000)
+ 766 words of extra memory for PDF output out of 10000 (max. 10000000)
 

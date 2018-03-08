@@ -1,20 +1,19 @@
 TODO/CHANGES for Tali Forth 2 
 Scot W. Stevenson <scot.stevenson@gmail.com>
 First version: 19. Jan 2014
-This version: 07. Mar 2016
+This version: 08. Mar 2016
 
 TODO POST-ALPHA ("ALL WORDS DO SOMETHING, USUALLY EVEN THE RIGHT THING")
         - Handle native compile special cases (R>, >R, 2R>, 2>R, etc)
         - Add size of words to source code
-        - Invent tests for CMOVE, CMOVE>, COUNT (and others)
-        - Test all words, adding new tests to docs/tests.md
+        - Invent tests for COUNT (and others)
+        - Test all words, adding new tests to documentation
 
 
 TODO POST-BETA ("ALL THERE, BUT BEWARE OF SNEAKY BUGS")
         - Allow stripping of underflow checks based on UF flag
         - Move adjust_z from CONSTANT to taliforth.asm (it's too long!)
         - Code temporary high-level Forth words such as WITHIN natively
-        - Allow stripping of underflow checks based on UF flag
         - Warn if newly defined word already in Dictionary
         - Add underflow check to PICK
         - Check where all "STY 0,X" can be used to good effect
@@ -35,9 +34,9 @@ TODO AT SOME POINT
         - See if MAX and MIN can be combined
         - See if > and < etc can be combined
         - Consider adding CASE
-        - Consider adding THROW/CATCH
         - Consider moving UM* to table-based multiplication
         - Consider adding KEY? if we can make it work with py65mon
+        - Consider adding THROW/CATCH
         - Allow SLITERAL to store strings longer than 255 chars
         - Allow S" and ." to handle strings longer than 255 chars
         - Allow -TRAILING to handle strings longer than 255 chars
