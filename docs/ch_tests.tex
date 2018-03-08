@@ -12,7 +12,8 @@ a Mandelbrot\index{Mandelbrot} program that can be uncommented and run.
 % ----------------------------------------
 \section{The interpreter}\index{interpreter}
 
-\subsection{\texttt{>in} tests}
+\subsection{\texttt{>in}}
+\index{>in@\texttt{>in}}
 
 From
 https://www.complang.tuwien.ac.at/forth/gforth/Docs-html/The-Text-Interpreter.html
@@ -35,7 +36,9 @@ https://www.complang.tuwien.ac.at/forth/gforth/Docs-html/The-Text-Interpreter.ht
 \section{Defining words}
 
 \subsection{\texttt{create} and \texttt{does>}}
+\index{does>@\texttt{does>}}
 The simplest test is to redefine \texttt{constant}:
+\index{constant@\texttt{constant}}
 
 \begin{lstlisting}[frame=lines]
         : aaa create , does> @ ; 
@@ -43,6 +46,7 @@ The simplest test is to redefine \texttt{constant}:
 
 
 \subsection{\texttt{literal}}
+\index{literal@\texttt{literal}}
 
 \begin{lstlisting}[frame=lines]
         : aaa [ 1 ] literal ;
@@ -62,6 +66,7 @@ The simplest test is to redefine \texttt{constant}:
 
 
 \subsection{\texttt{bracket-tick}}
+\index{[']@\texttt{[']}}
 
 \begin{lstlisting}[frame=lines]
         : aaa ['] words execute ;
@@ -71,6 +76,7 @@ The simplest test is to redefine \texttt{constant}:
 
 
 \subsection{\texttt{postpone}}
+\index{postpone@\texttt{postpone}}
 
 \texttt{postpone} is aord that is complicated to code, but very useful. The
 following simple test is from
@@ -86,6 +92,7 @@ Forth}}:
 
 
 \subsection{\texttt{find-name}}
+\index{find-name@\texttt{find-name}}
 
 This word walks through the dictionary until it finds the word presented. 
 
@@ -99,9 +106,8 @@ This word walks through the dictionary until it finds the word presented.
 \subsection{\texttt{word} vs \texttt{parse}}
 
 \texttt{word}\index{word@\texttt{word}} was used in ancient Forths and should be
-considered obsolete today. The following piece of code shows the differences:
-
-Taken from Conklin \& Rather p. 160
+considered obsolete today. The following piece of code, taken from the
+\textit{Forth Programmer's Handbook}\cite{conklinrather}, shows the differences:
 
 \begin{lstlisting}[frame=lines]
         : test1 ( "name" -- )  32 word count type ; 
@@ -143,12 +149,16 @@ numbers 1 to 5 in memory:
         00 01 02 03 04 05 00 00 00 00
 \end{lstlisting}
 
+\subsection{\texttt{cmove}}
+
 \noindent The test routine for \texttt{cmove} and its correct output is:
 
 \begin{lstlisting}[frame=lines]
         start  start 3 +  5  cmove
         00 01 02 00 01 02 00 01 00 00
 \end{lstlisting}
+
+\subsection{\texttt{cmove>}}
 
 \indent For \texttt{cmove>}, we have: 
 
@@ -314,13 +324,22 @@ Also, the classic (here from the ANSI Forth documentation):
 \end{lstlisting}
 
 \noindent Should give you: 
-% TODO convert to table
-\begin{lstlisting}[frame=lines]
-        10 7 --> 3 1
-        -10 7 --> 4 -2 
-        10 -7 --> -4 -2
-        -10 -7 --> -3 1
-\end{lstlisting}
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{ | c c || c c | }
+        \hline
+	Input & & Result & \\
+        \hline
+         10 &  7 &  3 &  1\\
+        -10 &  7 &  4 & -2 \\
+         10 & -7 & -4 & -2\\
+        -10 & -7 &  3 &  1\\
+        \hline
+\end{tabular}
+        \caption{Correct values for \texttt{fm/mod} tests}
+        \label{table_fmmod}
+\end{table}
 
 
 \subsection{\texttt{sm/rem}}
@@ -331,10 +350,21 @@ Also, the classic (here from the ANSI Forth documentation):
 \end{lstlisting}
 
 \noindent Should give you: 
-% TODO convert to table
-\begin{lstlisting}[frame=lines]
-        10 7 --> 3 1
-        -10 7 --> -3 -1 
-        10 -7 --> 3 -1
-        -10 -7 --> -3 1
-\end{lstlisting}
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{ | c c || c c | }
+        \hline
+	Input & & Result & \\
+        \hline
+         10 &  7 &  3 &  1\\
+        -10 &  7 & -3 & -1 \\
+         10 & -7 &  3 & -1\\
+        -10 & -7 & -3 &  1\\
+        \hline
+\end{tabular}
+        \caption{Correct values for \texttt{sm/rem} tests}
+        \label{table_smrem}
+\end{table}
+
+% end

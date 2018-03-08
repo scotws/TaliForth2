@@ -1,14 +1,16 @@
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {2.1}{\ignorespaces The classic Forth registers}}{10}{table.2.1}
+\contentsline {table}{\numberline {2.1}{\ignorespaces The classic Forth registers}}{11}{table.2.1}
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {6.1}{\ignorespaces DSP values for underflow testing}}{18}{table.6.1}
-\contentsline {table}{\numberline {6.2}{\ignorespaces Header flags}}{19}{table.6.2}
+\contentsline {table}{\numberline {6.1}{\ignorespaces DSP values for underflow testing}}{20}{table.6.1}
+\contentsline {table}{\numberline {6.2}{\ignorespaces Header flags}}{21}{table.6.2}
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
+\contentsline {table}{\numberline {B.1}{\ignorespaces Correct values for \texttt {fm/mod} tests}}{36}{table.B.1}
+\contentsline {table}{\numberline {B.2}{\ignorespaces Correct values for \texttt {sm/rem} tests}}{37}{table.B.2}
 \addvspace {10\p@ }

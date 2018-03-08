@@ -1,12 +1,9 @@
 This is makeindex, version 2.15 [TeX Live 2015] (kpathsea + Thai support).
-Scanning input file manual.idx....done (162 entries accepted, 0 rejected).
-Sorting entries....done (1303 comparisons).
+Scanning input file manual.idx....done (180 entries accepted, 0 rejected).
+Sorting entries....done (1436 comparisons).
 Generating output file manual.ind....
-## Warning (input = manual.idx, line = 62; output = manual.ind, line = 42):
+## Warning (input = manual.idx, line = 53; output = manual.ind, line = 138):
    -- Conflicting entries: multiple encaps for the same page under same key.
-
-## Warning (input = manual.idx, line = 52; output = manual.ind, line = 133):
-   -- Conflicting entries: multiple encaps for the same page under same key.
-done (197 lines written, 2 warnings).
+done (202 lines written, 1 warning).
 Output written in manual.ind.
 Transcript written in manual.ilg.

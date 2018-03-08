@@ -1,162 +1,180 @@
-\indexentry{6502|hyperpage}{7}
-\indexentry{Peddle, Chuck|hyperpage}{7}
-\indexentry{Mensch, Bill|hyperpage}{7}
-\indexentry{VIC-20|hyperpage}{7}
-\indexentry{Commodore PET|hyperpage}{7}
-\indexentry{Apple II|hyperpage}{7}
-\indexentry{Atari 800|hyperpage}{7}
-\indexentry{WDC|hyperpage}{7}
-\indexentry{6502.org|hyperpage}{7}
-\indexentry{Wilson, Garth|hyperpage}{7}
-\indexentry{65c02|hyperpage}{7}
-\indexentry{Z80|hyperpage}{7}
-\indexentry{Wilson, Garth|hyperpage}{7}
-\indexentry{instruction set!architecture|hyperpage}{8}
-\indexentry{ISA|hyperindexformat{\see {instruction set}}}{8}
-\indexentry{Williams, Elliot|hyperpage}{8}
-\indexentry{Forth|hyperindexformat{\textbf}}{8}
-\indexentry{Moore, Chuck|hyperpage}{8}
-\indexentry{NASA|hyperpage}{8}
-\indexentry{Cassini@\textit{Cassini}|hyperpage}{8}
-\indexentry{RPN|hyperindexformat{\see {reverse polish notation}}}{8}
-\indexentry{reverse polish notation|hyperpage}{8}
-\indexentry{Brodie, Leo|hyperpage}{8}
-\indexentry{Gforth|hyperpage}{8}
-\indexentry{FIG Forth|hyperpage}{8}
-\indexentry{ANSI Forth|hyperpage}{8}
-\indexentry{Canterbury Tales, The@\textit{Canterbury Tales, The}|hyperpage}{8}
-\indexentry{Brodie, Leo|hyperpage}{8}
-\indexentry{Lisp|hyperpage}{8}
-\indexentry{accumulator|hyperpage}{9}
-\indexentry{X register|hyperpage}{9}
-\indexentry{Y register|hyperpage}{9}
-\indexentry{Zero Page|hyperpage}{9}
-\indexentry{address bus|hyperpage}{9}
-\indexentry{RAM|hyperpage}{9}
-\indexentry{ROM|hyperpage}{9}
-\indexentry{address bus|hyperpage}{9}
-\indexentry{65816|hyperpage}{9}
-\indexentry{threading|hyperpage}{9}
+\indexentry{Moore, Charles|hyperpage}{8}
+\indexentry{6502|hyperpage}{8}
+\indexentry{Peddle, Chuck|hyperpage}{8}
+\indexentry{Mensch, Bill|hyperpage}{8}
+\indexentry{VIC-20|hyperpage}{8}
+\indexentry{Commodore PET|hyperpage}{8}
+\indexentry{Apple II|hyperpage}{8}
+\indexentry{Atari 800|hyperpage}{8}
+\indexentry{WDC|hyperpage}{8}
+\indexentry{6502.org|hyperpage}{8}
+\indexentry{Z80|hyperpage}{8}
+\indexentry{Wilson, Garth|hyperpage}{9}
+\indexentry{65c02|hyperpage}{9}
+\indexentry{instruction set!architecture|hyperpage}{9}
+\indexentry{ISA|hyperindexformat{\see {instruction set}}}{9}
+\indexentry{Williams, Elliot|hyperpage}{9}
+\indexentry{Forth|hyperindexformat{\textbf}}{9}
+\indexentry{Moore, Charles|hyperpage}{9}
+\indexentry{NASA|hyperpage}{9}
+\indexentry{Cassini@\textit{Cassini}|hyperpage}{9}
+\indexentry{RPN|hyperindexformat{\see {reverse polish notation}}}{9}
+\indexentry{reverse polish notation|hyperpage}{9}
+\indexentry{Brodie, Leo|hyperpage}{9}
+\indexentry{Gforth|hyperpage}{9}
 \indexentry{FIG Forth|hyperpage}{9}
-\indexentry{native words|hyperpage}{9}
-\indexentry{Rodriguez, Brad|hyperpage}{9}
-\indexentry{Kelly, Guy|hyperpage}{9}
-\indexentry{RISC-V|hyperpage}{10}
-\indexentry{Zero Page|hyperpage}{10}
+\indexentry{ANSI Forth|hyperpage}{9}
+\indexentry{Canterbury Tales, The@\textit{Canterbury Tales, The}|hyperpage}{9}
+\indexentry{Wilson, Garth|hyperpage}{9}
+\indexentry{Brodie, Leo|hyperpage}{9}
+\indexentry{Lisp|hyperpage}{9}
+\indexentry{accumulator|hyperpage}{10}
 \indexentry{X register|hyperpage}{10}
+\indexentry{Y register|hyperpage}{10}
 \indexentry{Zero Page|hyperpage}{10}
-\indexentry{underflow!detection|hyperpage}{10}
-\indexentry{native compilation|hyperpage}{10}
-\indexentry{header|hyperpage}{10}
-\indexentry{Tali Forth 1|hyperpage}{10}
-\indexentry{py65mon|hyperpage}{12}
-\indexentry{GitHub|hyperpage}{12}
-\indexentry{py65mon|hyperindexformat{\textbf}}{12}
-\indexentry{Python|hyperpage}{12}
-\indexentry{Linux|hyperpage}{12}
-\indexentry{PIP|hyperpage}{12}
-\indexentry{compiling, native|hyperindexformat{\textbf}}{13}
-\indexentry{[char]@\texttt{[char]}|hyperpage}{13}
-\indexentry{drop@\texttt{drop}|hyperpage}{13}
-\indexentry{underflow|hyperpage}{13}
-\indexentry{compiling, native|hyperpage}{13}
-\indexentry{nc-limit@\texttt{nc-limit}|hyperpage}{13}
-\indexentry{see@\texttt{see}|hyperpage}{13}
-\indexentry{underflow|hyperpage}{14}
-\indexentry{X register|hyperpage}{14}
-\indexentry{underflow!detection|hyperpage}{14}
-\indexentry{Gforth|hyperpage}{14}
-\indexentry{double cell|hyperpage}{14}
-\indexentry{feedback|hyperindexformat{\textbf}}{14}
-\indexentry{bugs|hyperpage}{14}
-\indexentry{stack|hyperindexformat{\textbf}}{17}
-\indexentry{Zero Page|hyperpage}{17}
-\indexentry{underflow|hyperpage}{17}
-\indexentry{X register|hyperpage}{17}
-\indexentry{floodplain (stack)|hyperpage}{17}
-\indexentry{underflow|hyperpage}{17}
-\indexentry{little endian|hyperpage}{17}
-\indexentry{Tali Forth 1|hyperpage}{17}
-\indexentry{Liara Forth|hyperpage}{17}
-\indexentry{underflow!detection|hyperpage}{18}
-\indexentry{Tali Forth 1|hyperpage}{18}
-\indexentry{X register|hyperpage}{18}
-\indexentry{underflow detection|hyperpage}{18}
-\indexentry{double cell|hyperpage}{18}
-\indexentry{overflow|hyperpage}{18}
-\indexentry{dictionary|hyperindexformat{\textbf}}{18}
-\indexentry{header|hyperindexformat{\textbf}}{19}
-\indexentry{name token|hyperpage}{19}
-\indexentry{nt|hyperindexformat{\see {name token}}}{19}
-\indexentry{header!flags|hyperpage}{19}
-\indexentry{status byte|hyperpage}{19}
-\indexentry{name token|hyperpage}{19}
-\indexentry{execution token|hyperpage}{19}
-\indexentry{xt|hyperindexformat{\see {execution token}}}{19}
-\indexentry{case, lower|hyperpage}{19}
-\indexentry{native words|hyperpage}{19}
-\indexentry{Forth words|hyperpage}{19}
-\indexentry{user words|hyperpage}{19}
-\indexentry{65c02|hyperpage}{19}
-\indexentry{drop@\texttt{drop}|hyperpage}{19}
-\indexentry{bye@\texttt{bye}|hyperpage}{19}
-\indexentry{words@\texttt{words}|hyperpage}{19}
-\indexentry{intro string|hyperpage}{19}
-\indexentry{self-test|hyperpage}{19}
-\indexentry{memory map|hyperindexformat{\textbf}}{20}
-\indexentry{RAM|hyperpage}{20}
-\indexentry{ROM|hyperpage}{20}
-\indexentry{ANSI Forth|hyperpage}{21}
-\indexentry{keyboard|hyperpage}{21}
-\indexentry{file!block|hyperpage}{21}
-\indexentry{file!text|hyperpage}{21}
-\indexentry{blk@\texttt{blk}|hyperpage}{21}
-\indexentry{file-id|hyperpage}{21}
-\indexentry{booting|hyperpage}{21}
-\indexentry{command line interface|hyperpage}{21}
-\indexentry{input|hyperindexformat{\textbf}}{21}
-\indexentry{current input buffer|hyperpage}{21}
-\indexentry{cib|hyperindexformat{\see {current input buffer}}}{21}
-\indexentry{>in@\texttt{>in}|hyperpage}{21}
-\indexentry{history list|hyperpage}{21}
-\indexentry{create@\texttt{create}|hyperindexformat{\textbf}}{22}
-\indexentry{does>@\texttt{does>}|hyperindexformat{\textbf}}{22}
-\indexentry{Ophis assembler|hyperindexformat{\textbf}}{26}
-\indexentry{Martin, Michael|hyperpage}{26}
-\indexentry{Python|hyperpage}{26}
-\indexentry{Linux|hyperpage}{26}
-\indexentry{X register|hyperpage}{26}
-\indexentry{Y register|hyperpage}{26}
-\indexentry{style, coding|hyperpage}{27}
-\indexentry{Ophis assembler|hyperpage}{27}
-\indexentry{Go|hyperpage}{27}
-\indexentry{Python|hyperpage}{27}
-\indexentry{testing|hyperpage}{27}
-\indexentry{cheat sheet, code|hyperpage}{27}
-\indexentry{stack|hyperpage}{27}
-\indexentry{Tali Forth 1|hyperpage}{30}
-\indexentry{GitHub|hyperpage}{30}
-\indexentry{vas Normandy, Tali'Zorah|hyperpage}{30}
-\indexentry{Mass Effect@\textit{Mass Effect}|hyperpage}{30}
-\indexentry{Liara Forth|hyperindexformat{\textbf}}{30}
-\indexentry{65816|hyperpage}{30}
-\indexentry{Tali Forth 1|hyperpage}{30}
-\indexentry{Mass Effect@\textit{Mass Effect}|hyperpage}{30}
-\indexentry{testing|hyperindexformat{\textbf}}{31}
-\indexentry{Mandelbrot|hyperpage}{31}
-\indexentry{interpreter|hyperpage}{31}
-\indexentry{[char]@\texttt{[char]}|hyperpage}{31}
-\indexentry{word@\texttt{word}|hyperpage}{32}
-\indexentry{cmove@\texttt{cmove}|hyperpage}{32}
-\indexentry{cmove>@\texttt{cmove>}|hyperpage}{32}
-\indexentry{move@\texttt{move}|hyperpage}{32}
-\indexentry{Gforth|hyperpage}{33}
-\indexentry{bounds@\texttt{bounds}|hyperpage}{34}
-\indexentry{Gforth|hyperpage}{34}
-\indexentry{recursion|hyperpage}{34}
-\indexentry{recurse@\texttt{recurse}|hyperpage}{34}
-\indexentry{math|hyperpage}{34}
-\indexentry{fm/mod@\texttt{fm/mod}|hyperindexformat{\textbf}}{34}
-\indexentry{sm/rem@\texttt{sm/rem}|hyperindexformat{\textbf}}{35}
-\indexentry{6502.org|hyperpage}{36}
-\indexentry{Barry, Mike|hyperpage}{36}
+\indexentry{address bus|hyperpage}{10}
+\indexentry{RAM|hyperpage}{10}
+\indexentry{ROM|hyperpage}{10}
+\indexentry{address bus|hyperpage}{10}
+\indexentry{65816|hyperpage}{10}
+\indexentry{threading|hyperpage}{10}
+\indexentry{FIG Forth|hyperpage}{10}
+\indexentry{native words|hyperpage}{10}
+\indexentry{Rodriguez, Brad|hyperpage}{10}
+\indexentry{Kelly, Guy|hyperpage}{10}
+\indexentry{RISC-V|hyperpage}{11}
+\indexentry{Zero Page|hyperpage}{11}
+\indexentry{X register|hyperpage}{11}
+\indexentry{Zero Page|hyperpage}{11}
+\indexentry{underflow!detection|hyperpage}{11}
+\indexentry{native compilation|hyperpage}{11}
+\indexentry{header|hyperpage}{11}
+\indexentry{Tali Forth 1|hyperpage}{11}
+\indexentry{py65mon|hyperpage}{13}
+\indexentry{GitHub|hyperpage}{13}
+\indexentry{py65mon|hyperindexformat{\textbf}}{13}
+\indexentry{Python|hyperpage}{13}
+\indexentry{Linux|hyperpage}{13}
+\indexentry{PIP|hyperpage}{13}
+\indexentry{Moore, Charles|hyperpage}{14}
+\indexentry{Forth words|hyperpage}{14}
+\indexentry{words@\texttt{words}|hyperpage}{14}
+\indexentry{dictionary|hyperpage}{14}
+\indexentry{native words|hyperpage}{14}
+\indexentry{drop@\texttt{drop}|hyperpage}{14}
+\indexentry{bye@\texttt{bye}|hyperpage}{14}
+\indexentry{see@\texttt{see}|hyperpage}{14}
+\indexentry{compiling, native|hyperindexformat{\textbf}}{14}
+\indexentry{[char]@\texttt{[char]}|hyperpage}{14}
+\indexentry{drop@\texttt{drop}|hyperpage}{15}
+\indexentry{underflow|hyperpage}{15}
+\indexentry{compiling, native|hyperpage}{15}
+\indexentry{nc-limit@\texttt{nc-limit}|hyperpage}{15}
+\indexentry{see@\texttt{see}|hyperpage}{15}
+\indexentry{underflow|hyperpage}{15}
+\indexentry{X register|hyperpage}{15}
+\indexentry{underflow!detection|hyperpage}{16}
+\indexentry{Gforth|hyperpage}{16}
+\indexentry{double cell|hyperpage}{16}
+\indexentry{feedback|hyperindexformat{\textbf}}{16}
+\indexentry{bugs|hyperpage}{16}
+\indexentry{GitHub|hyperpage}{16}
+\indexentry{stack|hyperindexformat{\textbf}}{19}
+\indexentry{Zero Page|hyperpage}{19}
+\indexentry{underflow|hyperpage}{19}
+\indexentry{X register|hyperpage}{19}
+\indexentry{floodplain (stack)|hyperpage}{19}
+\indexentry{underflow|hyperpage}{19}
+\indexentry{little endian|hyperpage}{19}
+\indexentry{Tali Forth 1|hyperpage}{19}
+\indexentry{Liara Forth|hyperpage}{19}
+\indexentry{underflow!detection|hyperpage}{20}
+\indexentry{Tali Forth 1|hyperpage}{20}
+\indexentry{X register|hyperpage}{20}
+\indexentry{underflow!detection|hyperpage}{20}
+\indexentry{double cell|hyperpage}{20}
+\indexentry{overflow|hyperpage}{20}
+\indexentry{dictionary|hyperindexformat{\textbf}}{20}
+\indexentry{header|hyperindexformat{\textbf}}{21}
+\indexentry{name token|hyperpage}{21}
+\indexentry{nt|hyperindexformat{\see {name token}}}{21}
+\indexentry{header!flags|hyperpage}{21}
+\indexentry{status byte|hyperpage}{21}
+\indexentry{name token|hyperpage}{21}
+\indexentry{execution token|hyperpage}{21}
+\indexentry{xt|hyperindexformat{\see {execution token}}}{21}
+\indexentry{case, lower|hyperpage}{21}
+\indexentry{native words|hyperpage}{21}
+\indexentry{Forth words|hyperpage}{21}
+\indexentry{user words|hyperpage}{21}
+\indexentry{65c02|hyperpage}{21}
+\indexentry{drop@\texttt{drop}|hyperpage}{21}
+\indexentry{bye@\texttt{bye}|hyperpage}{21}
+\indexentry{words@\texttt{words}|hyperpage}{21}
+\indexentry{intro string|hyperpage}{21}
+\indexentry{self-test|hyperpage}{21}
+\indexentry{memory map|hyperindexformat{\textbf}}{22}
+\indexentry{RAM|hyperpage}{22}
+\indexentry{ROM|hyperpage}{22}
+\indexentry{ANSI Forth|hyperpage}{23}
+\indexentry{keyboard|hyperpage}{23}
+\indexentry{file!block|hyperpage}{23}
+\indexentry{file!text|hyperpage}{23}
+\indexentry{blk@\texttt{blk}|hyperpage}{23}
+\indexentry{file-id|hyperpage}{23}
+\indexentry{booting|hyperpage}{23}
+\indexentry{command line interface|hyperpage}{23}
+\indexentry{input|hyperindexformat{\textbf}}{23}
+\indexentry{current input buffer|hyperpage}{23}
+\indexentry{cib|hyperindexformat{\see {current input buffer}}}{23}
+\indexentry{>in@\texttt{>in}|hyperpage}{23}
+\indexentry{history list|hyperpage}{23}
+\indexentry{create@\texttt{create}|hyperindexformat{\textbf}}{24}
+\indexentry{does>@\texttt{does>}|hyperindexformat{\textbf}}{24}
+\indexentry{Brodie, Leo|hyperpage}{28}
+\indexentry{Ophis assembler|hyperindexformat{\textbf}}{28}
+\indexentry{Martin, Michael|hyperpage}{28}
+\indexentry{Python|hyperpage}{28}
+\indexentry{Linux|hyperpage}{28}
+\indexentry{X register|hyperpage}{28}
+\indexentry{Y register|hyperpage}{28}
+\indexentry{style, coding|hyperpage}{29}
+\indexentry{Ophis assembler|hyperpage}{29}
+\indexentry{Go|hyperpage}{29}
+\indexentry{Python|hyperpage}{29}
+\indexentry{testing|hyperpage}{29}
+\indexentry{cheat sheet, code|hyperpage}{29}
+\indexentry{stack|hyperpage}{29}
+\indexentry{Tali Forth 1|hyperpage}{32}
+\indexentry{GitHub|hyperpage}{32}
+\indexentry{vas Normandy, Tali'Zorah|hyperpage}{32}
+\indexentry{Mass Effect@\textit{Mass Effect}|hyperpage}{32}
+\indexentry{Liara Forth|hyperindexformat{\textbf}}{32}
+\indexentry{65816|hyperpage}{32}
+\indexentry{Tali Forth 1|hyperpage}{32}
+\indexentry{Mass Effect@\textit{Mass Effect}|hyperpage}{32}
+\indexentry{testing|hyperindexformat{\textbf}}{33}
+\indexentry{Mandelbrot|hyperpage}{33}
+\indexentry{interpreter|hyperpage}{33}
+\indexentry{>in@\texttt{>in}|hyperpage}{33}
+\indexentry{does>@\texttt{does>}|hyperpage}{33}
+\indexentry{constant@\texttt{constant}|hyperpage}{33}
+\indexentry{literal@\texttt{literal}|hyperpage}{33}
+\indexentry{[char]@\texttt{[char]}|hyperpage}{33}
+\indexentry{[']@\texttt{[']}|hyperpage}{34}
+\indexentry{postpone@\texttt{postpone}|hyperpage}{34}
+\indexentry{find-name@\texttt{find-name}|hyperpage}{34}
+\indexentry{word@\texttt{word}|hyperpage}{34}
+\indexentry{cmove@\texttt{cmove}|hyperpage}{34}
+\indexentry{cmove>@\texttt{cmove>}|hyperpage}{34}
+\indexentry{move@\texttt{move}|hyperpage}{34}
+\indexentry{Gforth|hyperpage}{35}
+\indexentry{bounds@\texttt{bounds}|hyperpage}{36}
+\indexentry{Gforth|hyperpage}{36}
+\indexentry{recursion|hyperpage}{36}
+\indexentry{recurse@\texttt{recurse}|hyperpage}{36}
+\indexentry{math|hyperpage}{36}
+\indexentry{fm/mod@\texttt{fm/mod}|hyperindexformat{\textbf}}{36}
+\indexentry{sm/rem@\texttt{sm/rem}|hyperindexformat{\textbf}}{37}
+\indexentry{6502.org|hyperpage}{38}
+\indexentry{Barry, Mike|hyperpage}{38}

@@ -1,98 +1,101 @@
-\contentsline {part}{I\hspace {1em}Introduction}{6}{part.1}
-\contentsline {chapter}{\numberline {1}The Why}{7}{chapter.1}
-\contentsline {section}{\numberline {1.1}The big picture}{7}{section.1.1}
-\contentsline {subsection}{\numberline {1.1.1}The 6502 MPU}{7}{subsection.1.1.1}
-\contentsline {subsection}{\numberline {1.1.2}Forth}{8}{subsection.1.1.2}
-\contentsline {section}{\numberline {1.2}Writing your own Forth}{8}{section.1.2}
-\contentsline {subsection}{\numberline {1.2.1}FIG Forth}{8}{subsection.1.2.1}
-\contentsline {subsection}{\numberline {1.2.2}The need for a modern Forth for the 6502}{8}{subsection.1.2.2}
-\contentsline {chapter}{\numberline {2}Overview of Tali Forth}{9}{chapter.2}
-\contentsline {section}{\numberline {2.1}Design considerations}{9}{section.2.1}
-\contentsline {subsection}{\numberline {2.1.1}Characteristics of the 65c02}{9}{subsection.2.1.1}
-\contentsline {subsection}{\numberline {2.1.2}Cell size}{9}{subsection.2.1.2}
-\contentsline {subsection}{\numberline {2.1.3}Threading technique}{9}{subsection.2.1.3}
-\contentsline {subsection}{\numberline {2.1.4}Register use}{10}{subsection.2.1.4}
-\contentsline {subsection}{\numberline {2.1.5}Data Stack design}{10}{subsection.2.1.5}
-\contentsline {subsection}{\numberline {2.1.6}Dictionary structure}{10}{subsection.2.1.6}
-\contentsline {subsection}{\numberline {2.1.7}Even deeper down the rabbit hole}{10}{subsection.2.1.7}
-\contentsline {part}{II\hspace {1em}User Guide}{11}{part.2}
-\contentsline {chapter}{\numberline {3}Installing}{12}{chapter.3}
-\contentsline {section}{\numberline {3.1}Downloading}{12}{section.3.1}
-\contentsline {subsection}{\numberline {3.1.1}Downloading Tali Forth}{12}{subsection.3.1.1}
-\contentsline {subsection}{\numberline {3.1.2}Downloading the py65mon Simulator}{12}{subsection.3.1.2}
-\contentsline {section}{\numberline {3.2}Running the binary}{12}{section.3.2}
-\contentsline {chapter}{\numberline {4}Running}{13}{chapter.4}
-\contentsline {section}{\numberline {4.1}Native compiling}{13}{section.4.1}
-\contentsline {section}{\numberline {4.2}Underflow stripping}{14}{section.4.2}
-\contentsline {section}{\numberline {4.3}Gotchas}{14}{section.4.3}
-\contentsline {section}{\numberline {4.4}Reporting a problem}{14}{section.4.4}
-\contentsline {chapter}{\numberline {5}The Editor}{15}{chapter.5}
-\contentsline {part}{III\hspace {1em}Developer Guide}{16}{part.3}
-\contentsline {chapter}{\numberline {6}How Tali Forth works}{17}{chapter.6}
-\contentsline {section}{\numberline {6.1}Stack}{17}{section.6.1}
-\contentsline {subsection}{\numberline {6.1.1}Single cell values}{17}{subsection.6.1.1}
-\contentsline {subsection}{\numberline {6.1.2}Underflow detection}{18}{subsection.6.1.2}
-\contentsline {subsection}{\numberline {6.1.3}Double cell values}{18}{subsection.6.1.3}
-\contentsline {section}{\numberline {6.2}Dictionary}{18}{section.6.2}
-\contentsline {subsection}{\numberline {6.2.1}Elements of the Header}{19}{subsection.6.2.1}
-\contentsline {subsection}{\numberline {6.2.2}Structure of the Header List}{19}{subsection.6.2.2}
-\contentsline {section}{\numberline {6.3}Memory Map}{20}{section.6.3}
-\contentsline {section}{\numberline {6.4}Input}{21}{section.6.4}
-\contentsline {subsection}{\numberline {6.4.1}Starting up}{21}{subsection.6.4.1}
-\contentsline {subsection}{\numberline {6.4.2}The Command Line Interface}{21}{subsection.6.4.2}
-\contentsline {subsection}{\numberline {6.4.3}\texttt {save-input} and \texttt {restore-input}}{21}{subsection.6.4.3}
-\contentsline {subsection}{\numberline {6.4.4}\texttt {evaluate}}{21}{subsection.6.4.4}
-\contentsline {subsection}{\numberline {6.4.5}\texttt {state}}{21}{subsection.6.4.5}
-\contentsline {section}{\numberline {6.5}\texttt {create}/\texttt {does>}}{22}{section.6.5}
-\contentsline {subsubsection}{SEQUENCE I: Compiling the word \texttt {CONSTANT}}{22}{section*.4}
-\contentsline {subsubsection}{SEQUENCE II: Executing the word CONSTANT / creating LIFE }{22}{section*.5}
-\contentsline {subsubsection}{SEQUENCE III: Executing LIFE}{23}{section*.6}
-\contentsline {section}{\numberline {6.6}Control Flow}{24}{section.6.6}
-\contentsline {subsection}{\numberline {6.6.1}Branches}{24}{subsection.6.6.1}
-\contentsline {subsection}{\numberline {6.6.2}Loops}{24}{subsection.6.6.2}
-\contentsline {subsubsection}{\texttt {do} at compile-time:}{25}{section*.7}
-\contentsline {subsubsection}{\texttt {do} at run-time:}{25}{section*.8}
-\contentsline {subsubsection}{\texttt {loop} at compile time:}{25}{section*.9}
-\contentsline {subsubsection}{\texttt {loop} at run-time (which is \texttt {(+loop)}) }{25}{section*.10}
-\contentsline {chapter}{\numberline {7}Developing}{26}{chapter.7}
-\contentsline {section}{\numberline {7.1}Adding new words}{26}{section.7.1}
-\contentsline {section}{\numberline {7.2}Deeper changes}{26}{section.7.2}
-\contentsline {subsection}{\numberline {7.2.1}The Ophis Assembler}{26}{subsection.7.2.1}
-\contentsline {subsection}{\numberline {7.2.2}General notes}{26}{subsection.7.2.2}
-\contentsline {subsection}{\numberline {7.2.3}Coding style}{27}{subsection.7.2.3}
-\contentsline {section}{\numberline {7.3}Testing}{27}{section.7.3}
-\contentsline {section}{\numberline {7.4}Code Cheat Sheet}{27}{section.7.4}
-\contentsline {subsection}{\numberline {7.4.1}The Stack Drawing}{27}{subsection.7.4.1}
-\contentsline {subsection}{\numberline {7.4.2}Coding idioms}{28}{subsection.7.4.2}
-\contentsline {subsection}{\numberline {7.4.3}vi shortcuts}{28}{subsection.7.4.3}
-\contentsline {chapter}{\numberline {8}Future plans}{29}{chapter.8}
-\contentsline {chapter}{\numberline {A}FAQ}{30}{appendix.A}
-\contentsline {section}{\numberline {A.1}What happened to Tali Forth 1?}{30}{section.A.1}
-\contentsline {section}{\numberline {A.2}Why does Tali Forth take so long to start up?}{30}{section.A.2}
-\contentsline {section}{\numberline {A.3}Why `Tali' Forth?}{30}{section.A.3}
-\contentsline {section}{\numberline {A.4}Who is `Liara'?}{30}{section.A.4}
-\contentsline {chapter}{\numberline {B}Forth tests}{31}{appendix.B}
-\contentsline {section}{\numberline {B.1}The interpreter}{31}{section.B.1}
-\contentsline {subsection}{\numberline {B.1.1}\texttt {>in} tests}{31}{subsection.B.1.1}
-\contentsline {section}{\numberline {B.2}Defining words}{31}{section.B.2}
-\contentsline {subsection}{\numberline {B.2.1}\texttt {create} and \texttt {does>}}{31}{subsection.B.2.1}
-\contentsline {subsection}{\numberline {B.2.2}\texttt {literal}}{31}{subsection.B.2.2}
-\contentsline {subsection}{\numberline {B.2.3}\texttt {bracket-char}}{31}{subsection.B.2.3}
-\contentsline {subsection}{\numberline {B.2.4}\texttt {bracket-tick}}{32}{subsection.B.2.4}
-\contentsline {subsection}{\numberline {B.2.5}\texttt {postpone}}{32}{subsection.B.2.5}
-\contentsline {subsection}{\numberline {B.2.6}\texttt {find-name}}{32}{subsection.B.2.6}
-\contentsline {subsection}{\numberline {B.2.7}\texttt {word} vs \texttt {parse}}{32}{subsection.B.2.7}
-\contentsline {section}{\numberline {B.3}Movement words}{32}{section.B.3}
-\contentsline {section}{\numberline {B.4}Looping}{33}{section.B.4}
-\contentsline {subsection}{\numberline {B.4.1}Basic looping}{33}{subsection.B.4.1}
-\contentsline {subsection}{\numberline {B.4.2}Looping with \texttt {if}}{33}{subsection.B.4.2}
-\contentsline {subsection}{\numberline {B.4.3}Nested loops}{33}{subsection.B.4.3}
-\contentsline {subsection}{\numberline {B.4.4}\texttt {exit}}{34}{subsection.B.4.4}
-\contentsline {subsection}{\numberline {B.4.5}\texttt {unloop}}{34}{subsection.B.4.5}
-\contentsline {subsection}{\numberline {B.4.6}\texttt {leave}}{34}{subsection.B.4.6}
-\contentsline {subsection}{\numberline {B.4.7}\texttt {bounds}}{34}{subsection.B.4.7}
-\contentsline {subsection}{\numberline {B.4.8}\texttt {recurse}}{34}{subsection.B.4.8}
-\contentsline {section}{\numberline {B.5}Math routines}{34}{section.B.5}
-\contentsline {subsection}{\numberline {B.5.1}\texttt {fm/mod}}{34}{subsection.B.5.1}
-\contentsline {subsection}{\numberline {B.5.2}\texttt {sm/rem}}{35}{subsection.B.5.2}
-\contentsline {chapter}{\numberline {C}Thanks}{36}{appendix.C}
+\contentsline {part}{I\hspace {1em}Introduction}{7}{part.1}
+\contentsline {chapter}{\numberline {1}Why}{8}{chapter.1}
+\contentsline {section}{\numberline {1.1}The big picture}{8}{section.1.1}
+\contentsline {subsection}{\numberline {1.1.1}The 6502 MPU}{8}{subsection.1.1.1}
+\contentsline {subsection}{\numberline {1.1.2}Forth}{9}{subsection.1.1.2}
+\contentsline {section}{\numberline {1.2}Writing your own Forth}{9}{section.1.2}
+\contentsline {subsection}{\numberline {1.2.1}FIG Forth}{9}{subsection.1.2.1}
+\contentsline {subsection}{\numberline {1.2.2}A modern Forth for the 65c02}{9}{subsection.1.2.2}
+\contentsline {chapter}{\numberline {2}Overview of Tali Forth}{10}{chapter.2}
+\contentsline {section}{\numberline {2.1}Design considerations}{10}{section.2.1}
+\contentsline {subsection}{\numberline {2.1.1}Characteristics of the 65c02}{10}{subsection.2.1.1}
+\contentsline {subsection}{\numberline {2.1.2}Cell size}{10}{subsection.2.1.2}
+\contentsline {subsection}{\numberline {2.1.3}Threading technique}{10}{subsection.2.1.3}
+\contentsline {subsection}{\numberline {2.1.4}Register use}{11}{subsection.2.1.4}
+\contentsline {subsection}{\numberline {2.1.5}Data Stack design}{11}{subsection.2.1.5}
+\contentsline {subsection}{\numberline {2.1.6}Dictionary structure}{11}{subsection.2.1.6}
+\contentsline {subsection}{\numberline {2.1.7}Even deeper down the rabbit hole}{11}{subsection.2.1.7}
+\contentsline {part}{II\hspace {1em}User Guide}{12}{part.2}
+\contentsline {chapter}{\numberline {3}Installing}{13}{chapter.3}
+\contentsline {section}{\numberline {3.1}Downloading}{13}{section.3.1}
+\contentsline {subsection}{\numberline {3.1.1}Downloading Tali Forth}{13}{subsection.3.1.1}
+\contentsline {subsection}{\numberline {3.1.2}Downloading the py65mon Simulator}{13}{subsection.3.1.2}
+\contentsline {section}{\numberline {3.2}Running the binary}{13}{section.3.2}
+\contentsline {chapter}{\numberline {4}Running}{14}{chapter.4}
+\contentsline {section}{\numberline {4.1}Available words}{14}{section.4.1}
+\contentsline {section}{\numberline {4.2}Native compiling}{14}{section.4.2}
+\contentsline {section}{\numberline {4.3}Underflow stripping}{16}{section.4.3}
+\contentsline {section}{\numberline {4.4}Gotchas}{16}{section.4.4}
+\contentsline {section}{\numberline {4.5}Reporting a problem}{16}{section.4.5}
+\contentsline {chapter}{\numberline {5}The Editor}{17}{chapter.5}
+\contentsline {part}{III\hspace {1em}Developer Guide}{18}{part.3}
+\contentsline {chapter}{\numberline {6}How Tali Forth works}{19}{chapter.6}
+\contentsline {section}{\numberline {6.1}Stack}{19}{section.6.1}
+\contentsline {subsection}{\numberline {6.1.1}Single cell values}{19}{subsection.6.1.1}
+\contentsline {subsection}{\numberline {6.1.2}Underflow detection}{20}{subsection.6.1.2}
+\contentsline {subsection}{\numberline {6.1.3}Double cell values}{20}{subsection.6.1.3}
+\contentsline {section}{\numberline {6.2}Dictionary}{20}{section.6.2}
+\contentsline {subsection}{\numberline {6.2.1}Elements of the Header}{21}{subsection.6.2.1}
+\contentsline {subsection}{\numberline {6.2.2}Structure of the Header List}{21}{subsection.6.2.2}
+\contentsline {section}{\numberline {6.3}Memory Map}{22}{section.6.3}
+\contentsline {section}{\numberline {6.4}Input}{23}{section.6.4}
+\contentsline {subsection}{\numberline {6.4.1}Starting up}{23}{subsection.6.4.1}
+\contentsline {subsection}{\numberline {6.4.2}The Command Line Interface}{23}{subsection.6.4.2}
+\contentsline {subsection}{\numberline {6.4.3}\texttt {save-input} and \texttt {restore-input}}{23}{subsection.6.4.3}
+\contentsline {subsection}{\numberline {6.4.4}\texttt {evaluate}}{23}{subsection.6.4.4}
+\contentsline {subsection}{\numberline {6.4.5}\texttt {state}}{23}{subsection.6.4.5}
+\contentsline {section}{\numberline {6.5}\texttt {create}/\texttt {does>}}{24}{section.6.5}
+\contentsline {subsubsection}{SEQUENCE I: Compiling the word \texttt {CONSTANT}}{24}{section*.4}
+\contentsline {subsubsection}{SEQUENCE II: Executing the word CONSTANT / creating LIFE }{24}{section*.5}
+\contentsline {subsubsection}{SEQUENCE III: Executing LIFE}{25}{section*.6}
+\contentsline {section}{\numberline {6.6}Control Flow}{26}{section.6.6}
+\contentsline {subsection}{\numberline {6.6.1}Branches}{26}{subsection.6.6.1}
+\contentsline {subsection}{\numberline {6.6.2}Loops}{26}{subsection.6.6.2}
+\contentsline {subsubsection}{\texttt {do} at compile-time:}{27}{section*.7}
+\contentsline {subsubsection}{\texttt {do} at run-time:}{27}{section*.8}
+\contentsline {subsubsection}{\texttt {loop} at compile time:}{27}{section*.9}
+\contentsline {subsubsection}{\texttt {loop} at run-time (which is \texttt {(+loop)}) }{27}{section*.10}
+\contentsline {chapter}{\numberline {7}Developing}{28}{chapter.7}
+\contentsline {section}{\numberline {7.1}Adding new words}{28}{section.7.1}
+\contentsline {section}{\numberline {7.2}Deeper changes}{28}{section.7.2}
+\contentsline {subsection}{\numberline {7.2.1}The Ophis Assembler}{28}{subsection.7.2.1}
+\contentsline {subsection}{\numberline {7.2.2}General notes}{28}{subsection.7.2.2}
+\contentsline {subsection}{\numberline {7.2.3}Coding style}{29}{subsection.7.2.3}
+\contentsline {section}{\numberline {7.3}Testing}{29}{section.7.3}
+\contentsline {section}{\numberline {7.4}Code Cheat Sheet}{29}{section.7.4}
+\contentsline {subsection}{\numberline {7.4.1}The Stack Drawing}{29}{subsection.7.4.1}
+\contentsline {subsection}{\numberline {7.4.2}Coding idioms}{30}{subsection.7.4.2}
+\contentsline {subsection}{\numberline {7.4.3}vi shortcuts}{30}{subsection.7.4.3}
+\contentsline {chapter}{\numberline {8}Future plans}{31}{chapter.8}
+\contentsline {chapter}{\numberline {A}FAQ}{32}{appendix.A}
+\contentsline {section}{\numberline {A.1}What happened to Tali Forth 1?}{32}{section.A.1}
+\contentsline {section}{\numberline {A.2}Why does Tali Forth take so long to start up?}{32}{section.A.2}
+\contentsline {section}{\numberline {A.3}Why `Tali' Forth?}{32}{section.A.3}
+\contentsline {section}{\numberline {A.4}Who is `Liara'?}{32}{section.A.4}
+\contentsline {chapter}{\numberline {B}Forth tests}{33}{appendix.B}
+\contentsline {section}{\numberline {B.1}The interpreter}{33}{section.B.1}
+\contentsline {subsection}{\numberline {B.1.1}\texttt {>in}}{33}{subsection.B.1.1}
+\contentsline {section}{\numberline {B.2}Defining words}{33}{section.B.2}
+\contentsline {subsection}{\numberline {B.2.1}\texttt {create} and \texttt {does>}}{33}{subsection.B.2.1}
+\contentsline {subsection}{\numberline {B.2.2}\texttt {literal}}{33}{subsection.B.2.2}
+\contentsline {subsection}{\numberline {B.2.3}\texttt {bracket-char}}{33}{subsection.B.2.3}
+\contentsline {subsection}{\numberline {B.2.4}\texttt {bracket-tick}}{34}{subsection.B.2.4}
+\contentsline {subsection}{\numberline {B.2.5}\texttt {postpone}}{34}{subsection.B.2.5}
+\contentsline {subsection}{\numberline {B.2.6}\texttt {find-name}}{34}{subsection.B.2.6}
+\contentsline {subsection}{\numberline {B.2.7}\texttt {word} vs \texttt {parse}}{34}{subsection.B.2.7}
+\contentsline {section}{\numberline {B.3}Movement words}{34}{section.B.3}
+\contentsline {subsection}{\numberline {B.3.1}\texttt {cmove}}{34}{subsection.B.3.1}
+\contentsline {subsection}{\numberline {B.3.2}\texttt {cmove>}}{35}{subsection.B.3.2}
+\contentsline {section}{\numberline {B.4}Looping}{35}{section.B.4}
+\contentsline {subsection}{\numberline {B.4.1}Basic looping}{35}{subsection.B.4.1}
+\contentsline {subsection}{\numberline {B.4.2}Looping with \texttt {if}}{35}{subsection.B.4.2}
+\contentsline {subsection}{\numberline {B.4.3}Nested loops}{35}{subsection.B.4.3}
+\contentsline {subsection}{\numberline {B.4.4}\texttt {exit}}{36}{subsection.B.4.4}
+\contentsline {subsection}{\numberline {B.4.5}\texttt {unloop}}{36}{subsection.B.4.5}
+\contentsline {subsection}{\numberline {B.4.6}\texttt {leave}}{36}{subsection.B.4.6}
+\contentsline {subsection}{\numberline {B.4.7}\texttt {bounds}}{36}{subsection.B.4.7}
+\contentsline {subsection}{\numberline {B.4.8}\texttt {recurse}}{36}{subsection.B.4.8}
+\contentsline {section}{\numberline {B.5}Math routines}{36}{section.B.5}
+\contentsline {subsection}{\numberline {B.5.1}\texttt {fm/mod}}{36}{subsection.B.5.1}
+\contentsline {subsection}{\numberline {B.5.2}\texttt {sm/rem}}{37}{subsection.B.5.2}
+\contentsline {chapter}{\numberline {C}Thanks}{38}{appendix.C}

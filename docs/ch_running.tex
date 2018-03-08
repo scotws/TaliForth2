@@ -1,6 +1,54 @@
 % Chapter Running Tali Forth
 % Scot W. Stevenson
 
+\begin{quote}
+	One doesn't write programs in Forth. Forth is the program.
+\end{quote}
+\begin{flushright}
+        -- Charles Moore,\index{Moore, Charles} \textit{Masterminds of Programming}\cite{biancuzzi09}
+\end{flushright}
+
+\section{Available words}
+
+Tali Forth comes with the following Forth words\index{Forth words} out of the
+box:
+
+\begin{lstlisting}[frame=lines]
+        see within to d.r d. ud.r ud. .r u.r */mod */ mod /mod /
+        action-of is defer@ defer! while until repeat else then
+        if .( ( drop dup swap ! @ over >r r> r@ nip rot -rot tuck
+        , c@ c! +! execute emit type . u. ? false true space 0 1
+        2 2dup ?dup + - abs dabs and or xor rshift lshift pick char
+        [char] char+ chars cells cell+ here 1- 1+ 2* = <> < > 0=
+        0<> 0> 0< min max 2drop 2swap 2over 2variable 2r@ 2r> 2>r
+        invert negate dnegate c, bounds spaces bl -trailing /string
+        refill accept unused depth key allot create does> variable
+        constant value s>d d>s d- d+ erase blank fill find-name '
+        ['] name>int int>name name>string >body defer latestxt
+        latestnt parse-name parse source source-id : ; compile, [ ]
+        0branch branch literal sliteral ." s" postpone immediate
+        compile-only never-native always-native nc-limit abort
+        abort" do ?do i j loop +loop exit unloop leave recurse quit
+        begin again state evaluate base digit? number >number hex
+        decimal count m* um* * um/mod ud/mod sm/rem fm/mod \ move
+        cmove> cmove pad >in <# # #s #> hold sign output input cr
+        page at-xy marker words wordsize aligned align bell dump .s
+        find word cold bye
+\end{lstlisting}
+
+(Call \texttt{words}\index{words@\texttt{words}} in Tali Forth for the current
+list.)
+
+Though the list might look unsorted, it actually reflects the priority in the
+dictionary\index{dictionary}, that is, which words are found first. For
+instance, the native words\index{native words} -- those coded in assembler --
+start with \texttt{drop}\index{drop@\texttt{drop}}
+\texttt{bye}\index{bye@\texttt{bye}}, which is the last word that Tali Forth
+will find.\footnote{If you're going to quit, speed can't be that important} The
+words before \texttt{drop} are those that are defined in high-level Forth. For
+more information on the words, use the \texttt{see}\index{see@\texttt{see}}
+command.
+
 \section{Native compiling}\index{compiling, native|textbf}
 
 In a pure subroutine threaded code, higher-level words are merely a series of
@@ -146,6 +194,11 @@ different results.
 
 \section{Reporting a problem}\index{feedback|textbf}\index{bugs}
 
+The best way to point out a bug or make any other form of a comment is on Tali
+Forth's page on GitHub\index{GitHub} at
+\href{https://github.com/scotws/TaliForth2}{https://github.com/scotws/TaliForth2}.
+There, you can `open an issue', which allows other people who might have the
+same problem to help even when the author is not available.
 
 
 

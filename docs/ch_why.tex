@@ -1,6 +1,17 @@
 % The Why of Tali Forth
 % Scot W. Stevenson
 
+\begin{quote}
+        Forth is well suited to resource-constrained situations. It doesn't need
+        lots of memory and doesn't have much overhead. It can take full
+        advantage of whatever hardware or interfaces exist.
+\end{quote}
+\begin{flushright}
+        -- Charles Moore,\index{Moore, Charles} 
+        \href{https://www.red-gate.com/simple-talk/opinion/geek-of-the-week/chuck-moore-geek-of-the-week/}{`Chuck
+        Moore: Geek of the Week', redgate Hub 2009}
+\end{flushright}
+
 \section{The big picture}
 
 This section provides background information on Forth, the 6502 processor, and
@@ -61,9 +72,9 @@ is not the place to explain the joys of assembler. The official handbook for the
 \end{flushright}
 
 Forth\index{Forth|textbf} is the \textit{enfant terrible} of programming
-languages. It was invented by Chuck Moore\index{Moore, Chuck} in the 1960s to do
-work with radio astronomy before there were modern operating systems or
-programming languages. A language for people who actually need to get things
+languages. It was invented by Charles `Chuck' Moore\index{Moore, Charles} in the
+1960s to do work with radio astronomy before there were modern operating systems
+or programming languages. A language for people who actually need to get things
 done, lets you run with scissors, play with fire, and cut corners until you've
 turned a square into a circle. Forth is not for the faint-hearted: It is
 trivial, for instance, to redefine 1 as 2 and \texttt{true} as \texttt{false}.
@@ -92,7 +103,7 @@ Guide to Forth} by J.V.~Nobel\cite{nobel} or the classic (but slightly dated)
 Gforth,\index{Gforth} one of the more powerful free Forths, comes with its own
 \href{http://www.complang.tuwien.ac.at/forth/gforth/Docs-html/Tutorial.html}{tutorial}.\footnote{Once
 you have understood the basics of the language, do yourself a favor and read
-\textit{Thinking in Forth} by Brodie\cite{brodie84}\index{Brodie, Leo}, which
+\textit{Thinking Forth} by Brodie\cite{brodie84}\index{Brodie, Leo}, which
 deals with the philosophy of the language. Like Lisp\index{Lisp}, exposure to
 Forth will change the way you think about programming.} 
 
@@ -120,11 +131,11 @@ English with \textit{The Canterbury Tales}.\index{Canterbury Tales,
 The@\textit{Canterbury Tales, The}}
 
 
-\subsection{The need for a modern Forth for the 6502}
+\subsection{A modern Forth for the 65c02}
 
 Tali Forth was created to provide an easy to understand modern Forth written
 especially for the 65c02 that anybody can understand, adapt to their own use,
 and actually work with. As part of that effort, the source code is heavily
-commented -- and this document tries to explain the internals.
+commented. This document tries to explain the internals in more detail.
 
-
+% end
