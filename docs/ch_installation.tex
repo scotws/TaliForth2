@@ -27,11 +27,11 @@ add it first with \texttt{sudo apt-get install python-pip}.  There is a
 \section{Running the binary}
 
 To start the emulator, run:
-\begin{lstlisting}[frame=single]
+\begin{lstlisting}[frame=lines]
         py65mon -m 65c02 -r ophis.bin
 \end{lstlisting}
 
 \noindent Note that the option \texttt{-m 65c02} is required, because Tali Forth
-makes extensive use of the addition commands of the CMOS version and will not
+makes extensive use of the additional commands of the CMOS version and will not
 run on a stock 6502 MPU.
 
