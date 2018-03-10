@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.3.2)  8 MAR 2018 12:42
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.3.2)  10 MAR 2018 15:58
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -459,7 +459,14 @@ Chapter 2.
 
 ]
 Chapter 3.
-(./ch_installation.tex) [13
+(./ch_installation.tex
+Overfull \hbox (31.80138pt too wide) in paragraph at lines 17--21
+\T1/cmr/m/n/10 Tali was writ-ten to run out of the box on the \T1/SourceCodePro
+-TLF/m/n/10 py65mon \T1/cmr/m/n/10 sim-u-la-tor from [][]https://github.com/mna
+berez/py65[][].
+ []
+
+) [13
 
 ]
 Chapter 4.
@@ -601,8 +608,8 @@ Package rerunfilecheck Info: File `manual.out' has not changed.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 136.
  ) 
 Here is how much of TeX's memory you used:
- 8389 strings out of 494953
- 123812 string characters out of 6180978
+ 8391 strings out of 494953
+ 123847 string characters out of 6180978
  325779 words of memory out of 5000000
  10979 multiletter control sequences out of 15000+600000
  26350 words of font info for 55 fonts, out of 8000000 for 9000
@@ -627,10 +634,10 @@ type1/adobe/sourcecodepro/SourceCodePro-Bold.pfb></usr/share/texlive/texmf-dist
 /fonts/type1/adobe/sourcecodepro/SourceCodePro-It.pfb></usr/share/texlive/texmf
 -dist/fonts/type1/adobe/sourcecodepro/SourceCodePro-Regular.pfb></usr/share/tex
 live/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
-Output written on manual.pdf (42 pages, 429173 bytes).
+Output written on manual.pdf (42 pages, 429449 bytes).
 PDF statistics:
- 2089 PDF objects out of 2487 (max. 8388607)
- 1422 compressed objects within 15 object streams
- 532 named destinations out of 1000 (max. 500000)
+ 2093 PDF objects out of 2487 (max. 8388607)
+ 1426 compressed objects within 15 object streams
+ 534 named destinations out of 1000 (max. 500000)
  774 words of extra memory for PDF output out of 10000 (max. 10000000)
 

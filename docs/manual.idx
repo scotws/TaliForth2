@@ -50,8 +50,9 @@
 \indexentry{native compilation|hyperpage}{11}
 \indexentry{header|hyperpage}{11}
 \indexentry{Tali Forth 1|hyperpage}{11}
-\indexentry{py65mon|hyperpage}{13}
+\indexentry{py65mon@\texttt{py65mon}|hyperpage}{13}
 \indexentry{GitHub|hyperpage}{13}
+\indexentry{git@\texttt{git}|hyperpage}{13}
 \indexentry{py65mon|hyperindexformat{\textbf}}{13}
 \indexentry{Python|hyperpage}{13}
 \indexentry{Linux|hyperpage}{13}

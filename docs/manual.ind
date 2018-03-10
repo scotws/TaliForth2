@@ -75,6 +75,7 @@
   \indexspace
 
   \item Gforth, \hyperpage{9}, \hyperpage{16}, \hyperpage{36, 37}
+  \item \texttt{git}, \hyperpage{13}
   \item GitHub, \hyperpage{13}, \hyperpage{17}, \hyperpage{33}
   \item Go, \hyperpage{30}
 
@@ -137,7 +138,8 @@
   \item Peddle, Chuck, \hyperpage{8}
   \item PIP, \hyperpage{13}
   \item \texttt{postpone}, \hyperpage{35}
-  \item py65mon, \hyperindexformat{\textbf}{13}, \hyperpage{13, 14}
+  \item py65mon, \hyperindexformat{\textbf}{13}, \hyperpage{14}
+  \item \texttt{py65mon}, \hyperpage{13}
   \item Python, \hyperpage{13}, \hyperpage{29, 30}
 
   \indexspace

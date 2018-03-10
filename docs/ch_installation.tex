@@ -2,25 +2,36 @@
 
 Tali Forth was created to be easy to get started with. In fact, all you should
 need is the \texttt{ophis.bin} binary file and the
-\texttt{py65mon}\index{py65mon} simulator.
+\texttt{py65mon}\index{py65mon@\texttt{py65mon}} simulator.
 
 \subsection{Downloading Tali Forth}
 
-Tali Forth 2 lives on GitHub\index{GitHub} at \textbf{FEHLT}.
+The newest version of Tali Forth 2 lives on GitHub\index{GitHub} at
+\href{https://github.com/scotws/TaliForth2}{https://github.com/scotws/TaliForth2}.
+You can either clone the code with \texttt{git}\index{git@\texttt{git}} or
+simply download it. To just try the program, all you need is the
+\texttt{ophis.bin} binary. 
 
 \subsection{Downloading the py65mon Simulator}\index{py65mon|textbf}
 
-Tali comes with an assembled version that should run out of the box with the
+Tali was written to run out of the box on the 
 \texttt{py65mon} simulator from
 \href{https://github.com/mnaberez/py65}{https://github.com/mnaberez/py65}. This
 is a Python\index{Python} program that should run on various operating systems. 
 
-To install py65mon with Linux\index{Linux}, use the command \texttt{sudo pip
+To install py65mon on Linux\index{Linux}, use the command \texttt{sudo pip
 install -U py65}. If you don't have PIP\index{PIP} installed, you will have to
 add it first with \texttt{sudo apt-get install python-pip}.  There is a
-\texttt{setup.py} script as part of the package, too. 
+\texttt{setup.py} script as part of the package.
 
 \section{Running the binary}
 
-To start the emulator, run: \texttt{py65mon -m 65c02 -r ophis.bin}.
+To start the emulator, run:
+\begin{lstlisting}[frame=single]
+        py65mon -m 65c02 -r ophis.bin
+\end{lstlisting}
+
+\noindent Note that the option \texttt{-m 65c02} is required, because Tali Forth
+makes extensive use of the addition commands of the CMOS version and will not
+run on a stock 6502 MPU.
 
