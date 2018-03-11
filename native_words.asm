@@ -1165,7 +1165,7 @@ xt_compile_comma:
                 inc 1,x                 ; ( nt -- nt+1 )
 *
                 lda (0,x)
-                sta tmp1                ; keep copy of status byte for NN
+                sta tmp3                ; keep copy of status byte for NN
                 and #AN                 ; mask all but Always Native (AN bit
                 beq _compile_check
 
@@ -1183,7 +1183,7 @@ xt_compile_comma:
 _compile_check:
                 ; See if Native Compile is even alowed by checking the NN
                 ; flag
-                lda tmp1
+                lda tmp3
                 and #NN
                 beq _check_size_limit
 
@@ -1231,7 +1231,7 @@ _compile_as_code:
                 lda cp+1
                 sta 3,x                 ; ( -- xt cp u )
 
-               ; --- SPECIAL CASE 1: PREVENT RETURN STACK THRASHINIG ---
+                ; --- SPECIAL CASE 1: PREVENT RETURN STACK THRASHINIG ---
                 
                 ; Native compiling allows us to strip the stack antics off
                 ; a number of words that use the Return Stack such as >R, R>,
@@ -1315,7 +1315,7 @@ _underflow_strip:
                 beq _specials_done
 
                 ; See if this word even contains underflow checking
-                lda tmp1
+                lda tmp3
                 and #UF
                 beq _specials_done
 
