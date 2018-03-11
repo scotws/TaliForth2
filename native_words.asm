@@ -1984,8 +1984,6 @@ xt_question_do:
                 sta tmp1
                 bra do_common
 
-                ; We check for underflow in DO
-
 ; ## DO ( limit start -- )(R: -- limit start)  "Start a loop"
 ; ## "do"  src: ANSI core  b: TBA  c: TBA  status: coded
         ; """Compile-time part of DO. Could be realized in Forth as

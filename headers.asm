@@ -38,7 +38,7 @@
 ;       IM - Immediate Word
 ;       NN - Never Native Compile (must always be called by JSR)
 ;       AN - Always Native Compile (may not be called by JSR)
-;       UF - Contains underflow check (RESERVED FOR FUTURE USE)
+;       UF - Contains underflow check
 
 ; Note there are currently four bits unused. By default, all words can be
 ; natively compiled (compiled inline) or as a subroutine jump target; the system
@@ -69,12 +69,12 @@ nt_cold:
         .byte "cold"
 
 nt_word:
-        .byte 4, 0
+        .byte 4, UF
         .word nt_cold, xt_word, z_word
         .byte "word"
 
 nt_find:
-        .byte 4, 0
+        .byte 4, UF
         .word nt_word, xt_find, z_find
         .byte "find"
 
@@ -84,7 +84,7 @@ nt_dot_s:
         .byte ".s"
 
 nt_dump:
-        .byte 4, 0
+        .byte 4, UF
         .word nt_dot_s, xt_dump, z_dump
         .byte "dump"
 
@@ -104,7 +104,7 @@ nt_aligned:             ; same code as ALIGN
         .byte "aligned"
 
 nt_wordsize:
-        .byte 8, 0
+        .byte 8, UF
         .word nt_aligned, xt_wordsize, z_wordsize
         .byte "wordsize"
 
@@ -119,7 +119,7 @@ nt_marker:
         .byte "marker"
 
 nt_at_xy:
-        .byte 5, 0
+        .byte 5, UF
         .word nt_marker, xt_at_xy, z_at_xy
         .byte "at-xy"
 
@@ -144,27 +144,27 @@ nt_output:
         .byte "output"
 
 nt_sign:
-        .byte 4, 0
+        .byte 4, UF
         .word nt_output, xt_sign, z_sign
         .byte "sign"
 
 nt_hold:
-        .byte 4, 0
+        .byte 4, UF
         .word nt_sign, xt_hold, z_hold
         .byte "hold"
 
 nt_number_sign_greater:
-        .byte 2, 0
+        .byte 2, UF
         .word nt_hold, xt_number_sign_greater, z_number_sign_greater
         .byte "#>"
 
 nt_number_sign_s:
-        .byte 2, 0
+        .byte 2, UF
         .word nt_number_sign_greater, xt_number_sign_s, z_number_sign_s
         .byte "#s"
 
 nt_number_sign:
-        .byte 1, 0
+        .byte 1, UF
         .word nt_number_sign_s, xt_number_sign, z_number_sign
         .byte "#"
 
@@ -184,17 +184,17 @@ nt_pad:
         .byte "pad"
 
 nt_cmove:
-        .byte 5, 0
+        .byte 5, UF
         .word nt_pad, xt_cmove, z_cmove
         .byte "cmove"
 
 nt_cmove_up:
-        .byte 6, 0
+        .byte 6, UF
         .word nt_cmove, xt_cmove_up, z_cmove_up
         .byte "cmove>"
 
 nt_move:
-        .byte 4, NN
+        .byte 4, NN+UF
         .word nt_cmove_up, xt_move, z_move
         .byte "move"
 
@@ -204,42 +204,42 @@ nt_backslash:
         .byte $5c
 
 nt_fm_slash_mod:
-        .byte 6, 0
+        .byte 6, UF
         .word nt_backslash, xt_fm_slash_mod, z_fm_slash_mod
         .byte "fm/mod"
 
 nt_sm_slash_rem:
-        .byte 6, 0
+        .byte 6, UF
         .word nt_fm_slash_mod, xt_sm_slash_rem, z_sm_slash_rem
         .byte "sm/rem"
 
 nt_ud_slash_mod:
-        .byte 6, 0
+        .byte 6, UF
         .word nt_sm_slash_rem, xt_ud_slash_mod, z_ud_slash_mod
         .byte "ud/mod"
 
 nt_um_slash_mod:
-        .byte 6, 0
+        .byte 6, UF
         .word nt_ud_slash_mod, xt_um_slash_mod, z_um_slash_mod
         .byte "um/mod"
 
 nt_star:
-        .byte 1, 0
+        .byte 1, UF
         .word nt_um_slash_mod, xt_star, z_star
         .byte "*"
 
 nt_um_star:
-        .byte 3, 0
+        .byte 3, UF
         .word nt_star, xt_um_star, z_um_star
         .byte "um*"
 
 nt_m_star:
-        .byte 2, 0
+        .byte 2, UF
         .word nt_um_star, xt_m_star, z_m_star
         .byte "m*"
 
 nt_count:
-        .byte 5, 0
+        .byte 5, UF
         .word nt_m_star, xt_count, z_count
         .byte "count"
 
@@ -254,17 +254,17 @@ nt_hex:
         .byte "hex"
 
 nt_to_number:
-        .byte 7, 0
+        .byte 7, UF
         .word nt_hex, xt_to_number, z_to_number
         .byte ">number"
 
 nt_number:
-        .byte 6, 0
+        .byte 6, UF
         .word nt_to_number, xt_number, z_number
         .byte "number"
 
 nt_digit_question:
-        .byte 6, 0
+        .byte 6, UF
         .word nt_number, xt_digit_question, z_digit_question
         .byte "digit?"
 
@@ -274,7 +274,7 @@ nt_base:
         .byte "base"
 
 nt_evaluate:
-        .byte 8, 0
+        .byte 8, UF
         .word nt_base, xt_evaluate, z_evaluate
         .byte "evaluate"
 
@@ -284,7 +284,7 @@ nt_state:
         .byte "state"
 
 nt_again:
-        .byte 5, AN+CO+IM
+        .byte 5, AN+CO+IM+UF
         .word nt_state, xt_again, z_again
         .byte "again"
 
@@ -399,12 +399,12 @@ nt_dot_quote:
         .byte ".", $22
 
 nt_sliteral:
-        .byte 8, CO+IM
+        .byte 8, CO+IM+UF
         .word nt_dot_quote, xt_sliteral, z_sliteral
         .byte "sliteral"
 
 nt_literal:
-        .byte 7, IM+CO
+        .byte 7, IM+CO+UF
         .word nt_sliteral, xt_literal, z_literal
         .byte "literal"
 
@@ -413,7 +413,7 @@ nt_branch:
         .word nt_literal, xt_branch, z_branch
         .byte "branch"
 
-nt_zero_branch:
+nt_zero_branch:                 ; do not check for underflow
         .byte 7, CO+IM+NN
         .word nt_branch, xt_zero_branch, z_zero_branch
         .byte "0branch"
@@ -429,7 +429,7 @@ nt_left_bracket:
         .byte "["
 
 nt_compile_comma:
-        .byte 8, 0
+        .byte 8, UF
         .word nt_left_bracket, xt_compile_comma, z_compile_comma
         .byte "compile,"
 
@@ -454,7 +454,7 @@ nt_source:
         .byte "source"
 
 nt_parse:
-        .byte 5, 0
+        .byte 5, UF
         .word nt_source, xt_parse, z_parse
         .byte "parse"
 
@@ -479,22 +479,22 @@ nt_defer:
         .byte "defer"
 
 nt_to_body:
-        .byte 5, 0
+        .byte 5, UF
         .word nt_defer, xt_to_body, z_to_body
         .byte ">body"
 
 nt_name_to_string:
-        .byte 11, 0
+        .byte 11, UF
         .word nt_to_body, xt_name_to_string, z_name_to_string
         .byte "name>string"
 
 nt_int_to_name:
-        .byte 8, 0
+        .byte 8, UF
         .word nt_name_to_string, xt_int_to_name, z_int_to_name
         .byte "int>name"
 
 nt_name_to_int:
-        .byte 8, 0
+        .byte 8, UF
         .word nt_int_to_name, xt_name_to_int, z_name_to_int
         .byte "name>int"
 
@@ -509,42 +509,42 @@ nt_tick:
         .byte "'"
 
 nt_find_name:
-        .byte 9, 0
+        .byte 9, UF
         .word nt_tick, xt_find_name, z_find_name
         .byte "find-name"
 
 nt_fill:
-        .byte 4, 0
+        .byte 4, UF
         .word nt_find_name, xt_fill, z_fill
         .byte "fill"
 
 nt_blank:
-        .byte 5, 0
+        .byte 5, 0     ; underflow checked by FILL
         .word nt_fill, xt_blank, z_blank
         .byte "blank"
 
 nt_erase:
-        .byte 5, 0
+        .byte 5, 0      ; underflow checked by FILL
         .word nt_blank, xt_erase, z_erase
         .byte "erase"
 
 nt_d_plus:
-        .byte 2, 0
+        .byte 2, UF
         .word nt_erase, xt_d_plus, z_d_plus
         .byte "d+"
 
 nt_d_minus:
-        .byte 2, 0
+        .byte 2, UF
         .word nt_d_plus, xt_d_minus, z_d_minus
         .byte "d-"
 
 nt_d_to_s:
-        .byte 3, 0
+        .byte 3, UF
         .word nt_d_minus, xt_d_to_s, z_d_to_s
         .byte "d>s"
 
 nt_s_to_d:
-        .byte 3, 0
+        .byte 3, UF
         .word nt_d_to_s, xt_s_to_d, z_s_to_d
         .byte "s>d"
 
@@ -554,7 +554,7 @@ nt_value:               ; same code as CONSTANT
         .byte "value"
 
 nt_constant:
-        .byte 8, 0
+        .byte 8, UF
         .word nt_value, xt_constant, z_constant
         .byte "constant"
 
@@ -574,7 +574,7 @@ nt_create:
         .byte "create"
 
 nt_allot:
-        .byte 5, 0
+        .byte 5, UF
         .word nt_create, xt_allot, z_allot
         .byte "allot"
 
@@ -594,7 +594,7 @@ nt_unused:
         .byte "unused"
 
 nt_accept:
-        .byte 6, 0
+        .byte 6, UF
         .word nt_unused, xt_accept, z_accept
         .byte "accept"
 
@@ -604,12 +604,12 @@ nt_refill:
         .byte "refill"
 
 nt_slash_string:
-        .byte 7,0
+        .byte 7, UF
         .word nt_refill, xt_slash_string, z_slash_string
         .byte "/string"
 
 nt_minus_trailing:
-        .byte 9, 0
+        .byte 9, UF
         .word nt_slash_string, xt_minus_trailing, z_minus_trailing
         .byte "-trailing"
 
@@ -619,37 +619,37 @@ nt_bl:
         .byte "bl"
 
 nt_spaces:
-        .byte 6, 0
+        .byte 6, UF
         .word nt_bl, xt_spaces, z_spaces
         .byte "spaces"
 
 nt_bounds:
-        .byte 6, 0
+        .byte 6, UF
         .word nt_spaces, xt_bounds, z_bounds
         .byte "bounds"
 
 nt_c_comma:
-        .byte 2, 0
+        .byte 2, UF
         .word nt_bounds, xt_c_comma, z_c_comma
         .byte "c,"
 
 nt_dnegate:
-        .byte 7, 0
+        .byte 7, UF
         .word nt_c_comma, xt_dnegate, z_dnegate
         .byte "dnegate"
 
 nt_negate:
-        .byte 6, 0
+        .byte 6, UF
         .word nt_dnegate, xt_negate, z_negate
         .byte "negate"
 
 nt_invert:
-        .byte 6, 0
+        .byte 6, UF
         .word nt_negate, xt_invert, z_invert
         .byte "invert"
 
 nt_two_to_r:
-        .byte 3, CO             ; native is special case
+        .byte 3, CO+UF          ; native is special case
         .word nt_invert, xt_two_to_r, z_two_to_r
         .byte "2>r"
 
@@ -669,82 +669,82 @@ nt_two_variable:
         .byte "2variable"
 
 nt_two_over:
-        .byte 5, 0
+        .byte 5, UF
         .word nt_two_variable, xt_two_over, z_two_over
         .byte "2over"
 
 nt_two_swap:
-        .byte 5, 0
+        .byte 5, UF
         .word nt_two_over, xt_two_swap, z_two_swap
         .byte "2swap"
 
 nt_two_drop:
-        .byte 5, 0
+        .byte 5, UF
         .word nt_two_swap, xt_two_drop, z_two_drop
         .byte "2drop"
 
 nt_max:
-        .byte 3, 0
+        .byte 3, UF
         .word nt_two_drop, xt_max, z_max
         .byte "max"
 
 nt_min:
-        .byte 3, 0
+        .byte 3, UF
         .word nt_max, xt_min, z_min
         .byte "min"
 
 nt_zero_less:
-        .byte 2, 0
+        .byte 2, UF
         .word nt_min, xt_zero_less, z_zero_less
         .byte "0<"
 
 nt_zero_greater:
-        .byte 2, 0
+        .byte 2, UF
         .word nt_zero_less, xt_zero_greater, z_zero_greater
         .byte "0>"
 
 nt_zero_unequal:
-        .byte 3, 0
+        .byte 3, UF
         .word nt_zero_greater, xt_zero_unequal, z_zero_unequal
         .byte "0<>"
 
 nt_zero_equal:
-        .byte 2, 0
+        .byte 2, UF
         .word nt_zero_unequal, xt_zero_equal, z_zero_equal
         .byte "0="
 
 nt_greater_than:
-        .byte 1, 0
+        .byte 1, UF
         .word nt_zero_equal, xt_greater_than, z_greater_than
         .byte ">"
 
 nt_less_than:
-        .byte 1, 0
+        .byte 1, UF
         .word nt_greater_than, xt_less_than, z_less_than
         .byte "<"
 
 nt_not_equals:
-        .byte 2, 0
+        .byte 2, UF
         .word nt_less_than, xt_not_equals, z_not_equals
         .byte "<>"
 
 nt_equal:
-        .byte 1, 0
+        .byte 1, UF
         .word nt_not_equals, xt_equal, z_equal
         .byte "="
 
 nt_two_star:
-        .byte 2, 0
+        .byte 2, UF
         .word nt_equal, xt_two_star, z_two_star
         .byte "2*"
 
 nt_one_plus:
-        .byte 2, 0
+        .byte 2, UF
         .word nt_two_star, xt_one_plus, z_one_plus
         .byte "1+"
 
 nt_one_minus:
-        .byte 2, 0
+        .byte 2, UF
         .word nt_one_plus, xt_one_minus, z_one_minus
         .byte "1-"
 
@@ -754,7 +754,7 @@ nt_here:
         .byte "here"
 
 nt_cell_plus:
-        .byte 5, 0
+        .byte 5, UF
         .word nt_here, xt_cell_plus, z_cell_plus
         .byte "cell+"
 
@@ -764,7 +764,7 @@ nt_cells:
         .byte "cells"
 
 nt_chars:
-        .byte 5, AN                             ; deleted during compile
+        .byte 5, AN+UF                          ; deleted during compile
         .word nt_cells, xt_chars, z_chars
         .byte "chars"
 
@@ -784,62 +784,62 @@ nt_char:
         .byte "char"
 
 nt_pick:
-        .byte 4, 0
+        .byte 4, 0              ; underflow check is complicated, leave off here
         .word nt_char, xt_pick, z_pick
         .byte "pick"
 
 nt_lshift:
-        .byte 6, 0
+        .byte 6, UF
         .word nt_pick, xt_lshift, z_lshift
         .byte "lshift"
 
 nt_rshift:
-        .byte 6, 0
+        .byte 6, UF
         .word nt_lshift, xt_rshift, z_rshift
         .byte "rshift"
 
 nt_xor:
-        .byte 3, 0
+        .byte 3, UF
         .word nt_rshift, xt_xor, z_xor
         .byte "xor"
 
 nt_or:
-        .byte 2, 0
+        .byte 2, UF
         .word nt_xor, xt_or, z_or
         .byte "or"
 
 nt_and:
-        .byte 3, 0
+        .byte 3, UF
         .word nt_or, xt_and, z_and
         .byte "and"
 
 nt_dabs:
-        .byte 4, 0
+        .byte 4, UF
         .word nt_and, xt_dabs, z_dabs
         .byte "dabs"
 
 nt_abs:
-        .byte 3, 0
+        .byte 3, UF
         .word nt_dabs, xt_abs, z_abs
         .byte "abs"
 
 nt_minus:
-        .byte 1, 0
+        .byte 1, UF
         .word nt_abs, xt_minus, z_minus
         .byte "-"
 
 nt_plus:
-        .byte 1, 0
+        .byte 1, UF
         .word nt_minus, xt_plus, z_plus
         .byte "+"
 
 nt_question_dup:
-        .byte 4, 0
+        .byte 4, UF
         .word nt_plus, xt_question_dup, z_question_dup
         .byte "?dup"
 
 nt_two_dup:
-        .byte 4, 0
+        .byte 4, UF
         .word nt_question_dup, xt_two_dup, z_two_dup
         .byte "2dup"
 
@@ -879,67 +879,67 @@ nt_question:
         .byte "?"
 
 nt_u_dot:
-        .byte 2, 0
+        .byte 2, UF
         .word nt_question, xt_u_dot, z_u_dot
         .byte "u."
 
 nt_dot:
-        .byte 1, 0
+        .byte 1, UF
         .word nt_u_dot, xt_dot, z_dot
         .byte "."
 
 nt_type:
-        .byte 4, 0
+        .byte 4, UF
         .word nt_dot, xt_type, z_type
         .byte "type"
 
 nt_emit:
-        .byte 4, NN
+        .byte 4, NN+UF
         .word nt_type, xt_emit, z_emit
         .byte "emit"
 
 nt_execute:
-        .byte 7, 0
+        .byte 7, UF
         .word nt_emit, xt_execute, z_execute
         .byte "execute"
 
 nt_plus_store:
-        .byte 2, 0
+        .byte 2, UF
         .word nt_execute, xt_plus_store, z_plus_store
         .byte "+!"
 
 nt_c_store:
-        .byte 2, 0
+        .byte 2, UF
         .word nt_plus_store, xt_c_store, z_c_store
         .byte "c!"
 
 nt_c_fetch:
-        .byte 2, 0
+        .byte 2, UF
         .word nt_c_store, xt_c_fetch, z_c_fetch
         .byte "c@"
 
 nt_comma:
-        .byte 1, 0
+        .byte 1, UF
         .word nt_c_fetch, xt_comma, z_comma
         .byte ","
 
 nt_tuck:
-        .byte 4, 0
+        .byte 4, UF
         .word nt_comma, xt_tuck, z_tuck
         .byte "tuck"
 
 nt_not_rote:
-        .byte 4, 0
+        .byte 4, UF
         .word nt_tuck, xt_not_rote, z_not_rote
         .byte "-rot"
 
 nt_rot:
-        .byte 3, 0
+        .byte 3, UF
         .word nt_not_rote, xt_rot, z_rot
         .byte "rot"
 
 nt_nip:
-        .byte 3, 0
+        .byte 3, UF
         .word nt_rot, xt_nip, z_nip
         .byte "nip"
 
@@ -954,39 +954,39 @@ nt_r_from:
         .byte "r>"
 
 nt_to_r:
-        .byte 2, CO        ; native is special case
+        .byte 2, CO+UF     ; native is special case
         .word nt_r_from, xt_to_r, z_to_r
         .byte ">r"
 
 nt_over:
-        .byte 4, 0
+        .byte 4, UF
         .word nt_to_r, xt_over, z_over
         .byte "over"
 
 nt_fetch:
-        .byte 1, 0
+        .byte 1, UF
         .word nt_over, xt_fetch, z_fetch
         .byte "@"
 
 nt_store:
-        .byte 1, 0
+        .byte 1, UF
         .word nt_fetch, xt_store, z_store
         .byte "!"
 
 nt_swap:
-        .byte 4, 0
+        .byte 4, UF
         .word nt_store, xt_swap, z_swap
         .byte "swap"
 
 nt_dup:
-        .byte 3, 0
+        .byte 3, UF
         .word nt_swap, xt_dup, z_dup
         .byte "dup"
 
 ; DROP is always the first native word in the Dictionary
 dictionary_start:
 nt_drop:
-        .byte 4, 0
+        .byte 4, UF
         .word nt_dup, xt_drop, z_drop
         .byte "drop"
 
