@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.3.2)  11 MAR 2018 19:01
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.3.2)  11 MAR 2018 20:34
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -443,7 +443,7 @@ LaTeX Font Info:    Font shape `T1/SourceCodePro-TLF/m/n' will be
 
 ]
 Chapter 1.
-(./ch_why.tex <pics/W65c02.jpg, id=549, 301.125pt x 301.125pt>
+(./ch_why.tex <pics/W65c02.jpg, id=564, 301.125pt x 301.125pt>
 File: pics/W65c02.jpg Graphic file (type jpg)
 
 <use pics/W65c02.jpg>
@@ -472,86 +472,87 @@ berez/py65[][].
 Chapter 4.
 (./ch_running.tex [14
 
-] [15] [16]) [17]
+] [15]) [16]
 Chapter 5.
-[18
+[17
 
-] [19
+] [18
 
 ]
 Chapter 6.
-(./ch_internals.tex [20
+(./ch_internals.tex [19
 
-] [21]
-Overfull \hbox (5.86935pt too wide) in paragraph at lines 205--211
+] [20]
+Overfull \hbox (5.86935pt too wide) in paragraph at lines 206--212
 \T1/cmr/m/n/10 then gen-er-ated at run-time when Tali Forth starts up, and \T1/
 cmr/bx/n/10 user words \T1/cmr/m/n/10 in the file \T1/SourceCodePro-TLF/m/n/10 
 user_words.asm[]\T1/cmr/m/n/10 . 
  []
 
-[22] [23]
+[21] [22]
 LaTeX Font Info:    Font shape `T1/SourceCodePro-TLF/b/n' will be
-(Font)              scaled to size 10.0pt on input line 323.
+(Font)              scaled to size 10.0pt on input line 324.
 
-Overfull \hbox (103.13847pt too wide) in paragraph at lines 345--347
+Overfull \hbox (103.13847pt too wide) in paragraph at lines 346--348
 []\T1/cmr/m/n/10 (http://forth.sourceforge.net/standard/dpans/a0006.htm) (http:
 //forth.sourceforge.net/standard/dpans/dpansa6.htm 
  []
 
 LaTeX Font Info:    Font shape `T1/SourceCodePro-TLF/b/n' will be
-(Font)              scaled to size 12.0pt on input line 352.
+(Font)              scaled to size 12.0pt on input line 353.
 
-Overfull \hbox (89.38597pt too wide) in paragraph at lines 360--362
+Overfull \hbox (89.38597pt too wide) in paragraph at lines 361--363
 \T1/cmr/m/n/10 (Automatically calls SAVE-INPUT and RESTORE-INPUT) (http://forth
 .sourceforge.net/standard/dpans/a0006.htm) 
  []
 
 LaTeX Font Info:    Font shape `T1/SourceCodePro-TLF/b/n' will be
-(Font)              scaled to size 14.4pt on input line 371.
+(Font)              scaled to size 14.4pt on input line 372.
 
-Overfull \hbox (58.31242pt too wide) in paragraph at lines 375--383
+Overfull \hbox (58.31242pt too wide) in paragraph at lines 376--384
 \T1/cmr/m/n/10 more gen-eral take, see Brad Ro-driguez' se-ries of ar-ti-cles a
 t [][]http://www.bradrodriguez.com/papers/moving3.htm[][].
  []
 
-[24]
+[23]
 LaTeX Font Info:    Font shape `T1/SourceCodePro-TLF/m/sl' in size <10> not ava
 ilable
 (Font)              Font shape `T1/SourceCodePro-TLF/m/it' tried instead on inp
-ut line 466.
+ut line 467.
 LaTeX Font Info:    Font shape `T1/SourceCodePro-TLF/m/it' will be
-(Font)              scaled to size 10.0pt on input line 466.
- [25] [26]
+(Font)              scaled to size 10.0pt on input line 467.
+ [24] [25]
 LaTeX Font Info:    Font shape `T1/SourceCodePro-TLF/m/n' will be
-(Font)              scaled to size 8.0pt on input line 587.
+(Font)              scaled to size 8.0pt on input line 588.
 
-Underfull \hbox (badness 4096) in paragraph at lines 587--587
+Underfull \hbox (badness 4096) in paragraph at lines 588--588
 [][][]\T1/cmr/m/n/8 Many Forths now use the words \T1/SourceCodePro-TLF/m/n/8 c
 s-pick \T1/cmr/m/n/8 and \T1/SourceCodePro-TLF/m/n/8 cs-roll \T1/cmr/m/n/8 in-s
 tead of the \T1/SourceCodePro-TLF/m/n/8 branch \T1/cmr/m/n/8 vari-ants, see
  []
 
 
-Underfull \hbox (badness 1454) in paragraph at lines 600--600
+Underfull \hbox (badness 1454) in paragraph at lines 601--601
 \T1/cmr/m/n/8 see there for more de-tails. An-other take on this sub-ject that 
 han-dles things a bit dif-fer-ently is at
  []
 
 
-Overfull \hbox (2.941pt too wide) in paragraph at lines 631--636
+Overfull \hbox (2.941pt too wide) in paragraph at lines 632--637
 \T1/cmr/m/n/10 take care of. These can call up to three ad-dresses: One for the
  nor-mal loop-ing ac-tion (\T1/SourceCodePro-TLF/m/n/10 loop\T1/cmr/m/n/10 /\T1
 /SourceCodePro-TLF/m/n/10 +loop\T1/cmr/m/n/10 ),
  []
 
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 651.
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 652.
 
 (/usr/share/texlive/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 651.
- [27]) [28]
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 652.
+ [26] [27] [28]
+[29]) [30]
 Chapter 7.
 (./ch_developing.tex
 Overfull \hbox (41.71275pt too wide) in paragraph at lines 13--15
@@ -566,23 +567,23 @@ Overfull \hbox (31.95775pt too wide) in paragraph at lines 29--35
  [][]http://michaelcmartin.github.io/Ophis/[][].
  []
 
-[29
+[31
 
-] [30]) [31]
+] [32]) [33]
 Chapter 8.
-[32
+[34
 
 ]
 Appendix A.
-(./ch_faq.tex) [33
+(./ch_faq.tex) [35
 
 ]
 Appendix B.
-(./ch_tests.tex [34
+(./ch_tests.tex [36
 
-] [35] [36] [37]) [38]
+] [37] [38] [39]) [40]
 Appendix C.
-(./ch_thanks.tex) (./bibliography.tex [39
+(./ch_thanks.tex) (./bibliography.tex [41
 
 ]
 Overfull \hbox (65.6815pt too wide) in paragraph at lines 47--50
@@ -591,11 +592,11 @@ Be-gin-ner's Guide to Forth\T1/cmr/m/n/10 , [][]http://galileo.phys.virginia.ed
 u/classes/551.jvn.fall01/primer.htm[][]. 
  []
 
-) (./manual.ind [40
+) (./manual.ind [42
 
-] [41
+] [43
 
-] [42
+] [44
 
 ])
 Package atveryend Info: Empty hook `BeforeClearDocument' on input line 136.
@@ -604,14 +605,14 @@ Package atveryend Info: Empty hook `AfterLastShipout' on input line 136.
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 136.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 136.
 Package rerunfilecheck Info: File `manual.out' has not changed.
-(rerunfilecheck)             Checksum: 2421C24F6BB007D0AE42E54A7EE53EB3;6089.
+(rerunfilecheck)             Checksum: 50F1A61FD7E885E05E3AB9E02EB51C37;6305.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 136.
  ) 
 Here is how much of TeX's memory you used:
- 8391 strings out of 494953
- 123847 string characters out of 6180978
- 325779 words of memory out of 5000000
- 10979 multiletter control sequences out of 15000+600000
+ 8453 strings out of 494953
+ 124780 string characters out of 6180978
+ 325787 words of memory out of 5000000
+ 10982 multiletter control sequences out of 15000+600000
  26350 words of font info for 55 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  43i,12n,43p,246b,1712s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -634,10 +635,10 @@ type1/adobe/sourcecodepro/SourceCodePro-Bold.pfb></usr/share/texlive/texmf-dist
 /fonts/type1/adobe/sourcecodepro/SourceCodePro-It.pfb></usr/share/texlive/texmf
 -dist/fonts/type1/adobe/sourcecodepro/SourceCodePro-Regular.pfb></usr/share/tex
 live/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
-Output written on manual.pdf (42 pages, 429704 bytes).
+Output written on manual.pdf (44 pages, 437288 bytes).
 PDF statistics:
- 2095 PDF objects out of 2487 (max. 8388607)
- 1428 compressed objects within 15 object streams
- 534 named destinations out of 1000 (max. 500000)
- 774 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 2209 PDF objects out of 2487 (max. 8388607)
+ 1534 compressed objects within 16 object streams
+ 593 named destinations out of 1000 (max. 500000)
+ 798 words of extra memory for PDF output out of 10000 (max. 10000000)
 

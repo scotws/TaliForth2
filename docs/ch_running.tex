@@ -77,127 +77,46 @@ words before \texttt{drop} are those that are defined in high-level Forth. For
 more information on the words, use the \texttt{see}\index{see@\texttt{see}}
 command.
 
-\section{Native compiling}\index{compiling, native|textbf}
+\section{Native compiling}\index{compiling!native}
 
-In a pure subroutine threaded code, higher-level words are merely a series of
-subroutine jumps. For instance, the Forth word
-\texttt{[char]}\index{[char]@\texttt{[char]}}, formally defined in high-level
-Forth as
+As the name says, subroutine threaded code\index{threading} encodes the words as
+a series of subroutine jumps. Because of the overhead caused by these jumps,
+this can make the code slow. Therefore, Tali Forth enables `native compiling',
+where the machine code from the word itself is included instead of a subroutine
+jump. 
 
-\begin{lstlisting}[frame=lines]
-        : [char] char postpone literal ; immediate
-\end{lstlisting}
-
-\noindent in assembler is simply
-
-\begin{lstlisting}[frame=lines]
-                jsr xt_char
-                jsr xt_literal
-\end{lstlisting}
-
-\noindent as an immediate, compile-only word. Theare are two obvious problems
-with this method: First, it is slow, because each \texttt{jsr/rts} pair consumes
-four bytes and 12 cycles overhead. Second, for smaller words, the jumps use far
-more bytes than the actual code. Take for instance
-\texttt{drop}\index{drop@\texttt{drop}}, which in its naive form is simply
+The parameter \texttt{nc-limit}\index{nc-limit@\texttt{nc-limit}} sets the limit
+of how small words have to be to be natively compiled. To get the current value
+(usually 10 or 20), check the value of the system variable: 
 
 \begin{lstlisting}[frame=lines]
-                inx
-                inx
+        nc-limit ?
 \end{lstlisting}
 
-\noindent for two bytes and four cycles. If we jump to this word as is assumed
-with pure subroutine threaded Forth, we add four bytes and 12 cycles -- double
-the space and three times the time required by the actual working code. (In
-practice, it's even worse, because \texttt{drop} checks for
-underflow\index{underflow}. The actual assembler code is
+\noindent To set a new limit, save the maximal allowed number of bytes in the
+machine code like any other Forth variable:
 
 \begin{lstlisting}[frame=lines]
-                cpx #dsp0-1
-                bmi +
-                lda #11         ; error code for underflow
-                jmp error
-*
-                inx
-                inx
+        40 nc-limit !
 \end{lstlisting}
 
-\noindent for eleven bytes. We'll discuss the underflow checks further below.)
+To complete turn off native compiling, set this value to zero.
 
-To get rid of this problem, Tali Forth supports \textbf{native
-compiling}\index{compiling, native}. The system variable
-\texttt{nc-limit}\index{nc-limit@\texttt{nc-limit}} sets
-the threshhold up to which a word will be included not as a subroutine jump, but
-machine language. Let's start with an example where \texttt{nc-limit} is set to
-zero, that is, all words are compiled as subroutine jumps. Take a simple word
-such as
+\section{Underflow detection}\index{underflow!detection}
 
-\begin{lstlisting}[frame=lines]
-        : aaa 0 drop ;
-\end{lstlisting}
+When a word tries to access more words on the stack than it is holding, an
+`underflow' error occurs. Whereas Tali Forth 1\index{Tali Forth 1} didn't check
+for these errors, this version does. 
 
-\noindent and check the actual code with \texttt{see}\index{see@\texttt{see}}
+However, this slows the program down. Because of this, the user can turn off
+underflow detection for words that are natively compiled into new words. To do
+this, set the system variable
+\texttt{uf-strip}\index{uf-strip@\texttt{uf-strip}} to
+\texttt{true}\index{true@\texttt{true}}. Note this does not turn off underflow
+detection in the built-in words. Also, words with underflow detection which are
+not included in new words through native compiling will also retain their tests.
 
-\begin{lstlisting}[frame=lines]
-        see aaa
-          nt: 7CD  xt: 7D8
-         size (decimal): 6
-
-        07D8  20 52 99 20 6B 88  ok
-\end{lstlisting}
-
-\noindent (The actual addresses might be different, this is from the ALPHA release).  Our
-word \texttt{aaa} consists of two subroutine jumps, one to zero and one to
-\texttt{drop}. Now, if we increase the threshhold to 20, we get different code,
-as this console session shows:
-
-\begin{lstlisting}[frame=lines]
-        20 nc-limit !  ok
-        : bbb 0 drop ;  ok
-        see bbb
-          nt: 7DF  xt: 7EA
-         size (decimal): 17
-
-        07EA  CA CA 74 00 74 01 E0 77  30 05 A9 0B 4C C7 AC E8
-        07FA  E8  ok
-\end{lstlisting}
-
-\noindent Even though the definition of \texttt{bbb} is the same as \texttt{aaa}, we have
-totally different code: The number 0001 is pushed to the Data Stack (the first
-six bytes), then we check for underflow\index{underflow} (the next nine bytes),
-and finally we \texttt{drop} by moving X\index{X register}, the Data Stack
-Pointer. Our word is definitely longer, but have just saved 12 cycles.
-
-To experiment with various parameters for native compiling, the Forth word
-\texttt{words\&sizes}\index{words\&sizes@\texttt{words\&sizes}} is included in \texttt{user\_words.fs} (but commented out 
-by default). The Forth is:
-
-\begin{lstlisting}[frame=lines]
-: words&sizes ( -- )
-        latestnt
-        begin
-                dup
-        0<> while
-                dup name>string type space
-                dup wordsize u. cr      
-                2 + @
-        repeat
-        drop ;
-\end{lstlisting}
-
-\noindent An alternative is \texttt{see}\index{see@\texttt{see}}, which also
-displays the length of a word. One way or another, changing \texttt{nc-limit}
-should show differences in the Forth words.
-
-% TODO add Return Stack Thrashing Stripping
-
-\section{Underflow stripping}\index{underflow!detection}
-
-Checking for underflow helps during the design and debug phases of writing Forth
-code, but once it ready to ship, those nine bytes per check hurt, as we see in
-the case above. To allow those checks to be stripped, we can set the system
-variable \texttt{uf-strip} to \texttt{true}.
-
+% -------------------------------------
 \section{Restarting}
 
 Tali Forth has a non-standard word \texttt{cold}\index{cold@\texttt{cold}} that

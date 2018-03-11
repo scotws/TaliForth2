@@ -1,183 +1,194 @@
 \begin{theindex}
 
-  \item \texttt{>in}, \hyperpage{24}, \hyperpage{34}
-  \item \texttt{[']}, \hyperpage{35}
-  \item \texttt{[char]}, \hyperpage{15}, \hyperpage{34}
-  \item 6502.org, \hyperpage{8}, \hyperpage{39}
-  \item 65c02, \hyperpage{9}, \hyperpage{22}
+  \item \texttt{>in}, \hyperpage{23}, \hyperpage{36}
+  \item \texttt{>r}, \hyperpage{29}
+  \item \texttt{[']}, \hyperpage{37}
+  \item \texttt{[char]}, \hyperpage{27}, \hyperpage{36}
+  \item \texttt{2>r}, \hyperpage{29}
+  \item \texttt{2r>}, \hyperpage{29}
+  \item 6502.org, \hyperpage{8}, \hyperpage{41}
+  \item 65c02, \hyperpage{9}, \hyperpage{21}
 
   \indexspace
 
   \item 6502, \hyperpage{8}
-  \item 65816, \hyperpage{10}, \hyperpage{33}
+  \item 65816, \hyperpage{10}, \hyperpage{35}
 
   \indexspace
 
   \item accumulator, \hyperpage{10}
   \item address bus, \hyperpage{10}
-  \item ANSI Forth, \hyperpage{9}, \hyperpage{24}
+  \item ANSI Forth, \hyperpage{9}, \hyperpage{23}
   \item Apple II, \hyperpage{8}
   \item Atari 800, \hyperpage{8}
 
   \indexspace
 
-  \item Barry, Mike, \hyperpage{39}
-  \item \texttt{blk}, \hyperpage{24}
-  \item booting, \hyperpage{24}
-  \item \texttt{bounds}, \hyperpage{37}
-  \item Brodie, Leo, \hyperpage{9}, \hyperpage{29}
-  \item bugs, \hyperpage{17}
-  \item \texttt{bye}, \hyperpage{15}, \hyperpage{22}
+  \item Barry, Mike, \hyperpage{41}
+  \item \texttt{blk}, \hyperpage{23}
+  \item booting, \hyperpage{23}
+  \item \texttt{bounds}, \hyperpage{39}
+  \item Brodie, Leo, \hyperpage{9}, \hyperpage{31}
+  \item bugs, \hyperpage{16}
+  \item \texttt{bye}, \hyperpage{15}, \hyperpage{21}
 
   \indexspace
 
   \item \textit{Canterbury Tales, The}, \hyperpage{9}
-  \item case, lower, \hyperpage{22}
+  \item case, lower, \hyperpage{21}
   \item \textit{Cassini}, \hyperpage{9}
-  \item cheat sheet, code, \hyperpage{30}
-  \item cib, \hyperindexformat{\see {current input buffer}}{24}
-  \item \texttt{cmove}, \hyperpage{35}
-  \item \texttt{cmove>}, \hyperpage{35}
-  \item \texttt{cold}, \hyperpage{16}
-  \item command line interface, \hyperpage{24}
+  \item cheat sheet, code, \hyperpage{32}
+  \item cib, \hyperindexformat{\see {current input buffer}}{23}
+  \item \texttt{cmove}, \hyperpage{37}
+  \item \texttt{cmove>}, \hyperpage{37}
+  \item \texttt{cold}, \hyperpage{15}
+  \item command line interface, \hyperpage{23}
   \item Commodore PET, \hyperpage{8}
-  \item compiling, native, \hyperindexformat{\textbf}{15}, 
-		\hyperpage{15}
-  \item \texttt{constant}, \hyperpage{34}
-  \item \texttt{create}, \hyperindexformat{\textbf}{25}
-  \item current input buffer, \hyperpage{24}
+  \item \texttt{compile,}, \hyperpage{29}
+  \item compiling
+    \subitem native, \hyperpage{15}, \hyperpage{29}
+  \item compiling, native, \hyperindexformat{\textbf}{27}, 
+		\hyperpage{28}
+  \item \texttt{constant}, \hyperpage{36}
+  \item \texttt{create}, \hyperindexformat{\textbf}{24}
+  \item current input buffer, \hyperpage{23}
 
   \indexspace
 
-  \item dictionary, \hyperpage{15}, \hyperindexformat{\textbf}{21}
-  \item \texttt{does>}, \hyperindexformat{\textbf}{25}, \hyperpage{34}
-  \item double cell, \hyperpage{16}, \hyperpage{21}
-  \item \texttt{drop}, \hyperpage{15}, \hyperpage{22}
+  \item dictionary, \hyperpage{15}, \hyperindexformat{\textbf}{20}
+  \item \texttt{does>}, \hyperindexformat{\textbf}{24}, \hyperpage{36}
+  \item double cell, \hyperpage{15}, \hyperpage{20}
+  \item \texttt{drop}, \hyperpage{15}, \hyperpage{21}, \hyperpage{27}
 
   \indexspace
 
-  \item execution token, \hyperpage{22}
+  \item execution token, \hyperpage{21}
 
   \indexspace
 
-  \item feedback, \hyperindexformat{\textbf}{17}
+  \item feedback, \hyperindexformat{\textbf}{16}
   \item FIG Forth, \hyperpage{9, 10}
   \item file
-    \subitem block, \hyperpage{24}
-    \subitem text, \hyperpage{24}
-  \item file-id, \hyperpage{24}
-  \item \texttt{find-name}, \hyperpage{35}
-  \item floodplain (stack), \hyperpage{20}
-  \item \texttt{fm/mod}, \hyperindexformat{\textbf}{37}
+    \subitem block, \hyperpage{23}
+    \subitem text, \hyperpage{23}
+  \item file-id, \hyperpage{23}
+  \item \texttt{find-name}, \hyperpage{37}
+  \item floodplain (stack), \hyperpage{19}
+  \item \texttt{fm/mod}, \hyperindexformat{\textbf}{39}
   \item Forth, \hyperindexformat{\textbf}{9}
-  \item Forth words, \hyperpage{14}, \hyperpage{22}
+  \item Forth words, \hyperpage{14}, \hyperpage{21}
 
   \indexspace
 
-  \item Gforth, \hyperpage{9}, \hyperpage{16}, \hyperpage{36, 37}
+  \item Gforth, \hyperpage{9}, \hyperpage{15}, \hyperpage{38, 39}
   \item \texttt{git}, \hyperpage{13}
-  \item GitHub, \hyperpage{13}, \hyperpage{17}, \hyperpage{33}
-  \item Go, \hyperpage{30}
+  \item GitHub, \hyperpage{13}, \hyperpage{16}, \hyperpage{35}
+  \item Go, \hyperpage{32}
 
   \indexspace
 
-  \item header, \hyperpage{11}, \hyperindexformat{\textbf}{22}
-    \subitem flags, \hyperpage{22}
-  \item history list, \hyperpage{24}
+  \item header, \hyperpage{11}, \hyperindexformat{\textbf}{21}
+    \subitem flags, \hyperpage{21}
+  \item history list, \hyperpage{23}
 
   \indexspace
 
-  \item input, \hyperindexformat{\textbf}{24}
+  \item input, \hyperindexformat{\textbf}{23}
   \item instruction set
     \subitem architecture, \hyperpage{9}
-  \item interpreter, \hyperpage{34}
-  \item intro string, \hyperpage{22}
+  \item interpreter, \hyperpage{36}
+  \item intro string, \hyperpage{21}
   \item ISA, \hyperindexformat{\see {instruction set}}{9}
 
   \indexspace
 
   \item Kelly, Guy, \hyperpage{10}
   \item kernel, \hyperpage{14}
-  \item keyboard, \hyperpage{24}
+  \item keyboard, \hyperpage{23}
 
   \indexspace
 
-  \item Liara Forth, \hyperpage{20}, \hyperindexformat{\textbf}{33}
-  \item Linux, \hyperpage{13}, \hyperpage{29}
+  \item Liara Forth, \hyperpage{19}, \hyperindexformat{\textbf}{35}
+  \item Linux, \hyperpage{13}, \hyperpage{31}
   \item Lisp, \hyperpage{9}
-  \item \texttt{literal}, \hyperpage{34}
-  \item little endian, \hyperpage{20}
+  \item \texttt{literal}, \hyperpage{36}
+  \item little endian, \hyperpage{19}
 
   \indexspace
 
-  \item Mandelbrot, \hyperpage{34}
-  \item Martin, Michael, \hyperpage{29}
-  \item \textit{Mass Effect}, \hyperpage{33}
-  \item math, \hyperpage{37}
-  \item memory map, \hyperindexformat{\textbf}{23}
+  \item Mandelbrot, \hyperpage{36}
+  \item Martin, Michael, \hyperpage{31}
+  \item \textit{Mass Effect}, \hyperpage{35}
+  \item math, \hyperpage{39}
+  \item memory map, \hyperindexformat{\textbf}{22}
   \item Mensch, Bill, \hyperpage{8}
   \item Moore, Charles, \hyperpage{8, 9}, \hyperpage{14}
-  \item \texttt{move}, \hyperpage{35}
+  \item \texttt{move}, \hyperpage{37}
 
   \indexspace
 
-  \item name token, \hyperpage{22}
+  \item name token, \hyperpage{21}
   \item NASA, \hyperpage{9}
   \item native compilation, \hyperpage{11}
-  \item native words, \hyperpage{10}, \hyperpage{15}, \hyperpage{22}
-  \item \texttt{nc-limit}, \hyperpage{15}
-  \item nt, \hyperindexformat{\see {name token}}{22}
+  \item native words, \hyperpage{10}, \hyperpage{15}, \hyperpage{21}
+  \item \texttt{nc-limit}, \hyperpage{15}, \hyperpage{28}
+  \item nt, \hyperindexformat{\see {name token}}{21}
 
   \indexspace
 
-  \item Ophis assembler, \hyperindexformat{\textbf}{29}, \hyperpage{30}
-  \item overflow, \hyperpage{21}
+  \item Ophis assembler, \hyperindexformat{\textbf}{31}, \hyperpage{32}
+  \item overflow, \hyperpage{20}
 
   \indexspace
 
   \item Peddle, Chuck, \hyperpage{8}
   \item PIP, \hyperpage{13}
-  \item \texttt{postpone}, \hyperpage{35}
+  \item \texttt{postpone}, \hyperpage{37}
   \item py65mon, \hyperindexformat{\textbf}{13}, \hyperpage{14}
   \item \texttt{py65mon}, \hyperpage{13}
-  \item Python, \hyperpage{13}, \hyperpage{29, 30}
+  \item Python, \hyperpage{13}, \hyperpage{31, 32}
 
   \indexspace
 
-  \item RAM, \hyperpage{10}, \hyperpage{23}
-  \item \texttt{recurse}, \hyperpage{37}
-  \item recursion, \hyperpage{37}
+  \item \texttt{r>}, \hyperpage{29}
+  \item RAM, \hyperpage{10}, \hyperpage{22}
+  \item \texttt{recurse}, \hyperpage{39}
+  \item recursion, \hyperpage{39}
+  \item Return Stack, \hyperpage{29}
   \item reverse polish notation, \hyperpage{9}
   \item RISC-V, \hyperpage{11}
   \item Rodriguez, Brad, \hyperpage{10}
-  \item ROM, \hyperpage{10}, \hyperpage{23}
+  \item ROM, \hyperpage{10}, \hyperpage{22}
   \item RPN, \hyperindexformat{\see {reverse polish notation}}{9}
 
   \indexspace
 
-  \item \texttt{see}, \hyperpage{15, 16}
-  \item self-test, \hyperpage{22}
-  \item \texttt{sm/rem}, \hyperindexformat{\textbf}{38}
-  \item stack, \hyperindexformat{\textbf}{20}, \hyperpage{30}
-  \item status byte, \hyperpage{22}
-  \item style, coding, \hyperpage{30}
+  \item \texttt{see}, \hyperpage{15}, \hyperpage{28, 29}
+  \item self-test, \hyperpage{21}
+  \item \texttt{sm/rem}, \hyperindexformat{\textbf}{40}
+  \item stack, \hyperindexformat{\textbf}{19}, \hyperpage{32}
+  \item status byte, \hyperpage{21}
+  \item style, coding, \hyperpage{32}
 
   \indexspace
 
-  \item Tali Forth 1, \hyperpage{11}, \hyperpage{20, 21}, 
-		\hyperpage{33}
-  \item testing, \hyperpage{30}, \hyperindexformat{\textbf}{34}
-  \item threading, \hyperpage{10}
+  \item Tali Forth 1, \hyperpage{11}, \hyperpage{15}, 
+		\hyperpage{19, 20}, \hyperpage{35}
+  \item testing, \hyperpage{32}, \hyperindexformat{\textbf}{36}
+  \item threading, \hyperpage{10}, \hyperpage{15}, \hyperpage{29}
+  \item \texttt{true}, \hyperpage{15}, \hyperpage{29}
 
   \indexspace
 
-  \item underflow, \hyperpage{15, 16}, \hyperpage{20}
-    \subitem detection, \hyperpage{11}, \hyperpage{16}, \hyperpage{21}
-  \item user words, \hyperpage{22}
+  \item \texttt{uf-strip}, \hyperpage{15}, \hyperpage{29}
+  \item underflow, \hyperpage{19}, \hyperpage{28}
+    \subitem detection, \hyperpage{11}, \hyperpage{15}, \hyperpage{20}
+    \subitem stripping, \hyperpage{29}
+  \item user words, \hyperpage{21}
 
   \indexspace
 
-  \item vas Normandy, Tali'Zorah, \hyperpage{33}
+  \item vas Normandy, Tali'Zorah, \hyperpage{35}
   \item VIC-20, \hyperpage{8}
 
   \indexspace
@@ -185,23 +196,23 @@
   \item WDC, \hyperpage{8}
   \item Williams, Elliot, \hyperpage{9}
   \item Wilson, Garth, \hyperpage{9}
-  \item \texttt{word}, \hyperpage{35}
-  \item \texttt{words}, \hyperpage{15}, \hyperpage{22}
-  \item \texttt{words\&sizes}, \hyperpage{16}
+  \item \texttt{word}, \hyperpage{37}
+  \item \texttt{words}, \hyperpage{15}, \hyperpage{21}
+  \item \texttt{words\&sizes}, \hyperpage{28}
 
   \indexspace
 
-  \item X register, \hyperpage{10, 11}, \hyperpage{16}, 
-		\hyperpage{20, 21}, \hyperpage{29}
-  \item xt, \hyperindexformat{\see {execution token}}{22}
+  \item X register, \hyperpage{10, 11}, \hyperpage{19, 20}, 
+		\hyperpage{28}, \hyperpage{31}
+  \item xt, \hyperindexformat{\see {execution token}}{21}
 
   \indexspace
 
-  \item Y register, \hyperpage{10}, \hyperpage{29}
+  \item Y register, \hyperpage{10}, \hyperpage{31}
 
   \indexspace
 
   \item Z80, \hyperpage{8}
-  \item Zero Page, \hyperpage{10, 11}, \hyperpage{20}
+  \item Zero Page, \hyperpage{10, 11}, \hyperpage{19}
 
 \end{theindex}
