@@ -58,8 +58,7 @@ xt_cold:
 
                 ; We start out with smaller words with less than 20 bytes being
                 ; natively compiled
-                ; TODO TESTING
-                lda #00
+                lda #10
                 sta nc_limit
                 stz nc_limit+1
      
@@ -1181,8 +1180,11 @@ _compile_check:
                 ; flag
                 lda tmp1
                 and #NN
-                bne _compile_as_jump
+                beq _check_size_limit
 
+                jmp _compile_as_jump    ; too far for BRA
+
+_check_size_limit:
                 ; Native compile is a legal option, but we need to see what
                 ; limit the user set for size
                 lda tmptos
@@ -1196,44 +1198,125 @@ _compile_check:
                 ; greater than 255 bytes, so we only deal with LSB
                 clc
                 cmp nc_limit            ; user-defined limit
-                bcs _compile_as_jump    ; if too large, we jump
+                bcc _compile_as_code
+
+                jmp _compile_as_jump    ; too far for BRA
 
 _compile_as_code:
                 ; We arrive here with the length of the word's code TOS and
                 ; xt on top of the Return Stack. MOVE will need ( xt cp u )
                 ; on the data stack
                 dex
-                dex                     ; ( -- u ? )
+                dex                     ; ( -- u ?? )
                 dex
-                dex                     ; ( -- u ? ? ) 
+                dex                     ; ( -- u ?? ?? ) 
 
                 lda 4,x
                 sta 0,x                 ; LSB of u 
                 lda 5,x
-                sta 1,x                 ; ( -- u ? u )
+                sta 1,x                 ; ( -- u ?? u )
 
                 pla
                 sta 4,x                 ; LSB of xt
                 pla
-                sta 5,x                 ; ( -- xt ? u )
+                sta 5,x                 ; ( -- xt ?? u )
 
                 lda cp                  ; LSB of cp
                 sta 2,x
                 lda cp+1
                 sta 3,x                 ; ( -- xt cp u )
 
-                ; Store size of area copied for calculation of new CP
+               ; --- SPECIAL CASE 1: PREVENT RETURN STACK THRASHINIG ---
+                
+                ; Native compiling allows us to strip the stack antics off
+                ; a number of words that use the Return Stack such as >R, R>,
+                ; 2>R and 2R> (but not 2R@ in this version). We compare the
+                ; xt with the contents of the table
+                ldy #0
+_strip_loop:
+                lda _strip_table,y      ; LSB of first word
+                cmp 4,x                 ; LSB of xt
+                bne _next_entry
+
+                ; LSB is the same, test MSB
+                iny
+                lda _strip_table,y
+                cmp 5,x
+                beq _found_entry
+
+                ; MSB is not equal. Pretend though that we've come from LSB
+                ; so we can use the next step for both cases
+                dey
+_next_entry:
+                ; Not a word that needs stripping, so check next entry in table
+                ; Let's see if we're done with the table (marked by zero entry)
+                lda _strip_table,y      ; pointing to LSB
+                ora _strip_table+1,y    ; get MSB
+                beq _underflow_strip    ; table done, let's get out of here
+
+                iny             
+                iny
+                bra _strip_loop
+_found_entry:
+                ; This word is one of the ones that needs to have its size
+                ; adjusted during native compile. We find the values in the
+                ; next table with the same index, which is Y. However, Y is
+                ; pointing to the MSB, so we need to go back to the LSB and
+                ; halve the index before we can use it
+                dey
+                tya
+                lsr
+                tay
+
+                ; Get the adjustment out of the size table. We were clever
+                ; enough to make sure the cut on both ends of the code is
+                ; is the same size
+                lda _strip_size,y
+                sta tmptos              ; save a copy
+
+                ; Adjust xt: Start later
+                clc
+                adc 4,x
+                sta 4,x
+                lda 5,x
+                adc #0                  ; we just care about the carry
+                sta 5,x
+
+                ; Adjust u: Quit earlier. Since we cut off the top and the bottom of the
+                ; code, we have to double the value
+                asl tmptos
+
+                sec
+                lda 0,x
+                sbc tmptos
+                sta 0,x
+                lda 1,x
+                sbc #0                  ; we just care about the borrow
+                sta 1,x
+
+                ; drop through to underflow check stripping
+
+_underflow_strip:
+                ; --- SPECIAL CASE 2: REMOVE UNDERFLOW CHECKING ---
+                
+                ; The user can choose to remove the unterflow testing in those
+                ; words that have the UF flag. This shortens the word by
+                ; 9 bytes and increases speed by 5 cycles (because the branch
+                ; is taken if there is no underflow.
+                ; TODO add after BETA
+
+                ; --- END OF SPECIAL CASES ---
+                
+                ; Store size of area to be copied for calculation of 
+                ; new CP. We have to do this after all of the special cases
+                ; because they might change the size
                 lda 1,x                 ; MSB
                 pha
                 lda 0,x                 ; LSB
                 pha
-
-                ; TODO add special cases:
-                ; - strip single NOP
-                ; - cut R>, >R, R@
-                ; - later: if UF flag set, remove underflow testing
-
-                ; Enough of this, move the bytes already
+                
+                ; Enough of this, let's move those bytes already! We have 
+                ; ( xt cp u ) on the stack at this point
                 jsr xt_move
 
                 ; Update CP
@@ -1247,6 +1330,19 @@ _compile_as_code:
                 sta cp+1
 
                 bra _done
+
+_strip_table:
+               ; List of words we strip the Return Stack antics from
+               ; during native compile, zero terminated. The index here
+               ; must be the same as for the sizes
+                .word xt_r_from, xt_r_fetch, xt_to_r    ; R>, R@, >R
+                .word xt_two_to_r, xt_two_r_from, 0000  ; 2>R, 2R>, EOL
+
+_strip_size:    
+                ; List of bytes to be stripped from the words that get their
+                ; Return Stack antics removed during native compile. Index must
+                ; be the same as for the xts. Zero terminated.
+                .byte 4, 4, 4, 6, 6, 0          ; R>, R@, >R, 2>R, 2R>, EOL
                 
 _compile_as_jump:
                 ; Compile xt as a subroutine jump
@@ -5043,18 +5139,18 @@ z_question_dup: rts
 
 ; ## R_FETCH ( -- n ) "Get copy of top of Return Stack"
 ; ## "r@"  src: ANSI core  b: TBA  c: TBA  status: coded
-        ; """We follow Gforth in that this word is not compiled only, because
-        ; it can be interesting to know what the top of R is in an interactive
-        ; setting. However, this causes all kinds of problems if we try
-        ; to natively compile the word, so it is flagged NN even though it is
-        ; actually short enough to make that reasonable.
+        ; """This word is Compile Only in Tali Forth, though Gforth has it
+        ; work normally as well -- An alternative way to write this word
+        ; would be to access the elements on the stack directly like 2R@
+        ; does, these versions should be compared at some point.
         ; """
-        ; TODO consider special case in COMPILE,
 xt_r_fetch:     
                 ; get the return address
                 ply             ; LSB
                 sty tmp1
                 ply             ; MSB
+
+                ; --- CUT FOR NATIVE COMPILE ---
 
                 ; get the actual top of Return Stack
                 dex
@@ -5070,6 +5166,8 @@ xt_r_fetch:
                 lda 0,x
                 pha
 
+                ; --- CUT FOR NATIVE COMPILE ---
+ 
                 ; restore return value
                 phy             ; MSB
                 ldy tmp1
@@ -5087,9 +5185,6 @@ z_r_fetch:      rts
         ; """
 
 xt_r_from:
-                dex
-                dex
-
                 ; Rescue the address of the return jump that is currently
                 ; on top of the Return Stack. If this word is natively 
                 ; compiled, this is a total waste of time
@@ -5097,15 +5192,19 @@ xt_r_from:
                 sta tmptos
                 ply             ; MSB
 
-                ; --- cut for native coding ---
+                ; --- CUT FOR NATIVE CODING ---
 
+                dex
+                dex
+                
                 ; now we can access the actual data
+
                 pla             ; LSB
                 sta 0,x
                 pla             ; MSB
                 sta 1,x
 
-                ; --- cut for native coding ---
+                ; --- CUT FOR NATIVE CODING ---
                 
                 ; restore the return address
                 phy             ; MSB
@@ -6303,7 +6402,7 @@ z_to_number:    rts
 ; ## ">r"  src: ANSI core  b: TBA  c: TBA  status: coded
         ; """This word is handled differently for native and for 
         ; subroutine coding, see COMPILE, . This is a complile-only
-        ; word
+        ; word.
         ; """
 xt_to_r:
                 ; Save the return address. If this word is natively
@@ -6315,7 +6414,8 @@ xt_to_r:
 
                 ; --- CUT HERE FOR NATIVE CODING ---
 
-                ; We check for underflow later
+                ; We check for underflow in the second step, so we can
+                ; strip off the stack thrashing for native compiling first
                 cpx #dsp0-1
                 bmi +
                 lda #11
@@ -6327,15 +6427,15 @@ xt_to_r:
                 lda 0,x         ; LSB
                 pha
 
+                inx
+                inx
+
                 ; --- CUT HERE FOR NATIVE CODING ---
 
                 ; restore return address
                 phy             ; MSB
                 lda tmptos
                 pha             ; LSB
-
-                inx
-                inx
 
 z_to_r:         rts
 
@@ -6471,9 +6571,11 @@ z_two_over:     rts
 ; ## TWO_R_FETCH ( -- n n ) "Copy top two entries from Return Stack"
 ; ## "2r@"  src: ANSI core ext  b: TBA  c: TBA  status: coded
         ; """This is R> R> 2DUP >R >R SWAP but we can do it a lot faster in
-        ; assembler This routine may not be natively compiled without 
-        ; special trickery because it accessed by a JSR, the first element
-        ; on the Return Stack is the return address.
+        ; assembler. We use trickery to access the elements on the Return
+        ; Stack instead of pulling the return address first and storing
+        ; it somewhere else like for 2R> and 2>R. In this version, we leave
+        ; it as Never Native; at some point, we should compare versions to
+        ; see if an Always Native version would be better
         ; """
 .scope
 xt_two_r_fetch:

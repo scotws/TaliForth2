@@ -1,7 +1,7 @@
 ; Dictionary Headers for Tali Forth 2
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 05. Dec 2016 (Liara Forth)
-; This version: 01. Mar 2018
+; This version: 11. Mar 2018
 
 ; Dictionary headers are kept separately from the code, which allows various
 ; tricks in the code. We roughly follow the Gforth terminology: The Execution
@@ -649,12 +649,12 @@ nt_invert:
         .byte "invert"
 
 nt_two_to_r:
-        .byte 3, CO+NN          ; native is special case, leave NN for now
+        .byte 3, CO             ; native is special case
         .word nt_invert, xt_two_to_r, z_two_to_r
         .byte "2>r"
 
 nt_two_r_from:
-        .byte 3, CO+NN          ; native is special case, leave NN for now
+        .byte 3, CO             ; native is special case
         .word nt_two_to_r, xt_two_r_from, z_two_r_from
         .byte "2r>"
 
@@ -944,17 +944,17 @@ nt_nip:
         .byte "nip"
 
 nt_r_fetch:
-        .byte 2, NN
+        .byte 2, CO        ; native is special case
         .word nt_nip, xt_r_fetch, z_r_fetch
         .byte "r@"
 
 nt_r_from:
-        .byte 2, NN
+        .byte 2, CO        ; native is special case
         .word nt_r_fetch, xt_r_from, z_r_from
         .byte "r>"
 
 nt_to_r:
-        .byte 2, CO
+        .byte 2, CO        ; native is special case
         .word nt_r_from, xt_to_r, z_to_r
         .byte ">r"
 

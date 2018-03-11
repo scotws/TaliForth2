@@ -155,7 +155,7 @@
 
   \indexspace
 
-  \item \texttt{see}, \hyperpage{15}
+  \item \texttt{see}, \hyperpage{15, 16}
   \item self-test, \hyperpage{22}
   \item \texttt{sm/rem}, \hyperindexformat{\textbf}{38}
   \item stack, \hyperindexformat{\textbf}{20}, \hyperpage{30}
@@ -187,6 +187,7 @@
   \item Wilson, Garth, \hyperpage{9}
   \item \texttt{word}, \hyperpage{35}
   \item \texttt{words}, \hyperpage{15}, \hyperpage{22}
+  \item \texttt{words\&sizes}, \hyperpage{16}
 
   \indexspace
 

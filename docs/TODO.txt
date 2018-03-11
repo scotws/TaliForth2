@@ -1,24 +1,23 @@
 TODO/CHANGES for Tali Forth 2 
 Scot W. Stevenson <scot.stevenson@gmail.com>
 First version: 19. Jan 2014
-This version: 08. Mar 2016
+This version: 11. Mar 2016
 
 TODO POST-ALPHA ("ALL WORDS DO SOMETHING, USUALLY EVEN THE RIGHT THING")
-        - Handle native compile special cases (R>, >R, 2R>, 2>R, etc)
+        - Allow stripping of underflow checks based on UF flag
         - Add size of words to source code
         - Invent tests for COUNT (and others)
-        - Test all words, adding new tests to documentation
+        - Test all words, adding any new tests to documentation
 
 
 TODO POST-BETA ("ALL THERE, BUT BEWARE OF SNEAKY BUGS")
-        - Allow stripping of underflow checks based on UF flag
+        - Add SEARCH (prepares for inclusion of editor)
         - Move adjust_z from CONSTANT to taliforth.asm (it's too long!)
-        - Code temporary high-level Forth words such as WITHIN natively
         - Warn if newly defined word already in Dictionary
-        - Add underflow check to PICK
+        - Code temporary high-level Forth words such as WITHIN natively
+        - Add adaptive underflow checking to PICK
         - Check where all "STY 0,X" can be used to good effect
         - In ALLOT, figure out how to handle release of too much memory
-        - Add SEARCH (prepares for inclusion of editor)
         - Add Editor in Forth based on ed
 
 
@@ -30,7 +29,7 @@ TODO AT SOME POINT
         - Add handling for multi-byte keyboard input (if possible with py65)
         - See if we can add real Delete Key detection (ESC[3~)
         - Add real USER variables
-        - Add multitasking (round-robin)
+        - Add multitasking (round-robin), needs USER variables
         - See if MAX and MIN can be combined
         - See if > and < etc can be combined
         - Consider adding CASE
@@ -45,6 +44,7 @@ TODO AT SOME POINT
 -----------------------------------------------------------------------
 ALREADY DONE MAJOR CHANGES (LAST ON TOP WITH DATE)
 
+        - 11. Mar 2018 - Added native compiling special cases
         - 01. Mar 2018 - Enable assembly of Forth text files
         - 26. Feb 2018 - Added Prime, Fact, Fib, Mandelbrot to user_words.asm
         - 25. Feb 2018 - Added underflow checks

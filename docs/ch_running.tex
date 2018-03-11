@@ -169,11 +169,11 @@ and finally we \texttt{drop} by moving X\index{X register}, the Data Stack
 Pointer. Our word is definitely longer, but have just saved 12 cycles.
 
 To experiment with various parameters for native compiling, the Forth word
-\texttt{words\&sizes} is included in \texttt{user\_words.fs} (but commented out 
+\texttt{words\&sizes}\index{words\&sizes@\texttt{words\&sizes}} is included in \texttt{user\_words.fs} (but commented out 
 by default). The Forth is:
 
 \begin{lstlisting}[frame=lines]
-: words&sizes ( --)
+: words&sizes ( -- )
         latestnt
         begin
                 dup
@@ -185,7 +185,11 @@ by default). The Forth is:
         drop ;
 \end{lstlisting}
 
-\noindent Changing \texttt{nc-limit} should show differences in the Forth words.
+\noindent An alternative is \texttt{see}\index{see@\texttt{see}}, which also
+displays the length of a word. One way or another, changing \texttt{nc-limit}
+should show differences in the Forth words.
+
+% TODO add Return Stack Thrashing Stripping
 
 \section{Underflow stripping}\index{underflow!detection}
 
