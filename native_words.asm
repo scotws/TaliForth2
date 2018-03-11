@@ -56,11 +56,16 @@ xt_cold:
                 sta base
                 stz base+1
 
-                ; We start out with smaller words with less than 20 bytes being
+                ; We start out with smaller words with less than 10 bytes being
                 ; natively compiled
                 lda #10
                 sta nc_limit
                 stz nc_limit+1
+ 
+                ; Default is not to strip underflow detection code out of
+                ; natively compiled words
+                stz uf_strip
+                stz uf_strip+1
      
                 ; The compiler pointer (CP) points to the first free byte
                 ; in the Dictionary
@@ -1302,11 +1307,42 @@ _underflow_strip:
                 ; The user can choose to remove the unterflow testing in those
                 ; words that have the UF flag. This shortens the word by
                 ; 9 bytes and increases speed by 5 cycles (because the branch
-                ; is taken if there is no underflow.
-                ; TODO add after BETA
+                ; is taken) if there is no underflow.
+                
+                ; See if the user wants underflow stripping turned on
+                lda uf_strip
+                ora uf_strip+1
+                beq _specials_done
+
+                ; See if this word even contains underflow checking
+                lda tmp1
+                and #UF
+                beq _specials_done
+
+                ; If we arrived here, underflow has to go. It's always 9 bytes
+                ; long (except for PICK, which has a special case that can't
+                ; be stripped)
+ 
+                ; Adjust xt: Start later
+                clc
+                lda 4,x
+                adc #9
+                sta 4,x
+                lda 5,x
+                adc #0                  ; we just care about the carry
+                sta 5,x
+
+                ; Adjust u: End earlier
+                sec
+                lda 0,x
+                sbc #9
+                sta 0,x
+                lda 1,x
+                sbc #0                  ; we just care about the borrow
+                sta 1,x
 
                 ; --- END OF SPECIAL CASES ---
-                
+_specials_done:
                 ; Store size of area to be copied for calculation of 
                 ; new CP. We have to do this after all of the special cases
                 ; because they might change the size
@@ -6876,6 +6912,21 @@ xt_ud_slash_mod:
 z_ud_slash_mod: rts
 .scend
 
+; ## UF_STRIP ( -- addr ) "Return address where UF-STRIP value is kept"
+; ## "uf-strip"  src: Tali Forth  b: TBA  c: TBA  status: coded
+.scope
+xt_uf_strip:
+                dex
+                dex
+                lda #<uf_strip
+                sta 0,x
+                lda #>uf_strip
+                sta 1,x
+
+z_uf_strip:     rts
+.scend
+
+
 
 ; ## UM_SLASH_MOD ( ud u -- ur u ) "32/16 -> 16 division"
 ; ## "um/mod"  src: ANSI core  b: TBA  c: TBA  status: coded
@@ -7320,7 +7371,7 @@ z_zero:         rts
         ; """This exects the next two bytes to be the address of where to
         ; branch to if the test fails. The code may not be natively compiled
         ; because we need the return address provided by JSR's push to the
-        ; Return Stack This routine uses tmpbranch
+        ; Return Stack This routine uses tmpbranch. Do not check for underflow.
         ; """
 .scope
 xt_zero_branch:

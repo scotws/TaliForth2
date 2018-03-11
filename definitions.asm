@@ -1,7 +1,7 @@
 ; Definitions for Tali Forth 2
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 01. Apr 2016 (Liara Forth)
-; This version: 27. Feb 2018
+; This version: 11. Mar 2018
 
 ; This file is included by taliforth.asm
 
@@ -101,18 +101,19 @@
 .alias state     user0+22  ; STATE: -1 compile, 0 interpret
 .alias base      user0+24  ; number radix, default 10
 .alias nc_limit  user0+26  ; limit for Native Compile size
-.alias tmpbranch user0+28  ; temp storage for 0BRANCH, BRANCH only
-.alias tmp1      user0+30  ; temporary storage
-.alias tmp2      user0+32  ; temporary storage
-.alias tmp3      user0+34  ; temporary storage (especially for print)
-.alias tmpdsp    user0+36  ; temporary DSP (X) storage
-.alias tmptos    user0+38  ; temporary TOS storage
-.alias tohold    user0+40  ; pointer for formatted output 
-.alias scratch   user0+42  ; 8 byte scratchpad (see UM/MOD)
+.alias uf_strip  user0+28  ; flag to strip underflow detection code
+.alias tmpbranch user0+30  ; temp storage for 0BRANCH, BRANCH only
+.alias tmp1      user0+32  ; temporary storage
+.alias tmp2      user0+34  ; temporary storage
+.alias tmp3      user0+36  ; temporary storage (especially for print)
+.alias tmpdsp    user0+38  ; temporary DSP (X) storage
+.alias tmptos    user0+40  ; temporary TOS storage
+.alias tohold    user0+42  ; pointer for formatted output 
+.alias scratch   user0+44  ; 8 byte scratchpad (see UM/MOD)
 
-; Last address used for variables:   0050 ($0032)
+; Last address used for variables:   0052 ($0034)
 ; First usable Data Stack location: $0077  (0119)
-; Bytes avaible for Data Stack: 69 --> 32 16-bit cells
+; Bytes avaible for Data Stack: 67 --> 33 16-bit cells
 
 
 ; ASCII CHARACTERS

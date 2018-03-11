@@ -358,9 +358,14 @@ nt_abort:
         .word nt_abort_quote, xt_abort, z_abort
         .byte "abort"
 
+nt_uf_strip:
+        .byte 8, 0
+        .word nt_abort, xt_uf_strip, z_uf_strip
+        .byte "uf-strip"
+
 nt_nc_limit:
         .byte 8, 0
-        .word nt_abort, xt_nc_limit, z_nc_limit
+        .word nt_uf_strip, xt_nc_limit, z_nc_limit
         .byte "nc-limit"
 
 nt_always_native:

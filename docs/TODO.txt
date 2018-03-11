@@ -4,7 +4,6 @@ First version: 19. Jan 2014
 This version: 11. Mar 2016
 
 TODO POST-ALPHA ("ALL WORDS DO SOMETHING, USUALLY EVEN THE RIGHT THING")
-        - Allow stripping of underflow checks based on UF flag
         - Add size of words to source code
         - Invent tests for COUNT (and others)
         - Test all words, adding any new tests to documentation
@@ -44,6 +43,7 @@ TODO AT SOME POINT
 -----------------------------------------------------------------------
 ALREADY DONE MAJOR CHANGES (LAST ON TOP WITH DATE)
 
+        - 11. Mar 2018 - Allow stripping of underflow check for native compile
         - 11. Mar 2018 - Added native compiling special cases
         - 01. Mar 2018 - Enable assembly of Forth text files
         - 26. Feb 2018 - Added Prime, Fact, Fib, Mandelbrot to user_words.asm
