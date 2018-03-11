@@ -56,9 +56,10 @@ xt_cold:
                 sta base
                 stz base+1
 
-                ; We start out with smaller words with less than 10 bytes being
-                ; natively compiled
-                lda #10
+                ; We start out with smaller words with less than 20 bytes being
+                ; natively compiled. This number should at least cover DROP
+                ; with 11 bytes and DUP with 19 bytes
+                lda #20
                 sta nc_limit
                 stz nc_limit+1
  
