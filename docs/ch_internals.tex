@@ -331,42 +331,27 @@ However, \texttt{quit} now calls \texttt{refill} to get the input.
 
 Tali Forth accepts input\index{input|textbf} lines of up to 256 characters. The
 address of the current input buffer\index{current input buffer} is stored in
-\texttt{cib}\index{cib|see {current input buffer}} and is either
-\texttt{ibuffer1} or \texttt{ibuffer2}, each of which is 256 bytes long. The
-length of the current buffer is stored in \texttt{ciblen} -- this is the address
-that \texttt{>in}\index{>in@\texttt{>in}} returns. 
-
-When a new line is entered, the address in \texttt{cib} is swapped, and the
-contents of \texttt{ciblen} are moved to \texttt{piblen} (for `previous input
-buffer'). \texttt{ciblen} is set to zero.  When the previous entry is
-requested, the address in \texttt{cib} is swapped back, and \texttt{ciblen} and
-\texttt{piblen} are swapped as well. \texttt{source} by default returns
-\texttt{cib} and \texttt{ciblen} as the address and length of the input buffer. 
-
-(http://forth.sourceforge.net/standard/dpans/a0006.htm)
-(http://forth.sourceforge.net/standard/dpans/dpansa6.htm
-
-At some point, this system might be expanded to a real history
-list.\index{history list}
+\texttt{cib}\index{cib|see {current input buffer}}.  The length of the current
+buffer is stored in \texttt{ciblen} -- this is the address that
+\texttt{>in}\index{>in@\texttt{>in}} returns.
+\texttt{source}\index{source@\texttt{source}} by default returns \texttt{cib}
+and \texttt{ciblen} as the address and length of the input buffer. 
 
 
-\subsection{\texttt{save-input} and \texttt{restore-input}}
+\subsection{\texttt{evaluate}}\index{evaluate@\texttt{evaluate}}
 
-(see http://forth.sourceforge.net/standard/dpans/dpansa6.htm)
+\texttt{evaluate} is used to execute commands that are in a string. A simple
+example would be:
 
+\begin{lstlisting}[frame=lines]
+        s" 1 2 + ." evaluate
+\end{lstlisting}
 
-
-\subsection{\texttt{evaluate}}
-
-(Automatically calls SAVE-INPUT and RESTORE-INPUT)
-(http://forth.sourceforge.net/standard/dpans/a0006.htm)
-
-
-\subsection{\texttt{state}}
-
-http://forth.sourceforge.net/standard/dpans/dpans6.htm)
-
-
+\noindent Tali Forth uses \texttt{evaluate} to load high-level Forth words from
+the file
+\texttt{forth\_words.asc}\index{forth\_words.asc@\texttt{forth\_words.asc}} and
+extra, user-defined words from
+\texttt{user\_words.asc}\index{user\_words.asc@\texttt{user\_words.asc}}. 
 
 % ---------------------------------------
 \section{\texttt{create}/\texttt{does>}}
@@ -376,29 +361,27 @@ http://forth.sourceforge.net/standard/dpans/dpans6.htm)
 \texttt{create/does>} is the most complex, but also most powerful part of Forth.
 Understanding how it works in Tali Forth is important if you want to be able to
 modify the code. In this text, we walk through the generation process for a
-Subroutine Threaded Code (STC) such as Tali Forth. For a more general take, see
-Brad Rodriguez' series of articles at
+subroutine threaded code (STC)\index{threading} such as Tali Forth. For a more
+general take, see Brad Rodriguez' series of articles at
 \href{http://www.bradrodriguez.com/papers/moving3.htm}{http://www.bradrodriguez.com/papers/moving3.htm}.
 There is a discussion of this walkthrough at
 \href{http://forum.6502.org/viewtopic.php?f=9\&t=3153}{http://forum.6502.org/viewtopic.php?f=9\&t=3153}. 
 
 We start with the following standard example, the Forth version of
-\texttt{constant}: 
+\texttt{constant}:\index{constant@\texttt{constant}}. 
 
 \begin{lstlisting}[frame=lines]
         : constant create , does> @ ; 
 \end{lstlisting}
 
-\noindent We examine this in three phases or "sequences", based on Derick and Baker (see
-Rodriguez for details):   
+\noindent We examine this in three phases or "sequences", following Rodriguez
+based on\cite{derickbaker}:
 
+\subsubsection{Sequence 1: Compiling the word \texttt{constant}}
 
-\subsubsection{SEQUENCE I: Compiling the word \texttt{CONSTANT}}
-
-CONSTANT is a "defining word", one that makes new words. In pseudocode, and
+\texttt{constant} is a `defining word', one that makes new words. In pseudocode, and
 ignoring any compilation to native 65c02 assembler, the above compiles to: 
 \begin{lstlisting}[frame=lines]
-        ((Header "CONSTANT")) 
         jsr CREATE
         jsr COMMA
         jsr (DOES>)         ; from DOES>
@@ -407,13 +390,16 @@ ignoring any compilation to native 65c02 assembler, the above compiles to:
         rts
 \end{lstlisting}
 
-\noindent To make things easier to explain later, we've added the labels `a' and `b' in
-the listing. Note that \texttt{does>} is an immediate word that adds not one, but two
-subroutine jumps, one to \texttt{(does>)} and one to \texttt{dodoes}, which is a pre-defined
-system routine like \texttt{dovar}. we'll get to it later.
+\noindent To make things easier to explain later, we've added the labels `a' and
+`b' in the listing.\footnote{This example uses the word \texttt{(does>)}, which
+in Tali Forth 2 is actually an internal routine that does not appear as a
+separate word. This version is easier to explain.} \texttt{does>} is an
+immediate word that adds not one, but two subroutine jumps, one to
+\texttt{(does>)} and one to \texttt{dodoes}, which is a pre-defined system
+routine like \texttt{dovar}. We'll discuss those later.
 
 In Tali Forth, a number of words such as \texttt{defer} are
-`hand-compiled', that is, instead of using forth such (in this case, 
+`hand-compiled', that is, instead of using forth such as
 
 \begin{lstlisting}[frame=lines]
         : defer create ['] abort , does> @ execute ; 
@@ -424,7 +410,8 @@ code). In these cases, we need to use \texttt{(does>)} and \texttt{dodoes}
 instead of \texttt{does>} as well.
 
 
-\subsubsection{SEQUENCE II: Executing the word CONSTANT / creating LIFE }
+\subsubsection{Sequence 2: Executing the word \texttt{constant}/creating
+\texttt{life}}
 
 Now when we execute
 
@@ -432,28 +419,30 @@ Now when we execute
         42 constant life
 \end{lstlisting}
 
-\noindent this pushes the RTS of the calling routine -- call it `main' -- to the 65c02's
-stack (the Return Stack, as Forth calls it), which now looks like this:
+\noindent this pushes the \texttt{rts} of the calling routine -- call it `main'
+-- to the 65c02's stack (the Return Stack, as Forth calls it), which now looks
+like this:
 
 \begin{lstlisting}[frame=lines]
-        ((1)) RTS               ; to main routine 
+        (1) RTS               ; to main routine 
 \end{lstlisting}
 
 \noindent Without going into detail, the first two subroutine jumps of \texttt{constant} give us
 this word: 
 
 \begin{lstlisting}[frame=lines]
-        ((Header "LIFE"))
+        (Header "LIFE")
         jsr DOVAR               ; in CFA, from LIFE's CREATE
         4200                    ; in PFA (little-endian)
 \end{lstlisting}
 
-\noindent Next, we \texttt{jsr} to \texttt{(does>)}. The address that this pushes on the Return Stack is
-the instruction of \texttt{constant} we had labeled `a'. 
+\noindent Next, we \texttt{jsr} to \texttt{(does>)}. The address that this
+pushes on the Return Stack is the instruction of \texttt{constant} we had
+labeled `a'. 
 
 \begin{lstlisting}[frame=lines]
-        ((2)) RTS to CONSTANT ("a") 
-        ((1)) RTS to main routine 
+        (2) RTS to CONSTANT ("a") 
+        (1) RTS to main routine 
 \end{lstlisting}
 
 \noindent Now the tricks start. \texttt{(does>)} takes this address off the stack and uses
@@ -461,19 +450,19 @@ it to replace the \texttt{dovar jsr} target in the CFA of our freshly created
 \texttt{life} word. We now have this: 
 
 \begin{lstlisting}[frame=lines]
-        ((Header "LIFE"))
+        (Header "LIFE")
         jsr a                   ; in CFA, modified by (DOES>)
    c:   4200                    ; in PFA (little-endian)
 \end{lstlisting}
 
 \noindent Note we added a label `c'. Now, when \texttt{(does>)} reaches its own
-\texttt{rts}, it finds the RTS to the main routine on its stack. This is Good
-Thingi\textsuperscript{TM}, because it aborts the execution of the rest of
-\texttt{constant}, and we don't want to do \texttt{dodoes} or \texttt{fetch}
+\texttt{rts}, it finds the \texttt{rtrs} to the main routine on its stack. This
+is Good Thingi\textsuperscript{TM}, because it aborts the execution of the rest
+of \texttt{constant}, and we don't want to do \texttt{dodoes} or \texttt{fetch}
 now.  We're back at the main routine. 
 
 
-\subsubsection{SEQUENCE III: Executing LIFE}
+\subsubsection{Sequence 3: Executing \texttt{life}}
 
 Now we execute the word \texttt{life} from our `main' program. In a STC Forth
 such as Tali Forth, this executes a subroutine jump.
@@ -486,7 +475,7 @@ such as Tali Forth, this executes a subroutine jump.
 on the 65c02's stack: 
 
 \begin{lstlisting}[frame=lines]
-        ((1)) RTS to main
+        (1) RTS to main
 \end{lstlisting}
 
 \noindent The CFA of \texttt{life} executes a subroutine jump to label `a' in
@@ -494,8 +483,8 @@ on the 65c02's stack:
 stack:
 
 \begin{lstlisting}[frame=lines]
-        ((2)) RTS to LIFE ("c")
-        ((1)) RTS to main
+        (2) RTS to LIFE ("c")
+        (1) RTS to main
 \end{lstlisting}
 
 \noindent This \texttt{jsr} to a lands us at the subroutine jump to \texttt{dodoes}, so
@@ -504,14 +493,14 @@ given this instruction the label `b'. After all of this, we have three addresses
 on the 65c02's stack: 
 
 \begin{lstlisting}[frame=lines]
-        ((3)) RTS to CONSTANT ("b") 
-        ((2)) RTS to LIFE ("c") 
-        ((1)) RTS to main
+        (3) RTS to CONSTANT ("b") 
+        (2) RTS to LIFE ("c") 
+        (1) RTS to main
 \end{lstlisting}
 
 \noindent \texttt{dodoes} pops address `b' off the 65c02's stack and puts it in a nice
 safe place on Zero Page, which we'll call `z'. More on that in a moment. First,
-\texttt{dodoes}.  pops the \texttt{rts} to \texttt{life}. This is `c', the
+\texttt{dodoes} pops the \texttt{rts} to \texttt{life}. This is `c', the
 address of the PFA or \texttt{life}, where we stored the payload of this
 constant. Basically, \texttt{dodoes} performs a \texttt{dovar} here, and
 pushes `c' on the Data Stack. Now all we have left on the 65c02's stack is the
@@ -541,7 +530,6 @@ where we started. And that's all.
 Put together, this is what we have to code: 
 
 \begin{description}
-
         \item [\texttt{does>}:] Compiles a subroutine jump to \texttt{(does>)},
                 then compiles a subroutine jump to \texttt{dodoes}.
 
@@ -552,14 +540,13 @@ Put together, this is what we have to code:
         \item [\texttt{dodoes}:] Pop stack (\texttt{constant}'s PFA), increase
                 address by one, store on Zero Page; pop stack (\texttt{life}'s
                 PFA), increase by one, store on Data Stack; \texttt{jmp} to
-                address we stored in Zero Page. 
-
+                address we stored in Zero Page.\index{Zero Page} 
 \end{description}
 
 Remember we have to increase the addresses by one because of the way
 \texttt{jsr} stores the return address for \texttt{rts} on the stack on the
 65c02: It points to the third byte of the \texttt{jsr} instruction itself, not
-the actual return address.  This can be annoying, because it requires a sequence
+the actual return address. This can be annoying, because it requires a sequence
 like:
 
 \begin{lstlisting}[frame=lines]

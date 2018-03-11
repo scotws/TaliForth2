@@ -14,7 +14,7 @@
  8017  A9 0A     LDA  #$0A
  8019  85 18     STA  $18
  801B  64 19     STZ  $19
- 801D  A9 0A     LDA  #$0A
+ 801D  A9 14     LDA  #$14
  801F  85 1A     STA  $1A
  8021  64 1B     STZ  $1B
  8023  64 1C     STZ  $1C

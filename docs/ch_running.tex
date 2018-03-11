@@ -8,6 +8,8 @@
         -- Charles Moore,\index{Moore, Charles} \textit{Masterminds of Programming}\cite{biancuzzi09}
 \end{flushright}
 
+
+% -------------------------------------------------
 \section{Booting}\texttt{booting}
 
 Out of the box, Tali Forth boots a minimal kernel\texttt{kernel}\index{kernel}
@@ -36,6 +38,8 @@ level Forth words\index{Forth words} in either \texttt{forth\_words.fs} or
 \texttt{user\_words.fs}, the boot process might fail with a variant of the error
 message `unknown word'. The built-in, native words should still work.
 
+
+% -------------------------------------------------
 \section{Available words}
 
 Tali Forth comes with the following Forth words\index{Forth words} out of the
@@ -77,6 +81,23 @@ words before \texttt{drop} are those that are defined in high-level Forth. For
 more information on the words, use the \texttt{see}\index{see@\texttt{see}}
 command.
 
+Note that the built-in words are lower case\index{case!lower}. Newly defined
+words can be in any case and will be distinct -- `KASUMI' is a different word
+than `Kasumi'.\index{Goto, Kasumi}
+
+
+\subsection{Standards}
+
+Tali Forth is orientated on ANSI Forth, but (currently) doesn't contain the
+complete set of even the core words. Tali also adopted some words from
+Gforth\index{Gforth} such as \texttt{bounds}\index{bounds@\texttt{bounds}}. In
+practical terms, Tali aims to be a subset of Gforth: If a program runs on Tali,
+it should run on Gforth the same way or have a very good reason not to. 
+
+In addition, there are a few words that are specific to Gforth such as 
+\texttt{nc-limit}\index{nc-limit@\texttt{nc-limit}}. 
+
+% -------------------------------------------------
 \section{Native compiling}\index{compiling!native}
 
 As the name says, subroutine threaded code\index{threading} encodes the words as
@@ -87,7 +108,7 @@ jump.
 
 The parameter \texttt{nc-limit}\index{nc-limit@\texttt{nc-limit}} sets the limit
 of how small words have to be to be natively compiled. To get the current value
-(usually 10 or 20), check the value of the system variable: 
+(usually 20), check the value of the system variable: 
 
 \begin{lstlisting}[frame=lines]
         nc-limit ?
@@ -102,6 +123,8 @@ machine code like any other Forth variable:
 
 To complete turn off native compiling, set this value to zero.
 
+
+% -------------------------------------------------
 \section{Underflow detection}\index{underflow!detection}
 
 When a word tries to access more words on the stack than it is holding, an
@@ -116,6 +139,7 @@ this, set the system variable
 detection in the built-in words. Also, words with underflow detection which are
 not included in new words through native compiling will also retain their tests.
 
+
 % -------------------------------------
 \section{Restarting}
 
@@ -126,7 +150,6 @@ restarting completely.
 
 
 % -------------------------------------
-
 \section{Gotchas}
 
 Tali has a 16-bit cell size (use \texttt{1 cells 8 \* .} to get the cells size in
