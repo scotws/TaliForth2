@@ -473,7 +473,7 @@ z_align:        rts             ; stripped out during native compile
 
 
 ; ## ALLOT ( n -- ) "Reserve or release memory"
-; ## "allot"  src: ANSI core  b: 90  c: TBA  status: tested
+; ## "allot"  src: ANSI core  b: TBA  c: TBA  status: tested
         ; """Reserve a certain number of bytes (not cells) or release them.
         ; If n = 0, do nothing. If n is negative, release n bytes, but only
         ; to the beginning of the Dictionary. If n is positive (the most
@@ -489,45 +489,7 @@ xt_allot:
                 lda #11                 ; underflow
                 jmp error
 *
-                ; if we were given a zero, forget the whole thing
-                lda 0,x
-                ora 1,x
-                beq _done
-
-                ; if we have a positive value, reserve space
-                lda 1,x
-                bmi _negative
-
-                ; add positiv value
-                clc
-                lda 0,x
-                adc cp
-                sta cp
-
-                lda 1,x
-                adc cp+1
-                sta cp+1
-
-                ; make sure we haven't granted more than we have
-                sec
-                lda #<cp_end            
-                sbc cp                  ; only need the carry
-                lda #>cp_end
-                sbc cp+1
-                bpl _done               ; we're good
-
-                ; we're not good, so we fail hard. This is going to be rare,
-                ; and so it's not worth keeping the old values around to
-                ; restore them. Instead, we reserve max memory
-                lda #<cp_end
-                sta cp
-                lda #>cp_end
-                sta cp+1
-
-                lda #1                  ; error code for ALLOT
-                jmp error
-_negative:
-                ; we were given a negative value, release space
+                ; cp adjust code is the same for negative, zero or positive
                 clc
                 lda cp
                 adc 0,x
@@ -537,29 +499,48 @@ _negative:
                 adc 1,x
                 sta cp+1
 
+                ; did we just reserve bytes or free them?
+                lda 1,x
+                bmi _negative
+
+                ; did we just grant more space than we have available?
+                ldy #<cp_end            
+                cpy cp
+                lda #>cp_end
+                sbc cp+1
+                bcs _done               ; we're good
+
+                ; we're not good, so we fail hard. This is going to be rare,
+                ; and so it's not worth keeping the old values around to
+                ; restore them. Instead, we reserve max memory
+                sty cp
+                lda #>cp_end
+                sta cp+1
+
+                lda #1                  ; error code for ALLOT
+                jmp error
+_negative:
                 ; Free at most to the beginning of the Dictionary space. Note
                 ; this completely destroys the user's Dictionary. Currently,
                 ; this leaves the Dictionary Pointer dangling, so this is probably
                 ; not the best solution
                 ; TODO find the best solution
-                sec
-                lda #<cp0
-                sbc cp                  ; only need carry
+                ldy #<cp0
+                cpy cp
                 lda #>cp0
                 sbc cp+1
-                bmi _done               ; CP still > than CP0, we're good
+                bcc _done               ; CP still > than CP0, we're good
 
                 ; we're totally not good, set CP to CP0
-                lda #<cp0
-                sta cp
+                sty cp
                 lda #>cp0
                 sta cp+1                ; drop through to _done
-
-_done:          inx
+_done:
                 inx
-
-z_allot:        rts
-.scend
+                inx
+z_allot:
+                rts
+  .scend
 
 
 ; ## ALWAYS_NATIVE ( -- ) "Flag last word as always natively compiled"
