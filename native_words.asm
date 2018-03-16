@@ -1408,7 +1408,7 @@ z_compile_only: rts
 
 
 ; ## CONSTANT ( n "name" -- ) "Define a constant"
-; ## "constant"  src: ANSI core  b: 82  c: TBA  status: tested
+; ## "constant"  src: ANSI core  b: TBA  c: TBA  status: tested
         ; """Forth equivalent is  CREATE , DOES> @  but we do
         ; more in assembler and let CREATE do the heavy lifting.
         ; See http://www.bradrodriguez.com/papers/moving3.htm for
@@ -1422,9 +1422,10 @@ xt_constant:
 *
                 jsr xt_create
 
-                ; CREATE by default installs a subroutine jump to DOVAR,
+            	; CREATE by default installs a subroutine jump to DOVAR,
                 ; but we want DOCONST for constants. Go back two bytes and
                 ; replace the subroutine jump target
+                sec
                 lda cp
                 sbc #2
                 sta tmp1
@@ -1434,12 +1435,9 @@ xt_constant:
 
                 lda #<doconst   ; LSB of DOCONST
                 sta (tmp1)
-                inc tmp1
-                bne +
-                inc tmp1+1
-*
+                ldy #1
                 lda #>doconst   ; MSB of DOCONST
-                sta (tmp1)
+                sta (tmp1),y
 
                 ; Now we save the constant number itself in the next cell
                 jsr xt_comma            ; drop through to adjust_z
@@ -1453,28 +1451,19 @@ adjust_z:
 
                 ; z_word is six bytes further down
                 lda 0,x
-                clc
-                adc #6
                 sta tmp1
                 lda 1,x
-                adc #0          ; only need carry
                 sta tmp1+1
 
-                lda (tmp1)
+                ldy #6
+                lda (tmp1),y
                 clc
                 adc #2
-                sta tmp2
-                ldy #1
+                sta (tmp1),y
+                iny
                 lda (tmp1),y
                 adc #0          ; only need carry
-
-                tay             ; hold on to MSB while we update target
-                inc tmp1
-                bne +
-                inc tmp1
-*               
-                tya
-                sta (tmp1)
+                sta (tmp1),y
               
                 inx
                 inx
