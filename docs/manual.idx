@@ -215,8 +215,12 @@
 \indexentry{Gforth|hyperpage}{40}
 \indexentry{recursion|hyperpage}{40}
 \indexentry{recurse@\texttt{recurse}|hyperpage}{40}
-\indexentry{math|hyperpage}{40}
-\indexentry{fm/mod@\texttt{fm/mod}|hyperindexformat{\textbf}}{40}
+\indexentry{pick@\texttt{pick}|hyperpage}{40}
+\indexentry{pick@\texttt{dup}|hyperpage}{40}
+\indexentry{over@\texttt{over}|hyperpage}{40}
+\indexentry{Mass Effect@\textit{Mass Effect}|hyperpage}{40}
+\indexentry{math|hyperpage}{41}
+\indexentry{fm/mod@\texttt{fm/mod}|hyperindexformat{\textbf}}{41}
 \indexentry{sm/rem@\texttt{sm/rem}|hyperindexformat{\textbf}}{41}
 \indexentry{6502.org|hyperpage}{42}
 \indexentry{Barry, Mike|hyperpage}{42}

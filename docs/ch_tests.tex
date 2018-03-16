@@ -307,6 +307,30 @@ Also, the classic (here from the ANSI Forth documentation):
 
 \noindent For 5, the result should be 120.
 
+% ----------------------------------------
+
+\section{Stack Stuff}
+
+\subsection{\texttt{pick}}\index{pick@\texttt{pick}}
+
+Use of \texttt{pick} is considered bad form in Forth, but it's a word, so we
+test for it. The short version: \texttt{0 pick} should be the same as
+\texttt{dup}\index{pick@\texttt{dup}} and \texttt{1 pick} the same as
+\texttt{over}\index{over@\texttt{over}}. See this brief session:
+
+\begin{lstlisting}[frame=lines]
+	1 2 3 .s <3> 1 2 3  ok
+	0 pick .s <4> 1 2 3 3  ok
+	drop  ok
+	1 pick .s <4> 1 2 3 2  ok
+	drop  ok
+	2 pick .s <4> 1 2 3 1  ok
+\end{lstlisting}
+
+\noindent Another way to think about this is that the TOS is `element 0', which
+goes nicely with the \textit{Mass Effect}\index{Mass Effect@\textit{Mass
+Effect}} theme, \href{http://masseffect.wikia.com/wiki/Element\_Zero}{of
+course}.
 
 % ----------------------------------------
 
