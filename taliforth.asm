@@ -1,7 +1,7 @@
 ; Tali Forth 2 for the 65c02
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 19. Jan 2014 (Tali Forth)
-; This version: 04. Mar 2018
+; This version: 08. Apr 2018
 
 ; This is the main file for Tali Forth 2
 
@@ -65,25 +65,23 @@ cmpl_word:
                 pla
                 sta tmp1+1      ; MSB of return address
 
-                ldy #0
                 pla             ; LSB of word to compile
-                sta (cp),y
-                iny
+                sta (cp)
+                ldy #1
                 pla             ; MSB of word to compile
                 sta (cp),y
 
-                lda cp
-                clc
-                adc #2
+                tya
+                sec
+                adc cp
                 sta cp
                 bcc +
                 inc cp+1
 *
-                ; restore return address
-                lda tmp1+1      ; MSB
-                pha
-                lda tmp1        ; LSB
-                pha
+                lda tmp1+1
+                pha             ; MSB of return address
+                lda tmp1
+                pha             ; LSB of return address
 
 		rts
 
