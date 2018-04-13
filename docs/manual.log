@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.3.2)  16 MAR 2018 12:46
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.3.2)  13 APR 2018 02:02
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -620,9 +620,9 @@ type1/adobe/sourcecodepro/SourceCodePro-Bold.pfb></usr/share/texlive/texmf-dist
 /fonts/type1/adobe/sourcecodepro/SourceCodePro-It.pfb></usr/share/texlive/texmf
 -dist/fonts/type1/adobe/sourcecodepro/SourceCodePro-Regular.pfb></usr/share/tex
 live/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
-Output written on manual.pdf (45 pages, 441541 bytes).
+Output written on manual.pdf (45 pages, 441656 bytes).
 PDF statistics:
- 2261 PDF objects out of 2487 (max. 8388607)
+ 2262 PDF objects out of 2487 (max. 8388607)
  1580 compressed objects within 16 object streams
  606 named destinations out of 1000 (max. 500000)
  806 words of extra memory for PDF output out of 10000 (max. 10000000)
