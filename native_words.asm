@@ -152,7 +152,7 @@ xt_cold:
 
 
 ; ## ABORT ( -- ) "Reset the Data Stack and restart the CLI"
-; ## "abort"  src: ANSI core  b: TBA  c: TBA  status: fragment
+; ## "abort"  src: ANSI core  b: TBA  c: TBA  status: coded
         ; """Clear Data Stack and continue into QUIT. We can jump here via
         ; subroutine if we want to because we are going to reset the 65c02's
         ; stack pointer (the Return Stack) anyway during QUIT. Note we don't
@@ -2258,7 +2258,7 @@ does_runtime:
 
 
 ; ## DOT ( u -- ) "Print TOS"
-; ## "."  src: ANSI core  b: TBA  c: TBA  status: TBA
+; ## "."  src: ANSI core  b: TBA  c: TBA  status: coded
 .scope
 xt_dot:         
                 cpx #dsp0-1
@@ -4028,7 +4028,7 @@ z_minus_trailing:
 
 
 ; ## MOVE ( addr1 addr2 u -- ) "Copy bytes"
-; ## "move"  src: ANSI core  b: TBA  c: TBA  status: TBA
+; ## "move"  src: ANSI core  b: TBA  c: TBA  status: coded
         ; """Copy u "address units" from addr1 to addr2. Since our address
         ; units are bytes, this is just a front-end for CMOVE and CMOVE>. This
         ; is actually the only one of these three words that is in the CORE
@@ -4201,7 +4201,7 @@ z_nip:          rts
 
 
 ; ## NOT_EQUALS ( n m -- f ) "Return a true flag if TOS != NOS"
-; ## "<>"  src: ANSI core ext  b: TBA  c: TBA  status: TBA
+; ## "<>"  src: ANSI core ext  b: TBA  c: TBA  status: coded
         ; """This is just a variant of EQUAL, we code it separately
         ; for speed.
         ; """
@@ -4273,7 +4273,7 @@ z_not_rote:     rts
 
 
 ; ## NUMBER ( addr u -- u | d ) "Convert a number string"
-; ## "number"  src: Tali Forth  b: TBA  c: TBA  status: TBA
+; ## "number"  src: Tali Forth  b: TBA  c: TBA  status: coded
         ; """Convert a number string to a double or single cell number. This
         ; is a wrapper for >NUMBER and follows the convention set out in the 
         ; "Forth Programmer's Handbook" (Conklin & Rather) 3rd edition p. 87.
@@ -5017,7 +5017,7 @@ z_plus_store:   rts
 
 
 ; ## POSTPONE ( -- ) "<TBA>"
-; ## "postpone"  src: ANSI core  b: TBA  c: TBA  status: TBA
+; ## "postpone"  src: ANSI core  b: TBA  c: TBA  status: coded
         ; """Add the compilation behavior of a word to a new word at
         ; compile time. If the word that follows it is immediate, include
         ; it so that it will be compiled when the word being defined is
@@ -5642,7 +5642,7 @@ z_slash_string: rts
 .scend
 
 ; ## SLITERAL ( addr u -- )( -- addr u ) "Compile a string for runtime"
-; ## "sliteral"  src: ANSI string  b: TBA  c: TBA  status: TBA
+; ## "sliteral"  src: ANSI string  b: TBA  c: TBA  status: coded
         ; """Currently, we only copy strings of up to 255 characters
         ; """
 .scope
