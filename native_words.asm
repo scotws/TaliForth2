@@ -4676,7 +4676,7 @@ xt_page:
 z_page:         rts
 
 
-; ## PARSE-NAME ( "name" -- addr u ) "Parse the input"
+; ## PARSE_NAME ( "name" -- addr u ) "Parse the input"
 ; ## "parse-name"  src: ANSI core ext  b: TBA  c: TBA  status: coded
         ; """Find next word in input string, skipping leading spaces. This is 
         ; a special form of PARSE and drops through to that word. See PARSE 
@@ -5603,7 +5603,7 @@ z_sign:         rts
 .scend
 
 
-; ## SLASH-STRING ( addr u n -- addr u ) "Shorten string by n"
+; ## SLASH_STRING ( addr u n -- addr u ) "Shorten string by n"
 ; ## "/string"  src: ANSI string b: TBA  c: TBA  status: coded
         ; """Forth code is
         ; : /STRING ( ADDR U N -- ADDR U ) ROT OVER + ROT ROT - ; 
@@ -5915,7 +5915,7 @@ z_source_id:    rts
 
 
 ; ## SPACE ( -- ) "Print a single space"
-; ## "space"  src: ANSI core  b: 5  c: TBA  status: coded
+; ## "space"  src: ANSI core  b: 5  c: TBA  status: tested
 xt_space:      
                 lda #AscSP
                 jsr emit_a

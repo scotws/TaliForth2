@@ -8,19 +8,56 @@
 comments in native_words.asm
 """
 
-# TODO Instead of taking the word size in bytes from the headers in the source
-# code, we should automatically calculate them from the difference of xt_word
-# and z_word in docs/ophis_labelmap.txt 
-
 import sys
 
 SOURCE = '../native_words.asm'
+LABELS = '../docs/ophis_labelmap.txt'
 MARKER = '; ## '
+
+labels = {}
 
 # Counters for statistics. We just brutally use global variables for these
 not_tested = 0
-missing_size = 0
-missing_cycles = 0
+
+
+def get_sizes(label_dict):
+    """Use the Ophis labelmap to calculate the length of the native words
+    in bytes. Returns a dictionary that contains them based on the
+    names. Assumes lines in label map are of the format
+    "$0000 | cp                      | definitions.asm:90"
+    """
+
+    with open(LABELS) as f:
+        raw_list = f.readlines()
+
+    for line in raw_list:
+        ws = line.split()
+        
+        if not ws[2].startswith('xt_') and not ws[2].startswith('z_'):
+            continue
+
+        addr_hex = ws[0].replace('$', '0x')
+        addr = int(addr_hex, 16)
+
+        label_dict[ws[2]] = addr
+
+    return label_dict
+
+
+def calc_size(word, raw_labels=labels):
+    """Given the lowercase formal name of a Forth word, calculate the
+    size of the code in bytes by subtracting the start address xt_word
+    from the end address z_word.
+    """
+    start = 'xt_'+word
+    end = 'z_'+word
+
+    start_addr = raw_labels[start]
+    end_addr = raw_labels[end]
+
+    size = end_addr-start_addr
+
+    return size
 
 
 def print_intro():
@@ -36,21 +73,18 @@ def print_intro():
 
 def print_footer(size):
     """Print statistical information at bottom of table"""
-    global not_tested, missing_size, missing_cycles
+    global not_tested
 
     print()
-    print('Found **{0}** native words in `native_words.asm`'.format(size))
-    print()
-    print('Of those, **{0}** are not marked as "tested",'.format(not_tested))
-    print('**{0}** are missing size information,'.format(missing_size))
-    print('and **{0}** are missing cycle information'.format(missing_cycles))
+    print('Found **{0}** native words in `native_words.asm`.'.format(size))
+    print('Of those, **{0}** are not marked as "tested".'.format(not_tested))
     print()
 
 
 def print_header():
     """Print the header of the table in markup"""
-    print('| NAME | FORTH WORD | SOURCE | BYTES | CYCLES | STATUS |')
-    print('| :--- | :--------- | :---   | ----: | -----: | :----  |')
+    print('| NAME | FORTH WORD | SOURCE | BYTES | STATUS |')
+    print('| :--- | :--------- | :---   | ----: | :----  |')
 
 
 def print_line(fl, sl):
@@ -59,19 +93,23 @@ def print_line(fl, sl):
     because it all goes to hell if the format of the comment strings in
     the header changes
     """
-    global not_tested, missing_size, missing_cycles
+    global not_tested
 
     HAVE_TEST = 'tested'
     MISSING = 'TBA'
-    TEMPLATE = '| {0} | {1} | {2} | {3} | {4} | {5} |'
+    TEMPLATE = '| {0} | {1} | {2} | {3} | {4} |'
 
     l1 = fl[len(MARKER):].split()
     l2 = sl[len(MARKER):].split()
 
     name = l1[0]
     word = '`{0}`'.format(l2[0][1:-1]) # Include backticks
-    size = l2[-5]
-    cycles = l2[-3]
+
+    # Size requires looking up the start and end addresses of the code. We can
+    # safely assume that we have both xt_word and z_word or the code will not
+    # compile at all
+    size = calc_size(name.lower())
+
     status = l2[-1]
 
     # Source is a little bit trickier because it can be more than one word
@@ -80,16 +118,10 @@ def print_line(fl, sl):
     source = sl[s_start:s_end]
 
     # Statistics
-    if size == MISSING:
-        missing_size += 1
-
-    if cycles == MISSING:
-        missing_cycles += 1
-
     if status != HAVE_TEST:
         not_tested += 1
 
-    print(TEMPLATE.format(name, word, source, size, cycles, status))
+    print(TEMPLATE.format(name, word, source, size, status))
 
 
 def main():
@@ -112,6 +144,8 @@ def main():
 
     use_list = iter(data_list)
     number_of_words = int(len(data_list)/2)
+
+    word_labels = get_sizes(labels)
 
     print_intro()
     print_header()
