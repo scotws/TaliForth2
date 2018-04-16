@@ -91,16 +91,20 @@ def print_line(fl, sl):
     """Given the first and second line as strings, return a string with
     formatted information for WORDLIST.md. Note this is very brittle code
     because it all goes to hell if the format of the comment strings in
-    the header changes
+    the header changes. Currently, assumes
+
+        ; ## COLD ( -- ) "Reset the Forth system"
+        ; ## "cold"  coded  Tali Forth
+
+    as line one and line two
     """
     global not_tested
 
     HAVE_TEST = 'tested'
-    MISSING = 'TBA'
     TEMPLATE = '| {0} | {1} | {2} | {3} | {4} |'
 
     l1 = fl[len(MARKER):].split()
-    l2 = sl[len(MARKER):].split()
+    l2 = sl[len(MARKER):].split(maxsplit=2)
 
     name = l1[0]
     word = '`{0}`'.format(l2[0][1:-1]) # Include backticks
@@ -110,12 +114,8 @@ def print_line(fl, sl):
     # compile at all
     size = calc_size(name.lower())
 
-    status = l2[-1]
-
-    # Source is a little bit trickier because it can be more than one word
-    s_start = sl.find('src:')+5
-    s_end = sl.find('b:')-2
-    source = sl[s_start:s_end]
+    status = l2[1]
+    source = l2[2]
 
     # Statistics
     if status != HAVE_TEST:

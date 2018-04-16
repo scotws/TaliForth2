@@ -47,9 +47,9 @@ and user-defined words coded in Forth are in `forth_code`.
 | D_PLUS | `d+` | ANSI double | 38 | coded |
 | D_TO_S | `d>s` | ANSI double | 11 | coded |
 | DABS | `dabs` | ANSI double | 36 | coded |
-| DECIMAL | `decimal` | ANSI core | 6 | coded |
+| DECIMAL | `decimal` | ANSI core | 6 | tested |
 | DEFER | `defer` | ANSI core ext | 50 | coded |
-| DEPTH | `depth` | ANSI core | 14 | coded |
+| DEPTH | `depth` | ANSI core | 14 | tested |
 | DIGIT_QUESTION | `digit?` | Tali Forth | 58 | coded |
 | DNEGATE | `dnegate` | ANSI double | 32 | coded |
 | QUESTION_DO | `?do` | ANSI core ext | 96 | coded |
@@ -70,18 +70,18 @@ and user-defined words coded in Forth are in `forth_code`.
 | EXECUTE | `execute` | ANSI core | 29 | tested |
 | EXIT | `exit` | ANSI core | 1 | coded |
 | FALSE | `false` | ANSI core ext | 6 | tested |
-| FETCH | `@` | ANSI core | 25 | coded |
+| FETCH | `@` | ANSI core | 25 | tested |
 | FIND | `find` | ANSI core | 77 | coded |
-| FIND_NAME | `find-name` | Gforth | 108 | coded |
+| FIND_NAME | `find-name` | Gforth | 108 | tested |
 | FM_SLASH_MOD | `fm/mod` | ANSI core | 60 | coded |
 | GREATER_THAN | `>` | ANSI core | 26 | coded |
-| HERE | `here` | ANSI core | 10 | coded |
-| HEX | `hex` | ANSI core ext | 6 | coded |
+| HERE | `here` | ANSI core | 10 | tested |
+| HEX | `hex` | ANSI core ext | 6 | tested |
 | HOLD | `hold` | ANSI core | 23 | coded |
-| I | `i` | ANSI core | 28 | coded |
-| IMMEDIATE | `immediate` | ANSI core | 8 | coded |
+| I | `i` | ANSI core | 28 | tested |
+| IMMEDIATE | `immediate` | ANSI core | 8 | tested |
 | INPUT | `input` | Tali Forth | 10 | coded |
-| INT_TO_NAME | `int>name` | Tali Forth | 85 | coded |
+| INT_TO_NAME | `int>name` | Tali Forth | 85 | tested |
 | INVERT | `invert` | ANSI core | 21 | coded |
 | J | `j` | ANSI core | 28 | coded |
 | KEY | `key` | ANSI core | 13 | coded |
@@ -110,7 +110,7 @@ and user-defined words coded in Forth are in `forth_code`.
 | NIP | `nip` | ANSI core ext | 19 | coded |
 | NOT_EQUALS | `<>` | ANSI core ext | 35 | coded |
 | NOT_ROTE | `-rot` | Gforth | 37 | coded |
-| NUMBER | `number` | Tali Forth | 140 | coded |
+| NUMBER | `number` | Tali Forth | 140 | tested |
 | NUMBER_SIGN | `#` | ANSI core | 34 | coded |
 | NUMBER_SIGN_GREATER | `#>` | ANSI core | 39 | coded |
 | NUMBER_SIGN_S | `#s` | ANSI core | 22 | coded |
@@ -121,14 +121,14 @@ and user-defined words coded in Forth are in `forth_code`.
 | OUTPUT | `output` | Tali Forth | 10 | coded |
 | OVER | `over` | ANSI core | 19 | coded |
 | PAD | `pad` | ANSI core ext | 15 | coded |
-| PAGE | `page` | ANSI facility | 29 | coded |
-| PARSE_NAME | `parse-name` | ANSI core ext | 236 | coded |
-| PARSE | `parse` | ANSI core ext | 144 | coded |
-| PICK | `pick` | ANSI core ext | 16 | coded |
-| PLUS | `+` | ANSI core | 24 | coded |
+| PAGE | `page` | ANSI facility | 29 | tested |
+| PARSE_NAME | `parse-name` | ANSI core ext | 236 | tested |
+| PARSE | `parse` | ANSI core ext | 144 | tested |
+| PICK | `pick` | ANSI core ext | 16 | tested |
+| PLUS | `+` | ANSI core | 24 | tested |
 | PLUS_STORE | `+!` | ANSI core | 37 | coded |
 | POSTPONE | `postpone` | ANSI core | 73 | coded |
-| QUESTION | `?` | ANSI tools | 6 | coded |
+| QUESTION | `?` | ANSI tools | 6 | tested |
 | QUESTION_DUP | `?dup` | ANSI core | 25 | coded |
 | R_FETCH | `r@` | ANSI core | 20 | coded |
 | R_FROM | `r>` | ANSI core | 16 | coded |
@@ -141,7 +141,7 @@ and user-defined words coded in Forth are in `forth_code`.
 | S_TO_D | `s>d` | ANSI core | 23 | coded |
 | SEMICOLON | `;` | ANSI core | 33 | coded |
 | SIGN | `sign` | ANSI core | 26 | coded |
-| SLASH_STRING | `/string` | ANSI strin | 37 | coded |
+| SLASH_STRING | `/string` | ANSI string | 37 | coded |
 | SLITERAL | `sliteral` | ANSI string | 127 | coded |
 | SM_SLASH_REM | `sm/rem` | ANSI core | 46 | tested |
 | SOURCE | `source` | ANSI core | 20 | coded |
@@ -151,16 +151,16 @@ and user-defined words coded in Forth are in `forth_code`.
 | STAR | `*` | ANSI core | 14 | coded |
 | STATE | `state` | ANSI core | 10 | coded |
 | STORE | `!` | ANSI core | 27 | tested |
-| SWAP | `swap` | ANSI core | 25 | coded |
+| SWAP | `swap` | ANSI core | 25 | tested |
 | TICK | `'` | ANSI core | 31 | coded |
 | TO_BODY | `>body` | ANSI core | 93 | coded |
 | TO_IN | `>in` | ANSI core | 10 | coded |
 | TO_NUMBER | `>number` | ANSI core | 165 | coded |
 | TO_R | `>r` | ANSI core | 25 | coded |
-| TRUE | `true` | ANSI core ext | 8 | coded |
+| TRUE | `true` | ANSI core ext | 8 | tested |
 | TUCK | `tuck` | ANSI core ext | 33 | coded |
-| TWO | `2` | Tali Forth | 8 | coded |
-| TWO_DROP | `2drop` | ANSI core | 13 | coded |
+| TWO | `2` | Tali Forth | 8 | tested |
+| TWO_DROP | `2drop` | ANSI core | 13 | tested |
 | TWO_DUP | `2dup` | ANSI core | 29 | coded |
 | TWO_OVER | `2over` | ANSI core | 29 | coded |
 | TWO_R_FETCH | `2r@` | ANSI core ext | 29 | coded |
@@ -190,5 +190,5 @@ and user-defined words coded in Forth are in `forth_code`.
 | ZERO_UNEQUAL | `0<>` | ANSI core ext | 23 | tested |
 
 Found **183** native words in `native_words.asm`.
-Of those, **121** are not marked as "tested".
+Of those, **101** are not marked as "tested".
 

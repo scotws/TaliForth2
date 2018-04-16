@@ -2,12 +2,15 @@
 # Generate Tali Forth 2 native word skeleton from a word list
 # Scot W. Stevenson <scot.stevenson@gmail.com>
 # First version: 21. Nov 2017
-# This version: 26. Nov 2017
+# This version: 16. Apr 2018
 """Generate 65c02 assembler templates for Tali Forth native words
 
 After running this script, various parts need to be adjusted by hand. For
 instance, the boot sequence has COLD-ABORT-QUIT flowing into each other.
 See tools/README.txt for more details.
+
+NOTE: This is the original format for the headers of the Forth native words.
+This was modified later by hand
 """
 
 import json

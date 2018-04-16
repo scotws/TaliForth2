@@ -17,7 +17,7 @@
 ;       TBA --> fragment --> coded --> tested
 
 ; ## COLD ( -- ) "Reset the Forth system"
-; ## "cold"  src: Tali Forth  b: 208 c: TBA  status: coded
+; ## "cold"  coded  Tali Forth
 ;       """Reset the Forth system. Does not restart the kernel,
 ;       use the 65c02 reset for that. Flows into ABORT.
 ;       """
@@ -152,7 +152,7 @@ xt_cold:
 
 
 ; ## ABORT ( -- ) "Reset the Data Stack and restart the CLI"
-; ## "abort"  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## "abort"  coded  ANSI core
         ; """Clear Data Stack and continue into QUIT. We can jump here via
         ; subroutine if we want to because we are going to reset the 65c02's
         ; stack pointer (the Return Stack) anyway during QUIT. Note we don't
@@ -161,7 +161,7 @@ xt_cold:
 xt_abort:       ldx #dsp0               ; fall through to QUIT
 
 ; ## QUIT ( -- ) "Reset the input and get new input"
-; ## "quit"  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## "quit"  coded  ANSI core
         ; """Rest the input and start command loop"""
 .scope
 xt_quit:        
@@ -251,7 +251,7 @@ z_quit:         ; no RTS required
 
 
 ; ## ABORT_QUOTE ( "string" -- ) "If flag TOS is true, MESSAGE with message"
-; ## "abort""  src: ANSI core  b: 12  c: TBA  status: tested
+; ## "abort""  tested  ANSI core
 .scope
 xt_abort_quote:
                 ; save the string
@@ -292,7 +292,7 @@ _done:
 
 
 ; ## ABS ( n -- u ) "Return absolute value of a number"
-; ## "abs"  src: ANSI core  b: 26  c: TBA  status: tested
+; ## "abs"  tested  ANSI core
 .scope
 xt_abs:         
                 cpx #dsp0-1
@@ -319,7 +319,7 @@ z_abs:          rts
 
 
 ; ## ACCEPT ( addr n -- n ) "Receive a string of characters from the keyboard"
-; ## "accept"  src: ANSI core  b: 107  c: TBA  status: tested
+; ## "accept"  tested  ANSI core 
         ; """ Receive a string of at most n1 characters, placing them at
         ; addr. Return the actual number of characters as n2. Characters
         ; are echoed as they are received. ACCEPT is called by REFILL in
@@ -422,7 +422,7 @@ z_accept:       rts
 
 
 ; ## AGAIN ( addr -- ) "Code backwards branch to address left by BEGIN"
-; ## "again"  src: ANSI core ext  b: 38  c: TBA  status: tested
+; ## "again"  tested  ANSI core ext
 .scope
 xt_again:
                 cpx #dsp0-1
@@ -462,7 +462,7 @@ z_again:        rts
 
 
 ; ## ALIGN ( -- ) "Make sure CP is aligned on word size"
-; ## "align"  src: ANSI core  b: 0  c: TBA  status: tested
+; ## "align"  tested  ANSI core
         ; """On a 8-bit machine, this does nothing. ALIGNED uses
         ; this routine as well
         ; """
@@ -473,7 +473,7 @@ z_align:        rts             ; stripped out during native compile
 
 
 ; ## ALLOT ( n -- ) "Reserve or release memory"
-; ## "allot"  src: ANSI core  b: TBA  c: TBA  status: tested
+; ## "allot"  tested  ANSI core
         ; """Reserve a certain number of bytes (not cells) or release them.
         ; If n = 0, do nothing. If n is negative, release n bytes, but only
         ; to the beginning of the Dictionary. If n is positive (the most
@@ -544,7 +544,7 @@ z_allot:
 
 
 ; ## ALWAYS_NATIVE ( -- ) "Flag last word as always natively compiled"
-; ## "always-native"  src: Tali Forth  b: 8  c: TBA  status: tested
+; ## "always-native"  tested  Tali Forth
 xt_always_native:
                 ldy #1          ; offset for status byte
                 lda (dp),y
@@ -555,7 +555,7 @@ z_always_native:
 
 
 ; ## AND ( n n -- n ) "Logically AND TOS and NOS"
-; ## "and"  src: ANSI core  b: 23  c: TBA  status: tested
+; ## "and"  tested  ANSI core
 xt_and:         
                 cpx #dsp0-3
                 bmi +
@@ -577,7 +577,7 @@ z_and:          rts
 
 
 ; ## AT_XY ( n m -- ) "Move cursor to position given"
-; ## "at-xy"  src: ANSI facility  b: 35  c: TBA  status: tested
+; ## "at-xy"  tested  ANSI facility
         ; """On an ANSI compatible terminal, place cursor at row n colum m. 
         ; Code is ESC[<n>;<m>H Do not use U. to print the numbers because the 
         ; trailing space will not work with xterm 
@@ -603,7 +603,7 @@ z_at_xy:        rts
 
 
 ; ## BACKSLASH ( -- ) "Ignore rest of line"
-; ## "\"  src: ANSI core ext  b: 8  c: TBA  status: tested
+; ## "\"  tested  ANSI core ext
 xt_backslash:   
                 lda ciblen
                 sta toin
@@ -614,7 +614,7 @@ z_backslash:    rts
 
 
 ; ## BASE ( -- addr ) "Push address of radix base to stack"
-; ## "base"  src: ANSI core  b: 10  c: TBA  status: tested
+; ## "base"  tested  ANSI core
 xt_base:        
                 dex
                 dex
@@ -627,7 +627,7 @@ z_base:         rts
 
 
 ; ## BEGIN ( -- addr ) "Mark entry point for loop"
-; ## "begin"  src: ANSI core  b: 10  c: TBA  status: tested
+; ## "begin"  tested  ANSI core
         ; """This is just an immediate version of here which
         ; could just as welle be coded as
         ;       : BEGIN HERE ; IMMEDIATE COMPILE-ONLY
@@ -647,7 +647,7 @@ z_begin:        rts
 
 
 ; ## BELL ( -- ) "Emit ASCII BELL"
-; ## "bell"  src: Tali Forth  b: 5  c: TBA  status: tested
+; ## "bell"  tested  Tali Forth
 xt_bell:        
                 lda #7          ; ASCII value for BELl
                 jsr emit_a
@@ -656,7 +656,7 @@ z_bell:         rts
 
 
 ; ## BL ( -- c ) "Push ASCII value of SPACE to stack"
-; ## "bl"  src: ANSI core  b: 8  c: TBA  status: tested
+; ## "bl"  tested  ANSI core
 .scope
 xt_bl:          
                 dex
@@ -670,7 +670,7 @@ z_bl:           rts
 
 
 ; ## BOUNDS ( addr u -- addr+u addr ) "Prepare address for looping"
-; ## "bounds"  src: Gforth  b: 30  c: TBA  status: tested
+; ## "bounds"  tested  Gforth
         ; """Given a string, return the correct Data Stack parameters for
         ; a DO/LOOP loop; over its characters. This is realized as
         ; OVER + SWAP in Forth, but we do it a lot faster in assembler
@@ -698,7 +698,7 @@ z_bounds:       rts
 
 
 ; ## BRACKET_CHAR ( "c" -- ) "Compile character"
-; ## "[char]"  src: ANSI core  b: 6  c: TBA  status: tested
+; ## "[char]"  tested  ANSI core
         ; """Compile the ASCII value of a character as a literal. This is an
         ; immediate, compile-only word. A definition given in 
         ; http://forth-standard.org/standard/implement is 
@@ -711,7 +711,7 @@ z_bracket_char: rts
 
 
 ; ## BRACKET_TICK ( -- ) "Store xt of following word during compilation"
-; ## "[']"  src: ANSI core  b: 6  c: TBA  status: tested
+; ## "[']"  tested  ANSI core
 xt_bracket_tick:
                 jsr xt_tick
                 jsr xt_literal
@@ -719,7 +719,7 @@ z_bracket_tick: rts
 
 
 ; ## BRANCH ( -- ) "Always branch"
-; ## "branch"  src: Tali Forth  b: 9  c: TBA  status: tested
+; ## "branch"  tested  Tali Forth
         ; """Expects offset in next two bytes. This cannot be natively
         ; compiled because we need the return address provided on the
         ; 65c02 stack by JSR. 
@@ -759,7 +759,7 @@ branch_runtime:
 
 
 ; ## BYE ( -- ) "Break"
-; ## "bye"  src: ANSI tools ext  b: 1  c: TBA  status: tested
+; ## "bye"  tested  ANSI tools ext
 .scope
 xt_bye:         
                 brk
@@ -768,7 +768,7 @@ z_bye:          rts             ; never reached
 
 
 ; ## C_COMMA ( c -- ) "Store one byte/char in the Dictionary"
-; ## "c,"  src: ANSI core  b: 21  c: TBA  status: tested
+; ## "c,"  tested  ANSI core
 ; TODO make sure we haven't allocated more than we have
 .scope
 xt_c_comma:     
@@ -793,7 +793,7 @@ z_c_comma:      rts
 
 
 ; ## C_FETCH ( addr -- c ) "Get a character/byte from given address"
-; ## "c@"  src: ANSI core  b: 15  c: TBA  status: tested
+; ## "c@"  tested  ANSI core
 xt_c_fetch:     
                 cpx #dsp0-1
                 bmi +
@@ -808,7 +808,7 @@ z_c_fetch:      rts
 
 
 ; ## C_STORE ( c addr -- ) "Store character at address given"
-; ## "c!"  src: ANSI core  b: 17  c: TBA  status: tested
+; ## "c!"  tested  ANSI core
 xt_c_store:     
                 cpx #dsp0-3
                 bmi +
@@ -827,7 +827,7 @@ z_c_store:      rts
 
 
 ; ## CELL_PLUS ( u -- u ) "Add cell size in bytes"
-; ## "cell+"  src: ANSI core  b: 21  c: TBA  status: tested
+; ## "cell+"  tested  ANSI core
         ; """Add the number of bytes ("address units") that one cell needs.
         ; Since this is an 8 bit machine with 16 bit cells, we add two bytes.
         ; """
@@ -851,7 +851,7 @@ z_cell_plus:    rts
 
 
 ; ## CHAR ( "c" -- u ) "Convert character to ASCII value"
-; ## "char"  src: ANSI core  b: 22  c: TBA  status: tested
+; ## "char"  tested  ANSI core
 .scope
 xt_char:        
                 ; get character from string, returns ( addr u )
@@ -879,7 +879,7 @@ z_char:         rts
 
 
 ; ## CHARS ( n -- n ) "Number of bytes that n chars need"
-; ## "chars"  src: ANSI core  b: 18  c: TBA  status: tested
+; ## "chars"  tested  ANSI core
         ; """Return how many address units n chars are. Since this is an 8 bit
         ; machine, this does absolutely nothing and is included for
         ; compatibility with other Forth versions
@@ -900,7 +900,7 @@ z_chars:        rts
 
 
 ; ## CMOVE ( addr1 addr2 u -- ) "Copy bytes going from low to high"
-; ## "cmove"  src: ANSI string  b: 78  c: TBA  status: tested
+; ## "cmove"  tested  ANSI string
         ; """Copy u bytes from addr1 to addr2, going low to high (addr2 is
         ; larger than addr1). Based on code in Leventhal, Lance A. 
         ; "6502 Assembly Language Routines", p. 201
@@ -959,7 +959,7 @@ z_cmove:        rts
 
 
 ; ## CMOVE_UP ( add1 add2 u -- ) "Copy bytes from high to low"
-; ## "cmove>"  src: ANSI string  b: 93  c: TBA  status: tested
+; ## "cmove>"  tested  ANSI string
         ; """Based on code in Leventhal, Lance A. "6502 Assembly Language
         ; Routines", p. 201.
         ; """
@@ -1018,7 +1018,7 @@ z_cmove_up:     rts
 
 
 ; ## COLON ( "name" -- ) "Start compilation of a new word""
-; ## ":"  src: ANSI core  b: 49  c: TBA  status: tested
+; ## ":"  tested  ANSI core
         ; """Use the CREATE routine and fill in the rest by hand."""
 .scope
 xt_colon:       
@@ -1074,7 +1074,7 @@ z_colon:        rts
 
 
 ; ## COMMA ( n -- ) "Allot and store one cell in memory"
-; ## ","  src: ANSI core  b: 31  c: TBA  status: tested
+; ## ","  tested  ANSI core
         ; """Store TOS at current place in memory. Since this an eight-bit
         ; machine, we can ignore all alignment issures
         ; """
@@ -1107,7 +1107,7 @@ z_comma:        rts
 
 
 ; ## COMPILE_COMMA ( xt -- ) "Compile xt"
-; ## "compile,"  src: ANSI core ext  b: TBA  c: TBA  status: tested
+; ## "compile,"  tested  ANSI core ext
         ; """Compile the given xt in the current word definition. It is an
         ; error if we are not in the compile state. Because we are using
         ; subroutine threading, we can't use , (COMMA) to compile new words
@@ -1391,7 +1391,7 @@ z_compile_comma:
 
 
 ; ## COMPILE_ONLY ( -- ) "Mark most recent word as COMPILE-ONLY"
-; ## "compile-only"  src: Tali Forth  b: 8  c: TBA  status: tested
+; ## "compile-only"  tested  Tali Forth
         ; """Set the Compile Only flag (CO) of the most recently defined
         ; word. The alternative way to do this is to define a word 
         ; ?COMPILE that makes sure  we're in compile mode
@@ -1408,7 +1408,7 @@ z_compile_only: rts
 
 
 ; ## CONSTANT ( n "name" -- ) "Define a constant"
-; ## "constant"  src: ANSI core  b: TBA  c: TBA  status: tested
+; ## "constant"  tested  ANSI core
         ; """Forth equivalent is  CREATE , DOES> @  but we do
         ; more in assembler and let CREATE do the heavy lifting.
         ; See http://www.bradrodriguez.com/papers/moving3.htm for
@@ -1472,7 +1472,7 @@ z_constant:     rts
 
 
 ; ## COUNT ( c-addr -- addr u ) "Convert character string to normal format"
-; ## "count"  src: ANSI core  b: 25  c: TBA  status: coded
+; ## "count"  coded  ANSI core
         ; """; Convert old-style character string to address-length pair. Note
         ; that the length of the string c-addr ist stored in character length
         ; (8 bit), not cell length (16 bit). This is rarely used these days,
@@ -1504,7 +1504,7 @@ z_count:        rts
 
 
 ; ## CR ( -- ) "Print a line feed"
-; ## "cr"  src: ANSI core  b: 5  c: TBA  status: tested
+; ## "cr"  tested  ANSI core
 xt_cr:         
                 lda #AscLF
                 jsr emit_a
@@ -1512,7 +1512,7 @@ z_cr:           rts
 
 
 ; ## CREATE ( "name" -- ) "Create Dictionary entry for 'name'"
-; ## "create"  src: ANSI core  b: 142  c: TBA  status: tested
+; ## "create"  tested  ANSI core
         ; """See the drawing in headers.asm for details on the header
         ; """
 .scope
@@ -1672,7 +1672,7 @@ z_create:       rts
 
 
 ; ## D_MINUS ( d d -- d ) "Subtract two double-celled numbers"
-; ## "d-"  src: ANSI double  b: TBA  c: TBA  status: coded
+; ## "d-"  coded  ANSI double
 .scope
 xt_d_minus:
                 cpx #dsp0-7
@@ -1708,7 +1708,7 @@ z_d_minus:      rts
 
 
 ; ## D_PLUS ( d d -- d ) "Add two double-celled numbers"
-; ## "d+"  src: ANSI double  b: TBA  c: TBA  status: coded
+; ## "d+"  coded  ANSI double
 .scope
 xt_d_plus:
                 cpx #dsp0-7
@@ -1743,7 +1743,7 @@ z_d_plus:       rts
 
 
 ; ## D_TO_S ( d -- n ) "Convert a double number to single"
-; ## "d>s"  src: ANSI double  b: TBA  c: TBA  status: coded
+; ## "d>s"  coded  ANSI double
         ; """Though this is basically just DROP, we keep it
         ; separate so we can test for underflow
         ; """
@@ -1762,7 +1762,7 @@ z_d_to_s:       rts
 
 
 ; ## DABS ( d -- d ) "Return the absolute value of a double"
-; ## "dabs"  src: ANSI double  b: TBA  c: TBA  status: coded
+; ## "dabs"  coded  ANSI double
 .scope
 xt_dabs:
                 cpx #dsp0-3
@@ -1798,7 +1798,7 @@ z_dabs:         rts
 
 
 ; ## DECIMAL ( -- ) "Change radix base to decimal"
-; ## "decimal"  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## "decimal"  tested  ANSI core
 xt_decimal:     
                 lda #10
                 sta base
@@ -1808,7 +1808,7 @@ z_decimal:      rts
 
 
 ; ## DEFER ( "name" -- ) "Create a placeholder for words by name"
-; ## "defer"  src: ANSI core ext  b: TBA  c: TBA  status: coded
+; ## "defer"  coded  ANSI core ext
         ; """Reserve an name that can be linked to various xt by IS. The
         ; ANSI reference implementation is 
         ;       CREATE ['] ABORT , DOES> @ EXECUTE ;
@@ -1860,7 +1860,7 @@ z_defer:        rts
 
 
 ; ## DEPTH ( -- u ) "Get number of cells (not bytes) used by stack"
-; ## "depth"  src: ANSI core  b: 14  c: TBA  status: coded
+; ## "depth"  tested  ANSI core
 xt_depth:       
                 lda #dsp0
                 stx tmpdsp
@@ -1879,7 +1879,7 @@ z_depth:        rts
 
 
 ; ## DIGIT_QUESTION ( char -- u f | char f ) "Convert ASCII char to number"
-; ## "digit?"  src: Tali Forth  b: TBA  c: TBA  status: coded
+; ## "digit?"  coded  Tali Forth
         ; """Inspired by the pForth instruction DIGIT, see
         ; https://github.com/philburk/pforth/blob/master/fth/numberio.fth
         ; Rewritten from DIGIT>NUMBER in Tali Forth. Note in contrast to
@@ -1953,7 +1953,7 @@ z_digit_question:
 
 
 ; ## DNEGATE ( d -- d ) "Negate double cell number"
-; ## "dnegate"  src: ANSI double  b: TBA  c: TBA  status: coded
+; ## "dnegate"  coded  ANSI double
 xt_dnegate:     
                 cpx #dsp0-3
                 bmi +
@@ -1983,7 +1983,7 @@ z_dnegate:      rts
 
 
 ; ## QUESTION_DO ( limit start -- )(R: -- limit start) "Conditional loop start"
-; ## "?do"  src: ANSI core ext  b: TBA  c: TBA  status: coded
+; ## "?do"  coded  ANSI core ext
 xt_question_do:
                 ; ?DO shares most of its code with DO. We use the tmp1 flag
                 ; to mark which is which
@@ -1992,7 +1992,7 @@ xt_question_do:
                 bra do_common
 
 ; ## DO ( limit start -- )(R: -- limit start)  "Start a loop"
-; ## "do"  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## "do"  coded  ANSI core
         ; """Compile-time part of DO. Could be realized in Forth as
         ;       : DO POSTPONE (DO) HERE ; IMMEDIATE COMPILE-ONLY
         ; but we do it in assembler for speed. To work with LEAVE, we compile
@@ -2173,7 +2173,7 @@ question_do_runtime_end:
 
 
 ; ## DOES ( -- ) "Add payload when defining new words"
-; ## "does>"  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## "does>"  coded  ANSI core
         ; """Create the payload for defining new defining words. See
         ; http://www.bradrodriguez.com/papers/moving3.htm and 
         ; docs/create-does.txt for a discussion of
@@ -2258,7 +2258,7 @@ does_runtime:
 
 
 ; ## DOT ( u -- ) "Print TOS"
-; ## "."  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## "."  coded  ANSI core
 .scope
 xt_dot:         
                 cpx #dsp0-1
@@ -2282,7 +2282,7 @@ z_dot:          rts
 
 
 ; ## DOT_QUOTE ( "string" -- ) "Print string from compiled word"
-; ## ".""  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## ".""  coded  ANSI core
         ; """Compile string that is printed during run time. ANSI Forth wants
         ; this to be compile-only, even though everybody and their friend
         ; uses it for everything. We follow the book here, and recommend
@@ -2307,7 +2307,7 @@ z_dot_quote:    rts
 
 
 ; ## DOT_S ( -- ) "Print content of Data Stack"
-; ## ".s"  src: ANSI tools  b: TBA  c: TBA  status: coded
+; ## ".s"  coded  ANSI tools 
         ; """Print content of Data Stack non-distructively. Since this is for
         ; humans, we don't have to worry about speed. We follow the format
         ; of Gforth and print the number of elements first in brackets,
@@ -2385,7 +2385,7 @@ z_dot_s:        rts
 
 
 ; ## DROP ( u -- ) "Pop top entry on Data Stack"
-; ## "drop"  src: ANSI core  b: 11  c: TBA  status: tested
+; ## "drop"  tested  ANSI core
 xt_drop:        
                 cpx #dsp0-1
                 bmi +
@@ -2398,7 +2398,7 @@ z_drop:         rts
 
 
 ; ## DUMP ( addr u -- ) "Display a memory region"
-; ## "dump"  src: ANSI tools  b: TBA  c: TBA  status: coded
+; ## "dump"  coded  ANSI tools
 .scope
 xt_dump:        
 _row:
@@ -2464,7 +2464,7 @@ z_dump:         rts
 
 
 ; ## DUP ( u -- u u ) "Duplicate TOS"
-; ## "dup"  src: ANSI core  b: 19  c: TBA  status: tested
+; ## "dup"  tested  ANSI core
 xt_dup:         
                 cpx #dsp0-1
                 bmi +
@@ -2483,7 +2483,7 @@ z_dup:          rts
 
 
 ; ## EMIT ( char -- ) "Print character to current output"
-; ## "emit"  src: ANSI core  b: TBA  c: TBA  status: tested
+; ## "emit"  tested  ANSI core
         ; """Run-time default for EMIT. The user can revector this by changing
         ; the value of the OUTPUT variable. We ignore the MSB completely, and 
         ; do not check to see if we have been given a valid ASCII character. 
@@ -2513,7 +2513,7 @@ z_emit:         ; never reached
 
 
 ; ## EQUAL ( n n -- f ) "See if TOS and NOS are equal"
-; ## "="  src: ANSI core  b: TBA c: TBA  status: coded
+; ## "="  coded  ANSI core
 .scope
 xt_equal:       
                 cpx #dsp0-3
@@ -2545,7 +2545,7 @@ z_equal:        rts
 
 
 ; ## BLANK ( addr u -- ) "Fill memory region with spaces"
-; ## "blank"  src: ANSI core ext  b: TBA  c: TBA  status: coded
+; ## "blank"  coded  ANSI core ext
 xt_blank:
                 ; We don't check for underflow here because
                 ; we deal with that in FILL
@@ -2559,7 +2559,7 @@ xt_blank:
 
 
 ; ## ERASE ( addr u -- ) "Fill memory region with zeros"
-; ## "erase"  src: ANSI core ext  b: TBA  c: TBA  status: coded
+; ## "erase"  coded  ANSI core ext
 .scope
 xt_erase:
                 ; We don't check for underflow here because
@@ -2572,7 +2572,7 @@ xt_erase:
                 ; fall through to FILL
 
 ; ## FILL ( addr u char -- ) "Fill a memory region with a character"
-; ## "fill"  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## "fill" coded  ANSI core
         ; """Fill u bytes of memory with char starting at addr. Note that
         ; this works on bytes, not on cells. On an 8-bit machine such as the
         ; 65c02, this is a serious pain in the rear. It is not defined what
@@ -2650,7 +2650,7 @@ z_fill:         rts
 
 
 ; ## EVALUATE ( addr u -- ) "Execute a string"
-; ## "evaluate"  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## "evaluate"  coded  ANSI core
         ; """Set SOURCE-ID to -1, make addr u the input source, set >IN to zero.
         ; After processing the line, revert to old input source. We use this
         ; to compile high-level Forth words and user-defined words during
@@ -2750,7 +2750,7 @@ z_evaluate:     rts
 
 
 ; ## EXECUTE ( xt -- ) "Jump to word based on execution token"
-; ## "execute"  src: ANSI core  b: 19  c: TBA  status: tested
+; ## "execute"  tested  ANSI core
 .scope
 xt_execute:     
                 cpx #dsp0-1
@@ -2788,7 +2788,7 @@ z_execute:      rts
 
 
 ; ## EXIT ( -- ) "Return control to the calling word immediately"
-; ## "exit"  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## "exit"  coded  ANSI core
         ; """ If we're in a loop, we need to UNLOOP first and get everything
         ; we we might have put on the Return Stack off as well. This should
         ; be natively compiled
@@ -2801,7 +2801,7 @@ z_exit:                         ; never reached
 
 ;
 ; ## FALSE ( -- f ) "Push flag FALSE to Data Stack"
-; ## "false"  src: ANSI core ext  b: 6  c: TBA  status: tested
+; ## "false"  tested  ANSI core ext
 xt_false:       
                 dex
                 dex
@@ -2812,7 +2812,7 @@ z_false:        rts
 
 
 ; ## FETCH ( addr -- n ) "Push cell content from memory to stack"
-; ## "@"  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## "@"  tested  ANSI core
 xt_fetch:       
                 cpx #dsp0-1
                 bmi +
@@ -2834,7 +2834,7 @@ z_fetch:        rts
 
 
 ; ## FIND ( caddr -- addr 0 | xt 1 | xt -1 ) "Find word in Dictionary"
-; ## "find"  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## "find"  coded  ANSI core
         ; """Included for backwards compatibility only, because it still
         ; can be found in so may examples. It should, however, be replaced
         ; by FIND-NAME. Counted string either returns address with a FALSE
@@ -2916,7 +2916,7 @@ z_find:         rts
 
 
 ; ## FIND_NAME ( addr u -- nt|0 ) "Get the name token of input word"
-; ## "find-name"  src: Gforth  b: TBA  c: TBA  status: coded
+; ## "find-name"  tested  Gforth
 .scope
 xt_find_name:
         ; """Given a string, find the Name Token (nt) of a word or return
@@ -3037,7 +3037,7 @@ z_find_name:    rts
 
 
 ; ## FM_SLASH_MOD ( d n1  -- rem n2 ) "Floored signed division"
-; ## "fm/mod"  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## "fm/mod"  coded  ANSI core
         ; """There are various ways to realize this. We follow EForth with
         ;    DUP 0< DUP >R  IF NEGATE >R DNEGATE R> THEN >R DUP
         ;    0<  IF R@ + THEN  R> UM/MOD R> IF SWAP NEGATE SWAP THEN 
@@ -3093,7 +3093,7 @@ z_fm_slash_mod: rts
 .scend
 
 ; ## GREATER_THAN ( n n -- f ) "See if NOS is greater than TOS"
-; ## ">"  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## ">"  coded  ANSI core
 .scope
 xt_greater_than:
                 cpx #dsp0-3
@@ -3123,7 +3123,7 @@ z_greater_than: rts
 
 
 ; ## HERE ( -- addr ) "Put Compiler Pointer on Data Stack"
-; ## "here"  src: ANSI core  b: 10  c: TBA  status: coded
+; ## "here"  tested  ANSI core
 xt_here:        
                 dex
                 dex
@@ -3136,7 +3136,7 @@ z_here:         rts
 
 
 ; ## HEX ( -- ) "Change base radix to hexadecimal"
-; ## "hex"  src: ANSI core ext  b: 6  c: TBA  status: coded
+; ## "hex"  tested  ANSI core ext
 xt_hex:         
                 lda #16
                 sta base
@@ -3146,7 +3146,7 @@ z_hex:          rts
 
 
 ; ## HOLD ( char -- ) "Insert character at current output"
-; ## "hold"  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## "hold"  coded  ANSI core
         ; """Insert a character at the current position of a pictured numeric
         ; output string on 
         ; https://github.com/philburk/pforth/blob/master/fth/numberio.fth
@@ -3174,7 +3174,7 @@ z_hold:         rts
 
 
 ; ## I ( -- n )(R: n -- n)  "Copy loop counter to stack"
-; ## "i"  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## "i"  tested  ANSI core
         ; """Note that this is not the same as R@ because we use a fudge
         ; factor for loop control; see docs/loop.txt for details. We
         ; should make this native compile for speed. 
@@ -3209,7 +3209,7 @@ z_i:            rts
 
 
 ; ## IMMEDIATE ( -- ) "Mark most recent word as IMMEDIATE"
-; ## "immediate"  src: ANSI core  b: 8  c: TBA  status: coded
+; ## "immediate"  tested  ANSI core
         ; """Make sure the most recently defined word is immediate. Will only
         ; affect the last word in the dictionary. Note that if the word is
         ; defined in ROM, this will have no affect, but will not produce an
@@ -3225,7 +3225,7 @@ z_immediate:    rts
 
 
 ; ## INPUT ( -- addr ) "Return address of input vector"
-; ## "input"  src: Tali Forth  b: TBA  c: TBA  status: coded
+; ## "input"  coded  Tali Forth
 .scope
 xt_input:       
                 dex
@@ -3240,7 +3240,7 @@ z_input:        rts
 
 
 ; ## INT_TO_NAME ( xt -- nt ) "Get name token from execution token"
-; ## "int>name"  src: Tali Forth  b: TBA  c: TBA  status: coded
+; ## "int>name"  tested  Tali Forth
         ; """This is called >NAME in Gforth, but we change it to 
         ; INT>NAME to match NAME>INT
         ; """
@@ -3314,7 +3314,7 @@ z_int_to_name:  rts
 
 
 ; ## INVERT ( u -- u ) "Complement of TOS"
-; ## "invert"  src: ANSI core  b: 10  c: TBA  status: coded
+; ## "invert"  coded  ANSI core
 xt_invert:
                 cpx #dsp0-1
                 bmi +
@@ -3335,7 +3335,7 @@ z_invert:       rts
 
 
 ; ## J ( -- n ) (R: n -- n ) "Copy second loop counter to stack"
-; ## "j"  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## "j"  coded  ANSI core
         ; """Copy second loop counter from Return Stack to stack. Note we use
         ; a fudge factor for loop control; see docs/loop.txt for more details.
         ; At this point, we have the "I" counter/limit and the LEAVE address
@@ -3373,7 +3373,7 @@ z_j:            rts
 
 
 ; ## KEY ( -- char ) "Get one character from the input"
-; ## "key"  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## "key"  coded  ANSI core
 .scope
 xt_key:         
         ; """Get a single character of input from the vectored
@@ -3400,8 +3400,8 @@ z_key:          ; never reached
 .scend
 
 
-; ## LATESTNT ( -- nt ) "Push most recent nt to stack"
-; ## "latestnt"  src: Tali Forth  b: 10  c: TBA  status: coded
+; ## LATESTNT ( -- nt ) "Push most recent nt to the stack"
+; ## "latestnt"  coded  Tali Forth
         ; """The Gforth version of this word is called LATEST
         ; """
 xt_latestnt:
@@ -3416,8 +3416,8 @@ xt_latestnt:
 z_latestnt:     rts
 
 
-; ## LATESTXT ( -- xt ) "<TBA>"
-; ## "latestxt"  src: Gforth  b: TBA  c: TBA  status: coded
+; ## LATESTXT ( -- xt ) "Push most recent xt to the stack"
+; ## "latestxt"  coded  Gforth
 xt_latestxt:    
                 jsr xt_latestnt         ; ( nt )
                 jsr xt_name_to_int      ; ( xt ) 
@@ -3425,7 +3425,7 @@ z_latestxt:     rts
 
 
 ; ## LEAVE ( -- ) "Leave DO/LOOP construct"
-; ## "leave"  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## "leave"  coded  ANSI core
         ; """Note that this does not work with  anything but a DO/LOOP in
         ; contrast to other versions such as discussed at
         ; http://blogs.msdn.com/b/ashleyf/archive/2011/02/06/loopty-do-i-loop.aspx
@@ -3448,7 +3448,7 @@ z_leave:                        ; not reached, not compiled
 
 
 ; ## LEFT_BRACKET ( -- ) "Enter interpretation state"
-; ## "["  src: ANSI core  b: 4  c: TBA  status: coded
+; ## "["  coded  ANSI core
         ; """This is an immediate and compile-only word"""
 xt_left_bracket:
                 stz state
@@ -3458,7 +3458,7 @@ z_left_bracket: rts
 
 
 ; ## LESS_NUMBER_SIGN ( -- ) "Start number conversion"
-; ## "<#"  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## "<#"  coded  ANSI core
         ; """Start the process to create pictured numeric output. The new
         ; string is constructed from back to front, saving the new character
         ; at the beginning of the output string. Since we use PAD as a 
@@ -3485,7 +3485,7 @@ z_less_number_sign:
                 rts
 
 ; ## LESS_THAN ( n m -- f ) "Return true if NOS < TOS"
-; ## "<"  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## "<"  coded  ANSI core
 .scope
 xt_less_than:
                 cpx #dsp0-3
@@ -3515,7 +3515,7 @@ z_less_than:    rts
 
 
 ; ## LITERAL ( n -- ) "Store TOS to be push on stack during runtime"
-; ## "literal"  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## "literal"  coded  ANSI core
         ; """ Compile-only word to store TOS so that it is pushed on stack
         ; during runtime. This is a immediate, compile-only word. At runtime,
         ; it works by calling literal_runtime by compling JSR LITERAL_RT.
@@ -3580,7 +3580,7 @@ literal_runtime:
 
 
 ; ## LOOP ( -- ) "Finish loop construct"
-; ## "loop"  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## "loop"  coded  ANSI core
         ; """Compile-time part of LOOP. This does nothing more but push 1 on
         ; the stack and then call +LOOP. In Forth, this is 
         ;       : LOOP  POSTPONE 1 POSTPONE (+LOOP) , POSTPONE UNLOOP ;
@@ -3596,7 +3596,7 @@ xt_loop:
                 jsr cmpl_subroutine     ; drop through to +LOOP
 
 ; ## PLUS_LOOP ( -- ) "Finish loop construct"
-; ## "+loop"  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## "+loop"  coded  ANSI core
         ; """Compile-time part of +LOOP, also used for LOOP. Is usually
         ;       : +LOOP POSTPONE (+LOOP) , POSTPONE UNLOOP ; IMMEDIATE
         ;       COMPILE-ONLY 
@@ -3734,7 +3734,7 @@ plus_loop_runtime_end:
 
 
 ; ## LSHIFT ( x u -- u ) "Shift TOS left"
-; ## "lshift"  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## "lshift"  coded  ANSI core
 .scope
 xt_lshift:
                 cpx #dsp0-3
@@ -3762,7 +3762,7 @@ z_lshift:       rts
 
 
 ; ## M_STAR ( n n -- d ) "16 * 16 --> 32"
-; ## "m*"  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## "m*"  coded  ANSI core
         ; """Multiply two 16 bit numbers, producing a 32 bit result. All
         ; values are signed. Adapted from FIG Forth for Tali Forth. The
         ; original Forth is : M* OVER OVER XOR >R ABS SWAP ABS UM* R> D+- ;
@@ -3803,7 +3803,7 @@ z_m_star:       rts
 
 
 ; ## MARKER ( "name" -- ) "Create a deletion boundry"
-; ## "marker"  src: ANSI core ext  b: TBA  c: TBA  status: coded
+; ## "marker"  coded  ANSI core ext
         ; """This word replaces FORGET in earlier Forths. Old entries are not
         ; actually deleted, but merely overwritten by restoring CP and DP.
         ; """
@@ -3876,7 +3876,7 @@ z_marker:       rts
 
 
 ; ## MAX ( n n -- n ) "Keep larger of two numbers"
-; ## "max"  src: ANSI core  b: 24  c: TBA  status: coded
+; ## "max"  coded  ANSI core
         ; """Compare TOS and NOS and keep which one is larger. Adapted from
         ; Lance A. Leventhal "6502 Assembly Language Subroutines". Negative
         ; Flag indicates which number is larger. See also 
@@ -3918,7 +3918,7 @@ z_max:          rts
 
 
 ; ## MIN ( n n -- n ) "Keep smaller of two numbers"
-; ## "min"  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## "min"  coded  ANSI core
         ; """Adapted from Lance A. Leventhal "6502 Assembly Language
         ; Subroutines." Negative Flag indicateds which number is larger. See
         ; http://www.righto.com/2012/12/the-6502-overflow-flag-explained.html 
@@ -3958,7 +3958,7 @@ z_min:          rts
 
 
 ; ## MINUS ( n n -- n ) "Subtract TOS from NOS"
-; ## "-"  src: ANSI core  b: 15  c: TBA  status: tested
+; ## "-"  tested  ANSI core
 xt_minus:       
                 cpx #dsp0-3
                 bmi +
@@ -3981,7 +3981,7 @@ z_minus:        rts
 
 
 ; ## MINUS_TRAILING ( addr u1 -- addr u2 ) "Remove trailing spaces"
-; ## "-trailing"  src: ANSI string  b: TBA  c: TBA  status: coded
+; ## "-trailing"  coded  ANSI string
         ; """We assume that string is at most 255 chars long"""
 .scope
 xt_minus_trailing:
@@ -4028,7 +4028,7 @@ z_minus_trailing:
 
 
 ; ## MOVE ( addr1 addr2 u -- ) "Copy bytes"
-; ## "move"  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## "move"  coded  ANSI core
         ; """Copy u "address units" from addr1 to addr2. Since our address
         ; units are bytes, this is just a front-end for CMOVE and CMOVE>. This
         ; is actually the only one of these three words that is in the CORE
@@ -4069,7 +4069,7 @@ z_move:         rts
 
 
 ; ## NAME_TO_INT ( nt -- xt ) "Convert Name Token to Execute Token"
-; ## "name>int"  src: Gforth  b: 34  c: TBA  status: coded
+; ## "name>int"  coded  Gforth
 ; TODO deal with compile-only words
         ; """See
         ; https://www.complang.tuwien.ac.at/forth/gforth/Docs-html/Name-token.html
@@ -4105,7 +4105,7 @@ z_name_to_int:  rts
 
 
 ; ## NAME_TO_STRING ( nt -- addr u ) "Given a name token, return string of word"
-; ## "name>string"  src: Gforth  b: 31 c: TBA  status: tested
+; ## "name>string"  tested  Gforth
 .scope
 xt_name_to_string:
                 cpx #dsp0-1
@@ -4137,7 +4137,7 @@ z_name_to_string:
 .scend
 
 ; ## NC_LIMIT ( -- addr ) "Return address where NC-LIMIT value is kept"
-; ## "nc-limit"  src: Tali Forth  b: TBA  c: TBA  status: tested
+; ## "nc-limit"  tested  Tali Forth
 .scope
 xt_nc_limit:
                 dex
@@ -4152,7 +4152,7 @@ z_nc_limit:     rts
 
 
 ; ## NEGATE ( n -- n ) "Two's complement"
-; ## "negate"  src: ANSI core  b: 17  c: TBA  status: tested
+; ## "negate"  tested  ANSI core
 xt_negate:      
                 cpx #dsp0-1
                 bmi +
@@ -4172,7 +4172,7 @@ z_negate:       rts
 
 
 ; ## NEVER_NATIVE ( -- ) "Flag last word as never natively compiled"
-; ## "never-compile"  src: Tali Forth  b: TBA  c: TBA  status: coded
+; ## "never-compile"  coded  Tali Forth
 xt_never_native:
                 ldy #1          ; offset for status byte
                 lda (dp),y
@@ -4183,7 +4183,7 @@ z_never_native:
 
 
 ; ## NIP ( b a -- a ) "Delete NOS"
-; ## "nip"  src: ANSI core ext  b: 10  c: TBA  status: coded
+; ## "nip"  coded  ANSI core ext
 xt_nip:         
                 cpx #dsp0-3
                 bmi +
@@ -4201,7 +4201,7 @@ z_nip:          rts
 
 
 ; ## NOT_EQUALS ( n m -- f ) "Return a true flag if TOS != NOS"
-; ## "<>"  src: ANSI core ext  b: TBA  c: TBA  status: coded
+; ## "<>"  coded  ANSI core ext
         ; """This is just a variant of EQUAL, we code it separately
         ; for speed.
         ; """
@@ -4240,7 +4240,7 @@ z_not_equals:   rts
 
 
 ; ## NOT_ROTE ( a b c -- c a b ) "Rotate upwards"
-; ## "-rot"  src: Gforth  b: TBA  c: TBA  status: coded
+; ## "-rot"  coded  Gforth
 .scope
 xt_not_rote:    
                 cpx #dsp0-5
@@ -4273,7 +4273,7 @@ z_not_rote:     rts
 
 
 ; ## NUMBER ( addr u -- u | d ) "Convert a number string"
-; ## "number"  src: Tali Forth  b: TBA  c: TBA  status: coded
+; ## "number"  tested  Tali Forth
         ; """Convert a number string to a double or single cell number. This
         ; is a wrapper for >NUMBER and follows the convention set out in the 
         ; "Forth Programmer's Handbook" (Conklin & Rather) 3rd edition p. 87.
@@ -4420,7 +4420,7 @@ z_number:       rts
 
 
 ; ## NUMBER_SIGN ( ud -- ud ) "Add character to pictured output string"
-; ## "#"  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## "#"  coded  ANSI core
         ; """Add one char to the beginning of the pictured output string. Based
         ; on https://github.com/philburk/pforth/blob/master/fth/numberio.fth
         ; Forth code  BASE @ UD/MOD ROT 9 OVER < IF 7 + THEN [CHAR] 0 + HOLD ;
@@ -4454,7 +4454,7 @@ z_number_sign:
 
 
 ; ## NUMBER_SIGN_GREATER ( d -- addr u ) "Finish pictured number conversion"
-; ## "#>"  src: ANSI core  b: 26  c: TBA  status: coded
+; ## "#>"  coded  ANSI core
         ; """Finish conversion of pictured number string, putting address and
         ; length on the Data Stack. Original Fort is  2DROP HLD @ PAD OVER -
         ; Based on
@@ -4495,7 +4495,7 @@ z_number_sign_greater:
 
 
 ; ## NUMBER_SIGN_S ( d -- addr u ) "Completely convert pictured output"
-; ## "#s"  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## "#s"  coded  ANSI core
         ; """Completely convert number for pictured numerical output. Based on
         ; https://github.com/philburk/pforth/blob/master/fth/system.fth
         ; Original Forth code  BEGIN # 2DUP OR 0= UNTIL
@@ -4524,7 +4524,7 @@ z_number_sign_s:
 
 
 ; ## ONE ( -- n ) "Push the number 1 to the Data Stack"
-; ## "1"  src: Tali Forth  b: 8  c: TBA  status: tested
+; ## "1"  tested  Tali Forth
 xt_one:         
                 dex
                 dex
@@ -4536,7 +4536,7 @@ z_one:          rts
 
 
 ; ## ONE_MINUS ( u -- u-1 ) "Decrease TOS by one"
-; ## "1-"  src: ANSI core  b: 8  c: TBA  status: tested
+; ## "1-"  tested  ANSI core
 .scope
 xt_one_minus:   
                 cpx #dsp0-1
@@ -4554,7 +4554,7 @@ z_one_minus:    rts
 
 
 ; ## ONE_PLUS ( u -- u+1 ) "Increase TOS by one"
-; ## "1+"  src: ANSI core  b: 6  c: 14-15  status: tested
+; ## "1+"  tested  ANSI core
 .scope
 xt_one_plus:    
                 cpx #dsp0-1
@@ -4571,7 +4571,7 @@ z_one_plus:     rts
 
 
 ; ## OR ( m n -- n ) "Logically OR TOS and NOS"
-; ## "or"  src: ANSI core  b: 14  c: TBA  status: coded
+; ## "or"  coded  ANSI core
 xt_or:          
                 cpx #dsp0-3
                 bmi +
@@ -4593,7 +4593,7 @@ z_or:           rts
 
 
 ; ## OUTPUT ( -- addr ) "Return the address of the EMIT vector address"
-; ## "output"  src: Tali Forth  b: TBA  c: TBA  status: coded
+; ## "output"  coded  Tali Forth
 xt_output:      
         ; """Return the address where the jump target for EMIT is stored (but
         ; not the vector itself). By default, this will hold the value of 
@@ -4611,7 +4611,7 @@ z_output:       rts
 
 
 ; ## OVER ( b a -- b a b ) "Copy NOS to TOS"
-; ## "over"  src: ANSI core  b: 10  c: TBA  status: coded
+; ## "over"  coded  ANSI core
 xt_over:        
                 cpx #dsp0-3
                 bmi +
@@ -4630,7 +4630,7 @@ z_over:         rts
 
 
 ; ## PAD ( -- addr ) "Return address of user scratchpad"
-; ## "pad"  src: ANSI core ext  b: TBA  c: TBA  status: coded
+; ## "pad"  coded  ANSI core ext
         ; """Return address to a temporary area in free memory for user. Must
         ; be at least 84 bytes in size (says ANSI). It is located relative to
         ; the compile area pointer (CP) and therefore varies in position.
@@ -4653,7 +4653,7 @@ z_pad:          rts
 
 
 ; ## PAGE ( -- ) "Clear the screen"
-; ## "page"  src: ANSI facility  b: TBA  c: TBA  status: coded
+; ## "page"  tested  ANSI facility
         ; """Clears a page if supported by ANSI terminal codes. This is 
         ; Clear Screen ("ESC[2J") plus moving the cursor to the top
         ; left of the screen
@@ -4677,7 +4677,7 @@ z_page:         rts
 
 
 ; ## PARSE_NAME ( "name" -- addr u ) "Parse the input"
-; ## "parse-name"  src: ANSI core ext  b: TBA  c: TBA  status: coded
+; ## "parse-name"  tested  ANSI core ext
         ; """Find next word in input string, skipping leading spaces. This is 
         ; a special form of PARSE and drops through to that word. See PARSE 
         ; for more detail. We use this word internally for the interpreter
@@ -4780,7 +4780,7 @@ _char_found:
 .scend
 
 ; ## PARSE ( "name" c -- addr u ) "Parse input with delimiter character"
-; ## "parse"  src: ANSI core ext  b: TBA  c: TBA  status: coded
+; ## "parse"  tested  ANSI core ext
         ; """Find word in input string delimited by character given. Do not
         ; skip leading delimiters -- this is the main difference to PARSE-NAME.
         ; PARSE and PARSE-NAME replace WORD in modern systems. ANSI discussion
@@ -4934,7 +4934,7 @@ z_parse:        rts
 
 
 ; ## PICK ( n n u -- n n n ) "Move element u of the stack to TOS"
-; ## "pick"  src: ANSI core ext  b: TBA  c: TBA  status: coded
+; ## "pick"  tested  ANSI core ext
         ; """Take the u-th element out of the stack and put it on TOS,
         ; overwriting the original TOS. 0 PICK is equivalent to DUP, 1 PICK to
         ; OVER. Note that using PICK is considered poor coding form. Also note
@@ -4943,7 +4943,10 @@ z_parse:        rts
 .scope
 xt_pick:
                 ; Checking for underflow is difficult because it depends on
-                ; which element we want to grab
+                ; which element we want to grab. We could probably figure
+                ; something out, but it wouldn't work with underflow stripping
+                ; Since using PICK is considered poor form anyway, we just
+                ; leave it as it is
 
                 asl 0,x         ; we assume u < 128 (stack is small)
                 txa
@@ -4960,7 +4963,7 @@ z_pick:         rts
 
 
 ; ## PLUS ( n n -- n ) "Add TOS and NOS"
-; ## "+"  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## "+"  tested  ANSI core
 xt_plus:        
                 cpx #dsp0-3
                 bmi +
@@ -4984,7 +4987,7 @@ z_plus:         rts
 
 
 ; ## PLUS_STORE ( n addr -- ) "Add number to value at given address"
-; ## "+!"  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## "+!"  coded  ANSI core
 xt_plus_store:
                 cpx #dsp0-3
                 bmi +
@@ -5016,8 +5019,8 @@ xt_plus_store:
 z_plus_store:   rts
 
 
-; ## POSTPONE ( -- ) "<TBA>"
-; ## "postpone"  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## POSTPONE ( -- ) "Change IMMEDIATE status (it's complicated)"
+; ## "postpone"  coded   ANSI core
         ; """Add the compilation behavior of a word to a new word at
         ; compile time. If the word that follows it is immediate, include
         ; it so that it will be compiled when the word being defined is
@@ -5099,7 +5102,7 @@ z_postpone:     rts
 
 
 ; ## QUESTION ( addr -- ) "Print content of a variable"
-; ## "?"  src: ANSI tools  b: 6  c: TBA  status: coded
+; ## "?"  tested  ANSI tools
         ; """Only used interactively. Since humans are so slow, we
         ; save size and just go for the subroutine jumps
         ; """
@@ -5112,7 +5115,7 @@ z_question:     rts
 
 
 ; ## QUESTION_DUP ( n -- 0 | n n ) "Duplicate TOS non-zero"
-; ## "?dup"  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## "?dup"  coded  ANSI core
 .scope
 xt_question_dup:
                 cpx #dsp0-1
@@ -5138,7 +5141,7 @@ z_question_dup: rts
 
 
 ; ## R_FETCH ( -- n ) "Get copy of top of Return Stack"
-; ## "r@"  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## "r@"  coded  ANSI core
         ; """This word is Compile Only in Tali Forth, though Gforth has it
         ; work normally as well -- An alternative way to write this word
         ; would be to access the elements on the stack directly like 2R@
@@ -5177,7 +5180,7 @@ z_r_fetch:      rts
 
 
 ; ## R_FROM ( -- n )(R: n --) "Move top of Return Stack to TOS"
-; ## "r>"  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## "r>"  coded  ANSI core
         ; """Move Top of Return Stack to Top of Data Stack. We have to move
         ; the RTS address out of the way first. This word is handled
         ; differently for native and and subroutine compilation, see COMPILE,
@@ -5215,7 +5218,7 @@ z_r_from:       rts
 
 
 ; ## RECURSE ( -- ) "Copy recursive call to word being defined"
-; ## "recurse"  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## "recurse"  coded  ANSI core
         ; """This word may not be natively compiled"""
 .scope
 xt_recurse:
@@ -5264,7 +5267,7 @@ z_recurse:      rts
 
 
 ; ## REFILL ( -- f ) "Refill the input buffer"
-; ## "refill"  src: ANSI core ext  b: TBA  c: TBA  status: coded
+; ## "refill"  coded  ANSI core ext
         ; """Attempt to fill the input buffer from the input source, returning
         ; a true flag if successful. When the input source is the user input
         ; device, attempt to receive input into the terminal input buffer. If
@@ -5347,7 +5350,7 @@ z_refill:       rts
 
 
 ; ## RIGHT_BRACKET ( -- ) "Enter the compile state"
-; ## "]"  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## "]"  coded  ANSI core
         ; """This is an immediate word."""
 xt_right_bracket:
                 lda #$ff
@@ -5358,7 +5361,7 @@ z_right_bracket:
 
 
 ; ## ROT ( a b c -- b c a ) "Rotate first three stack entries downwards"
-; ## "rot"  src: ANSI core  b: 28  c: TBA  status: coded
+; ## "rot"  coded  ANSI core
         ; """Remember "R for 'Revolution' - the bottom entry comes out
         ; on top!
         ; """
@@ -5392,7 +5395,7 @@ z_rot:          rts
 
 
 ; ## RSHIFT ( x u -- x ) "Shift TOS to the right"
-; ## "rshift"  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## "rshift"  coded  ANSI core
 xt_rshift:      
                 cpx #dsp0-3
                 bmi +
@@ -5418,7 +5421,7 @@ z_rshift:       rts
 
 
 ; ## S_QUOTE ( "string" -- )( -- addr u ) "Store string in memory"
-; ## "s""  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## "s""  coded  ANSI core
         ; """Store address and length of string given, returning ( addr u ).
         ; ANSI core claims this is compile-only, but the file set expands it
         ; to be interpreted, so it is a state-sensitive word, which in theory
@@ -5504,7 +5507,7 @@ z_s_quote:      rts
 .scend
 
 ; ## S_TO_D ( u -- d ) "Convert single cell number to double cell"
-; ## "s>d"  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## "s>d"  coded  ANSI core
 .scope
 xt_s_to_d:
                 cpx #dsp0-1
@@ -5529,7 +5532,7 @@ z_s_to_d:       rts
 
 
 ; ## SEMICOLON ( -- ) "End compilation of new word"
-; ## ";"  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## ";"  coded  ANSI core
         ; """End the compilation of a new word into the Dictionary. When we
         ; enter this, WORKWORD is pointing to the nt_ of this word in the
         ; Dictionary, DP to the previous word, and CP to the next free byte.
@@ -5573,7 +5576,7 @@ z_semicolon:    rts
 
 
 ; ## SIGN ( n -- ) "Add minus to pictured output"
-; ## "sign"  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## "sign"  coded  ANSI core
         ; """Code based on 
         ; http://pforth.googlecode.com/svn/trunk/fth/numberio.fth
         ; Original Forth code is   0< IF ASCII - HOLD THEN 
@@ -5604,7 +5607,7 @@ z_sign:         rts
 
 
 ; ## SLASH_STRING ( addr u n -- addr u ) "Shorten string by n"
-; ## "/string"  src: ANSI string b: TBA  c: TBA  status: coded
+; ## "/string"  coded  ANSI string
         ; """Forth code is
         ; : /STRING ( ADDR U N -- ADDR U ) ROT OVER + ROT ROT - ; 
         ; Put differently, we need to add TOS and 3OS, and subtract
@@ -5642,7 +5645,7 @@ z_slash_string: rts
 .scend
 
 ; ## SLITERAL ( addr u -- )( -- addr u ) "Compile a string for runtime"
-; ## "sliteral"  src: ANSI string  b: TBA  c: TBA  status: coded
+; ## "sliteral" coded  ANSI string
         ; """Currently, we only copy strings of up to 255 characters
         ; """
 .scope
@@ -5818,7 +5821,7 @@ sliteral_runtime:
 
 
 ; ## SM_SLASH_REM ( d n1 -- n2 n3 ) "Symmetic signed division"
-; ## "sm/rem"  src: ANSI core  b: TBA  c: TBA  status: tested
+; ## "sm/rem"  tested  ANSI core
         ; """; Symmetic signed division. Compare FM/MOD. Based on F-PC 3.6
         ; by Ulrich Hoffmann. See http://www.xlerb.de/uho/ansi.seq Forth:
         ; OVER >R 2DUP XOR 0< >R ABS >R DABS R> UM/MOD R> ?NEGATE SWAP
@@ -5875,7 +5878,7 @@ z_sm_slash_rem: rts
 
 
 ; ## SOURCE ( -- addr u ) "Return location and size of input buffer""
-; ## "source"  src: ANSI core  b: 20  c: TBA  status: coded
+; ## "source"  coded  ANSI core
 xt_source:      
                 ; add address
                 dex
@@ -5897,7 +5900,7 @@ z_source:       rts
 
 
 ; ## SOURCE_ID ( -- n ) "Return source identifier"
-; ## "source-id"  src: ANSI core ext  b: 10  c: TBA  status: coded
+; ## "source-id"  coded  ANSI core ext
         ; """Identify the input source unless it is a block (s. Conklin &
         ; Rather p. 156). Since we don't have blocks (yet), this will give
         ; the input source: 0 is keyboard, -1 (0ffff) is character string,
@@ -5915,7 +5918,7 @@ z_source_id:    rts
 
 
 ; ## SPACE ( -- ) "Print a single space"
-; ## "space"  src: ANSI core  b: 5  c: TBA  status: tested
+; ## "space"  tested  ANSI core
 xt_space:      
                 lda #AscSP
                 jsr emit_a
@@ -5924,7 +5927,7 @@ z_space:        rts
 
 
 ; ## SPACES ( u -- ) "Print a number of spaces"
-; ## "spaces"  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## "spaces"  coded  ANSI core
 ; TODO test with TOS > 256
 .scope
 xt_spaces:      
@@ -5987,7 +5990,7 @@ z_spaces:       rts
 
 
 ; ## STAR ( n n -- n ) "16*16 --> 16 "
-; ## "*"  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## "*"  coded  ANSI core
         ; """Multiply two signed 16 bit numbers, returning a 16 bit result.
         ; This is nothing  more than UM* DROP
         ; """
@@ -6007,7 +6010,7 @@ z_star:         rts
 
 
 ; ## STATE ( -- addr ) "Return the address of compilation state flag"
-; ## "state"  src: ANSI core  b: 10  c: TBA  status: coded
+; ## "state"  coded  ANSI core
         ; """STATE is true when in compilation state, false otherwise. Note
         ; we do not return the state itself, but only the address where
         ; it lives. The state should not be changed directly by the user; see
@@ -6025,7 +6028,7 @@ z_state:        rts
 
 
 ; ## STORE ( n addr -- ) "Store TOS in memory"
-; ## "!"  src: ANSI core  b: 18  c: TBA  status: tested
+; ## "!"  tested  ANSI core
 .scope
 xt_store:
                 cpx #dsp0-3
@@ -6053,7 +6056,7 @@ z_store:        rts
 
 
 ; ## SWAP ( b a -- a b ) "Exchange TOS and NOS"
-; ## "swap"  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## "swap"  tested  ANSI core
 xt_swap:        
 .scope
                 cpx #dsp0-3
@@ -6077,7 +6080,7 @@ z_swap:         rts
 
 
 ; ## TICK ( "name" -- xt ) "Return a word's execution token (xt)"
-; ## "'"  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## "'"  coded  ANSI core
 .scope
 xt_tick:        
                 jsr xt_parse_name       ; ( -- addr u )
@@ -6108,7 +6111,7 @@ z_tick:         rts
 
 
 ; ## TO_BODY ( xt -- addr ) "Return a word's Code Field Area (CFA)"
-; ## ">body"  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## ">body"  coded  ANSI core
         ; """Given a word's execution token (xt), return the address of the
         ; start of that word's parameter field (PFA). This is the address that
         ; HERE would return right after CREATE. This is a difficult word for
@@ -6199,7 +6202,7 @@ z_to_body:      rts
 
 
 ; ## TO_IN ( -- addr ) "Return address of the input pointer"
-; ## ">in"  src: ANSI core  b: 10  c: TBA  status: coded
+; ## ">in"  coded  ANSI core
 xt_to_in:       
                 dex
                 dex
@@ -6213,7 +6216,7 @@ z_to_in:        rts
 
 
 ; ## TO_NUMBER ( ud addr u -- ud addr u ) "Convert a number"
-; ## ">number"  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## ">number"  coded  ANSI core
         ; """Convert a string to a double number. Logic here is based on the
         ; routine by Phil Burk of the same name in pForth, see
         ; https://github.com/philburk/pforth/blob/master/fth/numberio.fth
@@ -6399,7 +6402,7 @@ z_to_number:    rts
 
 
 ; ## TO_R ( n -- )(R: -- n) "Push TOS to the Return Stack"
-; ## ">r"  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## ">r"  coded  ANSI core
         ; """This word is handled differently for native and for 
         ; subroutine coding, see COMPILE, . This is a complile-only
         ; word.
@@ -6441,7 +6444,7 @@ z_to_r:         rts
 
 
 ; ## TRUE ( -- f ) "Push TRUE flag to Data Stack"
-; ## "true"  src: ANSI core ext  b: 8  c: TBA  status: coded
+; ## "true"  tested  ANSI core ext
 xt_true:        dex
                 dex
                 lda #$ff
@@ -6452,7 +6455,7 @@ z_true:         rts
 
 
 ; ## TUCK ( b a -- a b a ) "Copy TOS below NOS"
-; ## "tuck"  src: ANSI core ext  b: 24  c: TBA  status: coded
+; ## "tuck"  coded  ANSI core ext
 xt_tuck:        
                 cpx #dsp0-3
                 bmi +
@@ -6480,7 +6483,7 @@ z_tuck:         rts
 
 
 ; ## TWO ( -- u ) "Push the number 2 to stack"
-; ## "2"  src: Tali Forth  b: TBA  c: TBA  status: coded
+; ## "2"  tested  Tali Forth
 xt_two:
                 dex
                 dex
@@ -6492,7 +6495,7 @@ z_two:          rts
 
 
 ; ## TWO_DROP ( n n -- ) "Drop TOS and NOS"
-; ## "2drop"  src: ANSI core  b: 4  c: TBA  status: coded
+; ## "2drop"  tested  ANSI core
 .scope
 xt_two_drop:    
                 cpx #dsp0-3
@@ -6510,7 +6513,7 @@ z_two_drop:     rts
 
 
 ; ## TWO_DUP ( a b -- a b a b ) "Duplicate first two stack elements"
-; ## "2dup"  src: ANSI core  b: 20  c: TBA  status: coded
+; ## "2dup"  coded  ANSI core
 .scope
 xt_two_dup:
                 cpx #dsp0-3
@@ -6539,7 +6542,7 @@ z_two_dup:      rts
 
 
 ; ## TWO_OVER ( d1 d2 -- d1 d2 d1 ) "Copy double word NOS to TOS"
-; ## "2over"  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## "2over"  coded  ANSI core
 .scope
 xt_two_over:
                 cpx #dsp0-7
@@ -6569,7 +6572,7 @@ z_two_over:     rts
 
 
 ; ## TWO_R_FETCH ( -- n n ) "Copy top two entries from Return Stack"
-; ## "2r@"  src: ANSI core ext  b: TBA  c: TBA  status: coded
+; ## "2r@"  coded  ANSI core ext
         ; """This is R> R> 2DUP >R >R SWAP but we can do it a lot faster in
         ; assembler. We use trickery to access the elements on the Return
         ; Stack instead of pulling the return address first and storing
@@ -6612,7 +6615,7 @@ z_two_r_fetch:  rts
 
 
 ; ## TWO_R_FROM ( -- n1 n2 ) (R: n1 n2 -- ) "Pull two cells from Return Stack"
-; ## "2r>"  src: ANSI core ext  b: TBA  c: TBA  status: coded
+; ## "2r>"  coded  ANSI core ext
 	; """Pull top two entries from Return Stack. Is the same as
         ; R> R> SWAP. As with R>, the problem with the is word is that
         ; the top value on the ReturnStack for a STC Forth is the
@@ -6664,7 +6667,7 @@ z_two_r_from:   rts
 
 
 ; ## TWO_STAR ( n -- n ) "Multiply TOS by two"
-; ## "2*"  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## "2*"  coded  ANSI core
         ; """Also used for CELLS"""
 xt_two_star:
                 cpx #dsp0-1
@@ -6678,7 +6681,7 @@ z_two_star:     rts
 
 
 ; ## TWO_SWAP ( n1 n2 n3 n4 -- n3 n4 n1 n1 ) "Exchange two double words"
-; ## "2swap"  src: ANSI core  b: TBA  c: TBA  status: coded
+; ## "2swap"  coded  ANSI core
 .scope
 xt_two_swap:
                 cpx #dsp0-7
@@ -6715,7 +6718,7 @@ z_two_swap:     rts
 
 
 ; ## TWO_TO_R ( n1 n2 -- )(R: -- n1 n2 "Push top two entries to Return Stack"
-; ## "2>r"  src: ANSI core ext  b: TBA  c: TBA  status: coded
+; ## "2>r"  coded  ANSI core ext
         ; """Push top two entries to Return Stack. The same as SWAP >R >R
         ; except that if we jumped here, the return address will be in the
         ; way. May not be natively compiled unless we're clever and use
@@ -6766,7 +6769,7 @@ z_two_to_r:     rts
 
 
 ; ## TWO_VARIABLE ( "name" -- ) "Create a variable for a double word"
-; ## "2variable"  src: ANSI double  b: 14  c: TBA  status: coded
+; ## "2variable"  coded  ANSI double
         ; """This can be realized in Forth as either 
         ; CREATE 2 CELLS ALLOT  or just  CREATE 0 , 0 , 
         ; Note that in this case, the variable is not initialized to
@@ -6789,7 +6792,7 @@ z_two_variable: rts
 
 
 ; ## TYPE ( addr u -- ) "Print string"
-; ## "type"  src: ANSI core  b: 43  c: TBA  status: tested
+; ## "type"  tested  ANSI core
         ; """Works through EMIT to allow OUTPUT revectoring. Currently, only
         ; strings of up to 255 characters are printed
         ; """
@@ -6834,7 +6837,7 @@ z_type:         rts
 
 
 ; ## U_DOT ( u -- ) "Print TOS as unsigned number"
-; ## "u."  src: ANSI core  b: 17  c: TBA  status: tested
+; ## "u."  tested  ANSI core
         ; """This is : U. 0 <# #S #> TYPE SPACE ; in Forth
         ; We use the internal assembler function print_u followed
         ; by a single space
@@ -6855,7 +6858,7 @@ z_u_dot:        rts
 
 
 ; ## UD_SLASH_MOD ( ud u -- rem ud ) "32/16 --> 32 Division"
-; ## "ud/mod"  src: Gforth  b: 36  c: TBA  status: coded
+; ## "ud/mod"  coded  Gforth
         ; """Divide double cell number by a single-cell number and return
         ; the quotient ud as TOS in double-cell form and remainder rem
         ; Based on code from pForth, which is in the public domain. Original
@@ -6884,7 +6887,7 @@ z_ud_slash_mod: rts
 
 
 ; ## UF_STRIP ( -- addr ) "Return address where UF-STRIP value is kept"
-; ## "uf-strip"  src: Tali Forth  b: 10  c: TBA  status: tested
+; ## "uf-strip"  tested  Tali Forth
         ; """UF-STRIP is a flag that determines if underflow checking should
         ; be removed during the compilation of new words
         ; """
@@ -6902,7 +6905,7 @@ z_uf_strip:     rts
 
 
 ; ## UM_SLASH_MOD ( ud u -- ur u ) "32/16 -> 16 division"
-; ## "um/mod"  src: ANSI core  b: 71  c: TBA  status: coded
+; ## "um/mod"  coded  ANSI core
         ; """Divide double cell number by single cell number, returning the
         ; quotient as TOS and any remainder as NOS. All numbers are unsigned.
         ; This is the basic division operation all others use. Based on FIG
@@ -6976,7 +6979,7 @@ z_um_slash_mod: rts
 
 
 ; ## UM_STAR ( u u -- ud ) "Multiply 16 x 16 -> 32"
-; ## "um*"  src: ANSI core  b: 75  c: TBA  status: coded
+; ## "um*"  coded  ANSI core
         ; """Multiply two unsigned 16 bit numbers, producing a 32 bit result.
         ; This is based on modified FIG Forth code by Dr. Jefyll, see
         ; http://forum.6502.org/viewtopic.php?f=9&t=689 for a detailed
@@ -7052,7 +7055,7 @@ z_um_star:      rts
 
 
 ; ## UNLOOP ( -- )(R: n1 n2 n3 ---) "Drop loop control from Return stack"
-; ## "unloop"  src: ANSI core  b: 6  c: TBA  status: coded
+; ## "unloop"  coded  ANSI core
         ; """Note that 6xPLA uses just as many bytes as a loop would
         ; """
 .scope
@@ -7074,7 +7077,7 @@ z_unloop:       rts
 
 
 ; ## UNUSED ( -- u ) "Return size of space available to Dictionary"
-; ## "unused"  src: ANSI core ext  b: 15  c: TBA  status: coded
+; ## "unused"  coded  ANSI core ext
 xt_unused:      
                 dex
                 dex
@@ -7092,7 +7095,7 @@ z_unused:       rts
 
 
 ; ## VARIABLE ( "name" -- ) "Define a variable"
-; ## "variable"  src: ANSI core  b: 24  c: TBA  status: tested
+; ## "variable"  tested  ANSI core
         ; """There are various Forth definitions for this word, such as
         ; CREATE 1 CELLS ALLOT  or  CREATE 0 ,  We use a variant of the
         ; second one so the variable is initialized to zero
@@ -7122,7 +7125,7 @@ z_variable:     rts
 
 
 ; ## WORD ( char "name " -- caddr ) "Parse input stream"
-; ## "word"  src: ANSI core  b: 75  c: TBA  status: coded
+; ## "word"  coded  ANSI core
         ; """Obsolete parsing word included for backwards compatibility only.
         ; Do not use this, use PARSE or PARSE-NAME. Skips leading delimiters
         ; and copies word to storage area for a maximum size of 255 bytes.
@@ -7198,7 +7201,7 @@ z_word:
 
 
 ; ## WORDS ( -- ) "Print known words from Dictionary"
-; ## "words"  src: ANSI tools  b: 56  c: TBA  status: tested
+; ## "words"  tested  ANSI tools
         ; """This is pretty much only used at the command line so we can
         ; be slow and try to save space. DROP must always be the first word in a
         ; clean system (without Forth words), BYE the last. There is no reason
@@ -7262,7 +7265,7 @@ z_words:        rts
 
 
 ; ## WORDSIZE ( nt -- u ) "Get size of word in bytes"
-; ## "wordsize"  src: Tali Forth  b: 38  c: TBA  status: tested
+; ## "wordsize"  tested  Tali Forth
         ; """Given an word's name token (nt), return the size of the word's
         ; payload size in bytes (CFA plus PFA) in bytes. Does not count the
         ; final RTS.
@@ -7305,7 +7308,7 @@ z_wordsize:     rts
 
 
 ; ## XOR ( n n -- n ) "Logically XOR TOS and NOS"
-; ## "xor"  src: ANSI core  b: 14  c: TBA  status: tested
+; ## "xor"  tested  ANSI core
 .scope
 xt_xor:         
                 cpx #dsp0-3
@@ -7329,7 +7332,7 @@ z_xor:          rts
 
 
 ; ## ZERO ( -- 0 ) "Push 0 to Data Stack"
-; ## "0"  src: Tali Forth  b: 6  c: TBA  status: tested
+; ## "0"  tested  Tali Forth
 xt_zero:        
                 dex             ; push
                 dex
@@ -7340,7 +7343,7 @@ z_zero:         rts
 
 
 ; ## ZERO_BRANCH ( f -- ) "Branch if TOS is zero"
-; ## "0branch"  src: Tali Forth  b: 9  c: TBA  status: tested
+; ## "0branch"  tested  Tali Forth
         ; """This exects the next two bytes to be the address of where to
         ; branch to if the test fails. The code may not be natively compiled
         ; because we need the return address provided by JSR's push to the
@@ -7423,7 +7426,7 @@ _done:
 
 
 ; ## ZERO_EQUAL ( n -- f ) "Check if TOS is zero"
-; ## "0="  src: ANSI core  b: 25  c: TBA  status: tested
+; ## "0="  tested  ANSI core
 ; TODO Rewrite to the form of 0<>
 .scope
 xt_zero_equal:  
@@ -7451,7 +7454,7 @@ z_zero_equal:   rts
 
 
 ; ## ZERO_GREATER ( n -- f ) "Return a TRUE flag if TOS is positive"
-; ## "0>"  src: ANSI core ext  b: 25  c: TBA  status: tested
+; ## "0>"  tested   ANSI core ext
 .scope
 xt_zero_greater:
                 cpx #dsp0-1
@@ -7477,7 +7480,7 @@ z_zero_greater: rts
 
 
 ; ## ZERO_LESS ( n -- f ) "Return a TRUE flag if TOS negative"
-; ## "0<"  src: ANSI core  b: 21  c: TBA  status: tested
+; ## "0<"  tested  ANSI core
 .scope
 xt_zero_less:
                 cpx #dsp0-1
@@ -7501,7 +7504,7 @@ z_zero_less:    rts
 
 
 ; ## ZERO_UNEQUAL ( m -- f ) "Return TRUE flag if not zero"
-; ## "0<>"  src: ANSI core ext  b: 23  c: TBA  status: tested
+; ## "0<>"  tested  ANSI core ext
 .scope
 xt_zero_unequal:
                 cpx #dsp0-1

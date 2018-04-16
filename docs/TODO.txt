@@ -4,9 +4,8 @@ First version: 19. Jan 2014
 This version: 16. Apr 2018
 
 TODO POST-ALPHA ("ALL WORDS DO SOMETHING, USUALLY EVEN THE RIGHT THING")
-        - Add size of words to source code
-        - Invent tests for COUNT (and others)
         - Test all words, adding any new tests to documentation
+        - Review (and spellcheck) documentation
 
 
 TODO POST-BETA ("ALL THERE, BUT BEWARE OF SNEAKY BUGS")
@@ -14,7 +13,6 @@ TODO POST-BETA ("ALL THERE, BUT BEWARE OF SNEAKY BUGS")
         - Move adjust_z from CONSTANT to taliforth.asm (it's too long!)
         - Warn if newly defined word already in Dictionary
         - Code temporary high-level Forth words such as WITHIN natively
-        - Add adaptive underflow checking to PICK
         - Check where all "STY 0,X" can be used to good effect
         - In ALLOT, figure out how to handle release of too much memory
         - Add Editor in Forth based on ed
@@ -38,7 +36,6 @@ TODO AT SOME POINT
         - Allow SLITERAL to store strings longer than 255 chars
         - Allow S" and ." to handle strings longer than 255 chars
         - Allow -TRAILING to handle strings longer than 255 chars
-        - Automatically calculate native word size via ophis_labelmap
 
 
 -----------------------------------------------------------------------
