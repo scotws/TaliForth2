@@ -4,6 +4,13 @@
 # Scot W. Stevenson <scot.stevenson@gmail.com>
 # First version: 21. Nov 2017
 # This version: 16. Apr 2018
+"""Creates a markdown formated list of native words based on the header
+comments in native_words.asm
+"""
+
+# TODO Instead of taking the word size in bytes from the headers in the source
+# code, we should automatically calculate them from the difference of xt_word
+# and z_word in docs/ophis_labelmap.txt 
 
 import sys
 
@@ -48,7 +55,9 @@ def print_header():
 
 def print_line(fl, sl):
     """Given the first and second line as strings, return a string with
-    formatted information for WORDLIST.md
+    formatted information for WORDLIST.md. Note this is very brittle code
+    because it all goes to hell if the format of the comment strings in
+    the header changes
     """
     global not_tested, missing_size, missing_cycles
 

@@ -38,6 +38,7 @@ TODO AT SOME POINT
         - Allow SLITERAL to store strings longer than 255 chars
         - Allow S" and ." to handle strings longer than 255 chars
         - Allow -TRAILING to handle strings longer than 255 chars
+        - Automatically calculate native word size via ophis_labelmap
 
 
 -----------------------------------------------------------------------
