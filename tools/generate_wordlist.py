@@ -58,7 +58,7 @@ def print_line(fl, sl):
     l2 = sl[len(MARKER):].split()
 
     name = l1[0]
-    word = l2[0][1:-1]
+    word = '`{0}`'.format(l2[0][1:-1]) # Include backticks
     size = l2[-5]
     cycles = l2[-3]
     status = l2[-1]
