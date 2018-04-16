@@ -6,6 +6,7 @@ This version: 16. Apr 2018
 TODO POST-ALPHA ("ALL WORDS DO SOMETHING, USUALLY EVEN THE RIGHT THING")
         - Test all words, adding any new tests to documentation
         - Review (and spellcheck) documentation
+        - Write documentation for Tali Forth words (WORDSIZE, etc)
 
 
 TODO POST-BETA ("ALL THERE, BUT BEWARE OF SNEAKY BUGS")

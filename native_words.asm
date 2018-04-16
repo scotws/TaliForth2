@@ -15,9 +15,13 @@
 ; docs folder. Status entries are 
 ;
 ;       TBA --> fragment --> coded --> tested
+;
+; "Tested" is a grand word: Currently there is no automatic testing
+; and edge cases are usually not covered. 
+
 
 ; ## COLD ( -- ) "Reset the Forth system"
-; ## "cold"  coded  Tali Forth
+; ## "cold"  tested  Tali Forth
 ;       """Reset the Forth system. Does not restart the kernel,
 ;       use the 65c02 reset for that. Flows into ABORT.
 ;       """
@@ -2398,7 +2402,14 @@ z_drop:         rts
 
 
 ; ## DUMP ( addr u -- ) "Display a memory region"
-; ## "dump"  coded  ANSI tools
+; ## "dump"  tested  ANSI tools
+        ; """DUMP's exact output is defined as "implementation dependent".
+        ; A better version of this would print the ASCII characters after
+        ; the hex values. This is in assembler because it is really
+        ; useful for testing and development, so we want to have it work
+        ; as soon as possible.
+        ; """
+        ; TODO append ASCII values at end of line
 .scope
 xt_dump:        
 _row:
@@ -2545,7 +2556,7 @@ z_equal:        rts
 
 
 ; ## BLANK ( addr u -- ) "Fill memory region with spaces"
-; ## "blank"  coded  ANSI core ext
+; ## "blank"  tested  ANSI core ext
 xt_blank:
                 ; We don't check for underflow here because
                 ; we deal with that in FILL
@@ -2559,7 +2570,7 @@ xt_blank:
 
 
 ; ## ERASE ( addr u -- ) "Fill memory region with zeros"
-; ## "erase"  coded  ANSI core ext
+; ## "erase"  tested  ANSI core ext
 .scope
 xt_erase:
                 ; We don't check for underflow here because
@@ -2572,7 +2583,7 @@ xt_erase:
                 ; fall through to FILL
 
 ; ## FILL ( addr u char -- ) "Fill a memory region with a character"
-; ## "fill" coded  ANSI core
+; ## "fill"  tested  ANSI core
         ; """Fill u bytes of memory with char starting at addr. Note that
         ; this works on bytes, not on cells. On an 8-bit machine such as the
         ; 65c02, this is a serious pain in the rear. It is not defined what
