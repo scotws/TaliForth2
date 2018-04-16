@@ -60,7 +60,7 @@ and user-defined words coded in Forth are in `forth_code`.
 | DOT_S | `.s` | ANSI tools | TBA | TBA | coded |
 | DROP | `drop` | ANSI core | 11 | TBA | tested |
 | DUMP | `dump` | ANSI tools | TBA | TBA | coded |
-| DUP | `dup` | ANSI core | 19 | TBA | coded |
+| DUP | `dup` | ANSI core | 19 | TBA | tested |
 | EMIT | `emit` | ANSI core | TBA | TBA | tested |
 | EQUAL | `=` | ANSI core | TBA | TBA | coded |
 | BLANK | `blank` | ANSI core ext | TBA | TBA | coded |
@@ -99,7 +99,7 @@ and user-defined words coded in Forth are in `forth_code`.
 | MARKER | `marker` | ANSI core ext | TBA | TBA | coded |
 | MAX | `max` | ANSI core | 24 | TBA | coded |
 | MIN | `min` | ANSI core | TBA | TBA | coded |
-| MINUS | `-` | ANSI core | 15 | TBA | coded |
+| MINUS | `-` | ANSI core | 15 | TBA | tested |
 | MINUS_TRAILING | `-trailing` | ANSI string | TBA | TBA | coded |
 | MOVE | `move` | ANSI core | TBA | TBA | coded |
 | NAME_TO_INT | `name>int` | Gforth | 34 | TBA | coded |
@@ -115,8 +115,8 @@ and user-defined words coded in Forth are in `forth_code`.
 | NUMBER_SIGN_GREATER | `#>` | ANSI core | 26 | TBA | coded |
 | NUMBER_SIGN_S | `#s` | ANSI core | TBA | TBA | coded |
 | ONE | `1` | Tali Forth | 8 | TBA | tested |
-| ONE_MINUS | `1-` | ANSI core | 8 | TBA | coded |
-| ONE_PLUS | `1+` | ANSI core | 6 | 14-15 | coded |
+| ONE_MINUS | `1-` | ANSI core | 8 | TBA | tested |
+| ONE_PLUS | `1+` | ANSI core | 6 | 14-15 | tested |
 | OR | `or` | ANSI core | 14 | TBA | coded |
 | OUTPUT | `output` | Tali Forth | TBA | TBA | coded |
 | OVER | `over` | ANSI core | 10 | TBA | coded |
@@ -191,7 +191,7 @@ and user-defined words coded in Forth are in `forth_code`.
 
 Found **183** native words in `native_words.asm`
 
-Of those, **126** are not marked as "tested",
+Of those, **122** are not marked as "tested",
 **95** are missing size information,
 and **182** are missing cycle information
 

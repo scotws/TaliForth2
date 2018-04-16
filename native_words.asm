@@ -2464,7 +2464,7 @@ z_dump:         rts
 
 
 ; ## DUP ( u -- u u ) "Duplicate TOS"
-; ## "dup"  src: ANSI core  b: 19  c: TBA  status: coded
+; ## "dup"  src: ANSI core  b: 19  c: TBA  status: tested
 xt_dup:         
                 cpx #dsp0-1
                 bmi +
@@ -3958,7 +3958,7 @@ z_min:          rts
 
 
 ; ## MINUS ( n n -- n ) "Subtract TOS from NOS"
-; ## "-"  src: ANSI core  b: 15  c: TBA  status: coded
+; ## "-"  src: ANSI core  b: 15  c: TBA  status: tested
 xt_minus:       
                 cpx #dsp0-3
                 bmi +
@@ -4536,7 +4536,7 @@ z_one:          rts
 
 
 ; ## ONE_MINUS ( u -- u-1 ) "Decrease TOS by one"
-; ## "1-"  src: ANSI core  b: 8  c: TBA  status: coded
+; ## "1-"  src: ANSI core  b: 8  c: TBA  status: tested
 .scope
 xt_one_minus:   
                 cpx #dsp0-1
@@ -4554,7 +4554,7 @@ z_one_minus:    rts
 
 
 ; ## ONE_PLUS ( u -- u+1 ) "Increase TOS by one"
-; ## "1+"  src: ANSI core  b: 6  c: 14-15  status: coded
+; ## "1+"  src: ANSI core  b: 6  c: 14-15  status: tested
 .scope
 xt_one_plus:    
                 cpx #dsp0-1
