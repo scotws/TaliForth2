@@ -33,7 +33,7 @@
   \item Barry, Mike, \hyperpage{43}
   \item \texttt{bell}, \hyperpage{16}
   \item \texttt{blk}, \hyperpage{25}
-  \item booting, \hyperpage{25}
+  \item booting, \hyperpage{15}, \hyperpage{25}
   \item \texttt{bounds}, \hyperpage{16}, \hyperpage{41}
   \item \texttt{branch}, \hyperpage{16}
   \item Brodie, Leo, \hyperpage{9}, \hyperpage{33}
@@ -73,6 +73,7 @@
   \item \texttt{does>}, \hyperindexformat{\textbf}{25}, \hyperpage{38}
   \item double cell, \hyperpage{17}, \hyperpage{22}
   \item \texttt{drop}, \hyperpage{16}, \hyperpage{23}, \hyperpage{29}
+  \item \texttt{dump}, \hyperpage{15}
 
   \indexspace
 
@@ -156,7 +157,7 @@
   \item native compiling, \hyperpage{16, 17}
   \item native words, \hyperpage{11}, \hyperpage{16}, \hyperpage{23}
   \item \texttt{nc-limit}, \hyperpage{16, 17}, \hyperpage{30}
-  \item \texttt{never-native}, \hyperpage{16}
+  \item \texttt{never-native}, \hyperpage{17}
   \item nt, \hyperindexformat{\see {name token}}{23}
   \item \texttt{number}, \hyperpage{17}
 

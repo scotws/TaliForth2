@@ -63,9 +63,11 @@
 \indexentry{Linux|hyperpage}{14}
 \indexentry{PIP|hyperpage}{14}
 \indexentry{Moore, Charles|hyperpage}{15}
+\indexentry{booting|hyperpage}{15}
 \indexentry{kernel|hyperpage}{15}
 \indexentry{py65mon|hyperpage}{15}
 \indexentry{Forth words|hyperpage}{15}
+\indexentry{dump@\texttt{dump}|hyperpage}{15}
 \indexentry{Forth words|hyperpage}{15}
 \indexentry{words@\texttt{words}|hyperpage}{16}
 \indexentry{dictionary|hyperpage}{16}
@@ -104,7 +106,7 @@
 \indexentry{latest@\texttt{latest}|hyperpage}{16}
 \indexentry{nc-limit@\texttt{nc-limit}|hyperpage}{16}
 \indexentry{native compiling|hyperpage}{16}
-\indexentry{never-native@\texttt{never-native}|hyperpage}{16}
+\indexentry{never-native@\texttt{never-native}|hyperpage}{17}
 \indexentry{number@\texttt{number}|hyperpage}{17}
 \indexentry{s>number?@\texttt{s>number?}|hyperpage}{17}
 \indexentry{output@\texttt{output}|hyperpage}{17}
