@@ -57,38 +57,38 @@ RTS instruction at the end of each word.
 | QUESTION_DO | `?do` | ANSI core ext | 96 | coded |
 | DO | `do` | ANSI core | 90 | coded |
 | DOES | `does>` | ANSI core | 18 | coded |
-| DOT | `.` | ANSI core | 39 | coded |
+| DOT | `.` | ANSI core | 39 | tested |
 | DOT_QUOTE | `."` | ANSI core | 12 | coded |
-| DOT_S | `.s` | ANSI tools | 67 | coded |
+| DOT_S | `.s` | ANSI tools | 67 | tested |
 | DROP | `drop` | ANSI core | 11 | tested |
 | DUMP | `dump` | ANSI tools | 74 | tested |
 | DUP | `dup` | ANSI core | 19 | tested |
 | EMIT | `emit` | ANSI core | 16 | tested |
-| EQUAL | `=` | ANSI core | 33 | coded |
+| EQUAL | `=` | ANSI core | 33 | tested |
 | BLANK | `blank` | ANSI core ext | 88 | tested |
 | ERASE | `erase` | ANSI core ext | 78 | tested |
 | FILL | `fill` | ANSI core | 72 | tested |
-| EVALUATE | `evaluate` | ANSI core | 96 | coded |
+| EVALUATE | `evaluate` | ANSI core | 96 | tested |
 | EXECUTE | `execute` | ANSI core | 29 | tested |
-| EXIT | `exit` | ANSI core | 1 | coded |
+| EXIT | `exit` | ANSI core | 1 | tested |
 | FALSE | `false` | ANSI core ext | 6 | tested |
 | FETCH | `@` | ANSI core | 25 | tested |
 | FIND | `find` | ANSI core | 77 | coded |
 | FIND_NAME | `find-name` | Gforth | 108 | tested |
-| FM_SLASH_MOD | `fm/mod` | ANSI core | 60 | coded |
-| GREATER_THAN | `>` | ANSI core | 26 | coded |
+| FM_SLASH_MOD | `fm/mod` | ANSI core | 60 | tested |
+| GREATER_THAN | `>` | ANSI core | 26 | tested |
 | HERE | `here` | ANSI core | 10 | tested |
 | HEX | `hex` | ANSI core ext | 6 | tested |
-| HOLD | `hold` | ANSI core | 23 | coded |
+| HOLD | `hold` | ANSI core | 23 | tested |
 | I | `i` | ANSI core | 28 | tested |
 | IMMEDIATE | `immediate` | ANSI core | 8 | tested |
-| INPUT | `input` | Tali Forth | 10 | coded |
+| INPUT | `input` | Tali Forth | 10 | tested |
 | INT_TO_NAME | `int>name` | Tali Forth | 85 | tested |
-| INVERT | `invert` | ANSI core | 21 | coded |
-| J | `j` | ANSI core | 28 | coded |
-| KEY | `key` | ANSI core | 13 | coded |
-| LATESTNT | `latestnt` | Tali Forth | 10 | coded |
-| LATESTXT | `latestxt` | Gforth | 6 | coded |
+| INVERT | `invert` | ANSI core | 21 | tested |
+| J | `j` | ANSI core | 28 | tested |
+| KEY | `key` | ANSI core | 13 | tested |
+| LATESTNT | `latestnt` | Tali Forth | 10 | tested |
+| LATESTXT | `latestxt` | Gforth | 6 | tested |
 | LEAVE | `leave` | ANSI core | 5 | coded |
 | LEFT_BRACKET | `[` | ANSI core | 4 | coded |
 | LESS_NUMBER_SIGN | `<#` | ANSI core | 13 | coded |
@@ -192,5 +192,5 @@ RTS instruction at the end of each word.
 | ZERO_UNEQUAL | `0<>` | ANSI core ext | 23 | tested |
 
 Found **183** native words in `native_words.asm`.
-Of those, **96** are not marked as "tested".
+Of those, **82** are not marked as "tested".
 
