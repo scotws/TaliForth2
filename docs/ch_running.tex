@@ -97,6 +97,96 @@ it should run on Gforth the same way or have a very good reason not to.
 In addition, there are a few words that are specific to Gforth such as 
 \texttt{nc-limit}\index{nc-limit@\texttt{nc-limit}}. 
 
+
+\subsection{Tali Forth special words}
+
+Tali Forth includes a number of words not found in Gforth or ANSI Forth. 
+
+\begin{itemize}
+
+        \item \texttt{0branch}\index{0branch@\texttt{0branch}} \texttt{( f -- )} 
+                Take branch if TOS is zero. Used internally for branching
+                commands such as \texttt{if}\index{if@\texttt{if}}. This is
+                usually replaced by
+                \texttt{cs-pick}\index{cs-pick@\texttt{cs-pick}} and 
+                \texttt{cs-roll}\index{cs-roll@\texttt{cs-roll}} in modern
+                Forths; Tali Forth might switch to this model in the future.
+
+        \item \texttt{0}\index{0@\texttt{0}} \texttt{( -- 0 )} 
+                Push the number 0 on the Data Stack.
+
+        \item \texttt{1}\index{1@\texttt{1}} \texttt{( -- 1 )} 
+                Push the number 1 on the Data Stack.
+
+        \item \texttt{2}\index{2@\texttt{2}} \texttt{( -- 2 )} 
+                Push the number 2 on the Data Stack.
+
+        \item \texttt{always-native}\index{always-native@\texttt{always-native}}\texttt{( -- )} 
+                Mark latest word so that it is always natively compiled. 
+   
+        \item \texttt{bell}\index{bell@\texttt{bell}} \texttt{( -- )} 
+                Ring the terminal bell (print ASCII\index{ASCII} 07)
+
+        \item \texttt{branch}\index{branch@\texttt{branch}}\texttt{( -- )} 
+                Always take branch. Used internally for branching commands such
+                as \texttt{if}\index{if@\texttt{if}}. This is usually replaced
+                by \texttt{cs-pick}\index{cs-pick@\texttt{cs-pick}} and
+                \texttt{cs-roll}\index{cs-roll@\texttt{cs-roll}} in modern
+                Forths; Tali Forth might switch to this model in the future.
+
+        \item \texttt{compile-only}\index{compile-only@\texttt{compile-only}}
+                \texttt{( -- )} Mark latest word as compile only.
+
+        \item \texttt{digit?}\index{digit?@\texttt{digit?}} 
+                \texttt{( char -- u f | char f )} If character is a digit,
+                convert and set a success flag, otherwise return the character
+                and a failure flag.
+
+        \item \texttt{input}\index{input@\texttt{input}} \texttt{( -- addr )} 
+                Return the address where the vector for the input routine is
+                stored (not the vector itself). Used for input redirection for 
+                \texttt{emit}\index{emit@\texttt{emit}} and others. 
+
+        \item \texttt{int>name}\index{int>name@\texttt{int>name}} \texttt{( xt -- nt )} 
+                Given the execution token\index{execution token} of a
+                word, return the name token.\index{name token}. 
+                
+        \item \texttt{latestnt}\index{latestnt@\texttt{latestnt}} \texttt{( -- nt )} 
+                Return the last used name token\index{name token}. The Gforth
+                version of this word is called
+                \texttt{latest}\index{latest@\texttt{latest}}.
+
+        \item \texttt{nc-limit}\index{nc-limit@\texttt{nc-limit}}\texttt{( -- addr )} 
+                Return the address where the threshold value for native
+                compiling\index{native compiling} is kept.  
+
+        \item \texttt{never-native}\index{never-native@\texttt{never-native}} \texttt{( -- )} 
+                Mark most recent word so it is never natively compiled.
+
+        \item \texttt{number}\index{number@\texttt{number}} 
+                \texttt{( addr u -- u | d )} Convert a string to a number.
+                Gforth uses
+                \texttt{s>number?}\index{s>number?@\texttt{s>number?}} instead
+                and returns a success flag as well. 
+
+        \item \texttt{output}\index{output@\texttt{output}} \texttt{( -- addr )} 
+                Return the address where the vector for the output routine is
+                stored (not the vector itself). Used for output redirection for 
+                \texttt{emit}\index{emit@\texttt{emit}} and others. 
+
+        \item \texttt{uf-strip}\index{uf-strip@\texttt{uf-strip}} \texttt{( -- addr )} 
+                Return the address where the flag is kept that decides if
+                the underflow\index{underflow} checks are removed during native
+                compiling.
+
+        \item \texttt{wordsize}\index{wordsize@\texttt{wordsize}}
+                \texttt{( nt -- u )} Given the name token \index{name token} of
+                a Forth word, return its size in bytes. Used to help tune 
+                native compiling\index{native compiling}.
+
+\end{itemize}
+
+
 % -------------------------------------------------
 \section{Native compiling}\index{compiling!native}
 
