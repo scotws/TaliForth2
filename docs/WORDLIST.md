@@ -72,7 +72,7 @@ RTS instruction at the end of each word.
 | EXECUTE | `execute` | ANSI core | 29 | tested |
 | EXIT | `exit` | ANSI core | 1 | tested |
 | FALSE | `false` | ANSI core ext | 6 | tested |
-| FETCH | `@` | ANSI core | 25 | tested |
+| FETCH | `@` | ANSI core | 24 | tested |
 | FIND | `find` | ANSI core | 77 | coded |
 | FIND_NAME | `find-name` | Gforth | 108 | tested |
 | FM_SLASH_MOD | `fm/mod` | ANSI core | 60 | tested |
@@ -80,12 +80,12 @@ RTS instruction at the end of each word.
 | HERE | `here` | ANSI core | 10 | tested |
 | HEX | `hex` | ANSI core ext | 6 | tested |
 | HOLD | `hold` | ANSI core | 23 | tested |
-| I | `i` | ANSI core | 28 | tested |
+| I | `i` | ANSI core | 25 | tested |
 | IMMEDIATE | `immediate` | ANSI core | 8 | tested |
 | INPUT | `input` | Tali Forth | 10 | tested |
 | INT_TO_NAME | `int>name` | Tali Forth | 85 | tested |
 | INVERT | `invert` | ANSI core | 21 | tested |
-| J | `j` | ANSI core | 28 | tested |
+| J | `j` | ANSI core | 25 | tested |
 | KEY | `key` | ANSI core | 13 | tested |
 | LATESTNT | `latestnt` | Tali Forth | 10 | tested |
 | LATESTXT | `latestxt` | Gforth | 6 | tested |
@@ -111,7 +111,7 @@ RTS instruction at the end of each word.
 | NEVER_NATIVE | `never-compile` | Tali Forth | 8 | coded |
 | NIP | `nip` | ANSI core ext | 19 | coded |
 | NOT_EQUALS | `<>` | ANSI core ext | 35 | coded |
-| NOT_ROTE | `-rot` | Gforth | 37 | coded |
+| NOT_ROTE | `-rot` | Gforth | 33 | coded |
 | NUMBER | `number` | Tali Forth | 140 | tested |
 | NUMBER_SIGN | `#` | ANSI core | 34 | coded |
 | NUMBER_SIGN_GREATER | `#>` | ANSI core | 39 | coded |
@@ -137,7 +137,7 @@ RTS instruction at the end of each word.
 | RECURSE | `recurse` | ANSI core | 44 | coded |
 | REFILL | `refill` | ANSI core ext | 61 | coded |
 | RIGHT_BRACKET | `]` | ANSI core | 6 | coded |
-| ROT | `rot` | ANSI core | 37 | coded |
+| ROT | `rot` | ANSI core | 33 | coded |
 | RSHIFT | `rshift` | ANSI core | 25 | coded |
 | S_QUOTE | `s"` | ANSI core | 80 | coded |
 | S_TO_D | `s>d` | ANSI core | 23 | coded |
@@ -160,7 +160,7 @@ RTS instruction at the end of each word.
 | TO_NUMBER | `>number` | ANSI core | 165 | coded |
 | TO_R | `>r` | ANSI core | 25 | coded |
 | TRUE | `true` | ANSI core ext | 8 | tested |
-| TUCK | `tuck` | ANSI core ext | 33 | coded |
+| TUCK | `tuck` | ANSI core ext | 31 | tested |
 | TWO | `2` | Tali Forth | 8 | tested |
 | TWO_DROP | `2drop` | ANSI core | 13 | tested |
 | TWO_DUP | `2dup` | ANSI core | 29 | coded |
@@ -192,5 +192,5 @@ RTS instruction at the end of each word.
 | ZERO_UNEQUAL | `0<>` | ANSI core ext | 23 | tested |
 
 Found **183** native words in `native_words.asm`.
-Of those, **82** are not marked as "tested".
+Of those, **81** are not marked as "tested".
 
