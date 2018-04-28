@@ -43,48 +43,42 @@ user_words_end:
 ; this routine may not be natively compiled. We use "cmpl" as not to 
 ; confuse these routines with the COMPILE, word. Always call this with a 
 ; subroutine jump, which means combining JSR/RTS to JMP in those cases is
-; not okay.
-
+; not okay. To use, load the LSB of the address in A and the MSB in Y:
+;
+;               ldy #>addr      ; MSB
+;               lda #<addr      ; LSB
+;               jsr cmpl_subroutine
+;
+; You can remember which comes first by thinking of the song "Young Americans"
+; ("YA") by David Bowie.
+.scope
 cmpl_subroutine:
-                lda #$20        ; compile "JSR" opcode first
+                ; This is the entry point to compile JSR <ADDR>
+                pha             ; save LSB of address
+                lda #$20        ; load opcode for JSR
                 bra cmpl_common
 cmpl_jump:
-                lda #$4c        ; compile "JMP", fall through to common
+                ; This is the entry point to compile JMP <ADDR>
+                pha             ; save LSB of address
+                lda #$4c        ; load opcode for JMP, fall thru to cmpl_common
 cmpl_common:
-                ; A contains the opcode that must be compiled
-                ; first. This is basically C, ("c-comma")
+                ; At this point, A contains the opcode to be compiled,
+                ; the LSB of the address is on the 65c02 stack, and the MSB of
+                ; the address is in Y
+                jsr cmpl_a      ; compile opcode
+                pla             ; retrieve address LSB; fall thru to cmpl_word
+cmpl_word:
+                ; This is the entry point to compile a word (little-endian)
+                jsr cmpl_a      ; compile LSB of address
+                tya             ; fall thru for MSB
+cmpl_a:
                 sta (cp)
                 inc cp
-                bne cmpl_word
+                bne _done
                 inc cp+1
-cmpl_word:
-                ; The cmpl_word routine is the body of all these routines
-                ; and compiles the value on the Return Stack 
-                pla             ; LSB of return address
-                sta tmp1
-                pla
-                sta tmp1+1      ; MSB of return address
-
-                pla             ; LSB of word to compile
-                sta (cp)
-                ldy #1
-                pla             ; MSB of word to compile
-                sta (cp),y
-
-                tya
-                sec
-                adc cp
-                sta cp
-                bcc +
-                inc cp+1
-*
-                lda tmp1+1
-                pha             ; MSB of return address
-                lda tmp1
-                pha             ; LSB of return address
-
+_done:
 		rts
-
+.scend
 
 ; =====================================================================
 ; CODE FIELD ROUTINES
@@ -336,10 +330,8 @@ _loop:
 
                 ; We're compiling, so there is a bit more work. Note this
                 ; doesn't work with double-cell numbers, only single-cell
-                lda #>literal_runtime   ; MSB first
-                pha
+                ldy #>literal_runtime
                 lda #<literal_runtime
-                pha
                 jsr cmpl_subroutine
 
                 ; compile our number

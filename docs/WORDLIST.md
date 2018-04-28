@@ -10,7 +10,7 @@ RTS instruction at the end of each word.
 | COLD | `cold` | Tali Forth | 206 | tested |
 | ABORT | `abort` | ANSI core | 72 | coded |
 | QUIT | `quit` | ANSI core | 70 | coded |
-| ABORT_QUOTE | `abort"` | ANSI core | 12 | tested |
+| ABORT_QUOTE | `abort"` | ANSI core | 10 | tested |
 | ABS | `abs` | ANSI core | 24 | tested |
 | ACCEPT | `accept` | ANSI core | 105 | tested |
 | AGAIN | `again` | ANSI core ext | 36 | tested |
@@ -27,7 +27,7 @@ RTS instruction at the end of each word.
 | BOUNDS | `bounds` | Gforth | 28 | tested |
 | BRACKET_CHAR | `[char]` | ANSI core | 6 | tested |
 | BRACKET_TICK | `[']` | ANSI core | 6 | tested |
-| BRANCH | `branch` | Tali Forth | 9 | tested |
+| BRANCH | `branch` | Tali Forth | 7 | tested |
 | BYE | `bye` | ANSI tools ext | 1 | tested |
 | C_COMMA | `c,` | ANSI core | 19 | tested |
 | C_FETCH | `c@` | ANSI core | 13 | tested |
@@ -56,9 +56,9 @@ RTS instruction at the end of each word.
 | DNEGATE | `dnegate` | ANSI double | 30 | coded |
 | QUESTION_DO | `?do` | ANSI core ext | 96 | coded |
 | DO | `do` | ANSI core | 90 | coded |
-| DOES | `does>` | ANSI core | 18 | coded |
+| DOES | `does>` | ANSI core | 14 | coded |
 | DOT | `.` | ANSI core | 37 | tested |
-| DOT_QUOTE | `."` | ANSI core | 12 | coded |
+| DOT_QUOTE | `."` | ANSI core | 10 | coded |
 | DOT_S | `.s` | ANSI tools | 67 | tested |
 | DROP | `drop` | ANSI core | 9 | tested |
 | DUMP | `dump` | ANSI tools | 72 | tested |
@@ -93,8 +93,8 @@ RTS instruction at the end of each word.
 | LEFT_BRACKET | `[` | ANSI core | 4 | coded |
 | LESS_NUMBER_SIGN | `<#` | ANSI core | 13 | coded |
 | LESS_THAN | `<` | ANSI core | 24 | coded |
-| LITERAL | `literal` | ANSI core | 19 | coded |
-| LOOP | `loop` | ANSI core | 111 | coded |
+| LITERAL | `literal` | ANSI core | 17 | coded |
+| LOOP | `loop` | ANSI core | 109 | coded |
 | PLUS_LOOP | `+loop` | ANSI core | 102 | coded |
 | LSHIFT | `lshift` | ANSI core | 23 | coded |
 | M_STAR | `m*` | ANSI core | 30 | coded |
@@ -129,7 +129,7 @@ RTS instruction at the end of each word.
 | PICK | `pick` | ANSI core ext | 16 | tested |
 | PLUS | `+` | ANSI core | 22 | tested |
 | PLUS_STORE | `+!` | ANSI core | 35 | coded |
-| POSTPONE | `postpone` | ANSI core | 64 | coded |
+| POSTPONE | `postpone` | ANSI core | 62 | coded |
 | QUESTION | `?` | ANSI tools | 6 | tested |
 | QUESTION_DUP | `?dup` | ANSI core | 23 | coded |
 | R_FETCH | `r@` | ANSI core | 20 | coded |
@@ -144,7 +144,7 @@ RTS instruction at the end of each word.
 | SEMICOLON | `;` | ANSI core | 33 | coded |
 | SIGN | `sign` | ANSI core | 24 | coded |
 | SLASH_STRING | `/string` | ANSI string | 35 | coded |
-| SLITERAL | `sliteral` | ANSI string | 125 | coded |
+| SLITERAL | `sliteral` | ANSI string | 119 | coded |
 | SM_SLASH_REM | `sm/rem` | ANSI core | 44 | tested |
 | SOURCE | `source` | ANSI core | 20 | coded |
 | SOURCE_ID | `source-id` | ANSI core ext | 10 | coded |
@@ -185,7 +185,7 @@ RTS instruction at the end of each word.
 | WORDSIZE | `wordsize` | Tali Forth | 36 | tested |
 | XOR | `xor` | ANSI core | 21 | tested |
 | ZERO | `0` | Tali Forth | 6 | tested |
-| ZERO_BRANCH | `0branch` | Tali Forth | 9 | tested |
+| ZERO_BRANCH | `0branch` | Tali Forth | 7 | tested |
 | ZERO_EQUAL | `0=` | ANSI core | 23 | tested |
 | ZERO_GREATER | `0>` | ANSI core ext | 23 | tested |
 | ZERO_LESS | `0<` | ANSI core | 19 | tested |

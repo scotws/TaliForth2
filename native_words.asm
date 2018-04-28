@@ -261,10 +261,8 @@ xt_abort_quote:
                 jsr xt_s_quote 
 
                 ; compile run-time part
-                lda #>abort_quote_runtime       ; MSB
-                pha
-                lda #<abort_quote_runtime       ; LSB
-                pha
+                ldy #>abort_quote_runtime
+                lda #<abort_quote_runtime
                 jsr cmpl_subroutine
 
 z_abort_quote:  rts
@@ -718,10 +716,8 @@ z_bracket_tick: rts
 .scope
 xt_branch:
                 ; encode subroutine branch to runtime component
-                lda #>branch_runtime    ; MSB first
-                pha
+                ldy #>branch_runtime
                 lda #<branch_runtime
-                pha
                 jsr cmpl_subroutine
                 
 z_branch:       rts
@@ -2155,21 +2151,15 @@ question_do_runtime_end:
 .scope
 xt_does:
                 ; compile a subroutine jump to runtime of DOES>
-                lda #>does_runtime     ; MSB first
-                pha
-                lda #<does_runtime     ; LSB on top
-                pha
-
+                ldy #>does_runtime
+                lda #<does_runtime
                 jsr cmpl_subroutine
 
                 ; compile a subroutine jump to DODOES. In traditional
                 ; terms, this is the Code Field Area (CFA) of the new
                 ; word
-                lda #>dodoes            ; MSB first
-                pha
-                lda #<dodoes            ; LSB on top
-                pha
-                
+                ldy #>dodoes
+                lda #<dodoes
                 jsr cmpl_subroutine
 
 z_does:         rts
@@ -2268,10 +2258,8 @@ xt_dot_quote:
                 jsr xt_s_quote
 
                 ; We then let TYPE do the actual printing
-                lda #>xt_type           ; MSB
-                pha
-                lda #<xt_type           ; LSB
-                pha
+                ldy #>xt_type
+                lda #<xt_type
                 jsr cmpl_subroutine
 
 z_dot_quote:    rts
@@ -3466,11 +3454,8 @@ xt_literal:
                 bmi +
                 jmp underflow
 *
-                lda #>literal_runtime
-                pha                     ; MSB first
+                ldy #>literal_runtime
                 lda #<literal_runtime
-                pha                     ; LSB
-
                 jsr cmpl_subroutine
 
                 ; Compile the value that is to be pushed on the Stack during
@@ -3528,11 +3513,10 @@ literal_runtime:
         ; """
 xt_loop:
                 ; Have the finished word push 1 on the stack
-                lda #>xt_one
-                pha
+                ldy #>xt_one
                 lda #<xt_one
-                pha
                 jsr cmpl_subroutine     ; drop through to +LOOP
+
 
 ; ## PLUS_LOOP ( -- ) "Finish loop construct"
 ; ## "+loop"  coded  ANSI core
@@ -4994,10 +4978,8 @@ _not_immediate:
                 jsr xt_literal
 
                 ; Last, compile COMPILE, 
-                lda #>xt_compile_comma  ; MSB first
-                pha
+                ldy #>xt_compile_comma
                 lda #<xt_compile_comma 
-                pha
                 jsr cmpl_subroutine
 _done:
 z_postpone:     rts
@@ -5632,25 +5614,18 @@ _loop:
 
                 ; This means we'll have to adjust the return address for two
                 ; cells, not just one
-                lda #>sliteral_runtime  ; MSB
-                pha
-                lda #<sliteral_runtime  ; LSB
-                pha
-
+                ldy #>sliteral_runtime
+                lda #<sliteral_runtime
                 jsr cmpl_subroutine
 
                 ; We want to have the address end up as NOS and the length
                 ; as TOS, so we store the address first
-                lda tmp3+1              ; address MSB
-                pha
+                ldy tmp3+1              ; address MSB
                 lda tmp3                ; address LSB
-                pha
                 jsr cmpl_word
 
-                lda tmptos+1            ; length MSB
-                pha
+                ldy tmptos+1            ; length MSB
                 lda tmptos              ; length LSB
-                pha
                 jsr cmpl_word
 
                 ; clean up and leave
@@ -7219,10 +7194,8 @@ z_zero:         rts
 xt_zero_branch:
                 ; The actual word is short: Just compile the runtime
                 ; behavior
-                lda #>zero_branch_runtime       ; MSB first
-                pha
-                lda #<zero_branch_runtime       ; MSB first
-                pha
+                ldy #>zero_branch_runtime
+                lda #<zero_branch_runtime
                 jsr cmpl_subroutine
                 
 z_zero_branch:  rts
