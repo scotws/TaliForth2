@@ -2,8 +2,8 @@ This is makeindex, version 2.15 [TeX Live 2015] (kpathsea + Thai support).
 Scanning input file manual.idx....
 !! Input index error (file = manual.idx, line = 205):
    -- Extra `@' at position 4 of first argument.
-done (263 entries accepted, 1 rejected).
-Sorting entries.....done (2195 comparisons).
-Generating output file manual.ind....done (256 lines written, 0 warnings).
+done (264 entries accepted, 1 rejected).
+Sorting entries.....done (2347 comparisons).
+Generating output file manual.ind....done (257 lines written, 0 warnings).
 Output written in manual.ind.
 Transcript written in manual.ilg.
