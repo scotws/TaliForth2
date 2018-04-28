@@ -3318,7 +3318,6 @@ z_j:            rts
 
 ; ## KEY ( -- char ) "Get one character from the input"
 ; ## "key"  tested  ANSI core
-.scope
 xt_key:         
         ; """Get a single character of input from the vectored
         ; input without echoing.
@@ -3330,7 +3329,7 @@ xt_key:
                 sta 0,x
                 stz 1,x
 
-                rts
+z_key:          rts
 
 key_a:
         ; The 65c02 doesn't have a JSR (ADDR,X) instruction like the
@@ -3340,8 +3339,6 @@ key_a:
         ; character
                 jmp (input)             ; JSR/RTS
 
-z_key:          ; never reached
-.scend
 
 
 ; ## LATESTNT ( -- nt ) "Push most recent nt to the stack"
@@ -4994,16 +4991,7 @@ _not_immediate:
                 ; compilation" by including ' <NAME> COMPILE, which we do by
                 ; compiling the run-time routine of LITERAL, the xt itself, and
                 ; a subroutine jump to COMPILE,
-                lda #>literal_runtime   ; MSB first
-                pha
-                lda #<literal_runtime
-                pha
-                jsr cmpl_subroutine
-
-                ; The xt is TOS. We can't use COMPILE, here because it might
-                ; decided to do something silly like compile it as a native word
-                ; and ruin everything
-                jsr xt_comma
+                jsr xt_literal
 
                 ; Last, compile COMPILE, 
                 lda #>xt_compile_comma  ; MSB first

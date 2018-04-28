@@ -86,7 +86,7 @@ RTS instruction at the end of each word.
 | INT_TO_NAME | `int>name` | Tali Forth | 83 | tested |
 | INVERT | `invert` | ANSI core | 19 | tested |
 | J | `j` | ANSI core | 25 | tested |
-| KEY | `key` | ANSI core | 13 | tested |
+| KEY | `key` | ANSI core | 9 | tested |
 | LATESTNT | `latestnt` | Tali Forth | 10 | tested |
 | LATESTXT | `latestxt` | Gforth | 6 | tested |
 | LEAVE | `leave` | ANSI core | 5 | coded |
@@ -129,7 +129,7 @@ RTS instruction at the end of each word.
 | PICK | `pick` | ANSI core ext | 16 | tested |
 | PLUS | `+` | ANSI core | 22 | tested |
 | PLUS_STORE | `+!` | ANSI core | 35 | coded |
-| POSTPONE | `postpone` | ANSI core | 73 | coded |
+| POSTPONE | `postpone` | ANSI core | 64 | coded |
 | QUESTION | `?` | ANSI tools | 6 | tested |
 | QUESTION_DUP | `?dup` | ANSI core | 23 | coded |
 | R_FETCH | `r@` | ANSI core | 20 | coded |
