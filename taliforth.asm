@@ -1,7 +1,7 @@
 ; Tali Forth 2 for the 65c02
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 19. Jan 2014 (Tali Forth)
-; This version: 08. Apr 2018
+; This version: 28. Apr 2018
 
 ; This is the main file for Tali Forth 2
 
@@ -421,6 +421,12 @@ _line_done:
 
                 rts
 .scend
+
+underflow:
+        ; """Landing area for data stack underflow"""
+                lda #11                 ; signal underflow
+
+                ; fall through to error
 
 error: 
         ; """Given the error number in A, print the associated error string and 

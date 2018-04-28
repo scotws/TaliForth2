@@ -164,7 +164,8 @@ Tali Forth includes a number of words not found in Gforth or ANSI Forth.
 
         \item \textbf{\texttt{nc-limit}}\index{nc-limit@\texttt{nc-limit}}\texttt{( -- addr )} 
                 Return the address where the threshold value for native
-                compiling\index{native compiling} is kept.  
+                compiling\index{native compiling} is kept. To check the value of
+                this parameter, use \texttt{nc-limit ?}. The default is 20.
 
         \item \textbf{\texttt{never-native}}\index{never-native@\texttt{never-native}} \texttt{( -- )} 
                 Mark most recent word so it is never natively compiled.
@@ -183,7 +184,8 @@ Tali Forth includes a number of words not found in Gforth or ANSI Forth.
         \item \textbf{\texttt{uf-strip}}\index{uf-strip@\texttt{uf-strip}} \texttt{( -- addr )} 
                 Return the address where the flag is kept that decides if
                 the underflow\index{underflow} checks are removed during native
-                compiling.
+                compiling. To check the value of this flag, use 
+                \texttt{uf-strip ?}.
 
         \item \textbf{\texttt{wordsize}}\index{wordsize@\texttt{wordsize}}
                 \texttt{( nt -- u )} Given the name token \index{name token} of

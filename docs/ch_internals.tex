@@ -74,9 +74,7 @@ instance, to make sure we have one element on the stack, we write
 \begin{lstlisting}[frame=lines]
                 cpx #dsp0-1
                 bmi okay
-
-                lda #11         ; error string for underflow
-                jmp error
+                jmp underflow
 okay:
                 (...)
 \end{lstlisting}
@@ -99,7 +97,7 @@ okay:
         \label{table_uf}
 \end{table}
 
-Underflow detection\index{underflow!detection} adds nine bytes and five cycles
+Underflow detection\index{underflow!detection} adds seven bytes 
 to the words that have it. However, it increases the stability of the
 program enormously.
 
@@ -860,10 +858,10 @@ compiled into the new word.
 
 \subsection{Underflow stripping}\index{underflow!stripping}
 
-As described above, every underflow check adds nine bytes and five cycles to the
+As described above, every underflow check adds seven bytes to the
 word being coded. Stripping this check by setting the
 \texttt{uf-strip}\index{uf-strip@\texttt{uf-strip}} system variable to
-\texttt{true}\index{true@\texttt{true}} simply removes these nine bytes from new
+\texttt{true}\index{true@\texttt{true}} simply removes these seven bytes from new
 natively compiled words. 
 
 It is possible, of course, to have lice and fleas at the some time. For
@@ -879,8 +877,7 @@ xt_to_r:
 
                 cpx #dsp0-1
                 bmi +
-                lda #11
-                jmp error
+                jmp underflow
 *
                 lda 1,x
                 pha

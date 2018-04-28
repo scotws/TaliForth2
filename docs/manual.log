@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.3.2)  28 APR 2018 06:36
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.3.2)  28 APR 2018 07:03
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -493,7 +493,7 @@ Chapter 6.
 (./ch_internals.tex [21
 
 ] [22]
-Overfull \hbox (5.86935pt too wide) in paragraph at lines 206--212
+Overfull \hbox (5.86935pt too wide) in paragraph at lines 204--210
 \T1/cmr/m/n/10 then gen-er-ated at run-time when Tali Forth starts up, and \T1/
 cmr/bx/n/10 user words \T1/cmr/m/n/10 in the file \T1/SourceCodePro-TLF/m/n/10 
 user_words.asm[]\T1/cmr/m/n/10 . 
@@ -501,45 +501,45 @@ user_words.asm[]\T1/cmr/m/n/10 .
 
 [23] [24]
 LaTeX Font Info:    Font shape `T1/SourceCodePro-TLF/b/n' will be
-(Font)              scaled to size 12.0pt on input line 341.
+(Font)              scaled to size 12.0pt on input line 339.
 LaTeX Font Info:    Font shape `T1/SourceCodePro-TLF/b/n' will be
-(Font)              scaled to size 14.4pt on input line 357.
+(Font)              scaled to size 14.4pt on input line 355.
 
-Overfull \hbox (34.4016pt too wide) in paragraph at lines 361--369
+Overfull \hbox (34.4016pt too wide) in paragraph at lines 359--367
 \T1/cmr/m/n/10 gen-eral take, see Brad Ro-driguez' se-ries of ar-ti-cles at [][
 ]http://www.bradrodriguez.com/papers/moving3.htm[][].
  []
 
 [25]
 LaTeX Font Info:    Font shape `T1/SourceCodePro-TLF/m/n' will be
-(Font)              scaled to size 8.0pt on input line 396.
+(Font)              scaled to size 8.0pt on input line 394.
 LaTeX Font Info:    Font shape `T1/SourceCodePro-TLF/m/sl' in size <10> not ava
 ilable
 (Font)              Font shape `T1/SourceCodePro-TLF/m/it' tried instead on inp
-ut line 478.
+ut line 476.
 LaTeX Font Info:    Font shape `T1/SourceCodePro-TLF/m/it' will be
-(Font)              scaled to size 10.0pt on input line 478.
+(Font)              scaled to size 10.0pt on input line 476.
  [26]
-Underfull \hbox (badness 4096) in paragraph at lines 575--575
+Underfull \hbox (badness 4096) in paragraph at lines 573--573
 [][][]\T1/cmr/m/n/8 Many Forths now use the words \T1/SourceCodePro-TLF/m/n/8 c
 s-pick \T1/cmr/m/n/8 and \T1/SourceCodePro-TLF/m/n/8 cs-roll \T1/cmr/m/n/8 in-s
 tead of the \T1/SourceCodePro-TLF/m/n/8 branch \T1/cmr/m/n/8 vari-ants, see
  []
 
 
-Underfull \hbox (badness 1454) in paragraph at lines 588--588
+Underfull \hbox (badness 1454) in paragraph at lines 586--586
 \T1/cmr/m/n/8 see there for more de-tails. An-other take on this sub-ject that 
 han-dles things a bit dif-fer-ently is at
  []
 
 [27]
-Overfull \hbox (2.941pt too wide) in paragraph at lines 619--624
+Overfull \hbox (2.941pt too wide) in paragraph at lines 617--622
 \T1/cmr/m/n/10 take care of. These can call up to three ad-dresses: One for the
  nor-mal loop-ing ac-tion (\T1/SourceCodePro-TLF/m/n/10 loop\T1/cmr/m/n/10 /\T1
 /SourceCodePro-TLF/m/n/10 +loop\T1/cmr/m/n/10 ),
  []
 
-[28] [29] [30] [31]) [32]
+[28] [29] [30]) [31] [32]
 Chapter 7.
 (./ch_developing.tex
 Overfull \hbox (41.71275pt too wide) in paragraph at lines 13--15
@@ -594,8 +594,8 @@ Package rerunfilecheck Info: File `manual.out' has not changed.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 136.
  ) 
 Here is how much of TeX's memory you used:
- 8471 strings out of 494953
- 125027 string characters out of 6180978
+ 8468 strings out of 494953
+ 124983 string characters out of 6180978
  320820 words of memory out of 5000000
  10985 multiletter control sequences out of 15000+600000
  26350 words of font info for 55 fonts, out of 8000000 for 9000
@@ -620,10 +620,10 @@ type1/adobe/sourcecodepro/SourceCodePro-Bold.pfb></usr/share/texlive/texmf-dist
 /fonts/type1/adobe/sourcecodepro/SourceCodePro-It.pfb></usr/share/texlive/texmf
 -dist/fonts/type1/adobe/sourcecodepro/SourceCodePro-Regular.pfb></usr/share/tex
 live/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
-Output written on manual.pdf (46 pages, 445877 bytes).
+Output written on manual.pdf (46 pages, 445835 bytes).
 PDF statistics:
- 2304 PDF objects out of 2487 (max. 8388607)
- 1623 compressed objects within 17 object streams
- 608 named destinations out of 1000 (max. 500000)
+ 2300 PDF objects out of 2487 (max. 8388607)
+ 1619 compressed objects within 17 object streams
+ 605 named destinations out of 1000 (max. 500000)
  814 words of extra memory for PDF output out of 10000 (max. 10000000)
 
