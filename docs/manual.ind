@@ -31,6 +31,7 @@
   \indexspace
 
   \item Barry, Mike, \hyperpage{43}
+  \item \texttt{begin}, \hyperpage{40}
   \item \texttt{bell}, \hyperpage{16}
   \item \texttt{blk}, \hyperpage{25}
   \item booting, \hyperpage{15}, \hyperpage{25}
@@ -142,7 +143,7 @@
 
   \item Mandelbrot, \hyperpage{38}
   \item Martin, Michael, \hyperpage{33}
-  \item \textit{Mass Effect}, \hyperpage{37}, \hyperpage{41}
+  \item \textit{Mass Effect}, \hyperpage{37}, \hyperpage{42}
   \item math, \hyperpage{42}
   \item memory map, \hyperindexformat{\textbf}{24}
   \item Mensch, Bill, \hyperpage{8}
@@ -221,6 +222,7 @@
   \item underflow, \hyperpage{17}, \hyperpage{21}, \hyperpage{29, 30}
     \subitem detection, \hyperpage{12}, \hyperpage{17}, \hyperpage{22}
     \subitem stripping, \hyperpage{31}
+  \item \texttt{until}, \hyperpage{40}
   \item user words, \hyperpage{23}
   \item \texttt{user\_words.asc}, \hyperpage{25}
 

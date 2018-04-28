@@ -21,7 +21,7 @@ RTS instruction at the end of each word.
 | AT_XY | `at-xy` | ANSI facility | 33 | tested |
 | BACKSLASH | `\` | ANSI core ext | 8 | tested |
 | BASE | `base` | ANSI core | 10 | tested |
-| BEGIN | `begin` | ANSI core | 10 | tested |
+| BEGIN | `begin` | ANSI core | 3 | tested |
 | BELL | `bell` | Tali Forth | 5 | tested |
 | BL | `bl` | ANSI core | 8 | tested |
 | BOUNDS | `bounds` | Gforth | 28 | tested |

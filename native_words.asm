@@ -625,20 +625,15 @@ z_base:         rts
 
 ; ## BEGIN ( -- addr ) "Mark entry point for loop"
 ; ## "begin"  tested  ANSI core
-        ; """This is just an immediate version of here which
-        ; could just as welle be coded as
+        ; """This is just an immediate version of here which could just
+        ; as well be coded in Forth as
         ;       : BEGIN HERE ; IMMEDIATE COMPILE-ONLY
-        ; but we code it in assembler for speed
+        ; Since this is a compiling word, we don't care that much about
+        ; about speed
         ; """
 .scope
 xt_begin:
-                dex
-                dex
-                lda cp
-                sta 0,x
-                lda cp+1
-                sta 1,x
-
+                jsr xt_here
 z_begin:        rts
 .scend
 

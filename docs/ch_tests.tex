@@ -179,6 +179,19 @@ The looping constructs are the most complicated parts of Tali Forth. Currently,
 we use the Return Stack instead of the more traditional Data Stack as the
 mythical Forth `Control Stack'.
 
+
+\subsection{Conditional loops}
+
+Test simple \texttt{begin}\index{begin@\texttt{begin}} and
+\texttt{until}\index{until@\texttt{until}} structures:
+
+\begin{lstlisting}[frame=lines]
+        : aaa ( u -- ) begin dup .  1+ dup  11 = until ;
+\end{lstlisting}
+
+\noindent This should simply produce the numbers 0 to 10.
+
+
 \subsection{Basic looping}
 
 Test normal loop:
@@ -208,6 +221,7 @@ loop over multiple lines because it turns out this can be tricky:
 
 \noindent should print nothing.
 
+
 \subsection{Looping with \texttt{if}}
 
 Including \texttt{if} in a loop is the ultimate test if everything is correct
@@ -226,6 +240,7 @@ stupid bug in the ALPHA version of Tali Forth 2.
 \end{lstlisting}
 
 \noindent This should print the string right before the number two.
+
 
 \subsection{Nested loops}
 

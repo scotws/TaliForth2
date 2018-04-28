@@ -248,6 +248,8 @@
 \indexentry{cmove@\texttt{cmove}|hyperpage}{39}
 \indexentry{cmove>@\texttt{cmove>}|hyperpage}{39}
 \indexentry{move@\texttt{move}|hyperpage}{39}
+\indexentry{begin@\texttt{begin}|hyperpage}{40}
+\indexentry{until@\texttt{until}|hyperpage}{40}
 \indexentry{Gforth|hyperpage}{40}
 \indexentry{bounds@\texttt{bounds}|hyperpage}{41}
 \indexentry{Gforth|hyperpage}{41}
@@ -256,7 +258,7 @@
 \indexentry{pick@\texttt{pick}|hyperpage}{41}
 \indexentry{pick@\texttt{dup}|hyperpage}{41}
 \indexentry{over@\texttt{over}|hyperpage}{41}
-\indexentry{Mass Effect@\textit{Mass Effect}|hyperpage}{41}
+\indexentry{Mass Effect@\textit{Mass Effect}|hyperpage}{42}
 \indexentry{math|hyperpage}{42}
 \indexentry{fm/mod@\texttt{fm/mod}|hyperindexformat{\textbf}}{42}
 \indexentry{sm/rem@\texttt{sm/rem}|hyperindexformat{\textbf}}{42}

@@ -85,17 +85,18 @@
 \BOOKMARK [2][-]{subsection.B.3.1}{cmove}{section.B.3}% 85
 \BOOKMARK [2][-]{subsection.B.3.2}{cmove>}{section.B.3}% 86
 \BOOKMARK [1][-]{section.B.4}{Looping}{appendix.B}% 87
-\BOOKMARK [2][-]{subsection.B.4.1}{Basic looping}{section.B.4}% 88
-\BOOKMARK [2][-]{subsection.B.4.2}{Looping with if}{section.B.4}% 89
-\BOOKMARK [2][-]{subsection.B.4.3}{Nested loops}{section.B.4}% 90
-\BOOKMARK [2][-]{subsection.B.4.4}{exit}{section.B.4}% 91
-\BOOKMARK [2][-]{subsection.B.4.5}{unloop}{section.B.4}% 92
-\BOOKMARK [2][-]{subsection.B.4.6}{leave}{section.B.4}% 93
-\BOOKMARK [2][-]{subsection.B.4.7}{bounds}{section.B.4}% 94
-\BOOKMARK [2][-]{subsection.B.4.8}{recurse}{section.B.4}% 95
-\BOOKMARK [1][-]{section.B.5}{Stack Stuff}{appendix.B}% 96
-\BOOKMARK [2][-]{subsection.B.5.1}{pick}{section.B.5}% 97
-\BOOKMARK [1][-]{section.B.6}{Math routines}{appendix.B}% 98
-\BOOKMARK [2][-]{subsection.B.6.1}{fm/mod}{section.B.6}% 99
-\BOOKMARK [2][-]{subsection.B.6.2}{sm/rem}{section.B.6}% 100
-\BOOKMARK [0][-]{appendix.C}{Thanks}{part.3}% 101
+\BOOKMARK [2][-]{subsection.B.4.1}{Conditional loops}{section.B.4}% 88
+\BOOKMARK [2][-]{subsection.B.4.2}{Basic looping}{section.B.4}% 89
+\BOOKMARK [2][-]{subsection.B.4.3}{Looping with if}{section.B.4}% 90
+\BOOKMARK [2][-]{subsection.B.4.4}{Nested loops}{section.B.4}% 91
+\BOOKMARK [2][-]{subsection.B.4.5}{exit}{section.B.4}% 92
+\BOOKMARK [2][-]{subsection.B.4.6}{unloop}{section.B.4}% 93
+\BOOKMARK [2][-]{subsection.B.4.7}{leave}{section.B.4}% 94
+\BOOKMARK [2][-]{subsection.B.4.8}{bounds}{section.B.4}% 95
+\BOOKMARK [2][-]{subsection.B.4.9}{recurse}{section.B.4}% 96
+\BOOKMARK [1][-]{section.B.5}{Stack Stuff}{appendix.B}% 97
+\BOOKMARK [2][-]{subsection.B.5.1}{pick}{section.B.5}% 98
+\BOOKMARK [1][-]{section.B.6}{Math routines}{appendix.B}% 99
+\BOOKMARK [2][-]{subsection.B.6.1}{fm/mod}{section.B.6}% 100
+\BOOKMARK [2][-]{subsection.B.6.2}{sm/rem}{section.B.6}% 101
+\BOOKMARK [0][-]{appendix.C}{Thanks}{part.3}% 102
