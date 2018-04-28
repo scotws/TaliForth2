@@ -69,7 +69,7 @@ RTS instruction at the end of each word.
 | ERASE | `erase` | ANSI core ext | 76 | tested |
 | FILL | `fill` | ANSI core | 70 | tested |
 | EVALUATE | `evaluate` | ANSI core | 94 | tested |
-| EXECUTE | `execute` | ANSI core | 27 | tested |
+| EXECUTE | `execute` | ANSI core | 10 | tested |
 | EXIT | `exit` | ANSI core | 1 | tested |
 | FALSE | `false` | ANSI core ext | 6 | tested |
 | FETCH | `@` | ANSI core | 22 | tested |

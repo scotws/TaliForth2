@@ -2726,12 +2726,15 @@ z_evaluate:     rts
 
 ; ## EXECUTE ( xt -- ) "Jump to word based on execution token"
 ; ## "execute"  tested  ANSI core
-.scope
 xt_execute:     
                 cpx #dsp0-1
                 bmi +
                 jmp underflow
 *
+                jsr doexecute   ; do not combine to JMP (native coding)
+z_execute:      rts
+
+doexecute:
                 lda 0,x
                 sta ip
                 lda 1,x
@@ -2740,26 +2743,11 @@ xt_execute:
                 inx
                 inx
 
-                ; Only JMP has the addressing mode we need, but all our
-                ; Forth words end with a RTS instruction. We fake the 
-                ; return address by pushing the correct address to the stack
-                ; We'll land on a NOP so we don't have to DEC the return
-                ; address
-                lda #>_done     ; push MSB first
-                pha
-                lda #<_done
-                pha
+                ; we don't need a RTS here because we highjack the RTS of
+                ; the word we're calling to get back to xt_execute
+                jmp (ip)        
 
-                jmp (ip)
-
-_done:          ; Keep the NOP here as the landing site for the indirect 
-                ; subroutine jump (easier and quicker than adjusting the
-                ; return address on the stack)
-                nop             ; never actually reached
-
-z_execute:      rts
-.scend
-
+; end of doexecute
 
 ; ## EXIT ( -- ) "Return control to the calling word immediately"
 ; ## "exit"  tested  ANSI core
