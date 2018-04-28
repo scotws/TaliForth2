@@ -9,9 +9,9 @@
 ; for details
 .org $8000
 
-; Label used to calculate UNUSED. Silly for Tali Forth, where we assume 32 KiB
-; RAM and 32 KiB ROM, but required for Liara Forth, and kept here to make the
-; code more useful for other hardware configurations
+; Label used to calculate UNUSED. Silly for Tali Forth, where we assume
+; 32 KiB RAM and 32 KiB ROM, but kept here to make the code more useful
+; for other hardware configurations
 code0:
 
 .require "definitions.asm"      ; Top-level definitions, memory map
@@ -33,7 +33,6 @@ user_words_end:
 
 .require "headers.asm"          ; Headers of native words
 .require "strings.asm"          ; Strings and error messages
-
 
 ; =====================================================================
 ; COMPILE WORDS, JUMPS and SUBROUTINE JUMPS INTO CODE
@@ -492,6 +491,17 @@ print_u:
                 rts
 .scend
 
+; =====================================================================
+; EDITOR
+; (Currently no editor available)
+
+; =====================================================================
+; ASSEMBLER
+; (Currently no assembler available)
+
+; =====================================================================
+; DISASSEMBLER
+; (Currently no disassembler available)
 
 ; =====================================================================
 ; FINALLY
