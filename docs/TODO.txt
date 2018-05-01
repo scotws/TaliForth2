@@ -1,7 +1,7 @@
 TODO/CHANGES for Tali Forth 2 
 Scot W. Stevenson <scot.stevenson@gmail.com>
 First version: 19. Jan 2014
-This version: 30. Apr 2018
+This version: 01. May 2018
 
 TODO POST-ALPHA ("ALL WORDS DO SOMETHING, USUALLY EVEN THE RIGHT THING")
         - Test all words, adding any new tests to documentation
@@ -9,16 +9,14 @@ TODO POST-ALPHA ("ALL WORDS DO SOMETHING, USUALLY EVEN THE RIGHT THING")
 
 
 TODO POST-BETA ("ALL THERE, BUT BEWARE OF SNEAKY BUGS")
+        - Add ASCII output to DUMP
         - Add SEARCH (prepares for inclusion of editor)
         - Move adjust_z from CONSTANT to taliforth.asm (it's too long!)
         - Warn if newly defined word already in Dictionary
         - Code temporary high-level Forth words such as WITHIN natively
         - Check where all "STY 0,X" can be used to good effect
-        - Check where BBRn and RMBn can be used to good effect
         - In ALLOT, figure out how to handle release of too much memory
-        - Add ASCII output to DUMP
-        - Add editor based on ed
-        - Add disassembler
+        - Add an editor based on ed
 
 
 TODO AT SOME POINT
@@ -38,12 +36,13 @@ TODO AT SOME POINT
         - Allow SLITERAL to store strings longer than 255 chars
         - Allow S" and ." to handle strings longer than 255 chars
         - Allow -TRAILING to handle strings longer than 255 chars
-        - Add assembler
+        - Add an assembler
 
 
 -----------------------------------------------------------------------
 ALREADY DONE MAJOR CHANGES (LAST ON TOP WITH DATE)
 
+        - 01. May 2018 - Added Makefile; added disassembler
         - 16. Apr 2018 - Added tool to generate docs/WORDLIST.md
         - 11. Mar 2018 - Allow stripping of underflow check for native compile
         - 11. Mar 2018 - Added native compiling special cases

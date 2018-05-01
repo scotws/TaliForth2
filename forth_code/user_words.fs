@@ -1,6 +1,6 @@
 \ List of optional Forth words for Tali Forth 2 for the 65c02
 \ Scot W. Stevenson <scot.stevenson@gmail.com>
-\ This version: 07. March 2018
+\ This version: 01. May 2018
 
 \ When changing these words, edit them here and then use the 
 \ forth_to_dotbyte.py tool to convert them to the required format
@@ -24,7 +24,8 @@
         dup 1+ c@  8 and if space ." NN " then
         dup 1+ c@ 16 and if space ." UF " then
         dup cr space ." size (decimal): " decimal wordsize dup .
-        swap name>int swap hex cr space dump  r> base ! ;
+        swap name>int swap hex cr space 
+        2dup dump cr disasm r> base ! ;
 
 \ -------------------------------------------------------
 \ WORDS&SIZES prints all known words and the sizes of their codes
