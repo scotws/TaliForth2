@@ -7,7 +7,7 @@
 
 ; By default, we have 32 KiB of RAM and 32 KiB of ROM. See docs/memorymap.txt
 ; for details
-.org $8000
+.advance $8000
 
 ; Label used to calculate UNUSED. Silly for Tali Forth, where we assume 32 KiB
 ; RAM and 32 KiB ROM, but required for Liara Forth, and kept here to make the
@@ -493,14 +493,3 @@ print_u:
 .scend
 
 
-; =====================================================================
-; FINALLY
-
-; Of the 32 KiB we use, 24 KiB are reserved for Tali (from $8000 to $DFFF)
-; and the last eight (from $E000 to $FFFF) are left for whatever the user
-; wants to use them for.
-
-.advance $e000
-.require "kernel.asm"
-
-; END
