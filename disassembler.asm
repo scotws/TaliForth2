@@ -31,19 +31,28 @@ _byte_loop:
                 jsr xt_u_dot
                 jsr xt_space
 
-                ; Get one byte. We use the opcode value as the offset in the
-                ; oc_jump_table
+                ; We use the opcode value as the offset in the  oc_jump_table.
+                ; We have 256 entries, each two bytes large, so we can't just
+                ; use an index with y. We use tmp2 for this.
+                lda #<oc_jump_table
+                sta tmp2
+                lda #>oc_jump_table
+                sta tmp2+1
+
                 lda (2,x)
                 asl             ; multiply by two for offset
+                bcc +
+                inc tmp2+1      ; we're on second page, add 
+*
                 tay
 
                 ; Get address of the entry in the opcode table. We put the
                 ; address in tmp3 because that is where print_common expects
                 ; it to be
-                lda oc_jump_table,y 
+                lda (tmp2),y 
                 sta tmp3
                 iny
-                lda oc_jump_table,y
+                lda (tmp2),y
                 sta tmp3+1
 
                 ; The first byte is the length of the operand, so either
