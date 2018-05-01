@@ -46,7 +46,7 @@ xt_cold:
                 sta input
                 lda #>kernel_getc
                 sta input+1
-     
+                 
                 ; initialize 65c02 stack (Return Stack)
                 ldx #rsp0
                 txs
@@ -1920,6 +1920,22 @@ _done:
 z_digit_question:
                 rts
 .scend
+
+; ## DISASM ( addr u -- ) "Disassemble a block of memory"
+; ## "disasm"  coded  Tali Forth
+        ; """Convert a segment of memory to assembler output. This
+        ; word is vectored so people can add their own disassembler.
+        ; Natively, this produces Simpler Assembly Notation (SAN)
+        ; code, see the file disassembler.asm
+        ; """
+xt_disasm:
+                cpx #dsp0-3
+                bmi +
+                jmp underflow
+*
+                jmp disassembler        ; JSR/RTS
+
+z_disasm:  ; never reached
 
 
 ; ## DNEGATE ( d -- d ) "Negate double cell number"

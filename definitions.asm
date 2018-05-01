@@ -1,7 +1,7 @@
 ; Definitions for Tali Forth 2
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 01. Apr 2016 (Liara Forth)
-; This version: 11. Mar 2018
+; This version: 28. Apr 2018
 
 ; This file is included by taliforth.asm
 
@@ -69,7 +69,6 @@
 ; variables user0. 
 
 .alias user0     zpage          ; user and system variables
-.alias dsp0      $78            ; initial Data Stack Pointer, see docs/stack.md
 .alias rsp0      $ff            ; initial Return Stack Pointer (65c02 stack)
 .alias bsize     $ff            ; size of input/output buffers
 .alias buffer0   stack0+$100    ; input buffer ($0200-$027f)
@@ -111,10 +110,11 @@
 .alias tohold    user0+42  ; pointer for formatted output 
 .alias scratch   user0+44  ; 8 byte scratchpad (see UM/MOD)
 
-; Last address used for variables:   0052 ($0034)
-; First usable Data Stack location: $0077  (0119)
-; Bytes avaible for Data Stack: 67 --> 33 16-bit cells
+; Bytes used for variables: 54 ($0000-$0035) 
+; First usable Data Stack location: $0036 (decimal 54) 
+; Bytes avaible for Data Stack: 128-54 = 65 --> 32 16-bit cells
 
+.alias dsp0      $78            ; initial Data Stack Pointer, see docs/stack.md
 
 ; ASCII CHARACTERS
 

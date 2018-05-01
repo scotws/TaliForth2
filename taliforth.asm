@@ -20,6 +20,7 @@ code0:
 forth:
 
 .require "native_words.asm"     ; Native Forth words. Starts with COLD
+.require "disassembler.asm"     ; Disassembler 
 
 ; High-level Forth words, see forth_code/README.md
 forth_words_start:
@@ -33,6 +34,7 @@ user_words_end:
 
 .require "headers.asm"          ; Headers of native words
 .require "strings.asm"          ; Strings and error messages
+
 
 ; =====================================================================
 ; COMPILE WORDS, JUMPS and SUBROUTINE JUMPS INTO CODE
@@ -456,6 +458,18 @@ print_common:
         ; zero-terminated address of string to be printed is in tmp3. 
         ; Adds LF
         ; """
+                jsr print_common_no_lf
+
+                lda #AscLF
+                jsr emit_a
+
+        	rts
+
+print_common_no_lf:
+        ; """Common print loop with no line feed at the end. Assumes
+        ; address of zero-terminated string to be printed is in tmp3.
+        ; Used by print_common
+        ; """
 .scope
                 ldy #0
 _loop:
@@ -465,9 +479,6 @@ _loop:
                 iny
                 bra _loop
 _done:
-                lda #AscLF
-                jsr emit_a
-
         	rts
 .scend
 
@@ -491,15 +502,4 @@ print_u:
                 rts
 .scend
 
-; =====================================================================
-; EDITOR
-; (Currently no editor available)
-
-; =====================================================================
-; ASSEMBLER
-; (Currently no assembler available)
-
-; =====================================================================
-; DISASSEMBLER
-; (Currently no disassembler available)
-
+; END
