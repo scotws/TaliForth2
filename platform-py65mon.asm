@@ -1,3 +1,15 @@
+.org $8000
+.require "taliforth.asm"      ; Top-level definitions, memory map
+
+; =====================================================================
+; FINALLY
+
+; Of the 32 KiB we use, 24 KiB are reserved for Tali (from $8000 to $DFFF)
+; and the last eight (from $E000 to $FFFF) are left for whatever the user
+; wants to use them for.
+
+.advance $e000
+
 ; Default kernel file for Tali Forth 2 
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 19. Jan 2014
@@ -85,3 +97,4 @@ s_kernel_id:
 .word v_irq
 
 ; END
+	

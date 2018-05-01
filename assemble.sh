@@ -9,7 +9,7 @@
 # Run ophis with parameters to automatically generate label map and listing
 /usr/local/bin/ophis -l ./docs/ophis_listing.txt\
         -m ./docs/ophis_labelmap.txt\
-        -c taliforth.asm
+        -c platform-py65mon.asm
 
 # Automatically generate list of native Forth words as docs/WORDLIST.md
 cd tools
