@@ -1,13 +1,13 @@
 # Tali Forth 2 for the 65c02  
 Scot W. Stevenson <scot.stevenson@gmail.com>   
 First version: 19. Jan 2014 (original Tali Forth)  
-This version: 06. Mar 2018 
+This version: 01. May 2018 
 
 **(THIS IS AN ALPHA VERSION OF TALI FORTH. SOME THINGS DON'T WORK)**
 
 ## Dude, I am the very model of a Salarian scientist, just let me start!
 
-Run `py65mon -m 65c02 -r ophis.bin` from this directory.
+Run `py65mon -m 65c02 -r taliforth-py65mon.bin` from this directory.
 
 
 ## Introduction
@@ -26,10 +26,10 @@ GitHub. You can find the most current version at
 
 Tali Forth 2 aims to be, roughly in order of priority: 
 
-- **Easy to try.** Download the source -- or even just the binary `ophis.bin` --
-  and run the emulator with `py65mon -m 65c02 -r ophis.bin` to get it running.
-  This lets you experiment with a working 8-bit Forth for the 65c02 without any
-  special configuration.
+- **Easy to try.** Download the source -- or even just the binary
+  `taliforth-py65mon.bin` -- and run the emulator with `py65mon -m 65c02 -r
+  taliforth-py65mon.bin` to get it running.  This lets you experiment with a
+  working 8-bit Forth for the 65c02 without any special configuration.
 
 - **Simple**. The simple subroutine-threaded (STC) design and excessively
   commented source code give hobbyists the chance to study a working Forth at
