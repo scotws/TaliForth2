@@ -183,39 +183,37 @@ oc_jump_table:
         .word oc70, oc71, oc72, oc__, oc74, oc75, oc76, oc77
         .word oc78, oc79, oc7a, oc__, oc7c, oc7d, oc7e, oc7f 
 
-        ; HIER HIER 
-
         ; Opcodes 80-8F
-        .word oc80, oc81, oc8_, oc__, oc8_, oc85, oc86, oc8_
+        .word oc80, oc81, oc__, oc__, oc84, oc85, oc86, oc__
         .word oc88, oc89, oc8a, oc__, oc8c, oc8d, oc8e, oc8f 
 
         ; Opcodes 90-9F
-        .word oc90, oc91, oc9_, oc__, oc9_, oc95, oc96, oc9_
+        .word oc90, oc91, oc92, oc__, oc94, oc95, oc96, oc97
         .word oc98, oc99, oc9a, oc__, oc9c, oc9d, oc9e, oc9f 
         
         ; Opcodes a0-aF
-        .word oca0, oca1, oca_, oc__, oca_, oca5, oca6, oa__
-        .word oca8, oca9, ocaa, oc__, ocac, ocad, ocae, oa0f 
+        .word oca0, oca1, oca2, oc__, oca4, oca5, oca6, oca7
+        .word oca8, oca9, ocaa, oc__, ocac, ocad, ocae, ocaf 
 
         ; Opcodes b0-bF
-        .word ocb0, ocb1, ocb_, oc__, ocb_, ocb5, ocb6, ocb_
+        .word ocb0, ocb1, ocb2, oc__, ocb4, ocb5, ocb6, ocb7
         .word ocb8, ocb9, ocba, oc__, ocbc, ocbd, ocbe, ocbf 
 
         ; Opcodes c0-cF
-        .word occ0, occ1, occ_, oc__, occ_, occ5, occ6, occ_
-        .word occ8, occ9, occa, oc__, occc, occd, occe, occf 
+        .word occ0, occ1, oc__, oc__, occ4, occ5, occ6, occ7
+        .word occ8, occ9, occa, occb, occc, occd, occe, occf 
 
         ; Opcodes d0-dF
-        .word ocd0, ocd1, ocd_, oc__, ocd_, ocd5, ocd6, ocd_
-        .word ocd8, ocd9, ocda, oc__, ocdc, ocdd, ocde, ocdf 
+        .word ocd0, ocd1, ocd2, oc__, oc__, ocd5, ocd6, ocd7
+        .word ocd8, ocd9, ocda, ocdb, oc__, ocdd, ocde, ocdf 
         
         ; Opcodes e0-eF
-        .word oce0, oce1, oce_, oc__, oce_, oce5, oce6, oce_
+        .word oce0, oce1, oc__, oc__, oce4, oce5, oce6, oce7
         .word oce8, oce9, ocea, oc__, ocec, oced, ocee, ocef 
 
         ; Opcodes f0-fF
-        .word ocf0, ocf1, ocf_, oc__, ocf_, ocf5, ocf6, ocf_
-        .word ocf0, ocf1, ocf_, oc__, ocf_, ocf5, ocf6, ocf_
+        .word ocf0, ocf1, ocf2, oc__, oc__, ocf5, ocf6, ocf7
+        .word ocf8, ocf9, ocfa, oc__, oc__, ocfd, ocfe, ocff
 
 oc__:           
         .byte 0, "?", 0
@@ -357,103 +355,141 @@ oc_table:
         oc7e:   .byte 2, "ror.x", 0
         oc7f:   .byte 2, "bbr7", 0
 
-        ; HIER HIER 
+        oc80:   .byte 1, "bra", 0
+        oc81:   .byte 1, "sta.zxi", 0
+;      (oc82:)
+;      (oc83:)
+        oc84:   .byte 1, "sty.z", 0
+        oc85:   .byte 1, "sta.z", 0
+        oc86:   .byte 1, "stx.z", 0
+;      (oc87:)
+        oc88:   .byte 0, "dey", 0
+        oc89:   .byte 1, "bit.#", 0
+        oc8a:   .byte 0, "txa", 0
+;      (oc8b:)
+        oc8c:   .byte 2, "sty", 0
+        oc8d:   .byte 2, "sta", 0
+        oc8e:   .byte 2, "stx", 0
+        oc8f:   .byte 2, "bbs0", 0
 
-        oc80:   .byte 0, "", 0
-        oc81:   .byte 0, "", 0
-        oc85:   .byte 0, "", 0
-        oc86:   .byte 0, "", 0
-        oc88:   .byte 0, "", 0
-        oc89:   .byte 0, "", 0
-        oc8a:   .byte 0, "", 0
-        oc8c:   .byte 0, "", 0
-        oc8d:   .byte 0, "", 0
-        oc8e:   .byte 0, "", 0
-        oc8f:   .byte 0, "", 0
+        oc90:   .byte 1, "bcc", 0
+        oc91:   .byte 1, "sta.ziy", 0
+        oc92:   .byte 1, "sta.zi", 0
+;      (oc93:)
+        oc94:   .byte 1, "sty.zx", 0
+        oc95:   .byte 1, "sty.zx", 0
+        oc96:   .byte 1, "stx.zy", 0
+        oc97:   .byte 1, "smb1.z", 0
+        oc98:   .byte 0, "tya", 0
+        oc99:   .byte 2, "sta.y", 0
+        oc9a:   .byte 0, "txs", 0
+;      (oc9b:)
+        oc9c:   .byte 2, "stz", 0
+        oc9d:   .byte 2, "sta.x", 0
+        oc9e:   .byte 2, "stz.x", 0
+        oc9f:   .byte 2, "bbs1", 0
 
-        oc90:   .byte 0, "", 0
-        oc91:   .byte 1, "", 0
-        oc95:   .byte 1, "", 0
-        oc96:   .byte 1, "", 0
-        oc98:   .byte 0, "", 0
-        oc99:   .byte 1, "", 0
-        oc9a:   .byte 0, "", 0
-        oc9c:   .byte 2, "", 0
-        oc9d:   .byte 2, "", 0
-        oc9e:   .byte 2, "", 0
-        oc9f:   .byte 2, "", 0
+        oca0:   .byte 1, "ldy.#", 0
+        oca1:   .byte 1, "lda.zxi", 0
+        oca2:   .byte 1, "ldx.#", 0
+;      (oca3:)
+        oca4:   .byte 1, "ldy.z", 0
+        oca5:   .byte 1, "lda.z", 0
+        oca6:   .byte 1, "ldx.z", 0
+        oca7:   .byte 1, "smb2.z", 0
+        oca8:   .byte 0, "tay", 0
+        oca9:   .byte 1, "lda.#", 0
+        ocaa:   .byte 0, "tax", 0
+;      (ocab:)
+        ocac:   .byte 2, "ldy", 0
+        ocad:   .byte 2, "lda", 0
+        ocae:   .byte 2, "ldx", 0
+        ocaf:   .byte 2, "bbs2", 0
 
-        oca0:   .byte 0, "", 0
-        oca1:   .byte 0, "", 0
-        oca5:   .byte 0, "", 0
-        oca6:   .byte 0, "", 0
-        oca8:   .byte 0, "", 0
-        oca9:   .byte 0, "", 0
-        ocaa:   .byte 0, "", 0
-        ocac:   .byte 0, "", 0
-        ocad:   .byte 0, "", 0
-        ocae:   .byte 0, "", 0
-        ocaf:   .byte 0, "", 0
+        ocb0:   .byte 1, "bcs", 0
+        ocb1:   .byte 1, "lda.ziy", 0
+        ocb2:   .byte 1, "lda.zi", 0
+;      (ocb3:)
+        ocb4:   .byte 1, "ldy.zx", 0
+        ocb5:   .byte 1, "lda.zx", 0
+        ocb6:   .byte 1, "ldx.zy", 0
+        ocb7:   .byte 1, "smb3.z", 0
+        ocb8:   .byte 0, "clv", 0
+        ocb9:   .byte 2, "lda.y", 0
+        ocba:   .byte 0, "tsx", 0
+;      (ocbb:)
+        ocbc:   .byte 2, "ldy.x", 0
+        ocbd:   .byte 2, "lda.x", 0
+        ocbe:   .byte 2, "ldx.y", 0
+        ocbf:   .byte 2, "bbs4", 0
 
-        ocb0:   .byte 0, "", 0
-        ocb1:   .byte 0, "", 0
-        ocb5:   .byte 0, "", 0
-        ocb6:   .byte 0, "", 0
-        ocb8:   .byte 0, "", 0
-        ocb9:   .byte 0, "", 0
-        ocba:   .byte 0, "", 0
-        ocbc:   .byte 0, "", 0
-        ocbd:   .byte 0, "", 0
-        ocbe:   .byte 0, "", 0
-        ocbf:   .byte 0, "", 0
+        occ0:   .byte 1, "cpy.#", 0
+        occ1:   .byte 1, "cmp.zxi", 0
+;      (occ2:)
+;      (occ3:)
+        occ4:   .byte 1, "cpy.z", 0
+        occ5:   .byte 1, "cmp.z", 0
+        occ6:   .byte 1, "dec.z", 0
+        occ7:   .byte 1, "smb4.z", 0
+        occ8:   .byte 0, "iny", 0
+        occ9:   .byte 1, "cmp.#", 0
+        occa:   .byte 0, "dex", 0
+        occb:   .byte 0, "stp", 0
+        occc:   .byte 2, "cpy", 0
+        occd:   .byte 2, "cmp", 0
+        occe:   .byte 2, "dec", 0
+        occf:   .byte 2, "bbs4", 0
 
-        occ0:   .byte 0, "", 0
-        occ1:   .byte 0, "", 0
-        occ5:   .byte 0, "", 0
-        occ6:   .byte 0, "", 0
-        occ8:   .byte 0, "", 0
-        occ9:   .byte 0, "", 0
-        occa:   .byte 0, "", 0
-        occc:   .byte 0, "", 0
-        occd:   .byte 0, "", 0
-        occe:   .byte 0, "", 0
-        occf:   .byte 0, "", 0
+        ocd0:   .byte 1, "bne", 0
+        ocd1:   .byte 1, "cmp.ziy", 0
+        ocd2:   .byte 1, "cmp.zi", 0
+;      (ocd3:)
+;      (ocd4:)
+        ocd5:   .byte 1, "cmp.zx", 0
+        ocd6:   .byte 1, "dec.zx", 0
+        ocd7:   .byte 1, "smb5.z", 0
+        ocd8:   .byte 0, "cld", 0
+        ocd9:   .byte 2, "cmp.y", 0
+        ocda:   .byte 0, "phx", 0
+        ocdb:   .byte 0, "wai", 0
+;      (ocdc:)
+        ocdd:   .byte 2, "cmp.x", 0
+        ocde:   .byte 2, "dec.x", 0
+        ocdf:   .byte 2, "bbs5", 0
 
-        ocd0:   .byte 0, "", 0
-        ocd1:   .byte 0, "", 0
-        ocd5:   .byte 0, "", 0
-        ocd6:   .byte 0, "", 0
-        ocd8:   .byte 0, "", 0
-        ocd9:   .byte 0, "", 0
-        ocda:   .byte 0, "", 0
-        ocdc:   .byte 0, "", 0
-        ocdd:   .byte 0, "", 0
-        ocde:   .byte 0, "", 0
-        ocdf:   .byte 0, "", 0
+        oce0:   .byte 1, "cpx.#", 0
+        oce1:   .byte 1, "sbc.zxi", 0
+;      (oce2:)
+;      (oce3:)
+        oce4:   .byte 1, "cpx.z", 0
+        oce5:   .byte 1, "sbc.z", 0
+        oce6:   .byte 1, "inc.z", 0
+        oce7:   .byte 1, "smb6.z", 0
+        oce8:   .byte 0, "inx", 0
+        oce9:   .byte 1, "sbc.#", 0
+        ocea:   .byte 0, "nop", 0
+;      (oceb:)
+        ocec:   .byte 2, "cpx", 0
+        oced:   .byte 2, "sbc", 0
+        ocee:   .byte 2, "inc", 0
+        ocef:   .byte 2, "bbs6", 0
 
-        oce0:   .byte 0, "", 0
-        oce1:   .byte 0, "", 0
-        oce5:   .byte 0, "", 0
-        oce6:   .byte 0, "", 0
-        oce8:   .byte 0, "", 0
-        oce9:   .byte 0, "", 0
-        ocea:   .byte 0, "", 0
-        ocec:   .byte 0, "", 0
-        oced:   .byte 0, "", 0
-        ocee:   .byte 0, "", 0
-        ocef:   .byte 0, "", 0
-
-        ocf0:   .byte 0, "", 0
-        ocf1:   .byte 0, "", 0
-        ocf5:   .byte 0, "", 0
-        ocf6:   .byte 0, "", 0
-        ocf8:   .byte 0, "", 0
-        ocf9:   .byte 0, "", 0
-        ocfa:   .byte 0, "", 0
-        ocfc:   .byte 0, "", 0
-        ocfd:   .byte 0, "", 0
-        ocfe:   .byte 0, "", 0
-        ocff:   .byte 0, "", 0
+        ocf0:   .byte 1, "beq", 0
+        ocf1:   .byte 1, "sbc.ziy", 0
+        ocf2:   .byte 1, "sbc.zi", 0
+;      (ocf3:)
+;      (ocf4:)
+        ocf5:   .byte 1, "sbc.zx", 0
+        ocf6:   .byte 1, "inc.zx", 0
+        ocf7:   .byte 1, "smb7.z", 0
+        ocf8:   .byte 0, "sed", 0
+        ocf9:   .byte 2, "sbc.y", 0
+        ocfa:   .byte 0, "plx", 0
+;      (ocfb:)
+;      (ocfc:)
+        ocfd:   .byte 2, "sbc.x", 0
+        ocfe:   .byte 2, "inc.x", 0
+        ocff:   .byte 2, "bbs7", 0
 
 .scend
 
