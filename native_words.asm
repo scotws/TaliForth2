@@ -764,13 +764,8 @@ xt_c_comma:
                 jmp underflow
 *
                 lda 0,x
-                sta (cp)
+                jsr cmpl_a
 
-                ; increase CP to the next byte
-                inc cp
-                bne _done
-                inc cp+1
-_done:
                 inx
                 inx
 
@@ -5447,11 +5442,8 @@ xt_semicolon:
                 ; Allocate one further byte and save the RTS instruction
                 ; there
                 lda #$60                ; opcode for RTS
-                sta (cp)
-                inc cp
-                bne +
-                inc cp+1
-*
+                jsr cmpl_a
+
                 ; Save beginning of our word as new last word in the
                 ; Dictionary
                 lda workword
@@ -5565,11 +5557,8 @@ xt_sliteral:
 
                 ; Store opcode for JMP
                 lda #$4c
-                sta (cp)
-                inc cp
-                bne +
-                inc cp+1
-*
+                jsr cmpl_a
+
                 ; Our jump target is CP + 2 (for the length of the jump
                 ; instruction itself ) + the length of the string
                 lda tmptos

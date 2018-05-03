@@ -15,6 +15,7 @@ TODO POST-BETA ("ALL THERE, BUT BEWARE OF SNEAKY BUGS")
         - Warn if newly defined word already in Dictionary
         - Code temporary high-level Forth words such as WITHIN natively
         - Check where all "STY 0,X" can be used to good effect
+        - Check where all "cmpl_a" can be used to good effect
         - In ALLOT, figure out how to handle release of too much memory
         - Add an editor based on ed
         - Consider having WORDSIZE take xt and not nt

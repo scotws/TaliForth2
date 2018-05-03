@@ -51,7 +51,8 @@ user_words_end:
 ;               jsr cmpl_subroutine
 ;
 ; You can remember which comes first by thinking of the song "Young Americans"
-; ("YA") by David Bowie.
+; ("YA") by David Bowie. Also, we keep a routine here to compile a single
+; byte passed through A.
 .scope
 cmpl_subroutine:
                 ; This is the entry point to compile JSR <ADDR>
@@ -73,6 +74,8 @@ cmpl_word:
                 jsr cmpl_a      ; compile LSB of address
                 tya             ; fall thru for MSB
 cmpl_a:
+                ; This is the entry point to compile a single byte which
+                ; is passed in A
                 sta (cp)
                 inc cp
                 bne _done
