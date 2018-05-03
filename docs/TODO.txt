@@ -17,6 +17,7 @@ TODO POST-BETA ("ALL THERE, BUT BEWARE OF SNEAKY BUGS")
         - Check where all "STY 0,X" can be used to good effect
         - In ALLOT, figure out how to handle release of too much memory
         - Add an editor based on ed
+        - Consider having WORDSIZE take xt and not nt
 
 
 TODO AT SOME POINT
