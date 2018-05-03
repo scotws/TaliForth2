@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.3.2)  28 APR 2018 08:21
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.3.2)  3 MAY 2018 11:08
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -460,7 +460,7 @@ Chapter 2.
 ]
 Chapter 3.
 (./ch_installation.tex
-Overfull \hbox (31.80138pt too wide) in paragraph at lines 17--21
+Overfull \hbox (31.80138pt too wide) in paragraph at lines 19--23
 \T1/cmr/m/n/10 Tali was writ-ten to run out of the box on the \T1/SourceCodePro
 -TLF/m/n/10 py65mon \T1/cmr/m/n/10 sim-u-la-tor from [][]https://github.com/mna
 berez/py65[][].
@@ -620,9 +620,9 @@ type1/adobe/sourcecodepro/SourceCodePro-Bold.pfb></usr/share/texlive/texmf-dist
 /fonts/type1/adobe/sourcecodepro/SourceCodePro-It.pfb></usr/share/texlive/texmf
 -dist/fonts/type1/adobe/sourcecodepro/SourceCodePro-Regular.pfb></usr/share/tex
 live/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
-Output written on manual.pdf (46 pages, 446716 bytes).
+Output written on manual.pdf (46 pages, 446802 bytes).
 PDF statistics:
- 2311 PDF objects out of 2487 (max. 8388607)
+ 2310 PDF objects out of 2487 (max. 8388607)
  1629 compressed objects within 17 object streams
  608 named destinations out of 1000 (max. 500000)
  822 words of extra memory for PDF output out of 10000 (max. 10000000)
