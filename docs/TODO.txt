@@ -3,29 +3,33 @@ Scot W. Stevenson <scot.stevenson@gmail.com>
 First version: 19. Jan 2014
 This version: 03. May 2018
 
+(Note: Parts of the list have been moved to the GitHub website)
+
 TODO POST-ALPHA ("ALL WORDS DO SOMETHING, USUALLY EVEN THE RIGHT THING")
         - Test all words, adding any new tests to documentation
         - Review (and spellcheck) documentation
 
+--> Milestone BETA
 
 TODO POST-BETA ("ALL THERE, BUT BEWARE OF SNEAKY BUGS")
         - Add ASCII output to DUMP
-        - Add SEARCH (prepares for inclusion of editor)
-        - Move adjust_z from CONSTANT to taliforth.asm (it's too long!)
         - Warn if newly defined word already in Dictionary
         - Code temporary high-level Forth words such as WITHIN natively
-        - Check where all "STY 0,X" can be used to good effect
-        - Check where all "cmpl_a" can be used to good effect
         - In ALLOT, figure out how to handle release of too much memory
         - Add an editor based on ed
         - Consider having WORDSIZE take xt and not nt
         - Renumber error codes in strings.asm
+        - Allow SLITERAL to store strings longer than 255 chars
+        - Allow S" and ." to handle strings longer than 255 chars
+        - Allow -TRAILING to handle strings longer than 255 chars
 
+--> Milestone RELEASE 1.0
 
 TODO AT SOME POINT
+        - Check where all "STY 0,X" can be used to good effect
+        - Check where all "cmpl_a" can be used to good effect
         - Consider switching 0BRANCH/BRANCH to CS-PICK/CS-ROLL
         - Add history function, at least one line, best with CTRL-p (hex $10?)
-        - Add more words from the ANSI String list (see forth_code/temporary.fs)
         - Add handling for multi-byte keyboard input (if possible with py65)
         - See if we can add real Delete Key detection (ESC[3~)
         - Add real USER variables
@@ -36,9 +40,6 @@ TODO AT SOME POINT
         - Consider moving UM* to table-based multiplication
         - Consider adding KEY? if we can make it work with py65mon
         - Consider adding THROW/CATCH
-        - Allow SLITERAL to store strings longer than 255 chars
-        - Allow S" and ." to handle strings longer than 255 chars
-        - Allow -TRAILING to handle strings longer than 255 chars
         - Add an assembler
 
 
