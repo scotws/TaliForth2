@@ -1,7 +1,7 @@
 TODO/CHANGES for Tali Forth 2 
 Scot W. Stevenson <scot.stevenson@gmail.com>
 First version: 19. Jan 2014
-This version: 01. May 2018
+This version: 03. May 2018
 
 TODO POST-ALPHA ("ALL WORDS DO SOMETHING, USUALLY EVEN THE RIGHT THING")
         - Test all words, adding any new tests to documentation
@@ -18,6 +18,7 @@ TODO POST-BETA ("ALL THERE, BUT BEWARE OF SNEAKY BUGS")
         - In ALLOT, figure out how to handle release of too much memory
         - Add an editor based on ed
         - Consider having WORDSIZE take xt and not nt
+        - Renumber error codes in strings.asm
 
 
 TODO AT SOME POINT

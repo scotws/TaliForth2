@@ -210,7 +210,7 @@ _get_line:
                 ; need to print an error message and reset the machine. We don't
                 ; need to save TOS because we're going to clobber it anyway when we
                 ; go back to ABORT.
-                lda #8                  ; code for error string refill 1
+                lda #err_refill
                 jmp error 
 
 _success:
@@ -514,7 +514,7 @@ xt_allot:
                 lda #>cp_end
                 sta cp+1
 
-                lda #1                  ; error code for ALLOT
+                lda #err_allot
                 jmp error
 _negative:
                 ; Free at most to the beginning of the Dictionary space. Note
@@ -845,7 +845,7 @@ xt_char:
                 ora 1,x
                 bne _not_empty
 
-                lda #6          ; Code for parsing falue
+                lda #err_noname
                 jmp error 
 
 _not_empty:
@@ -1008,7 +1008,7 @@ xt_colon:
                 ora state+1
                 beq +
 
-                lda #10         ; "already in compile mode"
+                lda #err_state
                 jmp error
 *
                 ; switch to compile state
@@ -1500,7 +1500,7 @@ xt_create:
                 ora 1,x
                 bne _got_name
 
-                lda #6
+                lda #err_noname
                 jmp error
 
 _got_name:
@@ -3252,7 +3252,7 @@ _no_match:
 _zero:
                 ; if next word is zero, something is wrong and we
                 ; return with an error
-                lda #13         ; xt not found
+                lda #err_noxt
                 jmp error 
 _match:
                 ; It's a match! Replace TOS with nt
@@ -4303,7 +4303,7 @@ _main:
                 jsr emit_a
                 jsr xt_space
 
-                lda #12         ; code for Syntax error
+                lda #err_syntax
                 jmp error
                 
 _all_converted:
@@ -4950,14 +4950,14 @@ xt_postpone:
                 ora 1,x
                 bne +
 
-                lda #6          ; no name
+                lda #err_noname
                 jmp error
 *
                 jsr xt_find_name                ; ( -- nt | 0 )
 
                 ; if word not in Dictionary, complain and quit
                 bne +
-                lda #12         ; no name
+                lda #err_noname
                 jmp error
 *
                 ; keep a copy of nt for later
@@ -5241,7 +5241,7 @@ _src_not_string:
                 ; Since we don't have blocks, this must mean that we are trying
                 ; to read from a file. However, we don't have files yet, so we 
                 ; report an error and jump to ABORT.
-                lda #9                  ; error code for illegal source id
+                lda #err_badsource
                 jmp error
 
 _done:
@@ -5969,7 +5969,7 @@ xt_tick:
                 ora 1,x
                 bne +
 
-                lda #6                  ; parsing failure
+                lda #err_noname
                 jmp error
 *
                 jsr xt_find_name        ; ( addr u -- nt )
@@ -5979,7 +5979,7 @@ xt_tick:
                 ora 1,x
                 bne +
 
-                lda #12                 ; word not defined
+                lda #err_syntax
                 jmp error
 *
                 jsr xt_name_to_int      ; ( nt -- xt ) 
@@ -6786,7 +6786,7 @@ xt_um_slash_mod:
                 ora 1,x
                 bne _not_zero
 
-                lda #3          ; "Division by zero" error string
+                lda #err_divzero
                 jmp error
 
 _not_zero: 

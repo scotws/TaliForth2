@@ -139,7 +139,7 @@ dodefer:
 
 defer_error:
                 ; """Error routine for undefined DEFER: Complain and abort"""
-                lda #2          ; DEFER not defined yet
+                lda #err_defer
                 jmp error
 
 dodoes:
@@ -377,7 +377,7 @@ _got_name_token:
                 beq _interpret
 
                 ; TODO see if we can print offending word first
-                lda #1                  ; code for "compile only word" error
+                lda #err_compileonly
                 jmp error
 
 _interpret:
@@ -417,7 +417,7 @@ _line_done:
 
 underflow:
         ; """Landing area for data stack underflow"""
-                lda #11                 ; signal underflow
+                lda #err_underflow
 
                 ; fall through to error
 
