@@ -7112,12 +7112,11 @@ z_words:        rts
 .scend
 
 
-; ## WORDSIZE ( nt -- u ) "Get size of word in bytes"
+; ## WORDSIZE ( xt -- u ) "Get size of word in bytes"
 ; ## "wordsize"  tested  Tali Forth
-        ; """Given an word's name token (nt), return the size of the word's
-        ; payload size in bytes (CFA plus PFA) in bytes. Does not count the
-        ; final RTS.
-        ; """
+        ; """Given an word's execution token (xt), return the size of the
+        ; word's payload size in bytes (CFA plus PFA) in bytes. Does not
+        ; count the final RTS.  """
 .scope
 xt_wordsize:    
                 cpx #dsp0-1
