@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.3.2)  3 MAY 2018 11:08
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.3.2)  15 MAY 2018 08:45
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -542,14 +542,14 @@ Overfull \hbox (2.941pt too wide) in paragraph at lines 617--622
 [28] [29] [30]) [31] [32]
 Chapter 7.
 (./ch_developing.tex
-Overfull \hbox (41.71275pt too wide) in paragraph at lines 13--15
+Overfull \hbox (41.71275pt too wide) in paragraph at lines 14--16
 \T1/cmr/m/n/10 The eas-i-est way to add new words to Tali Forth is to in-clude 
 them in the file \T1/SourceCodePro-TLF/m/n/10 forth_code/user_words.fs\T1/cmr/m
 /n/10 . 
  []
 
 
-Overfull \hbox (31.95775pt too wide) in paragraph at lines 29--35
+Overfull \hbox (31.95775pt too wide) in paragraph at lines 30--36
 \T1/cmr/m/n/10 Michael Mar-tin's[] Ophis Cross-Assember can be down-loaded from
  [][]http://michaelcmartin.github.io/Ophis/[][].
  []
@@ -620,7 +620,7 @@ type1/adobe/sourcecodepro/SourceCodePro-Bold.pfb></usr/share/texlive/texmf-dist
 /fonts/type1/adobe/sourcecodepro/SourceCodePro-It.pfb></usr/share/texlive/texmf
 -dist/fonts/type1/adobe/sourcecodepro/SourceCodePro-Regular.pfb></usr/share/tex
 live/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
-Output written on manual.pdf (46 pages, 446802 bytes).
+Output written on manual.pdf (46 pages, 446767 bytes).
 PDF statistics:
  2310 PDF objects out of 2487 (max. 8388607)
  1629 compressed objects within 17 object streams

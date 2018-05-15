@@ -1,3 +1,4 @@
+% Developing Tali Forth 2
 
 \begin{quote}
         Programming computers can be crazy-making.
@@ -35,15 +36,17 @@ use the link provided above. For Linux\index{Linux}:
 
 \begin{lstlisting}[frame=lines]
         git clone https://github.com/michaelcmartin/Ophis
-        cd src
+        cd Ophis/src
         sudo python setup.py install
 \end{lstlisting}
 
-Switch to the folder where the Tali code lives, and assemble with the primitive
-shell script provided: \texttt{./assemble.sh} The script also automatically
-updates the file listings in the \texttt{docs} folder. Note that Ophis will not
-accept math operation characters in label names because it will try to perform
-those operations. Because of this, we use underscores for label names.
+Switch to the folder where the Tali code lives, and run the Makefile with a
+simple \texttt{make} command. This also updates the file listings in the
+\texttt{docs} folder. 
+
+Ophis has some quirks. For instance, you cannot use math symbols in label names,
+because it will try to perform those operations. Use underscores for label names
+instead.
 
 \subsection{General notes}
 
