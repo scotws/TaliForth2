@@ -1443,7 +1443,7 @@ z_constant:     rts
 
 
 ; ## COUNT ( c-addr -- addr u ) "Convert character string to normal format"
-; ## "count"  coded  ANSI core
+; ## "count"  tested  ANSI core
         ; """; Convert old-style character string to address-length pair. Note
         ; that the length of the string c-addr ist stored in character length
         ; (8 bit), not cell length (16 bit). This is rarely used these days,
@@ -1642,7 +1642,7 @@ z_create:       rts
 
 
 ; ## D_MINUS ( d d -- d ) "Subtract two double-celled numbers"
-; ## "d-"  coded  ANSI double
+; ## "d-"  tested  ANSI double
 .scope
 xt_d_minus:
                 cpx #dsp0-7
@@ -1677,7 +1677,7 @@ z_d_minus:      rts
 
 
 ; ## D_PLUS ( d d -- d ) "Add two double-celled numbers"
-; ## "d+"  coded  ANSI double
+; ## "d+"  tested  ANSI double
 .scope
 xt_d_plus:
                 cpx #dsp0-7
@@ -1711,7 +1711,7 @@ z_d_plus:       rts
 
 
 ; ## D_TO_S ( d -- n ) "Convert a double number to single"
-; ## "d>s"  coded  ANSI double
+; ## "d>s"  tested  ANSI double
         ; """Though this is basically just DROP, we keep it
         ; separate so we can test for underflow
         ; """
@@ -1729,7 +1729,7 @@ z_d_to_s:       rts
 
 
 ; ## DABS ( d -- d ) "Return the absolute value of a double"
-; ## "dabs"  coded  ANSI double
+; ## "dabs"  tested  ANSI double
 .scope
 xt_dabs:
                 cpx #dsp0-3
@@ -1774,7 +1774,7 @@ z_decimal:      rts
 
 
 ; ## DEFER ( "name" -- ) "Create a placeholder for words by name"
-; ## "defer"  coded  ANSI core ext
+; ## "defer"  tested  ANSI core ext
         ; """Reserve an name that can be linked to various xt by IS. The
         ; ANSI reference implementation is 
         ;       CREATE ['] ABORT , DOES> @ EXECUTE ;
@@ -1845,7 +1845,7 @@ z_depth:        rts
 
 
 ; ## DIGIT_QUESTION ( char -- u f | char f ) "Convert ASCII char to number"
-; ## "digit?"  coded  Tali Forth
+; ## "digit?"  tested  Tali Forth
         ; """Inspired by the pForth instruction DIGIT, see
         ; https://github.com/philburk/pforth/blob/master/fth/numberio.fth
         ; Rewritten from DIGIT>NUMBER in Tali Forth. Note in contrast to
@@ -6523,7 +6523,7 @@ z_two_r_from:   rts
 .scend
 
 ; ## TWO_SLASH ( n -- n ) "Divide TOS by two"
-; ## "2/"  coded  ANSI core
+; ## "2/"  tested  ANSI core
 xt_two_slash:
                 cpx #dsp0-1
                 bmi +
@@ -6541,7 +6541,7 @@ z_two_slash:    rts
 
 
 ; ## TWO_STAR ( n -- n ) "Multiply TOS by two"
-; ## "2*"  coded  ANSI core
+; ## "2*"  tested  ANSI core
         ; """Also used for CELLS"""
 xt_two_star:
                 cpx #dsp0-1
