@@ -677,9 +677,14 @@ nt_two_variable:
         .word nt_two_r_fetch, xt_two_variable, z_two_variable
         .byte "2variable"
 
+nt_two_fetch:
+        .byte 2, UF
+        .word nt_two_variable, xt_two_fetch, z_two_fetch
+        .byte "2@"
+
 nt_two_over:
         .byte 5, UF
-        .word nt_two_variable, xt_two_over, z_two_over
+        .word nt_two_fetch, xt_two_over, z_two_over
         .byte "2over"
 
 nt_two_swap:

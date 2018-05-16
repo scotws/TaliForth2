@@ -165,6 +165,7 @@ RTS instruction at the end of each word.
 | TWO | `2` | Tali Forth | 8 | tested |
 | TWO_DROP | `2drop` | ANSI core | 11 | tested |
 | TWO_DUP | `2dup` | ANSI core | 27 | coded |
+| TWO_FETCH | `2@` | ANSI core | 22 | tested |
 | TWO_OVER | `2over` | ANSI core | 27 | coded |
 | TWO_R_FETCH | `2r@` | ANSI core ext | 29 | coded |
 | TWO_R_FROM | `2r>` | ANSI core ext | 28 | coded |
@@ -193,6 +194,6 @@ RTS instruction at the end of each word.
 | ZERO_LESS | `0<` | ANSI core | 19 | tested |
 | ZERO_UNEQUAL | `0<>` | ANSI core ext | 21 | tested |
 
-Found **185** native words in `native_words.asm`.
+Found **186** native words in `native_words.asm`.
 Of those, **74** are not marked as "tested".
 

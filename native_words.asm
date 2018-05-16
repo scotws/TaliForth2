@@ -6319,7 +6319,7 @@ z_true:         rts
 
 
 ; ## TUCK ( b a -- a b a ) "Copy TOS below NOS"
-; ## "tuck"  tested ANSI core ext
+; ## "tuck"  tested  ANSI core ext
 xt_tuck:        
                 cpx #dsp0-3
                 bmi +
@@ -6398,6 +6398,27 @@ xt_two_dup:
 z_two_dup:      rts
 .scend
 
+
+; ## TWO_FETCH ( addr -- n1 n2 ) "Fetch the cell pair n1 n2 stored at addr"
+; ## "2@"  tested  ANSI core
+        ; """Note n2 stored at addr and n1 in the next cell -- in our case,
+        ; the next byte. This is equvalent to  DUP CELL+ @ SWAP @
+        ; """ 
+        ; TODO code in assembler for speed
+.scope
+xt_two_fetch:
+                cpx #dsp0-1
+                bmi +
+                jmp underflow
+*
+                jsr xt_dup
+                jsr xt_cell_plus
+                jsr xt_fetch
+                jsr xt_swap
+                jsr xt_fetch
+
+z_two_fetch:    rts
+.scend
 
 ; ## TWO_OVER ( d1 d2 -- d1 d2 d1 ) "Copy double word NOS to TOS"
 ; ## "2over"  coded  ANSI core
