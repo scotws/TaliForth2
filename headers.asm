@@ -742,9 +742,14 @@ nt_equal:
         .word nt_not_equals, xt_equal, z_equal
         .byte "="
 
+nt_two_slash:
+        .byte 2, UF
+        .word nt_equal, xt_two_slash, z_two_slash
+        .byte "2/"
+
 nt_two_star:
         .byte 2, UF
-        .word nt_equal, xt_two_star, z_two_star
+        .word nt_two_slash, xt_two_star, z_two_star
         .byte "2*"
 
 nt_one_plus:
