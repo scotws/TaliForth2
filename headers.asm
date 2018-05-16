@@ -1,7 +1,7 @@
 ; Dictionary Headers for Tali Forth 2
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 05. Dec 2016 (Liara Forth)
-; This version: 28. Apr 2018
+; This version: 16. May 2018
 
 ; Dictionary headers are kept separately from the code, which allows various
 ; tricks in the code. We roughly follow the Gforth terminology: The Execution
@@ -203,7 +203,7 @@ nt_move:
         .byte "move"
 
 nt_backslash:
-        .byte 1, 0
+        .byte 1, IM
         .word nt_move,  xt_backslash, z_backslash
         .byte $5c
 
