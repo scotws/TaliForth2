@@ -6528,14 +6528,15 @@ xt_two_slash:
                 cpx #dsp0-1
                 bmi +
                 jmp underflow
+
 *
+                ; We can't just LSR the LSB and ROR the MSB because that
+                ; would do bad things to the sign
                 lda 1,x
-                asl
+                asl                     ; save the sign
                 ror 1,x
                 ror 0,x
 
-                ; lsr 0,x
-                ; ror 1,x
 z_two_slash:    rts
 
 

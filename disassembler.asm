@@ -1,7 +1,7 @@
 ; Disassembler for Tali Forth 2 
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 28. Apr 2018
-; This version: 30. Apr 2018
+; This version: 16. May 2018
 
 ; This is the default disassembler for Tali Forth 2. To install your own,
 ; replace it with code that has a label "disassembler" below and takes
@@ -147,6 +147,7 @@ _instruction_done:
                 lda 0,x                 ; All done?
                 ora 1,x
                 beq _done
+                bmi _done               ; catch mid-instruction byte ranges
 
                 jmp _byte_loop          ; out of range for BRA
 _done:
