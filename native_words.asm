@@ -1880,7 +1880,7 @@ xt_digit_question:
 
                 ; Well, then let's if this is the gap between "9" and "A"
                 ; so we can treat the whole range as a number
-                cmp #'A-1               ; this is actually "@"
+                cmp #'A
                 bcc _done               ; failure flag is already set
 
                 ; probably a letter, so we make sure it is uppercase

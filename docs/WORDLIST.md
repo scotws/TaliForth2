@@ -42,17 +42,17 @@ RTS instruction at the end of each word.
 | COMPILE_COMMA | `compile,` | ANSI core ext | 274 | tested |
 | COMPILE_ONLY | `compile-only` | Tali Forth | 8 | tested |
 | CONSTANT | `constant` | ANSI core | 65 | tested |
-| COUNT | `count` | ANSI core | 23 | coded |
+| COUNT | `count` | ANSI core | 23 | tested |
 | CR | `cr` | ANSI core | 5 | tested |
 | CREATE | `create` | ANSI core | 143 | tested |
-| D_MINUS | `d-` | ANSI double | 36 | coded |
-| D_PLUS | `d+` | ANSI double | 36 | coded |
-| D_TO_S | `d>s` | ANSI double | 9 | coded |
-| DABS | `dabs` | ANSI double | 34 | coded |
+| D_MINUS | `d-` | ANSI double | 36 | tested |
+| D_PLUS | `d+` | ANSI double | 36 | tested |
+| D_TO_S | `d>s` | ANSI double | 9 | tested |
+| DABS | `dabs` | ANSI double | 34 | tested |
 | DECIMAL | `decimal` | ANSI core | 6 | tested |
-| DEFER | `defer` | ANSI core ext | 50 | coded |
+| DEFER | `defer` | ANSI core ext | 50 | tested |
 | DEPTH | `depth` | ANSI core | 14 | tested |
-| DIGIT_QUESTION | `digit?` | Tali Forth | 56 | coded |
+| DIGIT_QUESTION | `digit?` | Tali Forth | 56 | tested |
 | DISASM | `disasm` | Tali Forth | 10 | coded |
 | DNEGATE | `dnegate` | ANSI double | 30 | coded |
 | QUESTION_DO | `?do` | ANSI core ext | 96 | coded |
@@ -168,8 +168,8 @@ RTS instruction at the end of each word.
 | TWO_OVER | `2over` | ANSI core | 27 | coded |
 | TWO_R_FETCH | `2r@` | ANSI core ext | 29 | coded |
 | TWO_R_FROM | `2r>` | ANSI core ext | 28 | coded |
-| TWO_SLASH | `2/` | ANSI core | 14 | coded |
-| TWO_STAR | `2*` | ANSI core | 11 | coded |
+| TWO_SLASH | `2/` | ANSI core | 14 | tested |
+| TWO_STAR | `2*` | ANSI core | 11 | tested |
 | TWO_SWAP | `2swap` | ANSI core | 39 | coded |
 | TWO_TO_R | `2>r` | ANSI core ext | 35 | coded |
 | TWO_VARIABLE | `2variable` | ANSI double | 14 | coded |
@@ -194,5 +194,5 @@ RTS instruction at the end of each word.
 | ZERO_UNEQUAL | `0<>` | ANSI core ext | 21 | tested |
 
 Found **185** native words in `native_words.asm`.
-Of those, **83** are not marked as "tested".
+Of those, **74** are not marked as "tested".
 

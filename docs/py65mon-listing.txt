@@ -899,7 +899,7 @@
  8695  90 23     BCC  $86BA
  8697  C9 3A     CMP  #$3A
  8699  90 12     BCC  $86AD
- 869B  C9 40     CMP  #$40
+ 869B  C9 41     CMP  #$41
  869D  90 1B     BCC  $86BA
  869F  C9 61     CMP  #$61
  86A1  90 07     BCC  $86AA
