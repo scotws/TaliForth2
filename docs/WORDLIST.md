@@ -29,7 +29,7 @@ RTS instruction at the end of each word.
 | BRACKET_TICK | `[']` | ANSI core | 6 | tested |
 | BRANCH | `branch` | Tali Forth | 7 | tested |
 | BYE | `bye` | ANSI tools ext | 1 | tested |
-| C_COMMA | `c,` | ANSI core | 19 | tested |
+| C_COMMA | `c,` | ANSI core | 14 | tested |
 | C_FETCH | `c@` | ANSI core | 13 | tested |
 | C_STORE | `c!` | ANSI core | 15 | tested |
 | CELL_PLUS | `cell+` | ANSI core | 19 | tested |
@@ -142,10 +142,10 @@ RTS instruction at the end of each word.
 | RSHIFT | `rshift` | ANSI core | 23 | coded |
 | S_QUOTE | `s"` | ANSI core | 80 | coded |
 | S_TO_D | `s>d` | ANSI core | 21 | coded |
-| SEMICOLON | `;` | ANSI core | 33 | coded |
+| SEMICOLON | `;` | ANSI core | 28 | coded |
 | SIGN | `sign` | ANSI core | 24 | coded |
 | SLASH_STRING | `/string` | ANSI string | 35 | coded |
-| SLITERAL | `sliteral` | ANSI string | 119 | coded |
+| SLITERAL | `sliteral` | ANSI string | 114 | coded |
 | SM_SLASH_REM | `sm/rem` | ANSI core | 44 | tested |
 | SOURCE | `source` | ANSI core | 20 | coded |
 | SOURCE_ID | `source-id` | ANSI core ext | 10 | coded |
@@ -168,6 +168,7 @@ RTS instruction at the end of each word.
 | TWO_OVER | `2over` | ANSI core | 27 | coded |
 | TWO_R_FETCH | `2r@` | ANSI core ext | 29 | coded |
 | TWO_R_FROM | `2r>` | ANSI core ext | 28 | coded |
+| TWO_SLASH | `2/` | ANSI core | 14 | coded |
 | TWO_STAR | `2*` | ANSI core | 11 | coded |
 | TWO_SWAP | `2swap` | ANSI core | 39 | coded |
 | TWO_TO_R | `2>r` | ANSI core ext | 35 | coded |
@@ -192,6 +193,6 @@ RTS instruction at the end of each word.
 | ZERO_LESS | `0<` | ANSI core | 19 | tested |
 | ZERO_UNEQUAL | `0<>` | ANSI core ext | 21 | tested |
 
-Found **184** native words in `native_words.asm`.
-Of those, **82** are not marked as "tested".
+Found **185** native words in `native_words.asm`.
+Of those, **83** are not marked as "tested".
 
