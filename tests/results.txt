@@ -1,0 +1,1059 @@
+\ From: John Hayes S1I  ok
+\ Subject: tester.fr  ok
+\ Date: Mon, 27 Nov 95 13:10:09 PST    ok
+  ok
+\ Modified by SamCo 2018-05 for testing Tali Forth 2.  ok
+\ The main change is lowercasing all of the words as Tali  ok
+\ is case sensitive, as well as replacing tabs with spaces.  ok
+  ok
+\ (C) 1995 JOHNS HOPKINS UNIVERSITY / APPLIED PHYSICS LABORATORY  ok
+\ MAY BE DISTRIBUTED FREELY AS LONG AS THIS COPYRIGHT NOTICE REMAINS.  ok
+\ VERSION 1.1  ok
+hex  ok
+  ok
+\ SET THE FOLLOWING FLAG TO TRUE FOR MORE VERBOSE OUTPUT; THIS MAY  ok
+\ ALLOW YOU TO TELL WHICH TEST CAUSED YOUR SYSTEM TO HANG.  ok
+variable verbose  ok
+   false verbose !  ok
+  ok
+: empty-stack \ ( ... -- ) EMPTY STACK: HANDLES UNDERFLOWED STACK TOO.  compiled
+   depth ?dup if dup 0< if negate 0 do 0 loop else 0 do drop loop then then ;  ok
+  ok
+: error  \ ( C-ADDR U -- ) DISPLAY AN ERROR MESSAGE FOLLOWED BY  compiled
+  \ THE LINE THAT HAD THE ERROR.  compiled
+   type source type \ CR   \ DISPLAY LINE CORRESPONDING TO ERROR  compiled
+   empty-stack    \ THROW AWAY EVERY THING ELSE  compiled
+;  ok
+  ok
+variable actual-depth   \ STACK RECORD  ok
+create actual-results 20 cells allot  ok
+  ok
+: {  \ ( -- ) SYNTACTIC SUGAR.  compiled
+   ;  ok
+  ok
+: ->  \ ( ... -- ) RECORD DEPTH AND CONTENT OF STACK.  compiled
+   depth dup actual-depth !  \ RECORD DEPTH  compiled
+   ?dup if    \ IF THERE IS SOMETHING ON STACK  compiled
+      0 do actual-results i cells + ! loop \ SAVE THEM  compiled
+   then ;  ok
+  ok
+: }  \ ( ... -- ) COMPARE STACK (EXPECTED) CONTENTS WITH SAVED  compiled
+  \ (ACTUAL) CONTENTS.  compiled
+   depth actual-depth @ = if  \ IF DEPTHS MATCH  compiled
+      depth ?dup if   \ IF THERE IS SOMETHING ON THE STACK  compiled
+         0 do    \ FOR EACH STACK ITEM  compiled
+     actual-results i cells + @ \ COMPARE ACTUAL WITH EXPECTED  compiled
+     <> if s" INCORRECT RESULT: " error leave then  compiled
+  loop  compiled
+      then  compiled
+   else     \ DEPTH MISMATCH  compiled
+      s" WRONG NUMBER OF RESULTS: " error  compiled
+   then ;  ok
+  ok
+: testing \ ( -- ) TALKING COMMENT.  compiled
+   source verbose @  compiled
+   if dup >r type cr r> >in !  compiled
+   else >in ! drop  compiled
+   then ;  ok
+  ok
+\ From: John Hayes S1I  ok
+\ Subject: core.fr  ok
+\ Date: Mon, 27 Nov 95 13:10  ok
+  ok
+\ Modified by SamCo 2018-05 for testing Tali Forth 2.  ok
+\ The main change is lowercasing all of the words as Tali  ok
+\ is case sensitive.  ok
+  ok
+  ok
+\ (C) 1995 JOHNS HOPKINS UNIVERSITY / APPLIED PHYSICS LABORATORY  ok
+\ MAY BE DISTRIBUTED FREELY AS LONG AS THIS COPYRIGHT NOTICE REMAINS.  ok
+\ VERSION 1.2  ok
+\ THIS PROGRAM TESTS THE CORE WORDS OF AN ANS FORTH SYSTEM.  ok
+\ THE PROGRAM ASSUMES A TWO'S COMPLEMENT IMPLEMENTATION WHERE  ok
+\ THE RANGE OF SIGNED NUMBERS IS -2^(N-1) ... 2^(N-1)-1 AND  ok
+\ THE RANGE OF UNSIGNED NUMBERS IS 0 ... 2^(N)-1.  ok
+\ I HAVEN'T FIGURED OUT HOW TO TEST KEY, QUIT, ABORT, OR ABORT"...  ok
+\ I ALSO HAVEN'T THOUGHT OF A WAY TO TEST ENVIRONMENT?...  ok
+  ok
+testing core words  ok
+hex  ok
+  ok
+\ ------------------------------------------------------------------------  ok
+testing basic assumptions  ok
+  ok
+{ -> }     \ START WITH CLEAN SLATE  ok
+( TEST IF ANY BITS ARE SET; ANSWER IN BASE 1 )  ok
+{ : bitsset? if 0 0 else 0 then ; -> }  ok
+{  0 bitsset? -> 0 }  ( ZERO IS ALL BITS CLEAR )  ok
+{  1 bitsset? -> 0 0 }  ( OTHER NUMBER HAVE AT LEAST ONE BIT )  ok
+{ -1 bitsset? -> 0 0 }  ok
+  ok
+\ ------------------------------------------------------------------------  ok
+testing booleans: invert and or xor  ok
+  ok
+{ 0 0 and -> 0 }  ok
+{ 0 1 and -> 0 }  ok
+{ 1 0 and -> 0 }  ok
+{ 1 1 and -> 1 }  ok
+  ok
+{ 0 invert 1 and -> 1 }  ok
+{ 1 invert 1 and -> 0 }  ok
+  ok
+0  constant 0s  ok
+0 invert constant 1s  ok
+  ok
+{ 0s invert -> 1s }  ok
+{ 1s invert -> 0s }  ok
+  ok
+{ 0s 0s and -> 0s }  ok
+{ 0s 1s and -> 0s }  ok
+{ 1s 0s and -> 0s }  ok
+{ 1s 1s and -> 1s }  ok
+  ok
+{ 0s 0s or -> 0s }  ok
+{ 0s 1s or -> 1s }  ok
+{ 1s 0s or -> 1s }  ok
+{ 1s 1s or -> 1s }  ok
+  ok
+{ 0s 0s xor -> 0s }  ok
+{ 0s 1s xor -> 1s }  ok
+{ 1s 0s xor -> 1s }  ok
+{ 1s 1s xor -> 0s }  ok
+  ok
+\ ------------------------------------------------------------------------  ok
+testing 2* 2/ lshift rshift  ok
+  ok
+( WE TRUST 1S, INVERT, AND BITSSET?; WE WILL CONFIRM RSHIFT LATER )  ok
+1s 1 rshift invert constant msb  ok
+{ msb bitsset? -> 0 0 }  ok
+  ok
+{ 0s 2* -> 0s }  ok
+{ 1 2* -> 2 }  ok
+{ 4000 2* -> 8000 }  ok
+{ 1s 2* 1 xor -> 1s }  ok
+{ msb 2* -> 0s }  ok
+  ok
+{ 0s 2/ -> 0s }  ok
+{ 1 2/ -> 0 }  ok
+{ 4000 2/ -> 2000 }  ok
+{ 1s 2/ -> 1s }    \ msb propogated  ok
+{ 1s 1 xor 2/ -> 1s }  ok
+{ msb 2/ msb and -> msb }  ok
+  ok
+{ 1 0 lshift -> 1 }  ok
+{ 1 1 lshift -> 2 }  ok
+{ 1 2 lshift -> 4 }  ok
+{ 1 f lshift -> 8000 }   \ biggest guaranteed shift  ok
+{ 1s 1 lshift 1 xor -> 1s }  ok
+{ msb 1 lshift -> 0 }  ok
+  ok
+{ 1 0 rshift -> 1 }  ok
+{ 1 1 rshift -> 0 }  ok
+{ 2 1 rshift -> 1 }  ok
+{ 4 2 rshift -> 1 }  ok
+{ 8000 f rshift -> 1 }   \ biggest  ok
+{ msb 1 rshift msb and -> 0 }  \ rshift zero fills msbs  ok
+{ msb 1 rshift 2* -> msb }  ok
+  ok
+\ ------------------------------------------------------------------------  ok
+testing comparisons: 0= = 0< < > u< min max  ok
+0 invert   constant max-uint  ok
+0 invert 1 rshift  constant max-int  ok
+0 invert 1 rshift invert constant min-int  ok
+0 invert 1 rshift  constant mid-uint  ok
+0 invert 1 rshift invert constant mid-uint+1  ok
+  ok
+0s constant <false>  ok
+1s constant <true>  ok
+  ok
+{ 0 0= -> <true> }  ok
+{ 1 0= -> <false> }  ok
+{ 2 0= -> <false> }  ok
+{ -1 0= -> <false> }  ok
+{ max-uint 0= -> <false> }  ok
+{ min-int 0= -> <false> }  ok
+{ max-int 0= -> <false> }  ok
+  ok
+{ 0 0 = -> <true> }  ok
+{ 1 1 = -> <true> }  ok
+{ -1 -1 = -> <true> }  ok
+{ 1 0 = -> <false> }  ok
+{ -1 0 = -> <false> }  ok
+{ 0 1 = -> <false> }  ok
+{ 0 -1 = -> <false> }  ok
+  ok
+{ 0 0< -> <false> }  ok
+{ -1 0< -> <true> }  ok
+{ min-int 0< -> <true> }  ok
+{ 1 0< -> <false> }  ok
+{ max-int 0< -> <false> }  ok
+  ok
+{ 0 1 < -> <true> }  ok
+{ 1 2 < -> <true> }  ok
+{ -1 0 < -> <true> }  ok
+{ -1 1 < -> <true> }  ok
+{ min-int 0 < -> <true> }  ok
+{ min-int max-int < -> <true> }  ok
+{ 0 max-int < -> <true> }  ok
+{ 0 0 < -> <false> }  ok
+{ 1 1 < -> <false> }  ok
+{ 1 0 < -> <false> }  ok
+{ 2 1 < -> <false> }  ok
+{ 0 -1 < -> <false> }  ok
+{ 1 -1 < -> <false> }  ok
+{ 0 min-int < -> <false> }  ok
+{ max-int min-int < -> <false> }  ok
+{ max-int 0 < -> <false> }  ok
+  ok
+{ 0 1 > -> <false> }  ok
+{ 1 2 > -> <false> }  ok
+{ -1 0 > -> <false> }  ok
+{ -1 1 > -> <false> }  ok
+{ min-int 0 > -> <false> }  ok
+{ min-int max-int > -> <false> }  ok
+{ 0 max-int > -> <false> }  ok
+{ 0 0 > -> <false> }  ok
+{ 1 1 > -> <false> }  ok
+{ 1 0 > -> <true> }  ok
+{ 2 1 > -> <true> }  ok
+{ 0 -1 > -> <true> }  ok
+{ 1 -1 > -> <true> }  ok
+{ 0 min-int > -> <true> }  ok
+{ max-int min-int > -> <true> }  ok
+{ max-int 0 > -> <true> }  ok
+  ok
+{ 0 1 u< -> <true> } >u<< Undefined word
+{ 1 2 u< -> <true> } >u<< Undefined word
+{ 0 mid-uint u< -> <true> } >u<< Undefined word
+{ 0 max-uint u< -> <true> } >u<< Undefined word
+{ mid-uint max-uint u< -> <true> } >u<< Undefined word
+{ 0 0 u< -> <false> } >u<< Undefined word
+{ 1 1 u< -> <false> } >u<< Undefined word
+{ 1 0 u< -> <false> } >u<< Undefined word
+{ 2 1 u< -> <false> } >u<< Undefined word
+{ mid-uint 0 u< -> <false> } >u<< Undefined word
+{ max-uint 0 u< -> <false> } >u<< Undefined word
+{ max-uint mid-uint u< -> <false> } >u<< Undefined word
+  ok
+{ 0 1 min -> 0 }  ok
+{ 1 2 min -> 1 }  ok
+{ -1 0 min -> -1 }  ok
+{ -1 1 min -> -1 }  ok
+{ min-int 0 min -> min-int }  ok
+{ min-int max-int min -> min-int }  ok
+{ 0 max-int min -> 0 }  ok
+{ 0 0 min -> 0 }  ok
+{ 1 1 min -> 1 }  ok
+{ 1 0 min -> 0 }  ok
+{ 2 1 min -> 1 }  ok
+{ 0 -1 min -> -1 }  ok
+{ 1 -1 min -> -1 }  ok
+{ 0 min-int min -> min-int }  ok
+{ max-int min-int min -> min-int }  ok
+{ max-int 0 min -> 0 }  ok
+  ok
+{ 0 1 max -> 1 }  ok
+{ 1 2 max -> 2 }  ok
+{ -1 0 max -> 0 }  ok
+{ -1 1 max -> 1 }  ok
+{ min-int 0 max -> 0 }  ok
+{ min-int max-int max -> max-int }  ok
+{ 0 max-int max -> max-int }  ok
+{ 0 0 max -> 0 }  ok
+{ 1 1 max -> 1 }  ok
+{ 1 0 max -> 1 }  ok
+{ 2 1 max -> 2 }  ok
+{ 0 -1 max -> 0 }  ok
+{ 1 -1 max -> 1 }  ok
+{ 0 min-int max -> 0 }  ok
+{ max-int min-int max -> max-int }  ok
+{ max-int 0 max -> max-int }  ok
+  ok
+\ ------------------------------------------------------------------------  ok
+testing stack ops: 2drop 2dup 2over 2swap ?dup depth drop dup over rot swap  ok
+  ok
+{ 1 2 2drop -> }  ok
+{ 1 2 2dup -> 1 2 1 2 }  ok
+{ 1 2 3 4 2over -> 1 2 3 4 1 2 }  ok
+{ 1 2 3 4 2swap -> 3 4 1 2 }  ok
+{ 0 ?dup -> 0 }  ok
+{ 1 ?dup -> 1 1 }  ok
+{ -1 ?dup -> -1 -1 }  ok
+{ depth -> 0 }  ok
+{ 0 depth -> 0 1 }  ok
+{ 0 1 depth -> 0 1 2 }  ok
+{ 0 drop -> }  ok
+{ 1 2 drop -> 1 }  ok
+{ 1 dup -> 1 1 }  ok
+{ 1 2 over -> 1 2 1 }  ok
+{ 1 2 3 rot -> 2 3 1 }  ok
+{ 1 2 swap -> 2 1 }  ok
+  ok
+\ ------------------------------------------------------------------------  ok
+testing >r r> r@  ok
+  ok
+{ : gr1 >r r> ; -> }  ok
+{ : gr2 >r r@ r> drop ; -> }  ok
+{ 123 gr1 -> 123 }  ok
+{ 123 gr2 -> 123 }  ok
+{ 1s gr1 -> 1s }   ( return stack holds cells )  ok
+  ok
+\ ------------------------------------------------------------------------  ok
+testing add/subtract: + - 1+ 1- abs negate  ok
+  ok
+{ 0 5 + -> 5 }  ok
+{ 5 0 + -> 5 }  ok
+{ 0 -5 + -> -5 }  ok
+{ -5 0 + -> -5 }  ok
+{ 1 2 + -> 3 }  ok
+{ 1 -2 + -> -1 }  ok
+{ -1 2 + -> 1 }  ok
+{ -1 -2 + -> -3 }  ok
+{ -1 1 + -> 0 }  ok
+{ mid-uint 1 + -> mid-uint+1 }  ok
+  ok
+{ 0 5 - -> -5 }  ok
+{ 5 0 - -> 5 }  ok
+{ 0 -5 - -> 5 }  ok
+{ -5 0 - -> -5 }  ok
+{ 1 2 - -> -1 }  ok
+{ 1 -2 - -> 3 }  ok
+{ -1 2 - -> -3 }  ok
+{ -1 -2 - -> 1 }  ok
+{ 0 1 - -> -1 }  ok
+{ mid-uint+1 1 - -> mid-uint }  ok
+  ok
+{ 0 1+ -> 1 }  ok
+{ -1 1+ -> 0 }  ok
+{ 1 1+ -> 2 }  ok
+{ mid-uint 1+ -> mid-uint+1 }  ok
+  ok
+{ 2 1- -> 1 }  ok
+{ 1 1- -> 0 }  ok
+{ 0 1- -> -1 }  ok
+{ mid-uint+1 1- -> mid-uint }  ok
+  ok
+{ 0 negate -> 0 }  ok
+{ 1 negate -> -1 }  ok
+{ -1 negate -> 1 }  ok
+{ 2 negate -> -2 }  ok
+{ -2 negate -> 2 }  ok
+  ok
+{ 0 abs -> 0 }  ok
+{ 1 abs -> 1 }  ok
+{ -1 abs -> 1 }  ok
+{ min-int abs -> mid-uint+1 }  ok
+  ok
+\ ------------------------------------------------------------------------  ok
+testing multiply: s>d * m* um*  ok
+  ok
+{ 0 s>d -> 0 0 }  ok
+{ 1 s>d -> 1 0 }  ok
+{ 2 s>d -> 2 0 }  ok
+{ -1 s>d -> -1 -1 }  ok
+{ -2 s>d -> -2 -1 }  ok
+{ min-int s>d -> min-int -1 }  ok
+{ max-int s>d -> max-int 0 }  ok
+  ok
+{ 0 0 m* -> 0 s>d }  ok
+{ 0 1 m* -> 0 s>d }  ok
+{ 1 0 m* -> 0 s>d }  ok
+{ 1 2 m* -> 2 s>d }  ok
+{ 2 1 m* -> 2 s>d }  ok
+{ 3 3 m* -> 9 s>d }  ok
+{ -3 3 m* -> -9 s>d }  ok
+{ 3 -3 m* -> -9 s>d }  ok
+{ -3 -3 m* -> 9 s>d }  ok
+{ 0 min-int m* -> 0 s>d }  ok
+{ 1 min-int m* -> min-int s>d }  ok
+{ 2 min-int m* -> 0 1s }  ok
+{ 0 max-int m* -> 0 s>d }  ok
+{ 1 max-int m* -> max-int s>d }  ok
+{ 2 max-int m* -> max-int 1 lshift 0 }  ok
+{ min-int min-int m* -> 0 msb 1 rshift }  ok
+{ max-int min-int m* -> msb msb 2/ }  ok
+{ max-int max-int m* -> 1 msb 2/ invert }  ok
+  ok
+{ 0 0 * -> 0 }    \ test identities  ok
+{ 0 1 * -> 0 }  ok
+{ 1 0 * -> 0 }  ok
+{ 1 2 * -> 2 }  ok
+{ 2 1 * -> 2 }  ok
+{ 3 3 * -> 9 }  ok
+{ -3 3 * -> -9 }  ok
+{ 3 -3 * -> -9 }  ok
+{ -3 -3 * -> 9 }  ok
+  ok
+{ mid-uint+1 1 rshift 2 * -> mid-uint+1 }  ok
+{ mid-uint+1 2 rshift 4 * -> mid-uint+1 }  ok
+{ mid-uint+1 1 rshift mid-uint+1 or 2 * -> mid-uint+1 }  ok
+  ok
+{ 0 0 um* -> 0 0 }  ok
+{ 0 1 um* -> 0 0 }  ok
+{ 1 0 um* -> 0 0 }  ok
+{ 1 2 um* -> 2 0 }  ok
+{ 2 1 um* -> 2 0 }  ok
+{ 3 3 um* -> 9 0 }  ok
+  ok
+{ mid-uint+1 1 rshift 2 um* -> mid-uint+1 0 }  ok
+{ mid-uint+1 2 um* -> 0 1 }  ok
+{ mid-uint+1 4 um* -> 0 2 }  ok
+{ 1s 2 um* -> 1s 1 lshift 1 }  ok
+{ max-uint max-uint um* -> 1 1 invert }  ok
+  ok
+\ ------------------------------------------------------------------------  ok
+testing divide: fm/mod sm/rem um/mod */ */mod / /mod mod  ok
+  ok
+{ 0 s>d 1 fm/mod -> 0 0 }  ok
+{ 1 s>d 1 fm/mod -> 0 1 }  ok
+{ 2 s>d 1 fm/mod -> 0 2 }  ok
+{ -1 s>d 1 fm/mod -> 0 -1 }  ok
+{ -2 s>d 1 fm/mod -> 0 -2 }  ok
+{ 0 s>d -1 fm/mod -> 0 0 }  ok
+{ 1 s>d -1 fm/mod -> 0 -1 }  ok
+{ 2 s>d -1 fm/mod -> 0 -2 }  ok
+{ -1 s>d -1 fm/mod -> 0 1 }  ok
+{ -2 s>d -1 fm/mod -> 0 2 }  ok
+{ 2 s>d 2 fm/mod -> 0 1 }  ok
+{ -1 s>d -1 fm/mod -> 0 1 }  ok
+{ -2 s>d -2 fm/mod -> 0 1 }  ok
+{  7 s>d  3 fm/mod -> 1 2 }  ok
+{  7 s>d -3 fm/mod -> -2 -3 }  ok
+{ -7 s>d  3 fm/mod -> 2 -3 }  ok
+{ -7 s>d -3 fm/mod -> -1 2 }  ok
+{ max-int s>d 1 fm/mod -> 0 max-int }  ok
+{ min-int s>d 1 fm/mod -> 0 min-int }  ok
+{ max-int s>d max-int fm/mod -> 0 1 }  ok
+{ min-int s>d min-int fm/mod -> 0 1 }  ok
+{ 1s 1 4 fm/mod -> 3 max-int }  ok
+{ 1 min-int m* 1 fm/mod -> 0 min-int }  ok
+{ 1 min-int m* min-int fm/mod -> 0 1 }  ok
+{ 2 min-int m* 2 fm/mod -> 0 min-int }  ok
+{ 2 min-int m* min-int fm/mod -> 0 2 }  ok
+{ 1 max-int m* 1 fm/mod -> 0 max-int }  ok
+{ 1 max-int m* max-int fm/mod -> 0 1 }  ok
+{ 2 max-int m* 2 fm/mod -> 0 max-int }  ok
+{ 2 max-int m* max-int fm/mod -> 0 2 }  ok
+{ min-int min-int m* min-int fm/mod -> 0 min-int }  ok
+{ min-int max-int m* min-int fm/mod -> 0 max-int }  ok
+{ min-int max-int m* max-int fm/mod -> 0 min-int }  ok
+{ max-int max-int m* max-int fm/mod -> 0 max-int }  ok
+  ok
+{ 0 s>d 1 sm/rem -> 0 0 }  ok
+{ 1 s>d 1 sm/rem -> 0 1 }  ok
+{ 2 s>d 1 sm/rem -> 0 2 }  ok
+{ -1 s>d 1 sm/rem -> 0 -1 }  ok
+{ -2 s>d 1 sm/rem -> 0 -2 }  ok
+{ 0 s>d -1 sm/rem -> 0 0 }  ok
+{ 1 s>d -1 sm/rem -> 0 -1 }  ok
+{ 2 s>d -1 sm/rem -> 0 -2 }  ok
+{ -1 s>d -1 sm/rem -> 0 1 }  ok
+{ -2 s>d -1 sm/rem -> 0 2 }  ok
+{ 2 s>d 2 sm/rem -> 0 1 }  ok
+{ -1 s>d -1 sm/rem -> 0 1 }  ok
+{ -2 s>d -2 sm/rem -> 0 1 }  ok
+{  7 s>d  3 sm/rem -> 1 2 }  ok
+{  7 s>d -3 sm/rem -> 1 -2 }  ok
+{ -7 s>d  3 sm/rem -> -1 -2 }  ok
+{ -7 s>d -3 sm/rem -> -1 2 }  ok
+{ max-int s>d 1 sm/rem -> 0 max-int }  ok
+{ min-int s>d 1 sm/rem -> 0 min-int }  ok
+{ max-int s>d max-int sm/rem -> 0 1 }  ok
+{ min-int s>d min-int sm/rem -> 0 1 }  ok
+{ 1s 1 4 sm/rem -> 3 max-int }  ok
+{ 2 min-int m* 2 sm/rem -> 0 min-int }  ok
+{ 2 min-int m* min-int sm/rem -> 0 2 }  ok
+{ 2 max-int m* 2 sm/rem -> 0 max-int }  ok
+{ 2 max-int m* max-int sm/rem -> 0 2 }  ok
+{ min-int min-int m* min-int sm/rem -> 0 min-int }  ok
+{ min-int max-int m* min-int sm/rem -> 0 max-int }  ok
+{ min-int max-int m* max-int sm/rem -> 0 min-int }  ok
+{ max-int max-int m* max-int sm/rem -> 0 max-int }  ok
+  ok
+{ 0 0 1 um/mod -> 0 0 }  ok
+{ 1 0 1 um/mod -> 0 1 }  ok
+{ 1 0 2 um/mod -> 1 0 }  ok
+{ 3 0 2 um/mod -> 1 1 }  ok
+{ max-uint 2 um* 2 um/mod -> 0 max-uint }  ok
+{ max-uint 2 um* max-uint um/mod -> 0 2 }  ok
+{ max-uint max-uint um* max-uint um/mod -> 0 max-uint }  ok
+  ok
+: iffloored  compiled
+   [ -3 2 / -2 = invert ] literal if postpone \ then ;  ok
+: ifsym  compiled
+   [ -3 2 / -1 = invert ] literal if postpone \ then ;  ok
+  ok
+\ the system might do either floored or symmetric division.  ok
+\ since we have already tested m*, fm/mod, and sm/rem we can use them in test.  ok
+iffloored : t/mod  >r s>d r> fm/mod ;  ok
+iffloored : t/     t/mod swap drop ;  ok
+iffloored : tmod   t/mod drop ;  ok
+iffloored : t*/mod >r m* r> fm/mod ;  ok
+iffloored : t*/    t*/mod swap drop ;  ok
+ifsym     : t/mod  >r s>d r> sm/rem ;  ok
+ifsym     : t/     t/mod swap drop ;  ok
+ifsym     : tmod   t/mod drop ;  ok
+ifsym     : t*/mod >r m* r> sm/rem ;  ok
+ifsym     : t*/    t*/mod swap drop ;  ok
+  ok
+{ 0 1 /mod -> 0 1 t/mod }  ok
+{ 1 1 /mod -> 1 1 t/mod }  ok
+{ 2 1 /mod -> 2 1 t/mod }  ok
+{ -1 1 /mod -> -1 1 t/mod }  ok
+{ -2 1 /mod -> -2 1 t/mod }  ok
+{ 0 -1 /mod -> 0 -1 t/mod }  ok
+{ 1 -1 /mod -> 1 -1 t/mod }  ok
+{ 2 -1 /mod -> 2 -1 t/mod }  ok
+{ -1 -1 /mod -> -1 -1 t/mod }  ok
+{ -2 -1 /mod -> -2 -1 t/mod }  ok
+{ 2 2 /mod -> 2 2 t/mod }  ok
+{ -1 -1 /mod -> -1 -1 t/mod }  ok
+{ -2 -2 /mod -> -2 -2 t/mod }  ok
+{ 7 3 /mod -> 7 3 t/mod }  ok
+{ 7 -3 /mod -> 7 -3 t/mod }  ok
+{ -7 3 /mod -> -7 3 t/mod }  ok
+{ -7 -3 /mod -> -7 -3 t/mod }  ok
+{ max-int 1 /mod -> max-int 1 t/mod }  ok
+{ min-int 1 /mod -> min-int 1 t/mod }  ok
+{ max-int max-int /mod -> max-int max-int t/mod }  ok
+{ min-int min-int /mod -> min-int min-int t/mod }  ok
+  ok
+{ 0 1 / -> 0 1 t/ }  ok
+{ 1 1 / -> 1 1 t/ }  ok
+{ 2 1 / -> 2 1 t/ }  ok
+{ -1 1 / -> -1 1 t/ }  ok
+{ -2 1 / -> -2 1 t/ }  ok
+{ 0 -1 / -> 0 -1 t/ }  ok
+{ 1 -1 / -> 1 -1 t/ }  ok
+{ 2 -1 / -> 2 -1 t/ }  ok
+{ -1 -1 / -> -1 -1 t/ }  ok
+{ -2 -1 / -> -2 -1 t/ }  ok
+{ 2 2 / -> 2 2 t/ }  ok
+{ -1 -1 / -> -1 -1 t/ }  ok
+{ -2 -2 / -> -2 -2 t/ }  ok
+{ 7 3 / -> 7 3 t/ }  ok
+{ 7 -3 / -> 7 -3 t/ }  ok
+{ -7 3 / -> -7 3 t/ }  ok
+{ -7 -3 / -> -7 -3 t/ }  ok
+{ max-int 1 / -> max-int 1 t/ }  ok
+{ min-int 1 / -> min-int 1 t/ }  ok
+{ max-int max-int / -> max-int max-int t/ }  ok
+{ min-int min-int / -> min-int min-int t/ }  ok
+  ok
+{ 0 1 mod -> 0 1 tmod }  ok
+{ 1 1 mod -> 1 1 tmod }  ok
+{ 2 1 mod -> 2 1 tmod }  ok
+{ -1 1 mod -> -1 1 tmod }  ok
+{ -2 1 mod -> -2 1 tmod }  ok
+{ 0 -1 mod -> 0 -1 tmod }  ok
+{ 1 -1 mod -> 1 -1 tmod }  ok
+{ 2 -1 mod -> 2 -1 tmod }  ok
+{ -1 -1 mod -> -1 -1 tmod }  ok
+{ -2 -1 mod -> -2 -1 tmod }  ok
+{ 2 2 mod -> 2 2 tmod }  ok
+{ -1 -1 mod -> -1 -1 tmod }  ok
+{ -2 -2 mod -> -2 -2 tmod }  ok
+{ 7 3 mod -> 7 3 tmod }  ok
+{ 7 -3 mod -> 7 -3 tmod }  ok
+{ -7 3 mod -> -7 3 tmod }  ok
+{ -7 -3 mod -> -7 -3 tmod }  ok
+{ max-int 1 mod -> max-int 1 tmod }  ok
+{ min-int 1 mod -> min-int 1 tmod }  ok
+{ max-int max-int mod -> max-int max-int tmod }  ok
+{ min-int min-int mod -> min-int min-int tmod }  ok
+  ok
+{ 0 2 1 */ -> 0 2 1 t*/ }  ok
+{ 1 2 1 */ -> 1 2 1 t*/ }  ok
+{ 2 2 1 */ -> 2 2 1 t*/ }  ok
+{ -1 2 1 */ -> -1 2 1 t*/ }  ok
+{ -2 2 1 */ -> -2 2 1 t*/ }  ok
+{ 0 2 -1 */ -> 0 2 -1 t*/ }  ok
+{ 1 2 -1 */ -> 1 2 -1 t*/ }  ok
+{ 2 2 -1 */ -> 2 2 -1 t*/ }  ok
+{ -1 2 -1 */ -> -1 2 -1 t*/ }  ok
+{ -2 2 -1 */ -> -2 2 -1 t*/ }  ok
+{ 2 2 2 */ -> 2 2 2 t*/ }  ok
+{ -1 2 -1 */ -> -1 2 -1 t*/ }  ok
+{ -2 2 -2 */ -> -2 2 -2 t*/ }  ok
+{ 7 2 3 */ -> 7 2 3 t*/ }  ok
+{ 7 2 -3 */ -> 7 2 -3 t*/ }  ok
+{ -7 2 3 */ -> -7 2 3 t*/ }  ok
+{ -7 2 -3 */ -> -7 2 -3 t*/ }  ok
+{ max-int 2 max-int */ -> max-int 2 max-int t*/ }  ok
+{ min-int 2 min-int */ -> min-int 2 min-int t*/ }  ok
+  ok
+{ 0 2 1 */mod -> 0 2 1 t*/mod }  ok
+{ 1 2 1 */mod -> 1 2 1 t*/mod }  ok
+{ 2 2 1 */mod -> 2 2 1 t*/mod }  ok
+{ -1 2 1 */mod -> -1 2 1 t*/mod }  ok
+{ -2 2 1 */mod -> -2 2 1 t*/mod }  ok
+{ 0 2 -1 */mod -> 0 2 -1 t*/mod }  ok
+{ 1 2 -1 */mod -> 1 2 -1 t*/mod }  ok
+{ 2 2 -1 */mod -> 2 2 -1 t*/mod }  ok
+{ -1 2 -1 */mod -> -1 2 -1 t*/mod }  ok
+{ -2 2 -1 */mod -> -2 2 -1 t*/mod }  ok
+{ 2 2 2 */mod -> 2 2 2 t*/mod }  ok
+{ -1 2 -1 */mod -> -1 2 -1 t*/mod }  ok
+{ -2 2 -2 */mod -> -2 2 -2 t*/mod }  ok
+{ 7 2 3 */mod -> 7 2 3 t*/mod }  ok
+{ 7 2 -3 */mod -> 7 2 -3 t*/mod }  ok
+{ -7 2 3 */mod -> -7 2 3 t*/mod }  ok
+{ -7 2 -3 */mod -> -7 2 -3 t*/mod }  ok
+{ max-int 2 max-int */mod -> max-int 2 max-int t*/mod }  ok
+{ min-int 2 min-int */mod -> min-int 2 min-int t*/mod }  ok
+  ok
+\ ------------------------------------------------------------------------  ok
+testing here , @ ! cell+ cells c, c@ c! chars 2@ 2! align aligned +! allot  ok
+  ok
+here 1 allot  ok
+here  ok
+constant 2nda  ok
+constant 1sta  ok
+{ 1sta 2nda u< -> <true> }  \ here must grow with allot >u<< Undefined word
+{ 1sta 1+ -> 2nda }   \ ... by one address unit  ok
+( missing test: negative allot )  ok
+  ok
+here 1 ,  ok
+here 2 ,  ok
+constant 2nd  ok
+constant 1st  ok
+{ 1st 2nd u< -> <true> }   \ here must grow with allot >u<< Undefined word
+{ 1st cell+ -> 2nd }   \ ... by one cell  ok
+{ 1st 1 cells + -> 2nd }  ok
+{ 1st @ 2nd @ -> 1 2 }  ok
+{ 5 1st ! -> }  ok
+{ 1st @ 2nd @ -> 5 2 }  ok
+{ 6 2nd ! -> }  ok
+{ 1st @ 2nd @ -> 5 6 }  ok
+{ 1st 2@ -> 6 5 }  ok
+{ 2 1 1st 2! -> } >!< Undefined word
+{ 1st 2@ -> 2 1 } INCORRECT RESULT: { 1st 2@ -> 2 1 } ok
+{ 1s 1st !  1st @ -> 1s }  \ can store cell-wide value  ok
+  ok
+here 1 c,  ok
+here 2 c,  ok
+constant 2ndc  ok
+constant 1stc  ok
+{ 1stc 2ndc u< -> <true> }  \ here must grow with allot >u<< Undefined word
+{ 1stc char+ -> 2ndc }   \ ... by one char  ok
+{ 1stc 1 chars + -> 2ndc }  ok
+{ 1stc c@ 2ndc c@ -> 1 2 }  ok
+{ 3 1stc c! -> }  ok
+{ 1stc c@ 2ndc c@ -> 3 2 }  ok
+{ 4 2ndc c! -> }  ok
+{ 1stc c@ 2ndc c@ -> 3 4 }  ok
+  ok
+align 1 allot here align here 3 cells allot  ok
+constant a-addr  constant ua-addr  ok
+{ ua-addr aligned -> a-addr }  ok
+{    1 a-addr c!  a-addr c@ ->    1 }  ok
+{ 1234 a-addr  !  a-addr  @ -> 1234 }  ok
+{ 123 456 a-addr 2!  a-addr 2@ -> 123 456 } >!< Undefined word
+{ 2 a-addr char+ c!  a-addr char+ c@ -> 2 }  ok
+{ 3 a-addr cell+ c!  a-addr cell+ c@ -> 3 }  ok
+{ 1234 a-addr cell+ !  a-addr cell+ @ -> 1234 }  ok
+{ 123 456 a-addr cell+ 2!  a-addr cell+ 2@ -> 123 456 } >!< Undefined word
+  ok
+: bits ( x -- u )  compiled
+   0 swap begin dup while dup msb and if >r 1+ r> then 2* repeat drop ;  ok
+( characters >= 1 au, <= size of cell, >= 8 bits )  ok
+{ 1 chars 1 < -> <false> }  ok
+{ 1 chars 1 cells > -> <false> }  ok
+( tbd: how to find number of bits? )  ok
+  ok
+( cells >= 1 au, integral multiple of char size, >= 16 bits )  ok
+{ 1 cells 1 < -> <false> }  ok
+{ 1 cells 1 chars mod -> 0 }  ok
+{ 1s bits 10 < -> <false> }  ok
+  ok
+{ 0 1st ! -> }  ok
+{ 1 1st +! -> }  ok
+{ 1st @ -> 1 }  ok
+{ -1 1st +! 1st @ -> 0 }  ok
+  ok
+\ ------------------------------------------------------------------------  ok
+testing char [char] [ ] bl s"  ok
+  ok
+{ bl -> 20 }  ok
+{ char X -> 58 }  ok
+{ char HELLO -> 48 }  ok
+{ : gc1 [char] X ; -> }  ok
+{ : gc2 [char] HELLO ; -> }  ok
+{ gc1 -> 58 }  ok
+{ gc2 -> 48 }  ok
+{ : gc3 [ gc1 ] literal ; -> }  ok
+{ gc3 -> 58 }  ok
+{ : gc4 s" XY" ; -> }  ok
+{ gc4 swap drop -> 2 }  ok
+{ gc4 drop dup c@ swap char+ c@ -> 58 59 }  ok
+  ok
+\ ------------------------------------------------------------------------  ok
+testing ' ['] find execute immediate count literal postpone state  ok
+  ok
+{ : gt1 123 ; -> }  ok
+{ ' gt1 execute -> 123 }  ok
+{ : gt2 ['] gt1 ; immediate -> }  ok
+{ gt2 execute -> 123 }  ok
+here 3 c, char g c, char t c, char 1 c, constant gt1string  ok
+here 3 c, char g c, char t c, char 2 c, constant gt2string  ok
+{ gt1string find -> ' gt1 -1 }  ok
+{ gt2string find -> ' gt2 1 }  ok
+( how to search for non-existent word? )  ok
+{ : gt3 gt2 literal ; -> }  ok
+{ gt3 -> ' gt1 }  ok
+{ gt1string count -> gt1string char+ 3 }  ok
+  ok
+{ : gt4 postpone gt1 ; immediate -> }  ok
+{ : gt5 gt4 ; -> }  ok
+{ gt5 -> 123 }  ok
+{ : gt6 345 ; immediate -> }  ok
+{ : gt7 postpone gt6 ; -> }  ok
+{ gt7 -> 345 }  ok
+  ok
+{ : gt8 state @ ; immediate -> }  ok
+{ gt8 -> 0 }  ok
+{ : gt9 gt8 literal ; -> }  ok
+{ gt9 0= -> <false> }  ok
+  ok
+\ ------------------------------------------------------------------------  ok
+testing if else then begin while repeat until recurse  ok
+  ok
+{ : gi1 if 123 then ; -> }  ok
+{ : gi2 if 123 else 234 then ; -> }  ok
+{ 0 gi1 -> }  ok
+{ 1 gi1 -> 123 }  ok
+{ -1 gi1 -> 123 }  ok
+{ 0 gi2 -> 234 }  ok
+{ 1 gi2 -> 123 }  ok
+{ -1 gi1 -> 123 }  ok
+  ok
+{ : gi3 begin dup 5 < while dup 1+ repeat ; -> }  ok
+{ 0 gi3 -> 0 1 2 3 4 5 }  ok
+{ 4 gi3 -> 4 5 }  ok
+{ 5 gi3 -> 5 }  ok
+{ 6 gi3 -> 6 }  ok
+  ok
+{ : gi4 begin dup 1+ dup 5 > until ; -> }  ok
+{ 3 gi4 -> 3 4 5 6 }  ok
+{ 5 gi4 -> 5 6 }  ok
+{ 6 gi4 -> 6 7 }  ok
+  ok
+{ : gi5 begin dup 2 > while dup 5 < while dup 1+ repeat 123 else 345 then ; -> }  ok
+{ 1 gi5 -> 1 345 }  ok
+{ 2 gi5 -> 2 345 }  ok
+{ 3 gi5 -> 3 4 5 123 }  ok
+{ 4 gi5 -> 4 5 123 }  ok
+{ 5 gi5 -> 5 123 }  ok
+  ok
+{ : gi6 ( n -- 0,1,..n ) dup if dup >r 1- recurse r> then ; -> }  ok
+{ 0 gi6 -> 0 }  ok
+{ 1 gi6 -> 0 1 }  ok
+{ 2 gi6 -> 0 1 2 }  ok
+{ 3 gi6 -> 0 1 2 3 }  ok
+{ 4 gi6 -> 0 1 2 3 4 }  ok
+  ok
+\ ------------------------------------------------------------------------  ok
+testing do loop +loop i j unloop leave exit  ok
+  ok
+{ : gd1 do i loop ; -> }  ok
+{ 4 1 gd1 -> 1 2 3 }  ok
+{ 2 -1 gd1 -> -1 0 1 }  ok
+{ mid-uint+1 mid-uint gd1 -> mid-uint }  ok
+  ok
+{ : gd2 do i -1 +loop ; -> }  ok
+{ 1 4 gd2 -> 4 3 2 1 }  ok
+{ -1 2 gd2 -> 2 1 0 -1 }  ok
+{ mid-uint mid-uint+1 gd2 -> mid-uint+1 mid-uint }  ok
+  ok
+{ : gd3 do 1 0 do j loop loop ; -> }  ok
+{ 4 1 gd3 -> 1 2 3 }  ok
+{ 2 -1 gd3 -> -1 0 1 }  ok
+{ mid-uint+1 mid-uint gd3 -> mid-uint }  ok
+  ok
+{ : gd4 do 1 0 do j loop -1 +loop ; -> }  ok
+{ 1 4 gd4 -> 4 3 2 1 }  ok
+{ -1 2 gd4 -> 2 1 0 -1 }  ok
+{ mid-uint mid-uint+1 gd4 -> mid-uint+1 mid-uint }  ok
+  ok
+{ : gd5 123 swap 0 do i 4 > if drop 234 leave then loop ; -> }  ok
+{ 1 gd5 -> 123 }  ok
+{ 5 gd5 -> 123 }  ok
+{ 6 gd5 -> 234 }  ok
+  ok
+{ : gd6  ( pat: {0 0},{0 0}{1 0}{1 1},{0 0}{1 0}{1 1}{2 0}{2 1}{2 2} )  compiled
+   0 swap 0 do  compiled
+      i 1+ 0 do i j + 3 = if i unloop i unloop exit then 1+ loop  compiled
+    loop ; -> }  ok
+{ 1 gd6 -> 1 }  ok
+{ 2 gd6 -> 3 }  ok
+{ 3 gd6 -> 4 1 2 }  ok
+  ok
+\ ------------------------------------------------------------------------  ok
+testing defining words: : ; constant variable create does> >body  ok
+  ok
+{ 123 constant x123 -> }  ok
+{ x123 -> 123 }  ok
+{ : equ constant ; -> }  ok
+{ x123 equ y123 -> }  ok
+{ y123 -> 123 }  ok
+  ok
+{ variable v1 -> }  ok
+{ 123 v1 ! -> }  ok
+{ v1 @ -> 123 }  ok
+  ok
+{ : nop : postpone ; ; -> }  ok
+{ nop nop1 nop nop2 -> }  ok
+{ nop1 -> }  ok
+{ nop2 -> }  ok
+  ok
+{ : does1 does> @ 1 + ; -> }  ok
+{ : does2 does> @ 2 + ; -> }  ok
+{ create cr1 -> }  ok
+{ cr1 -> here }  ok
+{ ' cr1 >body -> here }  ok
+{ 1 , -> }  ok
+{ cr1 @ -> 1 }  ok
+{ does1 -> }  ok
+{ cr1 -> 2 }  ok
+{ does2 -> }  ok
+{ cr1 -> 3 }  ok
+  ok
+{ : weird: create does> 1 + does> 2 + ; -> }  ok
+{ weird: w1 -> }  ok
+{ ' w1 >body -> here } INCORRECT RESULT: { ' w1 >body -> here } ok
+{ w1 -> here 1 + }  ok
+{ w1 -> here 2 + }  ok
+  ok
+\ ------------------------------------------------------------------------  ok
+testing evaluate  ok
+  ok
+: ge1 s" 123" ; immediate  ok
+: ge2 s" 123 1+" ; immediate  ok
+: ge3 s" : ge4 345 ;" ;  ok
+: ge5 evaluate ; immediate  ok
+  ok
+{ ge1 evaluate -> 123 }   ( test evaluate in interp. state ) INCORRECT RESULT: { ge1 evaluate -> 123 }   ( test evaluate in interp. state ) ok
+{ ge2 evaluate -> 124 } INCORRECT RESULT: { ge2 evaluate -> 124 } ok
+{ ge3 evaluate -> } Parsing failure
+{ ge4 -> 345 } >ge4< Undefined word
+  ok
+{ : ge6 ge1 ge5 ; -> }   ( test evaluate in compile state ) >ge1< Undefined word
+{ ge6 -> 123 } >ge6< Undefined word
+{ : ge7 ge2 ge5 ; -> } >ge2< Undefined word
+{ ge7 -> 124 } >ge7< Undefined word
+  ok
+\ ------------------------------------------------------------------------  ok
+testing source >in word  ok
+  ok
+: gs1 s" source" 2dup evaluate  compiled
+       >r swap >r = r> r> = ;  ok
+{ gs1 -> <true> <true> }  ok
+  ok
+variable scans  ok
+: rescan?  -1 scans +! scans @ if 0 >in ! then ;  ok
+  ok
+{ 2 scans !  ok
+345 rescan?  ok
+-> 345 345 }  ok
+  ok
+: gs2  5 scans ! s" 123 rescan?" evaluate ;  ok
+{ gs2 -> 123 123 123 123 123 } INCORRECT RESULT: { gs2 -> 123 123 123 123 123 } ok
+  ok
+: gs3 word count swap c@ ;  ok
+{ bl gs3 hello -> 5 char h }  ok
+{ char " gs3 goodbye" -> 7 char g }  ok
+{ bl gs3  ok
+drop -> 0 }    \ blank line return zero-length string  ok
+  ok
+: gs4 source >in ! drop ;  ok
+{ gs4 123 456  ok
+-> }  ok
+  ok
+\ ------------------------------------------------------------------------  ok
+testing <# # #s #> hold sign base >number hex decimal  ok
+  ok
+: s=  \ ( addr1 c1 addr2 c2 -- t/f ) compare two strings.  compiled
+   >r swap r@ = if   \ make sure strings have same length  compiled
+      r> ?dup if   \ if non-empty strings  compiled
+  0 do  compiled
+     over c@ over c@ - if 2drop <false> unloop exit then  compiled
+     swap char+ swap char+  compiled
+         loop  compiled
+      then  compiled
+      2drop <true>   \ if we get here, strings match  compiled
+   else  compiled
+      r> drop 2drop <false>  \ lengths mismatch  compiled
+   then ;  ok
+  ok
+: gp1  <# 41 hold 42 hold 0 0 #> s" ba" s= ;  ok
+{ gp1 -> <true> } INCORRECT RESULT: { gp1 -> <true> } ok
+  ok
+: gp2  <# -1 sign 0 sign -1 sign 0 0 #> s" --" s= ;  ok
+{ gp2 -> <true> }  ok
+  ok
+: gp3  <# 1 0 # # #> s" 01" s= ;  ok
+{ gp3 -> <true> }  ok
+  ok
+: gp4  <# 1 0 #s #> s" 1" s= ;  ok
+{ gp4 -> <true> }  ok
+  ok
+24 constant max-base   \ base 2 .. 36  ok
+: count-bits  compiled
+   0 0 invert begin dup while >r 1+ r> 2* repeat drop ;  ok
+count-bits 2* constant #bits-ud  \ number of bits in ud  ok
+  ok
+: gp5  compiled
+   base @ <true>  compiled
+   max-base 1+ 2 do   \ for each possible base  compiled
+      i base !    \ tbd: assumes base works  compiled
+      i 0 <# #s #> s" 10" s= and  compiled
+   loop  compiled
+   swap base ! ;  ok
+{ gp5 -> <true> }  ok
+  ok
+: gp6  compiled
+   base @ >r  2 base !  compiled
+   max-uint max-uint <# #s #>  \ maximum ud to binary  compiled
+   r> base !    \ s: c-addr u  compiled
+   dup #bits-ud = swap  compiled
+   0 do     \ s: c-addr flag  compiled
+      over c@ [char] 1 = and  \ all ones  compiled
+      >r char+ r>  compiled
+   loop swap drop ;  ok
+{ gp6 -> <true> }  ok
+  ok
+: gp7  compiled
+   base @ >r    max-base base !  compiled
+   <true>  compiled
+   a 0 do  compiled
+      i 0 <# #s #>  compiled
+      1 = swap c@ i 30 + = and and  compiled
+   loop  compiled
+   max-base a do  compiled
+      i 0 <# #s #>  compiled
+      1 = swap c@ 41 i a - + = and and  compiled
+   loop  compiled
+   r> base ! ;  ok
+  ok
+{ gp7 -> <true> } INCORRECT RESULT: { gp7 -> <true> } ok
+  ok
+\ >number tests  ok
+create gn-buf 0 c,  ok
+: gn-string gn-buf 1 ;  ok
+: gn-consumed gn-buf char+ 0 ;  ok
+: gn'  [char] ' word char+ c@ gn-buf c!  gn-string ;  ok
+  ok
+{ 0 0 gn' 0' >number -> 0 0 gn-consumed }  ok
+{ 0 0 gn' 1' >number -> 1 0 gn-consumed }  ok
+{ 1 0 gn' 1' >number -> base @ 1+ 0 gn-consumed }  ok
+{ 0 0 gn' -' >number -> 0 0 gn-string } \ should fail to convert these  ok
+{ 0 0 gn' +' >number -> 0 0 gn-string }  ok
+{ 0 0 gn' .' >number -> 0 0 gn-string }  ok
+  ok
+: >number-based  compiled
+   base @ >r base ! >number r> base ! ;  ok
+  ok
+{ 0 0 gn' 2' 10 >number-based -> 2 0 gn-consumed }  ok
+{ 0 0 gn' 2'  2 >number-based -> 0 0 gn-string }  ok
+{ 0 0 gn' f' 10 >number-based -> f 0 gn-consumed }  ok
+{ 0 0 gn' g' 10 >number-based -> 0 0 gn-string }  ok
+{ 0 0 gn' g' max-base >number-based -> 10 0 gn-consumed }  ok
+{ 0 0 gn' z' max-base >number-based -> 23 0 gn-consumed }  ok
+  ok
+: gn1 \ ( ud base -- ud' len ) ud should equal ud' and len should be zero.  compiled
+   base @ >r base !  compiled
+   <# #s #>  compiled
+   0 0 2swap >number swap drop  \ return length only  compiled
+   r> base ! ;  ok
+{ 0 0 2 gn1 -> 0 0 0 }  ok
+{ max-uint 0 2 gn1 -> max-uint 0 0 }  ok
+{ max-uint dup 2 gn1 -> max-uint dup 0 }  ok
+{ 0 0 max-base gn1 -> 0 0 0 }  ok
+{ max-uint 0 max-base gn1 -> max-uint 0 0 }  ok
+{ max-uint dup max-base gn1 -> max-uint dup 0 } INCORRECT RESULT: { max-uint dup max-base gn1 -> max-uint dup 0 } ok
+  ok
+: gn2 \ ( -- 16 10 )  compiled
+   base @ >r  hex base @  decimal base @  r> base ! ;  ok
+{ gn2 -> 10 a }  ok
+  ok
+\ ------------------------------------------------------------------------  ok
+testing fill move  ok
+  ok
+create fbuf 00 c, 00 c, 00 c,  ok
+create sbuf 12 c, 34 c, 56 c,  ok
+: seebuf fbuf c@  fbuf char+ c@  fbuf char+ char+ c@ ;  ok
+  ok
+{ fbuf 0 20 fill -> }  ok
+{ seebuf -> 00 00 00 }  ok
+  ok
+{ fbuf 1 20 fill -> }  ok
+{ seebuf -> 20 00 00 }  ok
+  ok
+{ fbuf 3 20 fill -> }  ok
+{ seebuf -> 20 20 20 }  ok
+  ok
+{ fbuf fbuf 3 chars move -> }  \ bizarre special case  ok
+{ seebuf -> 20 20 20 }  ok
+  ok
+{ sbuf fbuf 0 chars move -> }  ok
+{ seebuf -> 20 20 20 }  ok
+  ok
+{ sbuf fbuf 1 chars move -> }  ok
+{ seebuf -> 12 20 20 }  ok
+  ok
+{ sbuf fbuf 3 chars move -> }  ok
+{ seebuf -> 12 34 56 }  ok
+  ok
+{ fbuf fbuf char+ 2 chars move -> }  ok
+{ seebuf -> 12 12 34 } INCORRECT RESULT: { seebuf -> 12 12 34 } ok
+  ok
+{ fbuf char+ fbuf 2 chars move -> }  ok
+{ seebuf -> 12 34 34 } INCORRECT RESULT: { seebuf -> 12 34 34 } ok
+  ok
+\ ------------------------------------------------------------------------  ok
+testing output: . ." cr emit space spaces type u.  ok
+  ok
+: output-test  compiled
+   ." you should see the standard graphic characters:" cr  compiled
+   41 bl do i emit loop cr  compiled
+   61 41 do i emit loop cr  compiled
+   7f 61 do i emit loop cr  compiled
+   ." you should see 0-9 separated by a space:" cr  compiled
+   9 1+ 0 do i . loop cr  compiled
+   ." you should see 0-9 (with no spaces):" cr  compiled
+   [char] 9 1+ [char] 0 do i 0 spaces emit loop cr  compiled
+   ." you should see a-g separated by a space:" cr  compiled
+   [char] g 1+ [char] a do i emit space loop cr  compiled
+   ." you should see 0-5 separated by two spaces:" cr  compiled
+   5 1+ 0 do i [char] 0 + emit 2 spaces loop cr  compiled
+   ." you should see two separate lines:" cr  compiled
+   s" line 1" type cr s" line 2" type cr  compiled
+   ." you should see the number ranges of signed and unsigned numbers:" cr  compiled
+   ."   signed: " min-int . max-int . cr  compiled
+   ." unsigned: " 0 u. max-uint u. cr  compiled
+;  ok
+  ok
+{ output-test -> }  ok
+  ok
+\ ------------------------------------------------------------------------  ok
+testing input: accept  ok
+  ok
+create abuf 80 chars allot  ok
+  ok
+: accept-test  compiled
+   cr ." please type up to 80 characters:" cr  compiled
+   abuf 80 accept  compiled
+   cr ." received: " [char] " emit  compiled
+   abuf swap type [char] " emit cr  compiled
+;  ok
+  ok
+{ accept-test -> } 
+please type up to 80 characters:
+ 
+received: ""
+ ok
+\ ------------------------------------------------------------------------  ok
+testing dictionary search rules  ok
+  ok
+{ : gdx   123 ; : gdx   gdx 234 ; -> } 
+ ok
