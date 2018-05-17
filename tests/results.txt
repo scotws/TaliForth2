@@ -626,8 +626,8 @@ constant 1st  ok
 { 6 2nd ! -> }  ok
 { 1st @ 2nd @ -> 5 6 }  ok
 { 1st 2@ -> 6 5 }  ok
-{ 2 1 1st 2! -> } >!< Undefined word
-{ 1st 2@ -> 2 1 } INCORRECT RESULT: { 1st 2@ -> 2 1 } ok
+{ 2 1 1st 2! -> }  ok
+{ 1st 2@ -> 2 1 }  ok
 { 1s 1st !  1st @ -> 1s }  \ can store cell-wide value  ok
   ok
 here 1 c,  ok
@@ -648,11 +648,11 @@ constant a-addr  constant ua-addr  ok
 { ua-addr aligned -> a-addr }  ok
 {    1 a-addr c!  a-addr c@ ->    1 }  ok
 { 1234 a-addr  !  a-addr  @ -> 1234 }  ok
-{ 123 456 a-addr 2!  a-addr 2@ -> 123 456 } >!< Undefined word
+{ 123 456 a-addr 2!  a-addr 2@ -> 123 456 }  ok
 { 2 a-addr char+ c!  a-addr char+ c@ -> 2 }  ok
 { 3 a-addr cell+ c!  a-addr cell+ c@ -> 3 }  ok
 { 1234 a-addr cell+ !  a-addr cell+ @ -> 1234 }  ok
-{ 123 456 a-addr cell+ 2!  a-addr cell+ 2@ -> 123 456 } >!< Undefined word
+{ 123 456 a-addr cell+ 2!  a-addr cell+ 2@ -> 123 456 }  ok
   ok
 : bits ( x -- u )  compiled
    0 swap begin dup while dup msb and if >r 1+ r> then 2* repeat drop ;  ok
@@ -1056,4 +1056,4 @@ received: ""
 testing dictionary search rules  ok
   ok
 { : gdx   123 ; : gdx   gdx 234 ; -> } 
- ok
+{ ok

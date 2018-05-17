@@ -1,7 +1,7 @@
 ; Dictionary Headers for Tali Forth 2
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 05. Dec 2016 (Liara Forth)
-; This version: 16. May 2018
+; This version: 17. May 2018
 
 ; Dictionary headers are kept separately from the code, which allows various
 ; tricks in the code. We roughly follow the Gforth terminology: The Execution
@@ -682,9 +682,14 @@ nt_two_fetch:
         .word nt_two_variable, xt_two_fetch, z_two_fetch
         .byte "2@"
 
+nt_two_store:
+        .byte 2, UF
+        .word nt_two_fetch, xt_two_store, z_two_store
+        .byte "2!"
+
 nt_two_over:
         .byte 5, UF
-        .word nt_two_fetch, xt_two_over, z_two_over
+        .word nt_two_store, xt_two_over, z_two_over
         .byte "2over"
 
 nt_two_swap:

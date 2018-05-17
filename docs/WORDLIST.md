@@ -34,6 +34,7 @@ RTS instruction at the end of each word.
 | C_STORE | `c!` | ANSI core | 15 | tested |
 | CELL_PLUS | `cell+` | ANSI core | 19 | tested |
 | CHAR | `char` | ANSI core | 22 | tested |
+| CHAR_PLUS | `char+` | ANSI core | 0 | tested |
 | CHARS | `chars` | ANSI core | 7 | tested |
 | CMOVE | `cmove` | ANSI string | 62 | tested |
 | CMOVE_UP | `cmove>` | ANSI string | 62 | tested |
@@ -171,6 +172,7 @@ RTS instruction at the end of each word.
 | TWO_R_FROM | `2r>` | ANSI core ext | 28 | coded |
 | TWO_SLASH | `2/` | ANSI core | 14 | tested |
 | TWO_STAR | `2*` | ANSI core | 11 | tested |
+| TWO_STORE | `2!` | ANSI core | 22 | coded |
 | TWO_SWAP | `2swap` | ANSI core | 39 | coded |
 | TWO_TO_R | `2>r` | ANSI core ext | 35 | coded |
 | TWO_VARIABLE | `2variable` | ANSI double | 14 | coded |
@@ -194,6 +196,6 @@ RTS instruction at the end of each word.
 | ZERO_LESS | `0<` | ANSI core | 19 | tested |
 | ZERO_UNEQUAL | `0<>` | ANSI core ext | 21 | tested |
 
-Found **186** native words in `native_words.asm`.
-Of those, **74** are not marked as "tested".
+Found **188** native words in `native_words.asm`.
+Of those, **75** are not marked as "tested".
 
