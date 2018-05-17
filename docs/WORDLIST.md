@@ -98,7 +98,7 @@ RTS instruction at the end of each word.
 | LITERAL | `literal` | ANSI core | 17 | coded |
 | LOOP | `loop` | ANSI core | 109 | coded |
 | PLUS_LOOP | `+loop` | ANSI core | 102 | coded |
-| LSHIFT | `lshift` | ANSI core | 23 | coded |
+| LSHIFT | `lshift` | ANSI core | 23 | **tested** |
 | M_STAR | `m*` | ANSI core | 30 | coded |
 | MARKER | `marker` | ANSI core ext | 72 | coded |
 | MAX | `max` | ANSI core | 31 | coded |
@@ -140,7 +140,7 @@ RTS instruction at the end of each word.
 | REFILL | `refill` | ANSI core ext | 61 | coded |
 | RIGHT_BRACKET | `]` | ANSI core | 6 | coded |
 | ROT | `rot` | ANSI core | 31 | coded |
-| RSHIFT | `rshift` | ANSI core | 23 | coded |
+| RSHIFT | `rshift` | ANSI core | 23 | **tested** |
 | S_QUOTE | `s"` | ANSI core | 80 | coded |
 | S_TO_D | `s>d` | ANSI core | 21 | coded |
 | SEMICOLON | `;` | ANSI core | 28 | coded |
@@ -167,7 +167,7 @@ RTS instruction at the end of each word.
 | TWO_DROP | `2drop` | ANSI core | 11 | **tested** |
 | TWO_DUP | `2dup` | ANSI core | 27 | coded |
 | TWO_FETCH | `2@` | ANSI core | 22 | **tested** |
-| TWO_OVER | `2over` | ANSI core | 27 | coded |
+| TWO_OVER | `2over` | ANSI core | 27 | **tested** |
 | TWO_R_FETCH | `2r@` | ANSI core ext | 29 | coded |
 | TWO_R_FROM | `2r>` | ANSI core ext | 28 | coded |
 | TWO_SLASH | `2/` | ANSI core | 14 | **tested** |
@@ -198,5 +198,5 @@ RTS instruction at the end of each word.
 | ZERO_UNEQUAL | `0<>` | ANSI core ext | 21 | **tested** |
 
 Found **189** native words in `native_words.asm`.
-Of those, **76** are not marked as "tested".
+Of those, **73** are not marked as "tested".
 

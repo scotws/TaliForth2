@@ -3675,7 +3675,7 @@ plus_loop_runtime_end:
 
 
 ; ## LSHIFT ( x u -- u ) "Shift TOS left"
-; ## "lshift"  coded  ANSI core
+; ## "lshift"  tested  ANSI core
 .scope
 xt_lshift:
                 cpx #dsp0-3
@@ -5292,7 +5292,7 @@ z_rot:          rts
 
 
 ; ## RSHIFT ( x u -- x ) "Shift TOS to the right"
-; ## "rshift"  coded  ANSI core
+; ## "rshift"  tested  ANSI core
 xt_rshift:      
                 cpx #dsp0-3
                 bmi +
@@ -6428,7 +6428,7 @@ z_two_fetch:    rts
 .scend
 
 ; ## TWO_OVER ( d1 d2 -- d1 d2 d1 ) "Copy double word NOS to TOS"
-; ## "2over"  coded  ANSI core
+; ## "2over"  tested  ANSI core
 .scope
 xt_two_over:
                 cpx #dsp0-7
