@@ -6774,6 +6774,35 @@ xt_u_dot:
 z_u_dot:        rts 
 .scend
 
+; ## U_LESS_THAN ( n m -- f ) "Return true if NOS < TOS (unsigned)"
+; ## "u<"  coded  ANSI core
+.scope
+xt_u_less_than:
+                cpx #dsp0-3
+                bmi +
+                jmp underflow
+*
+                ldy #0          ; default false
+                jsr compare_16bit
+
+                ; for unsigned numbers, NOS < TOS if Z=0 and C=1
+                beq _false
+                bcc _false
+
+                ; true
+                dey
+_false:
+                tya
+
+                inx
+                inx
+                sta 0,x
+                sta 1,x
+                
+z_u_less_than:    rts
+.scend
+
+
 
 ; ## UD_SLASH_MOD ( ud u -- rem ud ) "32/16 --> 32 Division"
 ; ## "ud/mod"  coded  Gforth

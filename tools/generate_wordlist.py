@@ -3,7 +3,7 @@
 # For Tali Forth 2
 # Scot W. Stevenson <scot.stevenson@gmail.com>
 # First version: 21. Nov 2017
-# This version: 16. May 2018
+# This version: 17. May 2018
 """Creates a markdown formated list of native words based on the header
 comments in native_words.asm. It is called by the Makefile on the top level
 """
@@ -124,6 +124,10 @@ def print_line(fl, sl):
     # Statistics
     if status != HAVE_TEST:
         not_tested += 1
+
+    # We want tested words to be bolded
+    if status == HAVE_TEST:
+        status = '**'+status+'**'
 
     print(TEMPLATE.format(name, word, source, size, status))
 

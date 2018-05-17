@@ -222,18 +222,18 @@ testing comparisons: 0= = 0< < > u< min max  ok
 { max-int min-int > -> <true> }  ok
 { max-int 0 > -> <true> }  ok
   ok
-{ 0 1 u< -> <true> } >u<< Undefined word
-{ 1 2 u< -> <true> } >u<< Undefined word
-{ 0 mid-uint u< -> <true> } >u<< Undefined word
-{ 0 max-uint u< -> <true> } >u<< Undefined word
-{ mid-uint max-uint u< -> <true> } >u<< Undefined word
-{ 0 0 u< -> <false> } >u<< Undefined word
-{ 1 1 u< -> <false> } >u<< Undefined word
-{ 1 0 u< -> <false> } >u<< Undefined word
-{ 2 1 u< -> <false> } >u<< Undefined word
-{ mid-uint 0 u< -> <false> } >u<< Undefined word
-{ max-uint 0 u< -> <false> } >u<< Undefined word
-{ max-uint mid-uint u< -> <false> } >u<< Undefined word
+{ 0 1 u< -> <true> }  ok
+{ 1 2 u< -> <true> }  ok
+{ 0 mid-uint u< -> <true> }  ok
+{ 0 max-uint u< -> <true> }  ok
+{ mid-uint max-uint u< -> <true> }  ok
+{ 0 0 u< -> <false> }  ok
+{ 1 1 u< -> <false> }  ok
+{ 1 0 u< -> <false> }  ok
+{ 2 1 u< -> <false> }  ok
+{ mid-uint 0 u< -> <false> }  ok
+{ max-uint 0 u< -> <false> }  ok
+{ max-uint mid-uint u< -> <false> }  ok
   ok
 { 0 1 min -> 0 }  ok
 { 1 2 min -> 1 }  ok
@@ -609,7 +609,7 @@ here 1 allot  ok
 here  ok
 constant 2nda  ok
 constant 1sta  ok
-{ 1sta 2nda u< -> <true> }  \ here must grow with allot >u<< Undefined word
+{ 1sta 2nda u< -> <true> }  \ here must grow with allot  ok
 { 1sta 1+ -> 2nda }   \ ... by one address unit  ok
 ( missing test: negative allot )  ok
   ok
@@ -617,7 +617,7 @@ here 1 ,  ok
 here 2 ,  ok
 constant 2nd  ok
 constant 1st  ok
-{ 1st 2nd u< -> <true> }   \ here must grow with allot >u<< Undefined word
+{ 1st 2nd u< -> <true> }   \ here must grow with allot  ok
 { 1st cell+ -> 2nd }   \ ... by one cell  ok
 { 1st 1 cells + -> 2nd }  ok
 { 1st @ 2nd @ -> 1 2 }  ok
@@ -634,7 +634,7 @@ here 1 c,  ok
 here 2 c,  ok
 constant 2ndc  ok
 constant 1stc  ok
-{ 1stc 2ndc u< -> <true> }  \ here must grow with allot >u<< Undefined word
+{ 1stc 2ndc u< -> <true> }  \ here must grow with allot  ok
 { 1stc char+ -> 2ndc }   \ ... by one char  ok
 { 1stc 1 chars + -> 2ndc }  ok
 { 1stc c@ 2ndc c@ -> 1 2 }  ok
@@ -1056,4 +1056,4 @@ received: ""
 testing dictionary search rules  ok
   ok
 { : gdx   123 ; : gdx   gdx 234 ; -> } 
-{ ok
+ ok
