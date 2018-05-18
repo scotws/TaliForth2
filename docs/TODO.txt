@@ -1,7 +1,7 @@
 TODO/CHANGES for Tali Forth 2 
 Scot W. Stevenson <scot.stevenson@gmail.com>
 First version: 19. Jan 2014
-This version: 03. May 2018
+This version: 18. May 2018
 
 (Note: Parts of the list have been moved to the GitHub website)
 
@@ -46,6 +46,7 @@ TODO AT SOME POINT
 -----------------------------------------------------------------------
 ALREADY DONE MAJOR CHANGES (LAST ON TOP WITH DATE)
 
+        - 17. May 2018 - Added testing suite
         - 01. May 2018 - Added Makefile; added disassembler
         - 16. Apr 2018 - Added tool to generate docs/WORDLIST.md
         - 11. Mar 2018 - Allow stripping of underflow check for native compile
