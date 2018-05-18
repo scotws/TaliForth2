@@ -5,6 +5,7 @@
 \ Modified by SamCo 2018-05 for testing Tali Forth 2.
 \ The main change is lowercasing all of the words as Tali
 \ is case sensitive, as well as replacing tabs with spaces.
+\ A word to display the actual (erroneous) results was also added.
 
 \ (C) 1995 JOHNS HOPKINS UNIVERSITY / APPLIED PHYSICS LABORATORY
 \ MAY BE DISTRIBUTED FREELY AS LONG AS THIS COPYRIGHT NOTICE REMAINS.
@@ -16,17 +17,29 @@ hex
 variable verbose
    false verbose !
 
+variable actual-depth   \ STACK RECORD
+create actual-results 20 cells allot
+
 : empty-stack \ ( ... -- ) EMPTY STACK: HANDLES UNDERFLOWED STACK TOO.
    depth ?dup if dup 0< if negate 0 do 0 loop else 0 do drop loop then then ;
+
+\ Added by SamCo 2018-05 to show actual results of previous test.
+: show-results \ ( -- ) Print the previous test's actual results.
+   s"  ACTUAL RESULT: { " type
+   actual-depth @ 0 ?do
+      actual-results 
+      actual-depth @ i - 1- \ Print them in reverse order to match test.             
+      cells + @ .
+   loop
+   s" }" type ;
 
 : error  \ ( C-ADDR U -- ) DISPLAY AN ERROR MESSAGE FOLLOWED BY
   \ THE LINE THAT HAD THE ERROR.
    type source type \ CR   \ DISPLAY LINE CORRESPONDING TO ERROR
    empty-stack    \ THROW AWAY EVERY THING ELSE
+   show-results \ Added by SamCo to show what actually happened.
 ;
 
-variable actual-depth   \ STACK RECORD
-create actual-results 20 cells allot
 
 : {  \ ( -- ) SYNTACTIC SUGAR.
    ;
