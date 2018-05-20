@@ -54,13 +54,13 @@ RTS instruction at the end of each word.
 | DEFER | `defer` | ANSI core ext | 50 | **tested** |
 | DEPTH | `depth` | ANSI core | 14 | **tested** |
 | DIGIT_QUESTION | `digit?` | Tali Forth | 56 | **tested** |
-| DISASM | `disasm` | Tali Forth | 10 | coded |
+| DISASM | `disasm` | Tali Forth | 10 | **tested** |
 | DNEGATE | `dnegate` | ANSI double | 30 | coded |
 | QUESTION_DO | `?do` | ANSI core ext | 96 | coded |
-| DO | `do` | ANSI core | 90 | coded |
-| DOES | `does>` | ANSI core | 14 | coded |
+| DO | `do` | ANSI core | 90 | **tested** |
+| DOES | `does>` | ANSI core | 14 | **tested** |
 | DOT | `.` | ANSI core | 37 | **tested** |
-| DOT_QUOTE | `."` | ANSI core | 10 | coded |
+| DOT_QUOTE | `."` | ANSI core | 10 | **tested** |
 | DOT_S | `.s` | ANSI tools | 67 | **tested** |
 | DROP | `drop` | ANSI core | 9 | **tested** |
 | DUMP | `dump` | ANSI tools | 72 | **tested** |
@@ -70,12 +70,12 @@ RTS instruction at the end of each word.
 | BLANK | `blank` | ANSI core ext | 86 | **tested** |
 | ERASE | `erase` | ANSI core ext | 76 | **tested** |
 | FILL | `fill` | ANSI core | 70 | **tested** |
-| EVALUATE | `evaluate` | ANSI core | 94 | **tested** |
+| EVALUATE | `evaluate` | ANSI core | 94 | coded |
 | EXECUTE | `execute` | ANSI core | 10 | **tested** |
 | EXIT | `exit` | ANSI core | 1 | **tested** |
 | FALSE | `false` | ANSI core ext | 6 | **tested** |
 | FETCH | `@` | ANSI core | 22 | **tested** |
-| FIND | `find` | ANSI core | 75 | coded |
+| FIND | `find` | ANSI core | 75 | **tested** |
 | FIND_NAME | `find-name` | Gforth | 106 | **tested** |
 | FM_SLASH_MOD | `fm/mod` | ANSI core | 58 | **tested** |
 | GREATER_THAN | `>` | ANSI core | 24 | **tested** |
@@ -91,18 +91,18 @@ RTS instruction at the end of each word.
 | KEY | `key` | ANSI core | 9 | **tested** |
 | LATESTNT | `latestnt` | Tali Forth | 10 | **tested** |
 | LATESTXT | `latestxt` | Gforth | 6 | **tested** |
-| LEAVE | `leave` | ANSI core | 5 | coded |
-| LEFT_BRACKET | `[` | ANSI core | 4 | coded |
-| LESS_NUMBER_SIGN | `<#` | ANSI core | 13 | coded |
-| LESS_THAN | `<` | ANSI core | 24 | coded |
-| LITERAL | `literal` | ANSI core | 17 | coded |
-| LOOP | `loop` | ANSI core | 109 | coded |
-| PLUS_LOOP | `+loop` | ANSI core | 102 | coded |
+| LEAVE | `leave` | ANSI core | 5 | **tested** |
+| LEFT_BRACKET | `[` | ANSI core | 4 | **tested** |
+| LESS_NUMBER_SIGN | `<#` | ANSI core | 13 | **tested** |
+| LESS_THAN | `<` | ANSI core | 24 | **tested** |
+| LITERAL | `literal` | ANSI core | 17 | **tested** |
+| LOOP | `loop` | ANSI core | 109 | **tested** |
+| PLUS_LOOP | `+loop` | ANSI core | 102 | **tested** |
 | LSHIFT | `lshift` | ANSI core | 23 | **tested** |
-| M_STAR | `m*` | ANSI core | 30 | coded |
+| M_STAR | `m*` | ANSI core | 30 | **tested** |
 | MARKER | `marker` | ANSI core ext | 72 | coded |
-| MAX | `max` | ANSI core | 31 | coded |
-| MIN | `min` | ANSI core | 31 | coded |
+| MAX | `max` | ANSI core | 31 | **tested** |
+| MIN | `min` | ANSI core | 31 | **tested** |
 | MINUS | `-` | ANSI core | 22 | **tested** |
 | MINUS_TRAILING | `-trailing` | ANSI string | 41 | coded |
 | MOVE | `move` | ANSI core | 30 | coded |
@@ -115,78 +115,78 @@ RTS instruction at the end of each word.
 | NOT_EQUALS | `<>` | ANSI core ext | 33 | coded |
 | NOT_ROTE | `-rot` | Gforth | 31 | coded |
 | NUMBER | `number` | Tali Forth | 138 | **tested** |
-| NUMBER_SIGN | `#` | ANSI core | 32 | coded |
-| NUMBER_SIGN_GREATER | `#>` | ANSI core | 37 | coded |
-| NUMBER_SIGN_S | `#s` | ANSI core | 20 | coded |
+| NUMBER_SIGN | `#` | ANSI core | 32 | **tested** |
+| NUMBER_SIGN_GREATER | `#>` | ANSI core | 37 | **tested** |
+| NUMBER_SIGN_S | `#s` | ANSI core | 20 | **tested** |
 | ONE | `1` | Tali Forth | 8 | **tested** |
 | ONE_MINUS | `1-` | ANSI core | 15 | **tested** |
 | ONE_PLUS | `1+` | ANSI core | 13 | **tested** |
-| OR | `or` | ANSI core | 21 | coded |
-| OUTPUT | `output` | Tali Forth | 10 | coded |
-| OVER | `over` | ANSI core | 17 | coded |
+| OR | `or` | ANSI core | 21 | **tested** |
+| OUTPUT | `output` | Tali Forth | 10 | **tested** |
+| OVER | `over` | ANSI core | 17 | **tested** |
 | PAD | `pad` | ANSI core ext | 15 | coded |
 | PAGE | `page` | ANSI facility | 29 | **tested** |
 | PARSE_NAME | `parse-name` | ANSI core ext | 234 | **tested** |
 | PARSE | `parse` | ANSI core ext | 142 | **tested** |
 | PICK | `pick` | ANSI core ext | 16 | **tested** |
 | PLUS | `+` | ANSI core | 22 | **tested** |
-| PLUS_STORE | `+!` | ANSI core | 35 | coded |
-| POSTPONE | `postpone` | ANSI core | 62 | coded |
+| PLUS_STORE | `+!` | ANSI core | 35 | **tested** |
+| POSTPONE | `postpone` | ANSI core | 62 | **tested** |
 | QUESTION | `?` | ANSI tools | 6 | **tested** |
-| QUESTION_DUP | `?dup` | ANSI core | 23 | coded |
-| R_FETCH | `r@` | ANSI core | 20 | coded |
-| R_FROM | `r>` | ANSI core | 16 | coded |
-| RECURSE | `recurse` | ANSI core | 44 | coded |
+| QUESTION_DUP | `?dup` | ANSI core | 23 | **tested** |
+| R_FETCH | `r@` | ANSI core | 20 | **tested** |
+| R_FROM | `r>` | ANSI core | 16 | **tested** |
+| RECURSE | `recurse` | ANSI core | 44 | **tested** |
 | REFILL | `refill` | ANSI core ext | 61 | coded |
-| RIGHT_BRACKET | `]` | ANSI core | 6 | coded |
-| ROT | `rot` | ANSI core | 31 | coded |
+| RIGHT_BRACKET | `]` | ANSI core | 6 | **tested** |
+| ROT | `rot` | ANSI core | 31 | **tested** |
 | RSHIFT | `rshift` | ANSI core | 23 | **tested** |
-| S_QUOTE | `s"` | ANSI core | 80 | coded |
-| S_TO_D | `s>d` | ANSI core | 21 | coded |
-| SEMICOLON | `;` | ANSI core | 28 | coded |
-| SIGN | `sign` | ANSI core | 24 | coded |
+| S_QUOTE | `s"` | ANSI core | 80 | **tested** |
+| S_TO_D | `s>d` | ANSI core | 21 | **tested** |
+| SEMICOLON | `;` | ANSI core | 28 | **tested** |
+| SIGN | `sign` | ANSI core | 24 | **tested** |
 | SLASH_STRING | `/string` | ANSI string | 35 | coded |
 | SLITERAL | `sliteral` | ANSI string | 114 | coded |
 | SM_SLASH_REM | `sm/rem` | ANSI core | 44 | **tested** |
-| SOURCE | `source` | ANSI core | 20 | coded |
+| SOURCE | `source` | ANSI core | 20 | **tested** |
 | SOURCE_ID | `source-id` | ANSI core ext | 10 | coded |
 | SPACE | `space` | ANSI core | 5 | **tested** |
-| SPACES | `spaces` | ANSI core | 53 | coded |
-| STAR | `*` | ANSI core | 12 | coded |
-| STATE | `state` | ANSI core | 10 | coded |
+| SPACES | `spaces` | ANSI core | 53 | **tested** |
+| STAR | `*` | ANSI core | 12 | **tested** |
+| STATE | `state` | ANSI core | 10 | **tested** |
 | STORE | `!` | ANSI core | 25 | **tested** |
 | SWAP | `swap` | ANSI core | 23 | **tested** |
-| TICK | `'` | ANSI core | 31 | coded |
-| TO_BODY | `>body` | ANSI core | 91 | coded |
+| TICK | `'` | ANSI core | 31 | **tested** |
+| TO_BODY | `>BODY` | ANSI core | 91 | coded |
 | TO_IN | `>in` | ANSI core | 10 | coded |
 | TO_NUMBER | `>number` | ANSI core | 163 | coded |
-| TO_R | `>r` | ANSI core | 23 | coded |
+| TO_R | `>r` | ANSI core | 23 | **tested** |
 | TRUE | `true` | ANSI core ext | 8 | **tested** |
 | TUCK | `tuck` | ANSI core ext | 29 | **tested** |
 | TWO | `2` | Tali Forth | 8 | **tested** |
 | TWO_DROP | `2drop` | ANSI core | 11 | **tested** |
-| TWO_DUP | `2dup` | ANSI core | 27 | coded |
+| TWO_DUP | `2dup` | ANSI core | 27 | **tested** |
 | TWO_FETCH | `2@` | ANSI core | 22 | **tested** |
 | TWO_OVER | `2over` | ANSI core | 27 | **tested** |
 | TWO_R_FETCH | `2r@` | ANSI core ext | 29 | coded |
 | TWO_R_FROM | `2r>` | ANSI core ext | 28 | coded |
 | TWO_SLASH | `2/` | ANSI core | 14 | **tested** |
 | TWO_STAR | `2*` | ANSI core | 11 | **tested** |
-| TWO_STORE | `2!` | ANSI core | 22 | coded |
-| TWO_SWAP | `2swap` | ANSI core | 39 | coded |
+| TWO_STORE | `2!` | ANSI core | 22 | **tested** |
+| TWO_SWAP | `2swap` | ANSI core | 39 | **tested** |
 | TWO_TO_R | `2>r` | ANSI core ext | 35 | coded |
 | TWO_VARIABLE | `2variable` | ANSI double | 14 | coded |
 | TYPE | `type` | ANSI core | 41 | **tested** |
 | U_DOT | `u.` | ANSI core | 15 | **tested** |
-| U_LESS_THAN | `u<` | ANSI core | 24 | coded |
+| U_LESS_THAN | `u<` | ANSI core | 24 | **tested** |
 | UD_SLASH_MOD | `ud/mod` | Gforth | 34 | coded |
 | UF_STRIP | `uf-strip` | Tali Forth | 10 | **tested** |
-| UM_SLASH_MOD | `um/mod` | ANSI core | 69 | coded |
-| UM_STAR | `um*` | ANSI core | 73 | coded |
-| UNLOOP | `unloop` | ANSI core | 6 | coded |
+| UM_SLASH_MOD | `um/mod` | ANSI core | 69 | **tested** |
+| UM_STAR | `um*` | ANSI core | 73 | **tested** |
+| UNLOOP | `unloop` | ANSI core | 6 | **tested** |
 | UNUSED | `unused` | ANSI core ext | 15 | coded |
 | VARIABLE | `variable` | ANSI core | 24 | **tested** |
-| WORD | `word` | ANSI core | 73 | coded |
+| WORD | `word` | ANSI core | 73 | **tested** |
 | WORDS | `words` | ANSI tools | 56 | **tested** |
 | WORDSIZE | `wordsize` | Tali Forth | 36 | **tested** |
 | XOR | `xor` | ANSI core | 21 | **tested** |
@@ -198,5 +198,5 @@ RTS instruction at the end of each word.
 | ZERO_UNEQUAL | `0<>` | ANSI core ext | 21 | **tested** |
 
 Found **189** native words in `native_words.asm`.
-Of those, **73** are not marked as "tested".
+Of those, **27** are not marked as "tested".
 
