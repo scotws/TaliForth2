@@ -1,4 +1,4 @@
-TaliForth2/tests
+Tali Forth 2 Tests
 
 This folder contains the test suite for Tali Forth. To run the tests (assuming
 you have already run make in the main project directory), simply run the

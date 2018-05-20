@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.3.2)  15 MAY 2018 08:45
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.3.2)  20 MAY 2018 20:02
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -422,40 +422,39 @@ ceCodePro-TLF.
 )
 LaTeX Font Info:    Font shape `T1/SourceCodePro-TLF/m/n' will be
 (Font)              scaled to size 10.0pt on input line 48.
-
-[3])
+)
 \tf@toc=\write5
 \openout5 = `manual.toc'.
 
- [4] (./manual.lof)
+[3] (./manual.lof)
 \tf@lof=\write6
 \openout6 = `manual.lof'.
 
- [5
+ [4
 
 ] (./manual.lot)
 \tf@lot=\write7
 \openout7 = `manual.lot'.
 
- [6
+ [5
 
-] [7
+] [6
 
 ]
 Chapter 1.
-(./ch_why.tex <pics/W65c02.jpg, id=579, 301.125pt x 301.125pt>
+(./ch_why.tex <pics/W65c02.jpg, id=424, 301.125pt x 301.125pt>
 File: pics/W65c02.jpg Graphic file (type jpg)
 
 <use pics/W65c02.jpg>
 Package pdftex.def Info: pics/W65c02.jpg used on input line 34.
 (pdftex.def)             Requested size: 213.39566pt x 213.40508pt.
- [8
+ [7
 
- <./pics/W65c02.jpg>] [9]) [10]
+ <./pics/W65c02.jpg>] [8]) [9]
 Chapter 2.
-(./ch_overview.tex [11
+(./ch_overview.tex [10
 
-]) [12] [13
+]) [11] [12
 
 ]
 Chapter 3.
@@ -466,11 +465,11 @@ Overfull \hbox (31.80138pt too wide) in paragraph at lines 19--23
 berez/py65[][].
  []
 
-) [14
+) [13
 
 ]
 Chapter 4.
-(./ch_running.tex [15
+(./ch_running.tex [14
 
 ]
 LaTeX Font Info:    Try loading font information for OMS+cmr on input line 113.
@@ -482,24 +481,24 @@ LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
 (Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 113.
 LaTeX Font Info:    Font shape `T1/SourceCodePro-TLF/b/n' will be
 (Font)              scaled to size 10.0pt on input line 113.
-[16] [17]) [18]
+[15] [16]) [17]
 Chapter 5.
-[19
+[18
 
-] [20
+] [19
 
 ]
 Chapter 6.
-(./ch_internals.tex [21
+(./ch_internals.tex [20
 
-] [22]
+] [21]
 Overfull \hbox (5.86935pt too wide) in paragraph at lines 204--210
 \T1/cmr/m/n/10 then gen-er-ated at run-time when Tali Forth starts up, and \T1/
 cmr/bx/n/10 user words \T1/cmr/m/n/10 in the file \T1/SourceCodePro-TLF/m/n/10 
 user_words.asm[]\T1/cmr/m/n/10 . 
  []
 
-[23] [24]
+[22] [23]
 LaTeX Font Info:    Font shape `T1/SourceCodePro-TLF/b/n' will be
 (Font)              scaled to size 12.0pt on input line 339.
 LaTeX Font Info:    Font shape `T1/SourceCodePro-TLF/b/n' will be
@@ -510,7 +509,7 @@ Overfull \hbox (34.4016pt too wide) in paragraph at lines 359--367
 ]http://www.bradrodriguez.com/papers/moving3.htm[][].
  []
 
-[25]
+[24]
 LaTeX Font Info:    Font shape `T1/SourceCodePro-TLF/m/n' will be
 (Font)              scaled to size 8.0pt on input line 394.
 LaTeX Font Info:    Font shape `T1/SourceCodePro-TLF/m/sl' in size <10> not ava
@@ -519,7 +518,7 @@ ilable
 ut line 476.
 LaTeX Font Info:    Font shape `T1/SourceCodePro-TLF/m/it' will be
 (Font)              scaled to size 10.0pt on input line 476.
- [26]
+ [25]
 Underfull \hbox (badness 4096) in paragraph at lines 573--573
 [][][]\T1/cmr/m/n/8 Many Forths now use the words \T1/SourceCodePro-TLF/m/n/8 c
 s-pick \T1/cmr/m/n/8 and \T1/SourceCodePro-TLF/m/n/8 cs-roll \T1/cmr/m/n/8 in-s
@@ -532,14 +531,14 @@ Underfull \hbox (badness 1454) in paragraph at lines 586--586
 han-dles things a bit dif-fer-ently is at
  []
 
-[27]
+[26]
 Overfull \hbox (2.941pt too wide) in paragraph at lines 617--622
 \T1/cmr/m/n/10 take care of. These can call up to three ad-dresses: One for the
  nor-mal loop-ing ac-tion (\T1/SourceCodePro-TLF/m/n/10 loop\T1/cmr/m/n/10 /\T1
 /SourceCodePro-TLF/m/n/10 +loop\T1/cmr/m/n/10 ),
  []
 
-[28] [29] [30]) [31] [32]
+[27] [28] [29]) [30] [31]
 Chapter 7.
 (./ch_developing.tex
 Overfull \hbox (41.71275pt too wide) in paragraph at lines 14--16
@@ -554,23 +553,23 @@ Overfull \hbox (31.95775pt too wide) in paragraph at lines 30--36
  [][]http://michaelcmartin.github.io/Ophis/[][].
  []
 
-[33
+[32
 
-] [34]) [35]
+] [33]) [34]
 Chapter 8.
-[36
+[35
 
 ]
 Appendix A.
-(./ch_faq.tex) [37
+(./ch_faq.tex) [36
 
 ]
 Appendix B.
-(./ch_tests.tex [38
+(./ch_tests.tex) [37
 
-] [39] [40] [41]) [42]
+]
 Appendix C.
-(./ch_thanks.tex) (./bibliography.tex [43
+(./ch_thanks.tex) (./bibliography.tex [38
 
 ]
 Overfull \hbox (65.6815pt too wide) in paragraph at lines 53--56
@@ -579,25 +578,25 @@ Be-gin-ner's Guide to Forth\T1/cmr/m/n/10 , [][]http://galileo.phys.virginia.ed
 u/classes/551.jvn.fall01/primer.htm[][]. 
  []
 
-) (./manual.ind [44
+) (./manual.ind [39
 
-] [45
+] [40
 
-] [46])
+] [41])
 Package atveryend Info: Empty hook `BeforeClearDocument' on input line 136.
 Package atveryend Info: Empty hook `AfterLastShipout' on input line 136.
  (./manual.aux)
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 136.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 136.
 Package rerunfilecheck Info: File `manual.out' has not changed.
-(rerunfilecheck)             Checksum: 09CF405921A0145A38CD764A36353D94;6496.
+(rerunfilecheck)             Checksum: C0DC958515E84EC19208EBBFBB52BFE4;4704.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 136.
  ) 
 Here is how much of TeX's memory you used:
- 8472 strings out of 494953
- 125048 string characters out of 6180978
- 320820 words of memory out of 5000000
- 10986 multiletter control sequences out of 15000+600000
+ 8324 strings out of 494953
+ 122807 string characters out of 6180978
+ 320700 words of memory out of 5000000
+ 10955 multiletter control sequences out of 15000+600000
  26350 words of font info for 55 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  44i,12n,43p,238b,1706s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -620,10 +619,10 @@ type1/adobe/sourcecodepro/SourceCodePro-Bold.pfb></usr/share/texlive/texmf-dist
 /fonts/type1/adobe/sourcecodepro/SourceCodePro-It.pfb></usr/share/texlive/texmf
 -dist/fonts/type1/adobe/sourcecodepro/SourceCodePro-Regular.pfb></usr/share/tex
 live/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
-Output written on manual.pdf (46 pages, 446767 bytes).
+Output written on manual.pdf (41 pages, 428770 bytes).
 PDF statistics:
- 2310 PDF objects out of 2487 (max. 8388607)
- 1629 compressed objects within 17 object streams
- 608 named destinations out of 1000 (max. 500000)
- 822 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 2001 PDF objects out of 2073 (max. 8388607)
+ 1333 compressed objects within 14 object streams
+ 491 named destinations out of 1000 (max. 500000)
+ 590 words of extra memory for PDF output out of 10000 (max. 10000000)
 
