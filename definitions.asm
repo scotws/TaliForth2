@@ -1,7 +1,7 @@
 ; Definitions for Tali Forth 2
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 01. Apr 2016 (Liara Forth)
-; This version: 28. Apr 2018
+; This version: 24. May 2018
 
 ; This file is included by taliforth.asm
 
@@ -46,6 +46,14 @@
 ;   (...)   ~~~~~~~~~~~~~~~~~~~~~  <-- cp
 ;           |                   |
 ;           |                   |
+;           |                   |
+;           |                   |
+;           |                   |
+;           |                   |
+;    $7C00  +-------------------+  hist_buff
+;           |   Input History   |
+;           |    for accept     |
+;           |  8 128B buffers   |
 ;    $7fff  +-------------------+  ram_end, code0-1
 
 
@@ -60,7 +68,7 @@
 .alias ram_end   $8000-1     ; end of installed RAM
 .alias zpage     ram_start   ; begin of Zero Page ($0000-$00ff)
 .alias stack0    $0100       ; begin of Return Stack ($0100-$01ff)
-
+.alias hist_buff ram_end-$03ff  ; begin of history buffers
 
 ; SOFT PHYSICAL ADDRESSES
 
@@ -109,7 +117,7 @@
 .alias tmptos    user0+40  ; temporary TOS storage
 .alias tohold    user0+42  ; pointer for formatted output 
 .alias scratch   user0+44  ; 8 byte scratchpad (see UM/MOD)
-
+.alias histinfo  user0+52  ; information about input history (see ACCEPT)
 ; Bytes used for variables: 54 ($0000-$0035) 
 ; First usable Data Stack location: $0036 (decimal 54) 
 ; Bytes avaible for Data Stack: 128-54 = 65 --> 32 16-bit cells
@@ -126,7 +134,9 @@
 .alias AscESC  $1b  ; escape
 .alias AscSP   $20  ; space
 .alias AscDEL  $7f  ; delete (CTRL-h)
-
+.alias AscCP   $10  ; CTRL-p (used to recall previous input history)
+.alias AscCN   $0e  ; CTRL-n (used to recall next input history)
+    
 
 ; DICTIONARY FLAGS
 
