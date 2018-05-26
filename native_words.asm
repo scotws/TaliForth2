@@ -495,7 +495,9 @@ _recall_history:
 _history_loop:
                 ; See if we have reached the end of the history buffer.
                 cpy histinfo+1
-                beq _done
+                bne +
+                jmp _loop       ; Needs a long jump
+*
                 ; See if we have reached the end of the input buffer.
                 ; (only comparing to lower byte as we currently limit
                 ; to 255 characters max)
@@ -506,6 +508,9 @@ _history_loop:
                 lda (tmp3),y
                 sta (tmp1),y
                 jsr emit_a
+
+                ; Move to the next character.
+                iny
                 
                 bra _history_loop
                 
@@ -516,8 +521,53 @@ _hist_filled_buffer:
                 dey
                 jmp _loop
 _done:
-                ; TODO: Copy the input buffer into the currently
+                ; Copy the input buffer into the currently
                 ; selected history buffer.
+                
+                ; Generate the address of the buffer in tmp3.
+                ; Start with the base address.
+                lda #<hist_buff
+                sta tmp3
+                lda #>hist_buff
+                sta tmp3+1
+                ; This is a bit annoying as some bits go into each byte.
+                lda histinfo
+                ror
+                and #$03
+                ora tmp3+1
+
+                lda histinfo
+                ror
+                ror
+                and #$80
+                ora tmp3
+
+                ; Save the current length of the input buffer in
+                ; histinfo+1 temporarily.  Reduce to 127 if larger.
+                tay
+                cmp #$80
+                bcc +
+                lda #$7f
+*
+                sta histinfo+1
+                ; Also save it in the first buffer byte.
+                ldy 0
+                sta (tmp3),y
+
+                ; Move path the count to the data bytes
+                inc tmp3
+
+                ; Copy the characters from the input buffer to the
+                ; history buffer.
+_save_history_loop: 
+                cpy histinfo+1
+                beq _save_history_done
+                lda (tmp1),y
+                sta (tmp3),y
+                iny
+                bra _save_history_loop
+_save_history_done:
+                
 z_accept:       rts
 .scend
 
