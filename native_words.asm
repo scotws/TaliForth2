@@ -474,6 +474,7 @@ _recall_history:
                 lda #>hist_buff
                 sta tmp3+1
                 ; This is a bit annoying as some bits go into each byte.
+                ; .....xxx gets put into address like ......xx x.......
                 lda histinfo
                 ror
                 and #$03
@@ -481,7 +482,7 @@ _recall_history:
                 sta tmp3+1
 
                 lda histinfo
-                ror
+                ror             ; Rotate through carry into msb.
                 ror
                 and #$80
                 ora tmp3
@@ -545,6 +546,7 @@ _done:
                 lda #>hist_buff
                 sta tmp3+1
                 ; This is a bit annoying as some bits go into each byte.
+                ; .....xxx gets put into address like ......xx x.......
                 lda histinfo
                 ror
                 and #$03
@@ -552,7 +554,7 @@ _done:
                 sta tmp3+1
 
                 lda histinfo
-                ror
+                ror             ; Rotate through carry into msb.
                 ror
                 and #$80
                 ora tmp3

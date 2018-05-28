@@ -70,6 +70,8 @@
 .alias stack0    $0100       ; begin of Return Stack ($0100-$01ff)
 .alias hist_buff ram_end-$03ff  ; begin of history buffers
                                 ; Note: history must begin on a 1K boundry
+
+        
 ; SOFT PHYSICAL ADDRESSES
 
 ; Tali currently doesn't have separate user variables for multitasking. To
@@ -118,6 +120,7 @@
 .alias tohold    user0+42  ; pointer for formatted output 
 .alias scratch   user0+44  ; 8 byte scratchpad (see UM/MOD)
 .alias histinfo  user0+52  ; information about input history (see ACCEPT)
+
 ; Bytes used for variables: 54 ($0000-$0035) 
 ; First usable Data Stack location: $0036 (decimal 54) 
 ; Bytes avaible for Data Stack: 128-54 = 65 --> 32 16-bit cells
