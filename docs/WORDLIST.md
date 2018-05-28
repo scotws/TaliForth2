@@ -12,7 +12,7 @@ RTS instruction at the end of each word.
 | QUIT | `quit` | ANSI core | 70 | coded |
 | ABORT_QUOTE | `abort"` | ANSI core | 10 | **tested** |
 | ABS | `abs` | ANSI core | 24 | **tested** |
-| ACCEPT | `accept` | ANSI core | 255 | coded |
+| ACCEPT | `accept` | ANSI core | 275 | coded |
 | AGAIN | `again` | ANSI core ext | 36 | **tested** |
 | ALIGN | `align` | ANSI core | 0 | **tested** |
 | ALLOT | `allot` | ANSI core | 63 | **tested** |

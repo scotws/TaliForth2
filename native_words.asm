@@ -377,6 +377,12 @@ _not_zero:
                 inc
                 ; Mask all the but the lowest three bits.
                 and #7
+                ; Set the most significant bit for detecting if
+                ; CTRL-n has been pressed the first time.  This
+                ; bit will be cleared on the first CTRL-n or
+                ; CTRL-p recieved and won't be used to calculate
+                ; the history buffer offset.
+                ora #$80
                 sta histinfo
 
                 
@@ -456,11 +462,18 @@ _ctrl_p:
                 bra _recall_history
 
 _ctrl_n:
-                ; CTRL-p was pressed.  Recall the next input buffer.
+                ; CTRL-n was pressed.  Recall the next input buffer.
         
-                ; Select the previous buffer
+                ; Select the next buffer
                 lda histinfo
+                ; Check the most significant bit.
+                ; If it's set, this is the first time CTRL-n has been
+                ; pressed and we should select the CURRENT history buffer.
+                bmi +
+                ; If this isn't the first time CTRL-n has been pressed,
+                ; select the next history buffer.
                 ina
+*                
                 ; Mask all the but the lowest three bits.
                 and #7
                 sta histinfo
@@ -478,15 +491,20 @@ _recall_history:
                 lda histinfo
                 ror
                 and #$03
-                ora tmp3+1
+                clc
+                adc tmp3+1
                 sta tmp3+1
 
                 lda histinfo
                 ror             ; Rotate through carry into msb.
                 ror
                 and #$80
-                ora tmp3
+                clc
+                adc tmp3
                 sta tmp3
+                bcc +           ; Increment the upper byte on carry
+                inc tmp3+1
+*
                 
                 ; tmp3 now has the address of the previous history buffer.
                 ; First byte of buffer is length.
@@ -550,15 +568,20 @@ _done:
                 lda histinfo
                 ror
                 and #$03
-                ora tmp3+1
+                clc
+                adc tmp3+1
                 sta tmp3+1
 
                 lda histinfo
                 ror             ; Rotate through carry into msb.
                 ror
                 and #$80
-                ora tmp3
+                clc
+                adc tmp3
                 sta tmp3
+                bcc +           ; Increment the upper byte on carry.
+                inc tmp3+1
+*
 
                 ; Save the current length of the input buffer in
                 ; histinfo+1 temporarily.  Reduce to 127 if larger.
@@ -574,6 +597,9 @@ _done:
 
                 ; Move path the count to the data bytes
                 inc tmp3
+                bne +           ; Increment the upper byte on carry.
+                inc tmp3+1
+*                
 
                 ; Copy the characters from the input buffer to the
                 ; history buffer.
