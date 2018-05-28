@@ -69,7 +69,7 @@
 .alias zpage     ram_start   ; begin of Zero Page ($0000-$00ff)
 .alias stack0    $0100       ; begin of Return Stack ($0100-$01ff)
 .alias hist_buff ram_end-$03ff  ; begin of history buffers
-
+                                ; Note: history must begin on a 1K boundry
 ; SOFT PHYSICAL ADDRESSES
 
 ; Tali currently doesn't have separate user variables for multitasking. To

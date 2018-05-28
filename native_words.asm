@@ -466,12 +466,14 @@ _recall_history:
                 ror
                 and #$03
                 ora tmp3+1
+                sta tmp3+1
 
                 lda histinfo
                 ror
                 ror
                 and #$80
                 ora tmp3
+                sta tmp3
                 
                 ; tmp3 now has the address of the previous history buffer.
                 ; First byte of buffer is length.
@@ -535,23 +537,25 @@ _done:
                 ror
                 and #$03
                 ora tmp3+1
+                sta tmp3+1
 
                 lda histinfo
                 ror
                 ror
                 and #$80
                 ora tmp3
+                sta tmp3
 
                 ; Save the current length of the input buffer in
                 ; histinfo+1 temporarily.  Reduce to 127 if larger.
-                tay
+                tya
                 cmp #$80
                 bcc +
                 lda #$7f
 *
                 sta histinfo+1
                 ; Also save it in the first buffer byte.
-                ldy 0
+                ldy #0
                 sta (tmp3),y
 
                 ; Move path the count to the data bytes
