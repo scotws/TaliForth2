@@ -374,7 +374,7 @@ _not_zero:
 
                 ; Select the next history buffer
                 lda histinfo
-                inc
+                ina
                 ; Mask all the but the lowest three bits.
                 and #7
                 ; Set the most significant bit for detecting if
