@@ -380,7 +380,7 @@ _not_zero:
                 ; Set the most significant bit for detecting if
                 ; CTRL-n has been pressed the first time.  This
                 ; bit will be cleared on the first CTRL-n or
-                ; CTRL-p recieved and won't be used to calculate
+                ; CTRL-p received and won't be used to calculate
                 ; the history buffer offset.
                 ora #$80
                 sta histinfo
