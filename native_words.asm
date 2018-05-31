@@ -429,7 +429,7 @@ _eol:
                 stz 1,x         ; we only accept 256 chars
 
                 jsr xt_space    ; print final space
-                bra _done
+                jmp _done
 
 _bs:
                 cpy #0          ; buffer empty?
@@ -508,9 +508,23 @@ _recall_history:
                 
                 ; tmp3 now has the address of the previous history buffer.
                 ; First byte of buffer is length.
+
+                ; Clear the line by sending CR, Y spaces, then CR.
+                lda #AscCR
+                jsr emit_a
+input_clear:  
+                cpy #0
+                beq input_cleared
+                lda #AscSP
+                jsr emit_a
+                dey
+                bra input_clear
+input_cleared:  
+                lda #AscCR
+                jsr emit_a
                 
                 ; Save the history length byte into histinfo+1
-                ldy #0
+                ; ldy #0        ; Y is already 0 by clearing the line.
                 lda (tmp3),y
                 sta histinfo+1
 
