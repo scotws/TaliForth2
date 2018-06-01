@@ -154,15 +154,14 @@ xt_cold:
 
                 ; Initialize all of the history buffers by
                 ; putting a zero in each length byte.
-                lda #0
-                sta hist_buff
-                sta hist_buff+$80
-                sta hist_buff+$100
-                sta hist_buff+$180
-                sta hist_buff+$200
-                sta hist_buff+$280
-                sta hist_buff+$300
-                sta hist_buff+$380
+                stz hist_buff
+                stz hist_buff+$80
+                stz hist_buff+$100
+                stz hist_buff+$180
+                stz hist_buff+$200
+                stz hist_buff+$280
+                stz hist_buff+$300
+                stz hist_buff+$380
                 
                 ; fall through to ABORT
 
@@ -374,7 +373,7 @@ _not_zero:
 
                 ; Select the next history buffer
                 lda histinfo
-                ina
+                inc
                 ; Mask all the but the lowest three bits.
                 and #7
                 ; Set the most significant bit for detecting if
@@ -472,7 +471,7 @@ _ctrl_n:
                 bmi +
                 ; If this isn't the first time CTRL-n has been pressed,
                 ; select the next history buffer.
-                ina
+                inc
 *                
                 ; Mask all the but the lowest three bits.
                 and #7

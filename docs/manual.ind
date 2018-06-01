@@ -69,7 +69,7 @@
   \item dictionary, \hyperpage{15}, \hyperindexformat{\textbf}{21}
   \item \texttt{digit?}, \hyperpage{15}
   \item \texttt{does>}, \hyperindexformat{\textbf}{24}
-  \item double cell, \hyperpage{16}, \hyperpage{21}
+  \item double cell, \hyperpage{17}, \hyperpage{21}
   \item \texttt{drop}, \hyperpage{15}, \hyperpage{22}, \hyperpage{28}
   \item \texttt{dump}, \hyperpage{14}
 
@@ -95,7 +95,7 @@
 
   \indexspace
 
-  \item Gforth, \hyperpage{8}, \hyperpage{15, 16}
+  \item Gforth, \hyperpage{8}, \hyperpage{15}, \hyperpage{17}
   \item \texttt{git}, \hyperpage{13}
   \item GitHub, \hyperpage{13}, \hyperpage{17}, \hyperpage{36}
   \item Go, \hyperpage{33}
@@ -106,6 +106,7 @@
   \item Hayes, John, \hyperpage{37}
   \item header, \hyperpage{11}, \hyperindexformat{\textbf}{22}
     \subitem flags, \hyperpage{22}
+  \item history, command line, \hyperpage{15}
 
   \indexspace
 
@@ -126,8 +127,8 @@
 
   \indexspace
 
-  \item \texttt{latest}, \hyperpage{15}
-  \item \texttt{latestnt}, \hyperpage{15}
+  \item \texttt{latest}, \hyperpage{16}
+  \item \texttt{latestnt}, \hyperpage{16}
   \item Liara Forth, \hyperpage{20}, \hyperindexformat{\textbf}{36}
   \item Linux, \hyperpage{13}, \hyperpage{32}
   \item Lisp, \hyperpage{8}
@@ -146,7 +147,7 @@
   \item name token, \hyperpage{15, 16}, \hyperpage{22}
   \item NASA, \hyperpage{8}
   \item native compilation, \hyperpage{11}
-  \item native compiling, \hyperpage{15, 16}
+  \item native compiling, \hyperpage{16}
   \item native words, \hyperpage{10}, \hyperpage{15}, \hyperpage{22}
   \item \texttt{nc-limit}, \hyperpage{15, 16}, \hyperpage{29}
   \item \texttt{never-native}, \hyperpage{16}

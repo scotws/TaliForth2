@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.3.2)  20 MAY 2018 20:02
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.3.2)  1 JUN 2018 10:06
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -414,14 +414,14 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 
 ]
 LaTeX Font Info:    Try loading font information for T1+SourceCodePro-TLF on in
-put line 48.
+put line 49.
 
 (/usr/share/texlive/texmf-dist/tex/latex/sourcecodepro/T1SourceCodePro-TLF.fd
 File: T1SourceCodePro-TLF.fd 2015/01/11 (autoinst) Font definitions for T1/Sour
 ceCodePro-TLF.
 )
 LaTeX Font Info:    Font shape `T1/SourceCodePro-TLF/m/n' will be
-(Font)              scaled to size 10.0pt on input line 48.
+(Font)              scaled to size 10.0pt on input line 49.
 )
 \tf@toc=\write5
 \openout5 = `manual.toc'.
@@ -442,7 +442,7 @@ LaTeX Font Info:    Font shape `T1/SourceCodePro-TLF/m/n' will be
 
 ]
 Chapter 1.
-(./ch_why.tex <pics/W65c02.jpg, id=424, 301.125pt x 301.125pt>
+(./ch_why.tex <pics/W65c02.jpg, id=429, 301.125pt x 301.125pt>
 File: pics/W65c02.jpg Graphic file (type jpg)
 
 <use pics/W65c02.jpg>
@@ -472,15 +472,15 @@ Chapter 4.
 (./ch_running.tex [14
 
 ]
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 113.
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 121.
 
  (/usr/share/texlive/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 113.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 121.
 LaTeX Font Info:    Font shape `T1/SourceCodePro-TLF/b/n' will be
-(Font)              scaled to size 10.0pt on input line 113.
+(Font)              scaled to size 10.0pt on input line 121.
 [15] [16]) [17]
 Chapter 5.
 [18
@@ -589,14 +589,14 @@ Package atveryend Info: Empty hook `AfterLastShipout' on input line 136.
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 136.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 136.
 Package rerunfilecheck Info: File `manual.out' has not changed.
-(rerunfilecheck)             Checksum: C0DC958515E84EC19208EBBFBB52BFE4;4704.
+(rerunfilecheck)             Checksum: 074F93C7BDB768C14C70A43EBECF8CBA;4765.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 136.
  ) 
 Here is how much of TeX's memory you used:
- 8324 strings out of 494953
- 122807 string characters out of 6180978
+ 8326 strings out of 494953
+ 122841 string characters out of 6180978
  320700 words of memory out of 5000000
- 10955 multiletter control sequences out of 15000+600000
+ 10956 multiletter control sequences out of 15000+600000
  26350 words of font info for 55 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  44i,12n,43p,238b,1706s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -619,10 +619,10 @@ type1/adobe/sourcecodepro/SourceCodePro-Bold.pfb></usr/share/texlive/texmf-dist
 /fonts/type1/adobe/sourcecodepro/SourceCodePro-It.pfb></usr/share/texlive/texmf
 -dist/fonts/type1/adobe/sourcecodepro/SourceCodePro-Regular.pfb></usr/share/tex
 live/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
-Output written on manual.pdf (41 pages, 428770 bytes).
+Output written on manual.pdf (41 pages, 428440 bytes).
 PDF statistics:
- 2001 PDF objects out of 2073 (max. 8388607)
- 1333 compressed objects within 14 object streams
- 491 named destinations out of 1000 (max. 500000)
- 590 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 2005 PDF objects out of 2073 (max. 8388607)
+ 1338 compressed objects within 14 object streams
+ 492 named destinations out of 1000 (max. 500000)
+ 598 words of extra memory for PDF output out of 10000 (max. 10000000)
 

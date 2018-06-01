@@ -77,6 +77,7 @@
 \indexentry{see@\texttt{see}|hyperpage}{15}
 \indexentry{case!lower|hyperpage}{15}
 \indexentry{Goto, Kasumi|hyperpage}{15}
+\indexentry{history, command line|hyperpage}{15}
 \indexentry{Gforth|hyperpage}{15}
 \indexentry{bounds@\texttt{bounds}|hyperpage}{15}
 \indexentry{nc-limit@\texttt{nc-limit}|hyperpage}{15}
@@ -101,11 +102,11 @@
 \indexentry{int>name@\texttt{int>name}|hyperpage}{15}
 \indexentry{execution token|hyperpage}{15}
 \indexentry{name token|hyperpage}{15}
-\indexentry{latestnt@\texttt{latestnt}|hyperpage}{15}
-\indexentry{name token|hyperpage}{15}
-\indexentry{latest@\texttt{latest}|hyperpage}{15}
-\indexentry{nc-limit@\texttt{nc-limit}|hyperpage}{15}
-\indexentry{native compiling|hyperpage}{15}
+\indexentry{latestnt@\texttt{latestnt}|hyperpage}{16}
+\indexentry{name token|hyperpage}{16}
+\indexentry{latest@\texttt{latest}|hyperpage}{16}
+\indexentry{nc-limit@\texttt{nc-limit}|hyperpage}{16}
+\indexentry{native compiling|hyperpage}{16}
 \indexentry{never-native@\texttt{never-native}|hyperpage}{16}
 \indexentry{number@\texttt{number}|hyperpage}{16}
 \indexentry{s>number?@\texttt{s>number?}|hyperpage}{16}
@@ -124,8 +125,8 @@
 \indexentry{uf-strip@\texttt{uf-strip}|hyperpage}{16}
 \indexentry{true@\texttt{true}|hyperpage}{16}
 \indexentry{cold@\texttt{cold}|hyperpage}{16}
-\indexentry{Gforth|hyperpage}{16}
-\indexentry{double cell|hyperpage}{16}
+\indexentry{Gforth|hyperpage}{17}
+\indexentry{double cell|hyperpage}{17}
 \indexentry{feedback|hyperindexformat{\textbf}}{17}
 \indexentry{bugs|hyperpage}{17}
 \indexentry{GitHub|hyperpage}{17}

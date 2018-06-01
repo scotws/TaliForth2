@@ -24,12 +24,13 @@
 \contentsline {chapter}{\numberline {4}Running}{14}{chapter.4}
 \contentsline {section}{\numberline {4.1}Booting}{14}{section.4.1}
 \contentsline {section}{\numberline {4.2}Available words}{14}{section.4.2}
-\contentsline {subsection}{\numberline {4.2.1}Standards}{15}{subsection.4.2.1}
-\contentsline {subsection}{\numberline {4.2.2}Tali Forth special words}{15}{subsection.4.2.2}
+\contentsline {subsection}{\numberline {4.2.1}History}{15}{subsection.4.2.1}
+\contentsline {subsection}{\numberline {4.2.2}Standards}{15}{subsection.4.2.2}
+\contentsline {subsection}{\numberline {4.2.3}Tali Forth special words}{15}{subsection.4.2.3}
 \contentsline {section}{\numberline {4.3}Native compiling}{16}{section.4.3}
 \contentsline {section}{\numberline {4.4}Underflow detection}{16}{section.4.4}
 \contentsline {section}{\numberline {4.5}Restarting}{16}{section.4.5}
-\contentsline {section}{\numberline {4.6}Gotchas}{16}{section.4.6}
+\contentsline {section}{\numberline {4.6}Gotchas}{17}{section.4.6}
 \contentsline {section}{\numberline {4.7}Reporting a problem}{17}{section.4.7}
 \contentsline {chapter}{\numberline {5}The Editor}{18}{chapter.5}
 \contentsline {part}{III\hspace {1em}Developer Guide}{19}{part.3}
