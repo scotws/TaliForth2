@@ -5,6 +5,7 @@
 \ Modified by SamCo 2018-05 for testing Tali Forth 2.  ok
 \ The main change is lowercasing all of the words as Tali  ok
 \ is case sensitive, as well as replacing tabs with spaces.  ok
+\ A word to display the actual (erroneous) results was also added.  ok
   ok
 \ (C) 1995 JOHNS HOPKINS UNIVERSITY / APPLIED PHYSICS LABORATORY  ok
 \ MAY BE DISTRIBUTED FREELY AS LONG AS THIS COPYRIGHT NOTICE REMAINS.  ok
@@ -16,17 +17,29 @@ hex  ok
 variable verbose  ok
    false verbose !  ok
   ok
+variable actual-depth   \ STACK RECORD  ok
+create actual-results 20 cells allot  ok
+  ok
 : empty-stack \ ( ... -- ) EMPTY STACK: HANDLES UNDERFLOWED STACK TOO.  compiled
    depth ?dup if dup 0< if negate 0 do 0 loop else 0 do drop loop then then ;  ok
+  ok
+\ Added by SamCo 2018-05 to show actual results of previous test.  ok
+: show-results \ ( -- ) Print the previous test's actual results.  compiled
+   s"  ACTUAL RESULT: { " type  compiled
+   actual-depth @ 0 ?do  compiled
+      actual-results   compiled
+      actual-depth @ i - 1- \ Print them in reverse order to match test.               compiled
+      cells + @ .  compiled
+   loop  compiled
+   s" }" type ;  ok
   ok
 : error  \ ( C-ADDR U -- ) DISPLAY AN ERROR MESSAGE FOLLOWED BY  compiled
   \ THE LINE THAT HAD THE ERROR.  compiled
    type source type \ CR   \ DISPLAY LINE CORRESPONDING TO ERROR  compiled
    empty-stack    \ THROW AWAY EVERY THING ELSE  compiled
+   show-results \ Added by SamCo to show what actually happened.  compiled
 ;  ok
   ok
-variable actual-depth   \ STACK RECORD  ok
-create actual-results 20 cells allot  ok
   ok
 : {  \ ( -- ) SYNTACTIC SUGAR.  compiled
    ;  ok
@@ -820,7 +833,7 @@ testing defining words: : ; constant variable create does> >body  ok
   ok
 { : weird: create does> 1 + does> 2 + ; -> }  ok
 { weird: w1 -> }  ok
-{ ' w1 >body -> here } INCORRECT RESULT: { ' w1 >body -> here } ok
+{ ' w1 >body -> here } INCORRECT RESULT: { ' w1 >body -> here } ACTUAL RESULT: { 3078 } ok
 { w1 -> here 1 + }  ok
 { w1 -> here 2 + }  ok
   ok
@@ -832,15 +845,15 @@ testing evaluate  ok
 : ge3 s" : ge4 345 ;" ;  ok
 : ge5 evaluate ; immediate  ok
   ok
-{ ge1 evaluate -> 123 }   ( test evaluate in interp. state ) INCORRECT RESULT: { ge1 evaluate -> 123 }   ( test evaluate in interp. state ) ok
-{ ge2 evaluate -> 124 } INCORRECT RESULT: { ge2 evaluate -> 124 } ok
-{ ge3 evaluate -> } Parsing failure
-{ ge4 -> 345 } >ge4< Undefined word
+{ ge1 evaluate -> 123 }   ( test evaluate in interp. state ) INCORRECT RESULT: { ge1 evaluate -> 123 }   ( test evaluate in interp. state ) ACTUAL RESULT: { 3089 } ok
+{ ge2 evaluate -> 124 } INCORRECT RESULT: { ge2 evaluate -> 124 } ACTUAL RESULT: { 30A2 } ok
+{ ge3 evaluate -> }  ok
+{ ge4 -> 345 }  ok
   ok
-{ : ge6 ge1 ge5 ; -> }   ( test evaluate in compile state ) >ge1< Undefined word
-{ ge6 -> 123 } >ge6< Undefined word
-{ : ge7 ge2 ge5 ; -> } >ge2< Undefined word
-{ ge7 -> 124 } >ge7< Undefined word
+{ : ge6 ge1 ge5 ; -> }   ( test evaluate in compile state )  ok
+{ ge6 -> 123 }  ok
+{ : ge7 ge2 ge5 ; -> }  ok
+{ ge7 -> 124 }  ok
   ok
 \ ------------------------------------------------------------------------  ok
 testing source >in word  ok
@@ -857,7 +870,7 @@ variable scans  ok
 -> 345 345 }  ok
   ok
 : gs2  5 scans ! s" 123 rescan?" evaluate ;  ok
-{ gs2 -> 123 123 123 123 123 } INCORRECT RESULT: { gs2 -> 123 123 123 123 123 } ok
+{ gs2 -> 123 123 123 123 123 } INCORRECT RESULT: { gs2 -> 123 123 123 123 123 } ACTUAL RESULT: { 3456 B 123 123 123 } ok
   ok
 : gs3 word count swap c@ ;  ok
 { bl gs3 hello -> 5 char h }  ok
@@ -886,7 +899,7 @@ testing <# # #s #> hold sign base >number hex decimal  ok
    then ;  ok
   ok
 : gp1  <# 41 hold 42 hold 0 0 #> s" ba" s= ;  ok
-{ gp1 -> <true> } INCORRECT RESULT: { gp1 -> <true> } ok
+{ gp1 -> <true> } INCORRECT RESULT: { gp1 -> <true> } ACTUAL RESULT: { 0 } ok
   ok
 : gp2  <# -1 sign 0 sign -1 sign 0 0 #> s" --" s= ;  ok
 { gp2 -> <true> }  ok
@@ -935,7 +948,7 @@ count-bits 2* constant #bits-ud  \ number of bits in ud  ok
    loop  compiled
    r> base ! ;  ok
   ok
-{ gp7 -> <true> } INCORRECT RESULT: { gp7 -> <true> } ok
+{ gp7 -> <true> } INCORRECT RESULT: { gp7 -> <true> } ACTUAL RESULT: { 0 } ok
   ok
 \ >number tests  ok
 create gn-buf 0 c,  ok
@@ -970,7 +983,7 @@ create gn-buf 0 c,  ok
 { max-uint dup 2 gn1 -> max-uint dup 0 }  ok
 { 0 0 max-base gn1 -> 0 0 0 }  ok
 { max-uint 0 max-base gn1 -> max-uint 0 0 }  ok
-{ max-uint dup max-base gn1 -> max-uint dup 0 } INCORRECT RESULT: { max-uint dup max-base gn1 -> max-uint dup 0 } ok
+{ max-uint dup max-base gn1 -> max-uint dup 0 } INCORRECT RESULT: { max-uint dup max-base gn1 -> max-uint dup 0 } ACTUAL RESULT: { 1 0 6 } ok
   ok
 : gn2 \ ( -- 16 10 )  compiled
    base @ >r  hex base @  decimal base @  r> base ! ;  ok
@@ -1005,10 +1018,10 @@ create sbuf 12 c, 34 c, 56 c,  ok
 { seebuf -> 12 34 56 }  ok
   ok
 { fbuf fbuf char+ 2 chars move -> }  ok
-{ seebuf -> 12 12 34 } INCORRECT RESULT: { seebuf -> 12 12 34 } ok
+{ seebuf -> 12 12 34 } INCORRECT RESULT: { seebuf -> 12 12 34 } ACTUAL RESULT: { 12 12 12 } ok
   ok
 { fbuf char+ fbuf 2 chars move -> }  ok
-{ seebuf -> 12 34 34 } INCORRECT RESULT: { seebuf -> 12 34 34 } ok
+{ seebuf -> 12 34 34 } INCORRECT RESULT: { seebuf -> 12 34 34 } ACTUAL RESULT: { 12 12 12 } ok
   ok
 \ ------------------------------------------------------------------------  ok
 testing output: . ." cr emit space spaces type u.  ok
@@ -1033,27 +1046,27 @@ testing output: . ." cr emit space spaces type u.  ok
    ." unsigned: " 0 u. max-uint u. cr  compiled
 ;  ok
   ok
-{ output-test -> }  ok
+{ output-test -> } you should see the standard graphic characters:
+ !"#$%&'()*+,-./0123456789:;<=>?@
+ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`
+abcdefghijklmnopqrstuvwxyz{|}~
+you should see 0-9 separated by a space:
+0 1 2 3 
+4 5 6 7 8 9 
+you should see 0-9 (with no spaces):
+0123456789
+you should see a-g separated by a space:
+a b c d e f g 
+
+Stack underflow
   ok
 \ ------------------------------------------------------------------------  ok
 testing input: accept  ok
   ok
-create abuf 80 chars allot  ok
+create abuf 80 chars allot 
+ ok
   ok
 : accept-test  compiled
-   cr ." please type up to 80 characters:" cr  compiled
-   abuf 80 accept  compiled
-   cr ." received: " [char] " emit  compiled
-   abuf swap type [char] " emit cr  compiled
-;  ok
-  ok
-{ accept-test -> } 
-please type up to 80 characters:
- 
-received: ""
- ok
-\ ------------------------------------------------------------------------  ok
-testing dictionary search rules  ok
-  ok
-{ : gdx   123 ; : gdx   gdx 234 ; -> } 
- ok
+   cr ." please type up to 80 characters:" cr   compiled
+   abuf 80 accept   compiled
+   cr ." received: " [char] " emit    compiled

@@ -1,7 +1,7 @@
 ; Definitions for Tali Forth 2
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 01. Apr 2016 (Liara Forth)
-; This version: 28. May 2018
+; This version: 01. Jun 2018
 
 ; This file is included by taliforth.asm
 
@@ -50,11 +50,11 @@
 ;           |                   |
 ;           |                   |
 ;           |                   |
-;    $7C00  +-------------------+  hist_buff
+;    $7C00  +-------------------+  hist_buff, cp_end
 ;           |   Input History   |
 ;           |    for accept     |
-;           |  8 128B buffers   |
-;    $7fff  +-------------------+  ram_end, code0-1
+;           |  8x128B buffers   |
+;    $7fff  +-------------------+  ram_end
 
 
 ; HARD PHYSICAL ADDRESSES
@@ -82,7 +82,7 @@
 .alias bsize     $ff            ; size of input/output buffers
 .alias buffer0   stack0+$100    ; input buffer ($0200-$027f)
 .alias cp0       buffer0+bsize  ; Dictionary starts after last buffer
-.alias cp_end    code0-1        ; Last RAM byte available
+.alias cp_end    hist_buff-1    ; Last RAM byte available for code
 .alias padoffset $ff            ; offset from CP to PAD (holds number strings)
 
 

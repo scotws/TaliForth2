@@ -1,7 +1,7 @@
 TODO/CHANGES for Tali Forth 2 
 Scot W. Stevenson <scot.stevenson@gmail.com>
 First version: 19. Jan 2014
-This version: 18. May 2018
+This version: 01. Jun 2018
 
 (Note: Parts of the list have been moved to the GitHub website)
 
@@ -29,7 +29,6 @@ TODO AT SOME POINT
         - Check where all "STY 0,X" can be used to good effect
         - Check where all "cmpl_a" can be used to good effect
         - Consider switching 0BRANCH/BRANCH to CS-PICK/CS-ROLL
-        - Add history function, at least one line, best with CTRL-p (hex $10?)
         - Add handling for multi-byte keyboard input (if possible with py65)
         - See if we can add real Delete Key detection (ESC[3~)
         - Add real USER variables
@@ -46,6 +45,7 @@ TODO AT SOME POINT
 -----------------------------------------------------------------------
 ALREADY DONE MAJOR CHANGES (LAST ON TOP WITH DATE)
 
+        - 01. Jun 2018 - Added history function
         - 17. May 2018 - Added testing suite
         - 01. May 2018 - Added Makefile; added disassembler
         - 16. Apr 2018 - Added tool to generate docs/WORDLIST.md
