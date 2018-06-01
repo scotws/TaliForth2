@@ -7,12 +7,12 @@ RTS instruction at the end of each word.
 
 | NAME | FORTH WORD | SOURCE | BYTES | STATUS |
 | :--- | :--------- | :---   | ----: | :----  |
-| COLD | `cold` | Tali Forth | 206 | **tested** |
+| COLD | `cold` | Tali Forth | 232 | **tested** |
 | ABORT | `abort` | ANSI core | 72 | coded |
 | QUIT | `quit` | ANSI core | 70 | coded |
 | ABORT_QUOTE | `abort"` | ANSI core | 10 | **tested** |
 | ABS | `abs` | ANSI core | 24 | **tested** |
-| ACCEPT | `accept` | ANSI core | 105 | **tested** |
+| ACCEPT | `accept` | ANSI core | 296 | coded |
 | AGAIN | `again` | ANSI core ext | 36 | **tested** |
 | ALIGN | `align` | ANSI core | 0 | **tested** |
 | ALLOT | `allot` | ANSI core | 63 | **tested** |
@@ -198,5 +198,5 @@ RTS instruction at the end of each word.
 | ZERO_UNEQUAL | `0<>` | ANSI core ext | 21 | **tested** |
 
 Found **189** native words in `native_words.asm`.
-Of those, **27** are not marked as "tested".
+Of those, **28** are not marked as "tested".
 
