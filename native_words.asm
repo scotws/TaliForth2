@@ -2356,10 +2356,11 @@ question_do_runtime:
 
                 ; Second, abort the whole loop. We don't have the 
                 ; limit/start parameters on the Return Stack yet, just the 
-                ; address that points to the end of the loop. Dump the 
-                ; RTS of ?DO and then just RTS ourselves
-                pla
-                pla
+                ; address that points to the end of the loop.
+                ; Return there to abort the loop.
+        
+                ; pla ; Bugfix for issue #38 where code after ?do loop
+                ; pla ; is skipped if ?do has equal start/end
                 rts
 _do_do:         
                 inx             ; clear flag from EQUAL off stack
