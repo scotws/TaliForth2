@@ -1051,8 +1051,7 @@ testing output: . ." cr emit space spaces type u.  ok
 ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`
 abcdefghijklmnopqrstuvwxyz{|}~
 you should see 0-9 separated by a space:
-0 1 2 3 
-4 5 6 7 8 9 
+0 1 2 3 4 5 6 7 8 9 
 you should see 0-9 (with no spaces):
 0123456789
 you should see a-g separated by a space:
@@ -1063,10 +1062,11 @@ Stack underflow
 \ ------------------------------------------------------------------------  ok
 testing input: accept  ok
   ok
-create abuf 80 chars allot  ok
+create abuf 80 chars allot 
+ ok
   ok
 : accept-test  compiled
-   cr ." please type up to 80 characters:" cr    compiled
-  abuf 80 accept  compiled
+   cr ." please type up to 80 characters:" cr   compiled
+   abuf 80 accept   compiled
    cr ." received: " [char] " emit   compiled
-   abuf swap type [char] " emit cr ;
+   abuf swap type [char] " emit cr ; compiled
