@@ -98,7 +98,7 @@ testing 2* 2/ lshift rshift
 { msb 1 rshift 2* -> msb }
 
 \ ------------------------------------------------------------------------
-testing comparisons: 0= = 0< < > u< min max
+testing comparisons: 0= = <> 0< < > u< min max
 0 invert   constant max-uint
 0 invert 1 rshift  constant max-int
 0 invert 1 rshift invert constant min-int
@@ -123,6 +123,14 @@ testing comparisons: 0= = 0< < > u< min max
 { -1 0 = -> <false> }
 { 0 1 = -> <false> }
 { 0 -1 = -> <false> }
+
+{ 0 0 <> -> <false> }
+{ 1 1 <> -> <false> }
+{ -1 -1 <> -> <false> }
+{ 1 0 <> -> <true> }
+{ -1 0 <> -> <true> }
+{ 0 1 <> -> <true> }
+{ 0 -1 <> -> <true> }
 
 { 0 0< -> <false> }
 { -1 0< -> <true> }
@@ -738,7 +746,7 @@ testing do loop +loop i j unloop leave exit
 { 3 gd6 -> 4 1 2 }
 
 \ ------------------------------------------------------------------------
-testing defining words: : ; constant variable create does> >body
+testing defining words: : ; constant variable 2variable create does> >body
 
 { 123 constant x123 -> }
 { x123 -> 123 }
@@ -749,6 +757,19 @@ testing defining words: : ; constant variable create does> >body
 { variable v1 -> }
 { 123 v1 ! -> }
 { v1 @ -> 123 }
+
+{ 2variable 2v1 -> }
+{ 0. 2v1 2! -> } 
+{ 2v1 2@ -> 0. } 
+{ -1 -2 2v1 2! -> } 
+{ 2v1 2@ -> -1 -2 }
+{ : cd2 2variable ; -> } 
+{ cd2 2v2 -> } 
+{ : cd3 2v2 2! ; -> } 
+{ -2 -1 cd3 -> } 
+{ 2v2 2@ -> -2 -1 }
+\ { 2variable 2v3 immediate 5 6 2v3 2! -> }  TODO this crashes
+{ 2v3 2@ -> 5 6 }
 
 { : nop : postpone ; ; -> }
 { nop nop1 nop nop2 -> }

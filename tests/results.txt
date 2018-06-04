@@ -169,7 +169,7 @@ testing 2* 2/ lshift rshift  ok
 { msb 1 rshift 2* -> msb }  ok
   ok
 \ ------------------------------------------------------------------------  ok
-testing comparisons: 0= = 0< < > u< min max  ok
+testing comparisons: 0= = <> 0< < > u< min max  ok
 0 invert   constant max-uint  ok
 0 invert 1 rshift  constant max-int  ok
 0 invert 1 rshift invert constant min-int  ok
@@ -194,6 +194,14 @@ testing comparisons: 0= = 0< < > u< min max  ok
 { -1 0 = -> <false> }  ok
 { 0 1 = -> <false> }  ok
 { 0 -1 = -> <false> }  ok
+  ok
+{ 0 0 <> -> <false> }  ok
+{ 1 1 <> -> <false> }  ok
+{ -1 -1 <> -> <false> }  ok
+{ 1 0 <> -> <true> }  ok
+{ -1 0 <> -> <true> }  ok
+{ 0 1 <> -> <true> }  ok
+{ 0 -1 <> -> <true> }  ok
   ok
 { 0 0< -> <false> }  ok
 { -1 0< -> <true> }  ok
@@ -809,7 +817,7 @@ testing do loop +loop i j unloop leave exit  ok
 { 3 gd6 -> 4 1 2 }  ok
   ok
 \ ------------------------------------------------------------------------  ok
-testing defining words: : ; constant variable create does> >body  ok
+testing defining words: : ; constant variable 2variable create does> >body  ok
   ok
 { 123 constant x123 -> }  ok
 { x123 -> 123 }  ok
@@ -820,6 +828,19 @@ testing defining words: : ; constant variable create does> >body  ok
 { variable v1 -> }  ok
 { 123 v1 ! -> }  ok
 { v1 @ -> 123 }  ok
+  ok
+{ 2variable 2v1 -> }  ok
+{ 0. 2v1 2! -> }   ok
+{ 2v1 2@ -> 0. }   ok
+{ -1 -2 2v1 2! -> }   ok
+{ 2v1 2@ -> -1 -2 }  ok
+{ : cd2 2variable ; -> }   ok
+{ cd2 2v2 -> }   ok
+{ : cd3 2v2 2! ; -> }   ok
+{ -2 -1 cd3 -> }   ok
+{ 2v2 2@ -> -2 -1 }  ok
+\ { 2variable 2v3 immediate 5 6 2v3 2! -> }   ok
+{ 2v3 2@ -> 5 6 } >v3< Undefined word
   ok
 { : nop : postpone ; ; -> }  ok
 { nop nop1 nop nop2 -> }  ok
@@ -840,7 +861,7 @@ testing defining words: : ; constant variable create does> >body  ok
   ok
 { : weird: create does> 1 + does> 2 + ; -> }  ok
 { weird: w1 -> }  ok
-{ ' w1 >body -> here } INCORRECT RESULT: { ' w1 >body -> here } ACTUAL RESULT: { 3076 } ok
+{ ' w1 >body -> here } INCORRECT RESULT: { ' w1 >body -> here } ACTUAL RESULT: { 30D9 } ok
 { w1 -> here 1 + }  ok
 { w1 -> here 2 + }  ok
   ok
@@ -878,7 +899,6 @@ variable scans  ok
   ok
 : gs2  5 scans ! s" 123 rescan?" evaluate ;  ok
 { gs2 -> 123 123 123 123 123 }  ok
-  ok
 : gs3 word count swap c@ ;  ok
 { bl gs3 hello -> 5 char h }  ok
 { char " gs3 goodbye" -> 7 char g }  ok
@@ -1064,16 +1084,16 @@ you should see 0-9 (with no spaces):
 0123456789
 you should see a-g separated by a space:
 a b c d e f g 
-
-Stack underflow
-  ok
-\ ------------------------------------------------------------------------  ok
-testing input: accept  ok
-  ok
-create abuf 80 chars allot 
+you should see 0-5 separated by two spaces:
+0  1  2  3  4  5  
+you should see two \separate lines:
+line 1
+line 2
+you should see the number ranges of signed and unsigned numbers:
+  signed: -8000 7FFF 
+unsigned:  0 FFFF 
  ok
   ok
-: accept-test  compiled
-   cr ." please type up to 80 characters:" cr   compiled
-   abuf 80 accept   compiled
-   cr ." received: " [char] " emit    compiled
+\ ----------------------------------------------------------------------  ok
+testing input: accept  ok
+  ok

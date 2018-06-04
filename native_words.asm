@@ -2150,7 +2150,7 @@ z_disasm:       rts
 
 
 ; ## DNEGATE ( d -- d ) "Negate double cell number"
-; ## "dnegate"  coded  ANSI double
+; ## "dnegate"  tested  ANSI double
 xt_dnegate:     
                 cpx #dsp0-3
                 bmi +
@@ -4370,7 +4370,7 @@ z_not_equals:   rts
 
 
 ; ## NOT_ROTE ( a b c -- c a b ) "Rotate upwards"
-; ## "-rot"  coded  Gforth
+; ## "-rot"  tested  Gforth
 .scope
 xt_not_rote:    
                 cpx #dsp0-5
