@@ -312,7 +312,7 @@ testing >r r> r@  ok
 { 1s gr1 -> 1s }   ( return stack holds cells )  ok
   ok
 \ ------------------------------------------------------------------------  ok
-testing add/subtract: + - 1+ 1- abs negate  ok
+testing add/subtract: + - 1+ 1- abs negate dnegate  ok
   ok
 { 0 5 + -> 5 }  ok
 { 5 0 + -> 5 }  ok
@@ -351,6 +351,12 @@ testing add/subtract: + - 1+ 1- abs negate  ok
 { -1 negate -> 1 }  ok
 { 2 negate -> -2 }  ok
 { -2 negate -> 2 }  ok
+  ok
+{ 0. dnegate -> 0. }  ok
+{ 1. dnegate -> -1. }  ok
+{ -1. dnegate -> 1. }  ok
+\ { max-2int dnegate -> min-2int swap 1+ swap } ( Not working yet )  ok
+\ { min-2int SWAP 1+ SWAP DNEGATE -> max-2int } ( Not working yet )   ok
   ok
 { 0 abs -> 0 }  ok
 { 1 abs -> 1 }  ok
