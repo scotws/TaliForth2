@@ -364,8 +364,8 @@ testing add/subtract: + - 1+ 1- abs negate dnegate  ok
 { 0. dnegate -> 0. }  ok
 { 1. dnegate -> -1. }  ok
 { -1. dnegate -> 1. }  ok
-\ { max-2int dnegate -> min-2int swap 1+ swap } ( Not working yet )  ok
-\ { min-2int SWAP 1+ SWAP DNEGATE -> max-2int } ( Not working yet )   ok
+\ { max-2int dnegate -> min-2int swap 1+ swap } ( TODO Not working yet )  ok
+\ { min-2int swap 1+ swap dnegate -> max-2int } ( TODO Not working yet )   ok
   ok
 { 0 abs -> 0 }  ok
 { 1 abs -> 1 }  ok
@@ -781,7 +781,7 @@ testing if else then begin while repeat until recurse  ok
 { 4 gi6 -> 0 1 2 3 4 }  ok
   ok
 \ ------------------------------------------------------------------------  ok
-testing do loop +loop i j unloop leave exit  ok
+testing do loop +loop i j unloop leave exit ?do  ok
   ok
 { : gd1 do i loop ; -> }  ok
 { 4 1 gd1 -> 1 2 3 }  ok
@@ -816,6 +816,65 @@ testing do loop +loop i j unloop leave exit  ok
 { 2 gd6 -> 3 }  ok
 { 3 gd6 -> 4 1 2 }  ok
   ok
+: qd ?do i loop ;   ok
+{   789   789 qd -> }   ok
+{ -9876 -9876 qd -> }   ok
+{     5     0 qd -> 0 1 2 3 4 }  ok
+  ok
+: qd1 ?do i 10 +loop ;   ok
+{ 50 1 qd1 -> 1 11 21 31 41 }   ok
+{ 50 0 qd1 -> 0 10 20 30 40 }  ok
+  ok
+: qd2 ?do i 3 > if leave else i then loop ;   ok
+{ 5 -1 qd2 -> -1 0 1 2 3 }  ok
+  ok
+: qd3 ?do i 1 +loop ;   ok
+{ 4  4 qd3 -> }   ok
+{ 4  1 qd3 ->  1 2 3 }  ok
+{ 2 -1 qd3 -> -1 0 1 }  ok
+  ok
+: qd4 ?do i -1 +loop ;   ok
+{  4 4 qd4 -> }  ok
+{  1 4 qd4 -> 4 3 2  1 }   ok
+{ -1 2 qd4 -> 2 1 0 -1 }  ok
+  ok
+: qd5 ?do i -10 +loop ;   ok
+{   1 50 qd5 -> 50 40 30 20 10   }   ok
+{   0 50 qd5 -> 50 40 30 20 10 0 }   ok
+{ -25 10 qd5 -> 10 0 -10 -20     }  ok
+  ok
+variable qditerations   ok
+variable qdincrement  ok
+  ok
+: qd6 ( limit start increment -- )    qdincrement !   compiled
+   0 qditerations !   compiled
+   ?do   compiled
+     1 qditerations +!   compiled
+     i   compiled
+     qditerations @ 6 = if leave then   compiled
+     qdincrement @   compiled
+   +loop qditerations @   compiled
+;  ok
+  ok
+{  4  4 -1 qd6 ->                   0  }   ok
+{  1  4 -1 qd6 ->  4  3  2  1       4  }   ok
+{  4  1 -1 qd6 ->  1  0 -1 -2 -3 -4 6  }   ok
+{  4  1  0 qd6 ->  1  1  1  1  1  1 6  }   ok
+{  0  0  0 qd6 ->                   0  }   ok
+{  1  4  0 qd6 ->  4  4  4  4  4  4 6  }   ok
+{  1  4  1 qd6 ->  4  5  6  7  8  9 6  }   ok
+{  4  1  1 qd6 ->  1  2  3          3  }   ok
+{  4  4  1 qd6 ->                   0  }   ok
+{  2 -1 -1 qd6 -> -1 -2 -3 -4 -5 -6 6  }   ok
+{ -1  2 -1 qd6 ->  2  1  0 -1       4  }   ok
+{  2 -1  0 qd6 -> -1 -1 -1 -1 -1 -1 6  }   ok
+{ -1  2  0 qd6 ->  2  2  2  2  2  2 6  }   ok
+{ -1  2  1 qd6 ->  2  3  4  5  6  7 6  }   ok
+{  2 -1  1 qd6 -> -1  0  1          3  }  ok
+  ok
+  ok
+  ok
+  ok
 \ ------------------------------------------------------------------------  ok
 testing defining words: : ; constant variable 2variable create does> >body  ok
   ok
@@ -839,8 +898,8 @@ testing defining words: : ; constant variable 2variable create does> >body  ok
 { : cd3 2v2 2! ; -> }   ok
 { -2 -1 cd3 -> }   ok
 { 2v2 2@ -> -2 -1 }  ok
-\ { 2variable 2v3 immediate 5 6 2v3 2! -> }   ok
-{ 2v3 2@ -> 5 6 } >v3< Undefined word
+\ { 2variable 2v3 immediate 5 6 2v3 2! -> }  TODO this crashes  ok
+\ { 2v3 2@ -> 5 6 }  ok
   ok
 { : nop : postpone ; ; -> }  ok
 { nop nop1 nop nop2 -> }  ok
@@ -861,7 +920,7 @@ testing defining words: : ; constant variable 2variable create does> >body  ok
   ok
 { : weird: create does> 1 + does> 2 + ; -> }  ok
 { weird: w1 -> }  ok
-{ ' w1 >body -> here } INCORRECT RESULT: { ' w1 >body -> here } ACTUAL RESULT: { 30D9 } ok
+{ ' w1 >body -> here } INCORRECT RESULT: { ' w1 >body -> here } ACTUAL RESULT: { 37B4 } ok
 { w1 -> here 1 + }  ok
 { w1 -> here 2 + }  ok
   ok

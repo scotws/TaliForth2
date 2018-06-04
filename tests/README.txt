@@ -14,4 +14,4 @@ Note that this is not a generic test for ANSI Forth, but rather includes
 special tests for words that are specific to Tali Forth 2. If you use this code
 for your own project, you'll have to adapt it accordingly. The "official" Forth
 tests, on which some of this code is based, can be found at
-https://forth-standard.org/
+https://forth-standard.org/standard/testsuite

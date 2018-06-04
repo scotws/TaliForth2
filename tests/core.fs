@@ -293,8 +293,8 @@ testing add/subtract: + - 1+ 1- abs negate dnegate
 { 0. dnegate -> 0. }
 { 1. dnegate -> -1. }
 { -1. dnegate -> 1. }
-\ { max-2int dnegate -> min-2int swap 1+ swap } ( Not working yet )
-\ { min-2int SWAP 1+ SWAP DNEGATE -> max-2int } ( Not working yet ) 
+\ { max-2int dnegate -> min-2int swap 1+ swap } ( TODO Not working yet )
+\ { min-2int swap 1+ swap dnegate -> max-2int } ( TODO Not working yet ) 
 
 { 0 abs -> 0 }
 { 1 abs -> 1 }
@@ -710,7 +710,7 @@ testing if else then begin while repeat until recurse
 { 4 gi6 -> 0 1 2 3 4 }
 
 \ ------------------------------------------------------------------------
-testing do loop +loop i j unloop leave exit
+testing do loop +loop i j unloop leave exit ?do
 
 { : gd1 do i loop ; -> }
 { 4 1 gd1 -> 1 2 3 }
@@ -745,6 +745,62 @@ testing do loop +loop i j unloop leave exit
 { 2 gd6 -> 3 }
 { 3 gd6 -> 4 1 2 }
 
+: qd ?do i loop ; 
+{   789   789 qd -> } 
+{ -9876 -9876 qd -> } 
+{     5     0 qd -> 0 1 2 3 4 }
+
+: qd1 ?do i 10 +loop ; 
+{ 50 1 qd1 -> 1 11 21 31 41 } 
+{ 50 0 qd1 -> 0 10 20 30 40 }
+
+: qd2 ?do i 3 > if leave else i then loop ; 
+{ 5 -1 qd2 -> -1 0 1 2 3 }
+
+: qd3 ?do i 1 +loop ; 
+{ 4  4 qd3 -> } 
+{ 4  1 qd3 ->  1 2 3 }
+{ 2 -1 qd3 -> -1 0 1 }
+
+: qd4 ?do i -1 +loop ; 
+{  4 4 qd4 -> }
+{  1 4 qd4 -> 4 3 2  1 } 
+{ -1 2 qd4 -> 2 1 0 -1 }
+
+: qd5 ?do i -10 +loop ; 
+{   1 50 qd5 -> 50 40 30 20 10   } 
+{   0 50 qd5 -> 50 40 30 20 10 0 } 
+{ -25 10 qd5 -> 10 0 -10 -20     }
+
+variable qditerations 
+variable qdincrement
+
+: qd6 ( limit start increment -- )    qdincrement ! 
+   0 qditerations ! 
+   ?do 
+     1 qditerations +! 
+     i 
+     qditerations @ 6 = if leave then 
+     qdincrement @ 
+   +loop qditerations @ 
+;
+
+{  4  4 -1 qd6 ->                   0  } 
+{  1  4 -1 qd6 ->  4  3  2  1       4  } 
+{  4  1 -1 qd6 ->  1  0 -1 -2 -3 -4 6  } 
+{  4  1  0 qd6 ->  1  1  1  1  1  1 6  } 
+{  0  0  0 qd6 ->                   0  } 
+{  1  4  0 qd6 ->  4  4  4  4  4  4 6  } 
+{  1  4  1 qd6 ->  4  5  6  7  8  9 6  } 
+{  4  1  1 qd6 ->  1  2  3          3  } 
+{  4  4  1 qd6 ->                   0  } 
+{  2 -1 -1 qd6 -> -1 -2 -3 -4 -5 -6 6  } 
+{ -1  2 -1 qd6 ->  2  1  0 -1       4  } 
+{  2 -1  0 qd6 -> -1 -1 -1 -1 -1 -1 6  } 
+{ -1  2  0 qd6 ->  2  2  2  2  2  2 6  } 
+{ -1  2  1 qd6 ->  2  3  4  5  6  7 6  } 
+{  2 -1  1 qd6 -> -1  0  1          3  }
+
 \ ------------------------------------------------------------------------
 testing defining words: : ; constant variable 2variable create does> >body
 
@@ -769,7 +825,7 @@ testing defining words: : ; constant variable 2variable create does> >body
 { -2 -1 cd3 -> } 
 { 2v2 2@ -> -2 -1 }
 \ { 2variable 2v3 immediate 5 6 2v3 2! -> }  TODO this crashes
-{ 2v3 2@ -> 5 6 }
+\ { 2v3 2@ -> 5 6 }
 
 { : nop : postpone ; ; -> }
 { nop nop1 nop nop2 -> }
