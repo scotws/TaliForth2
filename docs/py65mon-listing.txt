@@ -1358,7 +1358,7 @@
  89F6  4C 77 B5  JMP  $B577
  89F9  B5 00     LDA  $00, X
  89FB  15 01     ORA  $01, X
- 89FD  F0 4D     BEQ  $8A4C
+ 89FD  F0 51     BEQ  $8A50
  89FF  A5 0D     LDA  $0D
  8A01  48        PHA  
  8A02  A5 0C     LDA  $0C
@@ -1388,27 +1388,27 @@
  8A2B  85 08     STA  $08
  8A2D  B5 03     LDA  $03, X
  8A2F  85 09     STA  $09
- 8A31  20 0C B5  JSR  $B50C
- 8A34  68        PLA  
- 8A35  85 0A     STA  $0A
- 8A37  68        PLA  
- 8A38  85 0B     STA  $0B
- 8A3A  68        PLA  
- 8A3B  85 08     STA  $08
- 8A3D  68        PLA  
- 8A3E  85 09     STA  $09
- 8A40  68        PLA  
- 8A41  85 06     STA  $06
- 8A43  68        PLA  
- 8A44  85 07     STA  $07
- 8A46  68        PLA  
- 8A47  85 0C     STA  $0C
- 8A49  68        PLA  
- 8A4A  85 0D     STA  $0D
- 8A4C  E8        INX  
- 8A4D  E8        INX  
- 8A4E  E8        INX  
- 8A4F  E8        INX  
+ 8A31  E8        INX  
+ 8A32  E8        INX  
+ 8A33  E8        INX  
+ 8A34  E8        INX  
+ 8A35  20 0C B5  JSR  $B50C
+ 8A38  68        PLA  
+ 8A39  85 0A     STA  $0A
+ 8A3B  68        PLA  
+ 8A3C  85 0B     STA  $0B
+ 8A3E  68        PLA  
+ 8A3F  85 08     STA  $08
+ 8A41  68        PLA  
+ 8A42  85 09     STA  $09
+ 8A44  68        PLA  
+ 8A45  85 06     STA  $06
+ 8A47  68        PLA  
+ 8A48  85 07     STA  $07
+ 8A4A  68        PLA  
+ 8A4B  85 0C     STA  $0C
+ 8A4D  68        PLA  
+ 8A4E  85 0D     STA  $0D
  8A50  60        RTS  
  8A51  E0 77     CPX  #$77
  8A53  30 03     BMI  $8A58
@@ -3930,7 +3930,7 @@
  A6E5  20 2E 28 20 54 61 6C 69 20 46 6F 72 74 68 20 32  | .( Tali Forth 2|
  A6F5  20 66 6F 72 20 74 68 65 20 36 35 63 30 32 29 20  | for the 65c02) |
  A705  63 72 20 2E 28 20 56 65 72 73 69 6F 6E 20 41 4C  |cr .( Version AL|
- A715  50 48 41 20 30 33 2E 20 4A 75 6E 65 20 32 30 31  |PHA 03. June 201|
+ A715  50 48 41 20 30 35 2E 20 4A 75 6E 65 20 32 30 31  |PHA 05. June 201|
  A725  38 20 29 20 63 72 20 2E 28 20 43 6F 70 79 72 69  |8 ) cr .( Copyri|
  A735  67 68 74 20 32 30 31 34 2D 32 30 31 38 20 53 63  |ght 2014-2018 Sc|
  A745  6F 74 20 57 2E 20 53 74 65 76 65 6E 73 6F 6E 29  |ot W. Stevenson)|

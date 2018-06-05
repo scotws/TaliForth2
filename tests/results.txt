@@ -1,4 +1,4 @@
-\\ From: John Hayes S1I  ok
+\ From: John Hayes S1I  ok
 \ Subject: tester.fr  ok
 \ Date: Mon, 27 Nov 95 13:10:09 PST    ok
   ok
@@ -845,8 +845,8 @@ testing evaluate  ok
 : ge3 s" : ge4 345 ;" ;  ok
 : ge5 evaluate ; immediate  ok
   ok
-{ ge1 evaluate -> 123 }   ( test evaluate in interp. state ) INCORRECT RESULT: { ge1 evaluate -> 123 }   ( test evaluate in interp. state ) ACTUAL RESULT: { 3087 } ok
-{ ge2 evaluate -> 124 } INCORRECT RESULT: { ge2 evaluate -> 124 } ACTUAL RESULT: { 30A0 } ok
+{ ge1 evaluate -> 123 }   ( test evaluate in interp. state )  ok
+{ ge2 evaluate -> 124 }  ok
 { ge3 evaluate -> }  ok
 { ge4 -> 345 }  ok
   ok
@@ -870,7 +870,7 @@ variable scans  ok
 -> 345 345 }  ok
   ok
 : gs2  5 scans ! s" 123 rescan?" evaluate ;  ok
-{ gs2 -> 123 123 123 123 123 } INCORRECT RESULT: { gs2 -> 123 123 123 123 123 } ACTUAL RESULT: { 3454 B 123 123 123 } ok
+{ gs2 -> 123 123 123 123 123 }  ok
   ok
 : gs3 word count swap c@ ;  ok
 { bl gs3 hello -> 5 char h }  ok
@@ -1051,10 +1051,10 @@ testing output: . ." cr emit space spaces type u.  ok
 ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`
 abcdefghijklmnopqrstuvwxyz{|}~
 you should see 0-9 separated by a space:
-0 1 2 3 4 5 6 7 8 9 
+0 1 2 3 
+4 5 6 7 8 9 
 you should see 0-9 (with no spaces):
-0123
-456789
+0123456789
 you should see a-g separated by a space:
 a b c d e f g 
 
@@ -1067,6 +1067,6 @@ create abuf 80 chars allot
  ok
   ok
 : accept-test  compiled
-   cr ." please type up to 80 characters:" cr    compiled
-  abuf 80 accept  compiled
-   cr ." received: " [char] " emit   compiled
+   cr ." please type up to 80 characters:" cr   compiled
+   abuf 80 accept   compiled
+   cr ." received: " [char] " emit    compiled
