@@ -1,4 +1,4 @@
-\ From: John Hayes S1I  ok
+\\ From: John Hayes S1I  ok
 \ Subject: tester.fr  ok
 \ Date: Mon, 27 Nov 95 13:10:09 PST    ok
   ok
@@ -898,8 +898,8 @@ testing <# # #s #> hold sign base >number hex decimal  ok
       r> drop 2drop <false>  \ lengths mismatch  compiled
    then ;  ok
   ok
-: gp1  <# 41 hold 42 hold 0 0 #> s" ba" s= ;  ok
-{ gp1 -> <true> } INCORRECT RESULT: { gp1 -> <true> } ACTUAL RESULT: { 0 } ok
+: gp1  <# 41 hold 42 hold 0 0 #> s" BA" s= ;  ok
+{ gp1 -> <true> }  ok
   ok
 : gp2  <# -1 sign 0 sign -1 sign 0 0 #> s" --" s= ;  ok
 { gp2 -> <true> }  ok
@@ -1053,7 +1053,8 @@ abcdefghijklmnopqrstuvwxyz{|}~
 you should see 0-9 separated by a space:
 0 1 2 3 4 5 6 7 8 9 
 you should see 0-9 (with no spaces):
-0123456789
+0123
+456789
 you should see a-g separated by a space:
 a b c d e f g 
 
@@ -1066,7 +1067,6 @@ create abuf 80 chars allot
  ok
   ok
 : accept-test  compiled
-   cr ." please type up to 80 characters:" cr   compiled
-   abuf 80 accept   compiled
+   cr ." please type up to 80 characters:" cr    compiled
+  abuf 80 accept  compiled
    cr ." received: " [char] " emit   compiled
-   abuf swap type [char] " emit cr ; compiled

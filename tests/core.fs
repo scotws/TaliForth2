@@ -827,7 +827,7 @@ testing <# # #s #> hold sign base >number hex decimal
       r> drop 2drop <false>  \ lengths mismatch
    then ;
 
-: gp1  <# 41 hold 42 hold 0 0 #> s" ba" s= ;
+: gp1  <# 41 hold 42 hold 0 0 #> s" BA" s= ;
 { gp1 -> <true> }
 
 : gp2  <# -1 sign 0 sign -1 sign 0 0 #> s" --" s= ;
