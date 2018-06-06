@@ -49,7 +49,7 @@ create actual-results  20 cells allot
 : {  ( -- ) ;
 
 \ Record depth and content of stack
-: ->  \ ( ... -- ) 
+: ->  ( ... -- ) 
    depth dup actual-depth !  \ record depth
    ?dup if                   \ if there is something on stack ...
       0 do 

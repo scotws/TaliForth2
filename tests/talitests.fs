@@ -22,15 +22,15 @@ hex
 \ ------------------------------------------------------------------------
 testing basic assumptions
 
-{ -> }     \ START WITH CLEAN SLATE
-( TEST IF ANY BITS ARE SET; ANSWER IN BASE 1 )
+{ -> }     \ Start with clean slate
+( test if any bits are set; answer in base 1 )
 { : bitsset? if 0 0 else 0 then ; -> }
-{  0 bitsset? -> 0 }  ( ZERO IS ALL BITS CLEAR )
-{  1 bitsset? -> 0 0 }  ( OTHER NUMBER HAVE AT LEAST ONE BIT )
+{  0 bitsset? -> 0 }   \ zero is all bits clear
+{  1 bitsset? -> 0 0 } \ other number have at least one bit
 { -1 bitsset? -> 0 0 }
 
 \ ------------------------------------------------------------------------
-testing booleans: invert and or xor
+testing booleans: and invert or xor
 
 { 0 0 and -> 0 }
 { 0 1 and -> 0 }
@@ -40,7 +40,7 @@ testing booleans: invert and or xor
 { 0 invert 1 and -> 1 }
 { 1 invert 1 and -> 0 }
 
-0  constant 0s
+0 constant 0s
 0 invert constant 1s
 
 { 0s invert -> 1s }
@@ -64,7 +64,7 @@ testing booleans: invert and or xor
 \ ------------------------------------------------------------------------
 testing 2* 2/ lshift rshift
 
-( WE TRUST 1S, INVERT, AND BITSSET?; WE WILL CONFIRM RSHIFT LATER )
+( we trust 1s, invert, and bitsset?; we will confirm rshift later )
 1s 1 rshift invert constant msb
 { msb bitsset? -> 0 0 }
 
@@ -77,14 +77,14 @@ testing 2* 2/ lshift rshift
 { 0s 2/ -> 0s }
 { 1 2/ -> 0 }
 { 4000 2/ -> 2000 }
-{ 1s 2/ -> 1s }    \ msb propogated
+{ 1s 2/ -> 1s } \ msb propogated
 { 1s 1 xor 2/ -> 1s }
 { msb 2/ msb and -> msb }
 
 { 1 0 lshift -> 1 }
 { 1 1 lshift -> 2 }
 { 1 2 lshift -> 4 }
-{ 1 f lshift -> 8000 }   \ biggest guaranteed shift
+{ 1 f lshift -> 8000 } \ biggest guaranteed shift
 { 1s 1 lshift 1 xor -> 1s }
 { msb 1 lshift -> 0 }
 
@@ -92,17 +92,18 @@ testing 2* 2/ lshift rshift
 { 1 1 rshift -> 0 }
 { 2 1 rshift -> 1 }
 { 4 2 rshift -> 1 }
-{ 8000 f rshift -> 1 }   \ biggest
+{ 8000 f rshift -> 1 } \ biggest
 { msb 1 rshift msb and -> 0 }  \ rshift zero fills msbs
 { msb 1 rshift 2* -> msb }
 
 \ ------------------------------------------------------------------------
 testing comparisons: 0= = <> 0< < > u< min max
-0 invert   constant max-uint
+( TODO we need to add max-2int and min-2int for further tests)
+0 invert  constant max-uint
 0 invert 1 rshift  constant max-int
-0 invert 1 rshift invert constant min-int
+0 invert 1 rshift invert  constant min-int
 0 invert 1 rshift  constant mid-uint
-0 invert 1 rshift invert constant mid-uint+1
+0 invert 1 rshift invert  constant mid-uint+1
 
 0s constant <false>
 1s constant <true>
@@ -246,7 +247,7 @@ testing >r r> r@
 { : gr2 >r r@ r> drop ; -> }
 { 123 gr1 -> 123 }
 { 123 gr2 -> 123 }
-{ 1s gr1 -> 1s }   ( return stack holds cells )
+{ 1s gr1 -> 1s } \ return stack holds cells
 
 \ ------------------------------------------------------------------------
 testing add/subtract: + - 1+ 1- abs negate dnegate
@@ -292,8 +293,8 @@ testing add/subtract: + - 1+ 1- abs negate dnegate
 { 0. dnegate -> 0. }
 { 1. dnegate -> -1. }
 { -1. dnegate -> 1. }
-\ { max-2int dnegate -> min-2int swap 1+ swap } ( TODO Not working yet )
-\ { min-2int swap 1+ swap dnegate -> max-2int } ( TODO Not working yet ) 
+\ { max-2int dnegate -> min-2int swap 1+ swap } \ TODO Not working yet
+\ { min-2int swap 1+ swap dnegate -> max-2int } \ TODO Not working yet 
 
 { 0 abs -> 0 }
 { 1 abs -> 1 }
@@ -330,7 +331,7 @@ testing multiply: s>d * m* um*
 { max-int min-int m* -> msb msb 2/ }
 { max-int max-int m* -> 1 msb 2/ invert }
 
-{ 0 0 * -> 0 }    \ test identities
+{ 0 0 * -> 0 } \ test identities
 { 0 1 * -> 0 }
 { 1 0 * -> 0 }
 { 1 2 * -> 2 }
@@ -565,16 +566,16 @@ here 1 allot
 here
 constant 2nda
 constant 1sta
-{ 1sta 2nda u< -> <true> }  \ here must grow with allot
-{ 1sta 1+ -> 2nda }   \ ... by one address unit
+{ 1sta 2nda u< -> <true> }  \ here must grow with allot ...
+{ 1sta 1+ -> 2nda }         \ ... by one address unit
 ( TODO missing test: negative allot )
 
 here 1 ,
 here 2 ,
 constant 2nd
 constant 1st
-{ 1st 2nd u< -> <true> }   \ here must grow with allot
-{ 1st cell+ -> 2nd }   \ ... by one cell
+{ 1st 2nd u< -> <true> } \ here must grow with allot ...
+{ 1st cell+ -> 2nd }     \ ... by one cell
 { 1st 1 cells + -> 2nd }
 { 1st @ 2nd @ -> 1 2 }
 { 5 1st ! -> }
@@ -590,8 +591,8 @@ here 1 c,
 here 2 c,
 constant 2ndc
 constant 1stc
-{ 1stc 2ndc u< -> <true> }  \ here must grow with allot
-{ 1stc char+ -> 2ndc }   \ ... by one char
+{ 1stc 2ndc u< -> <true> } \ here must grow with allot
+{ 1stc char+ -> 2ndc }     \ ... by one char
 { 1stc 1 chars + -> 2ndc }
 { 1stc c@ 2ndc c@ -> 1 2 }
 { 3 1stc c! -> }
@@ -602,7 +603,7 @@ constant 1stc
 align 1 allot here align here 3 cells allot
 constant a-addr  constant ua-addr
 { ua-addr aligned -> a-addr }
-{    1 a-addr c!  a-addr c@ ->    1 }
+{ 1 a-addr c!  a-addr c@ -> 1 }
 { 1234 a-addr  !  a-addr  @ -> 1234 }
 { 123 456 a-addr 2!  a-addr 2@ -> 123 456 }
 { 2 a-addr char+ c!  a-addr char+ c@ -> 2 }
@@ -611,11 +612,18 @@ constant a-addr  constant ua-addr
 { 123 456 a-addr cell+ 2!  a-addr cell+ 2@ -> 123 456 }
 
 : bits ( x -- u )
-   0 swap begin dup while dup msb and if >r 1+ r> then 2* repeat drop ;
+   0 swap begin
+   dup while 
+      dup msb and if
+         >r 1+ r> 
+      then 2* 
+   repeat 
+   drop ;
+
 ( characters >= 1 au, <= size of cell, >= 8 bits )
 { 1 chars 1 < -> <false> }
 { 1 chars 1 cells > -> <false> }
-( TODO tbd: how to find number of bits? )
+( TODO how to find number of bits? )
 
 ( cells >= 1 au, integral multiple of char size, >= 16 bits )
 { 1 cells 1 < -> <false> }
@@ -857,12 +865,12 @@ testing evaluate
 : ge3 s" : ge4 345 ;" ;
 : ge5 evaluate ; immediate
 
-{ ge1 evaluate -> 123 }   ( test evaluate in interp. state )
+{ ge1 evaluate -> 123 } \ test evaluate in interp. state
 { ge2 evaluate -> 124 }
 { ge3 evaluate -> }
 { ge4 -> 345 }
 
-{ : ge6 ge1 ge5 ; -> }   ( test evaluate in compile state )
+{ : ge6 ge1 ge5 ; -> }  \ test evaluate in compile state
 { ge6 -> 123 }
 { : ge7 ge2 ge5 ; -> }
 { ge7 -> 124 }
@@ -870,16 +878,16 @@ testing evaluate
 \ ------------------------------------------------------------------------
 testing source >in word
 
-: gs1 s" source" 2dup evaluate
-       >r swap >r = r> r> = ;
+: gs1 s" source" 2dup evaluate >r swap >r = r> r> = ;
 { gs1 -> <true> <true> }
 
 variable scans
-: rescan?  -1 scans +! scans @ if 0 >in ! then ;
+: rescan?  -1 scans +! 
+   scans @ if 
+      0 >in ! 
+   then ;
 
-{ 2 scans !
-345 rescan?
--> 345 345 }
+{ 2 scans !  345 rescan?  -> 345 345 }
 
 : gs2  5 scans ! s" 123 rescan?" evaluate ;
 { gs2 -> 123 123 123 123 123 }
@@ -887,25 +895,26 @@ variable scans
 : gs3 word count swap c@ ;
 { bl gs3 hello -> 5 char h }
 { char " gs3 goodbye" -> 7 char g }
-{ bl gs3
-drop -> 0 }    \ blank line return zero-length string
+{ bl gs3 drop -> 0 } \ blank line return zero-length string
 
 : gs4 source >in ! drop ;
-{ gs4 123 456
--> }
+{ gs4 123 456 -> }
 
 \ ------------------------------------------------------------------------
 testing <# # #s #> hold sign base >number hex decimal
-
-: s=  \ ( addr1 c1 addr2 c2 -- t/f ) compare two strings.
-   >r swap r@ = if   \ make sure strings have same length
+\
+\ compare two strings.
+: s=  ( addr1 c1 addr2 c2 -- t/f ) 
+   >r swap r@ = if \ make sure strings have same length
       r> ?dup if   \ if non-empty strings
-  0 do
-     over c@ over c@ - if 2drop <false> unloop exit then
-     swap char+ swap char+
+         0 do
+            over c@ over c@ - if
+               2drop <false> unloop exit
+            then
+            swap char+ swap char+
          loop
       then
-      2drop <true>   \ if we get here, strings match
+      2drop <true> \ if we get here, strings match
    else
       r> drop 2drop <false>  \ lengths mismatch
    then ;
@@ -924,7 +933,13 @@ testing <# # #s #> hold sign base >number hex decimal
 
 24 constant max-base   \ base 2 .. 36
 : count-bits
-   0 0 invert begin dup while >r 1+ r> 2* repeat drop ;
+   0 0 invert 
+   begin 
+      dup while
+      >r 1+ r> 2* 
+   repeat 
+   drop ;
+
 count-bits 2* constant #bits-ud  \ number of bits in ud
 
 : gp5
@@ -948,7 +963,7 @@ count-bits 2* constant #bits-ud  \ number of bits in ud
 { gp6 -> <true> }
 
 : gp7
-   base @ >r    max-base base !
+   base @ >r  max-base base !
    <true>
    a 0 do
       i 0 <# #s #>
@@ -975,8 +990,7 @@ create gn-buf 0 c,
 { 0 0 gn' +' >number -> 0 0 gn-string }
 { 0 0 gn' .' >number -> 0 0 gn-string }
 
-: >number-based
-   base @ >r base ! >number r> base ! ;
+: >number-based  base @ >r base ! >number r> base ! ;
 
 { 0 0 gn' 2' 10 >number-based -> 2 0 gn-consumed }
 { 0 0 gn' 2'  2 >number-based -> 0 0 gn-string }
@@ -985,7 +999,8 @@ create gn-buf 0 c,
 { 0 0 gn' g' max-base >number-based -> 10 0 gn-consumed }
 { 0 0 gn' z' max-base >number-based -> 23 0 gn-consumed }
 
-: gn1 \ ( ud base -- ud' len ) ud should equal ud' and len should be zero.
+\ ud should equal ud' and len should be zero.
+: gn1  ( ud base -- ud' len ) 
    base @ >r base !
    <# #s #>
    0 0 2swap >number swap drop  \ return length only
@@ -997,7 +1012,7 @@ create gn-buf 0 c,
 { max-uint 0 max-base gn1 -> max-uint 0 0 }
 { max-uint dup max-base gn1 -> max-uint dup 0 }
 
-: gn2 \ ( -- 16 10 )
+: gn2 ( -- 16 10 )
    base @ >r  hex base @  decimal base @  r> base ! ;
 { gn2 -> 10 a }
 
@@ -1080,5 +1095,3 @@ testing dictionary search rules
 { : gdx   123 ; : gdx   gdx 234 ; -> }
 
 { gdx -> 123 234 }
-
-

@@ -61,14 +61,14 @@ child = pexpect.spawn(SPAWN_COMMAND)
 print('Waiting for Tali Forth 2 to initialize...')
 child.expect('to exit\r\n')
 
-# An extra delay is needed or the emulator drops the first few chars.
+# An extra delay is needed or the emulator drops the first few chars
 print('Waiting a bit more')
 time.sleep(3)
 
-# Log the results.
+# Log the results
 with open(RESULTS, 'wb') as fout:
 
-    # Send the tester file.
+    # Send the tester file
     with open(TESTER, 'r') as infile:
 
         # Using splitlines to get rid of newlines at the end of lines.
@@ -80,7 +80,7 @@ with open(RESULTS, 'wb') as fout:
     # Send the suite of tests
     with open(TESTS, 'r') as infile:
 
-        # Using splitlines to get rid of newlines at the end of lines.
+        # Using splitlines to get rid of newlines at the end of lines
         for line in infile.read().splitlines():
             results = sendline(child, line)
             print(results)
@@ -93,11 +93,11 @@ with open(RESULTS, 'wb') as fout:
 
             fout.write((results + '\n').encode('ascii'))
 
-# Shut it all down.
+# Shut it all down
 sendslow(child, 'bye\n')
 sendslow(child, 'quit\n')
 
-# Walk through results and find stuff that went wrong.
+# Walk through results and find stuff that went wrong
 print("="*80)
 print("Summary:\n")
 
@@ -110,11 +110,10 @@ with open(RESULTS, 'r') as rfile:
         if 'undefined' in line:
             undefined.append(line)
 
-# We shouldn't have any undefined words at all.
+# We shouldn't have any undefined words at all
 if undefined:
     for line in undefined:
         print(line.strip())
-
 
 # Second, stuff that failed the actual test
 failed = []
