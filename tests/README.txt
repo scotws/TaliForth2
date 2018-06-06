@@ -15,3 +15,7 @@ special tests for words that are specific to Tali Forth 2. If you use this code
 for your own project, you'll have to change it accordingly. The "official" Forth
 tests, on which some of this code is based, can be found at
 https://forth-standard.org/standard/testsuite
+
+KNOWN ISSUES:
+        - The ACCEPT test currenty doesn't work (expects user to type in chars)
+        - Because of ACCEPT problem, the test for dictionary rules doesn't work

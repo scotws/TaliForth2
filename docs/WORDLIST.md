@@ -110,8 +110,8 @@ RTS instruction at the end of each word.
 | NAME_TO_STRING | `name>string` | Gforth | 29 | **tested** |
 | NC_LIMIT | `nc-limit` | Tali Forth | 10 | **tested** |
 | NEGATE | `negate` | ANSI core | 20 | **tested** |
-| NEVER_NATIVE | `never-compile` | Tali Forth | 8 | coded |
-| NIP | `nip` | ANSI core ext | 17 | coded |
+| NEVER_NATIVE | `never-native` | Tali Forth | 8 | coded |
+| NIP | `nip` | ANSI core ext | 17 | **tested** |
 | NOT_EQUALS | `<>` | ANSI core ext | 33 | **tested** |
 | NOT_ROTE | `-rot` | Gforth | 31 | **tested** |
 | NUMBER | `number` | Tali Forth | 138 | **tested** |
@@ -149,7 +149,7 @@ RTS instruction at the end of each word.
 | SLITERAL | `sliteral` | ANSI string | 114 | coded |
 | SM_SLASH_REM | `sm/rem` | ANSI core | 44 | **tested** |
 | SOURCE | `source` | ANSI core | 20 | **tested** |
-| SOURCE_ID | `source-id` | ANSI core ext | 10 | coded |
+| SOURCE_ID | `source-id` | ANSI core ext | 10 | **tested** |
 | SPACE | `space` | ANSI core | 5 | **tested** |
 | SPACES | `spaces` | ANSI core | 53 | **tested** |
 | STAR | `*` | ANSI core | 12 | **tested** |
@@ -157,9 +157,9 @@ RTS instruction at the end of each word.
 | STORE | `!` | ANSI core | 25 | **tested** |
 | SWAP | `swap` | ANSI core | 23 | **tested** |
 | TICK | `'` | ANSI core | 31 | **tested** |
-| TO_BODY | `>BODY` | ANSI core | 91 | coded |
-| TO_IN | `>in` | ANSI core | 10 | coded |
-| TO_NUMBER | `>number` | ANSI core | 163 | coded |
+| TO_BODY | `>body` | ANSI core | 91 | coded |
+| TO_IN | `>in` | ANSI core | 10 | **tested** |
+| TO_NUMBER | `>number` | ANSI core | 163 | **tested** |
 | TO_R | `>r` | ANSI core | 23 | **tested** |
 | TRUE | `true` | ANSI core ext | 8 | **tested** |
 | TUCK | `tuck` | ANSI core ext | 29 | **tested** |
@@ -198,5 +198,5 @@ RTS instruction at the end of each word.
 | ZERO_UNEQUAL | `0<>` | ANSI core ext | 21 | **tested** |
 
 Found **189** native words in `native_words.asm`.
-Of those, **19** are not marked as "tested".
+Of those, **15** are not marked as "tested".
 

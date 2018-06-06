@@ -4311,7 +4311,7 @@ z_negate:       rts
 
 
 ; ## NEVER_NATIVE ( -- ) "Flag last word as never natively compiled"
-; ## "never-compile"  coded  Tali Forth
+; ## "never-native"  coded  Tali Forth
 xt_never_native:
                 ldy #1          ; offset for status byte
                 lda (dp),y
@@ -4322,7 +4322,7 @@ z_never_native:
 
 
 ; ## NIP ( b a -- a ) "Delete NOS"
-; ## "nip"  coded  ANSI core ext
+; ## "nip"  tested  ANSI core ext
 xt_nip:         
                 cpx #dsp0-3
                 bmi +
@@ -5987,7 +5987,7 @@ z_source:       rts
 
 
 ; ## SOURCE_ID ( -- n ) "Return source identifier"
-; ## "source-id"  coded  ANSI core ext
+; ## "source-id"  tested  ANSI core ext
         ; """Identify the input source unless it is a block (s. Conklin &
         ; Rather p. 156). Since we don't have blocks (yet), this will give
         ; the input source: 0 is keyboard, -1 (0ffff) is character string,
@@ -5996,6 +5996,7 @@ z_source:       rts
 xt_source_id:   
                 dex
                 dex
+
                 lda insrc
                 sta 0,x
                 lda insrc+1
@@ -6194,7 +6195,7 @@ z_tick:         rts
 
 
 ; ## TO_BODY ( xt -- addr ) "Return a word's Code Field Area (CFA)"
-; ## ">BODY"  coded  ANSI core
+; ## ">body"  coded  ANSI core
         ; """Given a word's execution token (xt), return the address of the
         ; start of that word's parameter field (PFA). This is the address that
         ; HERE would return right after CREATE. This is a difficult word for
@@ -6284,7 +6285,7 @@ z_to_body:      rts
 
 
 ; ## TO_IN ( -- addr ) "Return address of the input pointer"
-; ## ">in"  coded  ANSI core
+; ## ">in"  tested  ANSI core
 xt_to_in:       
                 dex
                 dex
@@ -6298,7 +6299,7 @@ z_to_in:        rts
 
 
 ; ## TO_NUMBER ( ud addr u -- ud addr u ) "Convert a number"
-; ## ">number"  coded  ANSI core
+; ## ">number"  tested  ANSI core
         ; """Convert a string to a double number. Logic here is based on the
         ; routine by Phil Burk of the same name in pForth, see
         ; https://github.com/philburk/pforth/blob/master/fth/numberio.fth

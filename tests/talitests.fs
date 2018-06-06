@@ -220,7 +220,7 @@ testing comparisons: 0= = <> 0< < > u< min max
 { max-int 0 max -> max-int }
 
 \ ------------------------------------------------------------------------
-testing stack ops: 2drop 2dup 2over 2swap ?dup depth drop dup over rot -rot swap
+testing stack ops: 2drop 2dup 2over 2swap ?dup depth drop dup nip over rot -rot swap 
 
 { 1 2 2drop -> }
 { 1 2 2dup -> 1 2 1 2 }
@@ -235,6 +235,7 @@ testing stack ops: 2drop 2dup 2over 2swap ?dup depth drop dup over rot -rot swap
 { 0 drop -> }
 { 1 2 drop -> 1 }
 { 1 dup -> 1 1 }
+{ 1 2 nip -> 2 }
 { 1 2 over -> 1 2 1 }
 { 1 2 3 rot -> 2 3 1 }
 { 1 2 3 -rot -> 3 1 2 }
