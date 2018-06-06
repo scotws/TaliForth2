@@ -9,63 +9,72 @@
 
 \ (C) 1995 JOHNS HOPKINS UNIVERSITY / APPLIED PHYSICS LABORATORY
 \ MAY BE DISTRIBUTED FREELY AS LONG AS THIS COPYRIGHT NOTICE REMAINS.
-\ VERSION 1.1
 hex
 
-\ SET THE FOLLOWING FLAG TO TRUE FOR MORE VERBOSE OUTPUT; THIS MAY
-\ ALLOW YOU TO TELL WHICH TEST CAUSED YOUR SYSTEM TO HANG.
-variable verbose
-   false verbose !
+\ Set the following flag to true for more verbose output; this may allow you to
+\ tell which test caused your system to hang. With Tali Forth, this is useless
+\ because the Python script echoes all the output anyway.
+variable verbose  false verbose !
 
-variable actual-depth   \ STACK RECORD
-create actual-results 20 cells allot
+variable actual-depth   \ stack record
+create actual-results  20 cells allot
 
-: empty-stack \ ( ... -- ) EMPTY STACK: HANDLES UNDERFLOWED STACK TOO.
-   depth ?dup if dup 0< if negate 0 do 0 loop else 0 do drop loop then then ;
+\ Empty stack: handles underflowed stack too
+: empty-stack ( ... -- ) 
+   depth ?dup if 
+      dup 0< if 
+         negate 0 do 0 loop 
+      else 
+         0 do drop loop 
+      then 
+   then ;
 
-\ Added by SamCo 2018-05 to show actual results of previous test.
-: show-results \ ( -- ) Print the previous test's actual results.
+\ Print the previous test's actual results. Added by SamCo 2018-05 
+: show-results ( -- ) 
    s"  ACTUAL RESULT: { " type
    actual-depth @ 0 ?do
       actual-results 
-      actual-depth @ i - 1- \ Print them in reverse order to match test.             
+      actual-depth @ i - 1- \ Print them in reverse order to match test.
       cells + @ .
    loop
    s" }" type ;
 
-: error  \ ( C-ADDR U -- ) DISPLAY AN ERROR MESSAGE FOLLOWED BY
-  \ THE LINE THAT HAD THE ERROR.
-   type source type \ CR   \ DISPLAY LINE CORRESPONDING TO ERROR
-   empty-stack    \ THROW AWAY EVERY THING ELSE
-   show-results \ Added by SamCo to show what actually happened.
-;
+\ Display an error message followed by the line that had the error
+: error  \ ( C-ADDR U -- ) 
+   type source type \ display line corresponding to error
+   empty-stack      \ throw away every thing else
+   show-results ;   \ added by SamCo to show what actually happened
 
+\ Syntactic sugar
+: {  ( -- ) ;
 
-: {  \ ( -- ) SYNTACTIC SUGAR.
-   ;
-
-: ->  \ ( ... -- ) RECORD DEPTH AND CONTENT OF STACK.
-   depth dup actual-depth !  \ RECORD DEPTH
-   ?dup if    \ IF THERE IS SOMETHING ON STACK
-      0 do actual-results i cells + ! loop \ SAVE THEM
+\ Record depth and content of stack
+: ->  \ ( ... -- ) 
+   depth dup actual-depth !  \ record depth
+   ?dup if                   \ if there is something on stack ...
+      0 do 
+         actual-results i cells + ! 
+      loop                   \ ... save it
    then ;
 
-: }  \ ( ... -- ) COMPARE STACK (EXPECTED) CONTENTS WITH SAVED
-  \ (ACTUAL) CONTENTS.
-   depth actual-depth @ = if  \ IF DEPTHS MATCH
-      depth ?dup if   \ IF THERE IS SOMETHING ON THE STACK
-         0 do    \ FOR EACH STACK ITEM
-     actual-results i cells + @ \ COMPARE ACTUAL WITH EXPECTED
-     <> if s" INCORRECT RESULT: " error leave then
-  loop
+\ Compare stack (expected) contents with saved (actual) contents
+: }  ( ... -- ) 
+   depth actual-depth @ = if     \ if depths match
+      depth ?dup if              \ if there is something on the stack
+         0 do                    \ for each stack item
+            actual-results i cells + @  \ compare actual with expected
+            <> if 
+               s" INCORRECT RESULT: " error leave 
+            then
+         loop
       then
-   else     \ DEPTH MISMATCH
+   else                          \ depth mismatch
       s" WRONG NUMBER OF RESULTS: " error
    then ;
 
-: testing \ ( -- ) TALKING COMMENT.
-   source verbose @
-   if dup >r type cr r> >in !
+\ Talking comment
+: testing ( -- ) 
+   source verbose @ if 
+      dup >r type cr r> >in !
    else >in ! drop
    then ;
-

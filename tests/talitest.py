@@ -26,7 +26,7 @@ import pexpect
 import sys
 import time
 
-TESTS = 'tali.fs'
+TESTS = 'talitests.fs'
 TESTER = 'tester.fs'
 RESULTS = 'results.txt'
 SPAWN_COMMAND = 'py65mon -m 65c02 -r ../taliforth-py65mon.bin'
@@ -39,7 +39,7 @@ def sendslow(kid, string):
         # print(char) # For debugging
         # If it looks like characters from the tests are being dropped
         # by the py65mon emulator, increase the time below.
-        time.sleep(0.001)
+        time.sleep(0.0001)
         kid.send(char)
 
 

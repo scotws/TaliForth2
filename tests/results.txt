@@ -14,6 +14,8 @@ hex  ok
   ok
 \ SET THE FOLLOWING FLAG TO TRUE FOR MORE VERBOSE OUTPUT; THIS MAY  ok
 \ ALLOW YOU TO TELL WHICH TEST CAUSED YOUR SYSTEM TO HANG.  ok
+\ (With Tali Forth, this is useless because the Python script echoes all  ok
+\ the output anyway) TODO remove verbose option  ok
 variable verbose  ok
    false verbose !  ok
   ok
@@ -76,7 +78,6 @@ create actual-results 20 cells allot  ok
 \ Modified by SamCo 2018-05 for testing Tali Forth 2.  ok
 \ The main change is lowercasing all of the words as Tali  ok
 \ is case sensitive.  ok
-  ok
   ok
 \ (C) 1995 JOHNS HOPKINS UNIVERSITY / APPLIED PHYSICS LABORATORY  ok
 \ MAY BE DISTRIBUTED FREELY AS LONG AS THIS COPYRIGHT NOTICE REMAINS.  ok
@@ -639,7 +640,7 @@ constant 2nda  ok
 constant 1sta  ok
 { 1sta 2nda u< -> <true> }  \ here must grow with allot  ok
 { 1sta 1+ -> 2nda }   \ ... by one address unit  ok
-( missing test: negative allot )  ok
+( TODO missing test: negative allot )  ok
   ok
 here 1 ,  ok
 here 2 ,  ok
@@ -687,7 +688,7 @@ constant a-addr  constant ua-addr  ok
 ( characters >= 1 au, <= size of cell, >= 8 bits )  ok
 { 1 chars 1 < -> <false> }  ok
 { 1 chars 1 cells > -> <false> }  ok
-( tbd: how to find number of bits? )  ok
+( TODO tbd: how to find number of bits? )  ok
   ok
 ( cells >= 1 au, integral multiple of char size, >= 16 bits )  ok
 { 1 cells 1 < -> <false> }  ok
@@ -726,7 +727,7 @@ here 3 c, char g c, char t c, char 1 c, constant gt1string  ok
 here 3 c, char g c, char t c, char 2 c, constant gt2string  ok
 { gt1string find -> ' gt1 -1 }  ok
 { gt2string find -> ' gt2 1 }  ok
-( how to search for non-existent word? )  ok
+( TODO how to search for non-existent word? )  ok
 { : gt3 gt2 literal ; -> }  ok
 { gt3 -> ' gt1 }  ok
 { gt1string count -> gt1string char+ 3 }  ok
@@ -895,8 +896,8 @@ testing defining words: : ; constant variable 2variable create does> >body  ok
 { : cd3 2v2 2! ; -> }   ok
 { -2 -1 cd3 -> }   ok
 { 2v2 2@ -> -2 -1 }  ok
-\ { 2variable 2v3 immediate 5 6 2v3 2! -> }  TODO this crashes  ok
-\ { 2v3 2@ -> 5 6 }  ok
+{ 2variable 2v3 immediate 5 6 2v3 2! -> }  \ TODO this crashed, test  ok
+{ 2v3 2@ -> 5 6 }  ok
   ok
 { : nop : postpone ; ; -> }  ok
 { nop nop1 nop nop2 -> }  ok
@@ -917,7 +918,7 @@ testing defining words: : ; constant variable 2variable create does> >body  ok
   ok
 { : weird: create does> 1 + does> 2 + ; -> }  ok
 { weird: w1 -> }  ok
-{ ' w1 >body -> here } INCORRECT RESULT: { ' w1 >body -> here } ACTUAL RESULT: { 37B4 } ok
+{ ' w1 >body -> here } INCORRECT RESULT: { ' w1 >body -> here } ACTUAL RESULT: { 37C6 } ok
 { w1 -> here 1 + }  ok
 { w1 -> here 2 + }  ok
   ok
@@ -931,12 +932,226 @@ testing evaluate  ok
   ok
 { ge1 evaluate -> 123 }   ( test evaluate in interp. state )  ok
 { ge2 evaluate -> 124 }  ok
-{ ge3 evaluate -> } 
-        PC  AC XR YR SP NV-BDIZC
-65C02: 6035 37 7a 01 fa 00110100
-
-Py65 Monitor
-
-       PC  AC XR YR SP NV-BDIZC
-6502: 0000 00 00 00 ff 00110000
-.{ ge4 -> 345 }
+{ ge3 evaluate -> }  ok
+{ ge4 -> 345 }  ok
+  ok
+{ : ge6 ge1 ge5 ; -> }   ( test evaluate in compile state )  ok
+{ ge6 -> 123 }  ok
+{ : ge7 ge2 ge5 ; -> }  ok
+{ ge7 -> 124 }  ok
+  ok
+\ ------------------------------------------------------------------------  ok
+testing source >in word  ok
+  ok
+: gs1 s" source" 2dup evaluate  compiled
+       >r swap >r = r> r> = ;  ok
+{ gs1 -> <true> <true> }  ok
+  ok
+variable scans  ok
+: rescan?  -1 scans +! scans @ if 0 >in ! then ;  ok
+  ok
+{ 2 scans !  ok
+345 rescan?  ok
+-> 345 345 }  ok
+  ok
+: gs2  5 scans ! s" 123 rescan?" evaluate ;  ok
+{ gs2 -> 123 123 123 123 123 }  ok
+  ok
+: gs3 word count swap c@ ;  ok
+{ bl gs3 hello -> 5 char h }  ok
+{ char " gs3 goodbye" -> 7 char g }  ok
+{ bl gs3  ok
+drop -> 0 }    \ blank line return zero-length string  ok
+  ok
+: gs4 source >in ! drop ;  ok
+{ gs4 123 456  ok
+-> }  ok
+  ok
+\ ------------------------------------------------------------------------  ok
+testing <# # #s #> hold sign base >number hex decimal  ok
+  ok
+: s=  \ ( addr1 c1 addr2 c2 -- t/f ) compare two strings.  compiled
+   >r swap r@ = if   \ make sure strings have same length  compiled
+      r> ?dup if   \ if non-empty strings  compiled
+  0 do  compiled
+     over c@ over c@ - if 2drop <false> unloop exit then  compiled
+     swap char+ swap char+  compiled
+         loop  compiled
+      then  compiled
+      2drop <true>   \ if we get here, strings match  compiled
+   else  compiled
+      r> drop 2drop <false>  \ lengths mismatch  compiled
+   then ;  ok
+  ok
+: gp1  <# 41 hold 42 hold 0 0 #> s" BA" s= ;  ok
+{ gp1 -> <true> }  ok
+  ok
+: gp2  <# -1 sign 0 sign -1 sign 0 0 #> s" --" s= ;  ok
+{ gp2 -> <true> }  ok
+  ok
+: gp3  <# 1 0 # # #> s" 01" s= ;  ok
+{ gp3 -> <true> }  ok
+  ok
+: gp4  <# 1 0 #s #> s" 1" s= ;  ok
+{ gp4 -> <true> } Stack underflow
+  ok
+24 constant max-base   \ base 2 .. 36  ok
+: count-bits  compiled
+   0 0 invert begin dup while >r 1+ r> 2* repeat drop ;  ok
+count-bits 2* constant #bits-ud  \ number of bits in ud  ok
+  ok
+: gp5  compiled
+   base @ <true>  compiled
+   max-base 1+ 2 do   \ for each possible base  compiled
+      i base !    \ tbd: assumes base works  compiled
+      i 0 <# #s #> s" 10" s= and  compiled
+   loop  compiled
+   swap base ! ;  ok
+{ gp5 -> <true> }  ok
+  ok
+: gp6  compiled
+   base @ >r  2 base !  compiled
+   max-uint max-uint <# #s #>  \ maximum ud to binary  compiled
+   r> base !    \ s: c-addr u  compiled
+   dup #bits-ud = swap  compiled
+   0 do     \ s: c-addr flag  compiled
+      over c@ [char] 1 = and  \ all ones  compiled
+      >r char+ r>  compiled
+   loop swap drop ;  ok
+{ gp6 -> <true> }  ok
+  ok
+: gp7  compiled
+   base @ >r    max-base base !  compiled
+   <true>  compiled
+   a 0 do  compiled
+      i 0 <# #s #>  compiled
+      1 = swap c@ i 30 + = and and  compiled
+   loop  compiled
+   max-base a do  compiled
+      i 0 <# #s #>  compiled
+      1 = swap c@ 41 i a - + = and and  compiled
+   loop  compiled
+   r> base ! ;  ok
+  ok
+{ gp7 -> <true> } INCORRECT RESULT: { gp7 -> <true> } ACTUAL RESULT: { 0 } ok
+  ok
+\ >number tests  ok
+create gn-buf 0 c,  ok
+: gn-string gn-buf 1 ;  ok
+: gn-consumed gn-buf char+ 0 ;  ok
+: gn'  [char] ' word char+ c@ gn-buf c!  gn-string ;  ok
+  ok
+{ 0 0 gn' 0' >number -> 0 0 gn-consumed }  ok
+{ 0 0 gn' 1' >number -> 1 0 gn-consumed }  ok
+{ 1 0 gn' 1' >number -> base @ 1+ 0 gn-consumed }  ok
+{ 0 0 gn' -' >number -> 0 0 gn-string } \ should fail to convert these  ok
+{ 0 0 gn' +' >number -> 0 0 gn-string }  ok
+{ 0 0 gn' .' >number -> 0 0 gn-string }  ok
+  ok
+: >number-based  compiled
+   base @ >r base ! >number r> base ! ;  ok
+  ok
+{ 0 0 gn' 2' 10 >number-based -> 2 0 gn-consumed }  ok
+{ 0 0 gn' 2'  2 >number-based -> 0 0 gn-string }  ok
+{ 0 0 gn' f' 10 >number-based -> f 0 gn-consumed }  ok
+{ 0 0 gn' g' 10 >number-based -> 0 0 gn-string }  ok
+{ 0 0 gn' g' max-base >number-based -> 10 0 gn-consumed }  ok
+{ 0 0 gn' z' max-base >number-based -> 23 0 gn-consumed }  ok
+  ok
+: gn1 \ ( ud base -- ud' len ) ud should equal ud' and len should be zero.  compiled
+   base @ >r base !  compiled
+   <# #s #>  compiled
+   0 0 2swap >number swap drop  \ return length only  compiled
+   r> base ! ;  ok
+{ 0 0 2 gn1 -> 0 0 0 }  ok
+{ max-uint 0 2 gn1 -> max-uint 0 0 }  ok
+{ max-uint dup 2 gn1 -> max-uint dup 0 }  ok
+{ 0 0 max-base gn1 -> 0 0 0 }  ok
+{ max-uint 0 max-base gn1 -> max-uint 0 0 }  ok
+{ max-uint dup max-base gn1 -> max-uint dup 0 } INCORRECT RESULT: { max-uint dup max-base gn1 -> max-uint dup 0 } ACTUAL RESULT: { 1 0 6 } ok
+  ok
+: gn2 \ ( -- 16 10 )  compiled
+   base @ >r  hex base @  decimal base @  r> base ! ;  ok
+{ gn2 -> 10 a }  ok
+  ok
+\ ------------------------------------------------------------------------  ok
+testing fill move  ok
+  ok
+create fbuf 00 c, 00 c, 00 c,  ok
+create sbuf 12 c, 34 c, 56 c,  ok
+: seebuf fbuf c@  fbuf char+ c@  fbuf char+ char+ c@ ;  ok
+  ok
+{ fbuf 0 20 fill -> }  ok
+{ seebuf -> 00 00 00 }  ok
+  ok
+{ fbuf 1 20 fill -> }  ok
+{ seebuf -> 20 00 00 }  ok
+  ok
+{ fbuf 3 20 fill -> }  ok
+{ seebuf -> 20 20 20 }  ok
+  ok
+{ fbuf fbuf 3 chars move -> }  \ bizarre special case  ok
+{ seebuf -> 20 20 20 }  ok
+  ok
+{ sbuf fbuf 0 chars move -> }  ok
+{ seebuf -> 20 20 20 }  ok
+  ok
+{ sbuf fbuf 1 chars move -> }  ok
+{ seebuf -> 12 20 20 }  ok
+  ok
+{ sbuf fbuf 3 chars move -> }  ok
+{ seebuf -> 12 34 56 }  ok
+  ok
+{ fbuf fbuf char+ 2 chars move -> }  ok
+{ seebuf -> 12 12 34 } INCORRECT RESULT: { seebuf -> 12 12 34 } ACTUAL RESULT: { 12 12 12 } ok
+  ok
+{ fbuf char+ fbuf 2 chars move -> }  ok
+{ seebuf -> 12 34 34 } INCORRECT RESULT: { seebuf -> 12 34 34 } ACTUAL RESULT: { 12 12 12 } ok
+  ok
+\ ------------------------------------------------------------------------  ok
+testing output: . ." cr emit space spaces type u.  ok
+  ok
+: output-test  compiled
+   ." you should see the standard graphic characters:" cr  compiled
+   41 bl do i emit loop cr  compiled
+   61 41 do i emit loop cr  compiled
+   7f 61 do i emit loop cr  compiled
+   ." you should see 0-9 separated by a space:" cr  compiled
+   9 1+ 0 do i . loop cr  compiled
+   ." you should see 0-9 (with no spaces):" cr  compiled
+   [char] 9 1+ [char] 0 do i 0 spaces emit loop cr  compiled
+   ." you should see a-g separated by a space:" cr  compiled
+   [char] g 1+ [char] a do i emit space loop cr  compiled
+   ." you should see 0-5 separated by two spaces:" cr  compiled
+   5 1+ 0 do i [char] 0 + emit 2 spaces loop cr  compiled
+   ." you should see two separate lines:" cr  compiled
+   s" line 1" type cr s" line 2" type cr  compiled
+   ." you should see the number ranges of signed and unsigned numbers:" cr  compiled
+   ."   signed: " min-int . max-int . cr  compiled
+   ." unsigned: " 0 u. max-uint u. cr  compiled
+;  ok
+  ok
+{ output-test -> } you should see the standard graphic characters:
+ !"#$%&'()*+,-./0123456789:;<=>?@
+ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`
+abcdefghijklmnopqrstuvwxyz{|}~
+you should see 0-9 separated by a space:
+0 1 2 3 
+4 5 6 7 8 9 
+you should see 0-9 (with no spaces):
+0123456789
+you should see a-g separated by a space:
+a b c d e f g 
+you should see 0-5 separated by two spaces:
+0  1  2  3  4  5  
+you should see two \separate lines:
+line 1
+line 2
+you should see the number ranges of signed and unsigned numbers:
+  signed: -8000 7FFF 
+unsigned:  0 FFFF 
+ ok
+  ok
+\ ----------------------------------------------------------------------  ok
+testing input: accept  ok
+  ok

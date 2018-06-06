@@ -6,7 +6,6 @@
 \ The main change is lowercasing all of the words as Tali
 \ is case sensitive.
 
-
 \ (C) 1995 JOHNS HOPKINS UNIVERSITY / APPLIED PHYSICS LABORATORY
 \ MAY BE DISTRIBUTED FREELY AS LONG AS THIS COPYRIGHT NOTICE REMAINS.
 \ VERSION 1.2
@@ -568,7 +567,7 @@ constant 2nda
 constant 1sta
 { 1sta 2nda u< -> <true> }  \ here must grow with allot
 { 1sta 1+ -> 2nda }   \ ... by one address unit
-( missing test: negative allot )
+( TODO missing test: negative allot )
 
 here 1 ,
 here 2 ,
@@ -616,7 +615,7 @@ constant a-addr  constant ua-addr
 ( characters >= 1 au, <= size of cell, >= 8 bits )
 { 1 chars 1 < -> <false> }
 { 1 chars 1 cells > -> <false> }
-( tbd: how to find number of bits? )
+( TODO tbd: how to find number of bits? )
 
 ( cells >= 1 au, integral multiple of char size, >= 16 bits )
 { 1 cells 1 < -> <false> }
@@ -655,7 +654,7 @@ here 3 c, char g c, char t c, char 1 c, constant gt1string
 here 3 c, char g c, char t c, char 2 c, constant gt2string
 { gt1string find -> ' gt1 -1 }
 { gt2string find -> ' gt2 1 }
-( how to search for non-existent word? )
+( TODO how to search for non-existent word? )
 { : gt3 gt2 literal ; -> }
 { gt3 -> ' gt1 }
 { gt1string count -> gt1string char+ 3 }
@@ -824,8 +823,8 @@ testing defining words: : ; constant variable 2variable create does> >body
 { : cd3 2v2 2! ; -> } 
 { -2 -1 cd3 -> } 
 { 2v2 2@ -> -2 -1 }
-\ { 2variable 2v3 immediate 5 6 2v3 2! -> }  TODO this crashes
-\ { 2v3 2@ -> 5 6 }
+{ 2variable 2v3 immediate 5 6 2v3 2! -> }
+{ 2v3 2@ -> 5 6 }
 
 { : nop : postpone ; ; -> }
 { nop nop1 nop nop2 -> }
