@@ -1,7 +1,7 @@
 ; Definitions for Tali Forth 2
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 01. Apr 2016 (Liara Forth)
-; This version: 01. Jun 2018
+; This version: 06. Jun 2018
 
 ; This file is included by taliforth.asm
 
@@ -64,11 +64,11 @@
 ; these for easier comparisons with Liara Forth's structure and to 
 ; help people new to these things.
 
-.alias ram_start $0000       ; start of installed 32 KiB of RAM
-.alias ram_end   $8000-1     ; end of installed RAM
-.alias zpage     ram_start   ; begin of Zero Page ($0000-$00ff)
-.alias stack0    $0100       ; begin of Return Stack ($0100-$01ff)
-.alias hist_buff ram_end-$03ff  ; begin of history buffers
+.alias ram_start $0000          ; start of installed 32 KiB of RAM
+.alias ram_end   $8000-1        ; end of installed RAM
+.alias zpage     ram_start      ; begin of Zero Page ($0000-$00ff)
+.alias stack0    $0100          ; begin of Return Stack ($0100-$01ff)
+.alias hist_buff ram_end-$0400  ; begin of history buffers
 
 
 ; SOFT PHYSICAL ADDRESSES

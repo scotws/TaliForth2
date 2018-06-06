@@ -63,8 +63,8 @@ $00FF | rsp0                    | definitions.asm:81
 $0100 | stack0                  | definitions.asm:70
 $0200 | buffer0                 | definitions.asm:83
 $02FF | cp0                     | definitions.asm:84
-$7BFF | cp_end                  | definitions.asm:85
-$7C00 | hist_buff               | definitions.asm:71
+$7BFE | cp_end                  | definitions.asm:85
+$7BFF | hist_buff               | definitions.asm:71
 $7FFF | ram_end                 | definitions.asm:68
 $8000 | code0                   | taliforth.asm:15
 $8000 | forth                   | taliforth.asm:20
