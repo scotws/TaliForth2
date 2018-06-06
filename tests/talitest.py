@@ -19,16 +19,18 @@
 # FILE        : talitest.py
 #
 # First version: 16. May 2018
-# This version: 17. May 2018
+# This version: 06. June 2018
 # """
 
-import time
 import pexpect
+import sys
+import time
 
-CORE = 'core.fs'
+TESTS = 'tali.fs'
 TESTER = 'tester.fs'
 RESULTS = 'results.txt'
 SPAWN_COMMAND = 'py65mon -m 65c02 -r ../taliforth-py65mon.bin'
+PY65MON_ERROR = '*** Unknown syntax:'
 
 
 def sendslow(kid, string):
@@ -76,12 +78,19 @@ with open(RESULTS, 'wb') as fout:
             fout.write((results + '\n').encode('ascii'))
 
     # Send the suite of tests
-    with open(CORE, 'r') as infile:
+    with open(TESTS, 'r') as infile:
 
         # Using splitlines to get rid of newlines at the end of lines.
         for line in infile.read().splitlines():
             results = sendline(child, line)
             print(results)
+
+            # Detect crashes: py65mon will print an error but this program will
+            # attempt to continue to send new commands
+            if results.startswith(PY65MON_ERROR):
+                print('py65mon error detected -- did we crash?')
+                sys.exit(1)
+
             fout.write((results + '\n').encode('ascii'))
 
 # Shut it all down.
@@ -128,3 +137,7 @@ if failed:
 print()
 if (not undefined) and (not failed):
     print("All available tests passed.")
+
+# If we got here, the program itself ran fine one way or another
+sys.exit(0)
+

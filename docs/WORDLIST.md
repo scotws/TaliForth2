@@ -8,8 +8,8 @@ RTS instruction at the end of each word.
 | NAME | FORTH WORD | SOURCE | BYTES | STATUS |
 | :--- | :--------- | :---   | ----: | :----  |
 | COLD | `cold` | Tali Forth | 230 | **tested** |
-| ABORT | `abort` | ANSI core | 72 | coded |
-| QUIT | `quit` | ANSI core | 70 | coded |
+| ABORT | `abort` | ANSI core | 72 | **tested** |
+| QUIT | `quit` | ANSI core | 70 | **tested** |
 | ABORT_QUOTE | `abort"` | ANSI core | 10 | **tested** |
 | ABS | `abs` | ANSI core | 24 | **tested** |
 | ACCEPT | `accept` | ANSI core | 296 | coded |
@@ -55,8 +55,8 @@ RTS instruction at the end of each word.
 | DEPTH | `depth` | ANSI core | 14 | **tested** |
 | DIGIT_QUESTION | `digit?` | Tali Forth | 56 | **tested** |
 | DISASM | `disasm` | Tali Forth | 10 | **tested** |
-| DNEGATE | `dnegate` | ANSI double | 30 | coded |
-| QUESTION_DO | `?do` | ANSI core ext | 96 | coded |
+| DNEGATE | `dnegate` | ANSI double | 30 | **tested** |
+| QUESTION_DO | `?do` | ANSI core ext | 96 | **tested** |
 | DO | `do` | ANSI core | 90 | **tested** |
 | DOES | `does>` | ANSI core | 14 | **tested** |
 | DOT | `.` | ANSI core | 37 | **tested** |
@@ -70,7 +70,7 @@ RTS instruction at the end of each word.
 | BLANK | `blank` | ANSI core ext | 86 | **tested** |
 | ERASE | `erase` | ANSI core ext | 76 | **tested** |
 | FILL | `fill` | ANSI core | 70 | **tested** |
-| EVALUATE | `evaluate` | ANSI core | 94 | coded |
+| EVALUATE | `evaluate` | ANSI core | 100 | **tested** |
 | EXECUTE | `execute` | ANSI core | 10 | **tested** |
 | EXIT | `exit` | ANSI core | 1 | **tested** |
 | FALSE | `false` | ANSI core ext | 6 | **tested** |
@@ -112,8 +112,8 @@ RTS instruction at the end of each word.
 | NEGATE | `negate` | ANSI core | 20 | **tested** |
 | NEVER_NATIVE | `never-compile` | Tali Forth | 8 | coded |
 | NIP | `nip` | ANSI core ext | 17 | coded |
-| NOT_EQUALS | `<>` | ANSI core ext | 33 | coded |
-| NOT_ROTE | `-rot` | Gforth | 31 | coded |
+| NOT_EQUALS | `<>` | ANSI core ext | 33 | **tested** |
+| NOT_ROTE | `-rot` | Gforth | 31 | **tested** |
 | NUMBER | `number` | Tali Forth | 138 | **tested** |
 | NUMBER_SIGN | `#` | ANSI core | 32 | **tested** |
 | NUMBER_SIGN_GREATER | `#>` | ANSI core | 37 | **tested** |
@@ -137,7 +137,7 @@ RTS instruction at the end of each word.
 | R_FETCH | `r@` | ANSI core | 20 | **tested** |
 | R_FROM | `r>` | ANSI core | 16 | **tested** |
 | RECURSE | `recurse` | ANSI core | 44 | **tested** |
-| REFILL | `refill` | ANSI core ext | 61 | coded |
+| REFILL | `refill` | ANSI core ext | 61 | **tested** |
 | RIGHT_BRACKET | `]` | ANSI core | 6 | **tested** |
 | ROT | `rot` | ANSI core | 31 | **tested** |
 | RSHIFT | `rshift` | ANSI core | 23 | **tested** |
@@ -175,7 +175,7 @@ RTS instruction at the end of each word.
 | TWO_STORE | `2!` | ANSI core | 22 | **tested** |
 | TWO_SWAP | `2swap` | ANSI core | 39 | **tested** |
 | TWO_TO_R | `2>r` | ANSI core ext | 35 | coded |
-| TWO_VARIABLE | `2variable` | ANSI double | 14 | coded |
+| TWO_VARIABLE | `2variable` | ANSI double | 14 | **tested** |
 | TYPE | `type` | ANSI core | 41 | **tested** |
 | U_DOT | `u.` | ANSI core | 15 | **tested** |
 | U_LESS_THAN | `u<` | ANSI core | 24 | **tested** |
@@ -198,5 +198,5 @@ RTS instruction at the end of each word.
 | ZERO_UNEQUAL | `0<>` | ANSI core ext | 21 | **tested** |
 
 Found **189** native words in `native_words.asm`.
-Of those, **28** are not marked as "tested".
+Of those, **19** are not marked as "tested".
 
