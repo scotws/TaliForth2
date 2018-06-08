@@ -1,5 +1,6 @@
 % Internals of Tali Forth 2
 % Scot W. Stevenson 
+% This version: 06. June 2018
 % ---------------------------------------
 \section{Stack}\index{stack|textbf}
 
@@ -226,7 +227,6 @@ string and only the string, the compilation of the Forth words worked.
 % ---------------------------------------
 \section{Memory Map}\index{memory map|textbf}
 
-
 Tali Forth 2 was developed with a simple 32 KiB RAM\index{RAM}, 32 KiB
 ROM\index{ROM} design. 
 
@@ -258,6 +258,9 @@ ROM\index{ROM} design.
           ~~~~~~~~~~~~~~~~~~~~~  <-- cp
           |                   |
           |                   |
+          +-------------------+     
+          |                   |
+          | ACCEPT history    | 
           |                   |
    $7FFF  #####################  ram_end
    $8000  |                   |  forth, code0
@@ -281,6 +284,9 @@ ROM\index{ROM} design.
           |  65c02 vectors    |
    $FFFF  +-------------------+     
 \end{lstlisting}
+
+Note that some of these values are hard-coded into the test\index{testing}
+suite; see the file \texttt{definitions.txt} for details.
 
 \pagebreak
 

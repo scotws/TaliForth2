@@ -561,7 +561,7 @@ ifsym     : t*/    t*/mod swap drop ;
 { min-int 2 min-int */mod -> min-int 2 min-int t*/mod }
 
 \ ------------------------------------------------------------------------
-testing here , @ ! cell+ cells c, c@ c! chars 2@ 2! align aligned +! allot
+testing here , @ ! cell+ cells c, c@ c! chars 2@ 2! align aligned +! allot pad unused
 
 here 1 allot
 here
@@ -635,6 +635,10 @@ constant a-addr  constant ua-addr
 { 1 1st +! -> }
 { 1st @ -> 1 }
 { -1 1st +! 1st @ -> 0 }
+
+( here + unused + buffer size must be total RAM, that is, $7FFF )
+{ pad here - -> FF } \ PAD must have offset of $FF
+{ here unused + 400 + -> 7FFF }
 
 \ ------------------------------------------------------------------------
 testing char [char] [ ] bl s"
@@ -879,16 +883,19 @@ testing evaluate
 \ ------------------------------------------------------------------------
 testing source >in word
 
-: gs1 s" source" 2dup evaluate >r swap >r = r> r> = ;
+: gs1 s" source" 2dup evaluate 
+       >r swap >r = r> r> = ;
 { gs1 -> <true> <true> }
 
 variable scans
-: rescan?  -1 scans +! 
-   scans @ if 
-      0 >in ! 
+: rescan?  -1 scans +!
+   scans @ if
+      0 >in !
    then ;
 
-{ 2 scans !  345 rescan?  -> 345 345 }
+{ 2 scans !  
+345 rescan?  
+-> 345 345 }
 
 : gs2  5 scans ! s" 123 rescan?" evaluate ;
 { gs2 -> 123 123 123 123 123 }
@@ -896,10 +903,12 @@ variable scans
 : gs3 word count swap c@ ;
 { bl gs3 hello -> 5 char h }
 { char " gs3 goodbye" -> 7 char g }
-{ bl gs3 drop -> 0 } \ blank line return zero-length string
+{ bl gs3 
+drop -> 0 } \ blank line return zero-length string
 
 : gs4 source >in ! drop ;
-{ gs4 123 456 -> }
+{ gs4 123 456 
+-> }
 
 \ ------------------------------------------------------------------------
 testing <# # #s #> hold sign base >number hex decimal
@@ -1050,6 +1059,83 @@ create sbuf 12 c, 34 c, 56 c,
 
 { fbuf char+ fbuf 2 chars move -> }
 { seebuf -> 12 34 34 }
+
+\ ------------------------------------------------------------------------
+testing string words: /string -trailing sliteral
+
+{ : s1 s" abcdefghijklmnopqrstuvwxyz" ; -> }
+ 
+{ s1  5 /string -> s1 swap 5 + swap 5 - }
+\ { s1 10 /string -4 /string -> s1 6 /string } \ TODO negative /string broken
+{ s1  0 /string -> s1 }
+
+{ : s2 s" abc"   ; -> }
+{ : s3 s" jklmn" ; -> }
+{ : s4 s" z"     ; -> }
+{ : s5 s" mnoq"  ; -> }
+{ : s6 s" 12345" ; -> }
+{ : s7 s" "      ; -> }
+
+( TODO SEARCH not implemented )
+\ { s1 s2 search -> s1 <true>  }  
+\ { s1 s3 search -> s1  9 /string <true>  }
+\ { s1 s4 search -> s1 25 /string <true>  }
+\ { s1 s5 search -> s1 <false> }
+\ { s1 s6 search -> s1 <false> }
+\ { s1 s7 search -> s1 <true>  } 
+
+{ :  s8 s" abc  " ; -> }
+{ :  s9 s"      " ; -> }
+{ : s10 s"    a " ; -> }
+
+{  s1 -trailing -> s1 }        \ "abcdefghijklmnopqrstuvwxyz"
+{  s8 -trailing -> s8 2 - }    \ "abc "
+{  s7 -trailing -> s7 }        \ " "
+{  s9 -trailing -> s9 drop 0 } \ " "
+{ s10 -trailing -> s10 1- }    \ " a "
+
+( TODO COMPARE not implemented )
+\ { s1        s1 compare ->  0  }
+\ { s1  pad swap cmove   ->     }    \ copy s1 to PAD
+\ { s1  pad over compare ->  0  }
+\ { s1     pad 6 compare ->  1  }
+\ { pad 10    s1 compare -> -1  }
+\ { s1     pad 0 compare ->  1  }
+\ { pad  0    s1 compare -> -1  }
+\ { s1        s6 compare ->  1  }
+\ { s6        s1 compare -> -1  }
+
+\ : "abdde" s" abdde" ;
+\ : "abbde" s" abbde" ;
+\ : "abcdf" s" abcdf" ;
+\ : "abcdee" s" abcdee" ;
+
+\ { s1 "abdde"  compare -> -1 }
+\ { s1 "abbde"  compare ->  1 }
+\ { s1 "abcdf"  compare -> -1 }
+\ { s1 "abcdee" compare ->  1 }
+
+: s11 s" 0abc" ;
+: s12 s" 0aBc" ;
+
+\ { s11 s12 compare ->  1 }
+\ { s12 s11 compare -> -1 }
+
+: s13 s" aaaaa a" ;            \ six spaces
+
+{ pad 25 char a fill -> }      \ fill PAD with 25 'a's
+{ pad 5 chars + 6 blank -> }   \ put 6 spaced from character 5
+\ { pad 12 s13 compare -> 0 }    \ PAD should now be same as s13 TODO
+
+( TODO SLITERAL test not implemented yet because it requires COMPARE) 
+\ { : s14 [ s1 ] sliteral ; -> } 
+\ { s1 s14 compare -> 0 }
+\ { s1 s14 rot = rot rot = -> <true> <false> }
+
+( TODO REPLACES not implemented )
+( TODO SUBSTITUTE not implemented )
+( TODO UNESCAPE not implemented )
+
 
 \ ------------------------------------------------------------------------
 testing output: . ." cr emit space spaces type u.

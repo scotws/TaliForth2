@@ -124,7 +124,7 @@ RTS instruction at the end of each word.
 | OR | `or` | ANSI core | 21 | **tested** |
 | OUTPUT | `output` | Tali Forth | 10 | **tested** |
 | OVER | `over` | ANSI core | 17 | **tested** |
-| PAD | `pad` | ANSI core ext | 15 | coded |
+| PAD | `pad` | ANSI core ext | 15 | **tested** |
 | PAGE | `page` | ANSI facility | 29 | **tested** |
 | PARSE_NAME | `parse-name` | ANSI core ext | 234 | **tested** |
 | PARSE | `parse` | ANSI core ext | 142 | **tested** |
@@ -184,7 +184,7 @@ RTS instruction at the end of each word.
 | UM_SLASH_MOD | `um/mod` | ANSI core | 69 | **tested** |
 | UM_STAR | `um*` | ANSI core | 73 | **tested** |
 | UNLOOP | `unloop` | ANSI core | 6 | **tested** |
-| UNUSED | `unused` | ANSI core ext | 15 | coded |
+| UNUSED | `unused` | ANSI core ext | 15 | **tested** |
 | VARIABLE | `variable` | ANSI core | 24 | **tested** |
 | WORD | `word` | ANSI core | 73 | **tested** |
 | WORDS | `words` | ANSI tools | 56 | **tested** |
@@ -198,5 +198,5 @@ RTS instruction at the end of each word.
 | ZERO_UNEQUAL | `0<>` | ANSI core ext | 21 | **tested** |
 
 Found **189** native words in `native_words.asm`.
-Of those, **15** are not marked as "tested".
+Of those, **13** are not marked as "tested".
 

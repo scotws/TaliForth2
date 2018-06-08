@@ -49,7 +49,7 @@ create actual-results  20 cells allot  ok
 : {  ( -- ) ;  ok
   ok
 \ Record depth and content of stack  ok
-: ->  \ ( ... -- )   compiled
+: ->  ( ... -- )   compiled
    depth dup actual-depth !  \ record depth  compiled
    ?dup if                   \ if there is something on stack ...  compiled
       0 do   compiled
@@ -102,15 +102,15 @@ hex  ok
 \ ------------------------------------------------------------------------  ok
 testing basic assumptions  ok
   ok
-{ -> }     \ START WITH CLEAN SLATE  ok
-( TEST IF ANY BITS ARE SET; ANSWER IN BASE 1 )  ok
+{ -> }     \ Start with clean slate  ok
+( test if any bits are set; answer in base 1 )  ok
 { : bitsset? if 0 0 else 0 then ; -> }  ok
-{  0 bitsset? -> 0 }  ( ZERO IS ALL BITS CLEAR )  ok
-{  1 bitsset? -> 0 0 }  ( OTHER NUMBER HAVE AT LEAST ONE BIT )  ok
+{  0 bitsset? -> 0 }   \ zero is all bits clear  ok
+{  1 bitsset? -> 0 0 } \ other number have at least one bit  ok
 { -1 bitsset? -> 0 0 }  ok
   ok
 \ ------------------------------------------------------------------------  ok
-testing booleans: invert and or xor  ok
+testing booleans: and invert or xor  ok
   ok
 { 0 0 and -> 0 }  ok
 { 0 1 and -> 0 }  ok
@@ -120,7 +120,7 @@ testing booleans: invert and or xor  ok
 { 0 invert 1 and -> 1 }  ok
 { 1 invert 1 and -> 0 }  ok
   ok
-0  constant 0s  ok
+0 constant 0s  ok
 0 invert constant 1s  ok
   ok
 { 0s invert -> 1s }  ok
@@ -144,7 +144,7 @@ testing booleans: invert and or xor  ok
 \ ------------------------------------------------------------------------  ok
 testing 2* 2/ lshift rshift  ok
   ok
-( WE TRUST 1S, INVERT, AND BITSSET?; WE WILL CONFIRM RSHIFT LATER )  ok
+( we trust 1s, invert, and bitsset?; we will confirm rshift later )  ok
 1s 1 rshift invert constant msb  ok
 { msb bitsset? -> 0 0 }  ok
   ok
@@ -157,14 +157,14 @@ testing 2* 2/ lshift rshift  ok
 { 0s 2/ -> 0s }  ok
 { 1 2/ -> 0 }  ok
 { 4000 2/ -> 2000 }  ok
-{ 1s 2/ -> 1s }    \ msb propogated  ok
+{ 1s 2/ -> 1s } \ msb propogated  ok
 { 1s 1 xor 2/ -> 1s }  ok
 { msb 2/ msb and -> msb }  ok
   ok
 { 1 0 lshift -> 1 }  ok
 { 1 1 lshift -> 2 }  ok
 { 1 2 lshift -> 4 }  ok
-{ 1 f lshift -> 8000 }   \ biggest guaranteed shift  ok
+{ 1 f lshift -> 8000 } \ biggest guaranteed shift  ok
 { 1s 1 lshift 1 xor -> 1s }  ok
 { msb 1 lshift -> 0 }  ok
   ok
@@ -172,17 +172,18 @@ testing 2* 2/ lshift rshift  ok
 { 1 1 rshift -> 0 }  ok
 { 2 1 rshift -> 1 }  ok
 { 4 2 rshift -> 1 }  ok
-{ 8000 f rshift -> 1 }   \ biggest  ok
+{ 8000 f rshift -> 1 } \ biggest  ok
 { msb 1 rshift msb and -> 0 }  \ rshift zero fills msbs  ok
 { msb 1 rshift 2* -> msb }  ok
   ok
 \ ------------------------------------------------------------------------  ok
 testing comparisons: 0= = <> 0< < > u< min max  ok
-0 invert   constant max-uint  ok
+( TODO we need to add max-2int and min-2int for further tests)  ok
+0 invert  constant max-uint  ok
 0 invert 1 rshift  constant max-int  ok
-0 invert 1 rshift invert constant min-int  ok
+0 invert 1 rshift invert  constant min-int  ok
 0 invert 1 rshift  constant mid-uint  ok
-0 invert 1 rshift invert constant mid-uint+1  ok
+0 invert 1 rshift invert  constant mid-uint+1  ok
   ok
 0s constant <false>  ok
 1s constant <true>  ok
@@ -299,7 +300,7 @@ testing comparisons: 0= = <> 0< < > u< min max  ok
 { max-int 0 max -> max-int }  ok
   ok
 \ ------------------------------------------------------------------------  ok
-testing stack ops: 2drop 2dup 2over 2swap ?dup depth drop dup over rot -rot swap  ok
+testing stack ops: 2drop 2dup 2over 2swap ?dup depth drop dup nip over rot -rot swap   ok
   ok
 { 1 2 2drop -> }  ok
 { 1 2 2dup -> 1 2 1 2 }  ok
@@ -314,6 +315,7 @@ testing stack ops: 2drop 2dup 2over 2swap ?dup depth drop dup over rot -rot swap
 { 0 drop -> }  ok
 { 1 2 drop -> 1 }  ok
 { 1 dup -> 1 1 }  ok
+{ 1 2 nip -> 2 }  ok
 { 1 2 over -> 1 2 1 }  ok
 { 1 2 3 rot -> 2 3 1 }  ok
 { 1 2 3 -rot -> 3 1 2 }  ok
@@ -326,7 +328,7 @@ testing >r r> r@  ok
 { : gr2 >r r@ r> drop ; -> }  ok
 { 123 gr1 -> 123 }  ok
 { 123 gr2 -> 123 }  ok
-{ 1s gr1 -> 1s }   ( return stack holds cells )  ok
+{ 1s gr1 -> 1s } \ return stack holds cells  ok
   ok
 \ ------------------------------------------------------------------------  ok
 testing add/subtract: + - 1+ 1- abs negate dnegate  ok
@@ -372,8 +374,8 @@ testing add/subtract: + - 1+ 1- abs negate dnegate  ok
 { 0. dnegate -> 0. }  ok
 { 1. dnegate -> -1. }  ok
 { -1. dnegate -> 1. }  ok
-\ { max-2int dnegate -> min-2int swap 1+ swap } ( TODO Not working yet )  ok
-\ { min-2int swap 1+ swap dnegate -> max-2int } ( TODO Not working yet )   ok
+\ { max-2int dnegate -> min-2int swap 1+ swap } \ TODO Not working yet  ok
+\ { min-2int swap 1+ swap dnegate -> max-2int } \ TODO Not working yet   ok
   ok
 { 0 abs -> 0 }  ok
 { 1 abs -> 1 }  ok
@@ -410,7 +412,7 @@ testing multiply: s>d * m* um*  ok
 { max-int min-int m* -> msb msb 2/ }  ok
 { max-int max-int m* -> 1 msb 2/ invert }  ok
   ok
-{ 0 0 * -> 0 }    \ test identities  ok
+{ 0 0 * -> 0 } \ test identities  ok
 { 0 1 * -> 0 }  ok
 { 1 0 * -> 0 }  ok
 { 1 2 * -> 2 }  ok
@@ -639,22 +641,22 @@ ifsym     : t*/    t*/mod swap drop ;  ok
 { min-int 2 min-int */mod -> min-int 2 min-int t*/mod }  ok
   ok
 \ ------------------------------------------------------------------------  ok
-testing here , @ ! cell+ cells c, c@ c! chars 2@ 2! align aligned +! allot  ok
+testing here , @ ! cell+ cells c, c@ c! chars 2@ 2! align aligned +! allot pad unused  ok
   ok
 here 1 allot  ok
 here  ok
 constant 2nda  ok
 constant 1sta  ok
-{ 1sta 2nda u< -> <true> }  \ here must grow with allot  ok
-{ 1sta 1+ -> 2nda }   \ ... by one address unit  ok
+{ 1sta 2nda u< -> <true> }  \ here must grow with allot ...  ok
+{ 1sta 1+ -> 2nda }         \ ... by one address unit  ok
 ( TODO missing test: negative allot )  ok
   ok
 here 1 ,  ok
 here 2 ,  ok
 constant 2nd  ok
 constant 1st  ok
-{ 1st 2nd u< -> <true> }   \ here must grow with allot  ok
-{ 1st cell+ -> 2nd }   \ ... by one cell  ok
+{ 1st 2nd u< -> <true> } \ here must grow with allot ...  ok
+{ 1st cell+ -> 2nd }     \ ... by one cell  ok
 { 1st 1 cells + -> 2nd }  ok
 { 1st @ 2nd @ -> 1 2 }  ok
 { 5 1st ! -> }  ok
@@ -670,8 +672,8 @@ here 1 c,  ok
 here 2 c,  ok
 constant 2ndc  ok
 constant 1stc  ok
-{ 1stc 2ndc u< -> <true> }  \ here must grow with allot  ok
-{ 1stc char+ -> 2ndc }   \ ... by one char  ok
+{ 1stc 2ndc u< -> <true> } \ here must grow with allot  ok
+{ 1stc char+ -> 2ndc }     \ ... by one char  ok
 { 1stc 1 chars + -> 2ndc }  ok
 { 1stc c@ 2ndc c@ -> 1 2 }  ok
 { 3 1stc c! -> }  ok
@@ -682,7 +684,7 @@ constant 1stc  ok
 align 1 allot here align here 3 cells allot  ok
 constant a-addr  constant ua-addr  ok
 { ua-addr aligned -> a-addr }  ok
-{    1 a-addr c!  a-addr c@ ->    1 }  ok
+{ 1 a-addr c!  a-addr c@ -> 1 }  ok
 { 1234 a-addr  !  a-addr  @ -> 1234 }  ok
 { 123 456 a-addr 2!  a-addr 2@ -> 123 456 }  ok
 { 2 a-addr char+ c!  a-addr char+ c@ -> 2 }  ok
@@ -691,11 +693,18 @@ constant a-addr  constant ua-addr  ok
 { 123 456 a-addr cell+ 2!  a-addr cell+ 2@ -> 123 456 }  ok
   ok
 : bits ( x -- u )  compiled
-   0 swap begin dup while dup msb and if >r 1+ r> then 2* repeat drop ;  ok
+   0 swap begin  compiled
+   dup while   compiled
+      dup msb and if  compiled
+         >r 1+ r>   compiled
+      then 2*   compiled
+   repeat   compiled
+   drop ;  ok
+  ok
 ( characters >= 1 au, <= size of cell, >= 8 bits )  ok
 { 1 chars 1 < -> <false> }  ok
 { 1 chars 1 cells > -> <false> }  ok
-( TODO tbd: how to find number of bits? )  ok
+( TODO how to find number of bits? )  ok
   ok
 ( cells >= 1 au, integral multiple of char size, >= 16 bits )  ok
 { 1 cells 1 < -> <false> }  ok
@@ -706,6 +715,10 @@ constant a-addr  constant ua-addr  ok
 { 1 1st +! -> }  ok
 { 1st @ -> 1 }  ok
 { -1 1st +! 1st @ -> 0 }  ok
+  ok
+( here + unused + buffer size must be total RAM, that is, $7FFF )  ok
+{ pad here - -> FF } \ PAD must have offset of $FF  ok
+{ here unused + 400 + -> 7FFF }  ok
   ok
 \ ------------------------------------------------------------------------  ok
 testing char [char] [ ] bl s"  ok
@@ -937,12 +950,12 @@ testing evaluate  ok
 : ge3 s" : ge4 345 ;" ;  ok
 : ge5 evaluate ; immediate  ok
   ok
-{ ge1 evaluate -> 123 }   ( test evaluate in interp. state )  ok
+{ ge1 evaluate -> 123 } \ test evaluate in interp. state  ok
 { ge2 evaluate -> 124 }  ok
 { ge3 evaluate -> }  ok
 { ge4 -> 345 }  ok
   ok
-{ : ge6 ge1 ge5 ; -> }   ( test evaluate in compile state )  ok
+{ : ge6 ge1 ge5 ; -> }  \ test evaluate in compile state  ok
 { ge6 -> 123 }  ok
 { : ge7 ge2 ge5 ; -> }  ok
 { ge7 -> 124 }  ok
@@ -950,15 +963,18 @@ testing evaluate  ok
 \ ------------------------------------------------------------------------  ok
 testing source >in word  ok
   ok
-: gs1 s" source" 2dup evaluate  compiled
+: gs1 s" source" 2dup evaluate   compiled
        >r swap >r = r> r> = ;  ok
 { gs1 -> <true> <true> }  ok
   ok
 variable scans  ok
-: rescan?  -1 scans +! scans @ if 0 >in ! then ;  ok
+: rescan?  -1 scans +!  compiled
+   scans @ if  compiled
+      0 >in !  compiled
+   then ;  ok
   ok
-{ 2 scans !  ok
-345 rescan?  ok
+{ 2 scans !    ok
+345 rescan?    ok
 -> 345 345 }  ok
   ok
 : gs2  5 scans ! s" 123 rescan?" evaluate ;  ok
@@ -967,25 +983,28 @@ variable scans  ok
 : gs3 word count swap c@ ;  ok
 { bl gs3 hello -> 5 char h }  ok
 { char " gs3 goodbye" -> 7 char g }  ok
-{ bl gs3  ok
-drop -> 0 }    \ blank line return zero-length string  ok
+{ bl gs3   ok
+drop -> 0 } \ blank line return zero-length string  ok
   ok
 : gs4 source >in ! drop ;  ok
-{ gs4 123 456  ok
+{ gs4 123 456   ok
 -> }  ok
   ok
 \ ------------------------------------------------------------------------  ok
 testing <# # #s #> hold sign base >number hex decimal  ok
-  ok
-: s=  \ ( addr1 c1 addr2 c2 -- t/f ) compare two strings.  compiled
-   >r swap r@ = if   \ make sure strings have same length  compiled
+\  ok
+\ compare two strings.  ok
+: s=  ( addr1 c1 addr2 c2 -- t/f )   compiled
+   >r swap r@ = if \ make sure strings have same length  compiled
       r> ?dup if   \ if non-empty strings  compiled
-  0 do  compiled
-     over c@ over c@ - if 2drop <false> unloop exit then  compiled
-     swap char+ swap char+  compiled
+         0 do  compiled
+            over c@ over c@ - if  compiled
+               2drop <false> unloop exit  compiled
+            then  compiled
+            swap char+ swap char+  compiled
          loop  compiled
       then  compiled
-      2drop <true>   \ if we get here, strings match  compiled
+      2drop <true> \ if we get here, strings match  compiled
    else  compiled
       r> drop 2drop <false>  \ lengths mismatch  compiled
    then ;  ok
@@ -1004,7 +1023,13 @@ testing <# # #s #> hold sign base >number hex decimal  ok
   ok
 24 constant max-base   \ base 2 .. 36  ok
 : count-bits  compiled
-   0 0 invert begin dup while >r 1+ r> 2* repeat drop ;  ok
+   0 0 invert   compiled
+   begin   compiled
+      dup while  compiled
+      >r 1+ r> 2*   compiled
+   repeat   compiled
+   drop ;  ok
+  ok
 count-bits 2* constant #bits-ud  \ number of bits in ud  ok
   ok
 : gp5  compiled
@@ -1028,7 +1053,7 @@ count-bits 2* constant #bits-ud  \ number of bits in ud  ok
 { gp6 -> <true> }  ok
   ok
 : gp7  compiled
-   base @ >r    max-base base !  compiled
+   base @ >r  max-base base !  compiled
    <true>  compiled
    a 0 do  compiled
       i 0 <# #s #>  compiled
@@ -1055,8 +1080,7 @@ create gn-buf 0 c,  ok
 { 0 0 gn' +' >number -> 0 0 gn-string }  ok
 { 0 0 gn' .' >number -> 0 0 gn-string }  ok
   ok
-: >number-based  compiled
-   base @ >r base ! >number r> base ! ;  ok
+: >number-based  base @ >r base ! >number r> base ! ;  ok
   ok
 { 0 0 gn' 2' 10 >number-based -> 2 0 gn-consumed }  ok
 { 0 0 gn' 2'  2 >number-based -> 0 0 gn-string }  ok
@@ -1065,7 +1089,8 @@ create gn-buf 0 c,  ok
 { 0 0 gn' g' max-base >number-based -> 10 0 gn-consumed }  ok
 { 0 0 gn' z' max-base >number-based -> 23 0 gn-consumed }  ok
   ok
-: gn1 \ ( ud base -- ud' len ) ud should equal ud' and len should be zero.  compiled
+\ ud should equal ud' and len should be zero.  ok
+: gn1  ( ud base -- ud' len )   compiled
    base @ >r base !  compiled
    <# #s #>  compiled
    0 0 2swap >number swap drop  \ return length only  compiled
@@ -1077,7 +1102,7 @@ create gn-buf 0 c,  ok
 { max-uint 0 max-base gn1 -> max-uint 0 0 }  ok
 { max-uint dup max-base gn1 -> max-uint dup 0 } INCORRECT RESULT: { max-uint dup max-base gn1 -> max-uint dup 0 } ACTUAL RESULT: { 1 0 6 } ok
   ok
-: gn2 \ ( -- 16 10 )  compiled
+: gn2 ( -- 16 10 )  compiled
    base @ >r  hex base @  decimal base @  r> base ! ;  ok
 { gn2 -> 10 a }  ok
   ok
@@ -1116,6 +1141,83 @@ create sbuf 12 c, 34 c, 56 c,  ok
 { seebuf -> 12 34 34 } INCORRECT RESULT: { seebuf -> 12 34 34 } ACTUAL RESULT: { 12 12 12 } ok
   ok
 \ ------------------------------------------------------------------------  ok
+testing string words: /string -trailing sliteral  ok
+  ok
+{ : s1 s" abcdefghijklmnopqrstuvwxyz" ; -> }  ok
+   ok
+{ s1  5 /string -> s1 swap 5 + swap 5 - }  ok
+\ { s1 10 /string -4 /string -> s1 6 /string } \ TODO negative /string broken  ok
+{ s1  0 /string -> s1 }  ok
+  ok
+{ : s2 s" abc"   ; -> }  ok
+{ : s3 s" jklmn" ; -> }  ok
+{ : s4 s" z"     ; -> }  ok
+{ : s5 s" mnoq"  ; -> }  ok
+{ : s6 s" 12345" ; -> }  ok
+{ : s7 s" "      ; -> }  ok
+  ok
+( TODO SEARCH not implemented )  ok
+\ { s1 s2 search -> s1 <true>  }    ok
+\ { s1 s3 search -> s1  9 /string <true>  }  ok
+\ { s1 s4 search -> s1 25 /string <true>  }  ok
+\ { s1 s5 search -> s1 <false> }  ok
+\ { s1 s6 search -> s1 <false> }  ok
+\ { s1 s7 search -> s1 <true>  }   ok
+  ok
+{ :  s8 s" abc  " ; -> }  ok
+{ :  s9 s"      " ; -> }  ok
+{ : s10 s"    a " ; -> }  ok
+  ok
+{  s1 -trailing -> s1 }        \ "abcdefghijklmnopqrstuvwxyz"  ok
+{  s8 -trailing -> s8 2 - }    \ "abc "  ok
+{  s7 -trailing -> s7 }        \ " " Stack underflow
+{  s9 -trailing -> s9 drop 0 } \ " "  ok
+{ s10 -trailing -> s10 1- }    \ " a "  ok
+  ok
+( TODO COMPARE not implemented )  ok
+\ { s1        s1 compare ->  0  }  ok
+\ { s1  pad swap cmove   ->     }    \ copy s1 to PAD  ok
+\ { s1  pad over compare ->  0  }  ok
+\ { s1     pad 6 compare ->  1  }  ok
+\ { pad 10    s1 compare -> -1  }  ok
+\ { s1     pad 0 compare ->  1  }  ok
+\ { pad  0    s1 compare -> -1  }  ok
+\ { s1        s6 compare ->  1  }  ok
+\ { s6        s1 compare -> -1  }  ok
+  ok
+\ : "abdde" s" abdde" ;  ok
+\ : "abbde" s" abbde" ;  ok
+\ : "abcdf" s" abcdf" ;  ok
+\ : "abcdee" s" abcdee" ;  ok
+  ok
+\ { s1 "abdde"  compare -> -1 }  ok
+\ { s1 "abbde"  compare ->  1 }  ok
+\ { s1 "abcdf"  compare -> -1 }  ok
+\ { s1 "abcdee" compare ->  1 }  ok
+  ok
+: s11 s" 0abc" ;  ok
+: s12 s" 0aBc" ;  ok
+  ok
+\ { s11 s12 compare ->  1 }  ok
+\ { s12 s11 compare -> -1 }  ok
+  ok
+: s13 s" aaaaa a" ;            \ six spaces  ok
+  ok
+{ pad 25 char a fill -> }      \ fill PAD with 25 'a's  ok
+{ pad 5 chars + 6 blank -> }   \ put 6 spaced from character 5  ok
+{ pad 12 s13 compare -> 0 }    \ PAD Should now be same as s13 >ompare< Undefined word
+  ok
+( TODO SLITERAL test not implemented yet because it requires COMPARE)   ok
+\ { : s14 [ s1 ] sliteral ; -> }   ok
+\ { s1 s14 compare -> 0 }  ok
+\ { s1 s14 rot = rot rot = -> <true> <false> }  ok
+  ok
+( TODO REPLACES not implemented )  ok
+( TODO SUBSTITUTE not implemented )  ok
+( TODO UNESCAPE not implemented )  ok
+  ok
+  ok
+\ ------------------------------------------------------------------------  ok
 testing output: . ." cr emit space spaces type u.  ok
   ok
 : output-test  compiled
@@ -1143,22 +1245,20 @@ testing output: . ." cr emit space spaces type u.  ok
 ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`
 abcdefghijklmnopqrstuvwxyz{|}~
 you should see 0-9 separated by a space:
-0 1 2 3 
-4 5 6 7 8 9 
-you should see 0-9 (with no spaces):
-0123456789
-you should see a-g separated by a space:
-a b c d e f g 
-you should see 0-5 separated by two spaces:
-0  1  2  3  4  5  
-you should see two separate lines:
-\line 1
-line 2
-you should see the number ranges of signed and unsigned numbers:
-  signed: -8000 7FFF 
-unsigned:  0 FFFF 
- ok
-  ok
-\ ----------------------------------------------------------------------  ok
-testing input: accept  ok
-  ok
+0 1 2 3 4 5 6 7 
+8 9 
+
+        PC  AC XR YR SP NV-BDIZC
+65C02: 6873 0a 78 00 f7 00110100
+
+Py65 Monitor
+
+       PC  AC XR YR SP NV-BDIZC
+6502: 0000 00 00 00 ff 00110000
+.
+
+Py65 Monitor
+
+       PC  AC XR YR SP NV-BDIZC
+6502: 0000 00 00 00 ff 00110000
+

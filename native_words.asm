@@ -1096,7 +1096,8 @@ z_chars:        rts
 ; ## "cmove"  tested  ANSI string
         ; """Copy u bytes from addr1 to addr2, going low to high (addr2 is
         ; larger than addr1). Based on code in Leventhal, Lance A. 
-        ; "6502 Assembly Language Routines", p. 201
+        ; "6502 Assembly Language Routines", p. 201. There are no official
+        ; tests for this word.
         ; """
 .scope
 xt_cmove:
@@ -1153,7 +1154,7 @@ z_cmove:        rts
 ; ## CMOVE_UP ( add1 add2 u -- ) "Copy bytes from high to low"
 ; ## "cmove>"  tested  ANSI string
         ; """Based on code in Leventhal, Lance A. "6502 Assembly Language
-        ; Routines", p. 201.
+        ; Routines", p. 201. There are no official tests for this word.
         ; """
 .scope
 xt_cmove_up:
@@ -4184,7 +4185,7 @@ xt_move:
                 ; compare MSB first
                 lda 3,x                 ; MSB of addr2
                 cmp 5,x                 ; MSB of addr1
-                beq _lsb                ; wasn't not helpful, move to LSB
+                beq _lsb                ; wasn't helpful, move to LSB
 
                 bcc _to_move_up         ; we want CMOVE>
 
@@ -4211,7 +4212,7 @@ z_move:         rts
 
 
 ; ## NAME_TO_INT ( nt -- xt ) "Convert Name Token to Execute Token"
-; ## "name>int"  coded  Gforth
+; ## "name>int"  tested  Gforth
 ; TODO deal with compile-only words
         ; """See
         ; https://www.complang.tuwien.ac.at/forth/gforth/Docs-html/Name-token.html
@@ -4756,7 +4757,7 @@ z_over:         rts
 
 
 ; ## PAD ( -- addr ) "Return address of user scratchpad"
-; ## "pad"  coded  ANSI core ext
+; ## "pad"  tested  ANSI core ext
         ; """Return address to a temporary area in free memory for user. Must
         ; be at least 84 bytes in size (says ANSI). It is located relative to
         ; the compile area pointer (CP) and therefore varies in position.
@@ -7231,7 +7232,11 @@ z_unloop:       rts
 
 
 ; ## UNUSED ( -- u ) "Return size of space available to Dictionary"
-; ## "unused"  coded  ANSI core ext
+; ## "unused"  tested  ANSI core ext
+        ; """UNUSED does not include the ACCEPT history buffers. Total RAM
+        ; should be HERE + UNUSED + <history buffer size>, the last of which
+        ; defaults to $400
+        ; """
 xt_unused:      
                 dex
                 dex

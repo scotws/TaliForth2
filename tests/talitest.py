@@ -52,7 +52,6 @@ def sendline(kid, string):
     kid.expect('\r\n')
     return kid.before.decode('ascii')
 
-
 # Create the py65mon process running Tali Forth 2.
 # Linux Version (Windows version doesn't work with this simulator)
 child = pexpect.spawn(SPAWN_COMMAND)

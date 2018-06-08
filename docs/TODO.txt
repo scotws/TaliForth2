@@ -34,13 +34,15 @@ TODO AT SOME POINT
         - Add handling for multi-byte keyboard input (if possible with py65)
         - See if we can add real Delete Key detection (ESC[3~)
         - Add real USER variables
-        - Add multitasking (round-robin), this needs USER variables
+        - Add multitasking (round-robin), this requires USER variables
         - See if MAX and MIN can be combined
         - See if > and < etc can be combined
         - Consider adding CASE
+        - Consider adding SEARCH and COMPARE, also REPLACES, SUBSTITUTE,
+          and UNESCAPE
         - Consider moving UM* to table-based multiplication
-        - Consider adding KEY? if we can make it work with py65mon
-        - Consider adding THROW/CATCH
+        - Consider implementing KEY? if we can make it work with py65mon
+        - Consider implementing  THROW/CATCH
         - Add an assembler
 
 

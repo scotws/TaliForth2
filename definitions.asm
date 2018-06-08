@@ -12,8 +12,11 @@
 
 ; MEMORY MAP OF RAM
 
-; Drawing is not only very ugly, but also not to scale. See docs/memorymap.txt
-; for the complete memory map
+; Drawing is not only very ugly, but also not to scale. See the manual for 
+; details on the memory map. Note that some of the values are hard-coded in
+; the testing routines, especially the size of the input history buffer, the
+; offset for PAD, and the total RAM size. If these are changed, the tests will
+; have to be changed as well
 
 
 ;    $0000  +-------------------+  ram_start, zpage, user0
@@ -52,7 +55,7 @@
 ;           |                   |
 ;    $7C00  +-------------------+  hist_buff, cp_end
 ;           |   Input History   |
-;           |    for accept     |
+;           |    for ACCEPT     |
 ;           |  8x128B buffers   |
 ;    $7fff  +-------------------+  ram_end
 
@@ -82,7 +85,7 @@
 .alias bsize     $ff            ; size of input/output buffers
 .alias buffer0   stack0+$100    ; input buffer ($0200-$027f)
 .alias cp0       buffer0+bsize  ; Dictionary starts after last buffer
-.alias cp_end    hist_buff-1    ; Last RAM byte available for code
+.alias cp_end    hist_buff      ; Last RAM byte available for code
 .alias padoffset $ff            ; offset from CP to PAD (holds number strings)
 
 

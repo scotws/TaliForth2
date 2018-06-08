@@ -331,7 +331,7 @@
  8280  85 01     STA  $01
  8282  B5 01     LDA  $01, X
  8284  30 15     BMI  $829B
- 8286  A0 FE     LDY  #$FE
+ 8286  A0 FF     LDY  #$FF
  8288  C4 00     CPY  $00
  828A  A9 7B     LDA  #$7B
  828C  E5 01     SBC  $01
@@ -3456,7 +3456,7 @@
  9901  60        RTS  
  9902  CA        DEX  
  9903  CA        DEX  
- 9904  A9 FE     LDA  #$FE
+ 9904  A9 FF     LDA  #$FF
  9906  38        SEC  
  9907  E5 00     SBC  $00
  9909  95 00     STA  $00, X
