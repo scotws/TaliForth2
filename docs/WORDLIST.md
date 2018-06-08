@@ -106,7 +106,7 @@ RTS instruction at the end of each word.
 | MINUS | `-` | ANSI core | 22 | **tested** |
 | MINUS_TRAILING | `-trailing` | ANSI string | 41 | coded |
 | MOVE | `move` | ANSI core | 30 | coded |
-| NAME_TO_INT | `name>int` | Gforth | 32 | coded |
+| NAME_TO_INT | `name>int` | Gforth | 32 | **tested** |
 | NAME_TO_STRING | `name>string` | Gforth | 29 | **tested** |
 | NC_LIMIT | `nc-limit` | Tali Forth | 10 | **tested** |
 | NEGATE | `negate` | ANSI core | 20 | **tested** |
@@ -198,5 +198,5 @@ RTS instruction at the end of each word.
 | ZERO_UNEQUAL | `0<>` | ANSI core ext | 21 | **tested** |
 
 Found **189** native words in `native_words.asm`.
-Of those, **13** are not marked as "tested".
+Of those, **12** are not marked as "tested".
 

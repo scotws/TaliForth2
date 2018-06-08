@@ -1205,7 +1205,7 @@ testing string words: /string -trailing sliteral  ok
   ok
 { pad 25 char a fill -> }      \ fill PAD with 25 'a's  ok
 { pad 5 chars + 6 blank -> }   \ put 6 spaced from character 5  ok
-{ pad 12 s13 compare -> 0 }    \ PAD Should now be same as s13 >ompare< Undefined word
+\ { pad 12 s13 compare -> 0 }    \ PAD should now be same as s13 TODO  ok
   ok
 ( TODO SLITERAL test not implemented yet because it requires COMPARE)   ok
 \ { : s14 [ s1 ] sliteral ; -> }   ok
@@ -1245,8 +1245,8 @@ testing output: . ." cr emit space spaces type u.  ok
 ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`
 abcdefghijklmnopqrstuvwxyz{|}~
 you should see 0-9 separated by a space:
-0 1 2 3 4 5 6 7 
-8 9 
+0 1 2 3 4 5 6 
+7 8 9 
 
         PC  AC XR YR SP NV-BDIZC
 65C02: 6873 0a 78 00 f7 00110100

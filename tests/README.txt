@@ -10,6 +10,10 @@ The tests take a long time to complete (about 25 minutes on a Ryzen 7
 When done, a summary will be printed. The detailed results can be found in
 results.txt. The script will abort if it detects a crash.
 
+Because these tests are normal Forth programs, they feed the words through
+PARSE-NAME, which assumes spaces as delimiters. Therefore, the test Forth files
+should not contain tabs.
+
 Note that this is not a generic test for ANSI Forth, but rather includes
 special tests for words that are specific to Tali Forth 2. If you use this code
 for your own project, you'll have to change it accordingly. The "official" Forth

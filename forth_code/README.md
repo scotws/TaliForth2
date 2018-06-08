@@ -1,7 +1,7 @@
 # Raw Forth flies for Tali Forth 2 for the 65c02  
 Scot W. Stevenson <scot.stevenson@gmail.com>   
 First version: 27. Feb 2018
-This version: 01. Mar 2018
+This version: 09. June 2018
 
 Tali Forth 2 uses a bunch of high-level Forth words that are compiled at
 run-time, some defined by the system, some defined by the user. To make it
@@ -10,6 +10,8 @@ this directory, and then use the `forth_to_ophisbin.py` tool in this directory
 to convert them to ASCII versions that have been stripped of all comment. These
 can be placed as `.asc` files in the parent folder, from where they are imported
 by Ophis with the `.incbin` directive.
+
+Or just run the `make` file from the top folder level.
 
 For example, given the Forth routine for SEE in `forth_code/user_words.py`:
 ```
@@ -50,5 +52,10 @@ user_words_start:
 user_words_end:
 ```
 
-This methode allows testing of the Forth word to be defined with Gforth (though
+This method allows testing of the Forth word to be defined with Gforth (though
 note that the exampe above will fail because of `wordsize`, a Tali Forth word). 
+
+All files included here are processed by the `evaluate` word which in turn uses
+the normal processing machinery with `parse-name`. Since that word assumes that
+delimiters will be spaces, not tabs, the Forth files here should not contain
+tabs because that can cause the files to choke.

@@ -1,6 +1,6 @@
 % Internals of Tali Forth 2
 % Scot W. Stevenson 
-% This version: 06. June 2018
+% This version: 09. June 2018
 % ---------------------------------------
 \section{Stack}\index{stack|textbf}
 
@@ -311,6 +311,10 @@ case, we use SOURCE-ID to find out where input is coming from: 0 for the
 keyboard, \texttt{-1 (\$FFFF)} for a string in memory, and a number \texttt{n}
 for a file-id\index{file-id}. Since Tali currently doesn't support blocks, we
 can skip the \texttt{blk} instruction and go right to \texttt{source-id}. 
+
+One gotcha with Tali Forth's input is that current it only sees spaces, but not
+other whitespace, as delimiters. This means that Forth text files that are fed
+to Tali should not contain tabs. This behavior might be changed in the future.
 
 
 \subsection{Starting up}\index{booting}

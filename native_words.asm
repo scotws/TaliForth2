@@ -4811,7 +4811,9 @@ z_page:         rts
         ; because it is a lot easier to use. Reference implementations at
         ; http://forth-standard.org/standard/core/PARSE-NAME and
         ; http://www.forth200x.org/reference-implementations/parse-name.fs
-        ; Roughly, the word is comparable to BL WORD COUNT
+        ; Roughly, the word is comparable to BL WORD COUNT. Note that because
+        ; we skip leading spaces, not leading whitespace, PARSE-NAME in its current
+        ; form will choke on tabs.
         ; """
 .scope
 xt_parse_name:
