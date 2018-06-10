@@ -166,19 +166,19 @@ RTS instruction at the end of each word.
 | TWO | `2` | Tali Forth | 8 | **tested** |
 | TWO_DROP | `2drop` | ANSI core | 11 | **tested** |
 | TWO_DUP | `2dup` | ANSI core | 27 | **tested** |
-| TWO_FETCH | `2@` | ANSI core | 22 | **tested** |
+| TWO_FETCH | `2@` | ANSI core | 41 | **tested** |
 | TWO_OVER | `2over` | ANSI core | 27 | **tested** |
 | TWO_R_FETCH | `2r@` | ANSI core ext | 29 | coded |
 | TWO_R_FROM | `2r>` | ANSI core ext | 28 | coded |
 | TWO_SLASH | `2/` | ANSI core | 14 | **tested** |
 | TWO_STAR | `2*` | ANSI core | 11 | **tested** |
-| TWO_STORE | `2!` | ANSI core | 22 | **tested** |
+| TWO_STORE | `2!` | ANSI core | 41 | **tested** |
 | TWO_SWAP | `2swap` | ANSI core | 39 | **tested** |
 | TWO_TO_R | `2>r` | ANSI core ext | 35 | coded |
 | TWO_VARIABLE | `2variable` | ANSI double | 14 | **tested** |
 | TYPE | `type` | ANSI core | 41 | **tested** |
 | U_DOT | `u.` | ANSI core | 15 | **tested** |
-| U_LESS_THAN | `u<` | ANSI core | 24 | **tested** |
+| U_LESS_THAN | `u<` | ANSI core | 25 | **tested** |
 | UD_SLASH_MOD | `ud/mod` | Gforth | 34 | coded |
 | UF_STRIP | `uf-strip` | Tali Forth | 10 | **tested** |
 | UM_SLASH_MOD | `um/mod` | ANSI core | 69 | **tested** |

@@ -665,7 +665,7 @@ constant 1st  ok
 { 1st @ 2nd @ -> 5 6 }  ok
 { 1st 2@ -> 6 5 }  ok
 { 2 1 1st 2! -> }  ok
-{ 1st 2@ -> 2 1 }  ok
+{ 1st 2@ -> 2 1 } INCORRECT RESULT: { 1st 2@ -> 2 1 } ACTUAL RESULT: { 1 2 } ok
 { 1s 1st !  1st @ -> 1s }  \ can store cell-wide value  ok
   ok
 here 1 c,  ok
@@ -686,11 +686,11 @@ constant a-addr  constant ua-addr  ok
 { ua-addr aligned -> a-addr }  ok
 { 1 a-addr c!  a-addr c@ -> 1 }  ok
 { 1234 a-addr  !  a-addr  @ -> 1234 }  ok
-{ 123 456 a-addr 2!  a-addr 2@ -> 123 456 }  ok
+{ 123 456 a-addr 2!  a-addr 2@ -> 123 456 } INCORRECT RESULT: { 123 456 a-addr 2!  a-addr 2@ -> 123 456 } ACTUAL RESULT: { 456 123 } ok
 { 2 a-addr char+ c!  a-addr char+ c@ -> 2 }  ok
 { 3 a-addr cell+ c!  a-addr cell+ c@ -> 3 }  ok
 { 1234 a-addr cell+ !  a-addr cell+ @ -> 1234 }  ok
-{ 123 456 a-addr cell+ 2!  a-addr cell+ 2@ -> 123 456 }  ok
+{ 123 456 a-addr cell+ 2!  a-addr cell+ 2@ -> 123 456 } INCORRECT RESULT: { 123 456 a-addr cell+ 2!  a-addr cell+ 2@ -> 123 456 } ACTUAL RESULT: { 456 123 } ok
   ok
 : bits ( x -- u )  compiled
    0 swap begin  compiled
@@ -910,14 +910,14 @@ testing defining words: : ; constant variable 2variable create does> >body  ok
 { 0. 2v1 2! -> }   ok
 { 2v1 2@ -> 0. }   ok
 { -1 -2 2v1 2! -> }   ok
-{ 2v1 2@ -> -1 -2 }  ok
+{ 2v1 2@ -> -1 -2 } INCORRECT RESULT: { 2v1 2@ -> -1 -2 } ACTUAL RESULT: { -2 -1 } ok
 { : cd2 2variable ; -> }   ok
 { cd2 2v2 -> }   ok
 { : cd3 2v2 2! ; -> }   ok
 { -2 -1 cd3 -> }   ok
-{ 2v2 2@ -> -2 -1 }  ok
+{ 2v2 2@ -> -2 -1 } INCORRECT RESULT: { 2v2 2@ -> -2 -1 } ACTUAL RESULT: { -1 -2 } ok
 { 2variable 2v3 immediate 5 6 2v3 2! -> }  ok
-{ 2v3 2@ -> 5 6 }  ok
+{ 2v3 2@ -> 5 6 } INCORRECT RESULT: { 2v3 2@ -> 5 6 } ACTUAL RESULT: { 6 5 } ok
   ok
 { : nop : postpone ; ; -> }  ok
 { nop nop1 nop nop2 -> }  ok
@@ -938,7 +938,7 @@ testing defining words: : ; constant variable 2variable create does> >body  ok
   ok
 { : weird: create does> 1 + does> 2 + ; -> }  ok
 { weird: w1 -> }  ok
-{ ' w1 >body -> here } INCORRECT RESULT: { ' w1 >body -> here } ACTUAL RESULT: { 37C6 } ok
+{ ' w1 >body -> here } INCORRECT RESULT: { ' w1 >body -> here } ACTUAL RESULT: { 37D9 } ok
 { w1 -> here 1 + }  ok
 { w1 -> here 2 + }  ok
   ok
@@ -1019,7 +1019,7 @@ testing <# # #s #> hold sign base >number hex decimal  ok
 { gp3 -> <true> }  ok
   ok
 : gp4  <# 1 0 #s #> s" 1" s= ;  ok
-{ gp4 -> <true> } Stack underflow
+{ gp4 -> <true> }  ok
   ok
 24 constant max-base   \ base 2 .. 36  ok
 : count-bits  compiled
@@ -1100,7 +1100,7 @@ create gn-buf 0 c,  ok
 { max-uint dup 2 gn1 -> max-uint dup 0 }  ok
 { 0 0 max-base gn1 -> 0 0 0 }  ok
 { max-uint 0 max-base gn1 -> max-uint 0 0 }  ok
-{ max-uint dup max-base gn1 -> max-uint dup 0 } INCORRECT RESULT: { max-uint dup max-base gn1 -> max-uint dup 0 } ACTUAL RESULT: { 1 0 6 } ok
+{ max-uint dup max-base gn1 -> max-uint dup 0 } INCORRECT RESULT: { max-uint dup max-base gn1 -> max-uint dup 0 } ACTUAL RESULT: { 7577 -40E0 0 } ok
   ok
 : gn2 ( -- 16 10 )  compiled
    base @ >r  hex base @  decimal base @  r> base ! ;  ok
@@ -1247,12 +1247,14 @@ hex  ok
 ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`
 abcdefghijklmnopqrstuvwxyz{|}~
 you should see 0-9 separated by a space:
-0 1 2 3 
-4 5 6 7 8 9 
+0 1 2 
+3 4 5 6 7 8 9 
+you should see 0-9 (with no spaces):
+0123456789
 
         PC  AC XR YR SP NV-BDIZC
-65C02: 6873 0a 78 00 f7 00110100
-
+65C02: 6f6e 0a 78 00 f7 01110100
+\
 Py65 Monitor
 
        PC  AC XR YR SP NV-BDIZC
@@ -1262,5 +1264,3 @@ Py65 Monitor
 Py65 Monitor
 
        PC  AC XR YR SP NV-BDIZC
-6502: 0000 00 00 00 ff 00110000
-
