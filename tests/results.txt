@@ -1142,11 +1142,12 @@ create sbuf 12 c, 34 c, 56 c,  ok
   ok
 \ ------------------------------------------------------------------------  ok
 testing string words: /string -trailing sliteral  ok
+decimal  ok
   ok
 { : s1 s" abcdefghijklmnopqrstuvwxyz" ; -> }  ok
    ok
 { s1  5 /string -> s1 swap 5 + swap 5 - }  ok
-\ { s1 10 /string -4 /string -> s1 6 /string } \ TODO negative /string broken  ok
+{ s1 10 /string -4 /string -> s1 6 /string } \ TODO negative /string broken  ok
 { s1  0 /string -> s1 }  ok
   ok
 { : s2 s" abc"   ; -> }  ok
@@ -1219,6 +1220,7 @@ testing string words: /string -trailing sliteral  ok
   ok
 \ ------------------------------------------------------------------------  ok
 testing output: . ." cr emit space spaces type u.  ok
+hex  ok
   ok
 : output-test  compiled
    ." you should see the standard graphic characters:" cr  compiled
@@ -1245,8 +1247,8 @@ testing output: . ." cr emit space spaces type u.  ok
 ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`
 abcdefghijklmnopqrstuvwxyz{|}~
 you should see 0-9 separated by a space:
-0 1 2 3 4 5 6 
-7 8 9 
+0 1 2 3 
+4 5 6 7 8 9 
 
         PC  AC XR YR SP NV-BDIZC
 65C02: 6873 0a 78 00 f7 00110100

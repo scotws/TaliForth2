@@ -1062,11 +1062,12 @@ create sbuf 12 c, 34 c, 56 c,
 
 \ ------------------------------------------------------------------------
 testing string words: /string -trailing sliteral
+decimal
 
 { : s1 s" abcdefghijklmnopqrstuvwxyz" ; -> }
  
 { s1  5 /string -> s1 swap 5 + swap 5 - }
-\ { s1 10 /string -4 /string -> s1 6 /string } \ TODO negative /string broken
+{ s1 10 /string -4 /string -> s1 6 /string }
 { s1  0 /string -> s1 }
 
 { : s2 s" abc"   ; -> }
@@ -1139,6 +1140,7 @@ testing string words: /string -trailing sliteral
 
 \ ------------------------------------------------------------------------
 testing output: . ." cr emit space spaces type u.
+hex
 
 : output-test
    ." you should see the standard graphic characters:" cr
