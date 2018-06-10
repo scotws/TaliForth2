@@ -663,9 +663,9 @@ constant 1st  ok
 { 1st @ 2nd @ -> 5 2 }  ok
 { 6 2nd ! -> }  ok
 { 1st @ 2nd @ -> 5 6 }  ok
-{ 1st 2@ -> 6 5 }  ok
+{ 1st 2@ -> 6 5 } INCORRECT RESULT: { 1st 2@ -> 6 5 } ACTUAL RESULT: { 5 6 } ok
 { 2 1 1st 2! -> }  ok
-{ 1st 2@ -> 2 1 } INCORRECT RESULT: { 1st 2@ -> 2 1 } ACTUAL RESULT: { 1 2 } ok
+{ 1st 2@ -> 2 1 }  ok
 { 1s 1st !  1st @ -> 1s }  \ can store cell-wide value  ok
   ok
 here 1 c,  ok
@@ -686,11 +686,11 @@ constant a-addr  constant ua-addr  ok
 { ua-addr aligned -> a-addr }  ok
 { 1 a-addr c!  a-addr c@ -> 1 }  ok
 { 1234 a-addr  !  a-addr  @ -> 1234 }  ok
-{ 123 456 a-addr 2!  a-addr 2@ -> 123 456 } INCORRECT RESULT: { 123 456 a-addr 2!  a-addr 2@ -> 123 456 } ACTUAL RESULT: { 456 123 } ok
+{ 123 456 a-addr 2!  a-addr 2@ -> 123 456 }  ok
 { 2 a-addr char+ c!  a-addr char+ c@ -> 2 }  ok
 { 3 a-addr cell+ c!  a-addr cell+ c@ -> 3 }  ok
 { 1234 a-addr cell+ !  a-addr cell+ @ -> 1234 }  ok
-{ 123 456 a-addr cell+ 2!  a-addr cell+ 2@ -> 123 456 } INCORRECT RESULT: { 123 456 a-addr cell+ 2!  a-addr cell+ 2@ -> 123 456 } ACTUAL RESULT: { 456 123 } ok
+{ 123 456 a-addr cell+ 2!  a-addr cell+ 2@ -> 123 456 }  ok
   ok
 : bits ( x -- u )  compiled
    0 swap begin  compiled
@@ -910,14 +910,14 @@ testing defining words: : ; constant variable 2variable create does> >body  ok
 { 0. 2v1 2! -> }   ok
 { 2v1 2@ -> 0. }   ok
 { -1 -2 2v1 2! -> }   ok
-{ 2v1 2@ -> -1 -2 } INCORRECT RESULT: { 2v1 2@ -> -1 -2 } ACTUAL RESULT: { -2 -1 } ok
+{ 2v1 2@ -> -1 -2 }  ok
 { : cd2 2variable ; -> }   ok
 { cd2 2v2 -> }   ok
 { : cd3 2v2 2! ; -> }   ok
 { -2 -1 cd3 -> }   ok
-{ 2v2 2@ -> -2 -1 } INCORRECT RESULT: { 2v2 2@ -> -2 -1 } ACTUAL RESULT: { -1 -2 } ok
+{ 2v2 2@ -> -2 -1 }  ok
 { 2variable 2v3 immediate 5 6 2v3 2! -> }  ok
-{ 2v3 2@ -> 5 6 } INCORRECT RESULT: { 2v3 2@ -> 5 6 } ACTUAL RESULT: { 6 5 } ok
+{ 2v3 2@ -> 5 6 }  ok
   ok
 { : nop : postpone ; ; -> }  ok
 { nop nop1 nop nop2 -> }  ok
@@ -1147,7 +1147,7 @@ decimal  ok
 { : s1 s" abcdefghijklmnopqrstuvwxyz" ; -> }  ok
    ok
 { s1  5 /string -> s1 swap 5 + swap 5 - }  ok
-{ s1 10 /string -4 /string -> s1 6 /string } \ TODO negative /string broken  ok
+{ s1 10 /string -4 /string -> s1 6 /string }  ok
 { s1  0 /string -> s1 }  ok
   ok
 { : s2 s" abc"   ; -> }  ok
@@ -1254,7 +1254,7 @@ you should see 0-9 (with no spaces):
 
         PC  AC XR YR SP NV-BDIZC
 65C02: 6f6e 0a 78 00 f7 01110100
-\
+
 Py65 Monitor
 
        PC  AC XR YR SP NV-BDIZC
