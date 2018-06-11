@@ -663,7 +663,7 @@ constant 1st  ok
 { 1st @ 2nd @ -> 5 2 }  ok
 { 6 2nd ! -> }  ok
 { 1st @ 2nd @ -> 5 6 }  ok
-{ 1st 2@ -> 6 5 } INCORRECT RESULT: { 1st 2@ -> 6 5 } ACTUAL RESULT: { 5 6 } ok
+{ 1st 2@ -> 6 5 }  ok
 { 2 1 1st 2! -> }  ok
 { 1st 2@ -> 2 1 }  ok
 { 1s 1st !  1st @ -> 1s }  \ can store cell-wide value  ok
@@ -1100,7 +1100,7 @@ create gn-buf 0 c,  ok
 { max-uint dup 2 gn1 -> max-uint dup 0 }  ok
 { 0 0 max-base gn1 -> 0 0 0 }  ok
 { max-uint 0 max-base gn1 -> max-uint 0 0 }  ok
-{ max-uint dup max-base gn1 -> max-uint dup 0 } INCORRECT RESULT: { max-uint dup max-base gn1 -> max-uint dup 0 } ACTUAL RESULT: { 7577 -40E0 0 } ok
+{ max-uint dup max-base gn1 -> max-uint dup 0 } INCORRECT RESULT: { max-uint dup max-base gn1 -> max-uint dup 0 } ACTUAL RESULT: { -1B19 -4F4B 0 } ok
   ok
 : gn2 ( -- 16 10 )  compiled
    base @ >r  hex base @  decimal base @  r> base ! ;  ok
@@ -1247,8 +1247,8 @@ hex  ok
 ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`
 abcdefghijklmnopqrstuvwxyz{|}~
 you should see 0-9 separated by a space:
-0 1 2 
-3 4 5 6 7 8 9 
+0 1 2 3 4 
+5 6 7 8 9 
 you should see 0-9 (with no spaces):
 0123456789
 

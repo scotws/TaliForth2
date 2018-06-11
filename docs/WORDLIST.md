@@ -166,7 +166,7 @@ RTS instruction at the end of each word.
 | TWO | `2` | Tali Forth | 8 | **tested** |
 | TWO_DROP | `2drop` | ANSI core | 11 | **tested** |
 | TWO_DUP | `2dup` | ANSI core | 27 | **tested** |
-| TWO_FETCH | `2@` | ANSI core | 41 | **tested** |
+| TWO_FETCH | `2@` | ANSI core | 37 | **tested** |
 | TWO_OVER | `2over` | ANSI core | 27 | **tested** |
 | TWO_R_FETCH | `2r@` | ANSI core ext | 29 | coded |
 | TWO_R_FROM | `2r>` | ANSI core ext | 28 | coded |
