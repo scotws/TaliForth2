@@ -47,7 +47,7 @@ def sendline(kid, string):
     """
     # print(string) # For debugging
     sendslow(kid, string + '\n')
-    # Look for all of the expcted responses.  The errors from the test
+    # Look for all of the expected responses.  The errors from the test
     # suite are not explicitly listed as they end in "ok".
     # Give up after 1 second.
     try:
