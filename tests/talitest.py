@@ -37,10 +37,8 @@ def sendslow(kid, string):
     """Slowly send a string to a subprocess using pexpect."""
     for char in string:
         # print(char) # For debugging
-        # If it looks like characters from the tests are being dropped
-        # by the py65mon emulator, increase the time below.
-        time.sleep(0.0001)
         kid.send(char)
+
 
 
 def sendline(kid, string):
@@ -49,12 +47,29 @@ def sendline(kid, string):
     """
     # print(string) # For debugging
     sendslow(kid, string + '\n')
-    kid.expect('\r\n')
-    return kid.before.decode('ascii')
+    # Look for all of the expcted responses.  The errors from the test
+    # suite are not explicitly listed as they end in "ok".
+    # Give up after 1 second.
+    try:
+        kid.expect(['ok\r\n', 'compiled\r\n',
+                    'Undefined word\r\n', 'Stack underflow\r\n'],
+                   timeout=1)
+    except pexpect.TIMEOUT:
+        # Return whatever we collected before the timeout.
+        return (kid.before.decode('ascii'))
+    else:
+        # Return the text and the response to it.            
+        return (kid.before.decode('ascii') +
+                kid.after.decode('ascii')).rstrip()
 
 # Create the py65mon process running Tali Forth 2.
 # Linux Version (Windows version doesn't work with this simulator)
 child = pexpect.spawn(SPAWN_COMMAND)
+
+# Change the default time before each char is sent (default is 50ms).
+# If it looks like characters from the tests are being dropped
+# by the py65mon emulator, increase the time below.
+child.delaybeforesend = 0.001 # 1ms
 
 # Wait for the "Type 'bye' to exit" prompt.
 print('Waiting for Tali Forth 2 to initialize...')
@@ -84,9 +99,9 @@ with open(RESULTS, 'wb') as fout:
             results = sendline(child, line)
             print(results)
 
-            # Detect crashes: py65mon will print an error but this program will
-            # attempt to continue to send new commands
-            if results.startswith(PY65MON_ERROR):
+            # Detect crashes: py65mon will print an error but this
+            # program will attempt to continue to send new commands
+            if PY65MON_ERROR in results:
                 print('py65mon error detected -- did we crash?')
                 sys.exit(1)
 
