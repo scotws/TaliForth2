@@ -6,7 +6,10 @@ talitest.py script. This script requires python3, the pexpect package
 (available via pip), and py65 (also available via pip) to be installed.
 
 When the test is done, a summary will be printed. The detailed results can be
-found in results.txt. The script will abort if it detects a crash.
+found in results.txt. The script will abort if it detects a crash. If you seem
+to be dropping characters -- for instance, with a "Unknown word" error when
+"rror" was defined instead of "error" -- you'll have to increase the waiting
+period for sending, see the source code for child.delaybeforesend().
 
 Because these tests are normal Forth programs, they feed the words through
 PARSE-NAME, which assumes spaces as delimiters. Therefore, the test Forth files

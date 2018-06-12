@@ -40,13 +40,13 @@ def sendslow(kid, string):
         kid.send(char)
 
 
-
 def sendline(kid, string):
     """Send a line (with newline added) to the simulator, returning
     results
     """
     # print(string) # For debugging
     sendslow(kid, string + '\n')
+
     # Look for all of the expected responses.  The errors from the test
     # suite are not explicitly listed as they end in "ok".
     # Give up after 1 second.
@@ -69,7 +69,7 @@ child = pexpect.spawn(SPAWN_COMMAND)
 # Change the default time before each char is sent (default is 50ms).
 # If it looks like characters from the tests are being dropped
 # by the py65mon emulator, increase the time below.
-child.delaybeforesend = 0.001 # 1ms
+child.delaybeforesend = 0.002 # 2ms
 
 # Wait for the "Type 'bye' to exit" prompt.
 print('Waiting for Tali Forth 2 to initialize...')
