@@ -1090,6 +1090,7 @@ create sbuf 12 c, 34 c, 56 c,
 
 \ CMOVE and CMOVE> propogation tests taken from 
 \ https://forth-standard.org/standard/string/CMOVE and .../CMOVEtop
+decimal
 create cmbuf  97 c, 98 c, 99 c, 100 c, \ "abcd"
 : seecmbuf  cmbuf c@  cmbuf char+ c@  cmbuf char+ char+ c@  cmbuf char+ char+ char+ c@ ;
 { cmbuf dup char+ 3 cmove -> }
