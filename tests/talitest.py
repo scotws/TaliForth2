@@ -69,7 +69,7 @@ child = pexpect.spawn(SPAWN_COMMAND)
 # Change the default time before each char is sent (default is 50ms).
 # If it looks like characters from the tests are being dropped
 # by the py65mon emulator, increase the time below.
-child.delaybeforesend = 0.002 # 2ms
+child.delaybeforesend = 0.003 # 3ms
 
 # Wait for the "Type 'bye' to exit" prompt.
 print('Waiting for Tali Forth 2 to initialize...')

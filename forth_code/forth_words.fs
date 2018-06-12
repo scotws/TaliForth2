@@ -1,6 +1,6 @@
 \ List of high-level Forth words for Tali Forth 2 for the 65c02
 \ Scot W. Stevenson <scot.stevenson@gmail.com>
-\ This version: 03. June 2018
+\ This version: 12. June 2018
 
 \ When changing these words, edit them here and then use the 
 \ forth_to_dotbyte.py tool to convert them to the required format
@@ -49,13 +49,16 @@
 
 \ Temporary high-level words. TODO convert these to assembler
         : to ( n -- 'name') ' >body ! ;
-        : within ( n1 n2 n3 -- f ) rot tuck > -rot > invert and ;
+        \ An optional version of WITHIN is ROT TUCK > -ROT > INVERT AND  - this
+        \ is from the Forth Standard, see
+        \ https://forth-standard.org/standard/core/WITHIN
+        : within ( n1 n2 n3 -- f )  over - >r - r> u< ;
 
 \ Splash strings. We leave these as high-level words because they are
 \ generated at the end of the boot process and signal that the other
 \ high-level definitions worked (or at least didn't crash)
         .( Tali Forth 2 for the 65c02)
-        cr .( Version ALPHA 05. June 2018 )
+        cr .( Version ALPHA 12. June 2018 )
         cr .( Copyright 2014-2018 Scot W. Stevenson)
         cr .( Tali Forth 2 comes with absolutely NO WARRANTY)
         cr .( Type 'bye' to exit) cr
