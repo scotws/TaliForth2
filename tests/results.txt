@@ -1247,8 +1247,24 @@ hex  ok
 ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`
 abcdefghijklmnopqrstuvwxyz{|}~
 you should see 0-9 separated by a space:
-0 1 2 3 4 
-5 6 7 8 9 
+0 1 2 3 4 5 6 7 8 9 
+you should see 0-9 (with no spaces):
+0123456789
+
+        PC  AC XR YR SP NV-BDIZC
+65C02: 6f6e 0a 78 00 f7 01110100
+
+Py65 Monitor
+
+       PC  AC XR YR SP NV-BDIZC
+6502: 0000 00 00 00 ff 00110000
+.
+{ output-test -> } you should see the standard graphic characters:
+ !"#$%&'()*+,-./0123456789:;<=>?@
+ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`
+abcdefghijklmnopqrstuvwxyz{|}~
+you should see 0-9 separated by a space:
+0 1 2 3 4 5 6 7 8 9 
 you should see 0-9 (with no spaces):
 0123456789
 
@@ -1264,3 +1280,8 @@ Py65 Monitor
 Py65 Monitor
 
        PC  AC XR YR SP NV-BDIZC
+6502: 0000 00 00 00 ff 00110000
+
+       PC  AC XR YR SP NV-BDIZC
+6502: 0000 00 00 00 ff 00110000
+.
