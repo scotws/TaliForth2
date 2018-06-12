@@ -589,7 +589,7 @@ ifsym     : t*/    t*/mod swap drop ;
 { min-int 2 min-int */mod -> min-int 2 min-int t*/mod }
 
 \ ------------------------------------------------------------------------
-testing here , @ ! cell+ cells c, c@ c! chars 2@ 2! align aligned +! allot pad unused
+testing here , @ ! cell+ cells c, c@ c! char+ chars 2@ 2! align aligned +! allot pad unused
 
 here 1 allot
 here
@@ -604,7 +604,7 @@ here 2 ,
 constant 2nd
 constant 1st
 { 1st 2nd u< -> <true> } \ here must grow with allot ...
-{ 1st cell+ -> 2nd }     \ ... by one cell
+{ 1st cell+ -> 2nd }     \ ... by one cell (test for char+)
 { 1st 1 cells + -> 2nd }
 { 1st @ 2nd @ -> 1 2 }
 { 5 1st ! -> }
@@ -1055,7 +1055,7 @@ create gn-buf 0 c,
 { gn2 -> 10 a }
 
 \ ------------------------------------------------------------------------
-testing fill move
+testing fill move cmove
 
 create fbuf 00 c, 00 c, 00 c,
 create sbuf 12 c, 34 c, 56 c,
@@ -1087,6 +1087,19 @@ create sbuf 12 c, 34 c, 56 c,
 
 { fbuf char+ fbuf 2 chars move -> }
 { seebuf -> 12 34 34 }
+
+\ CMOVE and CMOVE> propogation tests taken from 
+\ https://forth-standard.org/standard/string/CMOVE and .../CMOVEtop
+create cmbuf  97 c, 98 c, 99 c, 100 c, \ "abcd"
+: seecmbuf  cmbuf c@  cmbuf char+ c@  cmbuf char+ char+ c@  cmbuf char+ char+ char+ c@ ;
+{ cmbuf dup char+ 3 cmove -> }
+{ seecmbuf -> 97 97 97 97 } \ "aaaa"
+
+create cmubuf  97 c, 98 c, 99 c, 100 c, \ "abcd"
+: seecmubuf  cmubuf c@  cmubuf char+ c@  cmubuf char+ char+ c@  cmubuf char+ char+ char+ c@ ;
+{ cmubuf dup char+ swap 3 cmove> -> }
+{ seecmubuf -> 100 100 100 100 } \ "dddd"
+
 
 \ ------------------------------------------------------------------------
 testing string words: /string -trailing sliteral

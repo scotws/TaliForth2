@@ -463,7 +463,7 @@ testing multiply: s>d * m* um*  ok
   ok
 { mid-uint+1 1 rshift 2 um* -> mid-uint+1 0 }  ok
 { mid-uint+1 2 um* -> 0 1 }  ok
-{ mid-uint+1 4 um* -> 0 2 }  ok
+{ id-uint+1 4 um* -> 0 2 } >id-uint+1< Undefined word
 { 1s 2 um* -> 1s 1 lshift 1 }  ok
 { max-uint max-uint um* -> 1 1 invert }  ok
   ok
@@ -495,7 +495,7 @@ testing divide: fm/mod sm/rem um/mod */ */mod / /mod mod  ok
 { 1 min-int m* 1 fm/mod -> 0 min-int }  ok
 { 1 min-int m* min-int fm/mod -> 0 1 }  ok
 { 2 min-int m* 2 fm/mod -> 0 min-int }  ok
-{  min-int m* min-int fm/mod -> 0 2 } Stack underflow
+{ 2 min-int m* min-int fm/mod -> 0 2 }  ok
 { 1 max-int m* 1 fm/mod -> 0 max-int }  ok
 { 1 max-int m* max-int fm/mod -> 0 1 }  ok
 { 2 max-int m* 2 fm/mod -> 0 max-int }  ok
@@ -518,7 +518,7 @@ testing divide: fm/mod sm/rem um/mod */ */mod / /mod mod  ok
 { 2 s>d 2 sm/rem -> 0 1 }  ok
 { -1 s>d -1 sm/rem -> 0 1 }  ok
 { -2 s>d -2 sm/rem -> 0 1 }  ok
-{  7 s>d  3 sm/rem -> 1 2 }  ok
+{  7  3 sm/rem -> 1 2 } Stack underflow
 {  7 s>d -3 sm/rem -> 1 -2 }  ok
 { -7 s>d  3 sm/rem -> -1 -2 }  ok
 { -7 s>d -3 sm/rem -> -1 2 }  ok
@@ -669,7 +669,7 @@ ifsym     : t*/    t*/mod swap drop ;  ok
 { min-int 2 min-int */mod -> min-int 2 min-int t*/mod }  ok
   ok
 \ ------------------------------------------------------------------------  ok
-testing here , @ ! cell+ cells c, c@ c! chars 2@ 2! align aligned +! allot pad unused  ok
+testing here , @ ! cell+ cells c, c@ c! char+ chars 2@ 2! align aligned +! allot pad unused  ok
   ok
 here 1 allot  ok
 here  ok
@@ -684,7 +684,7 @@ here 2 ,  ok
 constant 2nd  ok
 constant 1st  ok
 { 1st 2nd u< -> <true> } \ here must grow with allot ...  ok
-{ 1st cell+ -> 2nd }     \ ... by one cell  ok
+{ 1st cell+ -> 2nd }     \ ... by one cell (test for char+)  ok
 { 1st 1 cells + -> 2nd }  ok
 { 1st @ 2nd @ -> 1 2 }  ok
 { 5 1st ! -> }  ok
@@ -745,7 +745,7 @@ constant a-addr  constant ua-addr  ok
 { -1 1st +! 1st @ -> 0 }  ok
   ok
 ( here + unused + buffer size must be total RAM, that is, $7FFF )  ok
-{ pad here - -> FF } \ PAD must have offsetof $FF  ok
+{ pad here - -> FF } \ PAD must have offset of $FF  ok
 { here unused + 400 + -> 7FFF }  ok
   ok
 \ ------------------------------------------------------------------------  ok
@@ -804,7 +804,7 @@ testing if else then begin while repeat until recurse  ok
 { 1 gi2 -> 123 }  ok
 { -1 gi1 -> 123 }  ok
   ok
-{ : gi3 begin du p 5 < while dup 1+ repeat ; -> }  ok
+{ : gi3 begin dup 5 < while dup 1+ repeat ; -> }  ok
 { 0 gi3 -> 0 1 2 3 4 5 }  ok
 { 4 gi3 -> 4 5 }  ok
 { 5 gi3 -> 5 }  ok
@@ -1135,7 +1135,7 @@ create gn-buf 0 c,  ok
 { gn2 -> 10 a }  ok
   ok
 \ ------------------------------------------------------------------------  ok
-testing fill move  ok
+testing fill move cmove  ok
   ok
 create fbuf 00 c, 00 c, 00 c,  ok
 create sbuf 12 c, 34 c, 56 c,  ok
@@ -1168,15 +1168,28 @@ create sbuf 12 c, 34 c, 56 c,  ok
 { fbuf char+ fbuf 2 chars move -> }  ok
 { seebuf -> 12 34 34 } INCORRECT RESULT: { seebuf -> 12 34 34 } ACTUAL RESULT: { 12 12 12 } ok
   ok
+\ CMOVE and CMOVE> propogation tests taken from   ok
+\ https://forth-standard.org/standard/string/CMOVE and .../CMOVEtop  ok
+create cmbuf  97 c, 98 c, 99 c, 100 c, \ "abcd"  ok
+: seecmbuf  cmbuf c@  cmbuf char+ c@  cmbuf char+ char+ c@  cmbuf char+ char+ char+ c@ ;  ok
+{ cmbuf dup char+ 3 cmove -> }  ok
+{ seecmbuf -> 97 97 97 97 } \ "aaaa"  ok
+  ok
+create cmubuf  97 c, 98 c, 99 c, 100 c, \ "abcd"  ok
+: seecmubuf  cmubuf c@  cmubuf char+ c@  cmubuf char+ char+ c@  cmubuf char+ char+ char+ c@ ;  ok
+{ cmubuf dup char+ swap 3 cmove> -> }  ok
+{ seecmubuf -> 100 100 100 100 } \ "dddd" INCORRECT RESULT: { seecmubuf -> 100 100 100 100 } \ "dddd" ACTUAL RESULT: { 0 0 0 0 } ok
+  ok
+  ok
 \ ------------------------------------------------------------------------  ok
 testing string words: /string -trailing sliteral  ok
 decimal  ok
   ok
 { : s1 s" abcdefghijklmnopqrstuvwxyz" ; -> }  ok
    ok
-{ s1  5 /string -> s1 swap 5 + swap 5 - } Stack underflow
-{ s1 10 /string -4 /string -> s1 6 /string } Stack underflow
-{ s1  0 /string -> s1 } Stack underflow
+{ s1  5 /string -> s1 swap 5 + swap 5 - }  ok
+{ s1 10 /string -4 /string -> s1 6 /string }  ok
+{ s1  0 /string -> s1 }  ok
   ok
 { : s2 s" abc"   ; -> }  ok
 { : s3 s" jklmn" ; -> }  ok
@@ -1197,7 +1210,7 @@ decimal  ok
 { :  s9 s"      " ; -> }  ok
 { : s10 s"    a " ; -> }  ok
   ok
-{  s1 -trailing -> s1 }        \ "abcdefghijklmnopqrstuvwxyz" Stack underflow
+{  s1 -trailing -> s1 }        \ "abcdefghijklmnopqrstuvwxyz"  ok
 {  s8 -trailing -> s8 2 - }    \ "abc "  ok
 {  s7 -trailing -> s7 }        \ " " Stack underflow
 {  s9 -trailing -> s9 drop 0 } \ " "  ok
@@ -1274,6 +1287,13 @@ hex  ok
  !"#$%&'()*+,-./0123456789:;<=>?@
 ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`
 abcdefghijklmnopqrstuvwxyz{|}~
+you should see 0-9 separated by a space:
+0 1 2 3 4 5 6 7 8 9 
+you should see 0-9 (with no spaces):
+0123456789
+you should see a-g separated by a space:
+a b c d e f g 
+
 Stack underflow
   ok
 \ ------------------------------------------------------------------------  ok
