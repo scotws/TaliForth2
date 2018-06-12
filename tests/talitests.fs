@@ -97,7 +97,7 @@ testing 2* 2/ lshift rshift
 { msb 1 rshift 2* -> msb }
 
 \ ------------------------------------------------------------------------
-testing comparisons: 0= = <> 0< < > u< min max
+testing comparisons: 0= = <> 0< < > u< min max within
 ( TODO we need to add max-2int and min-2int for further tests)
 0 invert  constant max-uint
 0 invert 1 rshift  constant max-int
@@ -218,6 +218,34 @@ testing comparisons: 0= = <> 0< < > u< min max
 { 0 min-int max -> 0 }
 { max-int min-int max -> max-int }
 { max-int 0 max -> max-int }
+
+{ 1 2 4 within -> <false> }
+{ 2 2 4 within -> <true> }
+{ 3 2 4 within -> <true> }
+{ 4 2 4 within -> <false> }
+{ 5 2 4 within -> <false> }
+
+{ 0 2 4 within -> <false> }
+{ 1 0 4 within -> <true> }
+{ 0 0 4 within -> <true> }
+{ 4 0 4 within -> <false> }
+{ 5 0 4 within -> <false> }
+
+{ -1 -3 -1 within -> <false> }
+{ -2 -3 -1 within -> <true> }
+{ -3 -3 -1 within -> <true> }
+{ -4 -3 -1 within -> <false> }
+
+{ -2 -2 0 within -> <true> }
+{ -1 -2 0 within -> <true> }
+{ 0 -2 0 within -> <false> }
+{ 1 -2 0 within -> <false> }
+
+{ 0 min-int max-int within -> <true> }
+{ 1 min-int max-int within -> <true> }
+{ -1 min-int max-int within -> <true> }
+{ min-int min-int max-int within -> <true> }
+{ max-int min-int max-int within -> <false> }
 
 \ ------------------------------------------------------------------------
 testing stack ops: 2drop 2dup 2over 2swap ?dup depth drop dup nip over rot -rot swap 
