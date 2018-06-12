@@ -4188,7 +4188,7 @@ xt_move:
                 cmp 5,x                 ; MSB of addr1
                 beq _lsb                ; wasn't helpful, move to LSB
 
-                bcc _to_move_up         ; we want CMOVE>
+                bcs _to_move_up         ; we want CMOVE>
 
                 jmp xt_cmove            ; JSR/RTS
 _lsb:        
@@ -4197,7 +4197,7 @@ _lsb:
                 cmp 4,x                 ; LSB of addr1
                 beq _equal              ; LSB is equal as well 
 
-                bcc _to_move_up         ; we want CMOVE>
+                bcs _to_move_up         ; we want CMOVE>
                 jmp xt_cmove            ; JSR/RTS
 _to_move_up:
                 jmp xt_cmove_up         ; JSR/RTS
