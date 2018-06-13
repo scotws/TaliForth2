@@ -37,7 +37,7 @@ RTS instruction at the end of each word.
 | CHAR_PLUS | `char+` | ANSI core | 0 | **tested** |
 | CHARS | `chars` | ANSI core | 7 | **tested** |
 | CMOVE | `cmove` | ANSI string | 62 | **tested** |
-| CMOVE_UP | `cmove>` | ANSI string | 60 | **tested** |
+| CMOVE_UP | `cmove>` | ANSI string | 62 | **tested** |
 | COLON | `:` | ANSI core | 49 | **tested** |
 | COMMA | `,` | ANSI core | 29 | **tested** |
 | COMPILE_COMMA | `compile,` | ANSI core ext | 274 | **tested** |

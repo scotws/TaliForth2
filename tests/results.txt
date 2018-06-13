@@ -463,7 +463,7 @@ testing multiply: s>d * m* um*  ok
   ok
 { mid-uint+1 1 rshift 2 um* -> mid-uint+1 0 }  ok
 { mid-uint+1 2 um* -> 0 1 }  ok
-{ id-uint+1 4 um* -> 0 2 } >id-uint+1< Undefined word
+{ mid-uint+1 4 um* -> 0 2 }  ok
 { 1s 2 um* -> 1s 1 lshift 1 }  ok
 { max-uint max-uint um* -> 1 1 invert }  ok
   ok
@@ -518,7 +518,7 @@ testing divide: fm/mod sm/rem um/mod */ */mod / /mod mod  ok
 { 2 s>d 2 sm/rem -> 0 1 }  ok
 { -1 s>d -1 sm/rem -> 0 1 }  ok
 { -2 s>d -2 sm/rem -> 0 1 }  ok
-{  7  3 sm/rem -> 1 2 } Stack underflow
+{  7 s>d  3 sm/rem -> 1 2 }  ok
 {  7 s>d -3 sm/rem -> 1 -2 }  ok
 { -7 s>d  3 sm/rem -> -1 -2 }  ok
 { -7 s>d -3 sm/rem -> -1 2 }  ok
@@ -1170,6 +1170,7 @@ create sbuf 12 c, 34 c, 56 c,  ok
   ok
 \ CMOVE and CMOVE> propogation tests taken from   ok
 \ https://forth-standard.org/standard/string/CMOVE and .../CMOVEtop  ok
+decimal  ok
 create cmbuf  97 c, 98 c, 99 c, 100 c, \ "abcd"  ok
 : seecmbuf  cmbuf c@  cmbuf char+ c@  cmbuf char+ char+ c@  cmbuf char+ char+ char+ c@ ;  ok
 { cmbuf dup char+ 3 cmove -> }  ok
@@ -1178,7 +1179,7 @@ create cmbuf  97 c, 98 c, 99 c, 100 c, \ "abcd"  ok
 create cmubuf  97 c, 98 c, 99 c, 100 c, \ "abcd"  ok
 : seecmubuf  cmubuf c@  cmubuf char+ c@  cmubuf char+ char+ c@  cmubuf char+ char+ char+ c@ ;  ok
 { cmubuf dup char+ swap 3 cmove> -> }  ok
-{ seecmubuf -> 100 100 100 100 } \ "dddd" INCORRECT RESULT: { seecmubuf -> 100 100 100 100 } \ "dddd" ACTUAL RESULT: { 0 0 0 0 } ok
+{ seecmubuf -> 100 100 100 100 } \ "dddd"  ok
   ok
   ok
 \ ------------------------------------------------------------------------  ok
