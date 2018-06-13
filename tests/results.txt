@@ -407,7 +407,7 @@ testing add/subtract: + - 1+ 1- abs negate dnegate  ok
   ok
 { 0 abs -> 0 }  ok
 { 1 abs -> 1 }  ok
-{ -1 abs -> 1 }  ok
+{ -bs -> 1 } >s< Undefined word
 { min-int abs -> mid-uint+1 }  ok
   ok
 \ ------------------------------------------------------------------------  ok
@@ -1253,7 +1253,7 @@ decimal  ok
 ( TODO SLITERAL test not implemented yet because it requires COMPARE)   ok
 \ { : s14 [ s1 ] sliteral ; -> }   ok
 \ { s1 s14 compare -> 0 }  ok
-\ { s1 s14 rot = rot rot = -> <true> <false> }  ok
+\ { s1 s4 rot = rot rot = -> <true> <false> }  ok
   ok
 ( TODO REPLACES not implemented )  ok
 ( TODO SUBSTITUTE not implemented )  ok
@@ -1315,9 +1315,9 @@ please type up to 80 characters:
 { accept-test -> } 
 please type up to 80 characters:
  WRONG NUMBER OF RESULTS: { accept-test -> } ACTUAL RESULT: { 0 } ok
-\ ------------------------------------------------------------------------  ok
+\ -----------------------------------------------------------------------  ok
 testing dictionary search rules  ok
   ok
 { : gdx   123 ; : gdx   gdx 234 ; -> }  ok
   ok
-{ gdx -> 123 234 }  ok
+{ gdx 123 234 } WRONG NUMBER OF RESULTS: { gdx 123 234 } ACTUAL RESULT: { } ok
