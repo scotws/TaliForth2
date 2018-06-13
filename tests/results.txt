@@ -1163,10 +1163,10 @@ create sbuf 12 c, 34 c, 56 c,  ok
 { seebuf -> 12 34 56 }  ok
   ok
 { fbuf fbuf char+ 2 chars move -> }  ok
-{ seebuf -> 12 12 34 } INCORRECT RESULT: { seebuf -> 12 12 34 } ACTUAL RESULT: { 12 12 12 } ok
+{ seebuf -> 12 12 34 }  ok
   ok
 { fbuf char+ fbuf 2 chars move -> }  ok
-{ seebuf -> 12 34 34 } INCORRECT RESULT: { seebuf -> 12 34 34 } ACTUAL RESULT: { 12 12 12 } ok
+{ seebuf -> 12 34 34 }  ok
   ok
 \ CMOVE and CMOVE> propogation tests taken from   ok
 \ https://forth-standard.org/standard/string/CMOVE and .../CMOVEtop  ok
