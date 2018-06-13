@@ -61,6 +61,7 @@
 \contentsline {section}{\numberline {6.7}Native Compiling}{28}{section.6.7}
 \contentsline {subsection}{\numberline {6.7.1}Return Stack special cases}{29}{subsection.6.7.1}
 \contentsline {subsection}{\numberline {6.7.2}Underflow stripping}{30}{subsection.6.7.2}
+\contentsline {section}{\numberline {6.8}\texttt {cmove, cmove>} and \texttt {move}}{31}{section.6.8}
 \contentsline {chapter}{\numberline {7}Developing}{32}{chapter.7}
 \contentsline {section}{\numberline {7.1}Adding new words}{32}{section.7.1}
 \contentsline {section}{\numberline {7.2}Deeper changes}{32}{section.7.2}

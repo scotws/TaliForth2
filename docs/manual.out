@@ -54,21 +54,22 @@
 \BOOKMARK [1][-]{section.6.7}{Native Compiling}{chapter.6}% 54
 \BOOKMARK [2][-]{subsection.6.7.1}{Return Stack special cases}{section.6.7}% 55
 \BOOKMARK [2][-]{subsection.6.7.2}{Underflow stripping}{section.6.7}% 56
-\BOOKMARK [0][-]{chapter.7}{Developing}{part.3}% 57
-\BOOKMARK [1][-]{section.7.1}{Adding new words}{chapter.7}% 58
-\BOOKMARK [1][-]{section.7.2}{Deeper changes}{chapter.7}% 59
-\BOOKMARK [2][-]{subsection.7.2.1}{The Ophis Assembler}{section.7.2}% 60
-\BOOKMARK [2][-]{subsection.7.2.2}{General notes}{section.7.2}% 61
-\BOOKMARK [2][-]{subsection.7.2.3}{Coding style}{section.7.2}% 62
-\BOOKMARK [1][-]{section.7.3}{Code Cheat Sheet}{chapter.7}% 63
-\BOOKMARK [2][-]{subsection.7.3.1}{The Stack Drawing}{section.7.3}% 64
-\BOOKMARK [2][-]{subsection.7.3.2}{Coding idioms}{section.7.3}% 65
-\BOOKMARK [2][-]{subsection.7.3.3}{vi shortcuts}{section.7.3}% 66
-\BOOKMARK [0][-]{chapter.8}{Future plans}{part.3}% 67
-\BOOKMARK [0][-]{appendix.A}{FAQ}{part.3}% 68
-\BOOKMARK [1][-]{section.A.1}{What happened to Tali Forth 1?}{appendix.A}% 69
-\BOOKMARK [1][-]{section.A.2}{Why does Tali Forth take so long to start up?}{appendix.A}% 70
-\BOOKMARK [1][-]{section.A.3}{Why `Tali' Forth?}{appendix.A}% 71
-\BOOKMARK [1][-]{section.A.4}{Who is `Liara'?}{appendix.A}% 72
-\BOOKMARK [0][-]{appendix.B}{Testing Tali Forth}{part.3}% 73
-\BOOKMARK [0][-]{appendix.C}{Thanks}{part.3}% 74
+\BOOKMARK [1][-]{section.6.8}{cmove, cmove> and move}{chapter.6}% 57
+\BOOKMARK [0][-]{chapter.7}{Developing}{part.3}% 58
+\BOOKMARK [1][-]{section.7.1}{Adding new words}{chapter.7}% 59
+\BOOKMARK [1][-]{section.7.2}{Deeper changes}{chapter.7}% 60
+\BOOKMARK [2][-]{subsection.7.2.1}{The Ophis Assembler}{section.7.2}% 61
+\BOOKMARK [2][-]{subsection.7.2.2}{General notes}{section.7.2}% 62
+\BOOKMARK [2][-]{subsection.7.2.3}{Coding style}{section.7.2}% 63
+\BOOKMARK [1][-]{section.7.3}{Code Cheat Sheet}{chapter.7}% 64
+\BOOKMARK [2][-]{subsection.7.3.1}{The Stack Drawing}{section.7.3}% 65
+\BOOKMARK [2][-]{subsection.7.3.2}{Coding idioms}{section.7.3}% 66
+\BOOKMARK [2][-]{subsection.7.3.3}{vi shortcuts}{section.7.3}% 67
+\BOOKMARK [0][-]{chapter.8}{Future plans}{part.3}% 68
+\BOOKMARK [0][-]{appendix.A}{FAQ}{part.3}% 69
+\BOOKMARK [1][-]{section.A.1}{What happened to Tali Forth 1?}{appendix.A}% 70
+\BOOKMARK [1][-]{section.A.2}{Why does Tali Forth take so long to start up?}{appendix.A}% 71
+\BOOKMARK [1][-]{section.A.3}{Why `Tali' Forth?}{appendix.A}% 72
+\BOOKMARK [1][-]{section.A.4}{Who is `Liara'?}{appendix.A}% 73
+\BOOKMARK [0][-]{appendix.B}{Testing Tali Forth}{part.3}% 74
+\BOOKMARK [0][-]{appendix.C}{Thanks}{part.3}% 75

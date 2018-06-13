@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.3.2)  9 JUN 2018 00:33
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.3.2)  13 JUN 2018 09:00
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -442,7 +442,7 @@ LaTeX Font Info:    Font shape `T1/SourceCodePro-TLF/m/n' will be
 
 ]
 Chapter 1.
-(./ch_why.tex <pics/W65c02.jpg, id=429, 301.125pt x 301.125pt>
+(./ch_why.tex <pics/W65c02.jpg, id=434, 301.125pt x 301.125pt>
 File: pics/W65c02.jpg Graphic file (type jpg)
 
 <use pics/W65c02.jpg>
@@ -538,7 +538,7 @@ Overfull \hbox (2.941pt too wide) in paragraph at lines 627--632
 /SourceCodePro-TLF/m/n/10 +loop\T1/cmr/m/n/10 ),
  []
 
-[27] [28] [29]) [30] [31]
+[27] [28] [29] [30]) [31]
 Chapter 7.
 (./ch_developing.tex
 Overfull \hbox (41.71275pt too wide) in paragraph at lines 14--16
@@ -589,14 +589,14 @@ Package atveryend Info: Empty hook `AfterLastShipout' on input line 136.
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 136.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 136.
 Package rerunfilecheck Info: File `manual.out' has not changed.
-(rerunfilecheck)             Checksum: 074F93C7BDB768C14C70A43EBECF8CBA;4765.
+(rerunfilecheck)             Checksum: 11948E452866339112869DF8CA4018CA;4834.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 136.
  ) 
 Here is how much of TeX's memory you used:
- 8329 strings out of 494953
- 122889 string characters out of 6180978
+ 8339 strings out of 494953
+ 123035 string characters out of 6180978
  325700 words of memory out of 5000000
- 10956 multiletter control sequences out of 15000+600000
+ 10957 multiletter control sequences out of 15000+600000
  26350 words of font info for 55 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  44i,12n,43p,238b,1706s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -619,10 +619,10 @@ type1/adobe/sourcecodepro/SourceCodePro-Bold.pfb></usr/share/texlive/texmf-dist
 /fonts/type1/adobe/sourcecodepro/SourceCodePro-It.pfb></usr/share/texlive/texmf
 -dist/fonts/type1/adobe/sourcecodepro/SourceCodePro-Regular.pfb></usr/share/tex
 live/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
-Output written on manual.pdf (41 pages, 429300 bytes).
+Output written on manual.pdf (41 pages, 432396 bytes).
 PDF statistics:
- 2011 PDF objects out of 2073 (max. 8388607)
- 1343 compressed objects within 14 object streams
- 495 named destinations out of 1000 (max. 500000)
- 598 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 2034 PDF objects out of 2073 (max. 8388607)
+ 1362 compressed objects within 14 object streams
+ 504 named destinations out of 1000 (max. 500000)
+ 606 words of extra memory for PDF output out of 10000 (max. 10000000)
 

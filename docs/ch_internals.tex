@@ -1,6 +1,6 @@
 % Internals of Tali Forth 2
 % Scot W. Stevenson 
-% This version: 09. June 2018
+% This version: 13. June 2018
 % ---------------------------------------
 \section{Stack}\index{stack|textbf}
 
@@ -909,3 +909,37 @@ z_to_r:         rts
 \noindent This word has \textit{both} native compile stripping and underflow
 detection. However, both can be removed from newly native code words, leaving
 only the eight byte core of the word to be compiled.
+
+% ---------------------------------------
+\section{\texttt{cmove, cmove>} and \texttt{move}}
+
+The three moving words \texttt{cmove}\index{cmove@\texttt{cmove}},
+\texttt{cmove>}\index{cmove>@\texttt{cmove>}}, and
+\texttt{move}\index{move@\texttt{move}} show subtle differences that can trip up
+new users and are reflected by different code under the hood. \texttt{cmove} and
+\texttt{cmove>} are the traditional Forth words that work on characters (which
+in the case of Tali Forth are bytes), whereas \texttt{move} is a more modern
+word that works on address units (which in our case is also bytes). 
+
+If the source and destination regions show no overlap, all three words work the
+same. However, if there is overlap, \texttt{cmove} and \texttt{cmove>}
+demonstrate a behavior called ``propagation''\index{propagation} or
+``clobbering''\index{clobbering}: Some of the characters are overwritten.
+\texttt{move} does not show this behavior. This example shows the difference:
+
+\begin{lstlisting}[frame=lines]
+create testbuf char a c, char b c, char c c, char d c,  ( ok ) 
+testbuf 4 type ( abcd ok ) 
+testbuf dup char+ 3 cmove  ( ok )
+testbuf 4 type ( aaaa ok )
+\end{lstlisting}
+
+Note the propagation in the result. \texttt{move}, however, doesn't propagate.
+The last two lines would be:
+
+\begin{lstlisting}[frame=lines]
+testbuf dup char+ 3 move  ( ok )
+testbuf 4 type ( aabc ok )
+\end{lstlisting}
+
+In practice, \texttt{move} is usually what you want to use.

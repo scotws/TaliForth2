@@ -48,6 +48,9 @@
   \item \textit{Cassini}, \hyperpage{8}
   \item cheat sheet, code, \hyperpage{33}
   \item cib, \hyperindexformat{\see {current input buffer}}{24}
+  \item clobbering, \hyperpage{31}
+  \item \texttt{cmove}, \hyperpage{31}
+  \item \texttt{cmove>}, \hyperpage{31}
   \item \texttt{cold}, \hyperpage{16}
   \item Colwell, Sam, \hyperpage{37}
   \item command line interface, \hyperpage{24}
@@ -141,6 +144,7 @@
   \item memory map, \hyperindexformat{\textbf}{23}
   \item Mensch, Bill, \hyperpage{7}
   \item Moore, Charles, \hyperpage{7, 8}, \hyperpage{14}
+  \item \texttt{move}, \hyperpage{31}
 
   \indexspace
 
@@ -167,6 +171,7 @@
   \item \texttt{pexpect}, \hyperpage{37}
   \item PIP, \hyperpage{13}
   \item Pivonka, Lee, \hyperpage{38}
+  \item propagation, \hyperpage{31}
   \item py65mon, \hyperindexformat{\textbf}{13}, \hyperpage{14}
   \item \texttt{py65mon}, \hyperpage{13}
   \item Python, \hyperpage{13}, \hyperpage{32, 33}

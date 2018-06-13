@@ -213,6 +213,11 @@
 \indexentry{uf-strip@\texttt{uf-strip}|hyperpage}{30}
 \indexentry{true@\texttt{true}|hyperpage}{30}
 \indexentry{>r@\texttt{>r}|hyperpage}{30}
+\indexentry{cmove@\texttt{cmove}|hyperpage}{31}
+\indexentry{cmove>@\texttt{cmove>}|hyperpage}{31}
+\indexentry{move@\texttt{move}|hyperpage}{31}
+\indexentry{propagation|hyperpage}{31}
+\indexentry{clobbering|hyperpage}{31}
 \indexentry{Brodie, Leo|hyperpage}{32}
 \indexentry{Ophis assembler|hyperindexformat{\textbf}}{32}
 \indexentry{Martin, Michael|hyperpage}{32}
