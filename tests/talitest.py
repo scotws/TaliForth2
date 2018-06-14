@@ -1,45 +1,49 @@
 #!/usr/bin/python3
-# """Talitest spawns a copy of py65mon running Tali Forth 2 and
-# feeds it tests, saving the results.  This script requires pexpect
-# (available via pip) and needs to run on a linux system.  The windows
-# version of py65mon reads directly from the console rather than
-# stdin, and therefore doesn't work with pexpect on Windows (even
-# though pexpect is now supported on Windows).
+"""Talitest spawns a copy of py65mon running Tali Forth 2 and
+feeds it tests, saving the results.  This script requires pexpect
+(available via pip) and needs to run on a linux system.  The windows
+version of py65mon reads directly from the console rather than
+stdin, and therefore doesn't work with pexpect on Windows (even
+though pexpect is now supported on Windows).
 
-# RUNNING     : Run talitest.py from the tests directory.
+RUNNING     : Run talitest.py from the tests directory.
 
-# This script takes a long time to run (25 minutes on my system).
-# Results will be found in results.txt when finished.  Grep for
-# "Undefined" to find words it couldn't run (some of these will be
-# from a previous failed compilation).  Grep for "RESULT" to find
-# WRONG NUMBER OF RESULTS errors and INCORRECT RESULTS errors.  Note
-# that the original error messages show up first.
-#
-# PROGRAMMER  : Sam Colwell
-# FILE        : talitest.py
-#
-# First version: 16. May 2018
-# This version: 06. June 2018
-# """
+This script takes a long time to run (25 minutes on my system).
+Results will be found in results.txt when finished.  Grep for
+"Undefined" to find words it couldn't run (some of these will be
+from a previous failed compilation).  Grep for "RESULT" to find
+WRONG NUMBER OF RESULTS errors and INCORRECT RESULTS errors.  Note
+that the original error messages show up first.
+
+PROGRAMMER  : Sam Colwell
+FILE        : talitest.py
+
+First version: 16. May 2018
+This version: 15. June 2018
+"""
 
 import argparse
-import pexpect
 import sys
 import time
+import pexpect
 
 TESTS = 'talitests.fs'
 TESTER = 'tester.fs'
 RESULTS = 'results.txt'
+DELAY = 0.003  # 3ms
 SPAWN_COMMAND = 'py65mon -m 65c02 -r ../taliforth-py65mon.bin'
 PY65MON_ERROR = '*** Unknown syntax:'
 
 OUTPUT_HELP = 'Output File, default "'+RESULTS+'"'
+DELAY_HELP = 'Delay before send in ms, default '+str(DELAY)+' ms'
 
 parser = argparse.ArgumentParser()
-parser.add_argument('-o', '--output', dest='output',
-                help=OUTPUT_HELP, default=RESULTS)
 parser.add_argument('-b', '--beep', action='store_true',
-                help='Make a sound at end of testing', default=False)
+                    help='Make a sound at end of testing', default=False)
+parser.add_argument('-d', '--delay', type=float,
+                    help=DELAY_HELP, default=DELAY)
+parser.add_argument('-o', '--output', dest='output',
+                    help=OUTPUT_HELP, default=RESULTS)
 args = parser.parse_args()
 
 
@@ -66,9 +70,9 @@ def sendline(kid, string):
                    timeout=1)
     except pexpect.TIMEOUT:
         # Return whatever we collected before the timeout.
-        return (kid.before.decode('ascii'))
+        return kid.before.decode('ascii')
     else:
-        # Return the text and the response to it.            
+        # Return the text and the response to it.
         return (kid.before.decode('ascii') +
                 kid.after.decode('ascii')).rstrip()
 
@@ -76,10 +80,10 @@ def sendline(kid, string):
 # Linux Version (Windows version doesn't work with this simulator)
 child = pexpect.spawn(SPAWN_COMMAND)
 
-# Change the default time before each char is sent (default is 50ms).
+# Change the default time before each char is sent (default is 3 ms).
 # If it looks like characters from the tests are being dropped
 # by the py65mon emulator, increase the time below.
-child.delaybeforesend = 0.003 # 3ms
+child.delaybeforesend = args.delay
 
 # Wait for the "Type 'bye' to exit" prompt.
 print('Waiting for Tali Forth 2 to initialize...')
@@ -163,6 +167,5 @@ if (not undefined) and (not failed):
 
 # If we got here, the program itself ran fine one way or another
 if args.beep:
-    print("\a") 
+    print("\a")
 sys.exit(0)
-
