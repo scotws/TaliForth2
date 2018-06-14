@@ -9,7 +9,8 @@ When the test is done, a summary will be printed. The detailed results can be
 found in results.txt. The script will abort if it detects a crash. If you seem
 to be dropping characters -- for instance, with a "Unknown word" error when
 "rror" was defined instead of "error" -- you'll have to increase the waiting
-period for sending, see the source code for child.delaybeforesend().
+period for sending. This can be done with the --delay option and settings in
+ms. 
 
 Because these tests are normal Forth programs, they feed the words through
 PARSE-NAME, which assumes spaces as delimiters. Therefore, the test Forth files

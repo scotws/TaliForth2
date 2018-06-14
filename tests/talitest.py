@@ -34,8 +34,13 @@ DELAY = 0.003  # 3ms
 SPAWN_COMMAND = 'py65mon -m 65c02 -r ../taliforth-py65mon.bin'
 PY65MON_ERROR = '*** Unknown syntax:'
 
+# Add name of file with test to the set of LEGAL_TESTS
+LEGAL_TESTS = frozenset(['tali'])
+TESTLIST = ' '.join(["'"+str(t)+"' " for t in LEGAL_TESTS])
+
 OUTPUT_HELP = 'Output File, default "'+RESULTS+'"'
 DELAY_HELP = 'Delay before send in ms, default '+str(DELAY)+' ms'
+TESTS_HELP = "Available tests: 'all', or one or more of "+TESTLIST
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-b', '--beep', action='store_true',
@@ -44,7 +49,18 @@ parser.add_argument('-d', '--delay', type=float,
                     help=DELAY_HELP, default=DELAY)
 parser.add_argument('-o', '--output', dest='output',
                     help=OUTPUT_HELP, default=RESULTS)
+parser.add_argument('-t', '--tests', nargs='+', type=str, default=['all'],
+                    help=TESTS_HELP)
 args = parser.parse_args()
+
+# Make sure we were given a legal list of tests: Must be either 'all' or one or
+# more of the legal tests
+if (args.tests != ['all']) and (not set(args.tests).issubset(LEGAL_TESTS)):
+    print('ERROR: Illegal test. Aborting.')
+    sys.exit(1)
+
+if args.tests == ['all']:
+    args.tests = list(LEGAL_TESTS)
 
 
 def sendslow(kid, string):
@@ -106,28 +122,36 @@ with open(args.output, 'wb') as fout:
             fout.write((results + '\n').encode('ascii'))
 
     # Send the suite of tests
-    with open(TESTS, 'r') as infile:
+    for test in args.tests: 
+        
+        testfile = test+'.fs'
+        print()
+        print('='*80)
+        print("Running test '{0}' from file '{1}'".format(test, testfile))
+        print()
 
-        # Using splitlines to get rid of newlines at the end of lines
-        for line in infile.read().splitlines():
-            results = sendline(child, line)
-            print(results)
+        with open(testfile, 'r') as infile:
 
-            # Detect crashes: py65mon will print an error but this
-            # program will attempt to continue to send new commands
-            if PY65MON_ERROR in results:
-                print('py65mon error detected -- did we crash?')
-                sys.exit(1)
+            # Using splitlines to get rid of newlines at the end of lines
+            for line in infile.read().splitlines():
+                results = sendline(child, line)
+                print(results)
 
-            fout.write((results + '\n').encode('ascii'))
+                # Detect crashes: py65mon will print an error but this
+                # program will attempt to continue to send new commands
+                if PY65MON_ERROR in results:
+                    print('py65mon error detected -- did we crash?')
+                    sys.exit(1)
+
+                fout.write((results + '\n').encode('ascii'))
 
 # Shut it all down
 sendslow(child, 'bye\n')
 sendslow(child, 'quit\n')
 
 # Walk through results and find stuff that went wrong
-print("="*80)
-print("Summary:\n")
+print('='*80)
+print('Summary:\n')
 
 # First, stuff that failed due to undefined words
 undefined = []
@@ -163,9 +187,9 @@ if failed:
 # Sum it all up.
 print()
 if (not undefined) and (not failed):
-    print("All available tests passed.")
+    print('All available tests passed.')
 
 # If we got here, the program itself ran fine one way or another
 if args.beep:
-    print("\a")
+    print('\a')
 sys.exit(0)
