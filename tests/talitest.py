@@ -30,7 +30,7 @@ import pexpect
 TESTS = 'talitests.fs'
 TESTER = 'tester.fs'
 RESULTS = 'results.txt'
-DELAY = 0.003  # 3ms
+DELAY = 0.003  # 3ms default
 SPAWN_COMMAND = 'py65mon -m 65c02 -r ../taliforth-py65mon.bin'
 PY65MON_ERROR = '*** Unknown syntax:'
 
@@ -40,13 +40,15 @@ TESTLIST = ' '.join(["'"+str(t)+"' " for t in LEGAL_TESTS])
 
 OUTPUT_HELP = 'Output File, default "'+RESULTS+'"'
 DELAY_HELP = 'Delay before send in ms, default '+str(DELAY)+' ms'
-TESTS_HELP = "Available tests: 'all', or one or more of "+TESTLIST
+TESTS_HELP = "Available tests: 'all' or one or more of "+TESTLIST
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-b', '--beep', action='store_true',
                     help='Make a sound at end of testing', default=False)
 parser.add_argument('-d', '--delay', type=float,
                     help=DELAY_HELP, default=DELAY)
+parser.add_argument('-m', '--mute', action='store_true',
+                    help='Only print errors and summary', default=False)
 parser.add_argument('-o', '--output', dest='output',
                     help=OUTPUT_HELP, default=RESULTS)
 parser.add_argument('-t', '--tests', nargs='+', type=str, default=['all'],
@@ -61,6 +63,14 @@ if (args.tests != ['all']) and (not set(args.tests).issubset(LEGAL_TESTS)):
 
 if args.tests == ['all']:
     args.tests = list(LEGAL_TESTS)
+
+
+def inform(string):
+    """If the program was not called with the silent argument, print the
+    string, otherwise just return. This is a convenience function.
+    """
+    if not args.silent:
+        print(string)
 
 
 def sendslow(kid, string):
@@ -102,11 +112,12 @@ child = pexpect.spawn(SPAWN_COMMAND)
 child.delaybeforesend = args.delay
 
 # Wait for the "Type 'bye' to exit" prompt.
-print('Waiting for Tali Forth 2 to initialize...')
+inform('Waiting for Tali Forth 2 to initialize...')
 child.expect('to exit\r\n')
 
 # An extra delay is needed or the emulator drops the first few chars
-print('Waiting a bit more')
+inform('Waiting a bit more')
+
 time.sleep(3)
 
 # Log the results
@@ -118,24 +129,24 @@ with open(args.output, 'wb') as fout:
         # Using splitlines to get rid of newlines at the end of lines.
         for line in infile.read().splitlines():
             results = sendline(child, line)
-            print(results)
+            inform(results)
             fout.write((results + '\n').encode('ascii'))
 
     # Send the suite of tests
     for test in args.tests: 
         
         testfile = test+'.fs'
-        print()
-        print('='*80)
-        print("Running test '{0}' from file '{1}'".format(test, testfile))
-        print()
+        inform('')
+        inform('='*80)
+        inform("Running test '{0}' from file '{1}'".format(test, testfile))
+        inform('')
 
         with open(testfile, 'r') as infile:
 
             # Using splitlines to get rid of newlines at the end of lines
             for line in infile.read().splitlines():
                 results = sendline(child, line)
-                print(results)
+                inform(results)
 
                 # Detect crashes: py65mon will print an error but this
                 # program will attempt to continue to send new commands
