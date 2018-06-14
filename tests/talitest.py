@@ -22,6 +22,7 @@
 # This version: 06. June 2018
 # """
 
+import argparse
 import pexpect
 import sys
 import time
@@ -31,6 +32,15 @@ TESTER = 'tester.fs'
 RESULTS = 'results.txt'
 SPAWN_COMMAND = 'py65mon -m 65c02 -r ../taliforth-py65mon.bin'
 PY65MON_ERROR = '*** Unknown syntax:'
+
+OUTPUT_HELP = 'Output File, default "'+RESULTS+'"'
+
+parser = argparse.ArgumentParser()
+parser.add_argument('-o', '--output', dest='output',
+                help=OUTPUT_HELP, default=RESULTS)
+parser.add_argument('-b', '--beep', action='store_true',
+                help='Make a sound at end of testing', default=False)
+args = parser.parse_args()
 
 
 def sendslow(kid, string):
@@ -80,7 +90,7 @@ print('Waiting a bit more')
 time.sleep(3)
 
 # Log the results
-with open(RESULTS, 'wb') as fout:
+with open(args.output, 'wb') as fout:
 
     # Send the tester file
     with open(TESTER, 'r') as infile:
@@ -118,7 +128,7 @@ print("Summary:\n")
 # First, stuff that failed due to undefined words
 undefined = []
 
-with open(RESULTS, 'r') as rfile:
+with open(args.output, 'r') as rfile:
 
     for line in rfile:
         if 'undefined' in line:
@@ -132,7 +142,7 @@ if undefined:
 # Second, stuff that failed the actual test
 failed = []
 
-with open(RESULTS, 'r') as rfile:
+with open(args.output, 'r') as rfile:
 
     for line in rfile:
         # Skip the message from compiling the test words
@@ -152,5 +162,7 @@ if (not undefined) and (not failed):
     print("All available tests passed.")
 
 # If we got here, the program itself ran fine one way or another
+if args.beep:
+    print("\a") 
 sys.exit(0)
 

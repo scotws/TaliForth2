@@ -773,12 +773,12 @@ testing ' ['] find execute immediate count literal postpone state  ok
 { gt2 execute -> 123 }  ok
 here 3 c, char g c, char t c, char 1 c, constant gt1string  ok
 here 3 c, char g c, char t c, char 2 c, constant gt2string  ok
-{ gt1stind -> ' gt1 -1 } >gt1stind< Undefined word
+{ gt1string find -> ' gt1 -1 }  ok
 { gt2string find -> ' gt2 1 }  ok
 ( TODO how to search for non-existent word? )  ok
 { : gt3 gt2 literal ; -> }  ok
 { gt3 -> ' gt1 }  ok
-{ gt1strg count -> gt1string char+ 3 } >gt1strg< Undefined word
+{ gt1string count -> gt1string char+ 3 }  ok
   ok
 { : gt4 postpone gt1 ; immediate -> }  ok
 { : gt5 gt4 ; -> }  ok
