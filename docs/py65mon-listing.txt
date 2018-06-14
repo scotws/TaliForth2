@@ -70,14 +70,14 @@
  807F  E9 A7     SBC  #$A7
  8081  95 01     STA  $01, X
  8083  20 F2 89  JSR  $89F2
- 8086  9C FF 7B  STZ  $7BFF
- 8089  9C 7F 7C  STZ  $7C7F
- 808C  9C FF 7C  STZ  $7CFF
- 808F  9C 7F 7D  STZ  $7D7F
- 8092  9C FF 7D  STZ  $7DFF
- 8095  9C 7F 7E  STZ  $7E7F
- 8098  9C FF 7E  STZ  $7EFF
- 809B  9C 7F 7F  STZ  $7F7F
+ 8086  9C 00 7C  STZ  $7C00
+ 8089  9C 80 7C  STZ  $7C80
+ 808C  9C 00 7D  STZ  $7D00
+ 808F  9C 80 7D  STZ  $7D80
+ 8092  9C 00 7E  STZ  $7E00
+ 8095  9C 80 7E  STZ  $7E80
+ 8098  9C 00 7F  STZ  $7F00
+ 809B  9C 80 7F  STZ  $7F80
  809E  A2 78     LDX  #$78
  80A0  8A        TXA  
  80A1  A2 FF     LDX  #$FF
@@ -214,9 +214,9 @@
  81A8  1A        INC  
  81A9  29 07     AND  #$07
  81AB  85 34     STA  $34
- 81AD  A9 FF     LDA  #$FF
+ 81AD  A9 00     LDA  #$00
  81AF  85 24     STA  $24
- 81B1  A9 7B     LDA  #$7B
+ 81B1  A9 7C     LDA  #$7C
  81B3  85 25     STA  $25
  81B5  A5 34     LDA  $34
  81B7  6A        ROR  
@@ -260,9 +260,9 @@
  8202  80 EB     BRA  $81EF
  8204  88        DEY  
  8205  4C 50 81  JMP  $8150
- 8208  A9 FF     LDA  #$FF
+ 8208  A9 00     LDA  #$00
  820A  85 24     STA  $24
- 820C  A9 7B     LDA  #$7B
+ 820C  A9 7C     LDA  #$7C
  820E  85 25     STA  $25
  8210  A5 34     LDA  $34
  8212  6A        ROR  
@@ -331,13 +331,13 @@
  8280  85 01     STA  $01
  8282  B5 01     LDA  $01, X
  8284  30 15     BMI  $829B
- 8286  A0 FF     LDY  #$FF
+ 8286  A0 00     LDY  #$00
  8288  C4 00     CPY  $00
- 828A  A9 7B     LDA  #$7B
+ 828A  A9 7C     LDA  #$7C
  828C  E5 01     SBC  $01
  828E  B0 1B     BCS  $82AB
  8290  84 00     STY  $00
- 8292  A9 7B     LDA  #$7B
+ 8292  A9 7C     LDA  #$7C
  8294  85 01     STA  $01
  8296  A9 00     LDA  #$00
  8298  4C 97 B5  JMP  $B597
@@ -3484,11 +3484,11 @@
  9924  60        RTS  
  9925  CA        DEX  
  9926  CA        DEX  
- 9927  A9 FF     LDA  #$FF
+ 9927  A9 00     LDA  #$00
  9929  38        SEC  
  992A  E5 00     SBC  $00
  992C  95 00     STA  $00, X
- 992E  A9 7B     LDA  #$7B
+ 992E  A9 7C     LDA  #$7C
  9930  E5 01     SBC  $01
  9932  95 01     STA  $01, X
  9934  60        RTS  
