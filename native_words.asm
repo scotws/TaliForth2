@@ -531,8 +531,9 @@ input_cleared:
                 ; on both tmp1 (the input buffer) and tmp3 (the history
                 ; buffer)
                 inc tmp3
-                ; We shouldn't need to check for overflow into the upper
-                ; byte of the address.
+                bne +           ; Increment the upper byte on carry.
+                inc tmp3+1
+*                
 
                 ; Copy the history buffer into the input buffer,
                 ; sending the characters to the output as we go.
