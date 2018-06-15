@@ -30,7 +30,6 @@ in this folder) and were distributed with the following copyright:
 ```
 \ (C) 1995 JOHNS HOPKINS UNIVERSITY / APPLIED PHYSICS LABORATORY
 \ MAY BE DISTRIBUTED FREELY AS LONG AS THIS COPYRIGHT NOTICE REMAINS.
-
 ```
 Modification for Tali Forth 2 was by SamCo in 2018. Further tests were adapted
 from the ANSI Forth standard (see
