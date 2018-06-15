@@ -279,7 +279,7 @@ testing >r r> r@
 { 1s gr1 -> 1s } \ return stack holds cells
 
 \ ------------------------------------------------------------------------
-testing add/subtract: + - 1+ 1- abs negate dnegate
+testing add/subtract: + - 1+ 1- abs negate 
 
 { 0 5 + -> 5 }
 { 5 0 + -> 5 }
@@ -318,12 +318,6 @@ testing add/subtract: + - 1+ 1- abs negate dnegate
 { -1 negate -> 1 }
 { 2 negate -> -2 }
 { -2 negate -> 2 }
-
-{ 0. dnegate -> 0. }
-{ 1. dnegate -> -1. }
-{ -1. dnegate -> 1. }
-\ { max-2int dnegate -> min-2int swap 1+ swap } \ TODO Not working yet
-\ { min-2int swap 1+ swap dnegate -> max-2int } \ TODO Not working yet 
 
 { 0 abs -> 0 }
 { 1 abs -> 1 }
@@ -842,7 +836,7 @@ variable qdincrement
 {  2 -1  1 qd6 -> -1  0  1          3  }
 
 \ ------------------------------------------------------------------------
-testing defining words: : ; constant variable 2variable create does> >body
+testing defining words: : ; constant variable create does> >body
 
 { 123 constant x123 -> }
 { x123 -> 123 }
@@ -853,19 +847,6 @@ testing defining words: : ; constant variable 2variable create does> >body
 { variable v1 -> }
 { 123 v1 ! -> }
 { v1 @ -> 123 }
-
-{ 2variable 2v1 -> }
-{ 0. 2v1 2! -> } 
-{ 2v1 2@ -> 0. } 
-{ -1 -2 2v1 2! -> } 
-{ 2v1 2@ -> -1 -2 }
-{ : cd2 2variable ; -> } 
-{ cd2 2v2 -> } 
-{ : cd3 2v2 2! ; -> } 
-{ -2 -1 cd3 -> } 
-{ 2v2 2@ -> -2 -1 }
-{ 2variable 2v3 immediate 5 6 2v3 2! -> }
-{ 2v3 2@ -> 5 6 }
 
 { : nop : postpone ; ; -> }
 { nop nop1 nop nop2 -> }
@@ -1087,6 +1068,19 @@ create sbuf 12 c, 34 c, 56 c,
 
 { fbuf char+ fbuf 2 chars move -> }
 { seebuf -> 12 34 34 }
+
+\ CMOVE and CMOVE> propogation tests taken from 
+\ https://forth-standard.org/standard/string/CMOVE and .../CMOVEtop
+decimal
+create cmbuf  97 c, 98 c, 99 c, 100 c, \ "abcd"
+: seecmbuf  cmbuf c@  cmbuf char+ c@  cmbuf char+ char+ c@  cmbuf char+ char+ char+ c@ ;
+{ cmbuf dup char+ 3 cmove -> }
+{ seecmbuf -> 97 97 97 97 } \ "aaaa"
+
+create cmubuf  97 c, 98 c, 99 c, 100 c, \ "abcd"
+: seecmubuf  cmubuf c@  cmubuf char+ c@  cmubuf char+ char+ c@  cmubuf char+ char+ char+ c@ ;
+{ cmubuf dup char+ swap 3 cmove> -> }
+{ seecmubuf -> 100 100 100 100 } \ "dddd"
 
 \ ------------------------------------------------------------------------
 testing output: . ." cr emit space spaces type u.

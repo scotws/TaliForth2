@@ -1861,7 +1861,7 @@ z_create:       rts
 
 
 ; ## D_MINUS ( d d -- d ) "Subtract two double-celled numbers"
-; ## "d-"  tested  ANSI double
+; ## "d-"  auto  ANSI double
 .scope
 xt_d_minus:
                 cpx #dsp0-7
@@ -1896,7 +1896,7 @@ z_d_minus:      rts
 
 
 ; ## D_PLUS ( d d -- d ) "Add two double-celled numbers"
-; ## "d+"  tested  ANSI double
+; ## "d+"  auto  ANSI double
 .scope
 xt_d_plus:
                 cpx #dsp0-7
@@ -1930,7 +1930,7 @@ z_d_plus:       rts
 
 
 ; ## D_TO_S ( d -- n ) "Convert a double number to single"
-; ## "d>s"  tested  ANSI double
+; ## "d>s"  auto  ANSI double
         ; """Though this is basically just DROP, we keep it
         ; separate so we can test for underflow
         ; """
@@ -1948,7 +1948,7 @@ z_d_to_s:       rts
 
 
 ; ## DABS ( d -- d ) "Return the absolute value of a double"
-; ## "dabs"  tested  ANSI double
+; ## "dabs"  auto  ANSI double
 .scope
 xt_dabs:
                 cpx #dsp0-3

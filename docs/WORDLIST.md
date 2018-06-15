@@ -46,10 +46,10 @@ RTS instruction at the end of each word.
 | COUNT | `count` | ANSI core | 23 | **tested** |
 | CR | `cr` | ANSI core | 5 | **tested** |
 | CREATE | `create` | ANSI core | 143 | **tested** |
-| D_MINUS | `d-` | ANSI double | 36 | **tested** |
-| D_PLUS | `d+` | ANSI double | 36 | **tested** |
-| D_TO_S | `d>s` | ANSI double | 9 | **tested** |
-| DABS | `dabs` | ANSI double | 34 | **tested** |
+| D_MINUS | `d-` | ANSI double | 36 | auto |
+| D_PLUS | `d+` | ANSI double | 36 | auto |
+| D_TO_S | `d>s` | ANSI double | 9 | auto |
+| DABS | `dabs` | ANSI double | 34 | auto |
 | DECIMAL | `decimal` | ANSI core | 6 | **tested** |
 | DEFER | `defer` | ANSI core ext | 50 | **tested** |
 | DEPTH | `depth` | ANSI core | 14 | **tested** |
@@ -198,5 +198,5 @@ RTS instruction at the end of each word.
 | ZERO_UNEQUAL | `0<>` | ANSI core ext | 21 | **tested** |
 
 Found **189** native words in `native_words.asm`.
-Of those, **12** are not marked as "tested".
+Of those, **16** are not marked as "tested".
 

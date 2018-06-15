@@ -68,18 +68,7 @@ decimal
 { pad 5 chars + 6 blank -> }   \ put 6 spaced from character 5
 \ { pad 12 s13 compare -> 0 }    \ PAD should now be same as s13 TODO
 
-\ CMOVE and CMOVE> propogation tests taken from 
-\ https://forth-standard.org/standard/string/CMOVE and .../CMOVEtop
-decimal
-create cmbuf  97 c, 98 c, 99 c, 100 c, \ "abcd"
-: seecmbuf  cmbuf c@  cmbuf char+ c@  cmbuf char+ char+ c@  cmbuf char+ char+ char+ c@ ;
-{ cmbuf dup char+ 3 cmove -> }
-{ seecmbuf -> 97 97 97 97 } \ "aaaa"
-
-create cmubuf  97 c, 98 c, 99 c, 100 c, \ "abcd"
-: seecmubuf  cmubuf c@  cmubuf char+ c@  cmubuf char+ char+ c@  cmubuf char+ char+ char+ c@ ;
-{ cmubuf dup char+ swap 3 cmove> -> }
-{ seecmubuf -> 100 100 100 100 } \ "dddd"
+( CMOVE and CMOVE> are kept together with MOVE )
 
 ( TODO SLITERAL test not implemented yet because it requires COMPARE) 
 \ { : s14 [ s1 ] sliteral ; -> } 
