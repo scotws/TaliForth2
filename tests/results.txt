@@ -78,88 +78,6 @@ create actual-results  20 cells allot  ok
       dup >r type cr r> >in !  compiled
    else >in ! drop  compiled
    then ;  ok
-\ ------------------------------------------------------------------------  ok
-testing string words: /string -trailing blank sliteral  ok
-decimal  ok
-  ok
-\ Note the sequence of tests is fixed by https://forth-standard.org/standard/testsuite  ok
-  ok
-{ : s1 s" abcdefghijklmnopqrstuvwxyz" ; -> }  ok
-   ok
-{ s1  5 /string -> s1 swap 5 + swap 5 - }  ok
-{ s1 10 /string -4 /string -> s1 6 /string }  ok
-{ s1  0 /string -> s1 }  ok
-  ok
-{ : s2 s" abc"   ; -> }  ok
-{ : s3 s" jklmn" ; -> }  ok
-{ : s4 s" z"     ; -> }  ok
-{ : s5 s" mnoq"  ; -> }  ok
-{ : s6 s" 12345" ; -> }  ok
-{ : s7 s" "      ; -> }  ok
-  ok
-( TODO SEARCH not implemented )  ok
-\ { s1 s2 search -> s1 <true>  }    ok
-\ { s1 s3 search -> s1  9 /string <true>  }  ok
-\ { s1 s4 search -> s1 25 /string <true>  }  ok
-\ { s1 s5 search -> s1 <false> }  ok
-\ { s1 s6 search -> s1 <false> }  ok
-\ { s1 s7 search -> s1 <true>  }   ok
-  ok
-{ :  s8 s" abc  " ; -> }  ok
-{ :  s9 s"      " ; -> }  ok
-{ : s10 s"    a " ; -> }  ok
-  ok
-{  s1 -trailing -> s1 }        \ "abcdefghijklmnopqrstuvwxyz"  ok
-{  s8 -trailing -> s8 2 - }    \ "abc "  ok
-{  s7 -trailing -> s7 }        \ " " Stack underflow
-{  s9 -trailing -> s9 drop 0 } \ " "  ok
-{ s10 -trailing -> s10 1- }    \ " a "  ok
-  ok
-( TODO COMPARE not implemented )  ok
-\ { s1        s1 compare ->  0  }  ok
-\ { s1  pad swap cmove   ->     }    \ copy s1 to PAD  ok
-\ { s1  pad over compare ->  0  }  ok
-\ { s1     pad 6 compare ->  1  }  ok
-\ { pad 10    s1 compare -> -1  }  ok
-\ { s1     pad 0 compare ->  1  }  ok
-\ { pad  0    s1 compare -> -1  }  ok
-\ { s1        s6 compare ->  1  }  ok
-\ { s6        s1 compare -> -1  }  ok
-  ok
-\ : "abdde" s" abdde" ;  ok
-\ : "abbde" s" abbde" ;  ok
-\ : "abcdf" s" abcdf" ;  ok
-\ : "abcdee" s" abcdee" ;  ok
-  ok
-\ { s1 "abdde"  compare -> -1 }  ok
-\ { s1 "abbde"  compare ->  1 }  ok
-\ { s1 "abcdf"  compare -> -1 }  ok
-\ { s1 "abcdee" compare ->  1 }  ok
-  ok
-: s11 s" 0abc" ;  ok
-: s12 s" 0aBc" ;  ok
-  ok
-\ { s11 s12 compare ->  1 }  ok
-\ { s12 s11 compare -> -1 }  ok
-  ok
-: s13 s" aaaaa a" ;            \ six spaces  ok
-  ok
-{ pad 25 char a fill -> }      \ fill PAD with 25 'a's  ok
-{ pad 5 chars + 6 blank -> }   \ put 6 spaced from character 5  ok
-\ { pad 12 s13 compare -> 0 }    \ PAD should now be same as s13 TODO  ok
-  ok
-( CMOVE and CMOVE> are kept together with MOVE )  ok
-  ok
-( TODO SLITERAL test not implemented yet because it requires COMPARE)   ok
-\ { : s14 [ s1 ] sliteral ; -> }   ok
-\ { s1 s14 compare -> 0 }  ok
-\ { s1 s14 rot = rot rot = -> <true> <false> }  ok
-  ok
-( TODO REPLACES not implemented yet )  ok
-( TODO SUBSTITUTE not implemented yet )  ok
-( TODO UNESCAPE not implemented yet )  ok
-  ok
-  ok
 \ From: John Hayes S1I  ok
 \ Subject: core.fr  ok
 \ Date: Mon, 27 Nov 95 13:10  ok
@@ -382,7 +300,7 @@ testing comparisons: 0= = <> 0< < > u< min max within  ok
 { max-int 0 max -> max-int }  ok
   ok
 { 1 2 4 within -> <false> }  ok
-{ 2 2 4 within -> <true> }  ok
+{  2 4 within -> <true> } Stack underflow
 { 3 2 4 within -> <true> }  ok
 { 4 2 4 within -> <false> }  ok
 { 5 2 4 within -> <false> }  ok
@@ -533,12 +451,12 @@ testing multiply: s>d * m* um*  ok
 { 0 0 um* -> 0 0 }  ok
 { 0 1 um* -> 0 0 }  ok
 { 1 0 um* -> 0 0 }  ok
-{ 1 um* -> 2 0 } Stack underflow
+{ 1 2 um* -> 2 0 }  ok
 { 2 1 um* -> 2 0 }  ok
 { 3 3 um* -> 9 0 }  ok
   ok
 { mid-uint+1 1 rshift 2 um* -> mid-uint+1 0 }  ok
-{ mid-uint+12 um* -> 0 1 } >mid-uint+12< Undefined word
+{ mid-uint+1 2 um* -> 0 1 }  ok
 { mid-uint+1 4 um* -> 0 2 }  ok
 { 1s 2 um* -> 1s 1 lshift 1 }  ok
 { max-uint max-uint um* -> 1 1 invert }  ok
@@ -822,7 +740,7 @@ constant a-addr  constant ua-addr  ok
   ok
 ( here + unused + buffer size must be total RAM, that is, $7FFF )  ok
 { pad here - -> FF } \ PAD must have offset of $FF  ok
-{ here unused + 400 + -> 7FFF }  ok
+{ heunused + 400 + -> 7FFF } >heunused< Undefined word
   ok
 \ ------------------------------------------------------------------------  ok
 testing char [char] [ ] bl s"  ok
@@ -916,7 +834,7 @@ testing do loop +loop i j unloop leave exit ?do  ok
 { : gd2 do i -1 +loop ; -> }  ok
 { 1 4 gd2 -> 4 3 2 1 }  ok
 { -1 2 gd2 -> 2 1 0 -1 }  ok
-{ id-uint mid-uint+1 gd2 -> mid-uint+1 mid-uint } >id-uint< Undefined word
+{ mid-uint mid-uint+1 gd2 -> mid-uint+1 mid-uint }  ok
   ok
 { : gd3 do 1 0 do j loop loop ; -> }  ok
 { 4 1 gd3 -> 1 2 3 }  ok
@@ -966,7 +884,7 @@ testing do loop +loop i j unloop leave exit ?do  ok
 : qd5 ?do i -10 +loop ;   ok
 {   1 50 qd5 -> 50 40 30 20 10   }   ok
 {   0 50 qd5 -> 50 40 30 20 10 0 }   ok
-{ -25 10 qd5 ->0 0 -10 -20     } >>0< Undefined word
+{ -25 10 qd5 -> 10 0 -10 -20     }  ok
   ok
 variable qditerations   ok
 variable qdincrement  ok
@@ -1029,7 +947,7 @@ testing defining words: : ; constant variable create does> >body  ok
   ok
 { : weird: create does> 1 + does> 2 + ; -> }  ok
 { weird: w1 -> }  ok
-{ ' w1 >body -> here } INCORRECT RESULT: { ' w1 >body -> here } ACTUAL RESULT: { 3860 } ok
+{ ' w1 >body -> here } INCORRECT RESULT: { ' w1 >body -> here } ACTUAL RESULT: { 370B } ok
 { w1 -> here 1 + }  ok
 { w1 -> here 2 + }  ok
   ok
@@ -1191,7 +1109,7 @@ create gn-buf 0 c,  ok
 { max-uint dup 2 gn1 -> max-uint dup 0 }  ok
 { 0 0 max-base gn1 -> 0 0 0 }  ok
 { max-uint 0 max-base gn1 -> max-uint 0 0 }  ok
-{ max-uint dup max-base gn1 -> max-uint dup 0 } INCORRECT RESULT: { max-uint dup max-base gn1 -> max-uint dup 0 } ACTUAL RESULT: { 5457 -5DB5 0 } ok
+{ max-uint dup max-base gn1 -> max-uint dup 0 } INCORRECT RESULT: { max-uint dup max-base gn1 -> max-uint dup 0 } ACTUAL RESULT: { 1 0 6 } ok
   ok
 : gn2 ( -- 16 10 )  compiled
    base @ >r  hex base @  decimal base @  r> base ! ;  ok
@@ -1268,25 +1186,7 @@ hex  ok
    ." unsigned: " 0 u. max-uint u. cr  compiled
 ;  ok
   ok
-{ output-test -> } you should see the standard graphic characters:
- !"#$%&'()*+,-./0123456789:;<=>?@
-ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`
-abcdefghijklmnopqrstuvwxyz{|}~
-you should see 0-9 separated by a space:
-0 1 2 3 4 5 6 7 8 9 
-you should see 0-9 (with no spaces):
-0123456789
-you should see a-g separated by a space:
-a b c d e f g 
-you should see 0-5 separated by two spaces:
-0  1  2  3  4  5  
-you should see two separate lines:
-line 1
-line 2
-you should see the number ranges of signed and unsigned numbers:
-  signed: -8000 7FFF 
-unsigned: 0 FFFF 
- ok
+{ output-test -> }  ok
   ok
 \ ------------------------------------------------------------------------  ok
 testing input: accept  ok
@@ -1461,5 +1361,87 @@ decimal  ok
 ( TODO 2ROT not implemented yet )  ok
 ( TODO 2VALUE not implemented yet )  ok
 ( TODO DU< not implemented yet )  ok
+  ok
+  ok
+\ ------------------------------------------------------------------------  ok
+testing string words: /string -trailing blank sliteral  ok
+decimal  ok
+  ok
+\ Note the sequence of tests is fixed by https://forth-standard.org/standard/testsuite  ok
+  ok
+{ : s1 s" abcdefghijklmnopqrstuvwxyz" ; -> }  ok
+   ok
+{ s1  5 /string -> s1 swap 5 + swap 5 - }  ok
+{ s1 10 /string -4 /string -> s1 6 /string }  ok
+{ s1  0 /string -> s1 }  ok
+  ok
+{ : s2 s" abc"   ; -> }  ok
+{ : s3 s" jklmn" ; -> }  ok
+{ : s4 s" z"     ; -> }  ok
+{ : s5 s" mnoq"  ; -> }  ok
+{ : s6 s" 12345" ; -> }  ok
+{ : s7 s" "      ; -> }  ok
+  ok
+( TODO SEARCH not implemented )  ok
+\ { s1 s2 search -> s1 <true>  }    ok
+\ { s1 s3 search -> s1  9 /string <true>  }  ok
+\ { s1 s4 search -> s1 25 /string <true>  }  ok
+\ { s1 s5 search -> s1 <false> }  ok
+\ { s1 s6 search -> s1 <false> }  ok
+\ { s1 s7 search -> s1 <true>  }   ok
+  ok
+{ :  s8 s" abc  " ; -> }  ok
+{ :  s9 s"      " ; -> }  ok
+{ : s10 s"    a " ; -> }  ok
+  ok
+{  s1 -trailing -> s1 }        \ "abcdefghijklmnopqrstuvwxyz"  ok
+{  s8 -trailing -> s8 2 - }    \ "abc "  ok
+{  s7 -trailing -> s7 }        \ " " Stack underflow
+{  s9 -trailing -> s9 drop 0 } \ " "  ok
+{ s10 -trailing -> s10 1- }    \ " a "  ok
+  ok
+( TODO COMPARE not implemented )  ok
+\ { s1        s1 compare ->  0  }  ok
+\ { s1  pad swap cmove   ->     }    \ copy s1 to PAD  ok
+\ { s1  pad over compare ->  0  }  ok
+\ { s1     pad 6 compare ->  1  }  ok
+\ { pad 10    s1 compare -> -1  }  ok
+\ { s1     pad 0 compare ->  1  }  ok
+\ { pad  0    s1 compare -> -1  }  ok
+\ { s1        s6 compare ->  1  }  ok
+\ { s6        s1 compare -> -1  }  ok
+  ok
+\ : "abdde" s" abdde" ;  ok
+\ : "abbde" s" abbde" ;  ok
+\ : "abcdf" s" abcdf" ;  ok
+\ : "abcdee" s" abcdee" ;  ok
+  ok
+\ { s1 "abdde"  compare -> -1 }  ok
+\ { s1 "abbde"  compare ->  1 }  ok
+\ { s1 "abcdf"  compare -> -1 }  ok
+\ { s1 "abcdee" compare ->  1 }  ok
+  ok
+: s11 s" 0abc" ;  ok
+: s12 s" 0aBc" ;  ok
+  ok
+\ { s11 s12 compare ->  1 }  ok
+\ { s12 s11 compare -> -1 }  ok
+  ok
+: s13 s" aaaaa a" ;            \ six spaces  ok
+  ok
+{ pad 25 char a fill -> }      \ fill PAD with 25 'a's  ok
+{ pad 5 chars + 6 blank -> }   \ put 6 spaced from character 5  ok
+\ { pad 12 s13 compare -> 0 }    \ PAD should now be same as s13 TODO  ok
+  ok
+( CMOVE and CMOVE> are kept together with MOVE )  ok
+  ok
+( TODO SLITERAL test not implemented yet because it requires COMPARE)   ok
+\ { : s14 [ s1 ] sliteral ; -> }   ok
+\ { s1 s14 compare -> 0 }  ok
+\ { s1 s14 rot = rot rot = -> <true> <false> }  ok
+  ok
+( TODO REPLACES not implemented yet )  ok
+( TODO SUBSTITUTE not implemented yet )  ok
+( TODO UNESCAPE not implemented yet )  ok
   ok
   ok
