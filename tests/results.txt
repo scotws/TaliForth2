@@ -746,7 +746,7 @@ constant a-addr  constant ua-addr  ok
   ok
 ( here + unused + buffer size must be total RAM, that is, $7FFF )  ok
 { pad here - -> FF } \ PAD must have offset of $FF  ok
-{ here unused + 400 + -> 7FFF }  ok
+{ here unused + 400 + -> 7FFF } INCORRECT RESULT: { here unused + 400 + -> 7FFF } ACTUAL RESULT: { -8000 } ok
   ok
 \ ------------------------------------------------------------------------  ok
 testing char [char] [ ] bl s"  ok
@@ -1128,7 +1128,7 @@ create gn-buf 0 c,  ok
 { max-uint dup 2 gn1 -> max-uint dup 0 }  ok
 { 0 0 max-base gn1 -> 0 0 0 }  ok
 { max-uint 0 max-base gn1 -> max-uint 0 0 }  ok
-{ max-uint dup max-base gn1 -> max-uint dup 0 } INCORRECT RESULT: { max-uint dup max-base gn1 -> max-uint dup 0 } ACTUAL RESULT: { 5457 -5DB5 0 } ok
+{ max-uint dup max-base gn1 -> max-uint dup 0 } INCORRECT RESULT: { max-uint dup max-base gn1 -> max-uint dup 0 } ACTUAL RESULT: { 1 0 6 } ok
   ok
 : gn2 ( -- 16 10 )  compiled
    base @ >r  hex base @  decimal base @  r> base ! ;  ok

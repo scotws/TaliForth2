@@ -66,10 +66,10 @@ if args.tests == ['all']:
 
 
 def inform(string):
-    """If the program was not called with the silent argument, print the
+    """If the program was not called with the mute argument, print the
     string, otherwise just return. This is a convenience function.
     """
-    if not args.silent:
+    if not args.mute:
         print(string)
 
 
