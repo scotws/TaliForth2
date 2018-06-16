@@ -148,7 +148,7 @@ RTS instruction at the end of each word.
 | SEMICOLON | `;` | ANSI core | 28 | **auto** |
 | SIGN | `sign` | ANSI core | 24 | **auto** |
 | SLASH_STRING | `/string` | ANSI string | 35 | **auto** |
-| SLITERAL | `sliteral` | ANSI string | 114 | *coded* |
+| SLITERAL | `sliteral` | ANSI string | 125 | *coded* |
 | SM_SLASH_REM | `sm/rem` | ANSI core | 44 | **auto** |
 | SOURCE | `source` | ANSI core | 20 | **auto** |
 | SOURCE_ID | `source-id` | ANSI core ext | 10 | tested |
