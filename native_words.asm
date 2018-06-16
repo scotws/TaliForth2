@@ -5793,15 +5793,24 @@ xt_sliteral:
 
                 ; Our jump target is CP + 2 (for the length of the jump
                 ; instruction itself ) + the length of the string
+                
+                ; Add the length of the string.
                 lda tmptos
                 clc
                 adc cp
-                adc #2
                 sta (cp)        ; LSB
                 lda tmptos+1
                 adc cp+1
                 ldy #1
                 sta (cp),y      ; MSB
+                ; Add the offset of 2
+                lda (cp)
+                clc
+                adc #2
+                sta (cp)
+                lda (cp),y
+                adc #0          ; only for the carry
+                sta (cp),y
 
                 ; Move past the jump instruction to where the string will
                 ; start
