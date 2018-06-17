@@ -5453,7 +5453,7 @@ xt_refill:
                 lda 1,x
                 sta ciblen+1            ; though we only accept 255 chars
 
-                ; make >IN point to begining of buffer
+                ; make >IN point to beginning of buffer
                 stz toin 
                 stz toin+1 
  
@@ -5856,7 +5856,7 @@ xt_sliteral:
                 ;  a -->    jsr sliteral_runtime
                 ;           <string address>
                 ;           <string length>
-                ; rts -->                
+                ; rts -->
 
                 ; This means we'll have to adjust the return address for two
                 ; cells, not just one
