@@ -966,8 +966,8 @@ testing evaluate  ok
   ok
 { : ge6 ge1 ge5 ; -> }  \ test evaluate in compile state  ok
 { ge6 -> 123 }  ok
-{ : ge7 ge2 ge5 ; -> }  ok
-{ ge7 -> 124 }  ok
+{  ge7 ge2 ge5 ; -> } >ge7< Undefined word
+{ ge7 -> 124 } >ge7< Undefined word
   ok
 \ ------------------------------------------------------------------------  ok
 testing source >in word  ok
@@ -1078,25 +1078,25 @@ count-bits 2* constant #bits-ud  \ number of bits in ud  ok
   ok
 \ >number tests  ok
 create gn-buf 0 c,  ok
-: gn-string gn-buf 1 ;  ok
+: gn-string gnbuf 1 ; >gnbuf< Undefined word
 : gn-consumed gn-buf char+ 0 ;  ok
-: gn'  [char] ' word char+ c@ gn-buf c!  gn-string ;  ok
+: gn'  [char] ' word char+ c@ gn-buf c!  gn-string ; >gn-string< Undefined word
   ok
-{ 0 0 gn' 0' >number -> 0 0 gn-consumed }  ok
-{ 0 0 gn' 1' >number -> 1 0 gn-consumed }  ok
-{ 1 0 gn' 1' >number -> base @ 1+ 0 gn-consumed }  ok
-{ 0 0 gn' -' >number -> 0 0 gn-string } \ should fail to convert these  ok
-{ 0 0 gn' +' >number -> 0 0 gn-string }  ok
-{ 0 0 gn' .' >number -> 0 0 gn-string }  ok
+{ 0 0 gn' 0' >number -> 0 0 gn-consumed } >gn'< Undefined word
+{ 0 0 gn' 1' >number -> 1 0 gn-consumed } >gn'< Undefined word
+{ 1 0 gn' 1' >number -> base @ 1+ 0 gn-consumed } >gn'< Undefined word
+{ 0 0 gn' -' >number -> 0 0 gn-string } \ should fail to convert these >gn'< Undefined word
+{ 0 0 gn' +' >number -> 0 0 gn-string } >gn'< Undefined word
+{ 0 0 gn' .' >number -> 0 0 gn-string } >gn'< Undefined word
   ok
 : >number-based  base @ >r base ! >number r> base ! ;  ok
   ok
-{ 0 0 gn' 2' 10 >number-based -> 2 0 gn-consumed }  ok
-{ 0 0 gn' 2'  2 >number-based -> 0 0 gn-string }  ok
-{ 0 0 gn' f' 10 >number-based -> f 0 gn-consumed }  ok
-{ 0 0 gn' g' 10 >number-based -> 0 0 gn-string }  ok
-{ 0 0 gn' g' max-base >number-based -> 10 0 gn-consumed }  ok
-{ 0 0 gn' z' max-base >number-based -> 23 0 gn-consumed }  ok
+{ 0 0 gn' 2' 10 >number-based -> 2 0 gn-consumed } >gn'< Undefined word
+{ 0 0 gn' 2'  2 >number-based -> 0 0 gn-string } >gn'< Undefined word
+{ 0 0 gn' f' 10 >number-based -> f 0 gn-consumed } >gn'< Undefined word
+{ 0 0 gn' g' 10 >number-based -> 0 0 gn-string } >gn'< Undefined word
+{ 0 0 gn' g' max-base >number-based -> 10 0 gn-consumed } >gn'< Undefined word
+{ 0 0 gn' z' max-base >number-based -> 23 0 gn-consumed } >gn'< Undefined word
   ok
 \ ud should equal ud' and len should be zero.  ok
 : gn1  ( ud base -- ud' len )   compiled
@@ -1323,7 +1323,7 @@ decimal  ok
 { 0. 2v1 2! -> }  ok
 { 2v1 2@ -> 0. }  ok
 { -1 -2 2v1 2! -> }  ok
-{ 2v1 2@ -> -1 -2 }  ok
+{ 2v1 2@ -> - 1 -2 }  ok
 { : cd2 2variable ; -> }  ok
 { cd2 2v2 -> }  ok
 { : cd3 2v2 2! ; -> }  ok
