@@ -232,10 +232,6 @@ _success:
                 inx                     ; drop
                 inx
      
-                ; make >IN point to begining of buffer
-                stz toin 
-                stz toin+1 
- 
                 ; Main compile/execute routine
                 jsr interpret
 
@@ -5442,7 +5438,11 @@ xt_refill:
                 sta ciblen
                 lda 1,x
                 sta ciblen+1            ; though we only accept 255 chars
-                
+
+                ; make >IN point to begining of buffer
+                stz toin 
+                stz toin+1 
+ 
                 lda #$ff                ; overwrite with TRUE flag
                 sta 0,x
                 sta 1,x
