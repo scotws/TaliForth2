@@ -5563,18 +5563,6 @@ xt_s_quote:
 
                 jsr xt_parse            ; ( "string" -- addr u )
 
-                ; if we were given an empty string, just leave
-                lda 0,x
-                ora 1,x
-                bne +
-
-                ; Zero length string, dump stack and run
-                inx
-                inx
-                inx
-                inx
-                bra _done
-*
                 ; What happens next depends on the state (which is bad, but
                 ; that's the way it works at the moment). If we are
                 ; interpretating, we save the string to a transient buffer
@@ -5602,12 +5590,15 @@ _interpreted:
                 sta tmp2+1
 
                 ldy 0,x                ; length of string
+                beq _loop_done         ; Skip copying for 0 length strings
+        
 _loop:
                 dey
                 lda (tmp1),y
                 sta (tmp2),y
                 bne _loop
-
+_loop_done:
+                
                 ; We can keep the length of the string in TOS, but
                 ; need to replace the address in NOS by the new one
                 lda cp
