@@ -420,7 +420,7 @@ _loop:
                 bne _loop       ; fall thru if buffer limit reached
 
 _eol:
-                ; REFILL updatess ciblen, we don't need to do it here
+                ; REFILL updates ciblen and toin, we don't need to do it here
                 sty 0,x         ; Y contains number of chars accepted already
                 stz 1,x         ; we only accept 256 chars
 
@@ -4135,7 +4135,7 @@ z_minus:        rts
 
 ; ## MINUS_TRAILING ( addr u1 -- addr u2 ) "Remove trailing spaces"
 ; ## "-trailing"  auto  ANSI string
-        ; """We assume that string is at most 255 chars long"""
+        ; """Remove trailing spaces"""
 .scope
 xt_minus_trailing:
                 cpx #dsp0-3
@@ -4144,35 +4144,49 @@ xt_minus_trailing:
 *
                 ; if length entry is zero, return a zero and leave the 
                 ; address part untouched
-                lda 0,x                 ; LSB of n
-                ora 1,x                 ; MSB of n (should be zero anyway) 
+                lda 0,x         ; LSB of n
+                ora 1,x         ; MSB of n
                 beq _done
 
-                lda 2,x                 ; LSB of addr 
+                ; Compute address of last char in tmp1 as
+                ; addr + u1 - 1
+
+                ; addr + u1
+                clc
+                lda 2,x         ; LSB of addr
+                adc 0,x
                 sta tmp1
-                lda 3,x                 ; MSB of addr
+                lda 3,x         ; MSB of addr
+                adc 1,x
                 sta tmp1+1
 
-                ; Ignore MSB of length 
-                lda 0,x
-                tay
-                dey                     ; u is length, but we need the offset 
-_loop:          
-                lda (tmp1),y
-                cmp #AscSP
-                bne _clean_up
-                dey
-                bne _loop
+                ; - 1
+                lda tmp1
+                bne +
+                dec tmp1+1
+*               dec tmp1
 
-                ; If it was spaces all the way down, fall through to the
-                ; clean-up routine. This is probably a rare case, so we use
-                ; DEY as a hack so we can use the more common routine
-                dey
-_clean_up:
-                iny             ; Y is offset, we need the length 
-                tya             ; store new n in LSB
-                sta 0,x
-                stz 1,x         ; always zero 
+                ; While spaces are found, move tmp1 backwards and
+                ; decrease the count on the data stack.
+_loop:
+                lda (tmp1)
+                cmp #AscSP
+                bne _done
+
+                ; Move back one address.
+                lda tmp1
+                bne +
+                dec tmp1+1
+*               dec tmp1
+
+                ; Decrement count by one.
+                lda 0,x
+                bne +
+                dec 1,x
+*               dec 0,x
+
+                bra _loop
+
 _done:
 z_minus_trailing:
                 rts
@@ -5553,15 +5567,123 @@ z_rshift:       rts
         ; """
 .scope
 xt_s_quote:
+                ; Make room on the data stack for the address.
+                dex
+                dex
+                ; Make room on the data stack for the count.
                 dex
                 dex
 
-                ; First, find the end of the string and save it
-                lda #$22                ; ASCII for "
-                sta 0,x
-                stz 1,x                 ; paranoid
+                ; Put a jmp over the string data with address to be filled
+                ; in later.
+                lda #$4C
+                jsr cmpl_a
+                ;; Address to be filled in later.
+                jsr cmpl_a
+                jsr cmpl_a
+                
 
-                jsr xt_parse            ; ( "string" -- addr u )
+                ; Save the current value of HERE on the data stack for the
+                ; address of the string.
+                lda cp
+                sta 2,x
+                lda cp+1
+                sta 3,x
+
+                ; Start saving the string into the dictionary up to the
+                ; ending double quote.
+_savechars_loop:
+                ; Check to see if the input buffer is empty.
+                lda toin+1              ; MSB
+                cmp ciblen+1
+                bcc _input_fine         ; unsigned comparison
+
+                lda toin                ; LSB
+                cmp ciblen
+                bcc _input_fine
+
+                ; Input buffer is empty.  Refill it.
+                jsr xt_refill           ; ( -- f )  
+
+                ; Check result of refill.
+                lda 0,x
+                ora 1,x
+                bne _refill_ok
+
+                ; Something when wrong with refill.
+                lda #err_refill
+                jmp error
+                
+_refill_ok:
+                ; Remove the refill flag from the data stack.
+                inx
+                inx
+                ; For refill success, jump back up to the empty check,
+                ; just in case refill gave us an empty buffer
+                ; (eg. empty/blank line of input)
+                bra _savechars_loop
+
+_input_fine:
+                ; There should be at least one valid char to use.
+                ; Calculate it's address at CIB+TOIN into tmp1
+                lda cib
+                clc
+                adc toin        ; LSB
+                sta tmp1
+                lda cib+1
+                adc toin+1      ; MSB
+                sta tmp1+1
+
+                ; Check if the current character is the end of the string.
+                lda (tmp1)
+                cmp #$22        ; ASCII for "
+                beq _found_string_end
+                ; If we didn't reach the end of the string, compile this
+                ; character into the dictionary
+                jsr cmpl_a
+                ; Move on to the next character.
+                inc toin
+                bne _savechars_loop
+                inc toin+1
+                bra _savechars_loop
+
+_found_string_end:
+                ; Use up the delimiter.
+                inc toin
+                bne +
+                inc toin+1
+*
+                ; Calculate the length of the string, which is the
+                ; difference between cp and the address of the start
+                ; of the string (currently saved on the stack).
+                lda cp
+                sec
+                sbc 2,x
+                sta 0,x         ; LSB
+                lda cp+1
+                sbc 3,x
+                sta 1,x         ; MSB
+
+                ; Update the address of the jump-over jmp instruction.
+                ; First determine location of jmp instructions address.
+                ; It should be 2 bytes before the start of the string.
+
+                ; Compute it into tmp1, which is no longer being used.
+                lda 2,x
+                sec
+                sbc #2
+                sta tmp1
+                lda 3,x
+                sbc #0          ; Propagate borrow
+                sta tmp1+1
+
+                ; Update the address of the jump to HERE.
+                lda cp
+                sta (tmp1)
+                ldy #1
+                lda cp+1
+                sta (tmp1),y
+                
 
                 ; What happens next depends on the state (which is bad, but
                 ; that's the way it works at the moment). If we are
@@ -5571,49 +5693,10 @@ xt_s_quote:
                 ; compiling, we just need SLITERAL
                 lda state
                 ora state+1             ; paranoid
-                beq _interpreted
+                beq _done
 
                 jsr xt_sliteral         ; ( addr u -- )
-                bra _done
-_interpreted:
-                ; We should move this string to a safe place. This is a pain
-                ; on an 8-bit machine, even though we're going to limit this
-                ; to 255 characters
-                lda 2,x                 ; current address of string
-                sta tmp1
-                lda 3,x
-                sta tmp1+1
 
-                lda cp                  ; HERE in quicker
-                sta tmp2
-                lda cp+1
-                sta tmp2+1
-
-                ldy 0,x                ; length of string
-                beq _loop_done         ; Skip copying for 0 length strings
-        
-_loop:
-                dey
-                lda (tmp1),y
-                sta (tmp2),y
-                bne _loop
-_loop_done:
-                
-                ; We can keep the length of the string in TOS, but
-                ; need to replace the address in NOS by the new one
-                lda cp
-                sta 2,x
-                lda cp+1
-                sta 3,x
-
-                ; Adjust CP to point past the string
-                lda 0,x
-                clc
-                adc cp
-                sta cp
-                lda cp+1
-                adc #0                  ; only care about the carry
-                sta cp+1
 _done:
 z_s_quote:      rts
 .scend
@@ -5752,7 +5835,7 @@ z_slash_string: rts
 
 ; ## SLITERAL ( addr u -- )( -- addr u ) "Compile a string for runtime"
 ; ## "sliteral" coded  ANSI string
-        ; """Currently, we only copy strings of up to 255 characters
+        ; """Add the runtime for an existing string.
         ; """
 .scope
 xt_sliteral:
@@ -5760,94 +5843,20 @@ xt_sliteral:
                 bmi +
                 jmp underflow
 *
-                ; We can't assume that ( addr u ) of the current string is in
-                ; a stable area, so we first have to move them to safety. Since
-                ; CP points to where the interpreter expects to be able to
-                ; continue in the code, we have to jump over the string. We use
-                ; JMP instead of BRA so we can use longer strings
+                ; We are assuming that ( addr u ) of the current string is in
+                ; a stable area (eg. already in the dictionary)
+                ; Both S" and ." (which calls S") put them there.
                 
-                ; Store length of source string in tmptos
-                lda 0,x
-                sta tmptos
-                lda 1,x
-                sta tmptos+1
-
-                ; Store address of source string in tmp1
-                lda 2,x
-                sta tmp1
-                lda 3,x
-                sta tmp1+1
-
-                ; Store opcode for JMP
-                lda #$4c
-                jsr cmpl_a
-
-                ; Our jump target is CP + 2 (for the length of the jump
-                ; instruction itself ) + the length of the string
-                
-                ; Add the length of the string.
-                lda tmptos
-                clc
-                adc cp
-                sta (cp)        ; LSB
-                lda tmptos+1
-                adc cp+1
-                ldy #1
-                sta (cp),y      ; MSB
-                ; Add the offset of 2
-                lda (cp)
-                clc
-                adc #2
-                sta (cp)
-                lda (cp),y
-                adc #0          ; only for the carry
-                sta (cp),y
-
-                ; Move past the jump instruction to where the string will
-                ; start
-                clc
-                lda cp
-                adc #2
-                sta cp
-                lda cp+1
-                adc #0          ; only for the carry
-                sta cp+1
-
-                ; Now we can savely copy the string. Note currently we
-                ; can only copy strings of up to 255 chars length
-                ldy tmptos
-                dey             ; offset is one less than length
-_loop:
-                lda (tmp1),y
-                sta (cp),y
-                dey
-                bpl _loop
-
-                ; Keep old CP as new address of string
-                lda cp
-                sta tmp3
-                lda cp+1
-                sta tmp3+1
-
-                ; Update CP
-                clc
-                lda cp
-                adc tmptos
-                sta cp
-                lda cp+1
-                adc tmptos+1
-                sta cp+1
-
                 ; Compile a subroutine jump to the runtime of SLITERAL that
                 ; pushes the new ( addr u ) pair to the Data Stack.
                 ; When we're done, the code will look like this:
- 
+
                 ; xt -->    jmp a
                 ;           <string data bytes>
                 ;  a -->    jsr sliteral_runtime
                 ;           <string address>
                 ;           <string length>
-                ; rts -->
+                ; rts -->                
 
                 ; This means we'll have to adjust the return address for two
                 ; cells, not just one
@@ -5857,12 +5866,12 @@ _loop:
 
                 ; We want to have the address end up as NOS and the length
                 ; as TOS, so we store the address first
-                ldy tmp3+1              ; address MSB
-                lda tmp3                ; address LSB
+                ldy 3,x                ; address MSB
+                lda 2,x                ; address LSB
                 jsr cmpl_word
 
-                ldy tmptos+1            ; length MSB
-                lda tmptos              ; length LSB
+                ldy 1,x                ; length MSB
+                lda 0,x                ; length LSB
                 jsr cmpl_word
 
                 ; clean up and leave
@@ -6981,28 +6990,33 @@ xt_type:
                 bmi +
                 jmp underflow
 *
-                ; skip if length is zero
-                lda 0,x
-                ora 1,x
-                beq _done
-
+                ; Save the starting address into tmp1
                 lda 2,x
                 sta tmp1
                 lda 3,x
                 sta tmp1+1
-                
-                ; CPY doesn't have a mode to compare with 0,x so we have to 
-                ; do the loop the hard way
-                ldy #0
+_loop:          
+                ; done if length is zero
                 lda 0,x
-                sta tmp2
+                ora 1,x
+                beq _done
 
-_loop:
-                lda (tmp1),y
-                jsr emit_a              ; avoids stack foolery
-                iny
-                cpy tmp2
-                bne _loop               ; fall through to _done
+                ; Send the current character
+                lda (tmp1)
+                jsr emit_a      ; avoids stack foolery
+
+                ; Move the address along (in tmp1) 
+                inc tmp1
+                bne +
+                inc tmp1+1
+*
+                ; Reduce the count (on the data stack)
+                lda 0,x
+                bne +
+                dec 1,x
+*               dec 0,x
+
+                bra _loop
 
 _done:
                 inx

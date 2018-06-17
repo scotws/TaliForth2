@@ -7,9 +7,9 @@ RTS instruction at the end of each word.
 
 | NAME | FORTH WORD | SOURCE | BYTES | STATUS |
 | :--- | :--------- | :---   | ----: | :----  |
-| COLD | `cold` | Tali Forth | 230 | tested |
-| ABORT | `abort` | ANSI core | 72 | tested |
-| QUIT | `quit` | ANSI core | 70 | tested |
+| COLD | `cold` | Tali Forth | 226 | tested |
+| ABORT | `abort` | ANSI core | 68 | tested |
+| QUIT | `quit` | ANSI core | 66 | tested |
 | ABORT_QUOTE | `abort"` | ANSI core | 10 | tested |
 | ABS | `abs` | ANSI core | 24 | **auto** |
 | ACCEPT | `accept` | ANSI core | 300 | **auto** |
@@ -106,7 +106,7 @@ RTS instruction at the end of each word.
 | MAX | `max` | ANSI core | 31 | **auto** |
 | MIN | `min` | ANSI core | 31 | **auto** |
 | MINUS | `-` | ANSI core | 22 | **auto** |
-| MINUS_TRAILING | `-trailing` | ANSI string | 41 | **auto** |
+| MINUS_TRAILING | `-trailing` | ANSI string | 58 | **auto** |
 | MOVE | `move` | ANSI core | 30 | **auto** |
 | NAME_TO_INT | `name>int` | Gforth | 32 | tested |
 | NAME_TO_STRING | `name>string` | Gforth | 29 | tested |
@@ -139,16 +139,16 @@ RTS instruction at the end of each word.
 | R_FETCH | `r@` | ANSI core | 20 | **auto** |
 | R_FROM | `r>` | ANSI core | 16 | **auto** |
 | RECURSE | `recurse` | ANSI core | 44 | **auto** |
-| REFILL | `refill` | ANSI core ext | 61 | tested |
+| REFILL | `refill` | ANSI core ext | 65 | tested |
 | RIGHT_BRACKET | `]` | ANSI core | 6 | **auto** |
 | ROT | `rot` | ANSI core | 31 | **auto** |
 | RSHIFT | `rshift` | ANSI core | 23 | **auto** |
-| S_QUOTE | `s"` | ANSI core | 70 | **auto** |
+| S_QUOTE | `s"` | ANSI core | 134 | **auto** |
 | S_TO_D | `s>d` | ANSI core | 21 | **auto** |
 | SEMICOLON | `;` | ANSI core | 28 | **auto** |
 | SIGN | `sign` | ANSI core | 24 | **auto** |
 | SLASH_STRING | `/string` | ANSI string | 35 | **auto** |
-| SLITERAL | `sliteral` | ANSI string | 125 | *coded* |
+| SLITERAL | `sliteral` | ANSI string | 32 | *coded* |
 | SM_SLASH_REM | `sm/rem` | ANSI core | 44 | **auto** |
 | SOURCE | `source` | ANSI core | 20 | **auto** |
 | SOURCE_ID | `source-id` | ANSI core ext | 10 | tested |
@@ -178,7 +178,7 @@ RTS instruction at the end of each word.
 | TWO_SWAP | `2swap` | ANSI core | 39 | **auto** |
 | TWO_TO_R | `2>r` | ANSI core ext | 35 | *coded* |
 | TWO_VARIABLE | `2variable` | ANSI double | 14 | **auto** |
-| TYPE | `type` | ANSI core | 41 | **auto** |
+| TYPE | `type` | ANSI core | 46 | **auto** |
 | U_DOT | `u.` | ANSI core | 15 | **auto** |
 | U_LESS_THAN | `u<` | ANSI core | 25 | *core* |
 | UD_SLASH_MOD | `ud/mod` | Gforth | 34 | *coded* |
