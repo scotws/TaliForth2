@@ -79,158 +79,6 @@ create actual-results  20 cells allot  ok
    else >in ! drop  compiled
    then ;  ok
 \ ------------------------------------------------------------------------  ok
-testing double words: 2variable d+ d- d. d.r d>s dabs dnegate  ok
-decimal  ok
-  ok
-( 2CONSTANT not implemented )  ok
-( 2LITERAL not implemented )  ok
-  ok
-{ 2variable 2v1 -> }  ok
-{ 0. 2v1 2! -> }  ok
-{ 2v1 2@ -> 0. }  ok
-{ -1 -2 2v1 2! -> }  ok
-{ 2v1 2@ -> -1 -2 }  ok
-{ : cd2 2variable ; -> }  ok
-{ cd2 2v2 -> }  ok
-{ : cd3 2v2 2! ; -> }  ok
-{ -2 -1 cd3 -> }  ok
-{ 2v2 2@ -> -2 -1 }  ok
-{ 2variable 2v3 immediate 5 6 2v3 2! -> }  ok
-{ 2v3 2@ -> 5 6 }  ok
-  ok
-\ Repeats in case we call this test alone  ok
-0 constant 0s  ok
-0 invert constant 1s  ok
-0 invert 1 rshift  constant max-int  ok
-0 invert 1 rshift invert  constant min-int  ok
-  ok
-{  0.  5. d+ ->  5. }                         \ small integers   ok
-{ -5.  0. d+ -> -5. }   ok
-{  1.  2. d+ ->  3. }   ok
-{  1. -2. d+ -> -1. }   ok
-{ -1.  2. d+ ->  1. }   ok
-{ -1. -2. d+ -> -3. }   ok
-{ -1.  1. d+ ->  0. }  ok
-{  0  0  0  5 d+ ->  0  5 }                  \ mid range integers   ok
-{ -1  5  0  0 d+ -> -1  5 }   ok
-{  0  0  0 -5 d+ ->  0 -5 }   ok
-{  0 -5 -1  0 d+ -> -1 -5 }   ok
-{  0  1  0  2 d+ ->  0  3 }   ok
-{ -1  1  0 -2 d+ -> -1 -1 }   ok
-{  0 -1  0  2 d+ ->  0  1 }   ok
-{  0 -1 -1 -2 d+ -> -1 -3 }   ok
-{ -1 -1  0  1 d+ -> -1  0 }  ok
-  ok
-{ min-int 0 2dup d+ -> 0 1 }  ok
-{ min-int s>d min-int 0 d+ -> 0 0 }  ok
-  ok
-\ TODO 2CONSTANT not implemented yet  ok
-\ 1s max-int  2constant max-2int \ 01...1   ok
-\ 0 min-int   2constant min-2int \ 10...0   ok
-\ max-2int 2/ 2constant hi-2int  \ 001...1   ok
-\ min-2int 2/ 2constant lo-2int  \ 110...0  ok
-  ok
-\ TODO hi-2int etc not implemented yet  ok
-\ {  hi-2int       1. d+ -> 0 hi-int 1+ }     \ large double integers   ok
-\ {  hi-2int     2dup d+ -> 1s 1- max-int }  ok
-\ { max-2int min-2int d+ -> -1. }  ok
-\ { max2int  lo-2int d+ -> hi-2int }  ok
-\ {  lo-2int     2dup d+ -> min-2int }  ok
-\ {  hi-2int min-2int d+ 1. d+ -> lo-2int }  ok
-  ok
-{  0.  5. d- -> -5. }              \ small integers   ok
-{  5.  0. d- ->  5. }   ok
-{  0. -5. d- ->  5. }   ok
-{  1.  2. d- -> -1. }   ok
-{  1. -2. d- ->  3. }   ok
-{ -1.  2. d- -> -3. }   ok
-{ -1. -2. d- ->  1. }   ok
-{ -1. -1. d- ->  0. }   ok
-{  0  0  0  5 d- ->  0 -5 }        \ mid-range integers   ok
-{ -1  5  0  0 d- -> -1  5 }   ok
-{  0  0 -1 -5 d- ->  1  4 }   ok
-{  0 -5  0  0 d- ->  0 -5 }   ok
-{ -1  1  0  2 d- -> -1 -1 }   ok
-{  0  1 -1 -2 d- ->  1  2 }   ok
-{  0 -1  0  2 d- ->  0 -3 }   ok
-{  0 -1  0 -2 d- ->  0  1 }   ok
-{  0  0  0  1 d- ->  0 -1 }  ok
-{ min-int 0 2dup d- -> 0. }   ok
-{ min-int s>d max-int 0 d- -> 1 1s }   ok
-  ok
-\ TODO max-2int etc not implemented yet  ok
-\ { max-2int max-2int d- -> 0. }    \ large integers   ok
-\ { min-2int min-2int d- -> 0. }  ok
-\ { max-2int  hi-2int d- -> lo-2int dnegate }   ok
-\ {  hi-2int  lo-2int d- -> max-2int }  ok
-\ {  lo-2int  hi-2int d- -> min-2int 1. d+ }  ok
-\ { min-2int min-2int d- -> 0. }  ok
-\ { min-2int  lo-2int d- -> lo-2int }  ok
-  ok
-\ D. and D.R  ok
-\ TODO max2int etc not implemented yet  ok
-\ TODO 2CONSTANT not implemented yet  ok
-\ max-2int 71 73 m*/ 2constant dbl1   ok
-\ min-2int 73 79 m*/ 2constant dbl2  ok
-\ : d>ascii ( d -- caddr u )   ok
-   \ dup >r <# dabs #s r> sign #>    ( -- caddr1 u )   ok
-   \ here swap 2dup 2>r chars dup allot move 2r>   ok
-\ ;  ok
-  ok
-\ dbl1 d>ascii 2constant "dbl1"   ok
-\ dbl2 d>ascii 2constant "dbl2"  ok
-  ok
-\ : doubleoutput   ok
-   \ cr ." you should see lines duplicated:" cr   ok
-   \ 5 spaces "dbl1" type cr   ok
-   \ 5 spaces dbl1 d. cr   ok
-   \ 8 spaces "dbl1" dup >r type cr   ok
-   \ 5 spaces dbl1 r> 3 + d.r cr   ok
-   \ 5 spaces "dbl2" type cr   ok
-   \ 5 spaces dbl2 d. cr   ok
-   \ 10 spaces "dbl2" dup >r type cr   ok
-   \ 5 spaces dbl2 r> 5 + d.r cr   ok
-\ ;  ok
-  ok
-\ { doubleoutput -> }  ok
-  ok
-( TODO D0< not implemented yet )  ok
-( TODO D0= not implemented yet )  ok
-( TODO D2* not implemented yet )  ok
-( TODO D2/ not implemented yet )  ok
-( TODO D< not implemented yet )  ok
-( TODO D= not implemented yet )  ok
-  ok
-{    1234  0 d>s ->  1234   }   ok
-{   -1234 -1 d>s -> -1234   }   ok
-{ max-int  0 d>s -> max-int }   ok
-{ min-int -1 d>s -> min-int }  ok
-  ok
-{       1. dabs -> 1.       }   ok
-{      -1. dabs -> 1.       }
-   ok
-\ TODO max-2int not implemented yet  ok
-\ { max-2int dabs -> max-2int }   ok
-\ { min-2int 1. d+ dabs -> max-2int }  ok
-  ok
-( TODO DMAX not implemented yet )  ok
-( TODO DMIN not implemented yet )  ok
-  ok
-{ 0. dnegate -> 0. }  ok
-{ 1. dnegate -> -1. }  ok
-{ -1. dnegate -> 1. }  ok
-\ TODO max-2int not implemented yet  ok
-\ { max-2int dnegate -> min-2int swap 1+ swap }  ok
-\ { min-2int swap 1+ swap dnegate -> max-2int }  ok
-  ok
-( TODO M*/ not implemented yet )  ok
-( TODO M+ not implemented yet )  ok
-( TODO 2ROT not implemented yet )  ok
-( TODO 2VALUE not implemented yet )  ok
-( TODO DU< not implemented yet )  ok
-  ok
-  ok
-\ ------------------------------------------------------------------------  ok
 testing string words: /string -trailing blank sliteral  ok
 decimal  ok
   ok
@@ -312,6 +160,157 @@ decimal  ok
 ( TODO UNESCAPE not implemented yet )  ok
   ok
   ok
+\ ------------------------------------------------------------------------  ok
+testing double words: 2variable d+ d- d. d.r d>s dabs dnegate  ok
+decimal  ok
+  ok
+( 2CONSTANT not implemented )  ok
+( 2LITERAL not implemented )  ok
+  ok
+{ 2variable 2v1 -> }  ok
+{ 0. 2v1 2! -> }  ok
+{ 2v1 2@ -> 0. }  ok
+{ -1 -2 2v1 2! -> }  ok
+{ 2v1 2@ -> -1 -2 }  ok
+{ : cd2 2variable ; -> }  ok
+{ cd2 2v2 -> }  ok
+{ : cd3 2v2 2! ; -> }  ok
+{ -2 -1 cd3 -> }  ok
+{ 2v2 2@ -> -2 -1 }  ok
+{ 2variable 2v3 immediate 5 6 2v3 2! -> }  ok
+{ 2v3 2@ -> 5 6 }  ok
+  ok
+\ Repeats in case we call this test alone  ok
+0 constant 0s  ok
+0 invert constant 1s  ok
+0 invert 1 rshift  constant max-int  ok
+0 invert 1 rshift invert  constant min-int  ok
+  ok
+{  0.  5. d+ ->  5. }                         \ small integers   ok
+{ -5.  0. d+ -> -5. }   ok
+{  1.  2. d+ ->  3. }   ok
+{  1. -2. d+ -> -1. }   ok
+{ -1.  2. d+ ->  1. }   ok
+{ -1. -2. d+ -> -3. }   ok
+{ -1.  1. d+ ->  0. }  ok
+{  0  0  0  5 d+ ->  0  5 }                  \ mid range integers   ok
+{ -1  5  0  0 d+ -> -1  5 }   ok
+{  0  0  0 -5 d+ ->  0 -5 }   ok
+{  0 -5 -1  0 d+ -> -1 -5 }   ok
+{  0  1  0  2 d+ ->  0  3 }   ok
+{ -1  1  0 -2 d+ -> -1 -1 }   ok
+{  0 -1  0  2 d+ ->  0  1 }   ok
+{  0 -1 -1 -2 d+ -> -1 -3 }   ok
+{ -1 -1  0  1 d+ -> -1  0 }  ok
+  ok
+{ min-int 0 2dup d+ -> 0 1 }  ok
+{ min-int s>d min-int 0 d+ -> 0 0 }  ok
+  ok
+\ TODO 2CONSTANT not implemented yet  ok
+\ 1s max-int  2constant max-2int \ 01...1   ok
+\ 0 min-int   2constant min-2int \ 10...0   ok
+\ max-2int 2/ 2constant hi-2int  \ 001...1   ok
+\ min-2int 2/ 2constant lo-2int  \ 110...0  ok
+  ok
+\ TODO hi-2int etc not implemented yet  ok
+\ {  hi-2int       1. d+ -> 0 hi-int 1+ }     \ large double integers   ok
+\ {  hi-2int     2dup d+ -> 1s 1- max-int }  ok
+\ { max-2int min-2int d+ -> -1. }  ok
+\ { max-2int  lo-2int d+ -> hi-2int }  ok
+\ {  lo-2int     2dup d+ -> min-2int }  ok
+\ {  hi-2int min-2int d+ 1. d+ -> lo-2int }  ok
+  ok
+{  0.  5. d- -> -5. }              \ small integers   ok
+{  5.  0. d- ->  5. }   ok
+{  0. -5. d- ->  5. }   ok
+{  1.  2. d- -> -1. }   ok
+{  1. -2. d- ->  3. }   ok
+{ -1.  2. d- -> -3. }   ok
+{ -1. -2. d- ->  1. }   ok
+{ -1. -1. d- ->  0. }   ok
+{  0  0  0  5 d- ->  0 -5 }        \ mid-range integers   ok
+{ -1  5  0  0 d- -> -1  5 }   ok
+{  0  0 -1 -5 d- ->  1  4 }   ok
+{  0 -5  0  0 d- ->  0 -5 }   ok
+{ -1  1  0  2 d- -> -1 -1 }   ok
+{  0  1 -1 -2 d- ->  1  2 }   ok
+{  0 -1  0  2 d- ->  0 -3 }   ok
+{  0 -1  0 -2 d- ->  0  1 }   ok
+{  0  0  0  1 d- ->  0 -1 }  ok
+{ min-int 0 2dup d- -> 0. }   ok
+{ min-int s>d max-int 0 d- -> 1 1s }   ok
+  ok
+\ TODO max-2int etc not implemented yet  ok
+\ { max-2int max-2int d- -> 0. }    \ large integers   ok
+\ { min-2int min-2int d- -> 0. }  ok
+\ { max-2int  hi-2int d- -> lo-2int dnegate }   ok
+\ {  hi-2int  lo-2int d- -> max-2int }  ok
+\ {  lo-2int  hi-2int d- -> min-2int 1. d+ }  ok
+\ { min-2int min-2int d- -> 0. }  ok
+\ { min-2int  lo-2int d- -> lo-2int }  ok
+  ok
+\ D. and D.R  ok
+\ TODO max2int etc not implemented yet  ok
+\ TODO 2CONSTANT not implemented yet  ok
+\ max-2int 71 73 m*/ 2constant dbl1   ok
+\ min-2int 73 79 m*/ 2constant dbl2  ok
+\ : d>ascii ( d -- caddr u )   ok
+   \ dup >r <# dabs #s r> sign #>    ( -- caddr1 u )   ok
+   \ here swap 2dup 2>r chars dup allot move 2r>   ok
+\ ;  ok
+  ok
+\ dbl1 d>ascii 2constant "dbl1"   ok
+\ dbl2 d>ascii 2constant "dbl2"  ok
+  ok
+\ : doubleoutput   ok
+   \ cr ." you should see lines duplicated:" cr   ok
+   \ 5 spaces "dbl1" type cr   ok
+   \ 5 spaces dbl1 d. cr   ok
+   \ 8 spaces "dbl1" dup >r type cr   ok
+   \ 5 spaces dbl1 r> 3 + d.r cr   ok
+   \ 5 spaces "dbl2" type cr   ok
+   \ 5 spaces dbl2 d. cr   ok
+   \ 10 spaces "dbl2" dup >r type cr   ok
+   \ 5 spaces dbl2 r> 5 + d.r cr   ok
+\ ;  ok
+  ok
+\ { doubleoutput -> }  ok
+  ok
+( TODO D0< not implemented yet )  ok
+( TODO D0= not implemented yet )  ok
+( TODO D2* not implemented yet )  ok
+( TODO D2/ not implemented yet )  ok
+( TODO D< not implemented yet )  ok
+( TODO D= not implemented yet )  ok
+  ok
+{    1234  0 d>s ->  1234   }   ok
+{   -1234 -1 d>s -> -1234   }   ok
+{ max-int  0 d>s -> max-int }   ok
+{ min-int -1 d>s -> min-int }  ok
+  ok
+{       1. dabs -> 1.       }   ok
+{      -1. dabs -> 1.       }   ok
+\ TODO max-2int not implemented yet  ok
+\ { max-2int dabs -> max-2int }   ok
+\ { min-2int 1. d+ dabs -> max-2int }  ok
+  ok
+( TODO DMAX not implemented yet )  ok
+( TODO DMIN not implemented yet )  ok
+  ok
+{ 0. dnegate -> 0. }  ok
+{ 1. dnegate -> -1. }  ok
+{ -1. dnegate -> 1. }  ok
+\ TODO max-2int not implemented yet  ok
+\ { max-2int dnegate -> min-2int swap 1+ swap }  ok
+\ { min-2int swap 1+ swap dnegate -> max-2int }  ok
+  ok
+( TODO M*/ not implemented yet )  ok
+( TODO M+ not implemented yet )  ok
+( TODO 2ROT not implemented yet )  ok
+( TODO 2VALUE not implemented yet )  ok
+( TODO DU< not implemented yet )  ok
+  ok
+  ok
 \ From: John Hayes S1I  ok
 \ Subject: core.fr  ok
 \ Date: Mon, 27 Nov 95 13:10  ok
@@ -337,7 +336,7 @@ hex  ok
 testing basic assumptions  ok
   ok
 { -> }     \ Start with clean slate  ok
-( tt if any bits are set; answer in base 1 )  ok
+( test if any bits are set; answer in base 1 )  ok
 { : bitsset? if 0 0 else 0 then ; -> }  ok
 {  0 bitsset? -> 0 }   \ zero is all bits clear  ok
 {  1 bitsset? -> 0 0 } \ other number have at least one bit  ok
@@ -578,7 +577,7 @@ testing stack ops: 2drop 2dup 2over 2swap ?dup depth drop dup nip over rot -rot 
 { 1 2 drop -> 1 }  ok
 { 1 dup -> 1 1 }  ok
 { 1 2 nip -> 2 }  ok
-{  2 over -> 1 2 1 } Stack underflow
+{ 1 2 over -> 1 2 1 }  ok
 { 1 2 3 rot -> 2 3 1 }  ok
 { 1 2 3 -rot -> 3 1 2 }  ok
 { 1 2 swap -> 2 1 }  ok
@@ -671,7 +670,7 @@ testing multiply: s>d * m* um*  ok
 { 0 0 * -> 0 } \ test identities  ok
 { 0 1 * -> 0 }  ok
 { 1 0 * -> 0 }  ok
-{ 1 * -> 2 } Stack underflow
+{ 1 2 * -> 2 }  ok
 { 2 1 * -> 2 }  ok
 { 3 3 * -> 9 }  ok
 { -3 3 * -> -9 }  ok
@@ -683,7 +682,7 @@ testing multiply: s>d * m* um*  ok
 { mid-uint+1 1 rshift mid-uint+1 or 2 * -> mid-uint+1 }  ok
   ok
 { 0 0 um* -> 0 0 }  ok
-{ 0 m* -> 0 0 } Stack underflow
+{ 0 1 um* -> 0 0 }  ok
 { 1 0 um* -> 0 0 }  ok
 { 1 2 um* -> 2 0 }  ok
 { 2 1 um* -> 2 0 }  ok
@@ -803,8 +802,8 @@ ifsym     : t*/    t*/mod swap drop ;  ok
 { 2 2 /mod -> 2 2 t/mod }  ok
 { -1 -1 /mod -> -1 -1 t/mod }  ok
 { -2 -2 /mod -> -2 -2 t/mod }  ok
-{ 7 3 /mod -> 7 3 t/mod }  ok
-{ 7 -3 /mod -> 7 -3 t/mod }  ok
+{ 7 3 /mod -> 7 3 t/mod   ok
+{ 7 -3 /mod -> 7 -3 t/mod } WRONG NUMBER OF RESULTS: { 7 -3 /mod -> 7 -3 t/mod } ACTUAL RESULT: { 1 2 1 -2 } ok
 { -7 3 /mod -> -7 3 t/mod }  ok
 { -7 -3 /mod -> -7 -3 t/mod }  ok
 { max-int 1 /mod -> max-int 1 t/mod }  ok
@@ -914,11 +913,11 @@ constant 1st  ok
 { 1st 2nd u< -> <true> } \ here must grow with allot ...  ok
 { 1st cell+ -> 2nd }     \ ... by one cell (test for char+)  ok
 { 1st 1 cells + -> 2nd }  ok
-{ 1st @ 2nd @ -> 1 2 }  ok
+{ 1st @ nd @ -> 1 2 } >nd< Undefined word
 { 5 1st ! -> }  ok
 { 1st @ 2nd @ -> 5 2 }  ok
 { 6 2nd ! -> }  ok
-{ 1st @ 2nd @ -> 5 6 }  ok
+{ st @ 2nd @ -> 5 6 } >st< Undefined word
 { 1st 2@ -> 6 5 }  ok
 { 2 1 1st 2! -> }  ok
 { 1st 2@ -> 2 1 }  ok
@@ -1181,7 +1180,7 @@ testing defining words: : ; constant variable create does> >body  ok
   ok
 { : weird: create does> 1 + does> 2 + ; -> }  ok
 { weird: w1 -> }  ok
-{ ' w1 >body -> here } INCORRECT RESULT: { ' w1 >body -> here } ACTUAL RESULT: { 3938 } ok
+{ ' w1 >body -> here } INCORRECT RESULT: { ' w1 >body -> here } ACTUAL RESULT: { 3974 } ok
 { w1 -> here 1 + }  ok
 { w1 -> here 2 + }  ok
   ok
@@ -1343,7 +1342,7 @@ create gn-buf 0 c,  ok
 { max-uint dup 2 gn1 -> max-uint dup 0 }  ok
 { 0 0 max-base gn1 -> 0 0 0 }  ok
 { max-uint 0 max-base gn1 -> max-uint 0 0 }  ok
-{ max-uint dup max-base gn1 -> max-uint dup 0 } INCORRECT RESULT: { max-uint dup max-base gn1 -> max-uint dup 0 } ACTUAL RESULT: { 1 0 6 } ok
+{ max-uint dup max-base gn1 -> max-uint dup 0 } INCORRECT RESULT: { max-uint dup max-base gn1 -> max-uint dup 0 } ACTUAL RESULT: { C0F -64EA 0 } ok
   ok
 : gn2 ( -- 16 10 )  compiled
    base @ >r  hex base @  decimal base @  r> base ! ;  ok
