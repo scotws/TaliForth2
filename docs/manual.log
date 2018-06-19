@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.3.2)  13 JUN 2018 09:00
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.3.2)  19 JUN 2018 14:37
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -541,35 +541,42 @@ Overfull \hbox (2.941pt too wide) in paragraph at lines 627--632
 [27] [28] [29] [30]) [31]
 Chapter 7.
 (./ch_developing.tex
-Overfull \hbox (41.71275pt too wide) in paragraph at lines 14--16
-\T1/cmr/m/n/10 The eas-i-est way to add new words to Tali Forth is to in-clude 
+Overfull \hbox (48.93321pt too wide) in paragraph at lines 14--17
+\T1/cmr/m/n/10 The sim-plest way to add new words to Tali Forth is to in-clude 
 them in the file \T1/SourceCodePro-TLF/m/n/10 forth_code/user_words.fs\T1/cmr/m
-/n/10 . 
+/n/10 .
  []
 
 
-Overfull \hbox (31.95775pt too wide) in paragraph at lines 30--36
+Overfull \hbox (105.56587pt too wide) in paragraph at lines 35--37
+[]\T1/cmr/m/n/10 After the new word has been tested in-ter-ac-tively, add a hig
+h-level ver-sion to the file \T1/SourceCodePro-TLF/m/n/10 forth_code/forth_word
+s.fs\T1/cmr/m/n/10 . 
+ []
+
+
+Overfull \hbox (31.95775pt too wide) in paragraph at lines 63--69
 \T1/cmr/m/n/10 Michael Mar-tin's[] Ophis Cross-Assember can be down-loaded from
  [][]http://michaelcmartin.github.io/Ophis/[][].
  []
 
 [32
 
-] [33]) [34]
+] [33] [34]) [35]
 Chapter 8.
-[35
+[36
 
 ]
 Appendix A.
-(./ch_faq.tex) [36
+(./ch_faq.tex) [37
 
 ]
 Appendix B.
-(./ch_tests.tex) [37
+(./ch_tests.tex) [38
 
 ]
 Appendix C.
-(./ch_thanks.tex) (./bibliography.tex [38
+(./ch_thanks.tex) (./bibliography.tex [39
 
 ]
 Overfull \hbox (65.6815pt too wide) in paragraph at lines 53--56
@@ -578,11 +585,11 @@ Be-gin-ner's Guide to Forth\T1/cmr/m/n/10 , [][]http://galileo.phys.virginia.ed
 u/classes/551.jvn.fall01/primer.htm[][]. 
  []
 
-) (./manual.ind [39
+) (./manual.ind [40
 
-] [40
+] [41
 
-] [41])
+] [42])
 Package atveryend Info: Empty hook `BeforeClearDocument' on input line 136.
 Package atveryend Info: Empty hook `AfterLastShipout' on input line 136.
  (./manual.aux)
@@ -593,8 +600,8 @@ Package rerunfilecheck Info: File `manual.out' has not changed.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 136.
  ) 
 Here is how much of TeX's memory you used:
- 8339 strings out of 494953
- 123035 string characters out of 6180978
+ 8340 strings out of 494953
+ 123042 string characters out of 6180978
  325700 words of memory out of 5000000
  10957 multiletter control sequences out of 15000+600000
  26350 words of font info for 55 fonts, out of 8000000 for 9000
@@ -619,10 +626,10 @@ type1/adobe/sourcecodepro/SourceCodePro-Bold.pfb></usr/share/texlive/texmf-dist
 /fonts/type1/adobe/sourcecodepro/SourceCodePro-It.pfb></usr/share/texlive/texmf
 -dist/fonts/type1/adobe/sourcecodepro/SourceCodePro-Regular.pfb></usr/share/tex
 live/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
-Output written on manual.pdf (41 pages, 432396 bytes).
+Output written on manual.pdf (42 pages, 434564 bytes).
 PDF statistics:
- 2034 PDF objects out of 2073 (max. 8388607)
- 1362 compressed objects within 14 object streams
- 504 named destinations out of 1000 (max. 500000)
+ 2047 PDF objects out of 2073 (max. 8388607)
+ 1373 compressed objects within 14 object streams
+ 505 named destinations out of 1000 (max. 500000)
  606 words of extra memory for PDF output out of 10000 (max. 10000000)
 

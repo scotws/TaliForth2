@@ -9,11 +9,44 @@
 
 
 
-\section{Adding new words}
+\section{Adding new words}\index{words, adding}
 
-The easiest way to add new words to Tali Forth is to include them in the file
-\texttt{forth\_code/user\_words.fs}. 
+The simplest way to add new words to Tali Forth is to include them in the file
+\texttt{forth\_code/user\_words.fs}. This is the place to put them for personal
+use. 
 
+To add words to the permament set, it is best to start a pull request\index{pull
+request} on the GitHub\index{GitHub} page of Tali Forth. The use of
+git\index{git} and GitHub is beyond the scope of this document -- we'll just
+point out it they are not as complicated as they look, and the make
+experimenting a lot easier.
+
+Internally, Tali Forth 2 tends to follow a sequence of steps for new words:
+\begin{itemize}
+
+        \item If it is an ANSI\index{ANSI Forth} Forth word, review the standard
+                online. In some cases, there is a reference implementation that
+                can be used.
+        \item Otherwise, check other sources for a high-level realization of the
+                word. This can be Jonesforth\index{Jonesforth} or
+                Gforth\index{Gforth}. A direct copy is usually not possible (or
+                legally allowed, given different licenses), but gives hints for
+                a Tali Forth version of the word.
+        \item After the new word has been tested interactively, add a high-level
+                version to the file \texttt{forth\_code/forth\_words.fs}. 
+        \item Add tests for the new word to the test suite. Ideally, there will
+                be tests code included in the ANSI\index{ANSI Forth} specification.
+        \item If appropriate, convert the word to assembler, adding an entry to
+                \texttt{headers.asm} and the code itself to
+                \texttt{native\_words.asm}. In this first step, it will usually
+                be a simple sequence of \texttt{JSR} subroutine jumps to the
+                existing native Forth words.
+        \item If appropriate, rewrite all or some of the subroutine jumps in
+                direct assembler.
+\end{itemize}
+
+Note that if you are contributing code, feel free to happily ignore this
+sequence and just submit whatever is working. 
 
 \section{Deeper changes}
 

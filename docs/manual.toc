@@ -65,18 +65,18 @@
 \contentsline {chapter}{\numberline {7}Developing}{32}{chapter.7}
 \contentsline {section}{\numberline {7.1}Adding new words}{32}{section.7.1}
 \contentsline {section}{\numberline {7.2}Deeper changes}{32}{section.7.2}
-\contentsline {subsection}{\numberline {7.2.1}The Ophis Assembler}{32}{subsection.7.2.1}
-\contentsline {subsection}{\numberline {7.2.2}General notes}{32}{subsection.7.2.2}
+\contentsline {subsection}{\numberline {7.2.1}The Ophis Assembler}{33}{subsection.7.2.1}
+\contentsline {subsection}{\numberline {7.2.2}General notes}{33}{subsection.7.2.2}
 \contentsline {subsection}{\numberline {7.2.3}Coding style}{33}{subsection.7.2.3}
 \contentsline {section}{\numberline {7.3}Code Cheat Sheet}{33}{section.7.3}
 \contentsline {subsection}{\numberline {7.3.1}The Stack Drawing}{33}{subsection.7.3.1}
-\contentsline {subsection}{\numberline {7.3.2}Coding idioms}{33}{subsection.7.3.2}
-\contentsline {subsection}{\numberline {7.3.3}vi shortcuts}{34}{subsection.7.3.3}
-\contentsline {chapter}{\numberline {8}Future plans}{35}{chapter.8}
-\contentsline {chapter}{\numberline {A}FAQ}{36}{appendix.A}
-\contentsline {section}{\numberline {A.1}What happened to Tali Forth 1?}{36}{section.A.1}
-\contentsline {section}{\numberline {A.2}Why does Tali Forth take so long to start up?}{36}{section.A.2}
-\contentsline {section}{\numberline {A.3}Why `Tali' Forth?}{36}{section.A.3}
-\contentsline {section}{\numberline {A.4}Who is `Liara'?}{36}{section.A.4}
-\contentsline {chapter}{\numberline {B}Testing Tali Forth}{37}{appendix.B}
-\contentsline {chapter}{\numberline {C}Thanks}{38}{appendix.C}
+\contentsline {subsection}{\numberline {7.3.2}Coding idioms}{34}{subsection.7.3.2}
+\contentsline {subsection}{\numberline {7.3.3}vi shortcuts}{35}{subsection.7.3.3}
+\contentsline {chapter}{\numberline {8}Future plans}{36}{chapter.8}
+\contentsline {chapter}{\numberline {A}FAQ}{37}{appendix.A}
+\contentsline {section}{\numberline {A.1}What happened to Tali Forth 1?}{37}{section.A.1}
+\contentsline {section}{\numberline {A.2}Why does Tali Forth take so long to start up?}{37}{section.A.2}
+\contentsline {section}{\numberline {A.3}Why `Tali' Forth?}{37}{section.A.3}
+\contentsline {section}{\numberline {A.4}Who is `Liara'?}{37}{section.A.4}
+\contentsline {chapter}{\numberline {B}Testing Tali Forth}{38}{appendix.B}
+\contentsline {chapter}{\numberline {C}Thanks}{39}{appendix.C}
