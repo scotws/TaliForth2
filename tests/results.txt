@@ -79,6 +79,88 @@ create actual-results  20 cells allot  ok
    else >in ! drop  compiled
    then ;  ok
 \ ------------------------------------------------------------------------  ok
+testing string words: /string -trailing blank sliteral  ok
+decimal  ok
+  ok
+\ Note the sequence of tests is fixed by https://forth-standard.org/standard/testsuite  ok
+  ok
+{ : s1 s" abcdefghijklmnopqrstuvwxyz" ; -> }  ok
+   ok
+{ s1  5 /string -> s1 swap 5 + swap 5 - }  ok
+{ s1 10 /string -4 /string -> s1 6 /string }  ok
+{ s1  0 /string -> s1 }  ok
+  ok
+{ : s2 s" abc"   ; -> }  ok
+{ : s3 s" jklmn" ; -> }  ok
+{ : s4 s" z"     ; -> }  ok
+{ : s5 s" mnoq"  ; -> }  ok
+{ : s6 s" 12345" ; -> }  ok
+{ : s7 s" "      ; -> }  ok
+  ok
+( TODO SEARCH not implemented )  ok
+\ { s1 s2 search -> s1 <true>  }    ok
+\ { s1 s3 search -> s1  9 /string <true>  }  ok
+\ { s1 s4 search -> s1 25 /string <true>  }  ok
+\ { s1 s5 search -> s1 <false> }  ok
+\ { s1 s6 search -> s1 <false> }  ok
+\ { s1 s7 search -> s1 <true>  }   ok
+  ok
+{ :  s8 s" abc  " ; -> }  ok
+{ :  s9 s"      " ; -> }  ok
+{ : s10 s"    a " ; -> }  ok
+  ok
+{  s1 -trailing -> s1 }        \ "abcdefghijklmnopqrstuvwxyz"  ok
+{  s8 -trailing -> s8 2 - }    \ "abc "  ok
+{  s7 -trailing -> s7 }        \ " "  ok
+{  s9 -trailing -> s9 drop 0 } \ " "  ok
+{ s10 -trailing -> s10 1- }    \ " a "  ok
+  ok
+( TODO COMPARE not implemented )  ok
+\ { s1        s1 compare ->  0  }  ok
+\ { s1  pad swap cmove   ->     }    \ copy s1 to PAD  ok
+\ { s1  pad over compare ->  0  }  ok
+\ { s1     pad 6 compare ->  1  }  ok
+\ { pad 10    s1 compare -> -1  }  ok
+\ { s1     pad 0 compare ->  1  }  ok
+\ { pad  0    s1 compare -> -1  }  ok
+\ { s1        s6 compare ->  1  }  ok
+\ { s6        s1 compare -> -1  }  ok
+  ok
+\ : "abdde" s" abdde" ;  ok
+\ : "abbde" s" abbde" ;  ok
+\ : "abcdf" s" abcdf" ;  ok
+\ : "abcdee" s" abcdee" ;  ok
+  ok
+\ { s1 "abdde"  compare -> -1 }  ok
+\ { s1 "abbde"  compare ->  1 }  ok
+\ { s1 "abcdf"  compare -> -1 }  ok
+\ { s1 "abcdee" compare ->  1 }  ok
+  ok
+: s11 s" 0abc" ;  ok
+: s12 s" 0aBc" ;  ok
+  ok
+\ { s11 s12 compare ->  1 }  ok
+\ { s12 s11 compare -> -1 }  ok
+  ok
+: s13 s" aaaaa a" ;            \ six spaces  ok
+  ok
+{ pad 25 char a fill -> }      \ fill PAD with 25 'a's  ok
+{ pad 5 chars + 6 blank -> }   \ put 6 spaced from character 5  ok
+\ { pad 12 s13 compare -> 0 }    \ PAD should now be same as s13 TODO  ok
+  ok
+( CMOVE and CMOVE> are kept together with MOVE )  ok
+  ok
+( TODO SLITERAL test not implemented yet because it requires COMPARE)   ok
+\ { : s14 [ s1 ] sliteral ; -> }   ok
+\ { s1 s14 compare -> 0 }  ok
+\ { s1 s14 rot = rot rot = -> <true> <false> }  ok
+  ok
+( TODO REPLACES not implemented yet )  ok
+( TODO SUBSTITUTE not implemented yet )  ok
+( TODO UNESCAPE not implemented yet )  ok
+  ok
+  ok
+\ ------------------------------------------------------------------------  ok
 testing double words: 2variable d+ d- d. d.r d>s dabs dnegate  ok
 decimal  ok
   ok
@@ -227,88 +309,6 @@ decimal  ok
 ( TODO 2ROT not implemented yet )  ok
 ( TODO 2VALUE not implemented yet )  ok
 ( TODO DU< not implemented yet )  ok
-  ok
-  ok
-\ ------------------------------------------------------------------------  ok
-testing string words: /string -trailing blank sliteral  ok
-decimal  ok
-  ok
-\ Note the sequence of tests is fixed by https://forth-standard.org/standard/testsuite  ok
-  ok
-{ : s1 s" abcdefghijklmnopqrstuvwxyz" ; -> }  ok
-   ok
-{ s1  5 /string -> s1 swap 5 + swap 5 - }  ok
-{ s1 10 /string -4 /string -> s1 6 /string }  ok
-{ s1  0 /string -> s1 }  ok
-  ok
-{ : s2 s" abc"   ; -> }  ok
-{ : s3 s" jklmn" ; -> }  ok
-{ : s4 s" z"     ; -> }  ok
-{ : s5 s" mnoq"  ; -> }  ok
-{ : s6 s" 12345" ; -> }  ok
-{ : s7 s" "      ; -> }  ok
-  ok
-( TODO SEARCH not implemented )  ok
-\ { s1 s2 search -> s1 <true>  }    ok
-\ { s1 s3 search -> s1  9 /string <true>  }  ok
-\ { s1 s4 search -> s1 25 /string <true>  }  ok
-\ { s1 s5 search -> s1 <false> }  ok
-\ { s1 s6 search -> s1 <false> }  ok
-\ { s1 s7 search -> s1 <true>  }   ok
-  ok
-{ :  s8 s" abc  " ; -> }  ok
-{ :  s9 s"      " ; -> }  ok
-{ : s10 s"    a " ; -> }  ok
-  ok
-{  s1 -trailing -> s1 }        \ "abcdefghijklmnopqrstuvwxyz"  ok
-{  s8 -trailing -> s8 2 - }    \ "abc "  ok
-{  s7 -trailing -> s7 }        \ " "  ok
-{  s9 -trailing -> s9 drop 0 } \ " "  ok
-{ s10 -trailing -> s10 1- }    \ " a "  ok
-  ok
-( TODO COMPARE not implemented )  ok
-\ { s1        s1 compare ->  0  }  ok
-\ { s1  pad swap cmove   ->     }    \ copy s1 to PAD  ok
-\ { s1  pad over compare ->  0  }  ok
-\ { s1     pad 6 compare ->  1  }  ok
-\ { pad 10    s1 compare -> -1  }  ok
-\ { s1     pad 0 compare ->  1  }  ok
-\ { pad  0    s1 compare -> -1  }  ok
-\ { s1        s6 compare ->  1  }  ok
-\ { s6        s1 compare -> -1  }  ok
-  ok
-\ : "abdde" s" abdde" ;  ok
-\ : "abbde" s" abbde" ;  ok
-\ : "abcdf" s" abcdf" ;  ok
-\ : "abcdee" s" abcdee" ;  ok
-  ok
-\ { s1 "abdde"  compare -> -1 }  ok
-\ { s1 "abbde"  compare ->  1 }  ok
-\ { s1 "abcdf"  compare -> -1 }  ok
-\ { s1 "abcdee" compare ->  1 }  ok
-  ok
-: s11 s" 0abc" ;  ok
-: s12 s" 0aBc" ;  ok
-  ok
-\ { s11 s12 compare ->  1 }  ok
-\ { s12 s11 compare -> -1 }  ok
-  ok
-: s13 s" aaaaa a" ;            \ six spaces  ok
-  ok
-{ pad 25 char a fill -> }      \ fill PAD with 25 'a's  ok
-{ pad 5 chars + 6 blank -> }   \ put 6 spaced from character 5  ok
-\ { pad 12 s13 compare -> 0 }    \ PAD should now be same as s13 TODO  ok
-  ok
-( CMOVE and CMOVE> are kept together with MOVE )  ok
-  ok
-( TODO SLITERAL test not implemented yet because it requires COMPARE)   ok
-\ { : s14 [ s1 ] sliteral ; -> }   ok
-\ { s1 s14 compare -> 0 }  ok
-\ { s1 s14 rot = rot rot = -> <true> <false> }  ok
-  ok
-( TODO REPLACES not implemented yet )  ok
-( TODO SUBSTITUTE not implemented yet )  ok
-( TODO UNESCAPE not implemented yet )  ok
   ok
   ok
 \ From: John Hayes S1I  ok
@@ -802,8 +802,8 @@ ifsym     : t*/    t*/mod swap drop ;  ok
 { 2 2 /mod -> 2 2 t/mod }  ok
 { -1 -1 /mod -> -1 -1 t/mod }  ok
 { -2 -2 /mod -> -2 -2 t/mod }  ok
-{ 7 3 /mod -> 7 3 t/mod }  ok
-{ 7 -3 /mod -> 7 -3 t/mod }  ok
+{ 7 3 /mod -> 7 3 t/mod   ok
+{ 7 -3 /mod -> 7 -3 t/mod } WRONG NUMBER OF RESULTS: { 7 -3 /mod -> 7 -3 t/mod } ACTUAL RESULT: { 1 2 1 -2 } ok
 { -7 3 /mod -> -7 3 t/mod }  ok
 { -7 -3 /mod -> -7 -3 t/mod }  ok
 { max-int 1 /mod -> max-int 1 t/mod }  ok
@@ -913,11 +913,11 @@ constant 1st  ok
 { 1st 2nd u< -> <true> } \ here must grow with allot ...  ok
 { 1st cell+ -> 2nd }     \ ... by one cell (test for char+)  ok
 { 1st 1 cells + -> 2nd }  ok
-{ 1st @ 2nd @ -> 1 2 }  ok
+{ 1st @ nd @ -> 1 2 } >nd< Undefined word
 { 5 1st ! -> }  ok
 { 1st @ 2nd @ -> 5 2 }  ok
 { 6 2nd ! -> }  ok
-{ 1st @ 2nd @ -> 5 6 }  ok
+{ st @ 2nd @ -> 5 6 } >st< Undefined word
 { 1st 2@ -> 6 5 }  ok
 { 2 1 1st 2! -> }  ok
 { 1st 2@ -> 2 1 }  ok
