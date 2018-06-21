@@ -660,7 +660,7 @@ constant a-addr  constant ua-addr
 
 ( here + unused + buffer size must be total RAM, that is, $7FFF )
 { pad here - -> FF } \ PAD must have offset of $FF
-{ here unused + 400 + -> 7FFF }
+{ here unused + 3FF + -> 7FFF }
 
 \ ------------------------------------------------------------------------
 testing char [char] [ ] bl s"

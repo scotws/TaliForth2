@@ -973,7 +973,7 @@ constant a-addr  constant ua-addr  ok
   ok
 ( here + unused + buffer size must be total RAM, that is, $7FFF )  ok
 { pad here - -> FF } \ PAD must have offset of $FF  ok
-{ here unused + 400 + -> 7FFF } INCORRECT RESULT: { here unused + 400 + -> 7FFF } ACTUAL RESULT: { -8000 } ok
+{ here unused + 3FF + -> 7FFF }  ok
   ok
 \ ------------------------------------------------------------------------  ok
 testing char [char] [ ] bl s"  ok
