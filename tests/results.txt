@@ -78,6 +78,23 @@ create actual-results  20 cells allot  ok
       dup >r type cr r> >in !  compiled
    else >in ! drop  compiled
    then ;  ok
+\ -----------------------------------------------------------------------  ok
+testing tools words: .s ? dump name>string see state words  ok
+  ok
+\ Test for BYE not implemented  ok
+  ok
+( TODO .S test missing )  ok
+( TODO ? test missing )  ok
+( TODO DUMP test missing )  ok
+( TODO NAME>STRING missing )  ok
+( TODO SEE test missing )  ok
+( TODO STATE test missing )  ok
+( TODO WORDS test missing )  ok
+\ ------------------------------------------------------------------------  ok
+testing facility words: at-xy page   ok
+  ok
+( TODO AT-XY test missing )  ok
+( TODO PAGE test missing )  ok
 \ ------------------------------------------------------------------------  ok
 testing double words: 2variable d+ d- d. d.r d>s dabs dnegate  ok
 decimal  ok
@@ -184,7 +201,7 @@ decimal  ok
    \ cr ." you should see lines duplicated:" cr   ok
    \ 5 spaces "dbl1" type cr   ok
    \ 5 spaces dbl1 d. cr   ok
-   \ 8 spaces "dbl1" dup >r type cr   ok
+   \ 8 saces "dbl1" dup >r type cr   ok
    \ 5 spaces dbl1 r> 3 + d.r cr   ok
    \ 5 spaces "dbl2" type cr   ok
    \ 5 spaces dbl2 d. cr   ok
@@ -708,7 +725,7 @@ iffloored : tmod   t/mod drop ;  ok
 iffloored : t*/mod >r m* r> fm/mod ;  ok
 iffloored : t*/    t*/mod swap drop ;  ok
 ifsym     : t/mod  >r s>d r> sm/rem ;  ok
-ifsym    : t/     t/mod swap drop ;  ok
+ifsym     : t/     t/mod swap drop ;  ok
 ifsym     : tmod   t/mod drop ;  ok
 ifsym     : t*/mod >r m* r> sm/rem ;  ok
 ifsym     : t*/    t*/mod swap drop ;  ok
@@ -755,7 +772,7 @@ ifsym     : t*/    t*/mod swap drop ;  ok
 { max-int 1 / -> max-int 1 t/ }  ok
 { min-int 1 / -> min-int 1 t/ }  ok
 { max-int max-int / -> max-int max-int t/ }  ok
-{ min-int min-int / -> min-int min-int t/ }  ok
+{ min-int min-int / -> min-innt min-int t/ }  ok
   ok
 { 0 1 mod -> 0 1 tmod }  ok
 { 1 1 mod -> 1 1 tmod }  ok
@@ -984,7 +1001,7 @@ testing if else then begin while repeat until recurse  ok
 { 1 gi6 -> 0 1 }  ok
 { 2 gi6 -> 0 1 2 }  ok
 { 3 gi6 -> 0 1 2 3 }  ok
-{ 4 gi6 -> 0 1 2 3 4 }  ok
+{  gi6 -> 0 1 2 3 4 } Stack underflow
   ok
 \ ------------------------------------------------------------------------  ok
 testing case of endof endcase  ok
