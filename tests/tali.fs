@@ -97,7 +97,7 @@ testing 2* 2/ lshift rshift
 { msb 1 rshift 2* -> msb }
 
 \ ------------------------------------------------------------------------
-testing comparisons: 0= = <> 0< < > u< min max within
+testing comparisons: true false 0= = <> 0< < > u< min max within
 ( TODO we need to add max-2int and min-2int for further tests)
 0 invert  constant max-uint
 0 invert 1 rshift  constant max-int
@@ -107,6 +107,12 @@ testing comparisons: 0= = <> 0< < > u< min max within
 
 0s constant <false>
 1s constant <true>
+
+{ false -> 0 }
+{ false -> <false> }
+
+{ true -> <true> }
+{ true -> 0 invert }
 
 { 0 0= -> <true> }
 { 1 0= -> <false> }
@@ -583,7 +589,7 @@ ifsym     : t*/    t*/mod swap drop ;
 { min-int 2 min-int */mod -> min-int 2 min-int t*/mod }
 
 \ ------------------------------------------------------------------------
-testing here , @ ! cell+ cells c, c@ c! char+ chars 2@ 2! align aligned +! allot pad unused
+testing here , @ ! cell+ cells c, c@ c! char+ chars 2@ 2! align aligned +! allot pad unused compile,
 
 here 1 allot
 here
@@ -661,6 +667,12 @@ constant a-addr  constant ua-addr
 ( here + unused + buffer size must be total RAM, that is, $7FFF )
 { pad here - -> FF } \ PAD must have offset of $FF
 { here unused + 3FF + -> 7FFF }
+
+\ TODO these tests require :NONAME
+\ :noname dup + ; constant dup+ 
+\ { : q dup+ compile, ; -> } 
+\ { : as [ q ] ; -> } 
+\ { 123 as -> 246 }
 
 \ ------------------------------------------------------------------------
 testing char [char] [ ] bl s"
@@ -1068,6 +1080,17 @@ create gn-buf 0 c,
 : gn2 ( -- 16 10 )
    base @ >r  hex base @  decimal base @  r> base ! ;
 { gn2 -> 10 a }
+
+
+\ ------------------------------------------------------------------------
+testing defer
+
+{ defer defer2 ->   } 
+{ ' * ' defer2 defer! -> }
+{   2 3 defer2 -> 6 }
+{ ' + is defer2 ->   }
+{    1 2 defer2 -> 3 }
+
 
 \ ------------------------------------------------------------------------
 testing fill move

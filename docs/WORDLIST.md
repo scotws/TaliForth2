@@ -16,11 +16,11 @@ RTS instruction at the end of each word.
 | AGAIN | `again` | ANSI core ext | 36 | tested |
 | ALIGN | `align` | ANSI core | 0 | **auto** |
 | ALIGNED | `aligned` | ANSI core | 0 | **auto** |
-| ALLOT | `allot` | ANSI core | 63 | tested |
+| ALLOT | `allot` | ANSI core | 63 | **auto** |
 | ALWAYS_NATIVE | `always-native` | Tali Forth | 8 | tested |
 | AND | `and` | ANSI core | 21 | **auto** |
 | AT_XY | `at-xy` | ANSI facility | 33 | tested |
-| BACKSLASH | `\` | ANSI core ext | 8 | tested |
+| BACKSLASH | `\` | ANSI core ext | 8 | **auto** |
 | BASE | `base` | ANSI core | 10 | **auto** |
 | BEGIN | `begin` | ANSI core | 3 | **auto** |
 | BELL | `bell` | Tali Forth | 5 | tested |
@@ -53,7 +53,7 @@ RTS instruction at the end of each word.
 | D_TO_S | `d>s` | ANSI double | 9 | **auto** |
 | DABS | `dabs` | ANSI double | 34 | **auto** |
 | DECIMAL | `decimal` | ANSI core | 6 | **auto** |
-| DEFER | `defer` | ANSI core ext | 50 | tested |
+| DEFER | `defer` | ANSI core ext | 50 | **auto** |
 | DEPTH | `depth` | ANSI core | 14 | **auto** |
 | DIGIT_QUESTION | `digit?` | Tali Forth | 56 | tested |
 | DISASM | `disasm` | Tali Forth | 10 | tested |
@@ -200,6 +200,6 @@ RTS instruction at the end of each word.
 | ZERO_UNEQUAL | `0<>` | ANSI core ext | 21 | tested |
 
 Found **191** native words in `native_words.asm`.
-Of those, **130** were automatically tested and
-          **138** are not marked as tested at all.
+Of those, **133** were automatically tested and
+          **141** are not marked as tested at all.
 

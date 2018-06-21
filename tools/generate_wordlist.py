@@ -3,7 +3,7 @@
 # For Tali Forth 2
 # Scot W. Stevenson <scot.stevenson@gmail.com>
 # First version: 21. Nov 2017
-# This version: 15. June 2018
+# This version: 21. June 2018
 """Creates a markdown formated list of native words based on the header
 comments in native_words.asm. It is called by the Makefile on the top level
 """
@@ -82,7 +82,7 @@ def print_footer(size):
     print()
     print('Found **{0}** native words in `native_words.asm`.'.format(size))
     print('Of those, **{0}** were automatically tested and'.format(auto_tested))
-    print('          **{0}** are not marked as tested at all.'.format(not_tested))
+    print('          **{0}** are not marked as tested at all.'.format(not_tested-auto_tested))
     print()
 
 
