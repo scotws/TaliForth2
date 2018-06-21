@@ -418,13 +418,15 @@ _loop:
                 iny
                 cpy tmp2        ; reached character limit?
                 bne _loop       ; fall thru if buffer limit reached
+                bra _buffer_full
 
 _eol:
+                jsr xt_space    ; print final space
+_buffer_full:   
                 ; REFILL updates ciblen and toin, we don't need to do it here
                 sty 0,x         ; Y contains number of chars accepted already
                 stz 1,x         ; we only accept 256 chars
 
-                jsr xt_space    ; print final space
                 jmp _done
 
 _bs:

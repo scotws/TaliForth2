@@ -744,6 +744,40 @@ testing if else then begin while repeat until recurse
 { 4 gi6 -> 0 1 2 3 4 }
 
 \ ------------------------------------------------------------------------
+testing case of endof endcase
+
+: cs1 case 1 of 111 endof
+   2 of 222 endof
+   3 of 333 endof
+   >r 999 r>
+   endcase
+;
+
+{ 1 cs1 -> 111 }
+{ 2 cs1 -> 222 }
+{ 3 cs1 -> 333 }
+{ 4 cs1 -> 999 }
+: cs2 >r case
+   -1 of case r@ 1 of 100 endof
+                2 of 200 endof
+                >r -300 r>
+        endcase
+     endof
+   -2 of case r@ 1 of -99 endof
+                >r -199 r>
+        endcase
+     endof
+     >r 299 r>
+   endcase r> drop ;
+
+{ -1 1 cs2 ->  100 }
+{ -1 2 cs2 ->  200 }
+{ -1 3 cs2 -> -300 }
+{ -2 1 cs2 ->  -99 }
+{ -2 2 cs2 -> -199 }
+{  0 2 cs2 ->  299 }
+
+\ ------------------------------------------------------------------------
 testing do loop +loop i j unloop leave exit ?do
 
 { : gd1 do i loop ; -> }
