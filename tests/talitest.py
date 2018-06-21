@@ -35,7 +35,7 @@ SPAWN_COMMAND = 'py65mon -m 65c02 -r ../taliforth-py65mon.bin'
 PY65MON_ERROR = '*** Unknown syntax:'
 
 # Add name of file with test to the set of LEGAL_TESTS
-LEGAL_TESTS = frozenset(['string', 'double', 'core', 'tali'])
+LEGAL_TESTS = frozenset(['core', 'string', 'double', 'facility', 'tali', 'tools'])
 TESTLIST = ' '.join(["'"+str(t)+"' " for t in LEGAL_TESTS])
 
 OUTPUT_HELP = 'Output File, default "'+RESULTS+'"'
