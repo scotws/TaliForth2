@@ -19,6 +19,10 @@
         : repeat postpone again here swap ! ; immediate compile-only
         : until postpone 0branch , ; immediate compile-only
         : while postpone 0branch here 0 , swap ; immediate compile-only
+        : case 0 ; immediate compile-only 
+        : of postpone over postpone = postpone if postpone drop ; immediate compile-only 
+        : endof postpone else ; immediate compile-only 
+        : endcase postpone drop begin ?dup while postpone then repeat ; immediate compile-only 
 
 \ DEFER and friends. Code taken from ANSI Forth specification. Some of
 \ these will be moved to assembler code in due course
