@@ -2739,7 +2739,7 @@ z_equal:        rts
 
 
 ; ## BLANK ( addr u -- ) "Fill memory region with spaces"
-; ## "blank"  tested  ANSI core ext
+; ## "blank"  auto  ANSI string
 xt_blank:
                 ; We don't check for underflow here because
                 ; we deal with that in FILL
@@ -5836,7 +5836,7 @@ z_slash_string: rts
 .scend
 
 ; ## SLITERAL ( addr u -- )( -- addr u ) "Compile a string for runtime"
-; ## "sliteral" coded  ANSI string
+; ## "sliteral" auto  ANSI string
         ; """Add the runtime for an existing string.
         ; """
 .scope
@@ -6104,7 +6104,7 @@ z_spaces:       rts
 
 
 ; ## STAR ( n n -- n ) "16*16 --> 16 "
-; ## "*"  tested  ANSI core
+; ## "*"  auto  ANSI core
         ; """Multiply two signed 16 bit numbers, returning a 16 bit result.
         ; This is nothing  more than UM* DROP
         ; """
@@ -7050,7 +7050,7 @@ z_u_dot:        rts
 .scend
 
 ; ## U_LESS_THAN ( n m -- f ) "Return true if NOS < TOS (unsigned)"
-; ## "u<"  core  ANSI core
+; ## "u<"  auto  ANSI core
 .scope
 xt_u_less_than:
                 cpx #dsp0-3

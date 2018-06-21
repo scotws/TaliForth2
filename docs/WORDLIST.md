@@ -69,13 +69,13 @@ RTS instruction at the end of each word.
 | DUP | `dup` | ANSI core | 17 | **auto** |
 | EMIT | `emit` | ANSI core | 14 | **auto** |
 | EQUAL | `=` | ANSI core | 31 | **auto** |
-| BLANK | `blank` | ANSI core ext | 86 | tested |
+| BLANK | `blank` | ANSI string | 86 | **auto** |
 | ERASE | `erase` | ANSI core ext | 76 | tested |
 | FILL | `fill` | ANSI core | 70 | **auto** |
 | EVALUATE | `evaluate` | ANSI core | 100 | **auto** |
 | EXECUTE | `execute` | ANSI core | 10 | **auto** |
 | EXIT | `exit` | ANSI core | 1 | **auto** |
-| FALSE | `false` | ANSI core ext | 6 | tested |
+| FALSE | `false` | ANSI core ext | 6 | **auto** |
 | FETCH | `@` | ANSI core | 22 | **auto** |
 | FIND | `find` | ANSI core | 75 | **auto** |
 | FIND_NAME | `find-name` | Gforth | 106 | tested |
@@ -148,13 +148,13 @@ RTS instruction at the end of each word.
 | SEMICOLON | `;` | ANSI core | 28 | **auto** |
 | SIGN | `sign` | ANSI core | 24 | **auto** |
 | SLASH_STRING | `/string` | ANSI string | 35 | **auto** |
-| SLITERAL | `sliteral` | ANSI string | 32 | *coded* |
+| SLITERAL | `sliteral` | ANSI string | 32 | **auto** |
 | SM_SLASH_REM | `sm/rem` | ANSI core | 44 | **auto** |
 | SOURCE | `source` | ANSI core | 20 | **auto** |
 | SOURCE_ID | `source-id` | ANSI core ext | 10 | tested |
 | SPACE | `space` | ANSI core | 5 | **auto** |
 | SPACES | `spaces` | ANSI core | 53 | **auto** |
-| STAR | `*` | ANSI core | 12 | tested |
+| STAR | `*` | ANSI core | 12 | **auto** |
 | STATE | `state` | ANSI core | 10 | **auto** |
 | STORE | `!` | ANSI core | 25 | **auto** |
 | SWAP | `swap` | ANSI core | 23 | **auto** |
@@ -163,7 +163,7 @@ RTS instruction at the end of each word.
 | TO_IN | `>in` | ANSI core | 10 | **auto** |
 | TO_NUMBER | `>number` | ANSI core | 163 | **auto** |
 | TO_R | `>r` | ANSI core | 23 | **auto** |
-| TRUE | `true` | ANSI core ext | 8 | tested |
+| TRUE | `true` | ANSI core ext | 8 | **auto** |
 | TUCK | `tuck` | ANSI core ext | 29 | tested |
 | TWO | `2` | Tali Forth | 8 | tested |
 | TWO_DROP | `2drop` | ANSI core | 11 | **auto** |
@@ -180,7 +180,7 @@ RTS instruction at the end of each word.
 | TWO_VARIABLE | `2variable` | ANSI double | 14 | **auto** |
 | TYPE | `type` | ANSI core | 46 | **auto** |
 | U_DOT | `u.` | ANSI core | 15 | **auto** |
-| U_LESS_THAN | `u<` | ANSI core | 25 | *core* |
+| U_LESS_THAN | `u<` | ANSI core | 25 | **auto** |
 | UD_SLASH_MOD | `ud/mod` | Gforth | 34 | *coded* |
 | UF_STRIP | `uf-strip` | Tali Forth | 10 | tested |
 | UM_SLASH_MOD | `um/mod` | ANSI core | 69 | **auto** |
@@ -200,6 +200,6 @@ RTS instruction at the end of each word.
 | ZERO_UNEQUAL | `0<>` | ANSI core ext | 21 | tested |
 
 Found **191** native words in `native_words.asm`.
-Of those, **133** were automatically tested and
-          **141** are not marked as tested at all.
+Of those, **139** were automatically tested and
+          **6** are not marked as tested at all.
 
