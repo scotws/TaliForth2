@@ -122,12 +122,18 @@
 .alias tmptos    user0+40  ; temporary TOS storage
 .alias tohold    user0+42  ; pointer for formatted output 
 .alias scratch   user0+44  ; 8 byte scratchpad (see UM/MOD)
-.alias histinfo  user0+52  ; information about input history (see ACCEPT)
-.alias status    user0+53  ; internal status information (used for :NONAME)
+.alias status    user0+52  ; internal status information
+                           ; (used by : :NONAME ; ACCEPT)
                            ; Bit 6 = 1 for normal ":" definitions
                            ;         WORKWORD contains nt of word being compiled
                            ;       = 0 for :NONAME definitions
                            ;         WORKDORD contains xt of word being compiled
+                           ; Bit 3 = 1 makes CTRL-n recall current history
+                           ;       = 0 CTRL-n recalls previous history
+                           ; Bit 2 = Current history buffer msb
+                           ; Bit 1 = Current history buffer (0-7, wraps)
+                           ; Bit 0 = Current history buffer lsb
+                           ; status+1 is used by ACCEPT to hold history lengths.
                 
 ; Bytes used for variables: 54 ($0000-$0035) 
 ; First usable Data Stack location: $0036 (decimal 54) 

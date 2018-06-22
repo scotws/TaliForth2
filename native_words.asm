@@ -369,17 +369,18 @@ _not_zero:
                 ldy #0
 
                 ; Select the next history buffer
-                lda histinfo
+                ; Clear bit 3 first (so overflow is OK)
+                lda status
+                and #$f7
+                ; Increment the buffer number (overflow from 7 to 0 OK)
                 inc
-                ; Mask all the but the lowest three bits.
-                and #7
-                ; Set the most significant bit for detecting if
-                ; CTRL-n has been pressed the first time.  This
-                ; bit will be cleared on the first CTRL-n or
-                ; CTRL-p received and won't be used to calculate
-                ; the history buffer offset.
-                ora #$80
-                sta histinfo
+                ; Set bit 3 for detecting if CTRL-n has been pressed
+                ; the first time.  This bit will be cleared on the
+                ; first CTRL-n or CTRL-p received and won't be used to
+                ; calculate the history buffer offset.
+                ora #$08
+                sta status
+                
 
                 
 _loop:
@@ -451,33 +452,46 @@ _ctrl_p:
                 ; CTRL-p was pressed.  Recall the previous input buffer.
         
                 ; Select the previous buffer
-                lda histinfo
-                dea
-                ; Mask all the but the lowest three bits.
+                lda status
+                ; Check for 0 (need to wrap back to 7)
                 and #7
-                sta histinfo
-
+                bne _ctrl_p_dec
+                ; We need to wrap back to 7.
+                lda status
+                ora #7
+                sta status
+                bra _recall_history
+_ctrl_p_dec:
+                ; It's safe to decrement the buffer index directly.
+                dec status
                 bra _recall_history
 
 _ctrl_n:
                 ; CTRL-n was pressed.  Recall the next input buffer.
         
                 ; Select the next buffer
-                lda histinfo
-                ; Check the most significant bit.
+
+                ; Check bit 3.
                 ; If it's set, this is the first time CTRL-n has been
                 ; pressed and we should select the CURRENT history buffer.
-                bmi +
+                lda #$8
+                bit status
+                bne _recall_history
                 ; If this isn't the first time CTRL-n has been pressed,
                 ; select the next history buffer.
+                ; Clear bit 3 first (so overflow is OK)
+                lda status
+                and #$f7
+                ; Increment the buffer number (overflow from 7 to 0 OK)
                 inc
-*                
-                ; Mask all the but the lowest three bits.
-                and #7
-                sta histinfo
+                sta status
                 ; Falls into _recall_history
 
-_recall_history: 
+_recall_history:
+                ; Clear bit 3 (first time ctrl-n recall) bit in status
+                lda status
+                and #$f7
+                sta status
                 ; Generate the address of the buffer in tmp3.
                 ; Start with the base address.
                 lda #<hist_buff
@@ -486,14 +500,14 @@ _recall_history:
                 sta tmp3+1
                 ; This is a bit annoying as some bits go into each byte.
                 ; .....xxx gets put into address like ......xx x.......
-                lda histinfo
+                lda status
                 ror
                 and #$03
                 clc
                 adc tmp3+1
                 sta tmp3+1
 
-                lda histinfo
+                lda status
                 ror             ; Rotate through carry into msb.
                 ror
                 and #$80
@@ -524,7 +538,7 @@ input_cleared:
                 ; Save the history length byte into histinfo+1
                 ; ldy #0        ; Y is already 0 by clearing the line.
                 lda (tmp3),y
-                sta histinfo+1
+                sta status+1
 
                 ; Increment the tmp3 pointer so we can use ,y addressing
                 ; on both tmp1 (the input buffer) and tmp3 (the history
@@ -540,7 +554,7 @@ input_cleared:
                 jsr emit_a
 _history_loop:
                 ; See if we have reached the end of the history buffer.
-                cpy histinfo+1
+                cpy status+1
                 bne +
                 jmp _loop       ; Needs a long jump
 *
@@ -578,14 +592,14 @@ _done:
                 sta tmp3+1
                 ; This is a bit annoying as some bits go into each byte.
                 ; .....xxx gets put into address like ......xx x.......
-                lda histinfo
+                lda status
                 ror
                 and #$03
                 clc
                 adc tmp3+1
                 sta tmp3+1
 
-                lda histinfo
+                lda status
                 ror             ; Rotate through carry into msb.
                 ror
                 and #$80
@@ -603,7 +617,7 @@ _done:
                 bcc +
                 lda #$7f
 *
-                sta histinfo+1
+                sta status+1
                 ; Also save it in the first buffer byte.
                 ldy #0
                 sta (tmp3),y
@@ -617,7 +631,7 @@ _done:
                 ; Copy the characters from the input buffer to the
                 ; history buffer.
 _save_history_loop: 
-                cpy histinfo+1
+                cpy status+1
                 beq _save_history_done
                 lda (tmp1),y
                 sta (tmp3),y
@@ -1239,7 +1253,7 @@ xt_colon:
                 dec state+1
                 ; Set bit6 in status to tell ";" and RECURSE this is a normal
                 ; word.
-                lda $40
+                lda #$40
                 ora status
                 sta status
 
@@ -5764,6 +5778,28 @@ z_s_to_d:       rts
         ; """
 .scope
 xt_semicolon:
+                ; Check if this is a : word or a :NONAME word.
+                bit status
+                bvs _colonword
+
+                ; debug
+                lda #42
+                jsr emit_a
+
+                ; This is a :NONAME word - just put an RTS on the end and
+                ; the address (held in workword) on the stack.
+                lda #$60                ; opcode for RTS
+                jsr cmpl_a
+
+                dex
+                dex
+                lda workword
+                sta 0,x
+                lda workword+1
+                sta 1,x
+                bra _semicolon_done
+                
+_colonword:
                 ; CP is the byte that will be the address we use in the
                 ; header as the end-of-compile address (z_word). This is
                 ; six bytes down from the header
@@ -5785,7 +5821,7 @@ xt_semicolon:
                 sta dp
                 lda workword+1
                 sta dp+1
-
+_semicolon_done:
                 ; Word definition complete. Return compile flag to zero
                 ; to return to interpret mode
                 stz state
