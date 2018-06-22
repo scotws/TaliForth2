@@ -3527,10 +3527,11 @@ _no_match:
                 sta tmp2
                 bra _loop
 _zero:
-                ; if next word is zero, something is wrong and we
-                ; return with an error
-                lda #err_noxt
-                jmp error 
+                ; if next word is zero, the xt has no nt.
+                ; We return a zero to indicate that.
+                stz 0,x
+                stz 1,x
+                bra z_int_to_name
 _match:
                 ; It's a match! Replace TOS with nt
                 lda tmp2
