@@ -1234,7 +1234,7 @@ z_cmove_up:     rts
 .scend
 
 
-; ## COLON ( "name" -- ) "Start compilation of a new word""
+; ## COLON ( "name" -- ) "Start compilation of a new word"
 ; ## ":"  auto  ANSI core
         ; """Use the CREATE routine and fill in the rest by hand."""
 .scope
@@ -1294,6 +1294,40 @@ _done:
 z_colon:        rts
 .scend
 
+; ## COLON_NONAME ( -- ) "Start compilation of a new word""
+; ## ":NONAME"  auto  ANSI core
+        ; """Compile a word with no nt.  ";" will put its xt on the stack."""
+.scope
+xt_colon_noname:       
+                ; if we're already in the compile state, complain
+                ; and quit
+                lda state
+                ora state+1
+                beq +
+
+                lda #err_state
+                jmp error
+*
+                ; switch to compile state
+                dec state
+                dec state+1
+                ; Clear bit6 in status to tell ";" and RECURSE this is a :NONAME
+                ; word.
+                lda #$bf
+                and status
+                sta status
+
+                ; Put cp (the xt for this word) in WORKWORD.
+                ; The flag above lets both ";" and RECURSE know that is is an
+                ; xt instead of an nt and they will modify their behavior.
+                lda cp
+                sta workword
+                lda cp+1
+                sta workword+1
+_done:
+z_colon_noname:        rts
+.scend
+                
 
 ; ## COMMA ( n -- ) "Allot and store one cell in memory"
 ; ## ","  auto  ANSI core
@@ -5781,10 +5815,6 @@ xt_semicolon:
                 ; Check if this is a : word or a :NONAME word.
                 bit status
                 bvs _colonword
-
-                ; debug
-                lda #42
-                jsr emit_a
 
                 ; This is a :NONAME word - just put an RTS on the end and
                 ; the address (held in workword) on the stack.
