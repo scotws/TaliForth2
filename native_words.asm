@@ -4859,6 +4859,11 @@ xt_parse_name:
                 sbc toin+1
                 sta tmp1+1
 
+                ; Check the result for zero (TOIN is equal to CIBLEN)
+                lda tmp1
+                ora tmp1+1
+                beq _empty_line
+
                 ; However, TOIN is an index and CIBLEN is a length, so we
                 ; have to subtract one
                 lda tmp1
