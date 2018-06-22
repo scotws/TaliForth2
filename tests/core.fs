@@ -1166,6 +1166,35 @@ hex
 { output-test -> }
 
 \ ------------------------------------------------------------------------
+testing parse-name marker
+
+\ Careful editing these, whitespace is significant
+{ parse-name abcd s" abcd" s= -> <true> } 
+{ parse-name   abcde   s" abcde" s= -> <true> } \ test empty parse area 
+{ parse-name 
+   nip -> 0 }    \ empty line 
+{ parse-name    
+   nip -> 0 }    \ line with white space
+{ : parse-name-test ( "name1" "name2" -- n ) 
+   parse-name parse-name s= ; -> }
+{ parse-name-test abcd abcd -> <true> } 
+{ parse-name-test  abcd   abcd   -> <true> } 
+{ parse-name-test abcde abcdf -> <false> } 
+{ parse-name-test abcdf abcde -> <false> } 
+{ parse-name-test abcde abcde 
+    -> <true> } 
+{ parse-name-test abcde abcde  
+    -> <true> }    \ line with white space
+
+\ There is no official ANSI test for MARKER, added 22. June 2018
+\ TODO There is currently no test for FIND-NAME, taking it on faith here
+{ marker quarian -> }
+: marker_test ." Bosh'tet!" ;
+{ marker_test -> } \ should print "Bosh'tet!"
+{ quarian -> } 
+{ parse-name marker_test find-name -> 0 } 
+
+\ ------------------------------------------------------------------------
 testing input: accept
 
 create abuf 80 chars allot

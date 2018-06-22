@@ -3961,7 +3961,7 @@ z_m_star:       rts
 
 
 ; ## MARKER ( "name" -- ) "Create a deletion boundry"
-; ## "marker"  coded  ANSI core ext
+; ## "marker"  auto  ANSI core ext
         ; """This word replaces FORGET in earlier Forths. Old entries are not
         ; actually deleted, but merely overwritten by restoring CP and DP.
         ; """
@@ -4843,7 +4843,7 @@ z_page:         rts
 
 
 ; ## PARSE_NAME ( "name" -- addr u ) "Parse the input"
-; ## "parse-name"  tested  ANSI core ext
+; ## "parse-name"  auto  ANSI core ext
         ; """Find next word in input string, skipping leading spaces. This is 
         ; a special form of PARSE and drops through to that word. See PARSE 
         ; for more detail. We use this word internally for the interpreter

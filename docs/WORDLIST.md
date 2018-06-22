@@ -102,7 +102,7 @@ RTS instruction at the end of each word.
 | PLUS_LOOP | `+loop` | ANSI core | 102 | **auto** |
 | LSHIFT | `lshift` | ANSI core | 23 | **auto** |
 | M_STAR | `m*` | ANSI core | 30 | **auto** |
-| MARKER | `marker` | ANSI core ext | 72 | *coded* |
+| MARKER | `marker` | ANSI core ext | 72 | **auto** |
 | MAX | `max` | ANSI core | 31 | **auto** |
 | MIN | `min` | ANSI core | 31 | **auto** |
 | MINUS | `-` | ANSI core | 22 | **auto** |
@@ -128,7 +128,7 @@ RTS instruction at the end of each word.
 | OVER | `over` | ANSI core | 17 | **auto** |
 | PAD | `pad` | ANSI core ext | 15 | **auto** |
 | PAGE | `page` | ANSI facility | 29 | tested |
-| PARSE_NAME | `parse-name` | ANSI core ext | 240 | tested |
+| PARSE_NAME | `parse-name` | ANSI core ext | 240 | **auto** |
 | PARSE | `parse` | ANSI core ext | 142 | tested |
 | PICK | `pick` | ANSI core ext | 16 | tested |
 | PLUS | `+` | ANSI core | 22 | **auto** |
@@ -199,6 +199,6 @@ RTS instruction at the end of each word.
 | ZERO_UNEQUAL | `0<>` | ANSI core ext | 21 | tested |
 
 Found **190** native words in `native_words.asm`.
-Of those, **139** were automatically tested and
-          **5** are not marked as tested at all.
+Of those, **141** were automatically tested and
+          **4** are not marked as tested at all.
 
