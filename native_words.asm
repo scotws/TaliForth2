@@ -369,7 +369,7 @@ _not_zero:
                 ldy #0
 
                 ; Select the next history buffer
-                ; Clear bit 3 first (so overflow is OK)
+                ; Clear bit 3 first (so overflow from bit 2 to 3 is OK)
                 lda status
                 and #$f7
                 ; Increment the buffer number (overflow from 7 to 0 OK)
@@ -477,13 +477,15 @@ _ctrl_n:
                 lda #$8
                 bit status
                 bne _recall_history
-                ; If this isn't the first time CTRL-n has been pressed,
+                ; This isn't the first time CTRL-n has been pressed,
                 ; select the next history buffer.
                 ; Clear bit 3 first (so overflow is OK)
                 lda status
                 and #$f7
                 ; Increment the buffer number (overflow from 7 to 0 OK)
                 inc
+                ; Bit 3 (if it got set by going from buffer 7 to 0) will
+                ; be cleared below.
                 sta status
                 ; Falls into _recall_history
 

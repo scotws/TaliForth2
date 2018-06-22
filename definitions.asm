@@ -127,7 +127,7 @@
                            ; Bit 6 = 1 for normal ":" definitions
                            ;         WORKWORD contains nt of word being compiled
                            ;       = 0 for :NONAME definitions
-                           ;         WORKDORD contains xt of word being compiled
+                           ;         WORKWORD contains xt of word being compiled
                            ; Bit 3 = 1 makes CTRL-n recall current history
                            ;       = 0 CTRL-n recalls previous history
                            ; Bit 2 = Current history buffer msb
