@@ -1,7 +1,7 @@
 ; List of Strings for Tali Forth 2
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 01. Apr 2016 (for Liara Forth)
-; This version: 03. May 2018
+; This version: 22. Jun 2018
 
 ; This file is included by taliforth.asm 
 
@@ -24,7 +24,8 @@ s_abc_upper: .byte "0123456789ABCDEFGHIJKLMNOPQRSTUVWYZ"
 
 
 ; ERROR STRINGS
-; All error strings must be zero-terminated, all names start with "es_"
+; All error strings must be zero-terminated, all names start with "es_".
+; If these strings are changed, the test suite must be  
 ; TODO renumber once we have all errors figured out
 
 .alias err_allot 	0

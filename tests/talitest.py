@@ -33,6 +33,19 @@ RESULTS = 'results.txt'
 DELAY = 0.003  # 3ms default
 SPAWN_COMMAND = 'py65mon -m 65c02 -r ../taliforth-py65mon.bin'
 PY65MON_ERROR = '*** Unknown syntax:'
+TALI_ERRORS = ['Undefined word',
+               'Stack underflow',
+               'ALLOT using all available memory',
+               'Illegal SOURCE-ID during REFILL',
+               'Interpreting a compile-only word',
+               'DEFERed word not defined yet',
+               'Division by zero',
+               'Not in interpret mode',
+               'Parsing failure',
+               'No such xt found in Dictionary',
+               'Digit larger than base',
+               'QUIT could not get input (REFILL returned -1)',
+               'Already in compile mode']
 
 # Add name of file with test to the set of LEGAL_TESTS
 LEGAL_TESTS = frozenset(['core', 'string', 'double', 'facility', 'tali', 'tools'])
@@ -190,6 +203,10 @@ with open(args.output, 'r') as rfile:
 
         if 'INCORRECT RESULT' in line:
             failed.append(line)
+
+        for error_str in TALI_ERRORS:
+            if error_str in line:
+                failed.append(line)
 
 if failed:
     for line in failed:
