@@ -276,13 +276,21 @@ testing stack ops: 2drop 2dup 2over 2swap ?dup depth drop dup nip over rot -rot 
 { 1 2 swap -> 2 1 }
 
 \ ------------------------------------------------------------------------
-testing >r r> r@
+testing >r r> r@ 2>r 2r> 2r@
 
 { : gr1 >r r> ; -> }
 { : gr2 >r r@ r> drop ; -> }
 { 123 gr1 -> 123 }
 { 123 gr2 -> 123 }
 { 1s gr1 -> 1s } \ return stack holds cells
+
+\ There are no official ANSI tests for 2>R, 2R>, or 2R@, added 22. June 2018
+{ : gr3 2>r 2r> ; -> }
+{ : gr4 2>r 2r@ 2r> 2drop ; -> }
+{ : gr5 2>r r> r> ; } \ must reverse sequence, as 2r> is not r> r> 
+{ 123. gr3 -> 123. }
+{ 123. gr4 -> 123. }
+{ 123. gr5 -> 0 123 }
 
 \ ------------------------------------------------------------------------
 testing add/subtract: + - 1+ 1- abs negate 
@@ -1188,11 +1196,13 @@ testing parse-name marker
 
 \ There is no official ANSI test for MARKER, added 22. June 2018
 \ TODO There is currently no test for FIND-NAME, taking it on faith here
+{ unused constant marker_size -> }
 { marker quarian -> }
 : marker_test ." Bosh'tet!" ;
 { marker_test -> } \ should print "Bosh'tet!"
 { quarian -> } 
 { parse-name marker_test find-name -> 0 } 
+{ marker_size unused = if -> <true> }
 
 \ ------------------------------------------------------------------------
 testing input: accept
