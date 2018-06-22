@@ -100,7 +100,8 @@
 
 .alias cp        user0+0  ; Compiler Pointer
 .alias dp        user0+2  ; Dictionary Pointer
-.alias workword  user0+4  ; nt (not xt!) of word being compiled
+.alias workword  user0+4  ; nt (not xt!) of word being compiled, except in
+                          ; a :NONAME declared word (see status)
 .alias insrc     user0+6  ; input Source for SOURCE-ID
 .alias cib       user0+8  ; address of current input buffer
 .alias ciblen    user0+10  ; length of current input buffer
@@ -123,6 +124,10 @@
 .alias scratch   user0+44  ; 8 byte scratchpad (see UM/MOD)
 .alias histinfo  user0+52  ; information about input history (see ACCEPT)
 .alias status    user0+53  ; internal status information (used for :NONAME)
+                           ; Bit 6 = 1 for normal ":" definitions
+                           ;         WORKWORD contains nt of word being compiled
+                           ;       = 0 for :NONAME definitions
+                           ;         WORKDORD contains xt of word being compiled
                 
 ; Bytes used for variables: 54 ($0000-$0035) 
 ; First usable Data Stack location: $0036 (decimal 54) 

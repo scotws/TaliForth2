@@ -1237,6 +1237,11 @@ xt_colon:
                 ; switch to compile state
                 dec state
                 dec state+1
+                ; Set bit6 in status to tell ";" and RECURSE this is a normal
+                ; word.
+                lda $40
+                ora status
+                sta status
 
                 ; CREATE is going to change DP to point to the new word's
                 ; header. While this is fine for (say) variables, it would mean
