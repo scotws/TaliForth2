@@ -19,7 +19,7 @@ PROGRAMMER  : Sam Colwell
 FILE        : talitest.py
 
 First version: 16. May 2018
-This version: 15. June 2018
+This version: 22. June 2018
 """
 
 import argparse
@@ -39,7 +39,7 @@ LEGAL_TESTS = frozenset(['core', 'string', 'double', 'facility', 'tali', 'tools'
 TESTLIST = ' '.join(["'"+str(t)+"' " for t in LEGAL_TESTS])
 
 OUTPUT_HELP = 'Output File, default "'+RESULTS+'"'
-DELAY_HELP = 'Delay before send in ms, default '+str(DELAY)+' ms'
+DELAY_HELP = 'Delay before send in sec, default '+str(DELAY)+' sec'
 TESTS_HELP = "Available tests: 'all' or one or more of "+TESTLIST
 
 parser = argparse.ArgumentParser()
