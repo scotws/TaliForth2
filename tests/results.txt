@@ -1155,7 +1155,7 @@ create gn-buf 0 c,  ok
 { max-uint dup 2 gn1 -> max-uint dup 0 }  ok
 { 0 0 max-base gn1 -> 0 0 0 }  ok
 { max-uint 0 max-base gn1 -> max-uint 0 0 }  ok
-{ max-uint dup max-base gn1 -> max-uint dup 0 } INCORRECT RESULT: { max-uint dup max-base gn1 -> max-uint dup 0 } ACTUAL RESULT: { -4FCD -6150 0 } ok
+{ max-uint dup max-base gn1 -> max-uint dup 0 } INCORRECT RESULT: { max-uint dup max-base gn1 -> max-uint dup 0 } ACTUAL RESULT: { 1 0 6 } ok
   ok
 : gn2 ( -- 16 10 )  compiled
    base @ >r  hex base @  decimal base @  r> base ! ;  ok
@@ -1287,11 +1287,6 @@ testing dictionary search rules  ok
 { : gdx   123 ; : gdx   gdx 234 ; -> }  ok
   ok
 { gdx -> 123 234 }  ok
-\ ------------------------------------------------------------------------  ok
-testing facility words: at-xy page   ok
-  ok
-( TODO AT-XY test missing )  ok
-( TODO PAGE test missing )  ok
 \ ------------------------------------------------------------------------  ok
 testing double words: 2variable d+ d- d. d.r d>s dabs dnegate  ok
 decimal  ok
@@ -1444,18 +1439,6 @@ decimal  ok
   ok
   ok
 \ ------------------------------------------------------------------------  ok
-testing tools words: .s ? dump name>string see state words  ok
-  ok
-\ Test for BYE not implemented  ok
-  ok
-( TODO .S test missing )  ok
-( TODO ? test missing )  ok
-( TODO DUMP test missing )  ok
-( TODO NAME>STRING missing )  ok
-( TODO SEE test missing )  ok
-( TODO STATE test missing )  ok
-( TODO WORDS test missing )  ok
-\ ------------------------------------------------------------------------  ok
 testing gforth words: bounds find-name latestxt name>int name>string  ok
   ok
 \ Test for COLD not implemented  ok
@@ -1492,6 +1475,23 @@ testing tali-only words: never-native wordsize  ok
 ( TODO 0 test missing)  ok
 ( TODO 1 test missing)  ok
 ( TODO 2 test missing)  ok
+\ ------------------------------------------------------------------------  ok
+testing tools words: .s ? dump name>string see state words  ok
+  ok
+\ Test for BYE not implemented  ok
+  ok
+( TODO .S test missing )  ok
+( TODO ? test missing )  ok
+( TODO DUMP test missing )  ok
+( TODO NAME>STRING missing )  ok
+( TODO SEE test missing )  ok
+( TODO STATE test missing )  ok
+( TODO WORDS test missing )  ok
+\ ------------------------------------------------------------------------  ok
+testing facility words: at-xy page   ok
+  ok
+( TODO AT-XY test missing )  ok
+( TODO PAGE test missing )  ok
 \ ------------------------------------------------------------------------  ok
 testing string words: /string -trailing blank sliteral  ok
 decimal  ok

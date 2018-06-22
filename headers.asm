@@ -1,7 +1,7 @@
 ; Dictionary Headers for Tali Forth 2
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 05. Dec 2016 (Liara Forth)
-; This version: 17. May 2018
+; This version: 22. June 2018
 
 ; Dictionary headers are kept separately from the code, which allows various
 ; tricks in the code. We roughly follow the Gforth terminology: The Execution
@@ -217,14 +217,9 @@ nt_sm_slash_rem:
         .word nt_fm_slash_mod, xt_sm_slash_rem, z_sm_slash_rem
         .byte "sm/rem"
 
-nt_ud_slash_mod:
-        .byte 6, UF
-        .word nt_sm_slash_rem, xt_ud_slash_mod, z_ud_slash_mod
-        .byte "ud/mod"
-
 nt_um_slash_mod:
         .byte 6, UF
-        .word nt_ud_slash_mod, xt_um_slash_mod, z_um_slash_mod
+        .word nt_sm_slash_rem, xt_um_slash_mod, z_um_slash_mod
         .byte "um/mod"
 
 nt_star:

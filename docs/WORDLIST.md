@@ -117,7 +117,7 @@ RTS instruction at the end of each word.
 | NOT_EQUALS | `<>` | ANSI core ext | 33 | **auto** |
 | NOT_ROTE | `-rot` | Gforth | 31 | **auto** |
 | NUMBER | `number` | Tali Forth | 138 | tested |
-| NUMBER_SIGN | `#` | ANSI core | 32 | **auto** |
+| NUMBER_SIGN | `#` | ANSI core | 56 | **auto** |
 | NUMBER_SIGN_GREATER | `#>` | ANSI core | 37 | **auto** |
 | NUMBER_SIGN_S | `#s` | ANSI core | 20 | **auto** |
 | ONE | `1` | Tali Forth | 8 | tested |
@@ -181,7 +181,6 @@ RTS instruction at the end of each word.
 | TYPE | `type` | ANSI core | 46 | **auto** |
 | U_DOT | `u.` | ANSI core | 15 | **auto** |
 | U_LESS_THAN | `u<` | ANSI core | 25 | **auto** |
-| UD_SLASH_MOD | `ud/mod` | Gforth | 34 | *coded* |
 | UF_STRIP | `uf-strip` | Tali Forth | 10 | tested |
 | UM_SLASH_MOD | `um/mod` | ANSI core | 69 | **auto** |
 | UM_STAR | `um*` | ANSI core | 73 | **auto** |
@@ -199,7 +198,7 @@ RTS instruction at the end of each word.
 | ZERO_LESS | `0<` | ANSI core | 19 | **auto** |
 | ZERO_UNEQUAL | `0<>` | ANSI core ext | 21 | tested |
 
-Found **191** native words in `native_words.asm`.
+Found **190** native words in `native_words.asm`.
 Of those, **139** were automatically tested and
-          **6** are not marked as tested at all.
+          **5** are not marked as tested at all.
 
