@@ -1389,6 +1389,14 @@ xt_compile_comma:
 
                 jsr xt_int_to_name      ; ( xt -- nt )
 
+                ; See if this xt even has an nt.
+                lda 0,x
+                ora 1,x
+                bne _check_nt
+                ; No nt in dictionary.  Just compile as a JSR.
+                jmp _compile_as_jump
+                
+_check_nt:      
                 ; put nt away for safe keeping
                 lda 0,x
                 sta tmptos
@@ -3529,6 +3537,7 @@ _no_match:
 _zero:
                 ; if next word is zero, the xt has no nt.
                 ; We return a zero to indicate that.
+                pla             ; Leftover from above loop
                 stz 0,x
                 stz 1,x
                 bra z_int_to_name
