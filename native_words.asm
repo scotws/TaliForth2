@@ -1612,8 +1612,10 @@ z_compile_only: rts
         ; """Forth equivalent is  CREATE , DOES> @  but we do
         ; more in assembler and let CREATE do the heavy lifting.
         ; See http://www.bradrodriguez.com/papers/moving3.htm for
-        ; a primer on how this works in various Forths.
+        ; a primer on how this works in various Forths. This is the
+        ; same code as VALUE in our case.
         ; """
+xt_value:
 xt_constant:    
                 cpx #dsp0-1
                 bmi +
@@ -1667,6 +1669,7 @@ adjust_z:
                 inx
                 inx
 
+z_value:
 z_constant:     rts
 
 
@@ -6726,7 +6729,7 @@ z_two_over:     rts
 
 
 ; ## TWO_R_FETCH ( -- n n ) "Copy top two entries from Return Stack"
-; ## "2r@"  coded  ANSI core ext
+; ## "2r@"  auto  ANSI core ext
         ; """This is R> R> 2DUP >R >R SWAP but we can do it a lot faster in
         ; assembler. We use trickery to access the elements on the Return
         ; Stack instead of pulling the return address first and storing
@@ -6769,7 +6772,7 @@ z_two_r_fetch:  rts
 
 
 ; ## TWO_R_FROM ( -- n1 n2 ) (R: n1 n2 -- ) "Pull two cells from Return Stack"
-; ## "2r>"  coded  ANSI core ext
+; ## "2r>"  auto  ANSI core ext
 	; """Pull top two entries from Return Stack. Is the same as
         ; R> R> SWAP. As with R>, the problem with the is word is that
         ; the top value on the ReturnStack for a STC Forth is the
@@ -6928,7 +6931,7 @@ z_two_swap:     rts
 
 
 ; ## TWO_TO_R ( n1 n2 -- )(R: -- n1 n2 "Push top two entries to Return Stack"
-; ## "2>r"  coded  ANSI core ext
+; ## "2>r"  auto  ANSI core ext
         ; """Push top two entries to Return Stack. The same as SWAP >R >R
         ; except that if we jumped here, the return address will be in the
         ; way. May not be natively compiled unless we're clever and use

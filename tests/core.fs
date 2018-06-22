@@ -890,7 +890,7 @@ variable qdincrement
 {  2 -1  1 qd6 -> -1  0  1          3  }
 
 \ ------------------------------------------------------------------------
-testing defining words: : ; constant variable create does> >body
+testing defining words: : ; constant variable create does> >body value to
 
 { 123 constant x123 -> }
 { x123 -> 123 }
@@ -924,6 +924,21 @@ testing defining words: : ; constant variable create does> >body
 { ' w1 >body -> here }
 { w1 -> here 1 + }
 { w1 -> here 2 + }
+
+{  111 value v1 -> }
+{ -999 value v2 -> }
+{ v1 ->  111 }
+{ v2 -> -999 } 
+{ 222 to v1 -> } 
+{ v1 -> 222 }
+{ : vd1 v1 ; -> }
+{ vd1 -> 222 }
+
+{ : vd2 to v2 ; -> }
+{ v2 -> -999 }
+{ -333 vd2 -> }
+{ v2 -> -333 }
+{ v1 ->  222 }
 
 \ ------------------------------------------------------------------------
 testing evaluate
@@ -1091,13 +1106,47 @@ create gn-buf 0 c,
 
 
 \ ------------------------------------------------------------------------
-testing defer
+testing action-of defer defer! defer@ is
+
+{ defer defer1 -> }
+{ : action-defer1 action-of defer1 ; -> }
+{ ' * ' defer1 defer! ->   }
+{          2 3 defer1 -> 6 }
+{ action-of defer1 -> ' * } 
+{    action-defer1 -> ' * }
+
+{ ' + is defer1 ->   }
+{    1 2 defer1 -> 3 } 
+{ action-of defer1 -> ' + }
+{    action-defer1 -> ' + }
 
 { defer defer2 ->   } 
 { ' * ' defer2 defer! -> }
 {   2 3 defer2 -> 6 }
 { ' + is defer2 ->   }
 {    1 2 defer2 -> 3 }
+
+{ defer defer3 -> }
+{ ' * ' defer3 defer! -> }
+{ 2 3 defer3 -> 6 }
+{ ' + ' defer3 defer! -> }
+{ 1 2 defer3 -> 3 }
+
+{ defer defer4 -> }
+{ ' * ' defer4 defer! -> }
+{ 2 3 defer4 -> 6 }
+{ ' defer4 defer@ -> ' * }
+
+{ ' + is defer4 -> } 
+{ 1 2 defer4 -> 3 } 
+{ ' defer4 defer@ -> ' + }
+
+{ defer defer5 -> }
+{ : is-defer5 is defer5 ; -> }
+{ ' * is defer5 -> }
+{ 2 3 defer5 -> 6 }
+{ ' + is-defer5 -> } 
+{ 1 2 defer5 -> 3 }
 
 
 \ ------------------------------------------------------------------------
@@ -1196,13 +1245,14 @@ testing parse-name marker
 
 \ There is no official ANSI test for MARKER, added 22. June 2018
 \ TODO There is currently no test for FIND-NAME, taking it on faith here
-{ unused constant marker_size -> }
+{ variable marker_size -> }
+{ unused marker_size ! -> }
 { marker quarian -> }
 : marker_test ." Bosh'tet!" ;
 { marker_test -> } \ should print "Bosh'tet!"
 { quarian -> } 
 { parse-name marker_test find-name -> 0 } 
-{ marker_size unused = if -> <true> }
+{ marker_size @ unused = -> <true> }
 
 \ ------------------------------------------------------------------------
 testing input: accept

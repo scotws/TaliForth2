@@ -367,10 +367,10 @@ testing >r r> r@ 2>r 2r> 2r@  ok
 \ There are no official ANSI tests for 2>R, 2R>, or 2R@, added 22. June 2018  ok
 { : gr3 2>r 2r> ; -> }  ok
 { : gr4 2>r 2r@ 2r> 2drop ; -> }  ok
-{ : gr5 2>r r> r> ; } \ must reverse sequence, see   ok
+{ : gr5 2>r r> r> ; } \ must reverse sequence, as 2r> is not r> r>   ok
 { 123. gr3 -> 123. }  ok
 { 123. gr4 -> 123. }  ok
-{ 123. gr5 -> 123 0 } INCORRECT RESULT: { 123. gr5 -> 123 0 } ACTUAL RESULT: { 0 123 } ok
+{ 123. gr5 -> 0 123 }  ok
   ok
 \ ------------------------------------------------------------------------  ok
 testing add/subtract: + - 1+ 1- abs negate   ok
@@ -1300,9 +1300,7 @@ testing parse-name marker  ok
 { marker_test -> } \ should print "Bosh'tet!" Bosh'tet! ok
 { quarian -> }   ok
 { parse-name marker_test find-name -> 0 }   ok
-{ marker_size unused = if -> <true> } Interpreting a compile-only word
-
-{ marker_size unused = if -> <true> } Interpreting a compile-only word
+{ marker_size unused = -> <true> } INCORRECT RESULT: { marker_size unused = -> <true> } ACTUAL RESULT: { 0 } ok
   ok
 \ ------------------------------------------------------------------------  ok
 testing input: accept  ok
