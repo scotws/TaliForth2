@@ -970,7 +970,7 @@ variable qdincrement  ok
 {  2 -1  1 qd6 -> -1  0  1          3  }  ok
   ok
 \ ------------------------------------------------------------------------  ok
-testing defining words: : ; constant variable create does> >body  ok
+testing defining words: : ; constant variable create does> >body value to  ok
   ok
 { 123 constant x123 -> }  ok
 { x123 -> 123 }  ok
@@ -1004,6 +1004,22 @@ testing defining words: : ; constant variable create does> >body  ok
 { ' w1 >body -> here } INCORRECT RESULT: { ' w1 >body -> here } ACTUAL RESULT: { 3BC9 } ok
 { w1 -> here 1 + }  ok
 { w1 -> here 2 + }  ok
+  ok
+( TODO VALUE and TO currently don't work)  ok
+\ {  111 value v1 -> }  ok
+\ { -999 value v2 -> }  ok
+\ { v1 ->  111 }  ok
+\ { v2 -> -999 }   ok
+\ { 222 to v1 -> }   ok
+\ { v1 -> 222 }  ok
+\ { : vd1 v1 ; -> }  ok
+\ { vd1 -> 222 }  ok
+  ok
+\ { : vd2 to v2 ; -> }  ok
+\ { v2 -> -999 }  ok
+\ { -333 vd2 -> }  ok
+\ { v2 -> -333 }  ok
+\ { v1 ->  222 }  ok
   ok
 \ ------------------------------------------------------------------------  ok
 testing evaluate  ok
@@ -1171,13 +1187,49 @@ create gn-buf 0 c,  ok
   ok
   ok
 \ ------------------------------------------------------------------------  ok
-testing defer  ok
+testing action-of defer defer! defer@ is  ok
+  ok
+{ defer defer1 -> }  ok
+{ : action-defer1 action-of defer1 ; -> }  ok
+{ ' * ' defer1 defer! ->   }  ok
+{          2 3 defer1 -> 6 }  ok
+{ action-of defer1 -> ' * }   ok
+{   action-defer1 -> ' * }  ok
+  ok
+{ ' + is defer1 ->   }  ok
+{    1 2 defer1 -> 3 }   ok
+{ action-of defer1 -> ' + }  ok
+{    action-defer1 -> ' + }  ok
   ok
 { defer defer2 ->   }   ok
 { ' * ' defer2 defer! -> }  ok
 {   2 3 defer2 -> 6 }  ok
 { ' + is defer2 ->   }  ok
 {    1 2 defer2 -> 3 }  ok
+  ok
+{ defer defer3 -> }  ok
+{  * ' defer3 defer! -> } Stack underflow
+{ 2 3 defer3 -> 6 } DEFERed word not defined yet
+
+{ 2 3 defer3 -> 6 } DEFERed word not defined yet
+{ ' + ' defer3 defer! -> }  ok
+{ 1 2 defer3 -> 3 }  ok
+  ok
+{ defer defer4 -> }  ok
+{ ' * ' defer4 defer! -> }  ok
+{ 2 3 defer4 -> 6 }  ok
+{ ' defer4 defer@ -> ' * }  ok
+  ok
+{ ' + is defer4 -> }   ok
+{ 1 2 defer4 -> 3 }   ok
+{ ' defer4 defer@ -> ' + }  ok
+  ok
+{ defer defer5 -> }  ok
+{ : is-defer5 is defer5 ; -> }  ok
+{ ' * is defer5 -> }  ok
+{ 2 3 defer5 -> 6 }  ok
+{ ' + is-defer5 -> }   ok
+{ 1 2 defer5 -> 3 }  ok
   ok
   ok
 \ ------------------------------------------------------------------------  ok
@@ -1294,13 +1346,14 @@ testing parse-name marker  ok
   ok
 \ There is no official ANSI test for MARKER, added 22. June 2018  ok
 \ TODO There is currently no test for FIND-NAME, taking it on faith here  ok
-{ unused constant marker_size -> }  ok
+{ variable marker_size -> }  ok
+{ unused marker_size ! -> }  ok
 { marker quarian -> }  ok
 : marker_test ." Bosh'tet!" ;  ok
 { marker_test -> } \ should print "Bosh'tet!" Bosh'tet! ok
 { quarian -> }   ok
 { parse-name marker_test find-name -> 0 }   ok
-{ marker_size unused = -> <true> } INCORRECT RESULT: { marker_size unused = -> <true> } ACTUAL RESULT: { 0 } ok
+{ marker_size @ unused = -> <true> } INCORRECT RESULT: { marker_size @ unused = -> <true> } ACTUAL RESULT: { 0 } ok
   ok
 \ ------------------------------------------------------------------------  ok
 testing input: accept  ok

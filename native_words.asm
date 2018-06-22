@@ -7305,6 +7305,13 @@ xt_unused:
 z_unused:       rts
 
 
+; ## VALUE ( n "name" -- ) "Define a value"
+; ## "value"  auto  ANSI core
+        ; """This is a dummy header for the WORDLIST. The actual code is
+        ; identical to that of CONSTANT
+        ; """
+
+
 ; ## VARIABLE ( "name" -- ) "Define a variable"
 ; ## "variable"  auto  ANSI core
         ; """There are various Forth definitions for this word, such as

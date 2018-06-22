@@ -170,13 +170,13 @@ RTS instruction at the end of each word.
 | TWO_DUP | `2dup` | ANSI core | 27 | **auto** |
 | TWO_FETCH | `2@` | ANSI core | 37 | **auto** |
 | TWO_OVER | `2over` | ANSI core | 27 | **auto** |
-| TWO_R_FETCH | `2r@` | ANSI core ext | 29 | *coded* |
-| TWO_R_FROM | `2r>` | ANSI core ext | 28 | *coded* |
+| TWO_R_FETCH | `2r@` | ANSI core ext | 29 | **auto** |
+| TWO_R_FROM | `2r>` | ANSI core ext | 28 | **auto** |
 | TWO_SLASH | `2/` | ANSI core | 14 | **auto** |
 | TWO_STAR | `2*` | ANSI core | 11 | **auto** |
 | TWO_STORE | `2!` | ANSI core | 41 | **auto** |
 | TWO_SWAP | `2swap` | ANSI core | 39 | **auto** |
-| TWO_TO_R | `2>r` | ANSI core ext | 35 | *coded* |
+| TWO_TO_R | `2>r` | ANSI core ext | 35 | **auto** |
 | TWO_VARIABLE | `2variable` | ANSI double | 14 | **auto** |
 | TYPE | `type` | ANSI core | 46 | **auto** |
 | U_DOT | `u.` | ANSI core | 15 | **auto** |
@@ -186,6 +186,7 @@ RTS instruction at the end of each word.
 | UM_STAR | `um*` | ANSI core | 73 | **auto** |
 | UNLOOP | `unloop` | ANSI core | 6 | **auto** |
 | UNUSED | `unused` | ANSI core ext | 15 | **auto** |
+| VALUE | `value` | ANSI core | 65 | **auto** |
 | VARIABLE | `variable` | ANSI core | 24 | **auto** |
 | WORD | `word` | ANSI core | 73 | **auto** |
 | WORDS | `words` | ANSI tools | 56 | tested |
@@ -198,7 +199,7 @@ RTS instruction at the end of each word.
 | ZERO_LESS | `0<` | ANSI core | 19 | **auto** |
 | ZERO_UNEQUAL | `0<>` | ANSI core ext | 21 | tested |
 
-Found **190** native words in `native_words.asm`.
-Of those, **141** were automatically tested and
-          **4** are not marked as tested at all.
+Found **191** native words in `native_words.asm`.
+Of those, **145** were automatically tested and
+          **1** are not marked as tested at all.
 
