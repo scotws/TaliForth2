@@ -5456,10 +5456,29 @@ xt_recurse:
                 iny
 
                 ; Next, we save the LSB and MSB of the xt of the word 
-                ; we are currently working on, which is four bytes down
+                ; we are currently working on.  We first need to see if
+                ; WORKWORD has the nt (: started the word) or the
+                ; xt (:NONAME started the word).  Bit 6 in status tells us.
+                bit status
+                bvs _nt_in_workword
+
+                ; This is a special :NONAME word.  Just copy the xt
+                ; from WORKWORD into the dictionary.
+                lda workword
+                sta (cp),y
+                iny
+                lda workword+1
+                sta (cp),y
+                iny
+                bra _update_cp
+
+                
+_nt_in_workword: 
+                ; This is a regular : word, so the xt is four bytes down
                 ; from the nt which we saved in WORKWORD. We could probably
                 ; use NAME>INT here but this is going to be faster, and 
                 ; fast counts with recursion
+
                 lda workword            ; LSB
                 clc
                 adc #4
@@ -5477,7 +5496,7 @@ xt_recurse:
                 iny
                 sta (cp),y
                 iny
-
+_update_cp:     
                 ; update CP
                 tya
                 clc
