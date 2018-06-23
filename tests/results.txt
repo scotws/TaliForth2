@@ -78,6 +78,23 @@ create actual-results  20 cells allot  ok
       dup >r type cr r> >in !  compiled
    else >in ! drop  compiled
    then ;  ok
+\ ------------------------------------------------------------------------  ok
+testing facility words: at-xy page   ok
+  ok
+( TODO AT-XY test missing )  ok
+( TODO PAGE test missing )  ok
+\ ------------------------------------------------------------------------  ok
+testing tools words: .s ? dump name>string see state words  ok
+  ok
+\ Test for BYE not implemented  ok
+  ok
+( TODO .S test missing )  ok
+( TODO ? test missing )  ok
+( TODO DUMP test missing )  ok
+( TODO NAME>STRING missing )  ok
+( TODO SEE test missing )  ok
+( TODO STATE test missing )  ok
+( TODO WORDS test missing )  ok
 \ From: John Hayes S1I  ok
 \ Subject: core.fr  ok
 \ Date: Mon, 27 Nov 95 13:10  ok
@@ -1402,137 +1419,6 @@ testing dictionary search rules  ok
   ok
 { gdx -> 123 234 }  ok
 \ ------------------------------------------------------------------------  ok
-testing string words: /string -trailing blank sliteral  ok
-decimal  ok
-  ok
-\ Note the sequence of tests is fixed by https://forth-standard.org/standard/testsuite  ok
-  ok
-{ : s1 s" abcdefghijklmnopqrstuvwxyz" ; -> }  ok
-   ok
-{ s1  5 /string -> s1 swap 5 + swap 5 - }  ok
-{ s1 10 /string -4 /string -> s1 6 /string }  ok
-{ s1  0 /string -> s1 }  ok
-  ok
-{ : s2 s" abc"   ; -> }  ok
-{ : s3 s" jklmn" ; -> }  ok
-{ : s4 s" z"     ; -> }  ok
-{ : s5 s" mnoq"  ; -> }  ok
-{ : s6 s" 12345" ; -> }  ok
-{ : s7 s" "      ; -> }  ok
-  ok
-( TODO SEARCH not implemented )  ok
-\ { s1 s2 search -> s1 <true>  }    ok
-\ { s1 s3 search -> s1  9 /string <true>  }  ok
-\ { s1 s4 search -> s1 25 /string <true>  }  ok
-\ { s1 s5 search -> s1 <false> }  ok
-\ { s1 s6 search -> s1 <false> }  ok
-\ { s1 s7 search -> s1 <true>  }   ok
-  ok
-{ :  s8 s" abc  " ; -> }  ok
-{ :  s9 s"      " ; -> }  ok
-{ : s10 s"    a " ; -> }  ok
-  ok
-{  s1 -trailing -> s1 }        \ "abcdefghijklmnopqrstuvwxyz"  ok
-{  s8 -trailing -> s8 2 - }    \ "abc "  ok
-{  s7 -trailing -> s7 }        \ " "  ok
-{  s9 -trailing -> s9 drop 0 } \ " "  ok
-{ s10 -trailing -> s10 1- }    \ " a "  ok
-  ok
-( TODO COMPARE not implemented )  ok
-\ { s1        s1 compare ->  0  }  ok
-\ { s1  pad swap cmove   ->     }    \ copy s1 to PAD  ok
-\ { s1  pad over compare ->  0  }  ok
-\ { s1     pad 6 compare ->  1  }  ok
-\ { pad 10    s1 compare -> -1  }  ok
-\ { s1     pad 0 compare ->  1  }  ok
-\ { pad  0    s1 compare -> -1  }  ok
-\ { s1        s6 compare ->  1  }  ok
-\ { s6        s1 compare -> -1  }  ok
-  ok
-\ : "abdde" s" abdde" ;  ok
-\ : "abbde" s" abbde" ;  ok
-\ : "abcdf" s" abcdf" ;  ok
-\ : "abcdee" s" abcdee" ;  ok
-  ok
-\ { s1 "abdde"  compare -> -1 }  ok
-\ { s1 "abbde"  compare ->  1 }  ok
-\ { s1 "abcdf"  compare -> -1 }  ok
-\ { s1 "abcdee" compare ->  1 }  ok
-  ok
-: s11 s" 0abc" ;  ok
-: s12 s" 0aBc" ;  ok
-  ok
-\ { s11 s12 compare ->  1 }  ok
-\ { s12 s11 compare -> -1 }  ok
-  ok
-: s13 s" aaaaa a" ;            \ six spaces  ok
-  ok
-{ pad 25 char a fill -> }      \ fill PAD with 25 'a's  ok
-{ pad 5 chars + 6 blank -> }   \ put 6 spaced from character 5  ok
-\ { pad 12 s13 compare -> 0 }    \ PAD should now be same as s13 TODO  ok
-  ok
-( CMOVE and CMOVE> are kept together with MOVE )  ok
-  ok
-( TODO SLITERAL test not implemented yet because it requires COMPARE)   ok
-\ { : s14 [ s1 ] sliteral ; -> }   ok
-\ { s1 s14 compare -> 0 }  ok
-\ { s1 s14 rot = rot rot = -> <true> <false> }  ok
-  ok
-( TODO REPLACES not implemented yet )  ok
-( TODO SUBSTITUTE not implemented yet )  ok
-( TODO UNESCAPE not implemented yet )  ok
-  ok
-  ok
-\ ------------------------------------------------------------------------  ok
-testing gforth words: bounds find-name latestxt name>int name>string  ok
-  ok
-\ Test for COLD not implemented  ok
-\ Test for UD/MOD not implemented ( TODO word will be removed)  ok
-  ok
-( TODO BOUNDS test missing)  ok
-( TODO FIND-NAME test missing)  ok
-( TODO LATESTXT test missing)  ok
-( TODO NAME>INT test missing)  ok
-( TODO NAME>STRING test missing)  ok
-  ok
-  ok
-\ ------------------------------------------------------------------------  ok
-testing tali-only words: always-native bell compile-only digit? int>name latestnt number 0 1 2  ok
-testing tali-only words: never-native wordsize  ok
-  ok
-\ Test for 0BRANCH not implemented  ok
-\ Test for BRANCH not implemented  ok
-\ Test for DISASM not implemented  ok
-\ Test for INPUT not implemented  ok
-\ Test for NC-LIMIT not implemented  ok
-\ Test for OUTPUT not implemented  ok
-\ Test for UF-STRIP not implemented  ok
-  ok
-( TODO ALWAY-NATIVE test missing)  ok
-( TODO BELL test missing)  ok
-( TODO COMPILE-ONLY test missing)  ok
-( TODO DIGIT? test missing)  ok
-( TODO INT>NAME test missing)  ok
-( TODO LATESTNT test missing)  ok
-( TODO NEVER-NATVE test missing)  ok
-( TODO NUMBER test missing)  ok
-( TODO WORDSIZE test missing)  ok
-( TODO 0 test missing)  ok
-( TODO 1 test missing)  ok
-( TODO 2 test missing)  ok
-\ ------------------------------------------------------------------------  ok
-testing tools words: .s ? dump name>string see state words  ok
-  ok
-\ Test for BYE not implemented  ok
-  ok
-( TODO .S test missing )  ok
-( TODO ? test missing )  ok
-( TODO DUMP test missing )  ok
-( TODO NAME>STRING missing )  ok
-( TODO SEE test missing )  ok
-( TODO STATE test missing )  ok
-( TODO WORDS test missing )  ok
-\ ------------------------------------------------------------------------  ok
 testing double words: 2variable d+ d- d. d.r d>s dabs dnegate  ok
 decimal  ok
   ok
@@ -1684,7 +1570,121 @@ decimal  ok
   ok
   ok
 \ ------------------------------------------------------------------------  ok
-testing facility words: at-xy page   ok
+testing gforth words: bounds find-name latestxt name>int name>string  ok
   ok
-( TODO AT-XY test missing )  ok
-( TODO PAGE test missing )  ok
+\ Test for COLD not implemented  ok
+\ Test for UD/MOD not implemented ( TODO word will be removed)  ok
+  ok
+( TODO BOUNDS test missing)  ok
+( TODO FIND-NAME test missing)  ok
+( TODO LATESTXT test missing)  ok
+( TODO NAME>INT test missing)  ok
+( TODO NAME>STRING test missing)  ok
+  ok
+  ok
+\ ------------------------------------------------------------------------  ok
+testing tali-only words: always-native bell compile-only digit? int>name latestnt number 0 1 2  ok
+testing tali-only words: never-native wordsize  ok
+  ok
+\ Test for 0BRANCH not implemented  ok
+\ Test for BRANCH not implemented  ok
+\ Test for DISASM not implemented  ok
+\ Test for INPUT not implemented  ok
+\ Test for NC-LIMIT not implemented  ok
+\ Test for OUTPUT not implemented  ok
+\ Test for UF-STRIP not implemented  ok
+  ok
+( TODO ALWAY-NATIVE test missing)  ok
+( TODO BELL test missing)  ok
+( TODO COMPILE-ONLY test missing)  ok
+( TODO DIGIT? test missing)  ok
+( TODO INT>NAME test missing)  ok
+( TODO LATESTNT test missing)  ok
+( TODO NEVER-NATVE test missing)  ok
+( TODO NUMBER test missing)  ok
+( TODO WORDSIZE test missing)  ok
+( TODO 0 test missing)  ok
+( TODO 1 test missing)  ok
+( TODO 2 test missing)  ok
+\ ------------------------------------------------------------------------  ok
+testing string words: /string -trailing blank sliteral  ok
+decimal  ok
+  ok
+\ Note the sequence of tests is fixed by https://forth-standard.org/standard/testsuite  ok
+  ok
+{ : s1 s" abcdefghijklmnopqrstuvwxyz" ; -> }  ok
+   ok
+{ s1  5 /string -> s1 swap 5 + swap 5 - }  ok
+{ s1 10 /string -4 /string -> s1 6 /string }  ok
+{ s1  0 /string -> s1 }  ok
+  ok
+{ : s2 s" abc"   ; -> }  ok
+{ : s3 s" jklmn" ; -> }  ok
+{ : s4 s" z"     ; -> }  ok
+{ : s5 s" mnoq"  ; -> }  ok
+{ : s6 s" 12345" ; -> }  ok
+{ : s7 s" "      ; -> }  ok
+  ok
+( TODO SEARCH not implemented )  ok
+\ { s1 s2 search -> s1 <true>  }    ok
+\ { s1 s3 search -> s1  9 /string <true>  }  ok
+\ { s1 s4 search -> s1 25 /string <true>  }  ok
+\ { s1 s5 search -> s1 <false> }  ok
+\ { s1 s6 search -> s1 <false> }  ok
+\ { s1 s7 search -> s1 <true>  }   ok
+  ok
+{ :  s8 s" abc  " ; -> }  ok
+{ :  s9 s"      " ; -> }  ok
+{ : s10 s"    a " ; -> }  ok
+  ok
+{  s1 -trailing -> s1 }        \ "abcdefghijklmnopqrstuvwxyz"  ok
+{  s8 -trailing -> s8 2 - }    \ "abc "  ok
+{  s7 -trailing -> s7 }        \ " "  ok
+{  s9 -trailing -> s9 drop 0 } \ " "  ok
+{ s10 -trailing -> s10 1- }    \ " a "  ok
+  ok
+( TODO COMPARE not implemented )  ok
+\ { s1        s1 compare ->  0  }  ok
+\ { s1  pad swap cmove   ->     }    \ copy s1 to PAD  ok
+\ { s1  pad over compare ->  0  }  ok
+\ { s1     pad 6 compare ->  1  }  ok
+\ { pad 10    s1 compare -> -1  }  ok
+\ { s1     pad 0 compare ->  1  }  ok
+\ { pad  0    s1 compare -> -1  }  ok
+\ { s1        s6 compare ->  1  }  ok
+\ { s6        s1 compare -> -1  }  ok
+  ok
+\ : "abdde" s" abdde" ;  ok
+\ : "abbde" s" abbde" ;  ok
+\ : "abcdf" s" abcdf" ;  ok
+\ : "abcdee" s" abcdee" ;  ok
+  ok
+\ { s1 "abdde"  compare -> -1 }  ok
+\ { s1 "abbde"  compare ->  1 }  ok
+\ { s1 "abcdf"  compare -> -1 }  ok
+\ { s1 "abcdee" compare ->  1 }  ok
+  ok
+: s11 s" 0abc" ;  ok
+: s12 s" 0aBc" ;  ok
+  ok
+\ { s11 s12 compare ->  1 }  ok
+\ { s12 s11 compare -> -1 }  ok
+  ok
+: s13 s" aaaaa a" ;            \ six spaces  ok
+  ok
+{ pad 25 char a fill -> }      \ fill PAD with 25 'a's  ok
+{ pad 5 chars + 6 blank -> }   \ put 6 spaced from character 5  ok
+\ { pad 12 s13 compare -> 0 }    \ PAD should now be same as s13 TODO  ok
+  ok
+( CMOVE and CMOVE> are kept together with MOVE )  ok
+  ok
+( TODO SLITERAL test not implemented yet because it requires COMPARE)   ok
+\ { : s14 [ s1 ] sliteral ; -> }   ok
+\ { s1 s14 compare -> 0 }  ok
+\ { s1 s14 rot = rot rot = -> <true> <false> }  ok
+  ok
+( TODO REPLACES not implemented yet )  ok
+( TODO SUBSTITUTE not implemented yet )  ok
+( TODO UNESCAPE not implemented yet )  ok
+  ok
+  ok
