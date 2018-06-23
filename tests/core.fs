@@ -676,11 +676,11 @@ constant a-addr  constant ua-addr
 { pad here - -> FF } \ PAD must have offset of $FF
 { here unused + 3FF + -> 7FFF }
 
-\ TODO these tests require :NONAME
-\ :noname dup + ; constant dup+ 
-\ { : q dup+ compile, ; -> } 
-\ { : as [ q ] ; -> } 
-\ { 123 as -> 246 }
+
+:noname dup + ; constant dup+ 
+{ : q dup+ compile, ; -> } 
+{ : as [ q ] ; -> } 
+{ 123 as -> 246 }
 
 \ ------------------------------------------------------------------------
 testing char [char] [ ] bl s"
@@ -762,6 +762,30 @@ testing if else then begin while repeat until recurse
 { 2 gi6 -> 0 1 2 }
 { 3 gi6 -> 0 1 2 3 }
 { 4 gi6 -> 0 1 2 3 4 }
+
+decimal
+{ :noname ( n -- 0, 1, .., n ) 
+     dup if dup >r 1- recurse r> then 
+   ; 
+   constant rn1 -> }
+{ 0 rn1 execute -> 0 }
+{ 4 rn1 execute -> 0 1 2 3 4 }
+
+:noname ( n -- n1 )
+   1- dup
+   case 0 of exit endof
+     1 of 11 swap recurse endof
+     2 of 22 swap recurse endof
+     3 of 33 swap recurse endof
+     drop abs recurse exit
+   endcase
+; constant rn2
+
+{  1 rn2 execute -> 0 }
+{  2 rn2 execute -> 11 0 }
+{  4 rn2 execute -> 33 22 11 0 }
+{ 25 rn2 execute -> 33 22 11 0 }
+hex
 
 \ ------------------------------------------------------------------------
 testing case of endof endcase

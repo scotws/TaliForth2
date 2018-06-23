@@ -437,9 +437,14 @@ nt_compile_comma:
         .word nt_left_bracket, xt_compile_comma, z_compile_comma
         .byte "compile,"
 
+nt_colon_noname:
+        .byte 7, 0
+        .word nt_compile_comma, xt_colon_noname, z_colon_noname
+        .byte ":noname"
+
 nt_semicolon:
         .byte 1, CO+IM
-        .word nt_compile_comma, xt_semicolon, z_semicolon
+        .word nt_colon_noname, xt_semicolon, z_semicolon
         .byte ";"
 
 nt_colon:

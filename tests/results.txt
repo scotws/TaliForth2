@@ -166,7 +166,7 @@ testing 2* 2/ lshift rshift  ok
 { 1 2 lshift -> 4 }  ok
 { 1 f lshift -> 8000 } \ biggest guaranteed shift  ok
 { 1s 1 lshift 1 xor -> 1s }  ok
-{  msb 1 lshift -> 0 }  ok
+{ msb 1 lshift -> 0 }  ok
   ok
 { 1 0 rshift -> 1 }  ok
 { 1 1 rshift -> 0 }  ok
@@ -756,11 +756,11 @@ constant a-addr  constant ua-addr  ok
 { pad here - -> FF } \ PAD must have offset of $FF  ok
 { here unused + 3FF + -> 7FFF }  ok
   ok
-\ TODO these tests require :NONAME  ok
-\ :noname dup + ; constant dup+   ok
-\ { : q dup+ compile, ; -> }   ok
-\ { : as [ q ] ; -> }   ok
-\ { 123 as -> 246 }  ok
+  ok
+:noname dup + ; constant dup+   ok
+{ : q dup+ compile, ; -> }   ok
+{ : as [ q ] ; -> }   ok
+{ 123 as -> 246 }  ok
   ok
 \ ------------------------------------------------------------------------  ok
 testing char [char] [ ] bl s"  ok
@@ -842,6 +842,30 @@ testing if else then begin while repeat until recurse  ok
 { 2 gi6 -> 0 1 2 }  ok
 { 3 gi6 -> 0 1 2 3 }  ok
 { 4 gi6 -> 0 1 2 3 4 }  ok
+  ok
+decimal  ok
+{ :noname ( n -- 0, 1, .., n )   compiled
+     dup if dup >r 1- recurse r> then   compiled
+   ;   ok
+   constant rn1 -> }  ok
+{ 0 rn1 execute -> 0 }  ok
+{ 4 rn1 execute -> 0 1 2 3 4 }  ok
+  ok
+:noname ( n -- n1 )  compiled
+   1- dup  compiled
+   case 0 of exit endof  compiled
+     1 of 11 swap recurse endof  compiled
+     2 of 22 swap recurse endof  compiled
+     3 of 33 swap recurse endof  compiled
+     drop abs recurse exit  compiled
+   endcase  compiled
+; constant rn2  ok
+  ok
+{  1 rn2 execute -> 0 }  ok
+{  2 rn2 execute -> 11 0 }  ok
+{  4 rn2 execute -> 33 22 11 0 }  ok
+{ 25 rn2 execute -> 33 22 11 0 }  ok
+hex  ok
   ok
 \ ------------------------------------------------------------------------  ok
 testing case of endof endcase  ok
@@ -1001,7 +1025,7 @@ testing defining words: : ; constant variable create does> >body value to  ok
   ok
 { : weird: create does> 1 + does> 2 + ; -> }  ok
 { weird: w1 -> }  ok
-{ ' w1 >body -> here } INCORRECT RESULT: { ' w1 >body -> here } ACTUAL RESULT: { 3BC9 } ok
+{ ' w1 >body -> here } INCORRECT RESULT: { ' w1 >body -> here } ACTUAL RESULT: { 3F98 } ok
 { w1 -> here 1 + }  ok
 { w1 -> here 2 + }  ok
   ok
@@ -1126,7 +1150,7 @@ count-bits 2* constant #bits-ud  \ number of bits in ud  ok
    r> base !    \ s: c-addr u  compiled
    dup #bits-ud = swap  compiled
    0 do     \ s: c-addr flag  compiled
-     over c@ [char] 1 = and  \ all ones  compiled
+      over c@ [char] 1 = and  \ all ones  compiled
       >r char+ r>  compiled
    loop swap drop ;  ok
 { gp6 -> <true> }  ok
@@ -1378,55 +1402,6 @@ testing dictionary search rules  ok
   ok
 { gdx -> 123 234 }  ok
 \ ------------------------------------------------------------------------  ok
-testing tools words: .s ? dump name>string see state words  ok
-  ok
-\ Test for BYE not implemented  ok
-  ok
-( TODO .S test missing )  ok
-( TODO ? test missing )  ok
-( TODO DUMP test missing )  ok
-( TODO NAME>STRING missing )  ok
-( TODO SEE test missing )  ok
-( TODO STATE test missing )  ok
-( TODO WORDS test missing )  ok
-\ ------------------------------------------------------------------------  ok
-testing gforth words: bounds find-name latestxt name>int name>string  ok
-  ok
-\ Test for COLD not implemented  ok
-\ Test for UD/MOD not implemented ( TODO word will be removed)  ok
-  ok
-( TODO BOUNDS test missing)  ok
-( TODO FIND-NAME test missing)  ok
-( TODO LATESTXT test missing)  ok
-( TODO NAME>INT test missing)  ok
-( TODO NAME>STRING test missing)  ok
-  ok
-  ok
-\ ------------------------------------------------------------------------  ok
-testing tali-only words: always-native bell compile-only digit? int>name latestnt number 0 1 2  ok
-testing tali-only words: never-native wordsize  ok
-  ok
-\ Test for 0BRANCH not implemented  ok
-\ Test for BRANCH not implemented  ok
-\ Test for DISASM not implemented  ok
-\ Test for INPUT not implemented  ok
-\ Test for NC-LIMIT not implemented  ok
-\ Test for OUTPUT not implemented  ok
-\ Test for UF-STRIP not implemented  ok
-  ok
-( TODO ALWAY-NATIVE test missing)  ok
-( TODO BELL test missing)  ok
-( TODO COMPILE-ONLY test missing)  ok
-( TODO DIGIT? test missing)  ok
-( TODO INT>NAME test missing)  ok
-( TODO LATESTNT test missing)  ok
-( TODO NEVER-NATVE test missing)  ok
-( TODO NUMBER test missing)  ok
-( TODO WORDSIZE test missing)  ok
-( TODO 0 test missing)  ok
-( TODO 1 test missing)  ok
-( TODO 2 test missing)  ok
-\ ------------------------------------------------------------------------  ok
 testing string words: /string -trailing blank sliteral  ok
 decimal  ok
   ok
@@ -1509,10 +1484,54 @@ decimal  ok
   ok
   ok
 \ ------------------------------------------------------------------------  ok
-testing facility words: at-xy page   ok
+testing gforth words: bounds find-name latestxt name>int name>string  ok
   ok
-( TODO AT-XY test missing )  ok
-( TODO PAGE test missing )  ok
+\ Test for COLD not implemented  ok
+\ Test for UD/MOD not implemented ( TODO word will be removed)  ok
+  ok
+( TODO BOUNDS test missing)  ok
+( TODO FIND-NAME test missing)  ok
+( TODO LATESTXT test missing)  ok
+( TODO NAME>INT test missing)  ok
+( TODO NAME>STRING test missing)  ok
+  ok
+  ok
+\ ------------------------------------------------------------------------  ok
+testing tali-only words: always-native bell compile-only digit? int>name latestnt number 0 1 2  ok
+testing tali-only words: never-native wordsize  ok
+  ok
+\ Test for 0BRANCH not implemented  ok
+\ Test for BRANCH not implemented  ok
+\ Test for DISASM not implemented  ok
+\ Test for INPUT not implemented  ok
+\ Test for NC-LIMIT not implemented  ok
+\ Test for OUTPUT not implemented  ok
+\ Test for UF-STRIP not implemented  ok
+  ok
+( TODO ALWAY-NATIVE test missing)  ok
+( TODO BELL test missing)  ok
+( TODO COMPILE-ONLY test missing)  ok
+( TODO DIGIT? test missing)  ok
+( TODO INT>NAME test missing)  ok
+( TODO LATESTNT test missing)  ok
+( TODO NEVER-NATVE test missing)  ok
+( TODO NUMBER test missing)  ok
+( TODO WORDSIZE test missing)  ok
+( TODO 0 test missing)  ok
+( TODO 1 test missing)  ok
+( TODO 2 test missing)  ok
+\ ------------------------------------------------------------------------  ok
+testing tools words: .s ? dump name>string see state words  ok
+  ok
+\ Test for BYE not implemented  ok
+  ok
+( TODO .S test missing )  ok
+( TODO ? test missing )  ok
+( TODO DUMP test missing )  ok
+( TODO NAME>STRING missing )  ok
+( TODO SEE test missing )  ok
+( TODO STATE test missing )  ok
+( TODO WORDS test missing )  ok
 \ ------------------------------------------------------------------------  ok
 testing double words: 2variable d+ d- d. d.r d>s dabs dnegate  ok
 decimal  ok
@@ -1546,7 +1565,7 @@ decimal  ok
 { -1.  2. d+ ->  1. }   ok
 { -1. -2. d+ -> -3. }   ok
 { -1.  1. d+ ->  0. }  ok
-{ 0  0  0  5 d+ ->  0  5 }                  \ mid range integers   ok
+{  0  0  0  5 d+ ->  0  5 }                  \ mid range integers   ok
 { -1  5  0  0 d+ -> -1  5 }   ok
 {  0  0  0 -5 d+ ->  0 -5 }   ok
 {  0 -5 -1  0 d+ -> -1 -5 }   ok
@@ -1664,3 +1683,8 @@ decimal  ok
 ( TODO DU< not implemented yet )  ok
   ok
   ok
+\ ------------------------------------------------------------------------  ok
+testing facility words: at-xy page   ok
+  ok
+( TODO AT-XY test missing )  ok
+( TODO PAGE test missing )  ok

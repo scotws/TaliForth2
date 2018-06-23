@@ -100,7 +100,8 @@
 
 .alias cp        user0+0  ; Compiler Pointer
 .alias dp        user0+2  ; Dictionary Pointer
-.alias workword  user0+4  ; nt (not xt!) of word being compiled
+.alias workword  user0+4  ; nt (not xt!) of word being compiled, except in
+                          ; a :NONAME declared word (see status)
 .alias insrc     user0+6  ; input Source for SOURCE-ID
 .alias cib       user0+8  ; address of current input buffer
 .alias ciblen    user0+10  ; length of current input buffer
@@ -121,8 +122,19 @@
 .alias tmptos    user0+40  ; temporary TOS storage
 .alias tohold    user0+42  ; pointer for formatted output 
 .alias scratch   user0+44  ; 8 byte scratchpad (see UM/MOD)
-.alias histinfo  user0+52  ; information about input history (see ACCEPT)
-
+.alias status    user0+52  ; internal status information
+                           ; (used by : :NONAME ; ACCEPT)
+                           ; Bit 6 = 1 for normal ":" definitions
+                           ;         WORKWORD contains nt of word being compiled
+                           ;       = 0 for :NONAME definitions
+                           ;         WORKWORD contains xt of word being compiled
+                           ; Bit 3 = 1 makes CTRL-n recall current history
+                           ;       = 0 CTRL-n recalls previous history
+                           ; Bit 2 = Current history buffer msb
+                           ; Bit 1 = Current history buffer (0-7, wraps)
+                           ; Bit 0 = Current history buffer lsb
+                           ; status+1 is used by ACCEPT to hold history lengths.
+                
 ; Bytes used for variables: 54 ($0000-$0035) 
 ; First usable Data Stack location: $0036 (decimal 54) 
 ; Bytes avaible for Data Stack: 128-54 = 65 --> 32 16-bit cells

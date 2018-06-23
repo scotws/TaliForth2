@@ -12,7 +12,7 @@ RTS instruction at the end of each word.
 | QUIT | `quit` | ANSI core | 66 | tested |
 | ABORT_QUOTE | `abort"` | ANSI core | 10 | tested |
 | ABS | `abs` | ANSI core | 24 | **auto** |
-| ACCEPT | `accept` | ANSI core | 302 | **auto** |
+| ACCEPT | `accept` | ANSI core | 321 | **auto** |
 | AGAIN | `again` | ANSI core ext | 36 | tested |
 | ALIGN | `align` | ANSI core | 0 | **auto** |
 | ALIGNED | `aligned` | ANSI core | 0 | **auto** |
@@ -40,9 +40,10 @@ RTS instruction at the end of each word.
 | CHARS | `chars` | ANSI core | 7 | **auto** |
 | CMOVE | `cmove` | ANSI string | 62 | **auto** |
 | CMOVE_UP | `cmove>` | ANSI string | 62 | **auto** |
-| COLON | `:` | ANSI core | 49 | **auto** |
+| COLON | `:` | ANSI core | 55 | **auto** |
+| COLON_NONAME | `:NONAME` | ANSI core | 29 | **auto** |
 | COMMA | `,` | ANSI core | 29 | **auto** |
-| COMPILE_COMMA | `compile,` | ANSI core ext | 274 | tested |
+| COMPILE_COMMA | `compile,` | ANSI core ext | 283 | tested |
 | COMPILE_ONLY | `compile-only` | Tali Forth | 8 | tested |
 | CONSTANT | `constant` | ANSI core | 65 | **auto** |
 | COUNT | `count` | ANSI core | 23 | **auto** |
@@ -87,7 +88,7 @@ RTS instruction at the end of each word.
 | I | `i` | ANSI core | 25 | **auto** |
 | IMMEDIATE | `immediate` | ANSI core | 8 | **auto** |
 | INPUT | `input` | Tali Forth | 10 | tested |
-| INT_TO_NAME | `int>name` | Tali Forth | 83 | tested |
+| INT_TO_NAME | `int>name` | Tali Forth | 85 | tested |
 | INVERT | `invert` | ANSI core | 19 | **auto** |
 | J | `j` | ANSI core | 25 | **auto** |
 | KEY | `key` | ANSI core | 9 | tested |
@@ -138,14 +139,14 @@ RTS instruction at the end of each word.
 | QUESTION_DUP | `?dup` | ANSI core | 23 | **auto** |
 | R_FETCH | `r@` | ANSI core | 20 | **auto** |
 | R_FROM | `r>` | ANSI core | 16 | **auto** |
-| RECURSE | `recurse` | ANSI core | 44 | **auto** |
+| RECURSE | `recurse` | ANSI core | 60 | **auto** |
 | REFILL | `refill` | ANSI core ext | 65 | tested |
 | RIGHT_BRACKET | `]` | ANSI core | 6 | **auto** |
 | ROT | `rot` | ANSI core | 31 | **auto** |
 | RSHIFT | `rshift` | ANSI core | 23 | **auto** |
 | S_QUOTE | `s"` | ANSI core | 134 | **auto** |
 | S_TO_D | `s>d` | ANSI core | 21 | **auto** |
-| SEMICOLON | `;` | ANSI core | 28 | **auto** |
+| SEMICOLON | `;` | ANSI core | 49 | **auto** |
 | SIGN | `sign` | ANSI core | 24 | **auto** |
 | SLASH_STRING | `/string` | ANSI string | 35 | **auto** |
 | SLITERAL | `sliteral` | ANSI string | 32 | **auto** |
@@ -199,7 +200,7 @@ RTS instruction at the end of each word.
 | ZERO_LESS | `0<` | ANSI core | 19 | **auto** |
 | ZERO_UNEQUAL | `0<>` | ANSI core ext | 21 | tested |
 
-Found **191** native words in `native_words.asm`.
-Of those, **145** were automatically tested and
+Found **192** native words in `native_words.asm`.
+Of those, **146** were automatically tested and
           **1** are not marked as tested at all.
 
