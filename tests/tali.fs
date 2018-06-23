@@ -2,7 +2,6 @@
 testing gforth words: bounds find-name latestxt name>int name>string
 
 \ Test for COLD not implemented
-\ Test for UD/MOD not implemented ( TODO word will be removed)
 
 ( TODO BOUNDS test missing)
 ( TODO FIND-NAME test missing)

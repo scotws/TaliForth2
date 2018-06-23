@@ -1,12 +1,11 @@
 TODO/CHANGES for Tali Forth 2 
 Scot W. Stevenson <scot.stevenson@gmail.com>
 First version: 19. Jan 2014
-This version: 06. Jun 2018
+This version: 22. Jun 2018
 
-(Note: Parts of the list have been moved to the GitHub website)
+(Note: The list of issues on the GitHub has priority)
 
 TODO POST-ALPHA ("ALL WORDS DO SOMETHING, USUALLY EVEN THE RIGHT THING")
-        - Add :NONAME (core extended)
         - Test all words, adding any new tests to documentation
         - Review (and spellcheck) documentation
 
@@ -20,9 +19,6 @@ TODO POST-BETA ("ALL THERE, BUT BEWARE OF SNEAKY BUGS")
         - Add an editor based on ed
         - Consider having WORDSIZE take xt and not nt
         - Renumber error codes in strings.asm
-        - Allow SLITERAL to store strings longer than 255 chars
-        - Allow S" and ." to handle strings longer than 255 chars
-        - Allow -TRAILING to handle strings longer than 255 chars
 
 --> Milestone RELEASE 1.0
 
@@ -30,14 +26,12 @@ TODO AT SOME POINT
         - Check where all "STY 0,X" can be used to good effect
         - Check where all "cmpl_a" can be used to good effect
         - Consider switching 0BRANCH/BRANCH to CS-PICK/CS-ROLL
-        - Consider getting rid of UD/MOD (ancient)
         - Add handling for multi-byte keyboard input (if possible with py65)
         - See if we can add real Delete Key detection (ESC[3~)
         - Add real USER variables
         - Add multitasking (round-robin), this requires USER variables
         - See if MAX and MIN can be combined
         - See if > and < etc can be combined
-        - Consider adding CASE
         - Consider adding SEARCH and COMPARE, also REPLACES, SUBSTITUTE,
           and UNESCAPE
         - Consider moving UM* to table-based multiplication
@@ -49,6 +43,7 @@ TODO AT SOME POINT
 -----------------------------------------------------------------------
 COMPLETED MAJOR CHANGES (LAST ON TOP WITH DATE)
 
+        - 20. Jun 2018 - Handle strings longer than 255 chars
         - 01. Jun 2018 - Added history function
         - 17. May 2018 - Added testing suite
         - 01. May 2018 - Added Makefile; added disassembler
