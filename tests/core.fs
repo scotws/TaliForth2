@@ -98,7 +98,6 @@ testing 2* 2/ lshift rshift
 
 \ ------------------------------------------------------------------------
 testing comparisons: true false 0= = <> 0< < > u< min max within
-( TODO we need to add max-2int and min-2int for further tests)
 0 invert  constant max-uint
 0 invert 1 rshift  constant max-int
 0 invert 1 rshift invert  constant min-int

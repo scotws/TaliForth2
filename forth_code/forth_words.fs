@@ -1,6 +1,6 @@
 \ List of high-level Forth words for Tali Forth 2 for the 65c02
 \ Scot W. Stevenson <scot.stevenson@gmail.com>
-\ This version: 12. June 2018
+\ This version: 24. June 2018
 
 \ When changing these words, edit them here and then use the 
 \ forth_to_dotbyte.py tool to convert them to the required format
@@ -57,12 +57,13 @@
         \ is from the Forth Standard, see
         \ https://forth-standard.org/standard/core/WITHIN
         : within ( n1 n2 n3 -- f )  over - >r - r> u< ;
+        : 2constant ( n n -- ) create swap , , does> dup @ swap cell+ @ ;
 
 \ Splash strings. We leave these as high-level words because they are
 \ generated at the end of the boot process and signal that the other
 \ high-level definitions worked (or at least didn't crash)
         .( Tali Forth 2 for the 65c02)
-        cr .( Version ALPHA 22. June 2018 )
+        cr .( Version ALPHA 24. June 2018 )
         cr .( Copyright 2014-2018 Scot W. Stevenson)
         cr .( Tali Forth 2 comes with absolutely NO WARRANTY)
         cr .( Type 'bye' to exit) cr

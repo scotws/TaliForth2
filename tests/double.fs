@@ -1,8 +1,7 @@
 \ ------------------------------------------------------------------------
-testing double words: 2variable d+ d- d. d.r d>s dabs dnegate
+testing double words: 2constant 2variable d+ d- d. d.r d>s dabs dnegate
 decimal
 
-( 2CONSTANT not implemented )
 ( 2LITERAL not implemented )
 
 { 2variable 2v1 -> }
@@ -44,11 +43,20 @@ decimal
 { min-int 0 2dup d+ -> 0 1 }
 { min-int s>d min-int 0 d+ -> 0 0 }
 
-\ TODO 2CONSTANT not implemented yet
-\ 1s max-int  2constant max-2int \ 01...1 
-\ 0 min-int   2constant min-2int \ 10...0 
-\ max-2int 2/ 2constant hi-2int  \ 001...1 
-\ min-2int 2/ 2constant lo-2int  \ 110...0
+{ 1 2 2constant 2c1 -> }
+{ 2c1 -> 1 2 }
+{ : cd1 2c1 ; -> }
+{ cd1 -> 1 2 }
+{ : cd2 2constant ; -> }
+{ -1 -2 cd2 2c2 -> }
+{ 2c2 -> -1 -2 }
+{ 4 5 2constant 2c3 immediate 2c3 -> 4 5 }
+\ { : cd6 2c3 2literal ; cd6 -> 4 5 }
+
+1s max-int  2constant max-2int \ 01...1 
+0 min-int   2constant min-2int \ 10...0 
+max-2int 2/ 2constant hi-2int  \ 001...1 
+min-2int 2/ 2constant lo-2int  \ 110...0
 
 \ TODO hi-2int etc not implemented yet
 \ {  hi-2int       1. d+ -> 0 hi-int 1+ }     \ large double integers 
