@@ -57,7 +57,8 @@
         \ is from the Forth Standard, see
         \ https://forth-standard.org/standard/core/WITHIN
         : within ( n1 n2 n3 -- f )  over - >r - r> u< ;
-        : 2constant ( n n -- ) create swap , , does> dup @ swap cell+ @ ;
+        : 2constant ( d -- ) create swap , , does> dup @ swap cell+ @ ;
+        : 2literal ( d -- ) swap postpone literal postpone literal ; immediate
 
 \ Splash strings. We leave these as high-level words because they are
 \ generated at the end of the boot process and signal that the other

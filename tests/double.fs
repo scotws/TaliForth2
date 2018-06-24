@@ -2,8 +2,6 @@
 testing double words: 2constant 2variable d+ d- d. d.r d>s dabs dnegate
 decimal
 
-( 2LITERAL not implemented )
-
 { 2variable 2v1 -> }
 { 0. 2v1 2! -> }
 { 2v1 2@ -> 0. }
@@ -51,20 +49,28 @@ decimal
 { -1 -2 cd2 2c2 -> }
 { 2c2 -> -1 -2 }
 { 4 5 2constant 2c3 immediate 2c3 -> 4 5 }
-\ { : cd6 2c3 2literal ; cd6 -> 4 5 }
+{ : cd6 2c3 2literal ; cd6 -> 4 5 }
+
+max-int 2/ constant hi-int \ 001...1 
+min-int 2/ constant lo-int \ 110...1
 
 1s max-int  2constant max-2int \ 01...1 
 0 min-int   2constant min-2int \ 10...0 
 max-2int 2/ 2constant hi-2int  \ 001...1 
 min-2int 2/ 2constant lo-2int  \ 110...0
 
-\ TODO hi-2int etc not implemented yet
-\ {  hi-2int       1. d+ -> 0 hi-int 1+ }     \ large double integers 
-\ {  hi-2int     2dup d+ -> 1s 1- max-int }
-\ { max-2int min-2int d+ -> -1. }
-\ { max-2int  lo-2int d+ -> hi-2int }
-\ {  lo-2int     2dup d+ -> min-2int }
-\ {  hi-2int min-2int d+ 1. d+ -> lo-2int }
+{ : cd1 [ max-2int ] 2literal ; -> }
+{ cd1 -> max-2int }
+{ 2variable 2v4 immediate 5 6 2v4 2! -> }
+{ : cd7 2v4 [ 2@ ] 2literal ; cd7 -> 5 6 }
+{ : cd8 [ 6 7 ] 2v4 [ 2! ] ; 2v4 2@ -> 6 7 }
+
+{  hi-2int       1. d+ -> 0 hi-int 1+ }     \ large double integers 
+{  hi-2int     2dup d+ -> 1s 1- max-int }
+{ max-2int min-2int d+ -> -1. }
+{ max-2int  lo-2int d+ -> hi-2int }
+{  lo-2int     2dup d+ -> min-2int }
+{  hi-2int min-2int d+ 1. d+ -> lo-2int }
 
 {  0.  5. d- -> -5. }              \ small integers 
 {  5.  0. d- ->  5. } 
@@ -86,18 +92,16 @@ min-2int 2/ 2constant lo-2int  \ 110...0
 { min-int 0 2dup d- -> 0. } 
 { min-int s>d max-int 0 d- -> 1 1s } 
 
-\ TODO max-2int etc not implemented yet
-\ { max-2int max-2int d- -> 0. }    \ large integers 
-\ { min-2int min-2int d- -> 0. }
-\ { max-2int  hi-2int d- -> lo-2int dnegate } 
-\ {  hi-2int  lo-2int d- -> max-2int }
-\ {  lo-2int  hi-2int d- -> min-2int 1. d+ }
-\ { min-2int min-2int d- -> 0. }
-\ { min-2int  lo-2int d- -> lo-2int }
+{ max-2int max-2int d- -> 0. }    \ large integers 
+{ min-2int min-2int d- -> 0. }
+{ max-2int  hi-2int d- -> lo-2int dnegate } 
+{  hi-2int  lo-2int d- -> max-2int }
+{  lo-2int  hi-2int d- -> min-2int 1. d+ }
+{ min-2int min-2int d- -> 0. }
+{ min-2int  lo-2int d- -> lo-2int }
 
-\ D. and D.R
-\ TODO max2int etc not implemented yet
-\ TODO 2CONSTANT not implemented yet
+( TODO m*/ not implemented ) 
+
 \ max-2int 71 73 m*/ 2constant dbl1 
 \ min-2int 73 79 m*/ 2constant dbl2
 \ : d>ascii ( d -- caddr u ) 
@@ -136,9 +140,8 @@ min-2int 2/ 2constant lo-2int  \ 110...0
 
 {       1. dabs -> 1.       } 
 {      -1. dabs -> 1.       } 
-\ TODO max-2int not implemented yet
-\ { max-2int dabs -> max-2int } 
-\ { min-2int 1. d+ dabs -> max-2int }
+{ max-2int dabs -> max-2int } 
+{ min-2int 1. d+ dabs -> max-2int }
 
 ( TODO DMAX not implemented yet )
 ( TODO DMIN not implemented yet )
@@ -146,9 +149,8 @@ min-2int 2/ 2constant lo-2int  \ 110...0
 { 0. dnegate -> 0. }
 { 1. dnegate -> -1. }
 { -1. dnegate -> 1. }
-\ TODO max-2int not implemented yet
-\ { max-2int dnegate -> min-2int swap 1+ swap }
-\ { min-2int swap 1+ swap dnegate -> max-2int }
+{ max-2int dnegate -> min-2int swap 1+ swap }
+{ min-2int swap 1+ swap dnegate -> max-2int }
 
 ( TODO M*/ not implemented yet )
 ( TODO M+ not implemented yet )
