@@ -948,16 +948,16 @@ testing defining words: : ; constant variable create does> >body value to
 { w1 -> here 1 + }
 { w1 -> here 2 + }
 
-( TODO VALUE and TO currently don't work)
-\ {  111 value v1 -> }
-\ { -999 value v2 -> }
-\ { v1 ->  111 }
-\ { v2 -> -999 } 
-\ { 222 to v1 -> } 
-\ { v1 -> 222 }
-\ { : vd1 v1 ; -> }
-\ { vd1 -> 222 }
+{  111 value v1 -> }
+{ -999 value v2 -> }
+{ v1 ->  111 }
+{ v2 -> -999 } 
+{ 222 to v1 -> } 
+{ v1 -> 222 }
+{ : vd1 v1 ; -> }
+{ vd1 -> 222 }
 
+( TODO these fail ) 
 \ { : vd2 to v2 ; -> }
 \ { v2 -> -999 }
 \ { -333 vd2 -> }
