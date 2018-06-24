@@ -8,5 +8,4 @@ testing tools words: .s ? dump name>string see state words
 ( TODO DUMP test missing )
 ( TODO NAME>STRING missing )
 ( TODO SEE test missing )
-( TODO STATE test missing )
 ( TODO WORDS test missing )
