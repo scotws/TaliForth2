@@ -6345,6 +6345,119 @@ z_tick:         rts
 .scend
 
 
+; ## TO ( n "name" -- ) or ( "name") "Change a value"
+; ## "to"  coded  ANSI core ext
+        ; """Gives a new value to a, uh, VALUE. One possible Forth
+        ; implementation is  ' >BODY !  but given the problems we have
+        ; with >BODY on STC Forths, we do this the hard way. Since 
+        ; Tali Forth uses the same code for CONSTANTs and VALUEs, you
+        ; could use this to redefine a CONSTANT, but that is a no-no.
+        ;
+        ; Note that the standard has different behaviors for TO depending
+        ; on the state (https://forth-standard.org/standard/core/TO). 
+        ; This makes TO state-dependent (which is bad) and also rather
+        ; complex (see the Gforth implementation for comparison). This
+        ; word may not be natively compiled and must be immediate. Frankly,
+        ; it would have made more sense to have two words for this.
+        ; """
+.scope
+xt_to:
+                ; One way or the other, we need the xt of the word
+                ; after this one. At this point, we don't know if we
+                ; are interpreted or compile, so we don't know if there
+                ; is a value n on the stack
+                jsr xt_tick             ; ( [n] xt )
+
+                ; The PFA (DFA in this case) is three bytes down,
+                ; after the jump to DOCONST
+                lda 0,x                 ; LSB
+                clc
+                adc #3
+                sta tmp1
+                lda 1,x                 ; MSB
+                adc #0                  ; we just want the carry
+                sta tmp1+1
+
+                inx
+                inx                     ; ( [n] ) 
+ 
+                ; Now it gets ugly. See which state we are in
+                lda state
+                ora state+1
+                beq _interpret
+                
+                ; Well, we're compiling. We want to end up with simple
+                ; code that just takes the number that is TOS and saves
+                ; it in the address of the xt we were just given. So we
+                ; want to compile this routine:
+                ;
+                ;       lda 0,x                 - B5 00
+                ;       sta <ADDR_LSB>          - 8D LSB MSB
+                ;       lda 1,x                 - B5 01
+                ;       sta <ADDR_LSB>          - 8D LSB MSB
+                ;       inx                     - E8
+                ;       inx                     - E8
+                ;
+                ; which at least is nice and short.
+                ; TODO Add underflow check
+                
+                ldy #$00                ; Code for LDA 0,X
+                lda #$B5
+                jsr cmpl_word 
+
+                lda #$8D                ; Code for STA abs
+                jsr cmpl_a
+
+                ldy tmp1+1              ; MSB goes in Y
+                lda tmp1
+                jsr cmpl_word
+
+                ldy #$01                ; Code for LDA 1,X
+                lda #$B5
+                jsr cmpl_word 
+ 
+                lda #$8D                ; Code for STA abs
+                jsr cmpl_a
+
+                inc tmp1                ; Calculate MSB
+                bne +
+                inc tmp1+1
+*
+                ldy tmp1+1              ; MSB goes in Y
+                lda tmp1
+                jsr cmpl_word
+
+                ldy #$E8                ; Code for INX
+                tya
+                jsr cmpl_word
+
+                bra _done
+_interpret:
+                ; We're interpreting, so we arrive here with n 
+                ; on the stack. This is an annoying place to put
+                ; the underflow check because we can't
+                ; automatically strip it out
+                cpx #dsp0-1
+                bmi +
+                jmp underflow
+* 
+                ; We skip over the jump to DOCONST and store the number
+                ; in the Program Field Area (PDF, in this case more a 
+                ; Data Field Area
+                lda 0,x
+                sta (tmp1)              ; LSB
+                
+                ldy #1
+                lda 1,x                 ; MSB
+                sta (tmp1),y            ; fall through to common
+
+                inx                     ; DROP
+                inx
+_done:
+z_to:           rts
+.scend
+        
+
 ; ## TO_BODY ( xt -- addr ) "Return a word's Code Field Area (CFA)"
 ; ## ">body"  auto  ANSI core
         ; """Given a word's execution token (xt), return the address of the

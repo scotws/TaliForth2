@@ -19,7 +19,7 @@ PROGRAMMER  : Sam Colwell
 FILE        : talitest.py
 
 First version: 16. May 2018
-This version: 22. June 2018
+This version: 25. June 2018
 """
 
 import argparse
@@ -30,7 +30,7 @@ import pexpect
 TESTS = 'talitests.fs'
 TESTER = 'tester.fs'
 RESULTS = 'results.txt'
-DELAY = 0.003  # 3ms default
+DELAY = 0.006  # 6ms default
 SPAWN_COMMAND = 'py65mon -m 65c02 -r ../taliforth-py65mon.bin'
 PY65MON_ERROR = '*** Unknown syntax:'
 TALI_ERRORS = ['Undefined word',
