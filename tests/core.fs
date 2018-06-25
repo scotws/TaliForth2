@@ -957,12 +957,11 @@ testing defining words: : ; constant variable create does> >body value to
 { : vd1 v1 ; -> }
 { vd1 -> 222 }
 
-( TODO these fail ) 
-\ { : vd2 to v2 ; -> }
-\ { v2 -> -999 }
-\ { -333 vd2 -> }
-\ { v2 -> -333 }
-\ { v1 ->  222 }
+{ : vd2 to v2 ; -> }
+{ v2 -> -999 }
+{ -333 vd2 -> }
+{ v2 -> -333 }
+{ v1 ->  222 }
 
 \ ------------------------------------------------------------------------
 testing evaluate

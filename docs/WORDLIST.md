@@ -113,7 +113,7 @@ RTS instruction at the end of each word.
 | NAME_TO_STRING | `name>string` | Gforth | 29 | tested |
 | NC_LIMIT | `nc-limit` | Tali Forth | 10 | tested |
 | NEGATE | `negate` | ANSI core | 20 | **auto** |
-| NEVER_NATIVE | `never-native` | Tali Forth | 8 | *coded* |
+| NEVER_NATIVE | `never-native` | Tali Forth | 8 | tested |
 | NIP | `nip` | ANSI core ext | 17 | **auto** |
 | NOT_EQUALS | `<>` | ANSI core ext | 33 | **auto** |
 | NOT_ROTE | `-rot` | Gforth | 31 | **auto** |
@@ -160,6 +160,7 @@ RTS instruction at the end of each word.
 | STORE | `!` | ANSI core | 25 | **auto** |
 | SWAP | `swap` | ANSI core | 23 | **auto** |
 | TICK | `'` | ANSI core | 31 | **auto** |
+| TO | `to` | ANSI core ext | 95 | *coded* |
 | TO_BODY | `>body` | ANSI core | 91 | **auto** |
 | TO_IN | `>in` | ANSI core | 10 | **auto** |
 | TO_NUMBER | `>number` | ANSI core | 163 | **auto** |
@@ -200,7 +201,7 @@ RTS instruction at the end of each word.
 | ZERO_LESS | `0<` | ANSI core | 19 | **auto** |
 | ZERO_UNEQUAL | `0<>` | ANSI core ext | 21 | tested |
 
-Found **192** native words in `native_words.asm`.
+Found **193** native words in `native_words.asm`.
 Of those, **146** were automatically tested and
           **1** are not marked as tested at all.
 

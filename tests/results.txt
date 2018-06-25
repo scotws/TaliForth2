@@ -878,7 +878,7 @@ testing case of endof endcase  ok
   ok
 { 1 cs1 -> 111 }  ok
 { 2 cs1 -> 222 }  ok
-{ 3 cs1 -> 333 }  ok
+{ 3 cs1 -> 333 } INCORRECT RESULT: { 3 cs1 -> 333 } ACTUAL RESULT: { 3 } ok
 { 4 cs1 -> 999 }  ok
 : cs2 >r case  compiled
    -1 of case r@ 1 of 100 endof  compiled
@@ -1024,7 +1024,7 @@ testing defining words: : ; constant variable create does> >body value to  ok
   ok
 { : weird: create does> 1 + does> 2 + ; -> }  ok
 { weird: w1 -> }  ok
-{ ' w1 >body -> here } INCORRECT RESULT: { ' w1 >body -> here } ACTUAL RESULT: { 4141 } ok
+{ ' w1 >body -> here } INCORRECT RESULT: { ' w1 >body -> here } ACTUAL RESULT: { 40A3 } ok
 { w1 -> here 1 + }  ok
 { w1 -> here 2 + }  ok
   ok
@@ -1040,8 +1040,8 @@ testing defining words: : ; constant variable create does> >body value to  ok
 { : vd2 to v2 ; -> }  ok
 { v2 -> -999 }  ok
 { -333 vd2 -> }  ok
-{ v2 -> -333 } Stack underflow
-{ v1 ->  222 } Stack underflow
+{ v2 -> -333 }  ok
+{ v1 ->  222 }  ok
   ok
 \ ------------------------------------------------------------------------  ok
 testing evaluate  ok
@@ -1051,22 +1051,22 @@ testing evaluate  ok
 : ge3 s" : ge4 345 ;" ;  ok
 : ge5 evaluate ; immediate  ok
   ok
-{ ge1 evaluate -> 123 } \ test evaluate in interp. state Stack underflow
-{ ge2 evaluate -> 124 } Stack underflow
-{ ge3 evaluate -> } Stack underflow
-{ ge4 -> 345 } Stack underflow
+{ ge1 evaluate -> 123 } \ test evaluate in interp. state  ok
+{ ge2 evaluate -> 124 }  ok
+{ ge3 evaluate -> }  ok
+{ ge4 -> 345 }  ok
   ok
-{ : ge6 ge1 ge5 ; -> }  \ test evaluate in compile state Stack underflow
-{ ge6 -> 123 } Stack underflow
-{ : ge7 ge2 ge5 ; -> } Stack underflow
-{ ge7 -> 124 } Stack underflow
+{ : ge6 ge1 ge5 ; -> }  \ test evaluate in compile state  ok
+{ ge6 -> 123 }  ok
+{ : ge7 ge2 ge5 ; -> }  ok
+{ ge7 -> 124 }  ok
   ok
 \ ------------------------------------------------------------------------  ok
 testing source >in word  ok
   ok
 : gs1 s" source" 2dup evaluate   compiled
        >r swap >r = r> r> = ;  ok
-{ gs1 -> <true> <true> } Stack underflow
+{ gs1 -> <true> <true> }  ok
   ok
 variable scans  ok
 : rescan?  -1 scans +!  compiled
@@ -1076,20 +1076,20 @@ variable scans  ok
   ok
 { 2 scans !    ok
 345 rescan?    ok
--> 345 345 } Stack underflow
+-> 345 345 }  ok
   ok
 : gs2  5 scans ! s" 123 rescan?" evaluate ;  ok
-{ gs2 -> 123 123 123 123 123 } Stack underflow
+{ gs2 -> 123 123 123 123 123 }  ok
   ok
 : gs3 word count swap c@ ;  ok
-{ bl gs3 hello -> 5 char h } Stack underflow
-{ char " gs3 goodbye" -> 7 char g } Stack underflow
+{ bl gs3 hello -> 5 char h }  ok
+{ char " gs3 goodbye" -> 7 char g }  ok
 { bl gs3   ok
-drop -> 0 } \ blank line return zero-length string Stack underflow
+drop -> 0 } \ blank line return zero-length string  ok
   ok
 : gs4 source >in ! drop ;  ok
 { gs4 123 456   ok
--> } Stack underflow
+-> }  ok
   ok
 \ ------------------------------------------------------------------------  ok
 testing <# # #s #> hold sign base >number hex decimal  ok
@@ -1111,16 +1111,16 @@ testing <# # #s #> hold sign base >number hex decimal  ok
    then ;  ok
   ok
 : gp1  <# 41 hold 42 hold 0 0 #> s" BA" s= ;  ok
-{ gp1 -> <true> } Stack underflow
+{ gp1 -> <true> }  ok
   ok
 : gp2  <# -1 sign 0 sign -1 sign 0 0 #> s" --" s= ;  ok
-{ gp2 -> <true> } Stack underflow
+{ gp2 -> <true> }  ok
   ok
 : gp3  <# 1 0 # # #> s" 01" s= ;  ok
-{ gp3 -> <true> } Stack underflow
+{ gp3 -> <true> }  ok
   ok
 : gp4  <# 1 0 #s #> s" 1" s= ;  ok
-{ gp4 -> <true> } Stack underflow
+{ gp4 -> <true> }  ok
   ok
 24 constant max-base   \ base 2 .. 36  ok
 : count-bits  compiled
@@ -1140,7 +1140,7 @@ count-bits 2* constant #bits-ud  \ number of bits in ud  ok
       i 0 <# #s #> s" 10" s= and  compiled
    loop  compiled
    swap base ! ;  ok
-{ gp5 -> <true> } Stack underflow
+{ gp5 -> <true> }  ok
   ok
 : gp6  compiled
    base @ >r  2 base !  compiled
@@ -1151,7 +1151,7 @@ count-bits 2* constant #bits-ud  \ number of bits in ud  ok
       over c@ [char] 1 = and  \ all ones  compiled
       >r char+ r>  compiled
    loop swap drop ;  ok
-{ gp6 -> <true> } Stack underflow
+{ gp6 -> <true> }  ok
   ok
 : gp7  compiled
    base @ >r  max-base base !  compiled
@@ -1166,7 +1166,7 @@ count-bits 2* constant #bits-ud  \ number of bits in ud  ok
    loop  compiled
    r> base ! ;  ok
   ok
-{ gp7 -> <true> } Stack underflow
+{ gp7 -> <true> } INCORRECT RESULT: { gp7 -> <true> } ACTUAL RESULT: { 0 } ok
   ok
 \ >number tests  ok
 create gn-buf 0 c,  ok
@@ -1174,21 +1174,21 @@ create gn-buf 0 c,  ok
 : gn-consumed gn-buf char+ 0 ;  ok
 : gn'  [char] ' word char+ c@ gn-buf c!  gn-string ;  ok
   ok
-{ 0 0 gn' 0' >number -> 0 0 gn-consumed } Stack underflow
-{ 0 0 gn' 1' >number -> 1 0 gn-consumed } Stack underflow
-{ 1 0 gn' 1' >number -> base @ 1+ 0 gn-consumed } Stack underflow
-{ 0 0 gn' -' >number -> 0 0 gn-string } \ should fail to convert these Stack underflow
-{ 0 0 gn' +' >number -> 0 0 gn-string } Stack underflow
-{ 0 0 gn' .' >number -> 0 0 gn-string } Stack underflow
+{ 0 0 gn' 0' >number -> 0 0 gn-consumed }  ok
+{ 0 0 gn' 1' >number -> 1 0 gn-consumed }  ok
+{ 1 0 gn' 1' >number -> base @ 1+ 0 gn-consumed }  ok
+{ 0 0 gn' -' >number -> 0 0 gn-string } \ should fail to convert these  ok
+{ 0 0 gn' +' >number -> 0 0 gn-string }  ok
+{ 0 0 gn' .' >number -> 0 0 gn-string }  ok
   ok
 : >number-based  base @ >r base ! >number r> base ! ;  ok
   ok
-{ 0 0 gn' 2' 10 >number-based -> 2 0 gn-consumed } Stack underflow
-{ 0 0 gn' 2'  2 >number-based -> 0 0 gn-string } Stack underflow
-{ 0 0 gn' f' 10 >number-based -> f 0 gn-consumed } Stack underflow
-{ 0 0 gn' g' 10 >number-based -> 0 0 gn-string } Stack underflow
-{ 0 0 gn' g' max-base >number-based -> 10 0 gn-consumed } Stack underflow
-{ 0 0 gn' z' max-base >number-based -> 23 0 gn-consumed } Stack underflow
+{ 0 0 gn' 2' 10 >number-based -> 2 0 gn-consumed }  ok
+{ 0 0 gn' 2'  2 >number-based -> 0 0 gn-string }  ok
+{ 0 0 gn' f' 10 >number-based -> f 0 gn-consumed }  ok
+{ 0 0 gn' g' 10 >number-based -> 0 0 gn-string }  ok
+{ 0 0 gn' g' max-base >number-based -> 10 0 gn-consumed }  ok
+{ 0 0 gn' z' max-base >number-based -> 23 0 gn-consumed }  ok
   ok
 \ ud should equal ud' and len should be zero.  ok
 : gn1  ( ud base -- ud' len )   compiled
@@ -1196,60 +1196,60 @@ create gn-buf 0 c,  ok
    <# #s #>  compiled
    0 0 2swap >number swap drop  \ return length only  compiled
    r> base ! ;  ok
-{ 0 0 2 gn1 -> 0 0 0 } Stack underflow
-{ max-uint 0 2 gn1 -> max-uint 0 0 } Stack underflow
-{ max-uint dup 2 gn1 -> max-uint dup 0 } Stack underflow
-{ 0 0 max-base gn1 -> 0 0 0 } Stack underflow
-{ max-uint 0 max-base gn1 -> max-uint 0 0 } Stack underflow
-{ max-uint dup max-base gn1 -> max-uint dup 0 } Stack underflow
+{ 0 0 2 gn1 -> 0 0 0 }  ok
+{ max-uint 0 2 gn1 -> max-uint 0 0 }  ok
+{ max-uint dup 2 gn1 -> max-uint dup 0 }  ok
+{ 0 0 max-base gn1 -> 0 0 0 }  ok
+{ max-uint 0 max-base gn1 -> max-uint 0 0 }  ok
+{ max-uint dup max-base gn1 -> max-uint dup 0 } INCORRECT RESULT: { max-uint dup max-base gn1 -> max-uint dup 0 } ACTUAL RESULT: { 40C3 -52E5 0 } ok
   ok
 : gn2 ( -- 16 10 )  compiled
    base @ >r  hex base @  decimal base @  r> base ! ;  ok
-{ gn2 -> 10 a } Stack underflow
+{ gn2 -> 10 a }  ok
   ok
   ok
 \ ------------------------------------------------------------------------  ok
 testing action-of defer defer! defer@ is  ok
   ok
-{ defer defer1 -> } Stack underflow
-{ : action-defer1 action-of defer1 ; -> } Stack underflow
-{ ' * ' defer1 defer! ->   } Stack underflow
-{          2 3 defer1 -> 6 } Stack underflow
-{ action-of defer1 -> ' * }  Stack underflow
-{    action-defer1 -> ' * } Stack underflow
+{ defer defer1 -> }  ok
+{ : action-defer1 action-of defer1 ; -> }  ok
+{ ' * ' defer1 defer! ->   }  ok
+{          2 3 defer1 -> 6 }  ok
+{ action-of defer1 -> ' * }   ok
+{    action-defer1 -> ' * }  ok
   ok
-{ ' + is defer1 ->   } Stack underflow
-{    1 2 defer1 -> 3 }  Stack underflow
-{ action-of defer1 -> ' + } Stack underflow
-{    action-defer1 -> ' + } Stack underflow
+{ ' + is defer1 ->   }  ok
+{    1 2 defer1 -> 3 }   ok
+{ action-of defer1 -> ' + }  ok
+{    action-defer1 -> ' + }  ok
   ok
-{ defer defer2 ->   }  Stack underflow
-{ ' * ' defer2 defer! -> } Stack underflow
-{   2 3 defer2 -> 6 } Stack underflow
-{ ' + is defer2 ->   } Stack underflow
-{    1 2 defer2 -> 3 } Stack underflow
+{ defer defer2 ->   }   ok
+{ ' * ' defer2 defer! -> }  ok
+{   2 3 defer2 -> 6 }  ok
+{ ' + is defer2 ->   }  ok
+{    1 2 defer2 -> 3 }  ok
   ok
-{ defer defer3 -> } Stack underflow
-{ ' * ' defer3 defer! -> } Stack underflow
-{ 2 3 defer3 -> 6 } Stack underflow
-{ ' + ' defer3 defer! -> } Stack underflow
-{ 1 2 defer3 -> 3 } Stack underflow
+{ defer defer3 -> }  ok
+{ ' * ' defer3 defer! -> }  ok
+{ 2 3 defer3 -> 6 }  ok
+{ ' + ' defer3 defer! -> }  ok
+{ 1 2 defer3 -> 3 }  ok
   ok
-{ defer defer4 -> } Stack underflow
-{ ' * ' defer4 defer! -> } Stack underflow
-{ 2 3 defer4 -> 6 } Stack underflow
-{ ' defer4 defer@ -> ' * } Stack underflow
+{ defer defer4 -> }  ok
+{ ' * ' defer4 defer! -> }  ok
+{ 2 3 defer4 -> 6 }  ok
+{ ' defer4 defer@ -> ' * }  ok
   ok
-{ ' + is defer4 -> }  Stack underflow
-{ 1 2 defer4 -> 3 }  Stack underflow
-{ ' defer4 defer@ -> ' + } Stack underflow
+{ ' + is defer4 -> }   ok
+{ 1 2 defer4 -> 3 }   ok
+{ ' defer4 defer@ -> ' + }  ok
   ok
-{ defer defer5 -> } Stack underflow
-{ : is-defer5 is defer5 ; -> } Stack underflow
-{ ' * is defer5 -> } Stack underflow
-{ 2 3 defer5 -> 6 } Stack underflow
-{ ' + is-defer5 -> }  Stack underflow
-{ 1 2 defer5 -> 3 } Stack underflow
+{ defer defer5 -> }  ok
+{ : is-defer5 is defer5 ; -> }  ok
+{ ' * is defer5 -> }  ok
+{ 2 3 defer5 -> 6 }  ok
+{ ' + is-defer5 -> }   ok
+{ 1 2 defer5 -> 3 }  ok
   ok
   ok
 \ ------------------------------------------------------------------------  ok
@@ -1259,45 +1259,45 @@ create fbuf 00 c, 00 c, 00 c,  ok
 create sbuf 12 c, 34 c, 56 c,  ok
 : seebuf fbuf c@  fbuf char+ c@  fbuf char+ char+ c@ ;  ok
   ok
-{ fbuf 0 20 fill -> } Stack underflow
-{ seebuf -> 00 00 00 } Stack underflow
+{ fbuf 0 20 fill -> }  ok
+{ seebuf -> 00 00 00 }  ok
   ok
-{ fbuf 1 20 fill -> } Stack underflow
-{ seebuf -> 20 00 00 } Stack underflow
+{ fbuf 1 20 fill -> }  ok
+{ seebuf -> 20 00 00 }  ok
   ok
-{ fbuf 3 20 fill -> } Stack underflow
-{ seebuf -> 20 20 20 } Stack underflow
+{ fbuf 3 20 fill -> }  ok
+{ seebuf -> 20 20 20 }  ok
   ok
-{ fbuf fbuf 3 chars move -> }  \ bizarre special case Stack underflow
-{ seebuf -> 20 20 20 } Stack underflow
+{ fbuf fbuf 3 chars move -> }  \ bizarre special case  ok
+{ seebuf -> 20 20 20 }  ok
   ok
-{ sbuf fbuf 0 chars move -> } Stack underflow
-{ seebuf -> 20 20 20 } Stack underflow
+{ sbuf fbuf 0 chars move -> }  ok
+{ seebuf -> 20 20 20 }  ok
   ok
-{ sbuf fbuf 1 chars move -> } Stack underflow
-{ seebuf -> 12 20 20 } Stack underflow
+{ sbuf fbuf 1 chars move -> }  ok
+{ seebuf -> 12 20 20 }  ok
   ok
-{ sbuf fbuf 3 chars move -> } Stack underflow
-{ seebuf -> 12 34 56 } Stack underflow
+{ sbuf fbuf 3 chars move -> }  ok
+{ seebuf -> 12 34 56 }  ok
   ok
-{ fbuf fbuf char+ 2 chars move -> } Stack underflow
-{ seebuf -> 12 12 34 } Stack underflow
+{ fbuf fbuf char+ 2 chars move -> }  ok
+{ seebuf -> 12 12 34 }  ok
   ok
-{ fbuf char+ fbuf 2 chars move -> } Stack underflow
-{ seebuf -> 12 34 34 } Stack underflow
+{ fbuf char+ fbuf 2 chars move -> }  ok
+{ seebuf -> 12 34 34 }  ok
   ok
 \ CMOVE and CMOVE> propogation tests taken from   ok
 \ https://forth-standard.org/standard/string/CMOVE and .../CMOVEtop  ok
 decimal  ok
 create cmbuf  97 c, 98 c, 99 c, 100 c, \ "abcd"  ok
 : seecmbuf  cmbuf c@  cmbuf char+ c@  cmbuf char+ char+ c@  cmbuf char+ char+ char+ c@ ;  ok
-{ cmbuf dup char+ 3 cmove -> } Stack underflow
-{ seecmbuf -> 97 97 97 97 } \ "aaaa" Stack underflow
+{ cmbuf dup char+ 3 cmove -> }  ok
+{ seecmbuf -> 97 97 97 97 } \ "aaaa"  ok
   ok
 create cmubuf  97 c, 98 c, 99 c, 100 c, \ "abcd"  ok
 : seecmubuf  cmubuf c@  cmubuf char+ c@  cmubuf char+ char+ c@  cmubuf char+ char+ char+ c@ ;  ok
-{ cmubuf dup char+ swap 3 cmove> -> } Stack underflow
-{ seecmubuf -> 100 100 100 100 } \ "dddd" Stack underflow
+{ cmubuf dup char+ swap 3 cmove> -> }  ok
+{ seecmubuf -> 100 100 100 100 } \ "dddd"  ok
   ok
 \ ------------------------------------------------------------------------  ok
 testing output: . ." cr emit space spaces type u.  ok
@@ -1341,39 +1341,39 @@ line 2
 you should see the number ranges of signed and unsigned numbers:
   signed: -8000 7FFF 
 unsigned: 0 FFFF 
-Stack underflow
+ ok
   ok
 \ ------------------------------------------------------------------------  ok
 testing parse-name marker  ok
   ok
 \ Careful editing these, whitespace is significant  ok
-{ parse-name abcd s" abcd" s= -> <true> }  Stack underflow
-{ parse-name   abcde   s" abcde" s= -> <true> } \ test empty parse area  Stack underflow
+{ parse-name abcd s" abcd" s= -> <true> }   ok
+{ parse-name   abcde   s" abcde" s= -> <true> } \ test empty parse area   ok
 { parse-name   ok
-   nip -> 0 }    \ empty line  Stack underflow
+   nip -> 0 }    \ empty line   ok
 { parse-name      ok
-   nip -> 0 }    \ line with white space Stack underflow
+   nip -> 0 }    \ line with white space  ok
 { : parse-name-test ( "name1" "name2" -- n )   compiled
-   parse-name parse-name s= ; -> } Stack underflow
-{ parse-name-test abcd abcd -> <true> }  Stack underflow
-{ parse-name-test  abcd   abcd   -> <true> }  Stack underflow
-{ parse-name-test abcde abcdf -> <false> }  Stack underflow
-{ parse-name-test abcdf abcde -> <false> }  Stack underflow
+   parse-name parse-name s= ; -> }  ok
+{ parse-name-test abcd abcd -> <true> }   ok
+{ parse-name-test  abcd   abcd   -> <true> }   ok
+{ parse-name-test abcde abcdf -> <false> }   ok
+{ parse-name-test abcdf abcde -> <false> }   ok
 { parse-name-test abcde abcde   ok
-    -> <true> }  Stack underflow
+    -> <true> }   ok
 { parse-name-test abcde abcde    ok
-    -> <true> }    \ line with white space Stack underflow
+    -> <true> }    \ line with white space  ok
   ok
 \ There is no official ANSI test for MARKER, added 22. June 2018  ok
 \ TODO There is currently no test for FIND-NAME, taking it on faith here  ok
-{ variable marker_size -> } Stack underflow
-{ unused marker_size ! -> } Stack underflow
-{ marker quarian -> } Stack underflow
+{ variable marker_size -> }  ok
+{ unused marker_size ! -> }  ok
+{ marker quarian -> }  ok
 : marker_test ." Bosh'tet!" ;  ok
-{ marker_test -> } \ should print "Bosh'tet!" Bosh'tet!Stack underflow
-{ quarian -> }  Stack underflow
-{ parse-name marker_test find-name -> 0 }  Stack underflow
-{ marker_size @ unused = -> <true> } Stack underflow
+{ marker_test -> } \ should print "Bosh'tet!" Bosh'tet! ok
+{ quarian -> }   ok
+{ parse-name marker_test find-name -> 0 }   ok
+{ marker_size @ unused = -> <true> } INCORRECT RESULT: { marker_size @ unused = -> <true> } ACTUAL RESULT: { 0 } ok
   ok
 \ ------------------------------------------------------------------------  ok
 testing input: accept  ok
@@ -1392,10 +1392,10 @@ please type up to 80 characters:
 
 { accept-test -> } 
 please type up to 80 characters:
- Stack underflow
+ WRONG NUMBER OF RESULTS: { accept-test -> } ACTUAL RESULT: { 0 } ok
 \ ------------------------------------------------------------------------  ok
 testing dictionary search rules  ok
   ok
-{ : gdx   123 ; : gdx   gdx 234 ; -> } Stack underflow
+{ : gdx   123 ; : gdx   gdx 234 ; -> }  ok
   ok
-{ gdx -> 123 234 } Stack underflow
+{ gdx -> 123 234 }  ok
