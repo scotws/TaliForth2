@@ -869,9 +869,14 @@ hex  ok
 \ ------------------------------------------------------------------------  ok
 testing case of endof endcase  ok
   ok
-: cs1 case 1 of 111 endof  compiled
+: cs1 case   compiled
+   1 of 111 endof  compiled
    2 of 222 endof  compiled
    3 of 333 endof  compiled
+   4 of 444 endof  compiled
+   5 of 555 endof  compiled
+   6 of 666 endof  compiled
+   7 of 777 endof  compiled
    >r 999 r>  compiled
    endcase  compiled
 ;  ok
@@ -879,8 +884,14 @@ testing case of endof endcase  ok
 { 1 cs1 -> 111 }  ok
 { 2 cs1 -> 222 }  ok
 { 3 cs1 -> 333 } INCORRECT RESULT: { 3 cs1 -> 333 } ACTUAL RESULT: { 3 } ok
-{ 4 cs1 -> 999 }  ok
+{ 4 cs1 -> 444 }  ok
+{ 5 cs1 -> 555 }  ok
+{ 6 cs1 -> 666 }  ok
+{ 7 cs1 -> 777 }  ok
+{ 8 cs1 -> 999 } \ default  ok
+  ok
 : cs2 >r case  compiled
+  compiled
    -1 of case r@ 1 of 100 endof  compiled
                 2 of 200 endof  compiled
                 >r -300 r>  compiled
@@ -1024,7 +1035,7 @@ testing defining words: : ; constant variable create does> >body value to  ok
   ok
 { : weird: create does> 1 + does> 2 + ; -> }  ok
 { weird: w1 -> }  ok
-{ ' w1 >body -> here } INCORRECT RESULT: { ' w1 >body -> here } ACTUAL RESULT: { 40A3 } ok
+{ ' w1 >body -> here } INCORRECT RESULT: { ' w1 >body -> here } ACTUAL RESULT: { 41D7 } ok
 { w1 -> here 1 + }  ok
 { w1 -> here 2 + }  ok
   ok

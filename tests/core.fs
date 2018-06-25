@@ -789,9 +789,14 @@ hex
 \ ------------------------------------------------------------------------
 testing case of endof endcase
 
-: cs1 case 1 of 111 endof
+: cs1 case 
+   1 of 111 endof
    2 of 222 endof
    3 of 333 endof
+   4 of 444 endof
+   5 of 555 endof
+   6 of 666 endof
+   7 of 777 endof
    >r 999 r>
    endcase
 ;
@@ -799,8 +804,14 @@ testing case of endof endcase
 { 1 cs1 -> 111 }
 { 2 cs1 -> 222 }
 { 3 cs1 -> 333 }
-{ 4 cs1 -> 999 }
+{ 4 cs1 -> 444 }
+{ 5 cs1 -> 555 }
+{ 6 cs1 -> 666 }
+{ 7 cs1 -> 777 }
+{ 8 cs1 -> 999 } \ default
+
 : cs2 >r case
+
    -1 of case r@ 1 of 100 endof
                 2 of 200 endof
                 >r -300 r>
