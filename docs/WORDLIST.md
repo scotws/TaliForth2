@@ -160,7 +160,7 @@ RTS instruction at the end of each word.
 | STORE | `!` | ANSI core | 25 | **auto** |
 | SWAP | `swap` | ANSI core | 23 | **auto** |
 | TICK | `'` | ANSI core | 31 | **auto** |
-| TO | `to` | ANSI core ext | 95 | *coded* |
+| TO | `to` | ANSI core ext | 95 | **auto** |
 | TO_BODY | `>body` | ANSI core | 91 | **auto** |
 | TO_IN | `>in` | ANSI core | 10 | **auto** |
 | TO_NUMBER | `>number` | ANSI core | 163 | **auto** |
@@ -202,6 +202,6 @@ RTS instruction at the end of each word.
 | ZERO_UNEQUAL | `0<>` | ANSI core ext | 21 | tested |
 
 Found **193** native words in `native_words.asm`.
-Of those, **146** were automatically tested and
-          **1** are not marked as tested at all.
+Of those, **147** were automatically tested and
+          **0** are not marked as tested at all.
 

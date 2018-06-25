@@ -6346,7 +6346,7 @@ z_tick:         rts
 
 
 ; ## TO ( n "name" -- ) or ( "name") "Change a value"
-; ## "to"  coded  ANSI core ext
+; ## "to"  auto  ANSI core ext
         ; """Gives a new value to a, uh, VALUE. One possible Forth
         ; implementation is  ' >BODY !  but given the problems we have
         ; with >BODY on STC Forths, we do this the hard way. Since 
