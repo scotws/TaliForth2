@@ -1024,7 +1024,8 @@ drop -> 0 } \ blank line return zero-length string
 
 \ ------------------------------------------------------------------------
 testing <# # #s #> hold sign base >number hex decimal
-\
+hex
+
 \ compare two strings.
 : s=  ( addr1 c1 addr2 c2 -- t/f ) 
    >r swap r@ = if \ make sure strings have same length
@@ -1054,6 +1055,7 @@ testing <# # #s #> hold sign base >number hex decimal
 { gp4 -> <true> }
 
 24 constant max-base   \ base 2 .. 36
+max-base .( max-base post def: ) . cr  ( TODO TEST )
 : count-bits
    0 0 invert 
    begin 
@@ -1084,20 +1086,41 @@ count-bits 2* constant #bits-ud  \ number of bits in ud
    loop swap drop ;
 { gp6 -> <true> }
 
-: gp7
-   base @ >r  max-base base !
+
+\ Split up long testing word from ANSI Forth in two parts
+\ to figure out what is wrong
+
+\ Test the numbers 0 to 15 in max-base
+: gp7-1
+   base @ >r  
+   max-base base !
    <true>
+
    a 0 do
       i 0 <# #s #>
       1 = swap c@ i 30 + = and and
    loop
-   max-base a do
-      i 0 <# #s #>
-      1 = swap c@ 41 i a - + = and and
-   loop
+   
    r> base ! ;
 
-{ gp7 -> <true> }
+{ gp7-1 -> <true> }
+
+\ Test the numbers 16 to max-base in max-base
+: gp7-2
+   base @ >r  
+   max-base base !
+   <true>
+
+   max-base a do
+      i 0 <# #s #>
+      2dup type cr ( TODO TEST )
+      1 = swap c@ 41 i a - + = and and
+      .s cr ( TODO TEST )
+   loop
+
+   r> base ! ;
+
+{ gp7-2 -> <true> }
 
 \ >number tests
 create gn-buf 0 c,
@@ -1127,15 +1150,18 @@ create gn-buf 0 c,
    <# #s #>
    0 0 2swap >number swap drop  \ return length only
    r> base ! ;
+
 { 0 0 2 gn1 -> 0 0 0 }
 { max-uint 0 2 gn1 -> max-uint 0 0 }
 { max-uint dup 2 gn1 -> max-uint dup 0 }
+
 { 0 0 max-base gn1 -> 0 0 0 }
 { max-uint 0 max-base gn1 -> max-uint 0 0 }
 { max-uint dup max-base gn1 -> max-uint dup 0 }
 
 : gn2 ( -- 16 10 )
    base @ >r  hex base @  decimal base @  r> base ! ;
+
 { gn2 -> 10 a }
 
 

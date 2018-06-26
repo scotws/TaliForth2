@@ -78,112 +78,26 @@ create actual-results  20 cells allot  ok
       dup >r type cr r> >in !  compiled
    else >in ! drop  compiled
    then ;  ok
-\ From: John Hayes S1I  ok
-\ Subject: core.fr  ok
-\ Date: Mon, 27 Nov 95 13:10  ok
+\ ------------------------------------------------------------------------  ok
+testing gforth words: bounds find-name latestxt name>int name>string  ok
   ok
-\ Modified by SamCo 2018-05 for testing Tali Forth 2.  ok
-\ The main change is lowercasing all of the words as Tali  ok
-\ is case sensitive.  ok
+\ Test for COLD not implemented  ok
   ok
-\ (C) 1995 JOHNS HOPKINS UNIVERSITY / APPLIED PHYSICS LABORATORY  ok
-\ MAY BE DISTRIBUTED FREELY AS LONG AS THIS COPYRIGHT NOTICE REMAINS.  ok
-\ VERSION 1.2  ok
-\ THIS PROGRAM TESTS THE CORE WORDS OF AN ANS FORTH SYSTEM.  ok
-\ THE PROGRAM ASSUMES A TWO'S COMPLEMENT IMPLEMENTATION WHERE  ok
-\ THE RANGE OF SIGNED NUMBERS IS -2^(N-1) ... 2^(N-1)-1 AND  ok
-\ THE RANGE OF UNSIGNED NUMBERS IS 0 ... 2^(N)-1.  ok
-\ I HAVEN'T FIGURED OUT HOW TO TEST KEY, QUIT, ABORT, OR ABORT"...  ok
-\ I ALSO HAVEN'T THOUGHT OF A WAY TO TEST ENVIRONMENT?...  ok
+( TODO BOUNDS test missing)  ok
+( TODO FIND-NAME test missing)  ok
+( TODO LATESTXT test missing)  ok
+( TODO NAME>INT test missing)  ok
+( TODO NAME>STRING test missing)  ok
   ok
-testing core words  ok
-hex  ok
   ok
 \ ------------------------------------------------------------------------  ok
-testing basic assumptions  ok
+testing tali-only words: always-native bell compile-only digit? int>name latestnt number 0 1 2  ok
+testing tali-only words: never-native wordsize  ok
+decimal  ok
   ok
-{ -> }     \ Start with clean slate  ok
-( test if any bits are set; answer in base 1 )  ok
-{ : bitsset? if 0 0 else 0 then ; -> }  ok
-{  0 bitsset? -> 0 }   \ zero is all bits clear  ok
-{  1 bitsset? -> 0 0 } \ other number have at least one bit  ok
-{ -1 bitsset? -> 0 0 }  ok
-  ok
-\ ------------------------------------------------------------------------  ok
-testing booleans: and invert or xor  ok
-  ok
-{ 0 0 and -> 0 }  ok
-{ 0 1 and -> 0 }  ok
-{ 1 0 and -> 0 }  ok
-{ 1 1 and -> 1 }  ok
-  ok
-{ 0 invert 1 and -> 1 }  ok
-{ 1 invert 1 and -> 0 }  ok
-  ok
+\ Repeat definitions for standalone testing  ok
 0 constant 0s  ok
 0 invert constant 1s  ok
-  ok
-{ 0s invert -> 1s }  ok
-{ 1s invert -> 0s }  ok
-  ok
-{ 0s 0s and -> 0s }  ok
-{ 0s 1s and -> 0s }  ok
-{ 1s 0s and -> 0s }  ok
-{ 1s 1s and -> 1s }  ok
-  ok
-{ 0s 0s or -> 0s }  ok
-{ 0s 1s or -> 1s }  ok
-{ 1s 0s or -> 1s }  ok
-{ 1s 1s or -> 1s }  ok
-  ok
-{ 0s 0s xor -> 0s }  ok
-{ 0s 1s xor -> 1s }  ok
-{ 1s 0s xor -> 1s }  ok
-{ 1s 1s xor -> 0s }  ok
-  ok
-\ ------------------------------------------------------------------------  ok
-testing 2* 2/ lshift rshift  ok
-  ok
-( we trust 1s, invert, and bitsset?; we will confirm rshift later )  ok
-1s 1 rshift invert constant msb  ok
-{ msb bitsset? -> 0 0 }  ok
-  ok
-{ 0s 2* -> 0s }  ok
-{ 1 2* -> 2 }  ok
-{ 4000 2* -> 8000 }  ok
-{ 1s 2* 1 xor -> 1s }  ok
-{ msb 2* -> 0s }  ok
-  ok
-{ 0s 2/ -> 0s }  ok
-{ 1 2/ -> 0 }  ok
-{ 4000 2/ -> 2000 }  ok
-{ 1s 2/ -> 1s } \ msb propogated  ok
-{ 1s 1 xor 2/ -> 1s }  ok
-{ msb 2/ msb and -> msb }  ok
-  ok
-{ 1 0 lshift -> 1 }  ok
-{ 1 1 lshift -> 2 }  ok
-{ 1 2 lshift -> 4 }  ok
-{ 1 f lshift -> 8000 } \ biggest guaranteed shift  ok
-{ 1s 1 lshift 1 xor -> 1s }  ok
-{ msb 1 lshift -> 0 }  ok
-  ok
-{ 1 0 rshift -> 1 }  ok
-{ 1 1 rshift -> 0 }  ok
-{ 2 1 rshift -> 1 }  ok
-{ 4 2 rshift -> 1 }  ok
-{ 8000 f rshift -> 1 } \ biggest  ok
-{ msb 1 rshift msb and -> 0 }  \ rshift zero fills msbs  ok
-{ msb 1 rshift 2* -> msb }  ok
-  ok
-\ ------------------------------------------------------------------------  ok
-testing comparisons: true false 0= = <> 0< < > u< min max within  ok
-0 invert  constant max-uint  ok
-0 invert 1 rshift  constant max-int  ok
-0 invert 1 rshift invert  constant min-int  ok
-0 invert 1 rshift  constant mid-uint  ok
-0 invert 1 rshift invert  constant mid-uint+1  ok
-  ok
 0s constant <false>  ok
 1s constant <true>  ok
   ok
@@ -1407,6 +1321,64 @@ please type up to 80 characters:
 \ ------------------------------------------------------------------------  ok
 testing dictionary search rules  ok
   ok
-{ : gdx   123 ; : gdx   gdx 234 ; -> }  ok
   ok
-{ gdx -> 123 234 }  ok
+\ All your bases are belong to us  ok
+: digit_all ( -- f )  compiled
+   true  compiled
+   max-base 1+  2 ?do  compiled
+      decimal cr ." Testing base " i . ." : "   compiled
+      i base !  compiled
+      digit_numeral and  dup ."  -> " .  \ print status of base to help find errors  compiled
+   loop ;   ok
+  ok
+  ok
+{ digit_all -> <true> } 
+Testing base 2 : 01 -> -1 
+Testing base 3 : 012 -> -1 
+Testing base 4 : 0123 -> -1 
+Testing base 5 : 01234 -> -1 
+Testing base 6 : 012345 -> -1 
+Testing base 7 : 0123456 -> -1 
+Testing base 8 : 01234567 -> -1 
+Testing base 9 : 012345678 -> -1 
+Testing base 10 : 0123456789 -> -1 
+Testing base 11 : 0123456789 -> -1 
+Testing base 12 : 0123456789 -> -1 
+Testing base 13 : 0123456789 -> -1 
+Testing base 14 : 0123456789 -> -1 
+Testing base 15 : 0123456789 -> -1 
+Testing base 16 : 0123456789 -> -1 
+Testing base 17 : 0123456789 -> -1 
+Testing base 18 : 0123456789 -> -1 
+Testing base 19 : 0123456789 -> -1 
+Testing base 20 : 0123456789 -> -1 
+Testing base 21 : 0123456789 -> -1 
+Testing base 22 : 0123456789 -> -1 
+Testing base 23 : 0123456789 -> -1 
+Testing base 24 : 0123456789 -> -1 
+Testing base 25 : 0123456789 -> -1 
+Testing base 26 : 0123456789 -> -1 
+Testing base 27 : 0123456789 -> -1 
+Testing base 28 : 0123456789 -> -1 
+Testing base 29 : 0123456789 -> -1 
+Testing base 30 : 0123456789 -> -1 
+Testing base 31 : 0123456789 -> -1 
+Testing base 32 : 0123456789 -> -1 
+Testing base 33 : 0123456789 -> -1 
+Testing base 34 : 0123456789 -> -1 
+Testing base 35 : 0123456789 -> -1 
+Testing base 36 : 0123456789 -> -1  ok
+  ok
+  ok
+{ orig-base base ! -> }  ok
+  ok
+  ok
+  ok
+( TODO INT>NAME test missing)  ok
+( TODO LATESTNT test missing)  ok
+( TODO NEVER-NATVE test missing)  ok
+( TODO NUMBER test missing)  ok
+( TODO WORDSIZE test missing)  ok
+( TODO 0 test missing)  ok
+( TODO 1 test missing)  ok
+( TODO 2 test missing)  ok
