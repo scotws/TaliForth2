@@ -1,0 +1,104 @@
+= Manual for Tali Forth 2 for the 65c02
+:doctype: book
+:author: Scot W. Stevenson
+:email: scot.stevenson@gmail.com
+:keywords: forth, 6502, assembler, programming
+:revnumber: ALPHA
+:revdate: 26. June 2018
+:showtitle:
+:icons: font
+:toc: left
+
+Tali Forth 2 is a bare-metal ANSI(ish) Forth for the 65c02 8-bit MPU. It aims
+to be, roughly in order of importance, easy to try out (just run the included
+binary), simple (subroutine threading model), specific (for the 65c02 only), and
+standardized (ANSI Forth). 
+
+[dedication]
+== Dedication
+
+For the crew at 6502.org, who made this possible in more ways than one.
+
+// --------------------------------------------------------
+= Introduction
+
+== Why?
+include::ch_why.adoc[]
+
+== Overview of Tali Forth
+// TODO include file ch_overview_
+
+// --------------------------------------------------------
+= User Guide
+
+== Installing
+// TODO include file ch_installation
+
+== Running
+// TODO include file ch_running
+
+== The Editor
+
+WARNING: Currently, there is no editor included. The plan is to include a simple
+line-based editor in the style of `ed`. 
+
+== The Assembler
+
+WARNING: Currently, there is no assembler included. The plan is to include a simple
+line-based editor in the style of `ed`. 
+
+
+// --------------------------------------------------------
+= Developer Guide
+
+== How Tali Forth works
+// TODO include ch_internals
+
+== Developing
+// TODO include ch_developing
+
+== Future and Long-Term plans
+WARNING: This section is missing.
+
+
+// --------------------------------------------------------
+= Appendix
+
+== FAQ
+include::ch_faq.adoc[]
+
+== Testing Tali Forth 2
+// TODO include file ch_testing
+
+== Thanks
+// TODO include file ch_thanks
+
+[bibliography]
+== References and Further Reading
+
+[[[CHM1]]] "Charles H. Moore: Geek of the Week", redgate Hub 2009
+https://www.red-gate.com/simple-talk/opinion/geek-of-the-week/chuck-moore-geek
+
+[[[EnL]]] _Programming the 65816, including the 6502, 65C02 and 65802_, FEHLT 
+
+[[[EW]]] "Forth: The Hacker's Language", Elliot Williams 
+https://hackaday.com/2017/01/27/forth-the-hackers-language/
+
+[[[JVN]]] _A Beginner's Guide to Forth_, FEHLT
+
+[[[LB1]]] _Starting Forth_, FEHLT 
+
+[[[LB2]]] _Thinking Forth_, FEHLT 
+
+// --------------------------------------------------------
+[colophon]
+== Colophon
+
+The Tali Forth 2 Manual was written with the vi editor in AsciiDoc format,
+formatted to HTML with AsciiDoctor, and version controled with Git.
+
+
+
+
+
+
