@@ -1,0 +1,63 @@
+=== Downloading
+
+Tali Forth 2 lives on GitHub(((GitHub))) at
+https://github.com/scotws/TaliForth2. This is where you will always find the
+current version. You can either clone the code with git(((git))) or simply
+download it. In fact, to just test Tali Forth, all you need is the binary file
+`taliforth-py65mon.bin`.
+
+=== Running 
+
+==== Downloading the py65mon Simulator
+
+Tali was written to run out of the box on the py65mon simulator from
+https://github.com/mnaberez/py65.(((py65mon))) This is a Python(((Python)))
+program that should run on various operating systems. Py65mon is also required
+for testing.
+
+To install py65mon on Linux(((Linux))), use the command 
+
+[source,bash]
+----
+sudo pip install -U py65
+----
+
+If you don't have PIP(((PIP))) installed, you will have to add it first with
+`sudo apt-get install python-pip`. There is a `setup.py` script as part of the
+package.
+
+==== Running the binary
+
+To start the emulator, run:
+
+[source,bash]
+----
+py65mon -m 65c02 -r taliforth-py65mon.bin
+----
+
+Note that the option `-m 65c02` is required, because Tali Forth makes extensive
+use of the additional commands of the CMOS version and will not run on a stock
+6502 MPU.
+
+
+=== Installing on Your Own Hardware
+
+The Tali Forth project started out as a way to run Forth on my own 65c02 computer,
+the Übersquirrel(((Übersquirrel))). Though it soon developed a life of it's own, a
+central aim of the project is to provide a working, modern Forth that people can install
+on their projects. 
+
+[#img_uebersquirrel]
+.The functioning Übersquirrel Mark Zero prototype, August 2013. Photo by Scot W. Stevenson
+image::pics/uebersquirrel.jpg[width=50%]
+
+For this to work, you need to create your own kernel(((kernel))) code to
+replace `platform-py65mon.asm`, the default kernel for use with the
+py65mon(((py65mon))) kernel. By convention, the name should start with
+`platform-`. 
+
+// TODO what belongs in the kernel file
+
+// ==== Hardware Projects that run Tali Forth
+// TODO 
+

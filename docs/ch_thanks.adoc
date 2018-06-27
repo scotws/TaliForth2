@@ -1,0 +1,12 @@
+Tali Forth would never have been possible without the help of a very large
+number of people, very few of whom I have actually even met.
+
+First, there is the crew at http://6502.org[6502.org](((6502.org))) who not
+only helped me build my own actual, working 6502 computer, but also introduced
+me to Forth. Tali would not exist without their inspiration, support, and
+feedback. Thanks, guys.
+
+Special thanks go out to Mike Barry((("Barry, Mike"))) and Lee
+Pivonka((("Pivonka, Lee"))), who both suggested vast improvements to the code
+in size, structure, and speed. And then there is Sam Colwell((("Colwell, Sam"))) 
+who contributed the test suite and a whole lot of code. Thank you, everybody.

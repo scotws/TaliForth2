@@ -435,7 +435,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_dedication">Dedication</a></li>
 <li><a href="#_introduction">Introduction</a>
 <ul class="sectlevel1">
-<li><a href="#_why">Why?</a>
+<li><a href="#_but_why">But why?</a>
 <ul class="sectlevel2">
 <li><a href="#_the_big_picture">The Big Picture</a></li>
 <li><a href="#_forth">Forth</a></li>
@@ -447,10 +447,17 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#_user_guide">User Guide</a>
 <ul class="sectlevel1">
-<li><a href="#_installing">Installing</a></li>
+<li><a href="#_installing_tali_forth">Installing Tali Forth</a>
+<ul class="sectlevel2">
+<li><a href="#_downloading">Downloading</a></li>
 <li><a href="#_running">Running</a></li>
+<li><a href="#_installing_on_your_own_hardware">Installing on Your Own Hardware</a></li>
+</ul>
+</li>
+<li><a href="#_running_tali_forth">Running Tali Forth</a></li>
 <li><a href="#_the_editor">The Editor</a></li>
 <li><a href="#_the_assembler">The Assembler</a></li>
+<li><a href="#_the_disassembler">The Disassembler</a></li>
 </ul>
 </li>
 <li><a href="#_developer_guide">Developer Guide</a>
@@ -500,7 +507,7 @@ standardized (ANSI Forth).</p>
 </div>
 <h1 id="_introduction" class="sect0">Introduction</h1>
 <div class="sect1">
-<h2 id="_why">Why?</h2>
+<h2 id="_but_why">But why?</h2>
 <div class="sectionbody">
 <div class="quoteblock">
 <blockquote>
@@ -694,13 +701,84 @@ commented. And this document tries to explain the internals in more detail.</p>
 </div>
 <h1 id="_user_guide" class="sect0">User Guide</h1>
 <div class="sect1">
-<h2 id="_installing">Installing</h2>
+<h2 id="_installing_tali_forth">Installing Tali Forth</h2>
 <div class="sectionbody">
-
+<div class="sect2">
+<h3 id="_downloading">Downloading</h3>
+<div class="paragraph">
+<p>Tali Forth 2 lives on GitHub at
+<a href="https://github.com/scotws/TaliForth2" class="bare">https://github.com/scotws/TaliForth2</a>. This is where you will always find the
+current version. You can either clone the code with git or simply
+download it. In fact, to just test Tali Forth, all you need is the binary file
+<code>taliforth-py65mon.bin</code>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_running">Running</h3>
+<div class="sect3">
+<h4 id="_downloading_the_py65mon_simulator">Downloading the py65mon Simulator</h4>
+<div class="paragraph">
+<p>Tali was written to run out of the box on the py65mon simulator from
+<a href="https://github.com/mnaberez/py65" class="bare">https://github.com/mnaberez/py65</a>. This is a Python
+program that should run on various operating systems. Py65mon is also required
+for testing.</p>
+</div>
+<div class="paragraph">
+<p>To install py65mon on Linux, use the command</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">sudo pip install -U py65</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you don&#8217;t have PIP installed, you will have to add it first with
+<code>sudo apt-get install python-pip</code>. There is a <code>setup.py</code> script as part of the
+package.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_running_the_binary">Running the binary</h4>
+<div class="paragraph">
+<p>To start the emulator, run:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">py65mon -m 65c02 -r taliforth-py65mon.bin</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note that the option <code>-m 65c02</code> is required, because Tali Forth makes extensive
+use of the additional commands of the CMOS version and will not run on a stock
+6502 MPU.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_installing_on_your_own_hardware">Installing on Your Own Hardware</h3>
+<div class="paragraph">
+<p>The Tali Forth project started out as a way to run Forth on my own 65c02 computer,
+the Übersquirrel. Though it soon developed a life of it&#8217;s own, a
+central aim of the project is to provide a working, modern Forth that people can install
+on their projects.</p>
+</div>
+<div id="img_uebersquirrel" class="imageblock">
+<div class="content">
+<img src="pics/uebersquirrel.jpg" alt="uebersquirrel" width="50%">
+</div>
+<div class="title">Figure 2. The functioning Übersquirrel Mark Zero prototype, August 2013. Photo by Scot W. Stevenson</div>
+</div>
+<div class="paragraph">
+<p>For this to work, you need to create your own kernel code to
+replace <code>platform-py65mon.asm</code>, the default kernel for use with the
+py65mon kernel. By convention, the name should start with
+<code>platform-</code>.</p>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_running">Running</h2>
+<h2 id="_running_tali_forth">Running Tali Forth</h2>
 <div class="sectionbody">
 
 </div>
@@ -739,6 +817,12 @@ line-based editor in the style of <code>ed</code>.
 </tr>
 </table>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_disassembler">The Disassembler</h2>
+<div class="sectionbody">
+
 </div>
 </div>
 <h1 id="_developer_guide" class="sect0">Developer Guide</h1>
@@ -782,6 +866,12 @@ This section is missing.
 As such, it is fondly remembered as a learning experience. You can still find
 it online at GitHub at <a href="https://github.com/scotws/TaliForth" class="bare">https://github.com/scotws/TaliForth</a>.  When
 Tali Forth 2 entered BETA, Tali Forth was discontinued.</p>
+</div>
+<div id="img_talialpha" class="imageblock">
+<div class="content">
+<img src="pics/tali_forth_alpha003.png" alt="tali forth alpha003">
+</div>
+<div class="title">Figure 3. Screenshot of the Tali Forth 1 boot screen, version Alpha 3, April 2014</div>
 </div>
 <div class="admonitionblock warning">
 <table>
@@ -841,7 +931,22 @@ character.</p>
 <div class="sect1">
 <h2 id="_thanks">Thanks</h2>
 <div class="sectionbody">
-
+<div class="paragraph">
+<p>Tali Forth would never have been possible without the help of a very large
+number of people, very few of whom I have actually even met.</p>
+</div>
+<div class="paragraph">
+<p>First, there is the crew at <a href="http://6502.org">6502.org</a> who not
+only helped me build my own actual, working 6502 computer, but also introduced
+me to Forth. Tali would not exist without their inspiration, support, and
+feedback. Thanks, guys.</p>
+</div>
+<div class="paragraph">
+<p>Special thanks go out to Mike Barry and Lee
+Pivonka, who both suggested vast improvements to the code
+in size, structure, and speed. And then there is Sam Colwell
+who contributed the test suite and a whole lot of code. Thank you, everybody.</p>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -873,8 +978,10 @@ character.</p>
 <h2 id="_colophon">Colophon</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The Tali Forth 2 Manual was written with the vi editor in AsciiDoc format,
-formatted to HTML with AsciiDoctor, and version controled with Git.</p>
+<p>The Tali Forth 2 Manual was written with the <a href="https://www.vim.org/">vim</a> editor in
+<a href="https://asciidoctor.org/docs/what-is-asciidoc/">AsciiDoc</a> format, formatted to
+HTML with AsciiDoctor, and version controled with <a href="https://git-scm.com/">Git</a>, all
+under <a href="https://www.ubuntu.com/">Ubuntu</a> Linux 16.04 LTS.</p>
 </div>
 </div>
 </div>
@@ -891,7 +998,7 @@ formatted to HTML with AsciiDoctor, and version controled with Git.</p>
 <div id="footer">
 <div id="footer-text">
 Version ALPHA<br>
-Last updated 2018-06-26 14:44:51 CEST
+Last updated 2018-06-28 00:57:01 CEST
 </div>
 </div>
 </body>

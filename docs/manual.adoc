@@ -19,22 +19,24 @@ standardized (ANSI Forth).
 
 For the crew at 6502.org, who made this possible in more ways than one.
 
+
 // --------------------------------------------------------
 = Introduction
 
-== Why?
+== But why?
 include::ch_why.adoc[]
 
 == Overview of Tali Forth
 // TODO include file ch_overview_
 
+
 // --------------------------------------------------------
 = User Guide
 
-== Installing
-// TODO include file ch_installation
+== Installing Tali Forth
+include::ch_installing.adoc[]
 
-== Running
+== Running Tali Forth
 // TODO include file ch_running
 
 == The Editor
@@ -46,6 +48,9 @@ line-based editor in the style of `ed`.
 
 WARNING: Currently, there is no assembler included. The plan is to include a simple
 line-based editor in the style of `ed`. 
+
+== The Disassembler
+// TODO include file ch_disasm
 
 
 // --------------------------------------------------------
@@ -71,7 +76,7 @@ include::ch_faq.adoc[]
 // TODO include file ch_testing
 
 == Thanks
-// TODO include file ch_thanks
+include::ch_thanks.adoc[]
 
 [bibliography]
 == References and Further Reading
@@ -94,11 +99,8 @@ https://hackaday.com/2017/01/27/forth-the-hackers-language/
 [colophon]
 == Colophon
 
-The Tali Forth 2 Manual was written with the vi editor in AsciiDoc format,
-formatted to HTML with AsciiDoctor, and version controled with Git.
-
-
-
-
-
+The Tali Forth 2 Manual was written with the https://www.vim.org/[vim] editor in
+https://asciidoctor.org/docs/what-is-asciidoc/[AsciiDoc] format, formatted to
+HTML with AsciiDoctor, and version controled with https://git-scm.com/[Git], all
+under https://www.ubuntu.com/[Ubuntu] Linux 16.04 LTS.
 

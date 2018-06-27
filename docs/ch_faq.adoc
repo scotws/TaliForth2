@@ -5,6 +5,10 @@ As such, it is fondly remembered as a learning experience. You can still find
 it online at GitHub(((GitHub))) at https://github.com/scotws/TaliForth.  When
 Tali Forth 2 entered BETA, Tali Forth was discontinued. 
 
+[#img_talialpha]
+.Screenshot of the Tali Forth 1 boot screen, version Alpha 3, April 2014
+image::pics/tali_forth_alpha003.png[]
+
 WARNING: Tali Forth 1 does not receive bug fixes, and not all known bugs(((bugs)))
 are even documented any more. Seriously, switch to Tali Forth 2.
 
