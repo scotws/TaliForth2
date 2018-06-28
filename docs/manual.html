@@ -925,7 +925,32 @@ character.</p>
 <div class="sect1">
 <h2 id="_testing_tali_forth_2">Testing Tali Forth 2</h2>
 <div class="sectionbody">
-
+<div class="paragraph">
+<p>Tali Forth 2 comes with a test suite in the <code>tests</code> folder. It is
+based on the official ANSI test code by John Hayes and was
+first adapted for Tali Forth by Sam Colwell.</p>
+</div>
+<div class="paragraph">
+<p>To run it, switch to that folder and start the <code>talitest.py</code> 
+program with Python3. The tests can take around half an hour to run and produce
+a lot of output, including, at the end, a list of words that didn&#8217;t work. A
+detailed list of results is saved to the file <code>results.txt</code>.  
+<code>talitest.py</code> currently requires the <code>pexpect</code> package.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+During early development, testing was done by hand with a list of words that has
+since been placed in the <code>old</code>  folder. These tests might be still useful if you
+are in the very early stages of developing your own Forth.
+</td>
+</tr>
+</table>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -998,7 +1023,7 @@ under <a href="https://www.ubuntu.com/">Ubuntu</a> Linux 16.04 LTS.</p>
 <div id="footer">
 <div id="footer-text">
 Version ALPHA<br>
-Last updated 2018-06-28 00:57:01 CEST
+Last updated 2018-06-28 16:41:31 CEST
 </div>
 </div>
 </body>

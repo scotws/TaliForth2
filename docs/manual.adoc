@@ -73,7 +73,7 @@ WARNING: This section is missing.
 include::ch_faq.adoc[]
 
 == Testing Tali Forth 2
-// TODO include file ch_testing
+include::ch_tests.adoc[]
 
 == Thanks
 include::ch_thanks.adoc[]
