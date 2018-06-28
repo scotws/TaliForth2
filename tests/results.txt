@@ -556,7 +556,7 @@ testing divide: fm/mod sm/rem um/mod */ */mod / /mod mod  ok
 : ifsym  compiled
    [ -3 2 / -1 = invert ] literal if postpone \ then ;  ok
   ok
-\ th system might do either floored or symmetric division.  ok
+\ the system might do either floored or symmetric division.  ok
 \ since we have already tested m*, fm/mod, and sm/rem we can use them in test.  ok
 iffloored : t/mod  >r s>d r> fm/mod ;  ok
 iffloored : t/     t/mod swap drop ;  ok
@@ -684,7 +684,7 @@ constant 2nda  ok
 constant 1sta  ok
 { 1sta 2nda u< -> <true> }  \ here must grow with allot ...  ok
 { 1sta 1+ -> 2nda }         \ ... by one address unit  ok
-( TODO missing test: negative allot )  ok
+( TODO missing ttest: negative allot )  ok
   ok
 here 1 ,  ok
 here 2 ,  ok
@@ -1177,7 +1177,7 @@ count-bits 2* constant #bits-ud  \ number of bits in ud  ok
    loop  compiled
    r> base ! ;  ok
   ok
-{ gp7 -> <true> } INCORRECT RESULT: { gp7 -> <true> } ACTUAL RESULT: { 0 } ok
+{ gp7 -> <true> }  ok
   ok
 \ >number tests  ok
 create gn-buf 0 c,  ok
@@ -1212,7 +1212,7 @@ create gn-buf 0 c,  ok
 { max-uint dup 2 gn1 -> max-uint dup 0 }  ok
 { 0 0 max-base gn1 -> 0 0 0 }  ok
 { max-uint 0 max-base gn1 -> max-uint 0 0 }  ok
-{ max-uint dup max-base gn1 -> max-uint dup 0 } INCORRECT RESULT: { max-uint dup max-base gn1 -> max-uint dup 0 } ACTUAL RESULT: { 40C3 -52E5 0 } ok
+{ max-uint dup max-base gn1 -> max-uint dup 0 }  ok
   ok
 : gn2 ( -- 16 10 )  compiled
    base @ >r  hex base @  decimal base @  r> base ! ;  ok

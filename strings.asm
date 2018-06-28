@@ -1,7 +1,7 @@
 ; List of Strings for Tali Forth 2
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 01. Apr 2016 (for Liara Forth)
-; This version: 22. Jun 2018
+; This version: 29. Jun 2018
 
 ; This file is included by taliforth.asm 
 
@@ -19,8 +19,8 @@ s_compiled:     .byte " compiled", 0    ; note space at beginning
 
 
 ; ALPHABET STRINGS
-s_abc_lower: .byte "0123456789abcdefghijklmnopqrstuvwyz"
-s_abc_upper: .byte "0123456789ABCDEFGHIJKLMNOPQRSTUVWYZ"
+s_abc_lower: .byte "0123456789abcdefghijklmnopqrstuvwxyz"
+s_abc_upper: .byte "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 
 ; ERROR STRINGS
