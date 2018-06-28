@@ -37,7 +37,7 @@ include::ch_why.adoc[]
 include::ch_installing.adoc[]
 
 == Running Tali Forth
-// TODO include file ch_running
+include::ch_running.adoc[]
 
 == The Editor
 
