@@ -69,6 +69,13 @@ WARNING: This section is missing.
 // --------------------------------------------------------
 = Appendix
 
+== Reporting Problems
+
+The best way to point out a bug or make any other form of a comment is on Tali
+Forth's page on GitHub at https://github.com/scotws/TaliForth2 There, you can
+"open an issue", which allows other people who might have the same problem to
+help even when the author is not available.
+
 == FAQ
 include::ch_faq.adoc[]
 

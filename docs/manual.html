@@ -454,7 +454,17 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_installing_on_your_own_hardware">Installing on Your Own Hardware</a></li>
 </ul>
 </li>
-<li><a href="#_running_tali_forth">Running Tali Forth</a></li>
+<li><a href="#_running_tali_forth">Running Tali Forth</a>
+<ul class="sectlevel2">
+<li><a href="#_booting">Booting</a></li>
+<li><a href="#_command_line_history">Command-Line History</a></li>
+<li><a href="#_words">Words</a></li>
+<li><a href="#_native_compiling">Native compiling</a></li>
+<li><a href="#_underflow_detection">Underflow detection</a></li>
+<li><a href="#_restarting">Restarting</a></li>
+<li><a href="#_gotchas">Gotchas</a></li>
+</ul>
+</li>
 <li><a href="#_the_editor">The Editor</a></li>
 <li><a href="#_the_assembler">The Assembler</a></li>
 <li><a href="#_the_disassembler">The Disassembler</a></li>
@@ -469,6 +479,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#_appendix">Appendix</a>
 <ul class="sectlevel1">
+<li><a href="#_reporting_problems">Reporting Problems</a></li>
 <li><a href="#_faq">FAQ</a>
 <ul class="sectlevel2">
 <li><a href="#_what_does_the_word_fehlt_mean_in_the_code">What does the word "FEHLT" mean in the code?</a></li>
@@ -781,7 +792,301 @@ py65mon kernel. By convention, the name should start with
 <div class="sect1">
 <h2 id="_running_tali_forth">Running Tali Forth</h2>
 <div class="sectionbody">
-
+<div class="sect2">
+<h3 id="_booting">Booting</h3>
+<div class="paragraph">
+<p>Out of the box, Tali Forth boots a minimal kernel 
+to connect to the <code>py65mon</code>  simulator. By default, this stage ends
+with a line such as</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Tali Forth 2 default kernel for py65mon (18. Feb 2018)</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When you port Tali Forth to your own hardware, you&#8217;ll have to include your own
+kernel (and probably should print out a different line).</p>
+</div>
+<div class="paragraph">
+<p>Tali Forth itself boots next, and after setting up various internal
+things, compiles the high level words. This causes a slight delay, depending on
+the number and length of these words. As the last step, Forth should spit out a
+boot string like</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Tali Forth 2 for the 65c02
+Version ALPHA 07. Mar 2018
+Copyright 2014-2018 Scot W. Stevenson
+Tali Forth 2 comes with absolutely NO WARRANTY
+Type 'bye' to exit</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Because these are the last high-level commands Tali Forth executes, this
+functions as a primitive self-test. If you have modified the high level Forth
+words in either <code>forth_words.fs</code> or <code>user_words.fs</code>, the boot process might
+fail with a variant of the error message "unknown word". The built-in, native
+words should always work. For this <code>dump</code>  is a built-in word&#8201;&#8212;&#8201;it is very
+useful for testing.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_command_line_history">Command-Line History</h3>
+<div class="paragraph">
+<p>Tali&#8217;s command line includes a simple, eight-element history function. To
+access the previous entries, press <code>CONTROL-p</code>, to go forward to the next
+entry, press <code>CONTROL-n</code>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_words">Words</h3>
+<div class="paragraph">
+<p>Tali Forth comes with the following Forth words out of the
+box:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>see within to d.r d. ud.r ud. .r u.r */mod */ mod /mod / action-of is defer@
+defer! while until repeat else then if .( ( drop dup swap ! @ over &gt;r r&gt; r@ nip
+rot -rot tuck , c@ c! +! execute emit type . u. ? false true space 0 1 2 2dup
+?dup + - abs dabs and or xor rshift lshift pick char [char] char+ chars cells
+cell+ here 1- 1+ 2* = &lt;&gt; &lt; &gt; 0= 0&lt;&gt; 0&gt; 0&lt; min max 2drop 2swap 2over 2variable
+2r@ 2r&gt; 2&gt;r invert negate dnegate c, bounds spaces bl -trailing /string refill
+accept unused depth key allot create does&gt; variable constant value s&gt;d d&gt;s d-
+d+ erase blank fill find-name ' ['] name&gt;int int&gt;name name&gt;string &gt;body defer
+latestxt latestnt parse-name parse source source-id : ; compile, [ ] 0branch
+branch literal sliteral ." s" postpone immediate compile-only never-native
+always-native nc-limit abort abort" do ?do i j loop +loop exit unloop leave
+recurse quit begin again state evaluate base digit? number &gt;number hex decimal
+count m* um* * um/mod ud/mod sm/rem fm/mod \ move cmove&gt; cmove pad &gt;in &lt;# # #s
+#&gt; hold sign output input cr page at-xy marker words wordsize aligned align
+bell dump .s find word cold bye</pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+During early development, this list might be outdated. To get the current
+list, run <code>words</code> from inside Tali Forth.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Though the list might look unsorted, it actually reflects the priority in the
+dictionary, that is, which words are found first. For instance,
+the native words &#8201;&#8212;&#8201;those coded in assembler&#8201;&#8212;&#8201;always start
+with <code>drop</code> and end with <code>bye</code>. This is the last word that Tali will find in
+the dictionary. <sup class="footnote">[<a id="_footnoteref_2" class="footnote" href="#_footnote_2" title="View footnote.">2</a>]</sup> The words before <code>drop</code> are those that are defined in high-level
+Forth. For more information on individual the words, use the <code>see</code> command.</p>
+</div>
+<div class="paragraph">
+<p>Note that the built-in words are lower case. Newly defined
+words can be in any case and will be distinct&#8201;&#8212;&#8201;<code>KASUMI</code> is a different word
+than  <code>Kasumi</code>.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+This behavior is set to change during BETA, so that upper case Forth words
+are recognized.
+</td>
+</tr>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_the_ansi_standard">The ANSI Standard</h4>
+<div class="paragraph">
+<p>Tali Forth is orientated on ANSI Forth, but (currently) doesn&#8217;t contain the
+complete set of even the core words. Tali also adopted some words from Gforth
+such as <code>bounds</code>. In practical terms, Tali aims to be a subset of Gforth: If a
+program runs on Tali, it should run on Gforth the same way or have a very good
+reason not to.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_tali_specific_words">Tali-Specific Words</h4>
+<div class="paragraph">
+<p>In addition, there are words that are specific to Tali Forth.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">0branch</dt>
+<dd>
+<p><code>( f&#8201;&#8212;&#8201;)</code> Branch if zero. Used internally for branching commands such as <code>if</code>.
+In modern Forths, this is usually replaced by <code>cs-pick</code> and <code>cs-roll</code>; Tali Forth
+might switch to these words in the future.</p>
+</dd>
+<dt class="hdlist1">0</dt>
+<dd>
+<p><code>(&#8201;&#8212;&#8201;0 )</code> Push the number 0 on the Data Stack.</p>
+</dd>
+<dt class="hdlist1">1</dt>
+<dd>
+<p><code>(&#8201;&#8212;&#8201;0 )</code> Push the number 1 on the Data Stack.</p>
+</dd>
+<dt class="hdlist1">2</dt>
+<dd>
+<p><code>(&#8201;&#8212;&#8201;0 )</code> Push the number 2 on the Data Stack.</p>
+</dd>
+<dt class="hdlist1">always-native</dt>
+<dd>
+<p>Mark last word in dictionary so that it is always natively compiled.</p>
+</dd>
+<dt class="hdlist1">bell</dt>
+<dd>
+<p>Ring the terminal bell (ASCII 07).</p>
+</dd>
+<dt class="hdlist1">branch</dt>
+<dd>
+<p>Always take branch. See <code>0branch</code>.</p>
+</dd>
+<dt class="hdlist1">compile-only</dt>
+<dd>
+<p>Mark last word in dictionary as compile-only.</p>
+</dd>
+<dt class="hdlist1">digit?</dt>
+<dd>
+<p><code>( char&#8201;&#8212;&#8201;u f | char f )</code> If character is a digit, convert and set flag to
+<code>true</code>, otherwise return the offending character and a <code>false</code> flag.</p>
+</dd>
+<dt class="hdlist1">input</dt>
+<dd>
+<p>Return the address where the vector for the input routine is
+stored (not the vector itself). Used for input redirection for
+<code>emit</code> and others.</p>
+</dd>
+<dt class="hdlist1">int&gt;name</dt>
+<dd>
+<p><code>( xt&#8201;&#8212;&#8201;nt )</code> Given the execution execution token (xt), return the
+name token (nt).</p>
+</dd>
+<dt class="hdlist1">latestnt</dt>
+<dd>
+<p><code>(&#8201;&#8212;&#8201;nt )</code> Return the last used name token. The Gforth version of this
+word is called <code>latest</code>.</p>
+</dd>
+<dt class="hdlist1">nc-limit</dt>
+<dd>
+<p><code>(&#8201;&#8212;&#8201;addr )</code> Return the address where the threshold value for native
+compiling native compiling is kept. To check the value of this parameter, use <code>nc-limit ?</code>.
+The default value is 20.</p>
+</dd>
+<dt class="hdlist1">never-native</dt>
+<dd>
+<p>Mark most recent word so it is never natively compiled.</p>
+</dd>
+<dt class="hdlist1">number</dt>
+<dd>
+<p><code>( addr u&#8201;&#8212;&#8201;u | d )</code> Convert a string to a number.  Gforth uses
+<code>s&gt;number?</code> and returns a success flag as well.</p>
+</dd>
+<dt class="hdlist1">output</dt>
+<dd>
+<p><code>(&#8201;&#8212;&#8201;addr )</code> Return the address where the vector for the output routine is
+stored (not the vector itself). Used for output redirection for <code>emit</code> and
+others.</p>
+</dd>
+<dt class="hdlist1">uf-strip</dt>
+<dd>
+<p><code>(&#8201;&#8212;&#8201;addr)</code> Return the address where the flag is kept that decides
+if the underflow checks are removed during native compiling. To check the value
+of this flag, use <code>uf-strip ?</code>.</p>
+</dd>
+<dt class="hdlist1">wordsize</dt>
+<dd>
+<p><code>( nt&#8201;&#8212;&#8201;u )</code> Given the name token (nt) of a Forth word, return its
+size in bytes. Used to help tune native compiling.</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_native_compiling">Native compiling</h3>
+<div class="paragraph">
+<p>As the name says, subroutine threaded code encodes the words as a series of
+subroutine jumps. Because of the overhead caused by these jumps, this can make
+the code slow. Therefore, Tali Forth enables native compiling, where the
+machine code from the word itself is included instead of a subroutine jump.</p>
+</div>
+<div class="paragraph">
+<p>The parameter <code>nc-limit</code> sets the limit
+of how small words have to be to be natively compiled. To get the current value
+(usually 20), check the value of the system variable:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>nc-limit ?</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To set a new limit, save the maximal allowed number of bytes in the
+machine code like any other Forth variable:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>40 nc-limit !</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To complete turn off native compiling, set this value to zero.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_underflow_detection">Underflow detection</h3>
+<div class="paragraph">
+<p>When a word tries to access more words on the stack than it is holding, an
+"underflow" error occurs. Whereas Tali Forth 1 didn&#8217;t check
+for these errors, this version does.</p>
+</div>
+<div class="paragraph">
+<p>However, this slows the program down. Because of this, the user can turn off
+underflow detection for words that are natively compiled into new words. To do
+this, set the system variable <code>uf-strip</code> to <code>true</code>. Note this does not turn off
+underflow detection in the built-in words. Also, words with underflow detection
+which are not included in new words through native compiling will also retain
+their tests.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_restarting">Restarting</h3>
+<div class="paragraph">
+<p>Tali Forth has a non-standard word <code>cold</code> that resets the system. Note that
+this doesn&#8217;t erase any data in memory, but just moves the pointers back. When
+in doubt, you might be better off quitting and restarting completely.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_gotchas">Gotchas</h3>
+<div class="paragraph">
+<p>Tali has a 16-bit cell size (use <code>1 cells 8 * .</code> to get the cells size in
+bits with any Forth), which can trip up calculations when compared to the
+<em>de facto</em> standard Gforth with 64 bits. Take this example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>( Gforth )      decimal 1000 100 um* hex swap u. u.  ( returns 186a0 0  ok )
+( Tali Forth)   decimal 1000 100 um* hex swap u. u.  ( returns 86a0 1  ok )</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Tali has to use the upper cell of a double-celled
+number to correctly report the result, while Gforth doesn&#8217;t. If the conversion
+from double to single is only via a <code>drop</code> instruction, this will produce
+different results.</p>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -858,6 +1163,17 @@ This section is missing.
 </div>
 <h1 id="_appendix" class="sect0">Appendix</h1>
 <div class="sect1">
+<h2 id="_reporting_problems">Reporting Problems</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The best way to point out a bug or make any other form of a comment is on Tali
+Forth&#8217;s page on GitHub at <a href="https://github.com/scotws/TaliForth2" class="bare">https://github.com/scotws/TaliForth2</a> There, you can
+"open an issue", which allows other people who might have the same problem to
+help even when the author is not available.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_faq">FAQ</h2>
 <div class="sectionbody">
 <div class="sect2">
@@ -916,7 +1232,7 @@ it to.</p>
 Normandy a character in the <em>Mass
 Effect</em>  universe created by BioWare. This
 software has absolutely nothing to do with either the game or the companies and
-neither do I, expect that I&#8217;ve played the games and enjoyed them.<sup class="footnote">[<a id="_footnoteref_2" class="footnote" href="#_footnote_2" title="View footnote.">2</a>]</sup></p>
+neither do I, expect that I&#8217;ve played the games and enjoyed them.<sup class="footnote">[<a id="_footnoteref_3" class="footnote" href="#_footnote_3" title="View footnote.">3</a>]</sup></p>
 </div>
 </div>
 <div class="sect2">
@@ -1055,13 +1371,16 @@ under <a href="https://www.ubuntu.com/">Ubuntu</a> Linux 16.04 LTS.</p>
 <a href="#_footnoteref_1">1</a>. Rumor has it that there was another MPU called "Z80", but it ended up being a mere footnote.
 </div>
 <div class="footnote" id="_footnote_2">
-<a href="#_footnoteref_2">2</a>. Though I do wish they would tell us what happened to the quarian ark in <em>Andromeda</em>
+<a href="#_footnoteref_2">2</a>. If you&#8217;re going to quit, speed can&#8217;t be that important
+</div>
+<div class="footnote" id="_footnote_3">
+<a href="#_footnoteref_3">3</a>. Though I do wish they would tell us what happened to the quarian ark in <em>Andromeda</em>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
 Version ALPHA<br>
-Last updated 2018-06-28 16:55:05 CEST
+Last updated 2018-06-28 20:43:00 CEST
 </div>
 </div>
 </body>
