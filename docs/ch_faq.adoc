@@ -1,3 +1,9 @@
+=== What does the word "FEHLT" mean in the code?
+
+That's German for "missing". During early development, I used it as a marker
+where stuff had to be added, sort of like another level of "TODO". Since there
+is no English word like that, it's very easy to find with `grep`. 
+
 === What happened to Tali Forth 1?
 
 Tali Forth 1(((Tali Forth 1))), informally just Tali Forth, was my first Forth.

@@ -471,6 +471,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel1">
 <li><a href="#_faq">FAQ</a>
 <ul class="sectlevel2">
+<li><a href="#_what_does_the_word_fehlt_mean_in_the_code">What does the word "FEHLT" mean in the code?</a></li>
 <li><a href="#_what_happened_to_tali_forth_1">What happened to Tali Forth 1?</a></li>
 <li><a href="#_why_does_tali_forth_take_so_long_to_start_up">Why does Tali Forth take so long to start up?</a></li>
 <li><a href="#_who_s_tali">Who&#8217;s "Tali"?</a></li>
@@ -860,6 +861,14 @@ This section is missing.
 <h2 id="_faq">FAQ</h2>
 <div class="sectionbody">
 <div class="sect2">
+<h3 id="_what_does_the_word_fehlt_mean_in_the_code">What does the word "FEHLT" mean in the code?</h3>
+<div class="paragraph">
+<p>That&#8217;s German for "missing". During early development, I used it as a marker
+where stuff had to be added, sort of like another level of "TODO". Since there
+is no English word like that, it&#8217;s very easy to find with <code>grep</code>.</p>
+</div>
+</div>
+<div class="sect2">
 <h3 id="_what_happened_to_tali_forth_1">What happened to Tali Forth 1?</h3>
 <div class="paragraph">
 <p>Tali Forth 1, informally just Tali Forth, was my first Forth.
@@ -964,13 +973,16 @@ number of people, very few of whom I have actually even met.</p>
 <p>First, there is the crew at <a href="http://6502.org">6502.org</a> who not
 only helped me build my own actual, working 6502 computer, but also introduced
 me to Forth. Tali would not exist without their inspiration, support, and
-feedback. Thanks, guys.</p>
+feedback.</p>
 </div>
 <div class="paragraph">
 <p>Special thanks go out to Mike Barry and Lee
 Pivonka, who both suggested vast improvements to the code
 in size, structure, and speed. And then there is Sam Colwell
-who contributed the test suite and a whole lot of code. Thank you, everybody.</p>
+who contributed the test suite and a whole lot of code.</p>
+</div>
+<div class="paragraph">
+<p>Thank you, everybody.</p>
 </div>
 </div>
 </div>
@@ -978,24 +990,50 @@ who contributed the test suite and a whole lot of code. Thank you, everybody.</p
 <h2 id="_references_and_further_reading">References and Further Reading</h2>
 <div class="sectionbody">
 <div class="paragraph">
+<p><a id="FB"></a>[FB] <em>Masterminds of Programming</em>, Federico Biancuzzi,
+O&#8217;Reilly Media 1st edition, 2009.</p>
+</div>
+<div class="paragraph">
 <p><a id="CHM1"></a>[CHM1] "Charles H. Moore: Geek of the Week", redgate Hub 2009
 <a href="https://www.red-gate.com/simple-talk/opinion/geek-of-the-week/chuck-moore-geek" class="bare">https://www.red-gate.com/simple-talk/opinion/geek-of-the-week/chuck-moore-geek</a></p>
 </div>
 <div class="paragraph">
-<p><a id="EnL"></a>[EnL] <em>Programming the 65816, including the 6502, 65C02 and 65802</em>, FEHLT</p>
+<p><a id="CnR"></a>[CnR] <em>Forth Programmer&#8217;s Handbook</em>, Edward K. Conklin, Elizabeth Rather,
+3rd edition 2010</p>
+</div>
+<div class="paragraph">
+<p><a id="DB"></a>[DB] <em>Forth Enzyclopedia</em>, Mitch Derick and Linda Baker,
+Mountain View Press 1982</p>
+</div>
+<div class="paragraph">
+<p><a id="EnL"></a>[EnL] <em>Programming the 65816, including the 6502, 65C02 and 65802</em>,
+David Eyes and Ron Lichty
+(Currently not available from the WDC website)</p>
 </div>
 <div class="paragraph">
 <p><a id="EW"></a>[EW] "Forth: The Hacker&#8217;s Language", Elliot Williams
 <a href="https://hackaday.com/2017/01/27/forth-the-hackers-language/" class="bare">https://hackaday.com/2017/01/27/forth-the-hackers-language/</a></p>
 </div>
 <div class="paragraph">
-<p><a id="JVN"></a>[JVN] <em>A Beginner&#8217;s Guide to Forth</em>, FEHLT</p>
+<p><a id="GK"></a>[GK] "Forth System Comparisons", Guy Kelly, in <em>Forth Dimensions</em> V13N6,
+March/April 1992
+<a href="http://www.forth.org/fd/FD-V13N6.pdf}{http://www.forth.org/fd/FD-V13N6.pdf" class="bare">http://www.forth.org/fd/FD-V13N6.pdf}{http://www.forth.org/fd/FD-V13N6.pdf</a></p>
 </div>
 <div class="paragraph">
-<p><a id="LB1"></a>[LB1] <em>Starting Forth</em>, FEHLT</p>
+<p><a id="JN"></a>[JN] <em>A Beginner&#8217;s Guide to Forth</em>, J.V. Nobel
+<a href="http://galileo.phys.virginia.edu/classes/551.jvn.fall01/primer.htm" class="bare">http://galileo.phys.virginia.edu/classes/551.jvn.fall01/primer.htm</a></p>
 </div>
 <div class="paragraph">
-<p><a id="LB2"></a>[LB2] <em>Thinking Forth</em>, FEHLT</p>
+<p><a id="LB1"></a>[LB1] <em>Starting Forth</em>, Leo Brodie, new edition 2003
+<a href="https://www.forth.com/starting-forth/}{https://www.forth.com/starting-forth/" class="bare">https://www.forth.com/starting-forth/}{https://www.forth.com/starting-forth/</a></p>
+</div>
+<div class="paragraph">
+<p><a id="LB2"></a>[LB2] <em>Thinking Forth</em>, Leo Brodie, 1984
+<a href="http://thinking-forth.sourceforge.net/\#21CENTURY" class="bare">http://thinking-forth.sourceforge.net/\#21CENTURY</a></p>
+</div>
+<div class="paragraph">
+<p><a id="LL"></a>[LL] <em>6502 Assembly Language Programming</em>, Lance A. Leventhal,
+OSBORNE/McGRAW-HILL 1979</p>
 </div>
 </div>
 </div>
@@ -1023,7 +1061,7 @@ under <a href="https://www.ubuntu.com/">Ubuntu</a> Linux 16.04 LTS.</p>
 <div id="footer">
 <div id="footer-text">
 Version ALPHA<br>
-Last updated 2018-06-28 16:41:31 CEST
+Last updated 2018-06-28 16:55:05 CEST
 </div>
 </div>
 </body>

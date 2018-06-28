@@ -80,20 +80,8 @@ include::ch_thanks.adoc[]
 
 [bibliography]
 == References and Further Reading
+include::ch_bibliography.adoc[]
 
-[[[CHM1]]] "Charles H. Moore: Geek of the Week", redgate Hub 2009
-https://www.red-gate.com/simple-talk/opinion/geek-of-the-week/chuck-moore-geek
-
-[[[EnL]]] _Programming the 65816, including the 6502, 65C02 and 65802_, FEHLT 
-
-[[[EW]]] "Forth: The Hacker's Language", Elliot Williams 
-https://hackaday.com/2017/01/27/forth-the-hackers-language/
-
-[[[JVN]]] _A Beginner's Guide to Forth_, FEHLT
-
-[[[LB1]]] _Starting Forth_, FEHLT 
-
-[[[LB2]]] _Thinking Forth_, FEHLT 
 
 // --------------------------------------------------------
 [colophon]
