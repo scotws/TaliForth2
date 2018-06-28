@@ -1,0 +1,189 @@
+[quote, Charles Moore, Masterminds of Programming]
+
+=== Booting
+
+Out of the box, Tali Forth boots a minimal kernel (((kernel)))
+to connect to the `py65mon` (((py65mon))) simulator. By default, this stage ends
+with a line such as
+
+----
+Tali Forth 2 default kernel for py65mon (18. Feb 2018)
+----
+
+When you port Tali Forth to your own hardware, you'll have to include your own
+kernel (and probably should print out a different line).
+
+Tali Forth itself boots next, and after setting up various internal
+things, compiles the high level words. This causes a slight delay, depending on
+the number and length of these words. As the last step, Forth should spit out a
+boot string like
+
+----
+Tali Forth 2 for the 65c02
+Version ALPHA 07. Mar 2018
+Copyright 2014-2018 Scot W. Stevenson
+Tali Forth 2 comes with absolutely NO WARRANTY
+Type 'bye' to exit
+----
+
+Because these are the last high-level commands Tali Forth executes, this
+functions as a primitive self-test. If you have modified the high level Forth
+words in either `forth_words.fs` or `user_words.fs`, the boot process might
+fail with a variant of the error message "unknown word". The built-in, native
+words should always work. For this `dump` (((dump))) is a built-in word -- it is very
+useful for testing.
+
+=== Command-Line History
+                                               
+Tali's command line includes a simple, eight-element history function. To
+access the previous entries, press `CONTROL-p`, to go forward to the next
+entry, press `CONTROL-n`.
+ 
+=== Words
+
+Tali Forth comes with the following Forth words out of the 
+box:
+
+----
+see within to d.r d. ud.r ud. .r u.r */mod */ mod /mod / action-of is defer@
+defer! while until repeat else then if .( ( drop dup swap ! @ over >r r> r@ nip
+rot -rot tuck , c@ c! +! execute emit type . u. ? false true space 0 1 2 2dup
+?dup + - abs dabs and or xor rshift lshift pick char [char] char+ chars cells
+cell+ here 1- 1+ 2* = <> < > 0= 0<> 0> 0< min max 2drop 2swap 2over 2variable
+2r@ 2r> 2>r invert negate dnegate c, bounds spaces bl -trailing /string refill
+accept unused depth key allot create does> variable constant value s>d d>s d-
+d+ erase blank fill find-name ' ['] name>int int>name name>string >body defer
+latestxt latestnt parse-name parse source source-id : ; compile, [ ] 0branch
+branch literal sliteral ." s" postpone immediate compile-only never-native
+always-native nc-limit abort abort" do ?do i j loop +loop exit unloop leave
+recurse quit begin again state evaluate base digit? number >number hex decimal
+count m* um* * um/mod ud/mod sm/rem fm/mod \ move cmove> cmove pad >in <# # #s
+#> hold sign output input cr page at-xy marker words wordsize aligned align
+bell dump .s find word cold bye
+----
+
+NOTE: During early development, this list might be outdated. To get the current
+list, run `words` from inside Tali Forth.
+
+Though the list might look unsorted, it actually reflects the priority in the
+dictionary(((dictionary))), that is, which words are found first. For instance,
+the native words (((native words))) -- those coded in assembler -- always start
+with `drop` and end with `bye`. This is the last word that Tali will find in
+the dictionary. footnote:[If you're going to quit, speed can't be that
+important] The words before `drop` are those that are defined in high-level
+Forth. For more information on individual the words, use the `see` command.
+
+Note that the built-in words are lower case. Newly defined
+words can be in any case and will be distinct -- `KASUMI` is a different word
+than  `Kasumi`.((("Goto, Kasumi")))
+
+WARNING: This behavior is set to change during BETA, so that upper case Forth words
+are recognized.
+                                              
+                                               
+==== The ANSI Standard
+                                   
+Tali Forth is orientated on ANSI Forth, but (currently) doesn't contain the
+complete set of even the core words. Tali also adopted some words from Gforth
+such as `bounds`. In practical terms, Tali aims to be a subset of Gforth: If a
+program runs on Tali, it should run on Gforth the same way or have a very good
+reason not to.
+
+==== Tali-Specific Words
+                                               
+In addition, there are words that are specific to Tali Forth.  
+
+0branch:: `( f -- )` Branch if zero. Used internally for branching commands such as `if`.
+In modern Forths, this is usually replaced by `cs-pick` and `cs-roll`; Tali Forth
+might switch to these words in the future.
+0:: `( -- 0 )` Push the number 0 on the Data Stack.
+1:: `( -- 0 )` Push the number 1 on the Data Stack.
+2:: `( -- 0 )` Push the number 2 on the Data Stack.
+always-native:: Mark last word in dictionary so that it is always natively compiled.
+bell:: Ring the terminal bell (ASCII 07).
+branch:: Always take branch. See `0branch`.
+compile-only:: Mark last word in dictionary as compile-only.
+digit?:: `( char -- u f | char f )` If character is a digit, convert and set flag to
+`true`, otherwise return the offending character and a `false` flag.
+input:: Return the address where the vector for the input routine is
+stored (not the vector itself). Used for input redirection for
+`emit` and others.
+int>name:: `( xt -- nt )` Given the execution execution token (xt), return the
+name token (nt).
+latestnt:: `( -- nt )` Return the last used name token. The Gforth version of this
+ word is called `latest`.
+nc-limit:: `( -- addr )` Return the address where the threshold value for native
+compiling native compiling is kept. To check the value of this parameter, use `nc-limit ?`. 
+The default value is 20.
+never-native:: Mark most recent word so it is never natively compiled.
+number:: `( addr u -- u | d )` Convert a string to a number.  Gforth uses
+`s>number?` and returns a success flag as well.
+output:: `( -- addr )` Return the address where the vector for the output routine is
+stored (not the vector itself). Used for output redirection for `emit` and
+others.
+uf-strip:: `( -- addr)` Return the address where the flag is kept that decides
+if the underflow checks are removed during native compiling. To check the value
+of this flag, use `uf-strip ?`.
+wordsize:: `( nt -- u )` Given the name token (nt) of a Forth word, return its
+size in bytes. Used to help tune native compiling.
+
+=== Native compiling
+
+As the name says, subroutine threaded code encodes the words as a series of
+subroutine jumps. Because of the overhead caused by these jumps, this can make
+the code slow. Therefore, Tali Forth enables native compiling, where the
+machine code from the word itself is included instead of a subroutine jump.
+
+The parameter `nc-limit` sets the limit
+of how small words have to be to be natively compiled. To get the current value
+(usually 20), check the value of the system variable:
+
+----
+nc-limit ?
+----
+
+To set a new limit, save the maximal allowed number of bytes in the
+machine code like any other Forth variable:
+
+----
+40 nc-limit !
+----
+
+To complete turn off native compiling, set this value to zero.
+
+
+=== Underflow detection
+
+When a word tries to access more words on the stack than it is holding, an
+"underflow" error occurs. Whereas Tali Forth 1 didn't check
+for these errors, this version does.
+
+However, this slows the program down. Because of this, the user can turn off
+underflow detection for words that are natively compiled into new words. To do
+this, set the system variable `uf-strip` to `true`. Note this does not turn off
+underflow detection in the built-in words. Also, words with underflow detection
+which are not included in new words through native compiling will also retain
+their tests.
+
+=== Restarting
+
+Tali Forth has a non-standard word `cold` that resets the system. Note that
+this doesn't erase any data in memory, but just moves the pointers back. When
+in doubt, you might be better off quitting and restarting completely.
+
+=== Gotchas
+
+Tali has a 16-bit cell size (use `1 cells 8 * .` to get the cells size in
+bits with any Forth), which can trip up calculations when compared to the
+_de facto_ standard Gforth with 64 bits. Take this example:
+
+----
+( Gforth )      decimal 1000 100 um* hex swap u. u.  ( returns 186a0 0  ok )
+( Tali Forth)   decimal 1000 100 um* hex swap u. u.  ( returns 86a0 1  ok ) 
+----
+
+Tali has to use the upper cell of a double-celled
+number to correctly report the result, while Gforth doesn't. If the conversion
+from double to single is only via a `drop` instruction, this will produce
+different results.
+

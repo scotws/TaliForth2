@@ -1,0 +1,38 @@
+[[[FB]]] _Masterminds of Programming_, Federico Biancuzzi, 
+O'Reilly Media 1st edition, 2009.
+
+[[[CHM1]]] "Charles H. Moore: Geek of the Week", redgate Hub 2009
+https://www.red-gate.com/simple-talk/opinion/geek-of-the-week/chuck-moore-geek
+
+[[[CnR]]] _Forth Programmer's Handbook_, Edward K. Conklin, Elizabeth Rather,
+3rd edition 2010
+
+[[[DB]]] _Forth Enzyclopedia_, Mitch Derick and Linda Baker,
+Mountain View Press 1982
+
+[[[EnL]]] _Programming the 65816, including the 6502, 65C02 and 65802_, 
+David Eyes and Ron Lichty
+(Currently not available from the WDC website) 
+
+[[[EW]]] "Forth: The Hacker's Language", Elliot Williams
+https://hackaday.com/2017/01/27/forth-the-hackers-language/
+
+[[[GK]]] "Forth System Comparisons", Guy Kelly, in _Forth Dimensions_ V13N6, 
+March/April 1992
+http://www.forth.org/fd/FD-V13N6.pdf}{http://www.forth.org/fd/FD-V13N6.pdf
+
+[[[JN]]] _A Beginner's Guide to Forth_, J.V. Nobel
+http://galileo.phys.virginia.edu/classes/551.jvn.fall01/primer.htm
+
+[[[LB1]]] _Starting Forth_, Leo Brodie, new edition 2003
+https://www.forth.com/starting-forth/}{https://www.forth.com/starting-forth/
+
+[[[LB2]]] _Thinking Forth_, Leo Brodie, 1984
+http://thinking-forth.sourceforge.net/\#21CENTURY
+
+[[[LL]]] _6502 Assembly Language Programming_, Lance A. Leventhal,
+OSBORNE/McGRAW-HILL 1979
+
+
+
+

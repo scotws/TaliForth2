@@ -1,47 +1,36 @@
-=== What does the word "FEHLT" mean in the code?
+Why does Tali Forth take so long to start up?::
+        After the default kernel string is printed, you'll notice a short pause that
+        didn't occur with Tali Forth 1. This is because Tali Forth 2 has more words
+        defined in high-level Forth (see `forth_code/forth-words.fs`) than Tali did.
+        The pause happens because they are being compiled on the fly.
 
-That's German for "missing". During early development, I used it as a marker
-where stuff had to be added, sort of like another level of "TODO". Since there
-is no English word like that, it's very easy to find with `grep`. 
+What does the word "FEHLT" mean in the code?::
+        That's German for "missing". During early development, I used it as a marker
+        where stuff had to be added, sort of like another level of "TODO". Since there
+        is no English word like that, it's very easy to find with `grep`. 
 
-=== What happened to Tali Forth 1?
-
-Tali Forth 1(((Tali Forth 1))), informally just Tali Forth, was my first Forth.
-As such, it is fondly remembered as a learning experience. You can still find
-it online at GitHub(((GitHub))) at https://github.com/scotws/TaliForth.  When
-Tali Forth 2 entered BETA, Tali Forth was discontinued. 
+What happened to Tali Forth 1?::
+        Tali Forth 1(((Tali Forth 1))), informally just Tali Forth, was my first Forth.
+        As such, it is fondly remembered as a learning experience. You can still find
+        it online at GitHub(((GitHub))) at https://github.com/scotws/TaliForth.  When
+        Tali Forth 2 entered BETA, Tali Forth was discontinued. 
 
 [#img_talialpha]
 .Screenshot of the Tali Forth 1 boot screen, version Alpha 3, April 2014
-image::pics/tali_forth_alpha003.png[]
+image::pics/tali_forth_alpha003.png[align=center]
 
-WARNING: Tali Forth 1 does not receive bug fixes, and not all known bugs(((bugs)))
-are even documented any more. Seriously, switch to Tali Forth 2.
-
-=== Why does Tali Forth take so long to start up?
-
-After the default kernel string is printed, you'll notice a short pause that
-didn't occur with Tali Forth 1. This is because Tali Forth 2 has more words
-defined in high-level Forth (see `forth_code/forth-words.fs`) than Tali did.
-The pause happens because they are being compiled on the fly.
-
-=== Who's "Tali"?
-
-I like the name, and we're probably not going to have any more kids I can give
-it to.
-
-If it sounds vaguely familiar, you're probably thinking of Tali'Zorah vas
-Normandy((("vas Normandy, Tali'Zorah"))) a character in the _Mass
-Effect_ (((Mass Effect))) universe created by BioWare(((BioWare))). This
-software has absolutely nothing to do with either the game or the companies and
-neither do I, expect that I've played the games and enjoyed them.footnote:[Though I do
-wish they would tell us what happened to the quarian ark in _Andromeda_]
-
-=== And who is "Liara"?(((Liara Forth)))
-
-Liara Forth is a STC Forth for the big sibling of the 6502, the
-65816(((65816))). Tali Forth 1(((Tali Forth 1))) came first, then I wrote Liara
-with that knowledge and learned even more, and now Tali 2 is such much better
-for the experience. Yes, it's another _Mass Effect_ (((Mass Effect)))
-character.
+Who's "Tali"?::
+        I like the name, and we're probably not going to have any more kids I can give
+        it to. If it sounds vaguely familiar, you're probably thinking of Tali'Zorah vas
+        Normandy((("vas Normandy, Tali'Zorah"))) a character in the _Mass
+        Effect_ (((Mass Effect))) universe created by BioWare(((BioWare))). This
+        software has absolutely nothing to do with either the game or the companies and
+        neither do I, expect that I've played the games and enjoyed them.footnote:[Though I do
+        wish they would tell us what happened to the quarian ark in _Andromeda_.]
+And who is "Liara"?(((Liara Forth)))::
+        Liara Forth is a STC Forth for the big sibling of the 6502, the
+        65816(((65816))). Tali Forth 1(((Tali Forth 1))) came first, then I wrote Liara
+        with that knowledge and learned even more, and now Tali 2 is such much better
+        for the experience. Yes, it's another _Mass Effect_ (((Mass Effect)))
+        character.
 
