@@ -255,7 +255,10 @@ Letters, base 21 : aAbBcCdDeEfFgGhHiIjJkK -> -1
 Letters, base 22 : aAbBcCdDeEfFgGhHiIjJkKlL -> -1 
 Letters, base 23 : aAbBcCdDeEfFgGhHiIjJkKlLmM -> -1 
 Letters, base 24 : aAbBcCdDeEfFgGhHiIjJkKlLmMnN -> -1 
-Letters, base 25 : aAbBcCdDeEfFgGhHiIjJkKlLmM
+Letters, base 25 : aAbBcCdDeEfFgGhHiIjJkKlLmMnNoO -> -1 
+Letters, base 26 : aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpP -> -1 
+Letters, base 27 : aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQ -> -1 
+Letters, base 28 : aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPq
 { digit_all -> <true> } 
 Numerals, base 2 : 01 -> -1 
 Numerals, base 3 : 012 -> -1 
@@ -307,11 +310,11 @@ Letters, base 21 : aAbBcCdDeEfFgGhHiIjJkK -> -1
 Letters, base 22 : aAbBcCdDeEfFgGhHiIjJkKlL -> -1 
 Letters, base 23 : aAbBcCdDeEfFgGhHiIjJkKlLmM -> -1 
 Letters, base 24 : aAbBcCdDeEfFgGhHiIjJkKlLmMnN -> -1 
-Letters, base 25 : aAbBcCdDeEfFgGhHiIjJkKlLmMnNoO -> 
--1 
+Letters, base 25 : aAbBcCdDeEfFgGhHiIjJkKlLmMnNoO -> -1 
 Letters, base 26 : aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpP -> -1 
 Letters, base 27 : aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQ -> -1 
-Letters, base 28 : aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrR -> -1 
+Letters, base 28 : aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrR -> 
+-1 
 Letters, base 29 : aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsS -> -1 
 Letters, base 30 : aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStT -> -1 
 Letters, base 31 : aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuU -> -1 
