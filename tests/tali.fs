@@ -32,6 +32,14 @@ decimal
 ( TODO ALWAY-NATIVE test missing)
 ( TODO BELL test missing)
 ( TODO COMPILE-ONLY test missing)
+( TODO INT>NAME test missing)
+( TODO LATESTNT test missing)
+( TODO NEVER-NATVE test missing)
+( TODO NUMBER test missing)
+( TODO WORDSIZE test missing)
+( TODO 0 test missing)
+( TODO 1 test missing)
+( TODO 2 test missing)
 
 
 \ Test for DIGIT? ( char -- u f | char f )
@@ -53,39 +61,69 @@ decimal
       digit_numeral i +  ( addr ) c@ 
       dup emit       \ show user what's happening
       dup digit?  ( char  u | char  f ) 
-      swap 48 +   ( char  f  u | char ) 
+      swap 48 ( ASCII "0" ) +   ( char  f  u | char ) 
       rot =  ( f f )       \ is number what it's supposed to be?
       and  ( f )           \ conversion was signaled as success?
       and                  \ merge with running tab flag
    loop ; 
 
-: digit_letters ( addr -- f ) 
-\ HERE HERE
-   ; 
-
-
-\ All your bases are belong to us
-: digit_all ( -- f )
+: digit_letters ( -- f ) 
    true
-   max-base 1+  2 ?do
-      decimal cr ." Testing base " i . ." : " 
-      i base !
-      digit_numeral and  dup ."  -> " .  \ print status of base to help find errors
+   base @  10 - ( grow index with base)  0 ?do
+      digit_lower i + c@  
+      dup emit
+      dup digit?  
+      swap 97 ( ASCII "a" ) 10 -  +
+      rot = 
+      and and 
+
+      digit_upper i + c@  
+      dup emit
+      dup digit? 
+      swap 65 ( ASCII "A" ) 10 -  +
+      rot = 
+      and and 
    loop ; 
 
+: digit_oneoff ( -- f ) 
+   true 
+   7 0 ?do
+      digit_bad i + c@
+      dup emit
+      digit?  ( char 0 ) 
+      nip invert 
+      and
+   loop ;
+
+
+\ All your bases are belong to us. In theory, we could condense this
+\ code further, because Forth, but it would become harder to understand
+: digit_all ( -- f )
+   true
+
+   max-base 1+  2 ?do
+      decimal cr ." Numerals, base " i . ." : " 
+      i base !
+      digit_numeral and
+      dup ."  -> " .  \ print status of base to help find errors
+   loop 
+   
+   decimal cr
+   max-base 1+  11 ?do
+      decimal cr ." Letters, base " i . ." : " 
+      i base !
+      digit_letters and
+      dup ."  -> " .
+   loop 
+
+   decimal cr
+   max-base 1+ 2 ?do
+      decimal cr ." One-off chars, base " i . ." : " 
+      i base !
+      digit_oneoff and
+      dup ."  -> " . 
+   loop ;
 
 { digit_all -> <true> }
 
-
-{ orig-base base ! -> }
-
-
-
-( TODO INT>NAME test missing)
-( TODO LATESTNT test missing)
-( TODO NEVER-NATVE test missing)
-( TODO NUMBER test missing)
-( TODO WORDSIZE test missing)
-( TODO 0 test missing)
-( TODO 1 test missing)
-( TODO 2 test missing)
+{ decimal -> }

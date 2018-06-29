@@ -56,7 +56,7 @@ RTS instruction at the end of each word.
 | DECIMAL | `decimal` | ANSI core | 6 | **auto** |
 | DEFER | `defer` | ANSI core ext | 50 | **auto** |
 | DEPTH | `depth` | ANSI core | 14 | **auto** |
-| DIGIT_QUESTION | `digit?` | Tali Forth | 56 | tested |
+| DIGIT_QUESTION | `digit?` | Tali Forth | 56 | **auto** |
 | DISASM | `disasm` | Tali Forth | 10 | tested |
 | DNEGATE | `dnegate` | ANSI double | 30 | **auto** |
 | QUESTION_DO | `?do` | ANSI core ext | 96 | **auto** |
@@ -202,6 +202,6 @@ RTS instruction at the end of each word.
 | ZERO_UNEQUAL | `0<>` | ANSI core ext | 21 | tested |
 
 Found **193** native words in `native_words.asm`.
-Of those, **147** were automatically tested and
+Of those, **148** were automatically tested and
           **0** are not marked as tested at all.
 
