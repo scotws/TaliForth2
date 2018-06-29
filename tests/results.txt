@@ -117,15 +117,18 @@ decimal  ok
 ( TODO NEVER-NATVE test missing)  ok
 ( TODO NUMBER test missing)  ok
 ( TODO WORDSIZE test missing)  ok
-( TODO 0 test missing)  ok
-( TODO 1 test missing)  ok
-( TODO 2 test missing)  ok
+  ok
+  ok
+\ Nothing is too trivial for testing!  ok
+{ 0 -> 0 }  ok
+{ 1 -> 1 }  ok
+{ 2 -> 2 }  ok
   ok
   ok
 \ Test for DIGIT? ( char -- u f | char f )  ok
   ok
-{ 36 constant max-base } \ ANSI standard says 2 - 36  ok
-{ base @  constant orig-base }  ok
+{ 36 constant max-base } \ ANSI standard says 2 - 36 WRONG NUMBER OF RESULTS: { 36 constant max-base } \ ANSI standard says 2 - 36 ACTUAL RESULT: { 2 } ok
+{ base @  constant orig-base } WRONG NUMBER OF RESULTS: { base @  constant orig-base } ACTUAL RESULT: { 2 } ok
 { s" 0123456789" ( addr u ) drop  constant digit_numeral -> }  ok
 { s" abcdefghijklmnopqrstuvwxyz" ( addr u ) drop  constant digit_lower -> }  ok
 { s" ABCDEFGHIJKLMNOPQRSTUVWXYZ" ( addr u ) drop  constant digit_upper -> }  ok
@@ -257,8 +260,7 @@ Letters, base 23 : aAbBcCdDeEfFgGhHiIjJkKlLmM -> -1
 Letters, base 24 : aAbBcCdDeEfFgGhHiIjJkKlLmMnN -> -1 
 Letters, base 25 : aAbBcCdDeEfFgGhHiIjJkKlLmMnNoO -> -1 
 Letters, base 26 : aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpP -> -1 
-Letters, base 27 : aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQ -> -1 
-Letters, base 28 : aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPq
+Letters, base 27 : aAb
 { digit_all -> <true> } 
 Numerals, base 2 : 01 -> -1 
 Numerals, base 3 : 012 -> -1 
@@ -312,9 +314,9 @@ Letters, base 23 : aAbBcCdDeEfFgGhHiIjJkKlLmM -> -1
 Letters, base 24 : aAbBcCdDeEfFgGhHiIjJkKlLmMnN -> -1 
 Letters, base 25 : aAbBcCdDeEfFgGhHiIjJkKlLmMnNoO -> -1 
 Letters, base 26 : aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpP -> -1 
-Letters, base 27 : aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQ -> -1 
-Letters, base 28 : aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrR -> 
--1 
+Letters, base 27 : aAbBcCdD
+eEfFgGhHiIjJkKlLmMnNoOpPqQ -> -1 
+Letters, base 28 : aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrR -> -1 
 Letters, base 29 : aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsS -> -1 
 Letters, base 30 : aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStT -> -1 
 Letters, base 31 : aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuU -> -1 

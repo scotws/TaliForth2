@@ -37,9 +37,12 @@ decimal
 ( TODO NEVER-NATVE test missing)
 ( TODO NUMBER test missing)
 ( TODO WORDSIZE test missing)
-( TODO 0 test missing)
-( TODO 1 test missing)
-( TODO 2 test missing)
+
+
+\ Nothing is too trivial for testing!
+{ 0 -> 0 }
+{ 1 -> 1 }
+{ 2 -> 2 }
 
 
 \ Test for DIGIT? ( char -- u f | char f )

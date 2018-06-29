@@ -4762,7 +4762,7 @@ z_number_sign_s:
 
 
 ; ## ONE ( -- n ) "Push the number 1 to the Data Stack"
-; ## "1"  tested  Tali Forth
+; ## "1"  auto  Tali Forth
 xt_one:         
                 dex
                 dex
@@ -6825,7 +6825,7 @@ z_tuck:         rts
 
 
 ; ## TWO ( -- u ) "Push the number 2 to stack"
-; ## "2"  tested  Tali Forth
+; ## "2"  auto  Tali Forth
 xt_two:
                 dex
                 dex
@@ -7761,7 +7761,7 @@ z_xor:          rts
 
 
 ; ## ZERO ( -- 0 ) "Push 0 to Data Stack"
-; ## "0"  tested  Tali Forth
+; ## "0"  auto  Tali Forth
 xt_zero:        
                 dex             ; push
                 dex

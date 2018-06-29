@@ -121,7 +121,7 @@ RTS instruction at the end of each word.
 | NUMBER_SIGN | `#` | ANSI core | 56 | **auto** |
 | NUMBER_SIGN_GREATER | `#>` | ANSI core | 37 | **auto** |
 | NUMBER_SIGN_S | `#s` | ANSI core | 20 | **auto** |
-| ONE | `1` | Tali Forth | 8 | tested |
+| ONE | `1` | Tali Forth | 8 | **auto** |
 | ONE_MINUS | `1-` | ANSI core | 15 | **auto** |
 | ONE_PLUS | `1+` | ANSI core | 13 | **auto** |
 | OR | `or` | ANSI core | 21 | **auto** |
@@ -167,7 +167,7 @@ RTS instruction at the end of each word.
 | TO_R | `>r` | ANSI core | 23 | **auto** |
 | TRUE | `true` | ANSI core ext | 8 | **auto** |
 | TUCK | `tuck` | ANSI core ext | 29 | tested |
-| TWO | `2` | Tali Forth | 8 | tested |
+| TWO | `2` | Tali Forth | 8 | **auto** |
 | TWO_DROP | `2drop` | ANSI core | 11 | **auto** |
 | TWO_DUP | `2dup` | ANSI core | 27 | **auto** |
 | TWO_FETCH | `2@` | ANSI core | 37 | **auto** |
@@ -194,7 +194,7 @@ RTS instruction at the end of each word.
 | WORDS | `words` | ANSI tools | 56 | tested |
 | WORDSIZE | `wordsize` | Tali Forth | 36 | tested |
 | XOR | `xor` | ANSI core | 21 | **auto** |
-| ZERO | `0` | Tali Forth | 6 | tested |
+| ZERO | `0` | Tali Forth | 6 | **auto** |
 | ZERO_BRANCH | `0branch` | Tali Forth | 7 | tested |
 | ZERO_EQUAL | `0=` | ANSI core | 23 | **auto** |
 | ZERO_GREATER | `0>` | ANSI core ext | 23 | tested |
@@ -202,6 +202,6 @@ RTS instruction at the end of each word.
 | ZERO_UNEQUAL | `0<>` | ANSI core ext | 21 | tested |
 
 Found **193** native words in `native_words.asm`.
-Of those, **148** were automatically tested and
+Of those, **151** were automatically tested and
           **0** are not marked as tested at all.
 
