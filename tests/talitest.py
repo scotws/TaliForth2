@@ -23,7 +23,6 @@ This version: 30. June 2018
 import argparse
 import sys
 import time
-#import pexpect
 import py65.monitor as monitor
 from py65.devices.mpu65c02 import MPU as CMOS65C02
 from py65.memory import ObservableMemory
