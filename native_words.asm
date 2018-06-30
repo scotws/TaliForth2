@@ -7540,17 +7540,17 @@ xt_variable:
                 ; there is no "STZ (CP)" so we have to do this the hard
                 ; way
                 lda #0
-                sta (cp)
-                inc cp
-                bne +
-                inc cp+1
-*
-                sta (cp)
-                inc cp
-                bne +
-*
-                inc cp+1
 
+                sta (cp)
+                inc cp
+                bne +
+                inc cp+1
+*
+                sta (cp)
+                inc cp
+                bne +
+                inc cp+1
+*
                 ; Now we need to adjust the length of the complete word by two
                 jsr adjust_z
                 

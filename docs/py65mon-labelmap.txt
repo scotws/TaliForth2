@@ -774,8 +774,8 @@ $99E6 | z_unloop                | native_words.asm:7497
 $99E7 | xt_unused               | native_words.asm:7507
 $99F6 | z_unused                | native_words.asm:7520
 $99F7 | xt_variable             | native_words.asm:7536
-$9A04 | *                       | native_words.asm:7547
-$9A0A | *                       | native_words.asm:7551
+$9A04 | *                       | native_words.asm:7548
+$9A0C | *                       | native_words.asm:7553
 $9A0F | z_variable              | native_words.asm:7557
 $9A10 | xt_word                 | native_words.asm:7574
 $9A17 | *                       | native_words.asm:7578

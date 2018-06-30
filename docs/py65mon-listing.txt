@@ -3591,7 +3591,7 @@
  9A02  E6 01     INC  $01
  9A04  92 00     STA  ($00)
  9A06  E6 00     INC  $00
- 9A08  D0 00     BNE  $9A0A
+ 9A08  D0 02     BNE  $9A0C
  9A0A  E6 01     INC  $01
  9A0C  20 0F 86  JSR  $860F
  9A0F  60        RTS  

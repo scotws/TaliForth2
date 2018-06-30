@@ -47,8 +47,8 @@ decimal
 
 \ Test for DIGIT? ( char -- u f | char f )
 
-{ 36 constant max-base } \ ANSI standard says 2 - 36
-{ base @  constant orig-base }
+{ 36 constant max-base -> } \ ANSI standard says 2 - 36
+{ base @  constant orig-base -> }
 { s" 0123456789" ( addr u ) drop  constant digit_numeral -> }
 { s" abcdefghijklmnopqrstuvwxyz" ( addr u ) drop  constant digit_lower -> }
 { s" ABCDEFGHIJKLMNOPQRSTUVWXYZ" ( addr u ) drop  constant digit_upper -> }
@@ -62,7 +62,7 @@ decimal
    true
    base @  10 min  ( don't go outside chars )  0 ?do
       digit_numeral i +  ( addr ) c@ 
-      dup emit       \ show user what's happening
+      \ dup emit       \ show user what's happening; uncomment for debugging
       dup digit?  ( char  u | char  f ) 
       swap 48 ( ASCII "0" ) +   ( char  f  u | char ) 
       rot =  ( f f )       \ is number what it's supposed to be?
@@ -74,14 +74,14 @@ decimal
    true
    base @  10 - ( grow index with base)  0 ?do
       digit_lower i + c@  
-      dup emit
+      \ dup emit  \ uncomment for debugging
       dup digit?  
       swap 97 ( ASCII "a" ) 10 -  +
       rot = 
       and and 
 
       digit_upper i + c@  
-      dup emit
+      \ dup emit  \ uncomment for debugging
       dup digit? 
       swap 65 ( ASCII "A" ) 10 -  +
       rot = 
@@ -92,7 +92,7 @@ decimal
    true 
    7 0 ?do
       digit_bad i + c@
-      dup emit
+      \ dup emit  \ uncomment for debugging
       digit?  ( char 0 ) 
       nip invert 
       and
@@ -105,26 +105,26 @@ decimal
    true
 
    max-base 1+  2 ?do
-      decimal cr ." Numerals, base " i . ." : " 
+      \ decimal cr ." Numerals, base " i . ." : " 
       i base !
       digit_numeral and
-      dup ."  -> " .  \ print status of base to help find errors
+      \ dup ."  -> " .  \ print status of base to help find errors
    loop 
    
    decimal cr
    max-base 1+  11 ?do
-      decimal cr ." Letters, base " i . ." : " 
+      \ decimal cr ." Letters, base " i . ." : " 
       i base !
       digit_letters and
-      dup ."  -> " .
+      \ dup ."  -> " . \ uncomment for debugging
    loop 
 
    decimal cr
    max-base 1+ 2 ?do
-      decimal cr ." One-off chars, base " i . ." : " 
+      \ decimal cr ." One-off chars, base " i . ." : " 
       i base !
       digit_oneoff and
-      dup ."  -> " . 
+      \ dup ."  -> " .  \ uncomment for debugging
    loop ;
 
 { digit_all -> <true> }
