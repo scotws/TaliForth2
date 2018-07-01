@@ -41,17 +41,17 @@ include::ch_running.adoc[]
 
 == Major Components
 
-=== The Editor
+=== Editor
 
 WARNING: Currently, there is no editor included. The plan is to include a simple
 line-based editor in the style of `ed`. 
 
-=== The Assembler
+=== Assembler
 
 WARNING: Currently, there is no assembler included. The plan is to include a simple
-line-based editor in the style of `ed`. 
+assembler based on Simpler Assembler Notation (SAN).
 
-=== The Disassembler
+=== Disassembler
 include::ch_disasm.adoc[]
 
 

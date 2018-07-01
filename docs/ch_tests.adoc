@@ -3,10 +3,10 @@ based on the official ANSI test code by John Hayes((("Hayes, John"))) and was
 first adapted for Tali Forth by Sam Colwell((("Colwell, Sam"))). 
 
 To run it, switch to that folder and start the `talitest.py` (((talitest.py)))
-program with Python3. The tests can take around half an hour to run and produce
-a lot of output, including, at the end, a list of words that didn't work. A
-detailed list of results is saved to the file `results.txt`.  (((results.txt)))
-`talitest.py` currently requires the `pexpect` package.
+program with Python3. The tests should take only a very few minutes to run and
+produce a lot of output, including, at the end, a list of words that didn't
+work. A detailed list of results is saved to the file `results.txt`.
+(((results.txt)))  
 
 NOTE: During early development, testing was done by hand with a list of words that has
 since been placed in the `old` (((old))) folder. These tests might be still useful if you
