@@ -97,7 +97,7 @@ testing 2* 2/ lshift rshift
 { msb 1 rshift 2* -> msb }
 
 \ ------------------------------------------------------------------------
-testing comparisons: true false 0= = <> 0< < > u< min max within
+testing comparisons: true false 0= 0<> = <> 0< 0> < > u< min max within
 0 invert  constant max-uint
 0 invert 1 rshift  constant max-int
 0 invert 1 rshift invert  constant min-int
@@ -121,6 +121,14 @@ testing comparisons: true false 0= = <> 0< < > u< min max within
 { min-int 0= -> <false> }
 { max-int 0= -> <false> }
 
+{ 0 0<> -> <false> }
+{ 1 0<> -> <true> }
+{ 2 0<> -> <true> }
+{ -1 0<> -> <true> }
+{ max-uint 0<> -> <true> }
+{ min-int 0<> -> <true> }
+{ max-int 0<> -> <true> }
+
 { 0 0 = -> <true> }
 { 1 1 = -> <true> }
 { -1 -1 = -> <true> }
@@ -142,6 +150,12 @@ testing comparisons: true false 0= = <> 0< < > u< min max within
 { min-int 0< -> <true> }
 { 1 0< -> <false> }
 { max-int 0< -> <false> }
+
+{ 0 0> -> <false> }
+{ -1 0> -> <false> }
+{ min-int 0> -> <false> }
+{ 1 0> -> <true> }
+{ max-int 0> -> <true> }
 
 { 0 1 < -> <true> }
 { 1 2 < -> <true> }
@@ -254,7 +268,7 @@ testing comparisons: true false 0= = <> 0< < > u< min max within
 
 \ ------------------------------------------------------------------------
 testing stack ops: 2drop 2dup 2over 2swap ?dup depth drop dup nip over rot -rot 
-testing stack ops: swap pick
+testing stack ops: swap tuck pick
 
 { 1 2 2drop -> }
 { 1 2 2dup -> 1 2 1 2 }
@@ -275,9 +289,11 @@ testing stack ops: swap pick
 { 1 2 3 -rot -> 3 1 2 }
 { 1 2 swap -> 2 1 }
 
-\ Hard to believe, but there is no formal ANSI test for PICK
+\ There is no formal ANSI test for TUCK, this added 01. July 2018
+{ 2 1 tuck -> 1 2 1 }
+
+\ There is no formal ANSI test for PICK, this added 01. July 2018
 \ Note that ANSI's PICK is different from FIG Forth PICK
-\ Added 01. July 2018
 { 1      0 pick -> 1 1 }    \ Defined by standard: 0 PICK is same as DUP
 { 1 2    1 pick -> 1 2 1 }  \ Defined by standard: 1 PICK is same as OVER
 { 1 2 3  2 pick -> 1 2 3 1 }

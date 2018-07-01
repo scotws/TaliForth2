@@ -6830,7 +6830,7 @@ z_true:         rts
 
 
 ; ## TUCK ( b a -- a b a ) "Copy TOS below NOS"
-; ## "tuck"  tested  ANSI core ext
+; ## "tuck"  auto  ANSI core ext
 xt_tuck:        
                 cpx #dsp0-3
                 bmi +
@@ -7910,7 +7910,7 @@ z_zero_equal:   rts
 
 
 ; ## ZERO_GREATER ( n -- f ) "Return a TRUE flag if TOS is positive"
-; ## "0>"  tested   ANSI core ext
+; ## "0>"  auto  ANSI core ext
 .scope
 xt_zero_greater:
                 cpx #dsp0-1
@@ -7958,7 +7958,7 @@ z_zero_less:    rts
 
 
 ; ## ZERO_UNEQUAL ( m -- f ) "Return TRUE flag if not zero"
-; ## "0<>"  tested  ANSI core ext
+; ## "0<>"  core  ANSI core ext
 .scope
 xt_zero_unequal:
                 cpx #dsp0-1
