@@ -467,9 +467,9 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#_major_components">Major Components</a>
 <ul class="sectlevel2">
-<li><a href="#_the_editor">The Editor</a></li>
-<li><a href="#_the_assembler">The Assembler</a></li>
-<li><a href="#_the_disassembler">The Disassembler</a></li>
+<li><a href="#_editor">Editor</a></li>
+<li><a href="#_assembler">Assembler</a></li>
+<li><a href="#_disassembler">Disassembler</a></li>
 </ul>
 </li>
 </ul>
@@ -1099,7 +1099,7 @@ bit address space, it wraps the upper address if we go beyond $FFFF:</p>
 <h2 id="_major_components">Major Components</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_the_editor">The Editor</h3>
+<h3 id="_editor">Editor</h3>
 <div class="admonitionblock warning">
 <table>
 <tr>
@@ -1115,7 +1115,7 @@ line-based editor in the style of <code>ed</code>.
 </div>
 </div>
 <div class="sect2">
-<h3 id="_the_assembler">The Assembler</h3>
+<h3 id="_assembler">Assembler</h3>
 <div class="admonitionblock warning">
 <table>
 <tr>
@@ -1124,14 +1124,14 @@ line-based editor in the style of <code>ed</code>.
 </td>
 <td class="content">
 Currently, there is no assembler included. The plan is to include a simple
-line-based editor in the style of <code>ed</code>.
+assembler based on Simpler Assembler Notation (SAN).
 </td>
 </tr>
 </table>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_the_disassembler">The Disassembler</h3>
+<h3 id="_disassembler">Disassembler</h3>
 <div class="paragraph">
 <p>Tali Forth is currently shipped with a very primitive disasembler, which is
 started with <code>disasm ( addr u&#8201;&#8212;&#8201;)</code>.</p>
@@ -1288,10 +1288,10 @@ first adapted for Tali Forth by Sam Colwell.</p>
 </div>
 <div class="paragraph">
 <p>To run it, switch to that folder and start the <code>talitest.py</code> 
-program with Python3. The tests can take around half an hour to run and produce
-a lot of output, including, at the end, a list of words that didn&#8217;t work. A
-detailed list of results is saved to the file <code>results.txt</code>.  
-<code>talitest.py</code> currently requires the <code>pexpect</code> package.</p>
+program with Python3. The tests should take only a very few minutes to run and
+produce a lot of output, including, at the end, a list of words that didn&#8217;t
+work. A detailed list of results is saved to the file <code>results.txt</code>.
+</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -1411,7 +1411,7 @@ under <a href="https://www.ubuntu.com/">Ubuntu</a> Linux 16.04 LTS.</p>
 <div id="footer">
 <div id="footer-text">
 Version ALPHA<br>
-Last updated 2018-07-01 10:09:59 CEST
+Last updated 2018-07-01 10:21:18 CEST
 </div>
 </div>
 </body>
