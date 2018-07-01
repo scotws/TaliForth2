@@ -476,7 +476,15 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#_developer_guide">Developer Guide</a>
 <ul class="sectlevel1">
-<li><a href="#_how_tali_forth_works">How Tali Forth works</a></li>
+<li><a href="#_how_tali_forth_works">How Tali Forth works</a>
+<ul class="sectlevel2">
+<li><a href="#_stack">Stack</a></li>
+<li><a href="#_dictionary">Dictionary</a></li>
+<li><a href="#_input">Input</a></li>
+<li><a href="#_the_words_code_create_code_and_code_does_code">The Words <code>create</code> and <code>does&gt;</code></a></li>
+<li><a href="#_control_flow">Control Flow</a></li>
+</ul>
+</li>
 <li><a href="#_developing">Developing</a></li>
 <li><a href="#_future_and_long_term_plans">Future and Long-Term plans</a></li>
 </ul>
@@ -1184,7 +1192,852 @@ after the label <code>disassembler:</code>.</p>
 <div class="sect1">
 <h2 id="_how_tali_forth_works">How Tali Forth works</h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="_stack">Stack</h3>
+<div class="paragraph">
+<p>Tali Forth 2 uses the lowest part of the top half of Zero Page
+for the Data Stack (DS). This leaves the lower half of the Zero Page for any
+kernel stuff the user might require. The DS therefore grows towards the initial
+user variables. See the file <code>definitions.asm</code> for details.  Because of the
+danger of underflow, it is recommended that the user kernel&#8217;s
+variables are keep closer to $0100 than to $007f.</p>
+</div>
+<div class="paragraph">
+<p>The X register is used as the Data Stack Pointer (DSP). It
+points to the least significant byte of the current top element of the stack
+("Top of the Stack", TOS).</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+In the first versions of Tali Forth 1, the DSP pointed to the next <em>free</em>
+element of the stack. The new system makes detecting underflow easier and
+parallels the structure of Liara Forth.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Initially, the DSP points to $78, not $7F as might be expected. This provides a
+few bytes as a "floodplain" underflow. The initial value of the
+DSP is defined as <code>dsp0</code> in the code.</p>
+</div>
+<div class="sect3">
+<h4 id="_single_cell_values">Single cell values</h4>
+<div class="paragraph">
+<p>Since the cell size is 16 bits, each stack entry
+consists of two bytes. They are stored little endian (least
+significant byte first). Therefore, the DSP points to the LSB of the current</p>
+</div>
+<div class="paragraph">
+<p>TOS.<sup class="footnote">[<a id="_footnoteref_3" class="footnote" href="#_footnote_3" title="View footnote.">3</a>]</sup></p>
+</div>
+<div class="paragraph">
+<p>Because the DSP points to the current top of the stack, the byte it points to</p>
+</div>
+<div class="paragraph">
+<p>after boot&#8201;&#8212;&#8201;<code>dsp0</code>&#8201;&#8212;&#8201;will never be accessed: The DSP is decremented first
+with two <code>dex</code> instructions, and then the new value is placed on the stack.
+This means that the initial byte is garbage and can be considered part of the
+floodplain.</p>
+</div>
+<div class="literalblock">
+<div class="title">Snapshot of the Data Stack with one entry as Top of the Stack (TOS). The DSP has been increased by one and the value written.</div>
+<div class="content">
+<pre>              +--------------+
+              |          ... |
+              +-            -+
+              |              |   ...
+              +-  (empty)   -+
+              |              |  FE,X
+              +-            -+
+        ...   |              |  FF,X
+              +==============+
+       $0076  |           LSB|  00,X   &lt;-- DSP (X Register)
+              +-    TOS     -+
+       $0077  |           MSB|  01,X
+              +==============+
+       $0078  |  (garbage)   |  02,X   &lt;-- DSP0
+              +--------------+
+       $0079  |              |  03,X
+              + (floodplain) +
+       $007A  |              |  04,X
+              +--------------+</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note that the 65c02 system stack&#8201;&#8212;&#8201;used as the Return Stack (RS) by Tali&#8201;&#8212;&#8201;pushes the MSB on first and then the LSB (preserving little endian), so the
+basic structure is the same for both stacks.</p>
+</div>
+<div class="paragraph">
+<p>Because of this stack design, the second entry ("next on stack", NOS) starts at
+<code>02,X</code> and the third entry ("third on stack", 3OS) at <code>04,X</code>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_underflow_detection_2">Underflow detection</h4>
+<div class="paragraph">
+<p>In contrast to Tali Forth 1, this version contains underflow detection for most
+words. It does this by comparing the Data Stack Pointer (X) to values that it
+must be smaller than (because the stack grows towards 0000). For instance, to
+make sure we have one element on the stack, we write</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>                cpx #dsp0-1
+                bmi okay
+                jmp underflow
+okay:
+                (...)</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For the most common cases, this gives us:</p>
+</div>
+<table class="tableblock frame-all grid-all">
+<caption class="title">Table 1. DSP values for underflow testing</caption>
+<colgroup>
+<col>
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Test for</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock">Pointer offset</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">one element</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><code>dsp0-1</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">two elements</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><code>dsp0-3</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">three elements</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><code>dsp0-5</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock">four elements</p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><code>dsp0-7</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Underflow detection adds seven bytes to the words that have it. However, it
+increases the stability of the program enormously.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_double_cell_values">Double Cell Values</h4>
+<div class="paragraph">
+<p>The double cell is stored on top of the single cell. Note this places the sign
+bit at the beginning of the byte below the DSP.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>              +---------------+
+              |               |
+              +===============+
+              |            LSB|  $0,x   &lt;-- DSP (X Register)
+              +-+  Top Cell  -+
+              |S|          MSB|  $1,x
+              +-+-------------+
+              |            LSB|  $2,x
+              +- Bottom Cell -+
+              |            MSB|  $3,x
+              +===============+</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Tali Forth 2 does not check for overflow, which in normal operation is too rare
+to justify the computing expense.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_dictionary">Dictionary</h3>
+<div class="paragraph">
+<p>Tali Forth 2 follows the traditional model of a Forth dictionary&#8201;&#8212;&#8201;a linked list
+of words terminated with a zero pointer. The headers and code are kept separate
+to allow various tricks in the code.</p>
+</div>
+<div class="sect3">
+<h4 id="_elements_of_the_header">Elements of the Header</h4>
+<div class="paragraph">
+<p>Each header is at least eight byts long:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>              8 bit     8 bit
+               LSB       MSB
+nt_word -&gt;  +--------+--------+
+         +0 | Length | Status |
+            +--------+--------+
+         +2 | Next Header     | nt_next_word
+            +-----------------+
+         +4 | Start of Code   | xt_word
+            +-----------------+
+         +6 | End of Code     | z_word
+            +--------+--------+
+         +8 | Name   |        |
+            +--------+--------+
+            |        |        |
+            +--------+--------+
+            |        |  ...   |
+         +n +--------+--------+</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Each word has a <code>name token</code> (nt, <code>nt_word</code> in the code) that points to the
+first byte of the header. This is the length of the word&#8217;s name string, which
+is limited to 255 characters.</p>
+</div>
+<div class="paragraph">
+<p>The second byte in the header (index 1) is the status byte. It is created by
+the flags defined in the file <code>definitions.asm</code>:</p>
+</div>
+<table class="tableblock frame-all grid-all">
+<caption class="title">Table 2. Header flags</caption>
+<colgroup>
+<col>
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Flag</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Function</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CO</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Compile Only</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>IM</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Immediate Word</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NN</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Never Native Compile</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AN</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Always Native Compile</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>UF</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Underflow dectection</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Note there are currently three bits unused. The status byte is followed by the
+<strong>pointer to the next header</strong> in the linked list, which makes it the name
+token of the next word. A 0000 in this position signales the end of the linked
+list, which by convention is the word <code>bye</code>.</p>
+</div>
+<div class="paragraph">
+<p>This is followed by the current word&#8217;s <strong>execution token</strong> (xt, <code>xt_word</code>) that
+points to the start of the actual code. Some words that have the same
+functionality point to the same code block. The <strong>end of the code</strong> is
+referenced through the next pointer (<code>z_word</code>) to enable native compilation of
+the word if allowed.</p>
+</div>
+<div class="paragraph">
+<p>The <strong>name string</strong> starts at the eighth byte. The string is <em>not</em>
+zero-terminated. By default, the strings of Tali Forth 2 are lower case, but
+case is respected for words the user defines, so <code>quarian</code> is a different word
+than <code>QUARIAN</code>.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+In ALPHA, upper case versions of the ANSI Forth words are not recognized. This is
+to be changed in future versions.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_structure_of_the_header_list">Structure of the Header List</h4>
+<div class="paragraph">
+<p>Tali Forth 2 distinguishes between three different list sources: The <strong>native
+words</strong> that are hard-coded in the file <code>native_words.asm</code>, the <strong>Forth words</strong>
+which are defined as high-level words and then generated at run-time when Tali
+Forth starts up, and <strong>user words</strong> in the file <code>user_words.asm</code>.</p>
+</div>
+<div class="paragraph">
+<p>Tali has an unusually high number of native words in an attempt to make the
+Forth as fast as possible on the 65c02. The first word in the list&#8201;&#8212;&#8201;the one
+that is checked first&#8201;&#8212;&#8201;is always <code>drop</code>, the last one&#8201;&#8212;&#8201;the one checked for
+last&#8201;&#8212;&#8201;is always <code>bye</code>. The words which are (or are assumed to be) used more
+than others come first. Since humans are slow, words that are used more
+interactively like <code>words</code> come later.</p>
+</div>
+<div class="paragraph">
+<p>The list of Forth words ends with the intro strings. This functions as a
+primitive form of a self-test: If you see the welcome message, compilation of
+the Forth words worked.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>   $0000  +-------------------+  ram_start, zpage, user0
+          |  User varliables  |
+          +-------------------+
+          |                   |
+          |  ^  Data Stack    |  &lt;-- dsp
+          |  |                |
+   $0078  +-------------------+  dsp0, stack
+          |                   |
+          |   (Reserved for   |
+          |      kernel)      |
+          |                   |
+   $0100  +===================+
+          |                   |
+          |  ^  Return Stack  |  &lt;-- rsp
+          |  |                |
+   $0200  +-------------------+  rsp0, buffer, buffer0
+          |  |                |
+          |  v  Input Buffer  |
+          |                   |
+   $0300  +-------------------+  cp0
+          |  |                |
+          |  v  Dictionary    |
+          |       (RAM)       |
+          |                   |
+          ~~~~~~~~~~~~~~~~~~~~~  &lt;-- cp
+          |                   |
+          |                   |
+          +-------------------+
+          |                   |
+          | ACCEPT history    |
+          |                   |
+   $7FFF  #####################  ram_end
+   $8000  |                   |  forth, code0
+          |                   |
+          |                   |
+          |    Tali Forth     |
+          |     (24 KiB)      |
+          |                   |
+          |                   |
+   $E000  +-------------------+
+          |                   |  kernel_putc, kernel_getc
+          |      Kernel       |
+          |                   |
+   $F000  +-------------------+
+          |   I/O addresses   |
+          +-------------------+
+          |                   |
+          |      Kernel       |
+          |                   |
+   $FFFA  +-------------------+
+          |  65c02 vectors    |
+   $FFFF  +-------------------+</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note that some of these values are hard-coded into the test suite; see the file
+<code>definitions.txt</code> for details.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_input">Input</h3>
+<div class="paragraph">
+<p>Tali Forth 2, like Liara Forth, follows the ANSI input model with <code>refill</code>
+instead of older forms. There are up to four possible input sources in Forth:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The keyboard ("user input device")</p>
+</li>
+<li>
+<p>A character string in memory</p>
+</li>
+<li>
+<p>A block file</p>
+</li>
+<li>
+<p>A text file</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>To check which one is being used, we first call <code>blk</code> which gives us the number
+of a mass storage block being used, or 0 for the "user input device"
+(keyboard).  In the second case, we use <code>source-id</code> to find out where input is
+coming from: 0 for the keyboard, -1 ($FFFF) for a string in memory, and a
+number <code>n</code> for a file-id.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Since Tali currently doesn&#8217;t support blocks, we can skip the <code>blk</code>
+instruction and go right to <code>source-id</code>.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+One gotcha with Tali Forth&#8217;s input is that current it only sees
+spaces, but not other whitespace, as delimiters. This means that Forth text
+files that are fed to Tali should not contain tabs. This behavior might be
+changed in the future.
+</td>
+</tr>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_booting_2">Booting</h4>
+<div class="paragraph">
+<p>The intial commands after reboot flow into each other: <code>cold</code> to
+<code>abort</code> to <code>quit</code>. This is the same as with pre-ANSI Forths.
+However, <code>quit</code> now calls <code>refill</code> to get the input.
+<code>refill</code> does different things based on which of the four input sources
+(see above) is active:</p>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+Keyboard entry
+</td>
+<td class="hdlist2">
+<p>This is the default. Get line of input via <code>accept</code> and return <code>true</code>
+even if the input string was empty.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>evaluate</code> string
+</td>
+<td class="hdlist2">
+<p>Return a <code>false</code> flag</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Input from a buffer
+</td>
+<td class="hdlist2">
+<p><em>Not implemented at this time</em></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Input from a file
+</td>
+<td class="hdlist2">
+<p><em>Not implemented at this time</em></p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_the_command_line_interface_cli">The Command Line Interface (CLI)</h4>
+<div class="paragraph">
+<p>Tali Forth accepts input lines of up to 256 characters. The address of the
+current input buffer is stored in <code>cib</code>.  The length of the current buffer is
+stored in <code>ciblen</code>&#8201;&#8212;&#8201;this is the address that <code>&gt;in</code> returns.  <code>source</code> by
+default returns <code>cib</code> and <code>ciblen</code> as the address and length of the input
+buffer.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_the_word_code_evaluate_code">The Word <code>evaluate</code></h4>
+<div class="paragraph">
+<p>The word `evaluate`is used to execute commands that are in a string. A simple example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>s" 1 2 + ." evaluate</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Tali Forth uses <code>evaluate</code> to load high-level Forth words from the file
+<code>forth_words.asc</code> and, if present, extra, user-defined words from
+<code>user_words.asc</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_the_words_code_create_code_and_code_does_code">The Words <code>create</code> and <code>does&gt;</code></h3>
+<div class="paragraph">
+<p>The tandem of words <code>create</code> and <code>does&gt;</code> is the most complex, but also most
+powerful part of Forth.  Understanding how it works in Tali Forth is important
+if you want to be able to modify the code. In this text, we walk through the
+generation process for a subroutine threaded code (STC) such as Tali Forth.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+For a more general take, see Brad Rodriguez' series of articles at
+<a href="http://www.bradrodriguez.com/papers/moving3.htm" class="bare">http://www.bradrodriguez.com/papers/moving3.htm</a> There is a discussion of this
+walkthrough at <a href="http://forum.6502.org/viewtopic.php?f=9&amp;t=3153" class="bare">http://forum.6502.org/viewtopic.php?f=9&amp;t=3153</a>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>We start with the following standard example, a high-level Forth version of the
+word <code>constant</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>: constant  ( "name" -- )  create , does&gt; @ ;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We examine this in three phases or "sequences", following Rodriguez (based on
+<a href="#DB">[DB]</a>).</p>
+</div>
+<div class="sect3">
+<h4 id="_sequence_1_compiling_the_word_code_constant_code">Sequence 1: Compiling the Word <code>constant</code></h4>
+<div class="paragraph">
+<p><code>constant</code> is a defining word, one that makes new words. In pseudocode,
+ignoring any compilation to native 65c02 assembler, the above compiles to:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>        jsr CREATE
+        jsr COMMA
+        jsr (DOES&gt;)         ; from DOES&gt;
+   a:   jsr DODOES          ; from DOES&gt;
+   b:   jsr FETCH
+        rts</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To make things easier to explain later, we&#8217;ve added the labels <code>a</code> and
+<code>b</code> in the listing.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+This example uses the traditional word <code>(does&gt;)</code>, which in Tali Forth 2
+is actually an internal routine that does not appear as a separate word. This
+version is easier to explain.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><code>does&gt;</code> is an immediate word that adds not one, but two subroutine jumps, one
+to <code>(does&gt;)</code> and one to <code>dodoes</code>, which is a pre-defined system routine like
+<code>dovar</code>. We&#8217;ll discuss those later.</p>
+</div>
+<div class="paragraph">
+<p>In Tali Forth, a number of words such as <code>defer</code> are
+"hand-compiled", that is, instead of using forth such as</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>: defer create ['] abort , does&gt; @ execute ;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>we write an opimized assembler version ourselves (see the actual <code>defer</code> code).
+In these cases, we need to use <code>(does&gt;)</code> and <code>dodoes</code> instead of <code>does&gt;</code> as
+well.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_sequence_2_executing_the_word_code_constant_code">Sequence 2: Executing the word <code>constant</code></h4>
+<div class="paragraph">
+<p>Now when we execute</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>        42 constant life</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This pushes the <code>rts</code> of the calling routine&#8201;&#8212;&#8201;call it "main"&#8201;&#8212;&#8201;to the
+65c02&#8217;s stack (the Return Stack, as Forth calls it), which now looks like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>        (1) RTS               ; to main routine</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Without going into detail, the first two subroutine jumps of <code>constant</code> give us
+this word:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>        (Header "LIFE")
+        jsr DOVAR               ; in CFA, from LIFE's CREATE
+        4200                    ; in PFA (little-endian)</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Next, we <code>jsr</code> to <code>(does&gt;)</code>. The address that this pushes on the Return Stack
+is the instruction of <code>constant</code> we had labeled <code>a</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>        (2) RTS to CONSTANT ("a")
+        (1) RTS to main routine</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now the tricks start. <code>(does&gt;)</code> takes this address off the stack and uses it to
+replace the <code>dovar jsr</code> target in the CFA of our freshly created <code>life</code> word.
+We now have this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>        (Header "LIFE")
+        jsr a                   ; in CFA, modified by (DOES&gt;)
+   c:   4200                    ; in PFA (little-endian)</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note we added a label <code>c</code>. Now, when <code>(does&gt;)</code> reaches its own <code>rts</code>, it finds
+the <code>rts</code> to the main routine on its stack. This is Good Thing&#8482;, because it
+aborts the execution of the rest of <code>constant</code>, and we don&#8217;t want to do
+<code>dodoes</code> or <code>fetch</code> now. We&#8217;re back at the main routine.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_sequence_3_executing_code_life_code">Sequence 3: Executing <code>life</code></h4>
+<div class="paragraph">
+<p>Now we execute the word <code>life</code> from our "main" program. In a STC Forth
+such as Tali Forth, this executes a subroutine jump.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>        jsr LIFE</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The first thing this call does is push the return address to the main routine
+on the 65c02&#8217;s stack:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>        (1) RTS to main</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The CFA of <code>life</code> executes a subroutine jump to label <code>a</code> in
+<code>constant</code>. This pushes the <code>rts</code> of <code>life</code> on the 65c02&#8217;s
+stack:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>        (2) RTS to LIFE ("c")
+        (1) RTS to main</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This <code>jsr</code> to a lands us at the subroutine jump to <code>dodoes</code>, so the return
+address to <code>constant</code> gets pushed on the stack as well. We had given this
+instruction the label <code>b</code>. After all of this, we have three addresses on the
+65c02&#8217;s stack:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>        (3) RTS to CONSTANT ("b")
+        (2) RTS to LIFE ("c")
+        (1) RTS to main</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>\noindent <code>dodoes</code> pops address <code>b</code> off the 65c02&#8217;s stack and puts it in a nice
+safe place on Zero Page, which we&#8217;ll call <code>z</code>. More on that in a moment. First,
+<code>dodoes</code> pops the <code>rts</code> to <code>life</code>. This is <code>c</code>, the address of the PFA or
+<code>life</code>, where we stored the payload of this constant. Basically, <code>dodoes</code>
+performs a <code>dovar</code> here, and pushes <code>c</code> on the Data Stack. Now all we have left
+on the 65c02&#8217;s stack is the <code>rts</code> to the main routine.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>        [1] RTS to main</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This is where <code>z</code> comes in, the location in Zero Page where we stored address
+<code>b</code> of <code>constant</code>. Remember, this is where the PFA of <code>constant</code> begins, the
+<code>fetch</code> command we had originally codes after <code>does&gt;</code> in the very first
+definition. The really clever part: We perform an indirect <code>jmp</code>&#8201;&#8212;&#8201;not a
+<code>jsr</code>!&#8201;&#8212;&#8201;to this address.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>        jmp (z)</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now the little payload program of <code>constant</code> is executed, the subroutine jump
+to <code>fetch</code>. Since we just put the PFA (<code>c</code>) on the Data Stack, <code>fetch</code> replaces
+this by 42, which is what we were aiming for all along.  And since <code>constant</code>
+ends with a <code>rts</code>, we pull the last remaining address off the 65c02&#8217;s stack,
+which is the return address to the main routine where we started. And that&#8217;s
+all.</p>
+</div>
+<div class="paragraph">
+<p>Put together, this is what we have to code:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>does&gt;</code></dt>
+<dd>
+<p>Compiles a subroutine jump to <code>(does&gt;)</code>, then compiles a subroutine
+jump to <code>dodoes</code>.</p>
+</dd>
+<dt class="hdlist1"><code>(does&gt;)</code></dt>
+<dd>
+<p>Pops the stack (address of subroutine jump to <code>dodoes</code> in
+<code>constant</code>, increase this by one, replace the original <code>dovar</code> jump target in
+<code>life</code>.</p>
+</dd>
+<dt class="hdlist1"><code>dodoes</code></dt>
+<dd>
+<p>Pop stack (PFA of <code>constant</code>), increase address by one, store on
+Zero Page; pop stack (PFA of <code>life</code>), increase by one, store on Data Stack;
+<code>jmp</code> to address we stored in Zero Page.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>Remember we have to increase the addresses by one because of the way <code>jsr</code>
+stores the return address for <code>rts</code> on the stack on the 65c02: It points to the
+third byte of the <code>jsr</code> instruction itself, not the actual return address. This
+can be annoying, because it requires a sequence like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>        inc z
+        bne +
+        inc z+1
+*
+        (...)</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note that with most words in Tali Forth, as any STC Forth, the distinction
+between PFA and CFA is meaningless or at least blurred, because we go native
+anyway. It is only with words generated by <code>create</code> and <code>does&gt;</code> where this
+really makes sense.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_control_flow">Control Flow</h3>
+<div class="sect3">
+<h4 id="_branches">Branches</h4>
+<div class="paragraph">
+<p>For <code>if</code> and <code>then</code>, we need to compile something called a "conditional forward
+branch", traditionally called <code>0branch</code>.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Many Forths now use the words <code>cs-pick</code> and <code>cs-roll</code> instead of the
+<code>branch</code> variants, see
+<a href="http://lars.nocrew.org/forth2012/rationale.html\#rat:tools:CS-PICK" class="bare">http://lars.nocrew.org/forth2012/rationale.html\#rat:tools:CS-PICK</a> Tali Forth
+might switch to this construction in the future.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Then, at run-time, if the
+value on the Data Stack is false (flag is zero), the branch is taken ("branch on
+zero", therefore the name). Execpt that we don&#8217;t have the target of that branch
+yet&#8201;&#8212;&#8201;it will later be added by <code>then</code>. For this to work, we remember
+the address after the <code>0branch</code> instruction during the compilation of
+<code>if</code>. This is put on the Data Stack, so that <code>then</code> knows where to
+compile it&#8217;s address in the second step. Until then, a dummy value is compiled
+after <code>0branch</code> to reserve the space we need.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+This section and the next one are based on a discussion at
+<a href="http://forum.6502.org/viewtopic.php?f=9\&amp;t=3176" class="bare">http://forum.6502.org/viewtopic.php?f=9\&amp;t=3176</a> see there for more detail`s.
+Another take on this subject that handles things a bit differently is at
+<a href="http://blogs.msdn.com/b/ashleyf/archive/2011/02/06/loopty-do-i-loop.aspx" class="bare">http://blogs.msdn.com/b/ashleyf/archive/2011/02/06/loopty-do-i-loop.aspx</a>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>In Forth, this can be realized by</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>        : if  postpone 0branch here 0 , ; immediate</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>and</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>        : then here swap ! ; immediate</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note <code>then</code> doesn&#8217;t actually compile anything at the location in memory where
+it is at. It&#8217;s job is simply to help <code>if</code> out of the mess it created.  If we
+have an <code>else</code>, we have to add an unconditional <code>branch</code> and manipulate the
+address that <code>if</code> left on the Data Stack. The Forth for this is:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>        : else  postpone branch here 0 , here rot ! ; immediate</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note that <code>then</code> has no idea what has just happened, and just like before
+compiles its address where the value on the top of the Data Stack told it to&#8201;&#8212;&#8201;except that this value now comes from <code>else</code>, not <code>if</code>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_loops">Loops</h4>
 
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -1203,7 +2056,7 @@ after the label <code>disassembler:</code>.</p>
 <i class="fa icon-warning" title="Warning"></i>
 </td>
 <td class="content">
-This section is missing.
+This section is missing. See the GitHub page for further details.
 </td>
 </tr>
 </table>
@@ -1264,7 +2117,7 @@ it to. If it sounds vaguely familiar, you&#8217;re probably thinking of Tali&#82
 Normandy a character in the <em>Mass
 Effect</em>  universe created by BioWare. This
 software has absolutely nothing to do with either the game or the companies and
-neither do I, expect that I&#8217;ve played the games and enjoyed them.<sup class="footnote">[<a id="_footnoteref_3" class="footnote" href="#_footnote_3" title="View footnote.">3</a>]</sup></p>
+neither do I, expect that I&#8217;ve played the games and enjoyed them.<sup class="footnote">[<a id="_footnoteref_4" class="footnote" href="#_footnote_4" title="View footnote.">4</a>]</sup></p>
 </dd>
 <dt class="hdlist1">And who is "Liara"?</dt>
 <dd>
@@ -1405,13 +2258,16 @@ under <a href="https://www.ubuntu.com/">Ubuntu</a> Linux 16.04 LTS.</p>
 <a href="#_footnoteref_2">2</a>. If you&#8217;re going to quit, speed can&#8217;t be that important
 </div>
 <div class="footnote" id="_footnote_3">
-<a href="#_footnoteref_3">3</a>. Though I do wish they would tell us what happened to the quarian ark in <em>Andromeda</em>.
+<a href="#_footnoteref_3">3</a>. Try reading that last sentence to a friend who isn&#8217;t into computers. Aren&#8217;t abbreviations fun?
+</div>
+<div class="footnote" id="_footnote_4">
+<a href="#_footnoteref_4">4</a>. Though I do wish they would tell us what happened to the quarian ark in <em>Andromeda</em>.
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
 Version ALPHA<br>
-Last updated 2018-07-01 10:21:18 CEST
+Last updated 2018-07-01 12:15:02 CEST
 </div>
 </div>
 </body>

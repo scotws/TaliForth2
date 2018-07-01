@@ -59,13 +59,13 @@ include::ch_disasm.adoc[]
 = Developer Guide
 
 == How Tali Forth works
-// TODO include ch_internals
+include::ch_internals.adoc[]
 
 == Developing
 // TODO include ch_developing
 
 == Future and Long-Term plans
-WARNING: This section is missing.
+WARNING: This section is missing. See the GitHub page for further details.
 
 
 // --------------------------------------------------------
