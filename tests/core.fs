@@ -253,7 +253,8 @@ testing comparisons: true false 0= = <> 0< < > u< min max within
 { max-int min-int max-int within -> <false> }
 
 \ ------------------------------------------------------------------------
-testing stack ops: 2drop 2dup 2over 2swap ?dup depth drop dup nip over rot -rot swap 
+testing stack ops: 2drop 2dup 2over 2swap ?dup depth drop dup nip over rot -rot 
+testing stack ops: swap pick
 
 { 1 2 2drop -> }
 { 1 2 2dup -> 1 2 1 2 }
@@ -273,6 +274,13 @@ testing stack ops: 2drop 2dup 2over 2swap ?dup depth drop dup nip over rot -rot 
 { 1 2 3 rot -> 2 3 1 }
 { 1 2 3 -rot -> 3 1 2 }
 { 1 2 swap -> 2 1 }
+
+\ Hard to believe, but there is no formal ANSI test for PICK
+\ Note that ANSI's PICK is different from FIG Forth PICK
+\ Added 01. July 2018
+{ 1      0 pick -> 1 1 }    \ Defined by standard: 0 PICK is same as DUP
+{ 1 2    1 pick -> 1 2 1 }  \ Defined by standard: 1 PICK is same as OVER
+{ 1 2 3  2 pick -> 1 2 3 1 }
 
 \ ------------------------------------------------------------------------
 testing >r r> r@ 2>r 2r> 2r@

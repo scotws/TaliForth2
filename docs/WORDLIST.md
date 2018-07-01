@@ -131,7 +131,7 @@ RTS instruction at the end of each word.
 | PAGE | `page` | ANSI facility | 29 | tested |
 | PARSE_NAME | `parse-name` | ANSI core ext | 240 | **auto** |
 | PARSE | `parse` | ANSI core ext | 142 | tested |
-| PICK | `pick` | ANSI core ext | 16 | tested |
+| PICK | `pick` | ANSI core ext | 16 | **auto** |
 | PLUS | `+` | ANSI core | 22 | **auto** |
 | PLUS_STORE | `+!` | ANSI core | 35 | **auto** |
 | POSTPONE | `postpone` | ANSI core | 62 | **auto** |
@@ -202,6 +202,6 @@ RTS instruction at the end of each word.
 | ZERO_UNEQUAL | `0<>` | ANSI core ext | 21 | tested |
 
 Found **193** native words in `native_words.asm`.
-Of those, **156** were automatically tested and
+Of those, **157** were automatically tested and
           **0** are not marked as tested at all.
 

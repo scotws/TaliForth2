@@ -5204,7 +5204,7 @@ z_parse:        rts
 
 
 ; ## PICK ( n n u -- n n n ) "Move element u of the stack to TOS"
-; ## "pick"  tested  ANSI core ext
+; ## "pick"  auto  ANSI core ext
         ; """Take the u-th element out of the stack and put it on TOS,
         ; overwriting the original TOS. 0 PICK is equivalent to DUP, 1 PICK to
         ; OVER. Note that using PICK is considered poor coding form. Also note
