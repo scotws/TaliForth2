@@ -4,7 +4,7 @@
 :email: scot.stevenson@gmail.com
 :keywords: forth, 6502, assembler, programming
 :revnumber: ALPHA
-:revdate: 26. June 2018
+:revdate: 01. July 2018
 :showtitle:
 :icons: font
 :toc: left
@@ -39,18 +39,20 @@ include::ch_installing.adoc[]
 == Running Tali Forth
 include::ch_running.adoc[]
 
-== The Editor
+== Major Components
+
+=== The Editor
 
 WARNING: Currently, there is no editor included. The plan is to include a simple
 line-based editor in the style of `ed`. 
 
-== The Assembler
+=== The Assembler
 
 WARNING: Currently, there is no assembler included. The plan is to include a simple
 line-based editor in the style of `ed`. 
 
-== The Disassembler
-// TODO include file ch_disasm
+=== The Disassembler
+include::ch_disasm.adoc[]
 
 
 // --------------------------------------------------------
