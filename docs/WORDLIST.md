@@ -199,9 +199,9 @@ RTS instruction at the end of each word.
 | ZERO_EQUAL | `0=` | ANSI core | 23 | **auto** |
 | ZERO_GREATER | `0>` | ANSI core ext | 23 | **auto** |
 | ZERO_LESS | `0<` | ANSI core | 19 | **auto** |
-| ZERO_UNEQUAL | `0<>` | ANSI core ext | 21 | *core* |
+| ZERO_UNEQUAL | `0<>` | ANSI core ext | 21 | **auto** |
 
 Found **193** native words in `native_words.asm`.
-Of those, **159** were automatically tested and
-          **1** are not marked as tested at all.
+Of those, **160** were automatically tested and
+          **0** are not marked as tested at all.
 

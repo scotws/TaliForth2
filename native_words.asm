@@ -7958,7 +7958,7 @@ z_zero_less:    rts
 
 
 ; ## ZERO_UNEQUAL ( m -- f ) "Return TRUE flag if not zero"
-; ## "0<>"  core  ANSI core ext
+; ## "0<>"  auto  ANSI core ext
 .scope
 xt_zero_unequal:
                 cpx #dsp0-1
