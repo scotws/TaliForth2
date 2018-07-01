@@ -1,13 +1,7 @@
 #!/usr/bin/python3
 """Talitest creates a py65 65C02 emulator running Tali Forth 2 and
-feeds it tests, saving the results.  This script requires py65 to
-already be installed.  If you don't have it, you can install it from
-https://github.com/mnaberez/py65.git
-
-At this time (2018-06-30) the version of py65 from the above repository
-is required.  The version installed by pip3 is not new enough.  When
-the py65 folks release their next version, you should be able to simply
-install py65 using pip3.
+feeds it tests, saving the results.  This script requires py65 version
+1.1.0 or later already be installed (`pip install --upgrade py65`).
 
 RUNNING     : Run talitest.py from the tests directory.
 
