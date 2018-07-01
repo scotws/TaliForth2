@@ -1,26 +1,30 @@
-\ ------------------------------------------------------------------------
-testing gforth words: bounds find-name latestxt name>int name>string
-\ Test for COLD not implemented
-
-( TODO FIND-NAME test missing)
-( TODO LATESTXT test missing)
-( TODO NAME>INT test missing)
-( TODO NAME>STRING test missing)
-
-{ hex -> }
-{ 1000 10 bounds -> 1010 1000 }
-{ ffff 2 bounds -> 0001 ffff }  \ BOUNDS wraps on Tali with 16 bit address space
-
-\ ------------------------------------------------------------------------
-testing tali-only words: always-native bell compile-only digit? int>name latestnt number 0 1 2
-testing tali-only words: never-native wordsize
-decimal
-
 \ Repeat definitions for standalone testing
 0 constant 0s
 0 invert constant 1s
 0s constant <false>
 1s constant <true>
+
+\ ------------------------------------------------------------------------
+testing gforth words: bounds find-name latestxt name>int name>string
+\ Test for COLD not implemented
+
+( TODO LATESTXT test missing)
+( TODO NAME>INT test missing)
+( TODO NAME>STRING test missing)
+
+\ Test for FIND-NAME assumes that PARSE-NAME has been tested in core.fs
+{ parse-name drop     find-name  0<> -> <true> } \ need to find any nt
+{ parse-name Chatika  find-name  0=  -> <true> } \ shouldn't find Tali's drone
+
+{ hex -> }
+{ 1000 10 bounds -> 1010 1000 }
+{ ffff 2 bounds -> 0001 ffff }  \ BOUNDS wraps on Tali with 16 bit address space
+{ decimal -> }
+
+\ ------------------------------------------------------------------------
+testing tali-only words: always-native bell compile-only digit? int>name latestnt number 0 1 2
+testing tali-only words: never-native wordsize
+decimal
 
 \ Test for 0BRANCH not implemented
 \ Test for BRANCH not implemented

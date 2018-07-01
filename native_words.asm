@@ -1364,7 +1364,7 @@ z_comma:        rts
 
 
 ; ## COMPILE_COMMA ( xt -- ) "Compile xt"
-; ## "compile,"  tested  ANSI core ext
+; ## "compile,"  auto  ANSI core ext
         ; """Compile the given xt in the current word definition. It is an
         ; error if we are not in the compile state. Because we are using
         ; subroutine threading, we can't use , (COMMA) to compile new words
@@ -2819,7 +2819,10 @@ xt_blank:
 
 
 ; ## ERASE ( addr u -- ) "Fill memory region with zeros"
-; ## "erase"  tested  ANSI core ext
+; ## "erase"  auto  ANSI core ext
+        ; """Note that ERASE works with "address" units
+        ; (bytes), not cells.
+        ; """
 .scope
 xt_erase:
                 ; We don't check for underflow here because
@@ -3161,7 +3164,7 @@ z_find:         rts
 
 
 ; ## FIND_NAME ( addr u -- nt|0 ) "Get the name token of input word"
-; ## "find-name"  tested  Gforth
+; ## "find-name"  auto  Gforth
 .scope
 xt_find_name:
         ; """Given a string, find the Name Token (nt) of a word or return

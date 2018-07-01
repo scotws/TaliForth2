@@ -675,7 +675,6 @@ constant a-addr  constant ua-addr
 { pad here - -> FF } \ PAD must have offset of $FF
 { here unused + 3FF + -> 7FFF }
 
-
 :noname dup + ; constant dup+ 
 { : q dup+ compile, ; -> } 
 { : as [ q ] ; -> } 
@@ -1283,7 +1282,7 @@ hex
 { output-test -> }
 
 \ ------------------------------------------------------------------------
-testing parse-name marker
+testing parse-name marker erase
 
 \ Careful editing these, whitespace is significant
 { parse-name abcd s" abcd" s= -> <true> } 
@@ -1314,6 +1313,16 @@ testing parse-name marker
 { parse-name marker_test find-name -> 0 } 
 { marker_size @ unused = -> <true> }
 
+\ There is no official ANSI test of ERASE, added 01. July 2018
+{ create erase_test -> }
+{ 9 c, 1 c, 2 c, 3 c, 9 c, -> }
+{ erase_test 1+ 3 erase -> }  \ Erase bytes between 9 
+{ erase_test            c@ 9 = -> <true> }
+{ erase_test 1 chars +  c@ 0 = -> <true> }
+{ erase_test 2 chars +  c@ 0 = -> <true> }
+{ erase_test 3 chars +  c@ 0 = -> <true> }
+{ erase_test 4 chars +  c@ 9 = -> <true> }
+
 \ ------------------------------------------------------------------------
 testing input: accept
 
@@ -1332,5 +1341,4 @@ create abuf 80 chars allot
 testing dictionary search rules
 
 { : gdx   123 ; : gdx   gdx 234 ; -> }
-
 { gdx -> 123 234 }

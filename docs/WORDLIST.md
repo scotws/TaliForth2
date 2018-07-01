@@ -43,7 +43,7 @@ RTS instruction at the end of each word.
 | COLON | `:` | ANSI core | 55 | **auto** |
 | COLON_NONAME | `:NONAME` | ANSI core | 29 | **auto** |
 | COMMA | `,` | ANSI core | 29 | **auto** |
-| COMPILE_COMMA | `compile,` | ANSI core ext | 283 | tested |
+| COMPILE_COMMA | `compile,` | ANSI core ext | 283 | **auto** |
 | COMPILE_ONLY | `compile-only` | Tali Forth | 8 | tested |
 | CONSTANT | `constant` | ANSI core | 65 | **auto** |
 | COUNT | `count` | ANSI core | 23 | **auto** |
@@ -71,7 +71,7 @@ RTS instruction at the end of each word.
 | EMIT | `emit` | ANSI core | 14 | **auto** |
 | EQUAL | `=` | ANSI core | 31 | **auto** |
 | BLANK | `blank` | ANSI string | 86 | **auto** |
-| ERASE | `erase` | ANSI core ext | 76 | tested |
+| ERASE | `erase` | ANSI core ext | 76 | **auto** |
 | FILL | `fill` | ANSI core | 70 | **auto** |
 | EVALUATE | `evaluate` | ANSI core | 100 | **auto** |
 | EXECUTE | `execute` | ANSI core | 10 | **auto** |
@@ -79,7 +79,7 @@ RTS instruction at the end of each word.
 | FALSE | `false` | ANSI core ext | 6 | **auto** |
 | FETCH | `@` | ANSI core | 22 | **auto** |
 | FIND | `find` | ANSI core | 75 | **auto** |
-| FIND_NAME | `find-name` | Gforth | 106 | tested |
+| FIND_NAME | `find-name` | Gforth | 106 | **auto** |
 | FM_SLASH_MOD | `fm/mod` | ANSI core | 58 | **auto** |
 | GREATER_THAN | `>` | ANSI core | 24 | **auto** |
 | HERE | `here` | ANSI core | 10 | **auto** |
@@ -202,6 +202,6 @@ RTS instruction at the end of each word.
 | ZERO_UNEQUAL | `0<>` | ANSI core ext | 21 | tested |
 
 Found **193** native words in `native_words.asm`.
-Of those, **152** were automatically tested and
+Of those, **155** were automatically tested and
           **0** are not marked as tested at all.
 
