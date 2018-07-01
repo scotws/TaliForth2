@@ -117,7 +117,7 @@ RTS instruction at the end of each word.
 | NIP | `nip` | ANSI core ext | 17 | **auto** |
 | NOT_EQUALS | `<>` | ANSI core ext | 33 | **auto** |
 | NOT_ROTE | `-rot` | Gforth | 31 | **auto** |
-| NUMBER | `number` | Tali Forth | 138 | tested |
+| NUMBER | `number` | Tali Forth | 138 | **auto** |
 | NUMBER_SIGN | `#` | ANSI core | 56 | **auto** |
 | NUMBER_SIGN_GREATER | `#>` | ANSI core | 37 | **auto** |
 | NUMBER_SIGN_S | `#s` | ANSI core | 20 | **auto** |
@@ -202,6 +202,6 @@ RTS instruction at the end of each word.
 | ZERO_UNEQUAL | `0<>` | ANSI core ext | 21 | tested |
 
 Found **193** native words in `native_words.asm`.
-Of those, **155** were automatically tested and
+Of those, **156** were automatically tested and
           **0** are not marked as tested at all.
 

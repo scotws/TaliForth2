@@ -40,7 +40,6 @@ decimal
 ( TODO INT>NAME test missing)
 ( TODO LATESTNT test missing)
 ( TODO NEVER-NATVE test missing)
-( TODO NUMBER test missing)
 ( TODO WORDSIZE test missing)
 
 
@@ -67,7 +66,7 @@ decimal
    true
    base @  10 min  ( don't go outside chars )  0 ?do
       digit_numeral i +  ( addr ) c@ 
-      \ dup emit       \ show user what's happening; uncomment for debugging
+      dup emit  \ Show user what is going on
       dup digit?  ( char  u | char  f ) 
       swap 48 ( ASCII "0" ) +   ( char  f  u | char ) 
       rot =  ( f f )       \ is number what it's supposed to be?
@@ -79,14 +78,14 @@ decimal
    true
    base @  10 - ( grow index with base)  0 ?do
       digit_lower i + c@  
-      \ dup emit  \ uncomment for debugging
+      dup emit
       dup digit?  
       swap 97 ( ASCII "a" ) 10 -  +
       rot = 
       and and 
 
       digit_upper i + c@  
-      \ dup emit  \ uncomment for debugging
+      dup emit
       dup digit? 
       swap 65 ( ASCII "A" ) 10 -  +
       rot = 
@@ -97,12 +96,11 @@ decimal
    true 
    7 0 ?do
       digit_bad i + c@
-      \ dup emit  \ uncomment for debugging
+      dup emit
       digit?  ( char 0 ) 
       nip invert 
       and
    loop ;
-
 
 \ All your bases are belong to us. In theory, we could condense this
 \ code further, because Forth, but it would become harder to understand
@@ -110,28 +108,40 @@ decimal
    true
 
    max-base 1+  2 ?do
-      \ decimal cr ." Numerals, base " i . ." : " 
+      decimal cr ." Numerals, base " i . ." : " 
       i base !
       digit_numeral and
-      \ dup ."  -> " .  \ print status of base to help find errors
+      dup ."  -> " .  \ print status of base to help find errors
    loop 
    
    decimal cr
    max-base 1+  11 ?do
-      \ decimal cr ." Letters, base " i . ." : " 
+      decimal cr ." Letters, base " i . ." : " 
       i base !
       digit_letters and
-      \ dup ."  -> " . \ uncomment for debugging
+      dup ."  -> " . \ uncomment for debugging
    loop 
 
    decimal cr
    max-base 1+ 2 ?do
-      \ decimal cr ." One-off chars, base " i . ." : " 
+      decimal cr ." One-off chars, base " i . ." : " 
       i base !
       digit_oneoff and
-      \ dup ."  -> " .  \ uncomment for debugging
+      dup ."  -> " .  \ uncomment for debugging
    loop ;
 
 { digit_all -> <true> }
-
 { decimal -> }
+
+
+\ TODO find more edge cases for NUMBER
+{ s" 0" number -> 0 }
+{ s" 10" number -> 10 }
+{ s" 100" number -> 100 }
+{ s" 1." number -> 1 0 }
+{ hex -> }
+{ s" 0" number -> 0 }
+{ s" 10" number -> 10 }
+{ s" ff" number -> FF }
+{ decimal -> }
+

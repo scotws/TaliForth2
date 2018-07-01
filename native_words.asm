@@ -4529,7 +4529,7 @@ z_not_rote:     rts
 
 
 ; ## NUMBER ( addr u -- u | d ) "Convert a number string"
-; ## "number"  tested  Tali Forth
+; ## "number"  auto  Tali Forth
         ; """Convert a number string to a double or single cell number. This
         ; is a wrapper for >NUMBER and follows the convention set out in the 
         ; "Forth Programmer's Handbook" (Conklin & Rather) 3rd edition p. 87.
