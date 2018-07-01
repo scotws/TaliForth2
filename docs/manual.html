@@ -1078,6 +1078,16 @@ number to correctly report the result, while Gforth doesn&#8217;t. If the conver
 from double to single is only via a <code>drop</code> instruction, this will produce
 different results.</p>
 </div>
+<div class="paragraph">
+<p>There is a similiar effect with the Gforth word <code>bounds</code>: Because of Tali&#8217;s 16
+bit address space, it wraps the upper address if we go beyond $FFFF:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>( Gforth )      hex FFFF 2 bounds  swap u. u.  ( returns 10001 ffff  ok  )
+( Tali )        hex FFFF 2 bounds  swap u. u.  ( returns     1 ffff  ok )</pre>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -1192,7 +1202,7 @@ Tali Forth 2 entered BETA, Tali Forth was discontinued.</p>
 </dd>
 </dl>
 </div>
-<div class="imageblock text-center" style="text-align: center">
+<div id="img_talialpha" class="imageblock" style="text-align: center">
 <div class="content">
 <img src="pics/tali_forth_alpha003.png" alt="tali forth alpha003">
 </div>
@@ -1354,7 +1364,7 @@ under <a href="https://www.ubuntu.com/">Ubuntu</a> Linux 16.04 LTS.</p>
 <div id="footer">
 <div id="footer-text">
 Version ALPHA<br>
-Last updated 2018-06-28 20:43:00 CEST
+Last updated 2018-06-29 00:41:43 CEST
 </div>
 </div>
 </body>

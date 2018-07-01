@@ -187,3 +187,11 @@ number to correctly report the result, while Gforth doesn't. If the conversion
 from double to single is only via a `drop` instruction, this will produce
 different results.
 
+There is a similiar effect with the Gforth word `bounds`: Because of Tali's 16
+bit address space, it wraps the upper address if we go beyond $FFFF:
+
+---- 
+( Gforth )      hex FFFF 2 bounds  swap u. u.  ( returns 10001 ffff  ok  )
+( Tali )        hex FFFF 2 bounds  swap u. u.  ( returns     1 ffff  ok )
+----
+

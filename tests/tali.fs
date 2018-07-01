@@ -1,14 +1,15 @@
 \ ------------------------------------------------------------------------
 testing gforth words: bounds find-name latestxt name>int name>string
-
 \ Test for COLD not implemented
 
-( TODO BOUNDS test missing)
 ( TODO FIND-NAME test missing)
 ( TODO LATESTXT test missing)
 ( TODO NAME>INT test missing)
 ( TODO NAME>STRING test missing)
 
+{ hex -> }
+{ 1000 10 bounds -> 1010 1000 }
+{ ffff 2 bounds -> 0001 ffff }  \ BOUNDS wraps on Tali with 16 bit address space
 
 \ ------------------------------------------------------------------------
 testing tali-only words: always-native bell compile-only digit? int>name latestnt number 0 1 2

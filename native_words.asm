@@ -888,7 +888,7 @@ z_bl:           rts
 
 
 ; ## BOUNDS ( addr u -- addr+u addr ) "Prepare address for looping"
-; ## "bounds"  tested  Gforth
+; ## "bounds"  auto  Gforth
         ; """Given a string, return the correct Data Stack parameters for
         ; a DO/LOOP loop; over its characters. This is realized as
         ; OVER + SWAP in Forth, but we do it a lot faster in assembler

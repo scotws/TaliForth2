@@ -25,7 +25,7 @@ RTS instruction at the end of each word.
 | BEGIN | `begin` | ANSI core | 3 | **auto** |
 | BELL | `bell` | Tali Forth | 5 | tested |
 | BL | `bl` | ANSI core | 8 | **auto** |
-| BOUNDS | `bounds` | Gforth | 28 | tested |
+| BOUNDS | `bounds` | Gforth | 28 | **auto** |
 | BRACKET_CHAR | `[char]` | ANSI core | 6 | **auto** |
 | BRACKET_TICK | `[']` | ANSI core | 6 | **auto** |
 | BRANCH | `branch` | Tali Forth | 7 | tested |
@@ -202,6 +202,6 @@ RTS instruction at the end of each word.
 | ZERO_UNEQUAL | `0<>` | ANSI core ext | 21 | tested |
 
 Found **193** native words in `native_words.asm`.
-Of those, **151** were automatically tested and
+Of those, **152** were automatically tested and
           **0** are not marked as tested at all.
 
