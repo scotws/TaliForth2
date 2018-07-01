@@ -103,7 +103,7 @@ RTS instruction at the end of each word.
 | PLUS_LOOP | `+loop` | ANSI core | 102 | **auto** |
 | LSHIFT | `lshift` | ANSI core | 23 | **auto** |
 | M_STAR | `m*` | ANSI core | 30 | **auto** |
-| MARKER | `marker` | ANSI core ext | 72 | **auto** |
+| MARKER | `marker` | ANSI core ext | 45 | **auto** |
 | MAX | `max` | ANSI core | 31 | **auto** |
 | MIN | `min` | ANSI core | 31 | **auto** |
 | MINUS | `-` | ANSI core | 22 | **auto** |
