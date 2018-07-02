@@ -1,0 +1,101 @@
+=== Design Considerations
+
+When creating a new Forth, there are a bunch of design decisions to be
+made.
+
+NOTE: Probably the best introduction to these questions is found in "Design
+Decisions in the Forth Kernel" at
+http://www.bradrodriguez.com/papers/moving1.htm by Brad Rodriguez.
+
+Spoiler alert: Tali Forth ended up as a subroutine-threaded variant with a
+16-bit cell size and a dictionary that keeps headers and code separate. If you
+don't care and just want to use the program, skip ahead.
+
+==== Characteristics of the 65c02
+
+Since this is a bare-metal Forth, the most important consideration is the target
+processor. The 65c02 only has one full register, the accumulator A, and two
+secondary registers X and Y. All are 8-bit wide. There are 256 bytes that are
+more easily addressable on the Zero Page. A single hardware stack is used for
+subroutine jumps. The address bus is 16 bits wide for a maximum of 64 KiB of RAM
+and ROM For the default, simple setup, we assume 32 KiB of each.
+
+==== Cell Size
+
+The 16 bit address bus suggests the cell size should be 16 bits as well. This is
+still easy enough to realize on a 8-bit MPU, though not as comfortable as
+working with the 65816, the 65c02's big brother, with an actual 16 bit register
+size.
+
+==== Threading Technique
+
+A "thread" in Forth is simply a list of addresses of words to be executed.
+There are four basic threading techniques: <<GK>>
+
+Indirect threaded (ITC):: The oldest, original variant, used by FIG Forth. All
+other versions are modifications of this model.
+
+Direct threaded (DTC):: Includes more assembler code to speed things up, but
+slightly larger than ITC.
+
+Token threaded (TTC):: The reverse of DTC in that it is slower, but uses less
+space than the other Forths. Words are created as a table of tokens.
+
+Subroutine threaded (STC):: This technique converts the words to a simple
+series of `jsr` combinations.
+
+Our lack of registers and the goal of creating a simple and easy to understand
+Forth makes subroutine threading the most attractive solution. We will try to
+mitigate the pain caused by the 12 cycle cost of each and every `jsr`-`rts`
+combination by including a relatively large number of native words.
+
+
+==== Register Use
+
+The lack of registers -- and any registers larger than 8 bit at that -- becomes
+apparent when you realize that Forth classically uses at least four "virtual"
+registers:
+
+.The classic Forth registers
+[%autowidth]
+|===
+| Register | Name 
+
+| W   | Working register
+| IP  | Interpreter Pointer
+| DSP | Data Stack Pointer
+| RSP | Return Stack Pointer
+
+|===
+
+On a modern processor like a RISC-V RV32I CPU with 32 registers of 32 bit each,
+this wouldn't be a problem. In fact, we'd be trying to figure out what else we
+could keep in a register. On the 65c02, at least we get the RSP for free with
+the built-in stack pointer. This still leaves three registers. We cut that
+number down by one through subroutine threading, which gets rid of the IP.  For
+the DSP, we use the 65c02's Zero Page indirect addressing mode with the X
+register. This leaves W, which we put on the Zero Page as well.
+
+
+==== Data Stack Design
+
+We'll go into greater detail on how the Data Stack works in a later chapter
+when we look at the internals. Briefly, the stack is realized on the Zero Page
+for speed. For stability, we provid underflow checks in the relevant words, but
+give the user the option of stripping it out for native compilation.
+
+
+==== Dictionary Structure
+
+Each Forth word consists of the actual code and the header that holds the
+meta-data. Part of this data is the single-linked list of words which is
+searched.
+
+In constrast to Tali Forth 1, which kept the header and body of the words
+together, Tali Forth 2 keeps them separate. This lets us play various tricks
+with the code to make it more effective.
+
+=== Deeper down the rabbit hole
+
+This concludes our overview of the basic Tali Forth 2 structure. For those
+interested, a later chapter will provide far more detail.

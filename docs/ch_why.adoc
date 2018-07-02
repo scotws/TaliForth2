@@ -42,8 +42,8 @@ because of its clean instruction set architecture (ISA)(((instruction set
 architecture (ISA) ))) This is not the place to explain the joys of assembler.
 The official handbook for the 65c02 is _Programming the 65816_ <<EnL>>.
 
-TIP: Wilson((("Wilson, Garth))) answers this question in greater detail as part of his
-http://wilsonminesco.com/6502primer/[6502 primer].
+TIP: GarthGarth  Wilson((("Wilson, Garth))) answers this question in greater
+detail as part of his 6502 primer at http://wilsonminesco.com/6502primer/ .
 
 === Forth 
 

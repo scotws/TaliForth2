@@ -442,7 +442,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_writing_your_own_forth">Writing Your Own Forth</a></li>
 </ul>
 </li>
-<li><a href="#_overview_of_tali_forth">Overview of Tali Forth</a></li>
+<li><a href="#_overview_of_tali_forth">Overview of Tali Forth</a>
+<ul class="sectlevel2">
+<li><a href="#_design_considerations">Design Considerations</a></li>
+<li><a href="#_deeper_down_the_rabbit_hole">Deeper down the rabbit hole</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#_user_guide">User Guide</a>
@@ -596,8 +601,8 @@ The official handbook for the 65c02 is <em>Programming the 65816</em> <a href="#
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-Wilson answers this question in greater detail as part of his
-<a href="http://wilsonminesco.com/6502primer/">6502 primer</a>.
+GarthGarth  Wilson answers this question in greater
+detail as part of his 6502 primer at <a href="http://wilsonminesco.com/6502primer/" class="bare">http://wilsonminesco.com/6502primer/</a> .
 </td>
 </tr>
 </table>
@@ -722,7 +727,164 @@ commented. And this document tries to explain the internals in more detail.</p>
 <div class="sect1">
 <h2 id="_overview_of_tali_forth">Overview of Tali Forth</h2>
 <div class="sectionbody">
-
+<div class="sect2">
+<h3 id="_design_considerations">Design Considerations</h3>
+<div class="paragraph">
+<p>When creating a new Forth, there are a bunch of design decisions to be
+made.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Probably the best introduction to these questions is found in "Design
+Decisions in the Forth Kernel" at
+<a href="http://www.bradrodriguez.com/papers/moving1.htm" class="bare">http://www.bradrodriguez.com/papers/moving1.htm</a> by Brad Rodriguez.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Spoiler alert: Tali Forth ended up as a subroutine-threaded variant with a
+16-bit cell size and a dictionary that keeps headers and code separate. If you
+don&#8217;t care and just want to use the program, skip ahead.</p>
+</div>
+<div class="sect3">
+<h4 id="_characteristics_of_the_65c02">Characteristics of the 65c02</h4>
+<div class="paragraph">
+<p>Since this is a bare-metal Forth, the most important consideration is the target
+processor. The 65c02 only has one full register, the accumulator A, and two
+secondary registers X and Y. All are 8-bit wide. There are 256 bytes that are
+more easily addressable on the Zero Page. A single hardware stack is used for
+subroutine jumps. The address bus is 16 bits wide for a maximum of 64 KiB of RAM
+and ROM For the default, simple setup, we assume 32 KiB of each.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_cell_size">Cell Size</h4>
+<div class="paragraph">
+<p>The 16 bit address bus suggests the cell size should be 16 bits as well. This is
+still easy enough to realize on a 8-bit MPU, though not as comfortable as
+working with the 65816, the 65c02&#8217;s big brother, with an actual 16 bit register
+size.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_threading_technique">Threading Technique</h4>
+<div class="paragraph">
+<p>A "thread" in Forth is simply a list of addresses of words to be executed.
+There are four basic threading techniques: <a href="#GK">[GK]</a></p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Indirect threaded (ITC)</dt>
+<dd>
+<p>The oldest, original variant, used by FIG Forth. All
+other versions are modifications of this model.</p>
+</dd>
+<dt class="hdlist1">Direct threaded (DTC)</dt>
+<dd>
+<p>Includes more assembler code to speed things up, but
+slightly larger than ITC.</p>
+</dd>
+<dt class="hdlist1">Token threaded (TTC)</dt>
+<dd>
+<p>The reverse of DTC in that it is slower, but uses less
+space than the other Forths. Words are created as a table of tokens.</p>
+</dd>
+<dt class="hdlist1">Subroutine threaded (STC)</dt>
+<dd>
+<p>This technique converts the words to a simple
+series of <code>jsr</code> combinations.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>Our lack of registers and the goal of creating a simple and easy to understand
+Forth makes subroutine threading the most attractive solution. We will try to
+mitigate the pain caused by the 12 cycle cost of each and every <code>jsr</code>-<code>rts</code>
+combination by including a relatively large number of native words.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_register_use">Register Use</h4>
+<div class="paragraph">
+<p>The lack of registers&#8201;&#8212;&#8201;and any registers larger than 8 bit at that&#8201;&#8212;&#8201;becomes
+apparent when you realize that Forth classically uses at least four "virtual"
+registers:</p>
+</div>
+<table class="tableblock frame-all grid-all">
+<caption class="title">Table 1. The classic Forth registers</caption>
+<colgroup>
+<col>
+<col>
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Register</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">W</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Working register</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">IP</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Interpreter Pointer</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DSP</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Data Stack Pointer</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">RSP</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Return Stack Pointer</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>On a modern processor like a RISC-V RV32I CPU with 32 registers of 32 bit each,
+this wouldn&#8217;t be a problem. In fact, we&#8217;d be trying to figure out what else we
+could keep in a register. On the 65c02, at least we get the RSP for free with
+the built-in stack pointer. This still leaves three registers. We cut that
+number down by one through subroutine threading, which gets rid of the IP.  For
+the DSP, we use the 65c02&#8217;s Zero Page indirect addressing mode with the X
+register. This leaves W, which we put on the Zero Page as well.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_data_stack_design">Data Stack Design</h4>
+<div class="paragraph">
+<p>We&#8217;ll go into greater detail on how the Data Stack works in a later chapter
+when we look at the internals. Briefly, the stack is realized on the Zero Page
+for speed. For stability, we provid underflow checks in the relevant words, but
+give the user the option of stripping it out for native compilation.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_dictionary_structure">Dictionary Structure</h4>
+<div class="paragraph">
+<p>Each Forth word consists of the actual code and the header that holds the
+meta-data. Part of this data is the single-linked list of words which is
+searched.</p>
+</div>
+<div class="paragraph">
+<p>In constrast to Tali Forth 1, which kept the header and body of the words
+together, Tali Forth 2 keeps them separate. This lets us play various tricks
+with the code to make it more effective.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_deeper_down_the_rabbit_hole">Deeper down the rabbit hole</h3>
+<div class="paragraph">
+<p>This concludes our overview of the basic Tali Forth 2 structure. For those
+interested, a later chapter will provide far more detail.</p>
+</div>
+</div>
 </div>
 </div>
 <h1 id="_user_guide" class="sect0">User Guide</h1>
@@ -1309,7 +1471,7 @@ okay:
 <p>For the most common cases, this gives us:</p>
 </div>
 <table class="tableblock frame-all grid-all">
-<caption class="title">Table 1. DSP values for underflow testing</caption>
+<caption class="title">Table 2. DSP values for underflow testing</caption>
 <colgroup>
 <col>
 <col>
@@ -1412,7 +1574,7 @@ is limited to 255 characters.</p>
 the flags defined in the file <code>definitions.asm</code>:</p>
 </div>
 <table class="tableblock frame-all grid-all">
-<caption class="title">Table 2. Header flags</caption>
+<caption class="title">Table 3. Header flags</caption>
 <colgroup>
 <col>
 <col>
@@ -2676,7 +2838,7 @@ X register of the 65c02) points to the LSB of the TOS value.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_vi_shortcuts">vi Shortcuts</h4>
+<h4 id="_vim_shortcuts">vim Shortcuts</h4>
 <div class="paragraph">
 <p>One option for these is to add abbreviations to your favorite editor, which
 should of course be vim, because vim is cool. There are examples for that
@@ -2917,7 +3079,7 @@ under <a href="https://www.ubuntu.com/">Ubuntu</a> Linux 16.04 LTS.</p>
 <div id="footer">
 <div id="footer-text">
 Version ALPHA<br>
-Last updated 2018-07-02 23:38:22 CEST
+Last updated 2018-07-03 00:05:01 CEST
 </div>
 </div>
 </body>

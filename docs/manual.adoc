@@ -27,7 +27,7 @@ For the crew at 6502.org, who made this possible in more ways than one.
 include::ch_why.adoc[]
 
 == Overview of Tali Forth
-// TODO include file ch_overview_
+include::ch_overview.adoc[]
 
 
 // --------------------------------------------------------

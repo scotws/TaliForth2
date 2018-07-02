@@ -1,0 +1,204 @@
+[quote, Leo Brodie, Thinking Forth]
+Programming computers can be crazy-making. <<LB2>>
+
+=== Adding new words
+
+The simplest way to add new words to Tali Forth is to include them in the file
+`forth_code/user_words.fs`. This is the place to put them for personal use.
+
+To add words to the permament set, it is best to start a pull request on the
+GitHub page of Tali Forth. The use of `git` and GitHub is beyond the scope of
+this document -- we'll just point out it they are not as complicated as they
+look, and the make experimenting a lot easier.
+
+Internally, Tali Forth 2 tends to follow a sequence of steps for new words:
+
+* If it is an ANSI Forth word, review the standard online. In some cases, there
+  is a reference implementation that can be used.
+
+* Otherwise, check other sources for a high-level realization of the word. This
+  can be Jonesforth or Gforth. A direct copy is usually not possible (or legally
+  allowed, given different licenses), but gives hints for a Tali Forth version of
+  the word.
+
+* After the new word has been tested interactively, add a high-level
+  version to the file `forth_code/forth_words.fs`.
+
+* Add tests for the new word to the test suite. Ideally, there will
+  be tests code included in the ANS Forth specification.
+
+* If appropriate, convert the word to assembler, adding an entry to
+  `headers.asm` and the code itself to `native_words.asm`. In this first step, it
+  will usually be a simple sequence of `JSR` subroutine jumps to the existing
+  native Forth words.
+
+* If appropriate, rewrite all or some of the subroutine jumps in direct
+  assembler.
+
+Note that if you are contributing code, feel free to happily ignore this
+sequence and just submit whatever is working.
+
+=== Deeper changes
+
+Tali Forth was not only placed in the public domain to honor the tradition of
+giving the code away freely. It is also to let people play around with it and
+adapt it to their own machines. This is also the reason it is (perversely)
+overcommented.
+
+To work on the internals of Tali Forth, you will need the Ophis
+assembler.
+
+==== The Ophis Assembler
+
+Michael Martin's Ophis Cross-Assember can be downloaded from
+http://michaelcmartin.github.io/Ophis/ It uses a slightly different format than
+other assemblers, but is in Python and therefore will run on almost any
+operating system. To install Ophis on Windows, use the link provided above. For
+LinuxLinux}:
+
+----
+git clone https://github.com/michaelcmartin/Ophis
+cd Ophis/src
+sudo python setup.py install
+----
+
+Switch to the folder where the Tali code lives, and run the Makefile with a
+simple `make} command. This also updates the file listings in the
+`docs} folder.
+
+Ophis has some quirks. For instance, you cannot use math symbols in label names,
+because it will try to perform those operations. Use underscores for label names
+instead.
+
+==== General notes
+
+* The X register should not be changed without saving its pointer status.
+
+* The Y register is free to be changed by subroutines. This means it should not
+  be expected to survive subroutines unchanged.
+
+* All words should have one point of entry -- the `xt_word`
+                link -- and one point of exit at `z_word`. In may cases,
+                this means a branch to an internal label `_done` right
+                before `z_word`.
+
+* Because of the way native compiling works, the trick of combining
+  `jsr`-`rts` pairs to a single `jmp` (usually) doesn't work.
+
+
+==== Coding style
+
+Until I get around to writing a tool for Ophis assembler code that formats the
+source file the way gofmt does for Go (golang), I work with the following
+rules:
+
+* Actual opcodes are indented by **two tabs**
+
+* Tabs are **eight characters long** and converted to spaces.
+
+* Function-like routines are followed by a one-tab indented "function doc"
+  based on the Python 3 format: Three quotation marks at the start, three at the
+  end it its own line, unless it is a one-liner. This should make it easier to
+  automatically extract the docs for them at some point.
+
+* The native words have a special commentary format that allows the automatic
+  generation of word list by a tool in the tools folder, see there for details.
+
+* Assembler mnenomics are lower case. I get enough uppercase
+  insanity writing German, thank you very much.
+
+* Hex numbers are, however, upper case, such as `$FFFE`.
+
+* Numbers in mnemonics are a stripped-down as possible to reduce
+  visual clutter: `lda 0,x` instead of `lda $00,x`.
+
+* Comments are included like popcorn to help readers who are new both to Forth
+  and 6502 assembler.
+
+
+
+=== Code Cheat Sheet
+
+==== The Stack Drawing
+
+This is your friend and should probably go on your wall or something.
+
+....
+                +--------------+
+                |          ... |
+                +-            -+
+                |              |   ...
+                +-  (empty)   -+
+                |              |  FE,X
+                +-            -+
+          ...   |              |  FF,X
+                +==============+
+         $0076  |           LSB|  00,X   <-- DSP (X Register)
+                +-    TOS     -+
+         $0077  |           MSB|  01,X
+                +==============+
+         $0078  |  (garbage)   |  02,X   <-- DSP0
+                +--------------+
+         $0079  |              |  03,X
+                + (floodplain) +
+         $007A  |              |  04,X
+                +--------------+
+....
+
+==== Coding Idioms
+
+While coding a Forth, there are certain assembler fragments that get repeated
+over and over again. These could be included as macros, but that can make the
+code harder to read for somebody only familiar with basic assembly.
+
+Some of these fragments could be written in other variants, such as the "push
+value" version, which could increment the DSP twice before storing a value. We
+try to keep these in the same sequence (a "dialect" or "code mannerism" if you
+will) so we have the option of adding code analysis tools later.
+
+* `drop` cell of top of the Data Stack 
+
+----
+                inx
+                inx
+----
+
+* `push` a value to the Data Stack.  Remember the Data Stack Pointer (DSP, the
+  X register of the 65c02) points to the LSB of the TOS value.
+
+---- 
+                dex
+                dex
+                lda $<LSB>      ; or pla, jsr kernel_getc, etc.
+                sta 0,x
+                lda $<LSB>      ; or pla, jsr kernel_getc, etc.
+                sta 1,x
+----
+
+* `pop` a value off the Data Stack
+
+----
+                lda 0,x
+                sta $<LSB>      ; or pha, jsr kernel_putc, etc
+                lda 1,x
+                sta $<MSB>      ; or pha, jsr kernel_putc, etc
+                inx
+                inx
+----
+
+==== vim Shortcuts
+
+One option for these is to add abbreviations to your favorite editor, which
+should of course be vim, because vim is cool. There are examples for that
+further down. They all assume that auto-indent is on and we are two tabs in with
+the code, and use `#` at the end of the abbreviation to keep them
+separate from the normal words. My `~/.vimrc` file contains the following
+lines for work on `.asm` files:
+
+----
+ab drop# inx<tab><tab>; drop<cr>inx<cr><left>
+ab push# dex<tab><tab>; push<cr>dex<cr>lda $<LSB><cr>sta $00,x<cr>lda $<MSB><cr>sta $01,x<cr><up><up><u>
+ab pop# lda $00,x<tab><tab>; pop<cr>sta $<LSB><cr>lda $01,x<cr>sta $<MSB><cr>inx<cr>inx<cr><up><up><up>>
+----
+
+
