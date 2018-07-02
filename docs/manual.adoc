@@ -62,7 +62,7 @@ include::ch_disasm.adoc[]
 include::ch_internals.adoc[]
 
 == Developing
-// TODO include ch_developing
+include::ch_developing.adoc[]
 
 == Future and Long-Term plans
 WARNING: This section is missing. See the GitHub page for further details.

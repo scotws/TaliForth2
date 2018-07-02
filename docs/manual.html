@@ -489,7 +489,13 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#__code_cmove_code_code_cmove_code_and_code_move_code"><code>cmove</code>, <code>cmove&gt;</code> and <code>move</code></a></li>
 </ul>
 </li>
-<li><a href="#_developing">Developing</a></li>
+<li><a href="#_developing">Developing</a>
+<ul class="sectlevel2">
+<li><a href="#_adding_new_words">Adding new words</a></li>
+<li><a href="#_deeper_changes">Deeper changes</a></li>
+<li><a href="#_code_cheat_sheet">Code Cheat Sheet</a></li>
+</ul>
+</li>
 <li><a href="#_future_and_long_term_plans">Future and Long-Term plans</a></li>
 </ul>
 </li>
@@ -2408,7 +2414,286 @@ testbuf 4 type ( aabc ok )</pre>
 <div class="sect1">
 <h2 id="_developing">Developing</h2>
 <div class="sectionbody">
-
+<div class="quoteblock">
+<blockquote>
+Programming computers can be crazy-making. <a href="#LB2">[LB2]</a>
+</blockquote>
+<div class="attribution">
+&#8212; Leo Brodie<br>
+<cite>Thinking Forth</cite>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_adding_new_words">Adding new words</h3>
+<div class="paragraph">
+<p>The simplest way to add new words to Tali Forth is to include them in the file
+<code>forth_code/user_words.fs</code>. This is the place to put them for personal use.</p>
+</div>
+<div class="paragraph">
+<p>To add words to the permament set, it is best to start a pull request on the
+GitHub page of Tali Forth. The use of <code>git</code> and GitHub is beyond the scope of
+this document&#8201;&#8212;&#8201;we&#8217;ll just point out it they are not as complicated as they
+look, and the make experimenting a lot easier.</p>
+</div>
+<div class="paragraph">
+<p>Internally, Tali Forth 2 tends to follow a sequence of steps for new words:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>If it is an ANSI Forth word, review the standard online. In some cases, there
+is a reference implementation that can be used.</p>
+</li>
+<li>
+<p>Otherwise, check other sources for a high-level realization of the word. This
+can be Jonesforth or Gforth. A direct copy is usually not possible (or legally
+allowed, given different licenses), but gives hints for a Tali Forth version of
+the word.</p>
+</li>
+<li>
+<p>After the new word has been tested interactively, add a high-level
+version to the file <code>forth_code/forth_words.fs</code>.</p>
+</li>
+<li>
+<p>Add tests for the new word to the test suite. Ideally, there will
+be tests code included in the ANS Forth specification.</p>
+</li>
+<li>
+<p>If appropriate, convert the word to assembler, adding an entry to
+<code>headers.asm</code> and the code itself to <code>native_words.asm</code>. In this first step, it
+will usually be a simple sequence of <code>JSR</code> subroutine jumps to the existing
+native Forth words.</p>
+</li>
+<li>
+<p>If appropriate, rewrite all or some of the subroutine jumps in direct
+assembler.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Note that if you are contributing code, feel free to happily ignore this
+sequence and just submit whatever is working.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_deeper_changes">Deeper changes</h3>
+<div class="paragraph">
+<p>Tali Forth was not only placed in the public domain to honor the tradition of
+giving the code away freely. It is also to let people play around with it and
+adapt it to their own machines. This is also the reason it is (perversely)
+overcommented.</p>
+</div>
+<div class="paragraph">
+<p>To work on the internals of Tali Forth, you will need the Ophis
+assembler.</p>
+</div>
+<div class="sect3">
+<h4 id="_the_ophis_assembler">The Ophis Assembler</h4>
+<div class="paragraph">
+<p>Michael Martin&#8217;s Ophis Cross-Assember can be downloaded from
+<a href="http://michaelcmartin.github.io/Ophis/" class="bare">http://michaelcmartin.github.io/Ophis/</a> It uses a slightly different format than
+other assemblers, but is in Python and therefore will run on almost any
+operating system. To install Ophis on Windows, use the link provided above. For
+LinuxLinux}:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>git clone https://github.com/michaelcmartin/Ophis
+cd Ophis/src
+sudo python setup.py install</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Switch to the folder where the Tali code lives, and run the Makefile with a
+simple `make} command. This also updates the file listings in the
+`docs} folder.</p>
+</div>
+<div class="paragraph">
+<p>Ophis has some quirks. For instance, you cannot use math symbols in label names,
+because it will try to perform those operations. Use underscores for label names
+instead.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_general_notes">General notes</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>The X register should not be changed without saving its pointer status.</p>
+</li>
+<li>
+<p>The Y register is free to be changed by subroutines. This means it should not
+be expected to survive subroutines unchanged.</p>
+</li>
+<li>
+<p>All words should have one point of entry&#8201;&#8212;&#8201;the <code>xt_word</code>
+link&#8201;&#8212;&#8201;and one point of exit at <code>z_word</code>. In may cases,
+this means a branch to an internal label <code>_done</code> right
+before <code>z_word</code>.</p>
+</li>
+<li>
+<p>Because of the way native compiling works, the trick of combining
+<code>jsr</code>-<code>rts</code> pairs to a single <code>jmp</code> (usually) doesn&#8217;t work.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_coding_style">Coding style</h4>
+<div class="paragraph">
+<p>Until I get around to writing a tool for Ophis assembler code that formats the
+source file the way gofmt does for Go (golang), I work with the following
+rules:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Actual opcodes are indented by <strong>two tabs</strong></p>
+</li>
+<li>
+<p>Tabs are <strong>eight characters long</strong> and converted to spaces.</p>
+</li>
+<li>
+<p>Function-like routines are followed by a one-tab indented "function doc"
+based on the Python 3 format: Three quotation marks at the start, three at the
+end it its own line, unless it is a one-liner. This should make it easier to
+automatically extract the docs for them at some point.</p>
+</li>
+<li>
+<p>The native words have a special commentary format that allows the automatic
+generation of word list by a tool in the tools folder, see there for details.</p>
+</li>
+<li>
+<p>Assembler mnenomics are lower case. I get enough uppercase
+insanity writing German, thank you very much.</p>
+</li>
+<li>
+<p>Hex numbers are, however, upper case, such as <code>$FFFE</code>.</p>
+</li>
+<li>
+<p>Numbers in mnemonics are a stripped-down as possible to reduce
+visual clutter: <code>lda 0,x</code> instead of <code>lda $00,x</code>.</p>
+</li>
+<li>
+<p>Comments are included like popcorn to help readers who are new both to Forth
+and 6502 assembler.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_code_cheat_sheet">Code Cheat Sheet</h3>
+<div class="sect3">
+<h4 id="_the_stack_drawing">The Stack Drawing</h4>
+<div class="paragraph">
+<p>This is your friend and should probably go on your wall or something.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>                +--------------+
+                |          ... |
+                +-            -+
+                |              |   ...
+                +-  (empty)   -+
+                |              |  FE,X
+                +-            -+
+          ...   |              |  FF,X
+                +==============+
+         $0076  |           LSB|  00,X   &lt;-- DSP (X Register)
+                +-    TOS     -+
+         $0077  |           MSB|  01,X
+                +==============+
+         $0078  |  (garbage)   |  02,X   &lt;-- DSP0
+                +--------------+
+         $0079  |              |  03,X
+                + (floodplain) +
+         $007A  |              |  04,X
+                +--------------+</pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_coding_idioms">Coding Idioms</h4>
+<div class="paragraph">
+<p>While coding a Forth, there are certain assembler fragments that get repeated
+over and over again. These could be included as macros, but that can make the
+code harder to read for somebody only familiar with basic assembly.</p>
+</div>
+<div class="paragraph">
+<p>Some of these fragments could be written in other variants, such as the "push
+value" version, which could increment the DSP twice before storing a value. We
+try to keep these in the same sequence (a "dialect" or "code mannerism" if you
+will) so we have the option of adding code analysis tools later.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>drop</code> cell of top of the Data Stack</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>                inx
+                inx</pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>push</code> a value to the Data Stack.  Remember the Data Stack Pointer (DSP, the
+X register of the 65c02) points to the LSB of the TOS value.</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>                dex
+                dex
+                lda $&lt;LSB&gt;      ; or pla, jsr kernel_getc, etc.
+                sta 0,x
+                lda $&lt;LSB&gt;      ; or pla, jsr kernel_getc, etc.
+                sta 1,x</pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>pop</code> a value off the Data Stack</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>                lda 0,x
+                sta $&lt;LSB&gt;      ; or pha, jsr kernel_putc, etc
+                lda 1,x
+                sta $&lt;MSB&gt;      ; or pha, jsr kernel_putc, etc
+                inx
+                inx</pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_vi_shortcuts">vi Shortcuts</h4>
+<div class="paragraph">
+<p>One option for these is to add abbreviations to your favorite editor, which
+should of course be vim, because vim is cool. There are examples for that
+further down. They all assume that auto-indent is on and we are two tabs in with
+the code, and use <code>#</code> at the end of the abbreviation to keep them
+separate from the normal words. My <code>~/.vimrc</code> file contains the following
+lines for work on <code>.asm</code> files:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>ab drop# inx&lt;tab&gt;&lt;tab&gt;; drop&lt;cr&gt;inx&lt;cr&gt;&lt;left&gt;
+ab push# dex&lt;tab&gt;&lt;tab&gt;; push&lt;cr&gt;dex&lt;cr&gt;lda $&lt;LSB&gt;&lt;cr&gt;sta $00,x&lt;cr&gt;lda $&lt;MSB&gt;&lt;cr&gt;sta $01,x&lt;cr&gt;&lt;up&gt;&lt;up&gt;&lt;u&gt;
+ab pop# lda $00,x&lt;tab&gt;&lt;tab&gt;; pop&lt;cr&gt;sta $&lt;LSB&gt;&lt;cr&gt;lda $01,x&lt;cr&gt;sta $&lt;MSB&gt;&lt;cr&gt;inx&lt;cr&gt;inx&lt;cr&gt;&lt;up&gt;&lt;up&gt;&lt;up&gt;&gt;</pre>
+</div>
+</div>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -2632,7 +2917,7 @@ under <a href="https://www.ubuntu.com/">Ubuntu</a> Linux 16.04 LTS.</p>
 <div id="footer">
 <div id="footer-text">
 Version ALPHA<br>
-Last updated 2018-07-02 23:04:26 CEST
+Last updated 2018-07-02 23:38:22 CEST
 </div>
 </div>
 </body>
