@@ -976,6 +976,14 @@ testing defining words: : ; constant variable create does> >body value to
 { does2 -> }
 { cr1 -> 3 }
 
+\ The following test is not part of the original suite, but belongs
+\ to the "weird:" test following it. See discussion at
+\ https://github.com/scotws/TaliForth2/issues/61
+{ : odd: create does> 1 + ; -> }
+{ odd: o1 -> }
+{ ' o1 >body -> here }
+{ o1 -> here 1 + }
+
 { : weird: create does> 1 + does> 2 + ; -> }
 { weird: w1 -> }
 { ' w1 >body -> here }

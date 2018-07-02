@@ -48,7 +48,7 @@ RTS instruction at the end of each word.
 | CONSTANT | `constant` | ANSI core | 65 | **auto** |
 | COUNT | `count` | ANSI core | 23 | **auto** |
 | CR | `cr` | ANSI core | 5 | **auto** |
-| CREATE | `create` | ANSI core | 143 | **auto** |
+| CREATE | `create` | ANSI core | 145 | **auto** |
 | D_MINUS | `d-` | ANSI double | 36 | **auto** |
 | D_PLUS | `d+` | ANSI double | 36 | **auto** |
 | D_TO_S | `d>s` | ANSI double | 9 | **auto** |
@@ -161,7 +161,7 @@ RTS instruction at the end of each word.
 | SWAP | `swap` | ANSI core | 23 | **auto** |
 | TICK | `'` | ANSI core | 31 | **auto** |
 | TO | `to` | ANSI core ext | 95 | **auto** |
-| TO_BODY | `>body` | ANSI core | 91 | **auto** |
+| TO_BODY | `>body` | ANSI core | 40 | **auto** |
 | TO_IN | `>in` | ANSI core | 10 | **auto** |
 | TO_NUMBER | `>number` | ANSI core | 163 | **auto** |
 | TO_R | `>r` | ANSI core | 23 | **auto** |

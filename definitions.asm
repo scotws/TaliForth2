@@ -1,7 +1,7 @@
 ; Definitions for Tali Forth 2
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 01. Apr 2016 (Liara Forth)
-; This version: 06. Jun 2018
+; This version: 02. Jul 2018
 
 ; This file is included by taliforth.asm
 
@@ -164,6 +164,7 @@
 .alias IM 4  ; Immediate Word
 .alias NN 8  ; Never Native Compile
 .alias UF 16 ; Includes Underflow Check (RESERVED)
+.alias HC 32 ; Word has Code Field Area (CFA)
 
 
 ; VARIOUS

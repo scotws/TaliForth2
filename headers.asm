@@ -39,8 +39,9 @@
 ;       NN - Never Native Compile (must always be called by JSR)
 ;       AN - Always Native Compile (may not be called by JSR)
 ;       UF - Contains underflow check
+;       HC - Has CFA (words created by CREATE and DOES> only)
 
-; Note there are currently three bits unused. By default, all words can be
+; Note there are currently two bits unused. By default, all words can be
 ; natively compiled (compiled inline) or as a subroutine jump target; the system
 ; decides which variant to use based on a threshold the user can set. The NN
 ; flag forbids native compiling, the AN flag forces it.  
