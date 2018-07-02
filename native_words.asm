@@ -7842,10 +7842,7 @@ zero_branch_runtime:
                 adc #2
                 sta tmp1
                 lda tmpbranch+1 ; MSB
-                bcc +
-                inc tmp1+1
-*
-                lda tmpbranch+1
+                adc #0          ; For carry
                 sta tmp1+1
 
                 bra _done
