@@ -4,7 +4,7 @@
 :email: scot.stevenson@gmail.com
 :keywords: forth, 6502, assembler, programming
 :revnumber: ALPHA
-:revdate: 01. July 2018
+:revdate: 02. July 2018
 :showtitle:
 :icons: font
 :toc: left

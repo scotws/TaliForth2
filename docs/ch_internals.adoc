@@ -587,5 +587,295 @@ Note that `then` has no idea what has just happened, and just like before
 compiles its address where the value on the top of the Data Stack told it to --
 except that this value now comes from `else`, not `if`.
 
-
 ==== Loops
+
+Loops are far more complicated, because we have `do`, `?do`, `loop`, `+loop`,
+`unloop`, and `leave` to take care of. These can call up to three addresses: One
+for the normal looping action (`loop` and `+loop`), one to skip over the loop at the
+beginning (`?do`) and one to skip out of the loop (`leave`).
+
+Based on a suggestion by Garth Wilson, we begin each loop in run-time by saving
+the address after the whole loop construct to the Return Stack. That way,
+`leave` and `?do` know where to jump to when called, and we don't interfere with
+any `if-then` structures. On top of that address, we place the limit and start
+values for the loop.
+
+The key to staying sane while designing these constructs is to first make
+a list of what we want to happen at compile-time and what at run-time. Let's
+start with a simple `do`-`loop`.
+
+===== `do` at compile-time:
+
+* Remember current address (in other words, `here`) on the Return Stack (!) so
+  we can later compile the code for the post-loop address to the Return Stack
+
+* Compile some dummy values to reserve the space for said code
+
+* Compile the run-time code; we'll call that fragment (`do`)
+
+* Push the current address (the new `here`) to the Data Stack so `loop` knows
+  where the loop contents begin
+
+
+===== `do` at run-time:
+
+* Take limit and start off Data Stack and push them to the Return Stack
+
+Since `loop` is just a special case of `+loop` with an index of one, we can get
+away with considering them at the same time.
+
+
+===== `loop` at compile time:
+
+
+* Compile the run-time part `(+loop)`
+
+* Consume the address that is on top of the Data Stack as the jump target for
+  normal looping and compile it
+
+* Compile `unloop` for when we're done with the loop, getting rid of the
+  limit/start and post-loop addresses on the Return Stack
+
+* Get the address on the top of the Return Stack which points to
+  the dummy code compiled by `do`
+
+* At that address, compile the code that pushes the address after the list
+  construct to the Return Stack at run-time
+
+
+===== `loop` at run-time (which is `(+loop)`)
+
+* Add loop step to count
+
+* Loop again if we haven't crossed the limit, otherwise continue after loop
+
+
+At one glance, we can see that the complicated stuff happens at compile-time.
+This is good, because we only have to do that once for each loop.
+
+In Tali Forth, these routines are coded in assembler. With this setup, `unloop`
+becomes simple (six `pla` instructions -- four for the limit/count of `do`, two
+for the address pushed to the stack just before it) and `leave` even simpler
+(four `pla` instructions for the address).
+
+=== Native Compiling
+
+In a pure subroutine threaded code, higher-level words are merely a series of
+subroutine jumps. For instance, the Forth word `[char]`, formally defined in
+high-level Forth as
+
+----
+: [char] char postpone literal ; immediate
+----
+
+indent in assembler is simply
+
+----
+                jsr xt_char
+                jsr xt_literal
+----
+
+as an immediate, compile-only word. Theare are two obvious problems with this
+method: First, it is slow, because each `jsr/rts` pair consumes four bytes and
+12 cycles as overhead. Second, for smaller words, the jumps use far more bytes
+than the actual code. Take for instance `drop`, which in its naive form is
+simply
+
+----
+                inx
+                inx
+----
+
+for two bytes and four cycles. If we jump to this word as is assumed with pure
+subroutine threaded Forth, we add four bytes and 12 cycles -- double the space
+and three times the time required by the actual working code. 
+
+(In practice, it's even worse, because `drop` checks for underflow. The actual
+assembler code is
+
+----
+                cpx #dsp0-1
+                bmi +
+                jmp underflow
+*
+                inx
+                inx
+----
+
+for eleven bytes. We'll discuss the underflow checks further below.)
+
+To get rid of this problem, Tali Forth supports **native compiling** (actually
+more a form of inlining). The system variable `nc-limit` sets the threshhold up
+to which a word will be included not as a subroutine jump, but machine
+language. Let's start with an example where `nc-limit` is set to zero, that is,
+all words are compiled as subroutine jumps. Take a simple word such as
+
+----
+: aaa 0 drop ;
+----
+
+and check the actual code with `see`
+
+----
+see aaa
+  nt: 7CD  xt: 7D8
+ size (decimal): 6
+
+07D8  20 52 99 20 6B 88  ok
+----
+
+(The actual addresses might be different, this is from the ALPHA release).  Our
+word `aaa` consists of two subroutine jumps, one to zero and one to `drop`.
+Now, if we increase the threshhold to 20, we get different code, as this
+console session shows:
+
+----
+20 nc-limit !  ok
+: bbb 0 drop ;  ok
+see bbb
+  nt: 7DF  xt: 7EA
+ size (decimal): 17
+
+07EA  CA CA 74 00 74 01 E0 77  30 05 A9 0B 4C C7 AC E8
+07FA  E8  ok
+----
+
+Even though the definition of `bbb` is the same as `aaa`, we have totally
+different code: The number 0001 is pushed to the Data Stack (the first six
+bytes), then we check for underflow (the next nine bytes), and finally we
+`drop` by moving X register, the Data Stack Pointer. Our word is definitely
+longer, but have just saved 12 cycles.
+
+To experiment with various parameters for native compiling, the Forth word
+`words&sizes` is included in `user_words.fs` (but commented out by default).
+The Forth is:
+
+----
+: words&sizes ( -- )
+        latestnt
+        begin
+                dup
+        0<> while
+                dup name>string type space
+                dup wordsize u. cr
+                2 + @
+        repeat
+        drop ;
+----
+
+An alternative is `see` which also displays the length of a word. One way or
+another, changing `nc-limit` should show differences in the Forth words.
+
+=== Return Stack special cases
+
+There are a few words that cause problems with Subroutine Threaded Code (STC):
+Those that access the Return Stack such as `r>`, `>r`, `r@`, `2r>`, and `2>r`,
+we first have to remove the return address on the top of the stack, only to
+replace it again before we return to the caller. This mechanism would normally
+prevent the word from being natively compiled at all, because we'd try to
+remove a return address that doesn't exit.
+
+This becomes clearer when we examine the code for `>r` (comments
+removed):
+
+----
+xt_r_from:
+                pla
+                sta tmptos
+                ply
+
+                ; --- CUT FOR NATIVE CODING ---
+
+                dex
+                dex
+                pla
+                sta 0,x
+                pla
+                sta 1,x
+
+                ; --- CUT FOR NATIVE CODING ---
+
+                phy
+                lda tmptos
+                pha
+
+z_r_from:       rts
+----
+
+The first three and last three instructions are purely for housekeeping with
+subroutine threaded code. To enable this routine to be included as native code,
+they are removed when native compiling is enabled by the word `compile,` This
+leaves us with just the six actual instructions in the center of the routine to
+be compiled into the new word.
+
+=== Underflow stripping
+
+As described above, every underflow check adds seven bytes to the word being
+coded. Stripping this check by setting the `uf-strip` system variable to `true`
+simply removes these seven bytes from new natively compiled words.
+
+It is possible, of course, to have lice and fleas at the some time. For
+instance, this is the code for `>r`:
+
+----
+xt_to_r:
+                pla
+                sta tmptos
+                ply
+
+                ; --- CUT HERE FOR NATIVE CODING ---
+
+                cpx #dsp0-1
+                bmi +
+                jmp underflow
+*
+                lda 1,x
+                pha
+                lda 0,x
+                pha
+
+                inx
+                inx
+
+                ; --- CUT HERE FOR NATIVE CODING ---
+
+                phy
+                lda tmptos
+                pha
+
+z_to_r:         rts
+----
+
+This word has _both_ native compile stripping and underflow detection. However,
+both can be removed from newly native code words, leaving only the eight byte
+core of the word to be compiled.
+
+=== `cmove`, `cmove>` and `move`
+
+The three moving words `cmove`, `cmove>` and `move` show subtle differences
+that can trip up new users and are reflected by different code under the hood.
+`cmove` and `cmove>` are the traditional Forth words that work on characters
+(which in the case of Tali Forth are bytes), whereas `move` is a more modern
+word that works on address units (which in our case is also bytes).
+
+If the source and destination regions show no overlap, all three words work the
+same. However, if there is overlap, `cmove` and `cmove>` demonstrate a behavior
+called "propagation" or "clobbering" : Some of the characters are overwritten.
+`move: does not show this behavior. This example shows the difference:
+
+----
+create testbuf char a c, char b c, char c c, char d c,  ( ok )
+testbuf 4 type ( abcd ok )
+testbuf dup char+ 3 cmove  ( ok )
+testbuf 4 type ( aaaa ok )
+----
+
+Note the propagation in the result. `move`, however, doesn't propagate.
+The last two lines would be:
+
+----
+testbuf dup char+ 3 move  ( ok )
+testbuf 4 type ( aabc ok )
+----
+
+In practice, `move` is usually what you want to use.

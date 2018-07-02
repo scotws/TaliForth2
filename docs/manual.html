@@ -420,16 +420,16 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
 </head>
-<body class="book">
+<body class="book toc2 toc-left">
 <div id="header">
 <h1>Manual for Tali Forth 2 for the 65c02</h1>
 <div class="details">
 <span id="author" class="author">Scot W. Stevenson</span><br>
 <span id="email" class="email"><a href="mailto:scot.stevenson@gmail.com">scot.stevenson@gmail.com</a></span><br>
 <span id="revnumber">version ALPHA,</span>
-<span id="revdate">01. July 2018</span>
+<span id="revdate">02. July 2018</span>
 </div>
-<div id="toc" class="toc">
+<div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
 <li><a href="#_dedication">Dedication</a></li>
@@ -483,6 +483,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_input">Input</a></li>
 <li><a href="#_the_words_code_create_code_and_code_does_code">The Words <code>create</code> and <code>does&gt;</code></a></li>
 <li><a href="#_control_flow">Control Flow</a></li>
+<li><a href="#_native_compiling_2">Native Compiling</a></li>
+<li><a href="#_return_stack_special_cases">Return Stack special cases</a></li>
+<li><a href="#_underflow_stripping">Underflow stripping</a></li>
+<li><a href="#__code_cmove_code_code_cmove_code_and_code_move_code"><code>cmove</code>, <code>cmove&gt;</code> and <code>move</code></a></li>
 </ul>
 </li>
 <li><a href="#_developing">Developing</a></li>
@@ -1994,7 +1998,7 @@ after <code>0branch</code> to reserve the space we need.</p>
 </td>
 <td class="content">
 This section and the next one are based on a discussion at
-<a href="http://forum.6502.org/viewtopic.php?f=9\&amp;t=3176" class="bare">http://forum.6502.org/viewtopic.php?f=9\&amp;t=3176</a> see there for more detail`s.
+<a href="http://forum.6502.org/viewtopic.php?f=9\&amp;t=3176" class="bare">http://forum.6502.org/viewtopic.php?f=9\&amp;t=3176</a> see there for more details.
 Another take on this subject that handles things a bit differently is at
 <a href="http://blogs.msdn.com/b/ashleyf/archive/2011/02/06/loopty-do-i-loop.aspx" class="bare">http://blogs.msdn.com/b/ashleyf/archive/2011/02/06/loopty-do-i-loop.aspx</a>
 </td>
@@ -2014,7 +2018,7 @@ Another take on this subject that handles things a bit differently is at
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>        : then here swap ! ; immediate</pre>
+<pre>        : then  here swap ! ; immediate</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2035,7 +2039,368 @@ compiles its address where the value on the top of the Data Stack told it to&#82
 </div>
 <div class="sect3">
 <h4 id="_loops">Loops</h4>
+<div class="paragraph">
+<p>Loops are far more complicated, because we have <code>do</code>, <code>?do</code>, <code>loop</code>, <code>+loop</code>,
+<code>unloop</code>, and <code>leave</code> to take care of. These can call up to three addresses: One
+for the normal looping action (<code>loop</code> and <code>+loop</code>), one to skip over the loop at the
+beginning (<code>?do</code>) and one to skip out of the loop (<code>leave</code>).</p>
+</div>
+<div class="paragraph">
+<p>Based on a suggestion by Garth Wilson, we begin each loop in run-time by saving
+the address after the whole loop construct to the Return Stack. That way,
+<code>leave</code> and <code>?do</code> know where to jump to when called, and we don&#8217;t interfere with
+any <code>if-then</code> structures. On top of that address, we place the limit and start
+values for the loop.</p>
+</div>
+<div class="paragraph">
+<p>The key to staying sane while designing these constructs is to first make
+a list of what we want to happen at compile-time and what at run-time. Let&#8217;s
+start with a simple <code>do</code>-<code>loop</code>.</p>
+</div>
+<div class="sect4">
+<h5 id="__code_do_code_at_compile_time"><code>do</code> at compile-time:</h5>
+<div class="ulist">
+<ul>
+<li>
+<p>Remember current address (in other words, <code>here</code>) on the Return Stack (!) so
+we can later compile the code for the post-loop address to the Return Stack</p>
+</li>
+<li>
+<p>Compile some dummy values to reserve the space for said code</p>
+</li>
+<li>
+<p>Compile the run-time code; we&#8217;ll call that fragment (<code>do</code>)</p>
+</li>
+<li>
+<p>Push the current address (the new <code>here</code>) to the Data Stack so <code>loop</code> knows
+where the loop contents begin</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect4">
+<h5 id="__code_do_code_at_run_time"><code>do</code> at run-time:</h5>
+<div class="ulist">
+<ul>
+<li>
+<p>Take limit and start off Data Stack and push them to the Return Stack</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Since <code>loop</code> is just a special case of <code>+loop</code> with an index of one, we can get
+away with considering them at the same time.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="__code_loop_code_at_compile_time"><code>loop</code> at compile time:</h5>
+<div class="ulist">
+<ul>
+<li>
+<p>Compile the run-time part <code>(+loop)</code></p>
+</li>
+<li>
+<p>Consume the address that is on top of the Data Stack as the jump target for
+normal looping and compile it</p>
+</li>
+<li>
+<p>Compile <code>unloop</code> for when we&#8217;re done with the loop, getting rid of the
+limit/start and post-loop addresses on the Return Stack</p>
+</li>
+<li>
+<p>Get the address on the top of the Return Stack which points to
+the dummy code compiled by <code>do</code></p>
+</li>
+<li>
+<p>At that address, compile the code that pushes the address after the list
+construct to the Return Stack at run-time</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect4">
+<h5 id="__code_loop_code_at_run_time_which_is_code_loop_code"><code>loop</code> at run-time (which is <code>(+loop)</code>)</h5>
+<div class="ulist">
+<ul>
+<li>
+<p>Add loop step to count</p>
+</li>
+<li>
+<p>Loop again if we haven&#8217;t crossed the limit, otherwise continue after loop</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>At one glance, we can see that the complicated stuff happens at compile-time.
+This is good, because we only have to do that once for each loop.</p>
+</div>
+<div class="paragraph">
+<p>In Tali Forth, these routines are coded in assembler. With this setup, <code>unloop</code>
+becomes simple (six <code>pla</code> instructions&#8201;&#8212;&#8201;four for the limit/count of <code>do</code>, two
+for the address pushed to the stack just before it) and <code>leave</code> even simpler
+(four <code>pla</code> instructions for the address).</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_native_compiling_2">Native Compiling</h3>
+<div class="paragraph">
+<p>In a pure subroutine threaded code, higher-level words are merely a series of
+subroutine jumps. For instance, the Forth word <code>[char]</code>, formally defined in
+high-level Forth as</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>: [char] char postpone literal ; immediate</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>indent in assembler is simply</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>                jsr xt_char
+                jsr xt_literal</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>as an immediate, compile-only word. Theare are two obvious problems with this
+method: First, it is slow, because each <code>jsr/rts</code> pair consumes four bytes and
+12 cycles as overhead. Second, for smaller words, the jumps use far more bytes
+than the actual code. Take for instance <code>drop</code>, which in its naive form is
+simply</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>                inx
+                inx</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>for two bytes and four cycles. If we jump to this word as is assumed with pure
+subroutine threaded Forth, we add four bytes and 12 cycles&#8201;&#8212;&#8201;double the space
+and three times the time required by the actual working code.</p>
+</div>
+<div class="paragraph">
+<p>(In practice, it&#8217;s even worse, because <code>drop</code> checks for underflow. The actual
+assembler code is</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>                cpx #dsp0-1
+                bmi +
+                jmp underflow
+*
+                inx
+                inx</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>for eleven bytes. We&#8217;ll discuss the underflow checks further below.)</p>
+</div>
+<div class="paragraph">
+<p>To get rid of this problem, Tali Forth supports <strong>native compiling</strong> (actually
+more a form of inlining). The system variable <code>nc-limit</code> sets the threshhold up
+to which a word will be included not as a subroutine jump, but machine
+language. Let&#8217;s start with an example where <code>nc-limit</code> is set to zero, that is,
+all words are compiled as subroutine jumps. Take a simple word such as</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>: aaa 0 drop ;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>and check the actual code with <code>see</code></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>see aaa
+  nt: 7CD  xt: 7D8
+ size (decimal): 6
 
+07D8  20 52 99 20 6B 88  ok</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>(The actual addresses might be different, this is from the ALPHA release).  Our
+word <code>aaa</code> consists of two subroutine jumps, one to zero and one to <code>drop</code>.
+Now, if we increase the threshhold to 20, we get different code, as this
+console session shows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>20 nc-limit !  ok
+: bbb 0 drop ;  ok
+see bbb
+  nt: 7DF  xt: 7EA
+ size (decimal): 17
+
+07EA  CA CA 74 00 74 01 E0 77  30 05 A9 0B 4C C7 AC E8
+07FA  E8  ok</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Even though the definition of <code>bbb</code> is the same as <code>aaa</code>, we have totally
+different code: The number 0001 is pushed to the Data Stack (the first six
+bytes), then we check for underflow (the next nine bytes), and finally we
+<code>drop</code> by moving X register, the Data Stack Pointer. Our word is definitely
+longer, but have just saved 12 cycles.</p>
+</div>
+<div class="paragraph">
+<p>To experiment with various parameters for native compiling, the Forth word
+<code>words&amp;sizes</code> is included in <code>user_words.fs</code> (but commented out by default).
+The Forth is:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>: words&amp;sizes ( -- )
+        latestnt
+        begin
+                dup
+        0&lt;&gt; while
+                dup name&gt;string type space
+                dup wordsize u. cr
+                2 + @
+        repeat
+        drop ;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>An alternative is <code>see</code> which also displays the length of a word. One way or
+another, changing <code>nc-limit</code> should show differences in the Forth words.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_return_stack_special_cases">Return Stack special cases</h3>
+<div class="paragraph">
+<p>There are a few words that cause problems with Subroutine Threaded Code (STC):
+Those that access the Return Stack such as <code>r&gt;</code>, <code>&gt;r</code>, <code>r@</code>, <code>2r&gt;</code>, and <code>2&gt;r</code>,
+we first have to remove the return address on the top of the stack, only to
+replace it again before we return to the caller. This mechanism would normally
+prevent the word from being natively compiled at all, because we&#8217;d try to
+remove a return address that doesn&#8217;t exit.</p>
+</div>
+<div class="paragraph">
+<p>This becomes clearer when we examine the code for <code>&gt;r</code> (comments
+removed):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>xt_r_from:
+                pla
+                sta tmptos
+                ply
+
+                ; --- CUT FOR NATIVE CODING ---
+
+                dex
+                dex
+                pla
+                sta 0,x
+                pla
+                sta 1,x
+
+                ; --- CUT FOR NATIVE CODING ---
+
+                phy
+                lda tmptos
+                pha
+
+z_r_from:       rts</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The first three and last three instructions are purely for housekeeping with
+subroutine threaded code. To enable this routine to be included as native code,
+they are removed when native compiling is enabled by the word <code>compile,</code> This
+leaves us with just the six actual instructions in the center of the routine to
+be compiled into the new word.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_underflow_stripping">Underflow stripping</h3>
+<div class="paragraph">
+<p>As described above, every underflow check adds seven bytes to the word being
+coded. Stripping this check by setting the <code>uf-strip</code> system variable to <code>true</code>
+simply removes these seven bytes from new natively compiled words.</p>
+</div>
+<div class="paragraph">
+<p>It is possible, of course, to have lice and fleas at the some time. For
+instance, this is the code for <code>&gt;r</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>xt_to_r:
+                pla
+                sta tmptos
+                ply
+
+                ; --- CUT HERE FOR NATIVE CODING ---
+
+                cpx #dsp0-1
+                bmi +
+                jmp underflow
+*
+                lda 1,x
+                pha
+                lda 0,x
+                pha
+
+                inx
+                inx
+
+                ; --- CUT HERE FOR NATIVE CODING ---
+
+                phy
+                lda tmptos
+                pha
+
+z_to_r:         rts</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This word has <em>both</em> native compile stripping and underflow detection. However,
+both can be removed from newly native code words, leaving only the eight byte
+core of the word to be compiled.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__code_cmove_code_code_cmove_code_and_code_move_code"><code>cmove</code>, <code>cmove&gt;</code> and <code>move</code></h3>
+<div class="paragraph">
+<p>The three moving words <code>cmove</code>, <code>cmove&gt;</code> and <code>move</code> show subtle differences
+that can trip up new users and are reflected by different code under the hood.
+<code>cmove</code> and <code>cmove&gt;</code> are the traditional Forth words that work on characters
+(which in the case of Tali Forth are bytes), whereas <code>move</code> is a more modern
+word that works on address units (which in our case is also bytes).</p>
+</div>
+<div class="paragraph">
+<p>If the source and destination regions show no overlap, all three words work the
+same. However, if there is overlap, <code>cmove</code> and <code>cmove&gt;</code> demonstrate a behavior
+called "propagation" or "clobbering" : Some of the characters are overwritten.
+`move: does not show this behavior. This example shows the difference:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>create testbuf char a c, char b c, char c c, char d c,  ( ok )
+testbuf 4 type ( abcd ok )
+testbuf dup char+ 3 cmove  ( ok )
+testbuf 4 type ( aaaa ok )</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note the propagation in the result. <code>move</code>, however, doesn&#8217;t propagate.
+The last two lines would be:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>testbuf dup char+ 3 move  ( ok )
+testbuf 4 type ( aabc ok )</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In practice, <code>move</code> is usually what you want to use.</p>
 </div>
 </div>
 </div>
@@ -2267,7 +2632,7 @@ under <a href="https://www.ubuntu.com/">Ubuntu</a> Linux 16.04 LTS.</p>
 <div id="footer">
 <div id="footer-text">
 Version ALPHA<br>
-Last updated 2018-07-01 12:15:02 CEST
+Last updated 2018-07-02 23:04:26 CEST
 </div>
 </div>
 </body>
