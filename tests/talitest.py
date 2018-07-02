@@ -17,7 +17,7 @@ PROGRAMMERS : Sam Colwell and Scot W. Stevenson
 FILE        : talitest.py
 
 First version: 16. May 2018
-This version: 30. June 2018
+This version: 1. July 2018
 """
 
 import argparse
@@ -140,7 +140,8 @@ with open(args.output, 'wb') as fout:
                 """
                 global fout
                 # Save results to file.
-                fout.write(chr(value).encode())
+                if value != 0:
+                    fout.write(chr(value).encode())
 
                 # Print to the screen if we are not muted.
                 if not args.mute:
