@@ -1,0 +1,591 @@
+=== Stack
+
+Tali Forth 2 uses the lowest part of the top half of Zero Page((("Zero Page")))
+for the Data Stack (DS). This leaves the lower half of the Zero Page for any
+kernel stuff the user might require. The DS therefore grows towards the initial
+user variables. See the file `definitions.asm` for details.  Because of the
+danger of underflow,(((underflow))) it is recommended that the user kernel's
+variables are keep closer to $0100 than to $007f.
+
+The X register((("X register"))) is used as the Data Stack Pointer (DSP). It
+points to the least significant byte of the current top element of the stack
+("Top of the Stack", TOS).
+
+NOTE: In the first versions of Tali Forth 1, the DSP pointed to the next _free_
+element of the stack. The new system makes detecting underflow easier and
+parallels the structure of Liara Forth.(((Liara)))
+
+Initially, the DSP points to $78, not $7F as might be expected. This provides a
+few bytes as a "floodplain" underflow.(((underflow))) The initial value of the
+DSP is defined as `dsp0` in the code.
+
+==== Single cell values
+
+Since the cell size is 16 bits, each stack entry
+consists of two bytes. They are stored little endian (least
+significant byte first). Therefore, the DSP points to the LSB of the current
+
+
+
+TOS.footnote:[Try reading that last sentence to a friend who isn't into
+computers. Aren't abbreviations fun?]
+
+Because the DSP points to the current top of the stack, the byte it points to
+
+
+
+after boot -- `dsp0` -- will never be accessed: The DSP is decremented first
+with two `dex` instructions, and then the new value is placed on the stack.
+This means that the initial byte is garbage and can be considered part of the
+floodplain.
+
+.Snapshot of the Data Stack with one entry as Top of the Stack (TOS). The DSP has been increased by one and the value written.
+....
+              +--------------+
+              |          ... |
+              +-            -+
+              |              |   ...
+              +-  (empty)   -+
+              |              |  FE,X
+              +-            -+
+        ...   |              |  FF,X
+              +==============+
+       $0076  |           LSB|  00,X   <-- DSP (X Register)
+              +-    TOS     -+ 
+       $0077  |           MSB|  01,X
+              +==============+
+       $0078  |  (garbage)   |  02,X   <-- DSP0 
+              +--------------+           
+       $0079  |              |  03,X
+              + (floodplain) +
+       $007A  |              |  04,X
+              +--------------+           
+....
+
+Note that the 65c02 system stack -- used as the Return Stack (RS) by Tali --
+pushes the MSB on first and then the LSB (preserving little endian), so the
+basic structure is the same for both stacks. 
+
+Because of this stack design, the second entry ("next on stack", NOS) starts at
+`02,X` and the third entry ("third on stack", 3OS) at `04,X`. 
+
+==== Underflow detection
+
+In contrast to Tali Forth 1, this version contains underflow detection for most
+words. It does this by comparing the Data Stack Pointer (X) to values that it
+must be smaller than (because the stack grows towards 0000). For instance, to
+make sure we have one element on the stack, we write
+
+----
+                cpx #dsp0-1
+                bmi okay
+                jmp underflow
+okay:
+                (...)
+----
+
+For the most common cases, this gives us:
+
+.DSP values for underflow testing
+[%autowidth, cols="2*^"]
+|===
+|  Test for  |  Pointer offset
+
+^| one element  | `dsp0-1`
+^| two elements | `dsp0-3`
+^| three elements | `dsp0-5`
+^| four elements | `dsp0-7`
+
+|===
+
+Underflow detection adds seven bytes to the words that have it. However, it
+increases the stability of the program enormously.
+
+==== Double Cell Values
+
+The double cell is stored on top of the single cell. Note this places the sign
+bit at the beginning of the byte below the DSP.
+
+....
+              +---------------+
+              |               |  
+              +===============+  
+              |            LSB|  $0,x   <-- DSP (X Register)
+              +-+  Top Cell  -+
+              |S|          MSB|  $1,x
+              +-+-------------+ 
+              |            LSB|  $2,x
+              +- Bottom Cell -+
+              |            MSB|  $3,x   
+              +===============+ 
+....
+
+Tali Forth 2 does not check for overflow, which in normal operation is too rare
+to justify the computing expense. 
+
+
+=== Dictionary
+
+Tali Forth 2 follows the traditional model of a Forth dictionary -- a linked list
+of words terminated with a zero pointer. The headers and code are kept separate
+to allow various tricks in the code.
+
+
+==== Elements of the Header
+
+Each header is at least eight byts long: 
+
+....
+              8 bit     8 bit
+               LSB       MSB
+nt_word ->  +--------+--------+
+         +0 | Length | Status |
+            +--------+--------+
+         +2 | Next Header     | nt_next_word
+            +-----------------+
+         +4 | Start of Code   | xt_word 
+            +-----------------+
+         +6 | End of Code     | z_word
+            +--------+--------+
+         +8 | Name   |        |
+            +--------+--------+
+            |        |        |
+            +--------+--------+
+            |        |  ...   |
+         +n +--------+--------+
+....
+
+Each word has a `name token` (nt, `nt_word` in the code) that points to the
+first byte of the header. This is the length of the word's name string, which
+is limited to 255 characters. 
+
+The second byte in the header (index 1) is the status byte. It is created by
+the flags defined in the file `definitions.asm`: 
+
+.Header flags
+[%autowidth]
+|===
+| Flag | Function 
+
+| `CO` | Compile Only
+| `IM` | Immediate Word
+| `NN` | Never Native Compile
+| `AN` | Always Native Compile
+| `UF` | Underflow dectection
+
+|===
+
+Note there are currently three bits unused. The status byte is followed by the
+**pointer to the next header** in the linked list, which makes it the name
+token of the next word. A 0000 in this position signales the end of the linked
+list, which by convention is the word `bye`.
+
+This is followed by the current word's **execution token** (xt, `xt_word`) that
+points to the start of the actual code. Some words that have the same
+functionality point to the same code block. The **end of the code** is
+referenced through the next pointer (`z_word`) to enable native compilation of
+the word if allowed. 
+
+The **name string** starts at the eighth byte. The string is _not_
+zero-terminated. By default, the strings of Tali Forth 2 are lower case, but
+case is respected for words the user defines, so `quarian` is a different word
+than `QUARIAN`. 
+
+NOTE: In ALPHA, upper case versions of the ANSI Forth words are not recognized. This is
+to be changed in future versions.
+
+
+==== Structure of the Header List
+
+Tali Forth 2 distinguishes between three different list sources: The **native
+words** that are hard-coded in the file `native_words.asm`, the **Forth words**
+which are defined as high-level words and then generated at run-time when Tali
+Forth starts up, and **user words** in the file `user_words.asm`. 
+
+Tali has an unusually high number of native words in an attempt to make the
+Forth as fast as possible on the 65c02. The first word in the list -- the one
+that is checked first -- is always `drop`, the last one -- the one checked for
+last -- is always `bye`. The words which are (or are assumed to be) used more
+than others come first. Since humans are slow, words that are used more
+interactively like `words` come later. 
+
+The list of Forth words ends with the intro strings. This functions as a
+primitive form of a self-test: If you see the welcome message, compilation of
+the Forth words worked.
+
+....
+   $0000  +-------------------+  ram_start, zpage, user0
+          |  User varliables  |
+          +-------------------+
+          |                   |
+          |  ^  Data Stack    |  <-- dsp
+          |  |                |
+   $0078  +-------------------+  dsp0, stack
+          |                   |
+          |   (Reserved for   |
+          |      kernel)      |
+          |                   |
+   $0100  +===================+
+          |                   |
+          |  ^  Return Stack  |  <-- rsp
+          |  |                |
+   $0200  +-------------------+  rsp0, buffer, buffer0
+          |  |                |
+          |  v  Input Buffer  |
+          |                   |
+   $0300  +-------------------+  cp0
+          |  |                |
+          |  v  Dictionary    |
+          |       (RAM)       |
+          |                   |
+          ~~~~~~~~~~~~~~~~~~~~~  <-- cp
+          |                   |
+          |                   |
+          +-------------------+
+          |                   |
+          | ACCEPT history    |
+          |                   |
+   $7FFF  #####################  ram_end
+   $8000  |                   |  forth, code0
+          |                   |
+          |                   |
+          |    Tali Forth     |
+          |     (24 KiB)      |
+          |                   |
+          |                   |
+   $E000  +-------------------+
+          |                   |  kernel_putc, kernel_getc   
+          |      Kernel       |
+          |                   |
+   $F000  +-------------------+
+          |   I/O addresses   |
+          +-------------------+
+          |                   |
+          |      Kernel       |
+          |                   |
+   $FFFA  +-------------------+     
+          |  65c02 vectors    |
+   $FFFF  +-------------------+
+....
+
+Note that some of these values are hard-coded into the test suite; see the file
+`definitions.txt` for details.
+
+=== Input 
+
+Tali Forth 2, like Liara Forth, follows the ANSI input model with `refill`
+instead of older forms. There are up to four possible input sources in Forth:
+
+* The keyboard ("user input device")
+* A character string in memory
+* A block file
+* A text file
+
+To check which one is being used, we first call `blk` which gives us the number
+of a mass storage block being used, or 0 for the "user input device"
+(keyboard).  In the second case, we use `source-id` to find out where input is
+coming from: 0 for the keyboard, -1 ($FFFF) for a string in memory, and a
+number `n` for a file-id. 
+
+NOTE: Since Tali currently doesn't support blocks, we can skip the `blk`
+instruction and go right to `source-id`.
+
+WARNING: One gotcha with Tali Forth's input is that current it only sees
+spaces, but not other whitespace, as delimiters. This means that Forth text
+files that are fed to Tali should not contain tabs. This behavior might be
+changed in the future.
+
+==== Booting
+
+The intial commands after reboot flow into each other: `cold` to
+`abort` to `quit`. This is the same as with pre-ANSI Forths.
+However, `quit` now calls `refill` to get the input.
+`refill` does different things based on which of the four input sources
+(see above) is active:
+
+[horizontal]
+Keyboard entry:: 
+	This is the default. Get line of input via `accept` and return `true`
+	even if the input string was empty.
+`evaluate` string:: Return a `false` flag
+Input from a buffer:: _Not implemented at this time_
+Input from a file:: _Not implemented at this time_
+
+
+==== The Command Line Interface (CLI)
+
+Tali Forth accepts input lines of up to 256 characters. The address of the
+current input buffer is stored in `cib`.  The length of the current buffer is
+stored in `ciblen` -- this is the address that `>in` returns.  `source` by
+default returns `cib` and `ciblen` as the address and length of the input
+buffer.
+
+
+==== The Word `evaluate`
+
+The word `evaluate`is used to execute commands that are in a string. A simple example:
+
+----
+s" 1 2 + ." evaluate 
+----
+
+Tali Forth uses `evaluate` to load high-level Forth words from the file
+`forth_words.asc` and, if present, extra, user-defined words from
+`user_words.asc`.
+
+=== The Words `create` and `does>`
+
+The tandem of words `create` and `does>` is the most complex, but also most
+powerful part of Forth.  Understanding how it works in Tali Forth is important
+if you want to be able to modify the code. In this text, we walk through the
+generation process for a subroutine threaded code (STC) such as Tali Forth. 
+
+NOTE: For a more general take, see Brad Rodriguez' series of articles at
+http://www.bradrodriguez.com/papers/moving3.htm There is a discussion of this
+walkthrough at http://forum.6502.org/viewtopic.php?f=9&t=3153
+
+We start with the following standard example, a high-level Forth version of the
+word `constant`.
+
+----
+: constant  ( "name" -- )  create , does> @ ; 
+----
+
+We examine this in three phases or "sequences", following Rodriguez (based on
+<<DB>>).
+
+==== Sequence 1: Compiling the Word `constant`
+
+`constant` is a defining word, one that makes new words. In pseudocode,
+ignoring any compilation to native 65c02 assembler, the above compiles to:
+
+----
+        jsr CREATE
+        jsr COMMA
+        jsr (DOES>)         ; from DOES>
+   a:   jsr DODOES          ; from DOES>
+   b:   jsr FETCH
+        rts
+----
+
+To make things easier to explain later, we've added the labels `a` and
+`b` in the listing.
+
+NOTE: This example uses the traditional word `(does>)`, which in Tali Forth 2
+is actually an internal routine that does not appear as a separate word. This
+version is easier to explain.
+
+`does>` is an immediate word that adds not one, but two subroutine jumps, one
+to `(does>)` and one to `dodoes`, which is a pre-defined system routine like
+`dovar`. We'll discuss those later.
+
+In Tali Forth, a number of words such as `defer` are
+"hand-compiled", that is, instead of using forth such as
+
+----
+: defer create ['] abort , does> @ execute ;
+----
+
+we write an opimized assembler version ourselves (see the actual `defer` code).
+In these cases, we need to use `(does>)` and `dodoes` instead of `does>` as
+well.
+
+
+==== Sequence 2: Executing the word `constant`
+
+Now when we execute
+
+----
+        42 constant life
+----
+
+This pushes the `rts` of the calling routine -- call it "main" -- to the
+65c02's stack (the Return Stack, as Forth calls it), which now looks like this:
+
+----
+        (1) RTS               ; to main routine 
+----
+
+Without going into detail, the first two subroutine jumps of `constant` give us
+this word: 
+
+----
+        (Header "LIFE")
+        jsr DOVAR               ; in CFA, from LIFE's CREATE
+        4200                    ; in PFA (little-endian)
+----
+
+Next, we `jsr` to `(does>)`. The address that this pushes on the Return Stack
+is the instruction of `constant` we had labeled `a`. 
+
+----
+        (2) RTS to CONSTANT ("a") 
+        (1) RTS to main routine 
+----
+
+Now the tricks start. `(does>)` takes this address off the stack and uses it to
+replace the `dovar jsr` target in the CFA of our freshly created `life` word.
+We now have this: 
+
+----
+        (Header "LIFE")
+        jsr a                   ; in CFA, modified by (DOES>)
+   c:   4200                    ; in PFA (little-endian)
+----
+
+Note we added a label `c`. Now, when `(does>)` reaches its own `rts`, it finds
+the `rts` to the main routine on its stack. This is Good Thing(TM), because it
+aborts the execution of the rest of `constant`, and we don't want to do
+`dodoes` or `fetch` now. We're back at the main routine. 
+
+
+==== Sequence 3: Executing `life`
+
+Now we execute the word `life` from our "main" program. In a STC Forth
+such as Tali Forth, this executes a subroutine jump.
+
+----
+        jsr LIFE
+----
+
+The first thing this call does is push the return address to the main routine
+on the 65c02's stack:
+
+----
+        (1) RTS to main
+----
+
+The CFA of `life` executes a subroutine jump to label `a` in
+`constant`. This pushes the `rts` of `life` on the 65c02's
+stack:
+
+----
+        (2) RTS to LIFE ("c")
+        (1) RTS to main
+----
+
+This `jsr` to a lands us at the subroutine jump to `dodoes`, so the return
+address to `constant` gets pushed on the stack as well. We had given this
+instruction the label `b`. After all of this, we have three addresses on the
+65c02's stack:
+
+----
+        (3) RTS to CONSTANT ("b")
+        (2) RTS to LIFE ("c")
+        (1) RTS to main
+----
+
+\noindent `dodoes` pops address `b` off the 65c02's stack and puts it in a nice
+safe place on Zero Page, which we'll call `z`. More on that in a moment. First,
+`dodoes` pops the `rts` to `life`. This is `c`, the address of the PFA or
+`life`, where we stored the payload of this constant. Basically, `dodoes`
+performs a `dovar` here, and pushes `c` on the Data Stack. Now all we have left
+on the 65c02's stack is the `rts` to the main routine.
+
+----
+        [1] RTS to main
+----
+
+This is where `z` comes in, the location in Zero Page where we stored address
+`b` of `constant`. Remember, this is where the PFA of `constant` begins, the
+`fetch` command we had originally codes after `does>` in the very first
+definition. The really clever part: We perform an indirect `jmp` -- not a
+`jsr`! -- to this address.
+
+----
+        jmp (z)
+----
+
+Now the little payload program of `constant` is executed, the subroutine jump
+to `fetch`. Since we just put the PFA (`c`) on the Data Stack, `fetch` replaces
+this by 42, which is what we were aiming for all along.  And since `constant`
+ends with a `rts`, we pull the last remaining address off the 65c02's stack,
+which is the return address to the main routine where we started. And that's
+all.
+
+Put together, this is what we have to code:
+
+`does>`:: Compiles a subroutine jump to `(does>)`, then compiles a subroutine
+jump to `dodoes`.
+
+`(does>)`:: Pops the stack (address of subroutine jump to `dodoes` in
+`constant`, increase this by one, replace the original `dovar` jump target in
+`life`.
+
+`dodoes`:: Pop stack (PFA of `constant`), increase address by one, store on
+Zero Page; pop stack (PFA of `life`), increase by one, store on Data Stack;
+`jmp` to address we stored in Zero Page.
+
+Remember we have to increase the addresses by one because of the way `jsr`
+stores the return address for `rts` on the stack on the 65c02: It points to the
+third byte of the `jsr` instruction itself, not the actual return address. This
+can be annoying, because it requires a sequence like:
+
+----
+        inc z
+        bne +
+        inc z+1
+*       
+        (...)
+----
+
+Note that with most words in Tali Forth, as any STC Forth, the distinction
+between PFA and CFA is meaningless or at least blurred, because we go native
+anyway. It is only with words generated by `create` and `does>` where this
+really makes sense.
+
+=== Control Flow
+
+
+==== Branches
+
+For `if` and `then`, we need to compile something called a "conditional forward
+branch", traditionally called `0branch`.
+
+NOTE: Many Forths now use the words `cs-pick` and `cs-roll` instead of the
+`branch` variants, see
+http://lars.nocrew.org/forth2012/rationale.html\#rat:tools:CS-PICK Tali Forth
+might switch to this construction in the future. 
+
+
+Then, at run-time, if the
+value on the Data Stack is false (flag is zero), the branch is taken ("branch on
+zero", therefore the name). Execpt that we don't have the target of that branch
+yet -- it will later be added by `then`. For this to work, we remember
+the address after the `0branch` instruction during the compilation of
+`if`. This is put on the Data Stack, so that `then` knows where to
+compile it's address in the second step. Until then, a dummy value is compiled
+after `0branch` to reserve the space we need.
+
+NOTE: This section and the next one are based on a discussion at
+http://forum.6502.org/viewtopic.php?f=9\&t=3176 see there for more details.
+Another take on this subject that handles things a bit differently is at
+http://blogs.msdn.com/b/ashleyf/archive/2011/02/06/loopty-do-i-loop.aspx 
+
+In Forth, this can be realized by
+
+----
+        : if  postpone 0branch here 0 , ; immediate
+----
+
+and
+
+----
+        : then  here swap ! ; immediate
+----
+
+Note `then` doesn't actually compile anything at the location in memory where
+it is at. It's job is simply to help `if` out of the mess it created.  If we
+have an `else`, we have to add an unconditional `branch` and manipulate the
+address that `if` left on the Data Stack. The Forth for this is:
+
+----
+        : else  postpone branch here 0 , here rot ! ; immediate
+----
+
+Note that `then` has no idea what has just happened, and just like before
+compiles its address where the value on the top of the Data Stack told it to --
+except that this value now comes from `else`, not `if`.
+
+
+==== Loops
