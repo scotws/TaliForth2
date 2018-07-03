@@ -58,7 +58,7 @@ include::ch_disasm.adoc[]
 // --------------------------------------------------------
 = Developer Guide
 
-== How Tali Forth works
+== How Tali Forth Works
 include::ch_internals.adoc[]
 
 == Developing
@@ -98,6 +98,6 @@ include::ch_bibliography.adoc[]
 
 The Tali Forth 2 Manual was written with the https://www.vim.org/[vim] editor in
 https://asciidoctor.org/docs/what-is-asciidoc/[AsciiDoc] format, formatted to
-HTML with AsciiDoctor, and version controled with https://git-scm.com/[Git], all
+HTML with AsciiDoctor, and version controlled with https://git-scm.com/[Git], all
 under https://www.ubuntu.com/[Ubuntu] Linux 16.04 LTS.
 

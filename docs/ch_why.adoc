@@ -1,24 +1,24 @@
 [quote, Charles H. Moore, redgate Hub 2009] 
 Forth is well suited to resource-constrained situations. It doesn't need lots
-of memory and doesn't have much overhead. It can take full advantage of
-whatever hardware or interfaces exist. <<CHM1>>
+of memory and doesn't have much overhead. <<CHM1>>
 
 === The Big Picture
 
 This section provides background information on Forth, the 6502 processor, and
-why anybody would want to combine the two. It can be safely skipped if you
-already know all those things.
+why anybody would want to combine the two. It can be skipped if you already know
+all those things.
 
 ==== The 6502 CPU
 
 It is a well-established fact that humanity reached the apex of processor design
-with the 6502(((6502))) in 1976. Created by a team including Chuck
-Peddle((("Peddle, Chuck"))) and Bill Mensch((("Mensch, Bill"))), it was the
-engine that powered the 8-bit home computer revolution of the
-1980s.footnote:[Rumor has it that there was another MPU called "Z80",(((Z80)))
-but it ended up being a mere footnote.] The VIC-20(((VIC-20))), Commodore
-PET(((Commodore PET))), Apple II(((Apple II))), and Atari 800(((Atari 800))) 
-all used the 6502, among others.
+with the 6502(((6502))) in 1976. 
+
+Created by a team including Chuck Peddle((("Peddle, Chuck"))) and Bill
+Mensch((("Mensch, Bill"))), it was the engine that powered the 8-bit home
+computer revolution of the 1980s.footnote:[Rumor has it that there was another
+MPU called "Z80",(((Z80))) but it ended up being a mere footnote.] The
+VIC-20(((VIC-20))), Commodore PET(((Commodore PET))), Apple II(((Apple II))),
+and Atari 800(((Atari 800))) all used the 6502, among others.
 
 [#img_65c02]
 .The 65c02 MPU. Photo: Anthony King, released in the public domain
@@ -27,7 +27,7 @@ image::pics/W65c02.jpg[]
 More than 40 years later, the processor is still in production by the
 http://www.westerndesigncenter.com/wdc/w65c02s-chip.cfm[Western Design
 Center](((WDC))). Apart from commercial uses, there is an active hobbyist scene
-centered on the website http://6502.org/[6502.org].(((6502.org))) Quite a
+centered on the website http://6502.org/[6502.org].(((6502.org))) A
 number of people have built their own 8-bit computers based on this chip and
 the instructions there, including a
 http://wilsonminesco.com/6502primer/[primer] by Garth Wilson((("Wilson,
@@ -42,14 +42,14 @@ because of its clean instruction set architecture (ISA)(((instruction set
 architecture (ISA) ))) This is not the place to explain the joys of assembler.
 The official handbook for the 65c02 is _Programming the 65816_ <<EnL>>.
 
-TIP: GarthGarth  Wilson((("Wilson, Garth))) answers this question in greater
+TIP: Garth  Wilson((("Wilson, Garth))) answers this question in greater
 detail as part of his 6502 primer at http://wilsonminesco.com/6502primer/ .
 
 === Forth 
 
 [quote, Elliot Williams, Forth: The Hacker's language]
 If C gives you enough rope to hang yourself, Forth is a flamethrower crawling with
- cobras. <<EW>>
+cobras. <<EW>>
 
 Forth(((Forth)) is the _enfant terrible_ of programming languages. It was
 invented by Charles "Chuck" H. Moore((("Moore, Charles"))) in the 1960s to do
@@ -61,18 +61,18 @@ https://www.forth.com/resources/forth-programming-language
 
 As a language for people who actually need to get things done, it lets you run
 with scissors, play with fire, and cut corners until you've turned a square
-into a circle.  Forth is not for the faint-hearted: It is trivial, for
+into a circle. Forth is not for the faint-hearted: It is trivial, for
 instance, to redefine `1` as `2` and `true` as `false`. Though you can do really,
 really clever things with few lines of code, the result can be hard for other
 people to understand, leading to the reputation of Forth begin a "write-only
-language".  However, Forth excels when you positively, absolutely have to get
+language". However, Forth excels when you positively, absolutely have to get
 something done with hardware that is really too weak for the job.
 
-It should be no surprise that NASA(((NASA))) is one of the organizations who
-use Forth. The _Cassini_ mission(((Cassini))) to Saturn used a
+It should be no surprise that NASA(((NASA))) is one of the organizations that
+uses Forth. The _Cassini_ mission(((Cassini))) to Saturn used a
 http://www.cpushack.com/2013/02/21/charles-moore-forth-stack-processors/[Forth
 CPU], for instance. It is also perfect for small computers like the 8-bit
-65c02.  After a small boom in the 1980s, more powerful computers led to a
+65c02. After a small boom in the 1980s, more powerful computers led to a
 decline of the language. The "Internet of Things" (IOT) (((Internet of
 Things))) with embedded small processors has led to a certain amount of
 https://www.embedded.com/design/programming-languages-and-tools/4431133/Go-Forth-[renewed
@@ -80,18 +80,18 @@ interest] in the language. It helps that Forth is easy to implement: It is
 stack-based, uses Reverse Polish Notation (RPN)(((Reverse Polish Notation)))
 and a simple threaded(((threading))) interpreter model.
 
-There is no way this document can provide an adiquate introduction to Forth.
+There is no way this document can provide an adequate introduction to Forth.
 There are quite a number of tutorials, however, such as _A Beginner's Guide to
 Forth_ by J.V. Nobel ((("Nobel, J.V.")))<<JVN>> or the classic (but slightly
 dated) _Starting Forth_ by Leo Brodie.((("Brodie, Leo")))<<LB1>>
 Gforth,(((Gforth))) one of the more powerful free Forths, comes with its own
 http://www.complang.tuwien.ac.at/forth/gforth/Docs-html/Tutorial.html[tutorial].
 
-TIP: Once you have understood the basics of the language, do yourself a
-favor and read _Thinking Forth_ by Brodie((("Brodie, Leo")))<<LB2>> which deals
-with the philosophy of the language. Even if you never code a line of Forth
-afterwards, exposure to Forth will change the way you think about programming,
-much like Lisp(((Lisp))).
+TIP: Once you have understood the basics of the language, do yourself a favor
+and read _Thinking Forth_ by Brodie((("Brodie, Leo")))<<LB2>> which deals with
+the philosophy of the language. Even if you never code a line of Forth in your
+life, exposure to Forth will change the way you think about programming, much
+like Lisp(((Lisp))).
 
 === Writing Your Own Forth
 
@@ -101,20 +101,20 @@ shouldn't there be a bunch of Forths around already?
 
 ==== FIG Forth
 
-In fact, the classic Forth availble for the whole group of 8-bit MPUs is FIG
-Forth(((FIG Forth))). "FIG" stands for "Forth Interest Group". Ported to
-various architectures, it was original based on an incarnation for the 6502
-written by Bill Ragsdale((("Ragsdale, Bill))) and Robert Selzer((("Selzer,
-Robert"))). There are PDFs of the
-http://www.forth.org/fig-forth/fig-forth\_6502.pdf[6502 version] from September
-1980 freely available -- Forths are traditionally placed in the public domain
--- and more than one hobbyist has revised it to his machine.
+In fact, the classic Forth available for the whole group of 8-bit MPUs is FIG
+Forth(((FIG Forth))). "FIG" stands for "Forth Interest Group". Ported to various
+architectures, it was original based on an incarnation for the 6502 written by
+Bill Ragsdale((("Ragsdale, Bill))) and Robert Selzer((("Selzer, Robert"))).
+There are PDFs of the http://www.forth.org/fig-forth/fig-forth\_6502.pdf[6502
+version] from September 1980 freely available -- there is a tradition of placing
+Forth in the public domain -- and more than one hobbyist has revised it to his
+machine.
 
 However, Forth has changed a lot in the past three decades. There is now a
-standardized version called https://forth-standard.org/[ANS Forth],
-which includes very basic changes such as how the
-`do` loop works. Learning the language with FIG Forth is like learning
-English with _The Canterbury Tales_.((("Canterbury Tales, The")))
+standardized version called https://forth-standard.org/[ANS Forth], which
+includes very basic changes such as how the `do` loop works. Learning the
+language with FIG Forth is like learning English with _The Canterbury
+Tales_.((("Canterbury Tales, The")))
 
 ==== A Modern Forth for the 65c02
 
@@ -122,7 +122,3 @@ Tali Forth was created to provide an easy to understand modern Forth written
 especially for the 65c02 that anybody can understand, adapt to their own use,
 and maybe actually work with. As part of that effort, the source code is heavily
 commented. And this document tries to explain the internals in more detail.
-
-
-
-
