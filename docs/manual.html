@@ -483,22 +483,22 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel1">
 <li><a href="#_how_tali_forth_works">How Tali Forth works</a>
 <ul class="sectlevel2">
-<li><a href="#_stack">Stack</a></li>
+<li><a href="#_the_data_stack">The Data Stack</a></li>
 <li><a href="#_dictionary">Dictionary</a></li>
 <li><a href="#_input">Input</a></li>
 <li><a href="#_the_words_code_create_code_and_code_does_code">The Words <code>create</code> and <code>does&gt;</code></a></li>
 <li><a href="#_control_flow">Control Flow</a></li>
 <li><a href="#_native_compiling_2">Native Compiling</a></li>
-<li><a href="#_return_stack_special_cases">Return Stack special cases</a></li>
-<li><a href="#_underflow_stripping">Underflow stripping</a></li>
+<li><a href="#_return_stack_special_cases">Return Stack Special Cases</a></li>
+<li><a href="#_underflow_stripping">Underflow Stripping</a></li>
 <li><a href="#__code_cmove_code_code_cmove_code_and_code_move_code"><code>cmove</code>, <code>cmove&gt;</code> and <code>move</code></a></li>
 </ul>
 </li>
 <li><a href="#_developing">Developing</a>
 <ul class="sectlevel2">
-<li><a href="#_adding_new_words">Adding new words</a></li>
-<li><a href="#_deeper_changes">Deeper changes</a></li>
-<li><a href="#_code_cheat_sheet">Code Cheat Sheet</a></li>
+<li><a href="#_adding_new_words">Adding New Words</a></li>
+<li><a href="#_deeper_changes">Deeper Changes</a></li>
+<li><a href="#_code_cheat_sheets">Code Cheat Sheets</a></li>
 </ul>
 </li>
 <li><a href="#_future_and_long_term_plans">Future and Long-Term plans</a></li>
@@ -748,28 +748,30 @@ Decisions in the Forth Kernel" at
 </table>
 </div>
 <div class="paragraph">
-<p>Spoiler alert: Tali Forth ended up as a subroutine-threaded variant with a
-16-bit cell size and a dictionary that keeps headers and code separate. If you
-don&#8217;t care and just want to use the program, skip ahead.</p>
+<p>Spoiler alert: Tali Forth is a subroutine-threaded (STC) variant with a 16-bit
+cell size and a dictionary that keeps headers and code separate. If you don&#8217;t
+care and just want to use the program, skip ahead.</p>
 </div>
 <div class="sect3">
 <h4 id="_characteristics_of_the_65c02">Characteristics of the 65c02</h4>
 <div class="paragraph">
 <p>Since this is a bare-metal Forth, the most important consideration is the target
-processor. The 65c02 only has one full register, the accumulator A, and two
-secondary registers X and Y. All are 8-bit wide. There are 256 bytes that are
-more easily addressable on the Zero Page. A single hardware stack is used for
-subroutine jumps. The address bus is 16 bits wide for a maximum of 64 KiB of RAM
-and ROM For the default, simple setup, we assume 32 KiB of each.</p>
+processor. The 65c02 only has one full register, the accumulator A, as well as
+two secondary registers X and Y. All are 8-bit wide. There are 256 bytes that
+are more easily addressable on the Zero Page. A single hardware stack is used
+for subroutine jumps. The address bus is 16 bits wide for a maximum of 64 KiB of
+RAM and ROM.</p>
+</div>
+<div class="paragraph">
+<p>For the default setup, we assume 32 KiB of each, but allow this to be changed so
+people can adapt Tali to their own hardware.</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_cell_size">Cell Size</h4>
 <div class="paragraph">
-<p>The 16 bit address bus suggests the cell size should be 16 bits as well. This is
-still easy enough to realize on a 8-bit MPU, though not as comfortable as
-working with the 65816, the 65c02&#8217;s big brother, with an actual 16 bit register
-size.</p>
+<p>The 16-bit address bus suggests the cell size should be 16 bits as well. This is
+still easy enough to realize on a 8-bit MPU.</p>
 </div>
 </div>
 <div class="sect3">
@@ -780,40 +782,41 @@ There are four basic threading techniques: <a href="#GK">[GK]</a></p>
 </div>
 <div class="dlist">
 <dl>
-<dt class="hdlist1">Indirect threaded (ITC)</dt>
+<dt class="hdlist1">Indirect threading (ITC)</dt>
 <dd>
 <p>The oldest, original variant, used by FIG Forth. All
 other versions are modifications of this model.</p>
 </dd>
-<dt class="hdlist1">Direct threaded (DTC)</dt>
+<dt class="hdlist1">Direct threading (DTC)</dt>
 <dd>
 <p>Includes more assembler code to speed things up, but
 slightly larger than ITC.</p>
 </dd>
-<dt class="hdlist1">Token threaded (TTC)</dt>
+<dt class="hdlist1">Token threading (TTC)</dt>
 <dd>
 <p>The reverse of DTC in that it is slower, but uses less
 space than the other Forths. Words are created as a table of tokens.</p>
 </dd>
-<dt class="hdlist1">Subroutine threaded (STC)</dt>
+<dt class="hdlist1">Subroutine threading (STC)</dt>
 <dd>
-<p>This technique converts the words to a simple
-series of <code>jsr</code> combinations.</p>
+<p>Converts the words to a simple
+series of <code>jsr</code> combinations. Easy to understand and less complex than the other
+variants, but uses more space and is slower.</p>
 </dd>
 </dl>
 </div>
 <div class="paragraph">
 <p>Our lack of registers and the goal of creating a simple and easy to understand
-Forth makes subroutine threading the most attractive solution. We will try to
+Forth makes subroutine threading the most attractive solution. We try to
 mitigate the pain caused by the 12 cycle cost of each and every <code>jsr</code>-<code>rts</code>
-combination by including a relatively large number of native words.</p>
+combination by including a relatively high number of native words.</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_register_use">Register Use</h4>
 <div class="paragraph">
 <p>The lack of registers&#8201;&#8212;&#8201;and any registers larger than 8 bit at that&#8201;&#8212;&#8201;becomes
-apparent when you realize that Forth classically uses at least four "virtual"
+apparent when you realize that Forth classically uses at least four virtual
 registers:</p>
 </div>
 <table class="tableblock frame-all grid-all">
@@ -829,7 +832,7 @@ registers:</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">W</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Working register</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Working Register</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">IP</p></td>
@@ -846,13 +849,13 @@ registers:</p>
 </tbody>
 </table>
 <div class="paragraph">
-<p>On a modern processor like a RISC-V RV32I CPU with 32 registers of 32 bit each,
-this wouldn&#8217;t be a problem. In fact, we&#8217;d be trying to figure out what else we
-could keep in a register. On the 65c02, at least we get the RSP for free with
-the built-in stack pointer. This still leaves three registers. We cut that
-number down by one through subroutine threading, which gets rid of the IP.  For
-the DSP, we use the 65c02&#8217;s Zero Page indirect addressing mode with the X
-register. This leaves W, which we put on the Zero Page as well.</p>
+<p>On a modern processor like a RISC-V RV32I with 32 registers of 32 bit each, none
+of this would be a problem (in fact, we&#8217;d probably run out of ways to use the
+registers). On the 65c02, at least we get the RSP for free with the built-in
+stack pointer. This still leaves three registers. We cut that number down by one
+through subroutine threading, which gets rid of the IP. For the DSP, we use the
+65c02&#8217;s Zero Page indirect addressing mode with the X register. This leaves W,
+which we put on the Zero Page as well.</p>
 </div>
 </div>
 <div class="sect3">
@@ -860,19 +863,19 @@ register. This leaves W, which we put on the Zero Page as well.</p>
 <div class="paragraph">
 <p>We&#8217;ll go into greater detail on how the Data Stack works in a later chapter
 when we look at the internals. Briefly, the stack is realized on the Zero Page
-for speed. For stability, we provid underflow checks in the relevant words, but
-give the user the option of stripping it out for native compilation.</p>
+for speed. For stability, we provide underflow checks in the relevant words, but
+give the user the option of stripping it out for native compilation. There are
+no checks for overflow because those cases tend to be rare.</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_dictionary_structure">Dictionary Structure</h4>
 <div class="paragraph">
 <p>Each Forth word consists of the actual code and the header that holds the
-meta-data. Part of this data is the single-linked list of words which is
-searched.</p>
+meta-data. The headers are arranged as a simple single-linked list.</p>
 </div>
 <div class="paragraph">
-<p>In constrast to Tali Forth 1, which kept the header and body of the words
+<p>In contrast to Tali Forth 1, which kept the header and body of the words
 together, Tali Forth 2 keeps them separate. This lets us play various tricks
 with the code to make it more effective.</p>
 </div>
@@ -897,7 +900,7 @@ interested, a later chapter will provide far more detail.</p>
 <p>Tali Forth 2 lives on GitHub at
 <a href="https://github.com/scotws/TaliForth2" class="bare">https://github.com/scotws/TaliForth2</a>. This is where you will always find the
 current version. You can either clone the code with git or simply
-download it. In fact, to just test Tali Forth, all you need is the binary file
+download it. To just test Tali Forth, all you need is the binary file
 <code>taliforth-py65mon.bin</code>.</p>
 </div>
 </div>
@@ -909,7 +912,7 @@ download it. In fact, to just test Tali Forth, all you need is the binary file
 <p>Tali was written to run out of the box on the py65mon simulator from
 <a href="https://github.com/mnaberez/py65" class="bare">https://github.com/mnaberez/py65</a>. This is a Python
 program that should run on various operating systems. Py65mon is also required
-for testing.</p>
+for the test suite.</p>
 </div>
 <div class="paragraph">
 <p>To install py65mon on Linux, use the command</p>
@@ -920,13 +923,13 @@ for testing.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>If you don&#8217;t have PIP installed, you will have to add it first with
-<code>sudo apt-get install python-pip</code>. There is a <code>setup.py</code> script as part of the
-package.</p>
+<p>If you don&#8217;t have <code>pip</code> installed, you will have to add it first with
+something like <code>sudo apt-get install python-pip</code> (Ubuntu Linux). There is a
+<code>setup.py</code> script as part of the package.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_running_the_binary">Running the binary</h4>
+<h4 id="_running_the_binary">Running the Binary</h4>
 <div class="paragraph">
 <p>To start the emulator, run:</p>
 </div>
@@ -945,10 +948,10 @@ use of the additional commands of the CMOS version and will not run on a stock
 <div class="sect2">
 <h3 id="_installing_on_your_own_hardware">Installing on Your Own Hardware</h3>
 <div class="paragraph">
-<p>The Tali Forth project started out as a way to run Forth on my own 65c02 computer,
-the Übersquirrel. Though it soon developed a life of it&#8217;s own, a
-central aim of the project is to provide a working, modern Forth that people can install
-on their projects.</p>
+<p>The Tali Forth project started out as a way to run Forth on my own 65c02
+computer, the Übersquirrel. Though it soon developed a life of
+its own, a central aim of the project is to provide a working, modern Forth that
+people can install on their projects.</p>
 </div>
 <div id="img_uebersquirrel" class="imageblock">
 <div class="content">
@@ -1313,7 +1316,7 @@ assembler based on Simpler Assembler Notation (SAN).
 <div class="sect2">
 <h3 id="_disassembler">Disassembler</h3>
 <div class="paragraph">
-<p>Tali Forth is currently shipped with a very primitive disasembler, which is
+<p>Tali Forth is currently shipped with a very primitive disassembler, which is
 started with <code>disasm ( addr u&#8201;&#8212;&#8201;)</code>.</p>
 </div>
 <div class="sect3">
@@ -1324,7 +1327,7 @@ an instruction to the main mnemonic, simplifying parsing of code. For instance,<
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>lda #$01
+<pre>lda #1
 sta $1000,x
 sta $80
 lda ($80)</pre>
@@ -1335,7 +1338,7 @@ lda ($80)</pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>lda.# $01
+<pre>lda.# 1
 sta.x $1000
 sta.z $80
 lda.di $80</pre>
@@ -1365,14 +1368,13 @@ after the label <code>disassembler:</code>.</p>
 <h2 id="_how_tali_forth_works">How Tali Forth works</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_stack">Stack</h3>
+<h3 id="_the_data_stack">The Data Stack</h3>
 <div class="paragraph">
-<p>Tali Forth 2 uses the lowest part of the top half of Zero Page
-for the Data Stack (DS). This leaves the lower half of the Zero Page for any
-kernel stuff the user might require. The DS therefore grows towards the initial
-user variables. See the file <code>definitions.asm</code> for details.  Because of the
+<p>Tali Forth uses the lowest part of the top half of the Zero Page for the Data Stack (DS). This leaves the lower half of the Zero Page
+for any kernel stuff the user might require. The DS grows towards the initial
+user variables. See the file <code>definitions.asm</code> for details. Because of the
 danger of underflow, it is recommended that the user kernel&#8217;s
-variables are keep closer to $0100 than to $007f.</p>
+variables are kept closer to $0100 than to $007F.</p>
 </div>
 <div class="paragraph">
 <p>The X register is used as the Data Stack Pointer (DSP). It
@@ -1388,37 +1390,32 @@ points to the least significant byte of the current top element of the stack
 <td class="content">
 In the first versions of Tali Forth 1, the DSP pointed to the next <em>free</em>
 element of the stack. The new system makes detecting underflow easier and
-parallels the structure of Liara Forth.
+follows the convention in Liara Forth.
 </td>
 </tr>
 </table>
 </div>
 <div class="paragraph">
 <p>Initially, the DSP points to $78, not $7F as might be expected. This provides a
-few bytes as a "floodplain" underflow. The initial value of the
-DSP is defined as <code>dsp0</code> in the code.</p>
+few bytes as a "floodplain" for underflow. The initial value of
+the DSP is defined as <code>dsp0</code> in the code.</p>
 </div>
 <div class="sect3">
-<h4 id="_single_cell_values">Single cell values</h4>
+<h4 id="_single_cell_values">Single Cell Values</h4>
 <div class="paragraph">
-<p>Since the cell size is 16 bits, each stack entry
-consists of two bytes. They are stored little endian (least
-significant byte first). Therefore, the DSP points to the LSB of the current</p>
+<p>Since the cell size is 16 bits, each stack entry consists of two bytes. They are
+stored little endian (least significant byte first). Therefore, the DSP points
+to the LSB of the current TOS. <sup class="footnote">[<a id="_footnoteref_3" class="footnote" href="#_footnote_3" title="View footnote.">3</a>]</sup></p>
 </div>
 <div class="paragraph">
-<p>TOS.<sup class="footnote">[<a id="_footnoteref_3" class="footnote" href="#_footnote_3" title="View footnote.">3</a>]</sup></p>
-</div>
-<div class="paragraph">
-<p>Because the DSP points to the current top of the stack, the byte it points to</p>
-</div>
-<div class="paragraph">
-<p>after boot&#8201;&#8212;&#8201;<code>dsp0</code>&#8201;&#8212;&#8201;will never be accessed: The DSP is decremented first
+<p>Because the DSP points to the current top of the stack, the byte it points to
+after boot&#8201;&#8212;&#8201;<code>dsp0</code>&#8201;&#8212;&#8201;will never be accessed: The DSP is decremented first
 with two <code>dex</code> instructions, and then the new value is placed on the stack.
 This means that the initial byte is garbage and can be considered part of the
 floodplain.</p>
 </div>
 <div class="literalblock">
-<div class="title">Snapshot of the Data Stack with one entry as Top of the Stack (TOS). The DSP has been increased by one and the value written.</div>
+<div class="title">Snapshot of the Data Stack with one entry as TOS. The DSP has been increased by one and the value written.</div>
 <div class="content">
 <pre>              +--------------+
               |          ... |
@@ -1451,19 +1448,19 @@ basic structure is the same for both stacks.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_underflow_detection_2">Underflow detection</h4>
+<h4 id="_underflow_detection_2">Underflow Detection</h4>
 <div class="paragraph">
-<p>In contrast to Tali Forth 1, this version contains underflow detection for most
-words. It does this by comparing the Data Stack Pointer (X) to values that it
-must be smaller than (because the stack grows towards 0000). For instance, to
-make sure we have one element on the stack, we write</p>
+<p>Most native words come with built-in underflow detection. This works by
+comparing the Data Stack Pointer (X) to values that it must be smaller than
+(because the stack grows towards 0000). For instance, to make sure we have one
+element on the stack, we write</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre>                cpx #dsp0-1
-                bmi okay
+                bmi _ok
                 jmp underflow
-okay:
+_ok:
                 (...)</pre>
 </div>
 </div>
@@ -1501,7 +1498,8 @@ okay:
 </table>
 <div class="paragraph">
 <p>Underflow detection adds seven bytes to the words that have it. However, it
-increases the stability of the program enormously.</p>
+increases the stability of the program. There is an option for stripping it out
+during for user-defined words (see below).</p>
 </div>
 </div>
 <div class="sect3">
@@ -1526,7 +1524,7 @@ bit at the beginning of the byte below the DSP.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>Tali Forth 2 does not check for overflow, which in normal operation is too rare
+<p>Tali Forth does not check for overflow, which in normal operation is too rare
 to justify the computing expense.</p>
 </div>
 </div>
@@ -1534,14 +1532,14 @@ to justify the computing expense.</p>
 <div class="sect2">
 <h3 id="_dictionary">Dictionary</h3>
 <div class="paragraph">
-<p>Tali Forth 2 follows the traditional model of a Forth dictionary&#8201;&#8212;&#8201;a linked list
+<p>Tali Forth follows the traditional model of a Forth dictionary&#8201;&#8212;&#8201;a linked list
 of words terminated with a zero pointer. The headers and code are kept separate
 to allow various tricks in the code.</p>
 </div>
 <div class="sect3">
 <h4 id="_elements_of_the_header">Elements of the Header</h4>
 <div class="paragraph">
-<p>Each header is at least eight byts long:</p>
+<p>Each header is at least eight bytes long:</p>
 </div>
 <div class="literalblock">
 <div class="content">
@@ -1550,7 +1548,7 @@ to allow various tricks in the code.</p>
 nt_word -&gt;  +--------+--------+
          +0 | Length | Status |
             +--------+--------+
-         +2 | Next Header     | nt_next_word
+         +2 | Next Header     | next nt_word
             +-----------------+
          +4 | Start of Code   | xt_word
             +-----------------+
@@ -1602,28 +1600,74 @@ the flags defined in the file <code>definitions.asm</code>:</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>UF</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Underflow dectection</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Underflow detection</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>HC</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Has Code Field Area (CFA)</p></td>
 </tr>
 </tbody>
 </table>
 <div class="paragraph">
-<p>Note there are currently three bits unused. The status byte is followed by the
-<strong>pointer to the next header</strong> in the linked list, which makes it the name
-token of the next word. A 0000 in this position signales the end of the linked
-list, which by convention is the word <code>bye</code>.</p>
+<p>Note there are currently two bits unused.</p>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+CO
+</td>
+<td class="hdlist2">
+<p>This word may only be used inside definitions of new words.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+IM
+</td>
+<td class="hdlist2">
+<p>Word is executed immediately during definitions of new words.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+NN
+</td>
+<td class="hdlist2">
+<p>Word is never inlined. Usually means that the return address from a
+subroutine jump is required for processing.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+AN
+</td>
+<td class="hdlist2">
+<p>Word must always be inlined.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+HC
+</td>
+<td class="hdlist2">
+<p>Consider first three bytes of the word&#8217;s code the Code Field Area (CFA)
+of the word. Used by words defined with <code>create</code> so <code>&gt;body</code> returns
+the correct value.</p>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The status byte is followed by the <strong>pointer to the next header</strong> in the linked
+list, which makes it the name token of the next word. A 0000 in this position
+signals the end of the linked list, which by convention is the word <code>bye</code> for
+the native code words.</p>
 </div>
 <div class="paragraph">
 <p>This is followed by the current word&#8217;s <strong>execution token</strong> (xt, <code>xt_word</code>) that
 points to the start of the actual code. Some words that have the same
-functionality point to the same code block. The <strong>end of the code</strong> is
-referenced through the next pointer (<code>z_word</code>) to enable native compilation of
-the word if allowed.</p>
-</div>
-<div class="paragraph">
-<p>The <strong>name string</strong> starts at the eighth byte. The string is <em>not</em>
-zero-terminated. By default, the strings of Tali Forth 2 are lower case, but
-case is respected for words the user defines, so <code>quarian</code> is a different word
-than <code>QUARIAN</code>.</p>
+functionality point to the same code block.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -1632,8 +1676,32 @@ than <code>QUARIAN</code>.</p>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-In ALPHA, upper case versions of the ANSI Forth words are not recognized. This is
-to be changed in future versions.
+Because Tali uses a subroutine threaded model (STC), the classic Forth
+distinction between the Code Field Area (CFA) and the Parameter Field Area
+(PFA, also Data Field Area) is meaningless&#8201;&#8212;&#8201;it&#8217;s all "payload".
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The next pointer is for the <strong>end of the code</strong> (<code>z_word</code>) to enable native
+compilation of the word (if allowed and requested).</p>
+</div>
+<div class="paragraph">
+<p>The <strong>name string</strong> starts at the eighth byte. The string is <em>not</em>
+zero-terminated. By default, the strings of Tali Forth are lower case, but case
+is respected for words the user defines, so <code>quarian</code> is a different word than
+<code>QUARIAN</code>.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Currently, upper case versions of the ANS Forth words are not recognized.
+This will be changed in future releases.
 </td>
 </tr>
 </table>
@@ -1642,18 +1710,20 @@ to be changed in future versions.
 <div class="sect3">
 <h4 id="_structure_of_the_header_list">Structure of the Header List</h4>
 <div class="paragraph">
-<p>Tali Forth 2 distinguishes between three different list sources: The <strong>native
+<p>Tali Forth distinguishes between three different word sources: The <strong>native
 words</strong> that are hard-coded in the file <code>native_words.asm</code>, the <strong>Forth words</strong>
-which are defined as high-level words and then generated at run-time when Tali
-Forth starts up, and <strong>user words</strong> in the file <code>user_words.asm</code>.</p>
+from <code>forth_words.asm</code> which are defined as high-level words and then generated
+at run-time when Tali Forth starts up, and <strong>user words</strong> in the file
+<code>user_words.asm</code>.</p>
 </div>
 <div class="paragraph">
 <p>Tali has an unusually high number of native words in an attempt to make the
-Forth as fast as possible on the 65c02. The first word in the list&#8201;&#8212;&#8201;the one
+Forth as fast as possible on the 65c02 and compensate for the disadvantages of
+the subroutine threading model (STC). The first word on that list&#8201;&#8212;&#8201;the one
 that is checked first&#8201;&#8212;&#8201;is always <code>drop</code>, the last one&#8201;&#8212;&#8201;the one checked for
 last&#8201;&#8212;&#8201;is always <code>bye</code>. The words which are (or are assumed to be) used more
 than others come first. Since humans are slow, words that are used more
-interactively like <code>words</code> come later.</p>
+interactively like <code>words</code> always come later.</p>
 </div>
 <div class="paragraph">
 <p>The list of Forth words ends with the intro strings. This functions as a
@@ -1663,7 +1733,7 @@ the Forth words worked.</p>
 <div class="literalblock">
 <div class="content">
 <pre>   $0000  +-------------------+  ram_start, zpage, user0
-          |  User varliables  |
+          |  User variables  |
           +-------------------+
           |                   |
           |  ^  Data Stack    |  &lt;-- dsp
@@ -1725,8 +1795,8 @@ the Forth words worked.</p>
 <div class="sect2">
 <h3 id="_input">Input</h3>
 <div class="paragraph">
-<p>Tali Forth 2, like Liara Forth, follows the ANSI input model with <code>refill</code>
-instead of older forms. There are up to four possible input sources in Forth:</p>
+<p>Tali Forth follows the ANS Forth input model with <code>refill</code> instead of older
+forms. There are four possible input sources:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -1746,23 +1816,37 @@ instead of older forms. There are up to four possible input sources in Forth:</p
 </div>
 <div class="paragraph">
 <p>To check which one is being used, we first call <code>blk</code> which gives us the number
-of a mass storage block being used, or 0 for the "user input device"
-(keyboard).  In the second case, we use <code>source-id</code> to find out where input is
-coming from: 0 for the keyboard, -1 ($FFFF) for a string in memory, and a
-number <code>n</code> for a file-id.</p>
+of a mass storage block being used, or 0 for the "user input device" (keyboard).
+In the second case, we use <code>source-id</code> to find out where input is coming from:</p>
 </div>
-<div class="admonitionblock note">
-<table>
+<table class="tableblock frame-all grid-all">
+<caption class="title">Table 4. Non-block input sources</caption>
+<colgroup>
+<col>
+<col>
+</colgroup>
+<tbody>
 <tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-Since Tali currently doesn&#8217;t support blocks, we can skip the <code>blk</code>
-instruction and go right to <code>source-id</code>.
-</td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Value</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Source</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">keyboard</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string in memory</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>n</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">file-id</p></td>
+</tr>
+</tbody>
 </table>
+<div class="paragraph">
+<p>Since Tali currently doesn&#8217;t support blocks, we can skip the <code>blk</code> instruction
+and go right to <code>source-id</code>.</p>
 </div>
 <div class="admonitionblock warning">
 <table>
@@ -1771,10 +1855,10 @@ instruction and go right to <code>source-id</code>.
 <i class="fa icon-warning" title="Warning"></i>
 </td>
 <td class="content">
-One gotcha with Tali Forth&#8217;s input is that current it only sees
-spaces, but not other whitespace, as delimiters. This means that Forth text
-files that are fed to Tali should not contain tabs. This behavior might be
-changed in the future.
+One gotcha with Tali Forth&#8217;s input is that current it only sees spaces,
+but not other whitespace, as delimiters. This means that Forth text files that
+are fed to Tali may not contain tabs. This behavior might be changed in the
+future.
 </td>
 </tr>
 </table>
@@ -1782,11 +1866,10 @@ changed in the future.
 <div class="sect3">
 <h4 id="_booting_2">Booting</h4>
 <div class="paragraph">
-<p>The intial commands after reboot flow into each other: <code>cold</code> to
-<code>abort</code> to <code>quit</code>. This is the same as with pre-ANSI Forths.
-However, <code>quit</code> now calls <code>refill</code> to get the input.
-<code>refill</code> does different things based on which of the four input sources
-(see above) is active:</p>
+<p>The initial commands after reboot flow into each other: <code>cold</code> to <code>abort</code> to
+<code>quit</code>. This is the same as with pre-ANSI Forths.  However, <code>quit</code> now calls
+<code>refill</code> to get the input.  <code>refill</code> does different things based on which of the
+four input sources (see above) is active:</p>
 </div>
 <div class="hdlist">
 <table>
@@ -1830,7 +1913,7 @@ Input from a file
 <h4 id="_the_command_line_interface_cli">The Command Line Interface (CLI)</h4>
 <div class="paragraph">
 <p>Tali Forth accepts input lines of up to 256 characters. The address of the
-current input buffer is stored in <code>cib</code>.  The length of the current buffer is
+current input buffer is stored in <code>cib</code>. The length of the current buffer is
 stored in <code>ciblen</code>&#8201;&#8212;&#8201;this is the address that <code>&gt;in</code> returns.  <code>source</code> by
 default returns <code>cib</code> and <code>ciblen</code> as the address and length of the input
 buffer.</p>
@@ -1848,7 +1931,7 @@ buffer.</p>
 </div>
 <div class="paragraph">
 <p>Tali Forth uses <code>evaluate</code> to load high-level Forth words from the file
-<code>forth_words.asc</code> and, if present, extra, user-defined words from
+<code>forth_words.asc</code> and, if present, any extra, user-defined words from
 <code>user_words.asc</code>.</p>
 </div>
 </div>
@@ -1857,7 +1940,7 @@ buffer.</p>
 <h3 id="_the_words_code_create_code_and_code_does_code">The Words <code>create</code> and <code>does&gt;</code></h3>
 <div class="paragraph">
 <p>The tandem of words <code>create</code> and <code>does&gt;</code> is the most complex, but also most
-powerful part of Forth.  Understanding how it works in Tali Forth is important
+powerful part of Forth. Understanding how it works in Tali Forth is important
 if you want to be able to modify the code. In this text, we walk through the
 generation process for a subroutine threaded code (STC) such as Tali Forth.</p>
 </div>
@@ -1868,7 +1951,7 @@ generation process for a subroutine threaded code (STC) such as Tali Forth.</p>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-For a more general take, see Brad Rodriguez' series of articles at
+For a more general explanation, see Brad Rodriguez' series of articles at
 <a href="http://www.bradrodriguez.com/papers/moving3.htm" class="bare">http://www.bradrodriguez.com/papers/moving3.htm</a> There is a discussion of this
 walkthrough at <a href="http://forum.6502.org/viewtopic.php?f=9&amp;t=3153" class="bare">http://forum.6502.org/viewtopic.php?f=9&amp;t=3153</a>
 </td>
@@ -1928,8 +2011,8 @@ to <code>(does&gt;)</code> and one to <code>dodoes</code>, which is a pre-define
 <code>dovar</code>. We&#8217;ll discuss those later.</p>
 </div>
 <div class="paragraph">
-<p>In Tali Forth, a number of words such as <code>defer</code> are
-"hand-compiled", that is, instead of using forth such as</p>
+<p>In Tali Forth, a number of words such as <code>defer</code> are "hand-compiled", that is,
+instead of using forth such as</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1937,19 +2020,19 @@ to <code>(does&gt;)</code> and one to <code>dodoes</code>, which is a pre-define
 </div>
 </div>
 <div class="paragraph">
-<p>we write an opimized assembler version ourselves (see the actual <code>defer</code> code).
+<p>we write an optimized assembler version ourselves (see the actual <code>defer</code> code).
 In these cases, we need to use <code>(does&gt;)</code> and <code>dodoes</code> instead of <code>does&gt;</code> as
 well.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_sequence_2_executing_the_word_code_constant_code">Sequence 2: Executing the word <code>constant</code></h4>
+<h4 id="_sequence_2_executing_the_word_code_constant_code">Sequence 2: Executing the Word <code>constant</code></h4>
 <div class="paragraph">
 <p>Now when we execute</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>        42 constant life</pre>
+<pre>42 constant life</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1958,7 +2041,7 @@ well.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>        (1) RTS               ; to main routine</pre>
+<pre>        (1) rts                 ; to main routine</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1978,8 +2061,8 @@ is the instruction of <code>constant</code> we had labeled <code>a</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>        (2) RTS to CONSTANT ("a")
-        (1) RTS to main routine</pre>
+<pre>        (2) rts to CONSTANT ("a")
+        (1) rts to main routine</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2018,18 +2101,17 @@ on the 65c02&#8217;s stack:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>        (1) RTS to main</pre>
+<pre>        (1) rts to main</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The CFA of <code>life</code> executes a subroutine jump to label <code>a</code> in
-<code>constant</code>. This pushes the <code>rts</code> of <code>life</code> on the 65c02&#8217;s
-stack:</p>
+<p>The CFA of <code>life</code> executes a subroutine jump to label <code>a</code> in <code>constant</code>. This
+pushes the <code>rts</code> of <code>life</code> on the 65c02&#8217;s stack:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>        (2) RTS to LIFE ("c")
-        (1) RTS to main</pre>
+<pre>        (2) rts to LIFE ("c")
+        (1) rts to main</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2046,12 +2128,12 @@ instruction the label <code>b</code>. After all of this, we have three addresses
 </div>
 </div>
 <div class="paragraph">
-<p>\noindent <code>dodoes</code> pops address <code>b</code> off the 65c02&#8217;s stack and puts it in a nice
-safe place on Zero Page, which we&#8217;ll call <code>z</code>. More on that in a moment. First,
-<code>dodoes</code> pops the <code>rts</code> to <code>life</code>. This is <code>c</code>, the address of the PFA or
-<code>life</code>, where we stored the payload of this constant. Basically, <code>dodoes</code>
-performs a <code>dovar</code> here, and pushes <code>c</code> on the Data Stack. Now all we have left
-on the 65c02&#8217;s stack is the <code>rts</code> to the main routine.</p>
+<p><code>dodoes</code> pops address <code>b</code> off the 65c02&#8217;s stack and puts it in a nice safe place
+on Zero Page, which we&#8217;ll call <code>z</code>. More on that in a moment. First, <code>dodoes</code>
+pops the <code>rts</code> to <code>life</code>. This is <code>c</code>, the address of the PFA or <code>life</code>, where
+we stored the payload of this constant. Basically, <code>dodoes</code> performs a <code>dovar</code>
+here, and pushes <code>c</code> on the Data Stack. Now all we have left on the 65c02&#8217;s
+stack is the <code>rts</code> to the main routine.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2143,20 +2225,19 @@ branch", traditionally called <code>0branch</code>.</p>
 Many Forths now use the words <code>cs-pick</code> and <code>cs-roll</code> instead of the
 <code>branch</code> variants, see
 <a href="http://lars.nocrew.org/forth2012/rationale.html\#rat:tools:CS-PICK" class="bare">http://lars.nocrew.org/forth2012/rationale.html\#rat:tools:CS-PICK</a> Tali Forth
-might switch to this construction in the future.
+will probably switch to this variant in the future.
 </td>
 </tr>
 </table>
 </div>
 <div class="paragraph">
-<p>Then, at run-time, if the
-value on the Data Stack is false (flag is zero), the branch is taken ("branch on
-zero", therefore the name). Execpt that we don&#8217;t have the target of that branch
-yet&#8201;&#8212;&#8201;it will later be added by <code>then</code>. For this to work, we remember
-the address after the <code>0branch</code> instruction during the compilation of
-<code>if</code>. This is put on the Data Stack, so that <code>then</code> knows where to
-compile it&#8217;s address in the second step. Until then, a dummy value is compiled
-after <code>0branch</code> to reserve the space we need.</p>
+<p>At run-time, if the value on the Data Stack is false (flag is zero), the branch
+is taken ("branch on zero", therefore the name). Except that we don&#8217;t have the
+target of that branch yet&#8201;&#8212;&#8201;it will later be added by <code>then</code>. For this to work,
+we remember the address after the <code>0branch</code> instruction during the compilation
+of <code>if</code>. This is put on the Data Stack, so that <code>then</code> knows where to compile
+it&#8217;s address in the second step. Until then, a dummy value is compiled after
+<code>0branch</code> to reserve the space we need.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -2178,7 +2259,7 @@ Another take on this subject that handles things a bit differently is at
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>        : if  postpone 0branch here 0 , ; immediate</pre>
+<pre>: if  postpone 0branch here 0 , ; immediate</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2186,18 +2267,18 @@ Another take on this subject that handles things a bit differently is at
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>        : then  here swap ! ; immediate</pre>
+<pre>: then  here swap ! ; immediate</pre>
 </div>
 </div>
 <div class="paragraph">
 <p>Note <code>then</code> doesn&#8217;t actually compile anything at the location in memory where
-it is at. It&#8217;s job is simply to help <code>if</code> out of the mess it created.  If we
+it is at. It&#8217;s job is simply to help <code>if</code> out of the mess it has created. If we
 have an <code>else</code>, we have to add an unconditional <code>branch</code> and manipulate the
 address that <code>if</code> left on the Data Stack. The Forth for this is:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>        : else  postpone branch here 0 , here rot ! ; immediate</pre>
+<pre>: else  postpone branch here 0 , here rot ! ; immediate</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2208,21 +2289,21 @@ compiles its address where the value on the top of the Data Stack told it to&#82
 <div class="sect3">
 <h4 id="_loops">Loops</h4>
 <div class="paragraph">
-<p>Loops are far more complicated, because we have <code>do</code>, <code>?do</code>, <code>loop</code>, <code>+loop</code>,
+<p>Loops are more complicated, because we have <code>do</code>, <code>?do</code>, <code>loop</code>, <code>+loop</code>,
 <code>unloop</code>, and <code>leave</code> to take care of. These can call up to three addresses: One
-for the normal looping action (<code>loop</code> and <code>+loop</code>), one to skip over the loop at the
-beginning (<code>?do</code>) and one to skip out of the loop (<code>leave</code>).</p>
+for the normal looping action (<code>loop</code> and <code>+loop</code>), one to skip over the loop at
+the beginning (<code>?do</code>) and one to skip out of the loop (<code>leave</code>).</p>
 </div>
 <div class="paragraph">
 <p>Based on a suggestion by Garth Wilson, we begin each loop in run-time by saving
 the address after the whole loop construct to the Return Stack. That way,
 <code>leave</code> and <code>?do</code> know where to jump to when called, and we don&#8217;t interfere with
-any <code>if-then</code> structures. On top of that address, we place the limit and start
+any <code>if</code>-<code>then</code> structures. On top of that address, we place the limit and start
 values for the loop.</p>
 </div>
 <div class="paragraph">
 <p>The key to staying sane while designing these constructs is to first make
-a list of what we want to happen at compile-time and what at run-time. Let&#8217;s
+a list of what we want to happen at compile time and what at run time. Let&#8217;s
 start with a simple <code>do</code>-<code>loop</code>.</p>
 </div>
 <div class="sect4">
@@ -2324,7 +2405,7 @@ high-level Forth as</p>
 </div>
 </div>
 <div class="paragraph">
-<p>indent in assembler is simply</p>
+<p>in assembler is simply</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2333,11 +2414,10 @@ high-level Forth as</p>
 </div>
 </div>
 <div class="paragraph">
-<p>as an immediate, compile-only word. Theare are two obvious problems with this
-method: First, it is slow, because each <code>jsr/rts</code> pair consumes four bytes and
-12 cycles as overhead. Second, for smaller words, the jumps use far more bytes
-than the actual code. Take for instance <code>drop</code>, which in its naive form is
-simply</p>
+<p>as an immediate, compile-only word. There are two problems with this method:
+First, it is slow, because each <code>jsr</code>-<code>rts</code> pair consumes four bytes and 12
+cycles as overhead. Second, for smaller words, the jumps use far more bytes than
+the actual code. Take for instance <code>drop</code>, which in its naive form is simply</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2368,11 +2448,11 @@ assembler code is</p>
 <p>for eleven bytes. We&#8217;ll discuss the underflow checks further below.)</p>
 </div>
 <div class="paragraph">
-<p>To get rid of this problem, Tali Forth supports <strong>native compiling</strong> (actually
-more a form of inlining). The system variable <code>nc-limit</code> sets the threshhold up
-to which a word will be included not as a subroutine jump, but machine
-language. Let&#8217;s start with an example where <code>nc-limit</code> is set to zero, that is,
-all words are compiled as subroutine jumps. Take a simple word such as</p>
+<p>To get rid of this problem, Tali Forth supports <strong>native compiling</strong> (also known
+as inlining). The system variable <code>nc-limit</code> sets the threshold up to which a
+word will be included not as a subroutine jump, but in machine language. Let&#8217;s
+start with an example where <code>nc-limit</code> is set to zero, that is, all words are
+compiled as subroutine jumps. Take a simple word such as</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2392,9 +2472,9 @@ all words are compiled as subroutine jumps. Take a simple word such as</p>
 </div>
 </div>
 <div class="paragraph">
-<p>(The actual addresses might be different, this is from the ALPHA release).  Our
+<p>(The actual addresses might be different, this is from the ALPHA release). Our
 word <code>aaa</code> consists of two subroutine jumps, one to zero and one to <code>drop</code>.
-Now, if we increase the threshhold to 20, we get different code, as this
+Now, if we increase the threshold to 20, we get different code, as this
 console session shows:</p>
 </div>
 <div class="listingblock">
@@ -2441,14 +2521,14 @@ another, changing <code>nc-limit</code> should show differences in the Forth wor
 </div>
 </div>
 <div class="sect2">
-<h3 id="_return_stack_special_cases">Return Stack special cases</h3>
+<h3 id="_return_stack_special_cases">Return Stack Special Cases</h3>
 <div class="paragraph">
-<p>There are a few words that cause problems with Subroutine Threaded Code (STC):
-Those that access the Return Stack such as <code>r&gt;</code>, <code>&gt;r</code>, <code>r@</code>, <code>2r&gt;</code>, and <code>2&gt;r</code>,
-we first have to remove the return address on the top of the stack, only to
+<p>There are a few words that cause problems with subroutine threaded code (STC):
+Those that access the Return Stack such as <code>r&gt;</code>, <code>&gt;r</code>, <code>r@</code>, <code>2r&gt;</code>, and <code>2&gt;r</code>.
+We first have to remove the return address on the top of the stack, only to
 replace it again before we return to the caller. This mechanism would normally
-prevent the word from being natively compiled at all, because we&#8217;d try to
-remove a return address that doesn&#8217;t exit.</p>
+prevent the word from being natively compiled at all, because we&#8217;d try to remove
+a return address that doesn&#8217;t exit.</p>
 </div>
 <div class="paragraph">
 <p>This becomes clearer when we examine the code for <code>&gt;r</code> (comments
@@ -2488,7 +2568,7 @@ be compiled into the new word.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_underflow_stripping">Underflow stripping</h3>
+<h3 id="_underflow_stripping">Underflow Stripping</h3>
 <div class="paragraph">
 <p>As described above, every underflow check adds seven bytes to the word being
 coded. Stripping this check by setting the <code>uf-strip</code> system variable to <code>true</code>
@@ -2551,9 +2631,9 @@ called "propagation" or "clobbering" : Some of the characters are overwritten.
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>create testbuf char a c, char b c, char c c, char d c,  ( ok )
-testbuf 4 type ( abcd ok )
-testbuf dup char+ 3 cmove  ( ok )
+<pre>create testbuf  char a c,  char b c,  char c c,  char d c,  ( ok )
+testbuf 4 type  ( abcd ok )
+testbuf dup char+ 3  cmove  ( ok )
 testbuf 4 type ( aaaa ok )</pre>
 </div>
 </div>
@@ -2563,8 +2643,8 @@ The last two lines would be:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>testbuf dup char+ 3 move  ( ok )
-testbuf 4 type ( aabc ok )</pre>
+<pre>testbuf dup char+ 3  move  ( ok )
+testbuf 4 type  ( aabc ok )</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2586,77 +2666,79 @@ Programming computers can be crazy-making. <a href="#LB2">[LB2]</a>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_adding_new_words">Adding new words</h3>
+<h3 id="_adding_new_words">Adding New Words</h3>
 <div class="paragraph">
 <p>The simplest way to add new words to Tali Forth is to include them in the file
-<code>forth_code/user_words.fs</code>. This is the place to put them for personal use.</p>
+<code>forth_code/user_words.fs</code>. This is the suggested place to put them for personal
+use.</p>
 </div>
 <div class="paragraph">
-<p>To add words to the permament set, it is best to start a pull request on the
-GitHub page of Tali Forth. The use of <code>git</code> and GitHub is beyond the scope of
-this document&#8201;&#8212;&#8201;we&#8217;ll just point out it they are not as complicated as they
-look, and the make experimenting a lot easier.</p>
+<p>To add words to the permanent set, it is best to start a pull request on the
+GitHub page of Tali Forth. How to setup and use <code>git</code> and GitHub is beyond the
+scope of this document&#8201;&#8212;&#8201;we&#8217;ll just point out it they are not as complicated as
+they look, and the make experimenting a lot easier.</p>
 </div>
 <div class="paragraph">
-<p>Internally, Tali Forth 2 tends to follow a sequence of steps for new words:</p>
+<p>During development, Tali Forth tends to follow a sequence of steps for new words:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>If it is an ANSI Forth word, review the standard online. In some cases, there
-is a reference implementation that can be used.</p>
+<p>If it is an ANS Forth word, first review the standard online. In some cases,
+there is a reference implementation that can be used.</p>
 </li>
 <li>
-<p>Otherwise, check other sources for a high-level realization of the word. This
-can be Jonesforth or Gforth. A direct copy is usually not possible (or legally
-allowed, given different licenses), but gives hints for a Tali Forth version of
-the word.</p>
+<p>Otherwise, check other sources for a high-level realization of the word, for
+instance Jonesforth or Gforth. A direct copy is usually not possible (or legally
+allowed, given different licenses), but studying the code provides hints for
+a Tali Forth version.</p>
 </li>
 <li>
-<p>After the new word has been tested interactively, add a high-level
-version to the file <code>forth_code/forth_words.fs</code>.</p>
+<p>Write the word in Forth in the interpreter. After it has been tested tested
+interactively, add a high-level version to the file <code>forth_code/forth_words.fs</code>.</p>
 </li>
 <li>
-<p>Add tests for the new word to the test suite. Ideally, there will
-be tests code included in the ANS Forth specification.</p>
+<p>Add automatic tests for the new word to the test suite. Ideally, there will
+be test code included in the ANS Forth specification. If not, document what
+the test does.</p>
 </li>
 <li>
-<p>If appropriate, convert the word to assembler, adding an entry to
-<code>headers.asm</code> and the code itself to <code>native_words.asm</code>. In this first step, it
-will usually be a simple sequence of <code>JSR</code> subroutine jumps to the existing
-native Forth words.</p>
+<p>In a further step, if appropriate, convert the word to assembler. This
+requires adding an entry to <code>headers.asm</code> and the code itself to <code>native_words.asm</code>.
+In this first step, it will usually be a simple 1:1 sequence of <code>jsr</code> subroutine
+jumps to the existing native Forth words.</p>
 </li>
 <li>
 <p>If appropriate, rewrite all or some of the subroutine jumps in direct
-assembler.</p>
+assembler. Because we have the automatic tests in place, we can be confident
+that the assembly version is correct as well.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>Note that if you are contributing code, feel free to happily ignore this
-sequence and just submit whatever is working.</p>
+<p>However, if you are contributing code, feel free to happily ignore this sequence
+and just submit whatever you have.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_deeper_changes">Deeper changes</h3>
+<h3 id="_deeper_changes">Deeper Changes</h3>
 <div class="paragraph">
 <p>Tali Forth was not only placed in the public domain to honor the tradition of
 giving the code away freely. It is also to let people play around with it and
 adapt it to their own machines. This is also the reason it is (perversely)
-overcommented.</p>
+over-commented.</p>
 </div>
 <div class="paragraph">
-<p>To work on the internals of Tali Forth, you will need the Ophis
-assembler.</p>
+<p>To work on the internals of Tali Forth, you will need the Ophis assembler.</p>
 </div>
 <div class="sect3">
 <h4 id="_the_ophis_assembler">The Ophis Assembler</h4>
 <div class="paragraph">
-<p>Michael Martin&#8217;s Ophis Cross-Assember can be downloaded from
-<a href="http://michaelcmartin.github.io/Ophis/" class="bare">http://michaelcmartin.github.io/Ophis/</a> It uses a slightly different format than
-other assemblers, but is in Python and therefore will run on almost any
+<p>Michael Martin&#8217;s Ophis Cross-Assembler can be downloaded from
+<a href="http://michaelcmartin.github.io/Ophis/" class="bare">http://michaelcmartin.github.io/Ophis/</a>. It uses a slightly different format than
+other assemblers, but is in Python and therefore will run on pretty much any
 operating system. To install Ophis on Windows, use the link provided above. For
-LinuxLinux}:</p>
+Linux:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2667,74 +2749,89 @@ sudo python setup.py install</pre>
 </div>
 <div class="paragraph">
 <p>Switch to the folder where the Tali code lives, and run the Makefile with a
-simple `make} command. This also updates the file listings in the
-`docs} folder.</p>
+simple <code>make</code> command. This also updates the file listings in the <code>docs</code> folder.</p>
 </div>
 <div class="paragraph">
 <p>Ophis has some quirks. For instance, you cannot use math symbols in label names,
-because it will try to perform those operations. Use underscores for label names
-instead.</p>
+because it will try to perform those operations. Use underscores instead.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_general_notes">General notes</h4>
+<h4 id="_general_notes">General Notes</h4>
 <div class="ulist">
 <ul>
 <li>
-<p>The X register should not be changed without saving its pointer status.</p>
+<p>The X register is used as the Data Stack Pointer (DSP) and should only be used
+if there is no other alternative.</p>
 </li>
 <li>
-<p>The Y register is free to be changed by subroutines. This means it should not
-be expected to survive subroutines unchanged.</p>
+<p>The Y register, however, is free to be changed by subroutines. This also means
+it should not be expected to survive subroutines unchanged.</p>
 </li>
 <li>
-<p>All words should have one point of entry&#8201;&#8212;&#8201;the <code>xt_word</code>
-link&#8201;&#8212;&#8201;and one point of exit at <code>z_word</code>. In may cases,
-this means a branch to an internal label <code>_done</code> right
-before <code>z_word</code>.</p>
+<p>Naively coded words generally should have exactly one point of entry&#8201;&#8212;&#8201;the
+<code>xt_word</code> link&#8201;&#8212;&#8201;and exactly one point of exit at <code>z_word</code>. In may cases,
+this requires a branch to an internal label <code>_done</code> right before <code>z_word</code>.</p>
 </li>
 <li>
 <p>Because of the way native compiling works, the trick of combining
-<code>jsr</code>-<code>rts</code> pairs to a single <code>jmp</code> (usually) doesn&#8217;t work.</p>
+<code>jsr</code>-<code>rts</code> pairs to a single <code>jmp</code> instruction (usually) doesn&#8217;t work.</p>
 </li>
 </ul>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_coding_style">Coding style</h4>
+<h4 id="_coding_style">Coding Style</h4>
 <div class="paragraph">
-<p>Until I get around to writing a tool for Ophis assembler code that formats the
-source file the way gofmt does for Go (golang), I work with the following
-rules:</p>
+<p>Until there is a tool for Ophis assembly code that formats the source file the
+way gofmt does for Go (golang), the following format is suggested.</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>Actual opcodes are indented by <strong>two tabs</strong></p>
-</li>
-<li>
 <p>Tabs are <strong>eight characters long</strong> and converted to spaces.</p>
 </li>
 <li>
-<p>Function-like routines are followed by a one-tab indented "function doc"
+<p>Opcodes are indented by <strong>two tabs</strong>.</p>
+</li>
+<li>
+<p>Function-like routines are followed by a one-tab indented "function doc string"
 based on the Python 3 format: Three quotation marks at the start, three at the
-end it its own line, unless it is a one-liner. This should make it easier to
+end in their own line, unless it is a one-liner. This should make it easier to
 automatically extract the docs for them at some point.</p>
 </li>
 <li>
-<p>The native words have a special commentary format that allows the automatic
-generation of word list by a tool in the tools folder, see there for details.</p>
+<p>The native words have a special comment format with lines that start with <code>##</code>
+that allows the automatic generation of word lists by a tool in the tools
+folder, see there for details.</p>
 </li>
 <li>
-<p>Assembler mnenomics are lower case. I get enough uppercase
-insanity writing German, thank you very much.</p>
+<p>Assembler mnemonics are lower case. I get enough uppercase insanity writing German,
+thank you very much.</p>
 </li>
 <li>
 <p>Hex numbers are, however, upper case, such as <code>$FFFE</code>.</p>
 </li>
+</ul>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+The Ophis assembler interprets numbers with a leading zero as octal.
+This can be an annoying source of errors.
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<ul>
 <li>
 <p>Numbers in mnemonics are a stripped-down as possible to reduce
-visual clutter: <code>lda 0,x</code> instead of <code>lda $00,x</code>.</p>
+visual clutter: use <code>lda 0,x</code> instead of <code>lda $00,x</code>.</p>
 </li>
 <li>
 <p>Comments are included like popcorn to help readers who are new both to Forth
@@ -2745,7 +2842,7 @@ and 6502 assembler.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_code_cheat_sheet">Code Cheat Sheet</h3>
+<h3 id="_code_cheat_sheets">Code Cheat Sheets</h3>
 <div class="sect3">
 <h4 id="_the_stack_drawing">The Stack Drawing</h4>
 <div class="paragraph">
@@ -2804,7 +2901,7 @@ will) so we have the option of adding code analysis tools later.</p>
 <div class="ulist">
 <ul>
 <li>
-<p><code>push</code> a value to the Data Stack.  Remember the Data Stack Pointer (DSP, the
+<p><code>push</code> a value to the Data Stack. Remember the Data Stack Pointer (DSP, the
 X register of the 65c02) points to the LSB of the TOS value.</p>
 </li>
 </ul>
@@ -2813,9 +2910,9 @@ X register of the 65c02) points to the LSB of the TOS value.</p>
 <div class="content">
 <pre>                dex
                 dex
-                lda $&lt;LSB&gt;      ; or pla, jsr kernel_getc, etc.
+                lda &lt;LSB&gt;      ; or pla, jsr kernel_getc, etc.
                 sta 0,x
-                lda $&lt;LSB&gt;      ; or pla, jsr kernel_getc, etc.
+                lda &lt;MSB&gt;      ; or pla, jsr kernel_getc, etc.
                 sta 1,x</pre>
 </div>
 </div>
@@ -2829,9 +2926,9 @@ X register of the 65c02) points to the LSB of the TOS value.</p>
 <div class="listingblock">
 <div class="content">
 <pre>                lda 0,x
-                sta $&lt;LSB&gt;      ; or pha, jsr kernel_putc, etc
+                sta &lt;LSB&gt;      ; or pha, jsr kernel_putc, etc
                 lda 1,x
-                sta $&lt;MSB&gt;      ; or pha, jsr kernel_putc, etc
+                sta &lt;MSB&gt;      ; or pha, jsr kernel_putc, etc
                 inx
                 inx</pre>
 </div>
@@ -2841,11 +2938,10 @@ X register of the 65c02) points to the LSB of the TOS value.</p>
 <h4 id="_vim_shortcuts">vim Shortcuts</h4>
 <div class="paragraph">
 <p>One option for these is to add abbreviations to your favorite editor, which
-should of course be vim, because vim is cool. There are examples for that
-further down. They all assume that auto-indent is on and we are two tabs in with
-the code, and use <code>#</code> at the end of the abbreviation to keep them
-separate from the normal words. My <code>~/.vimrc</code> file contains the following
-lines for work on <code>.asm</code> files:</p>
+should of course be vim, because vim is cool. There are examples farther down.
+They all assume that auto-indent is on and we are two tabs into the code, and
+use <code>#</code> at the end of the abbreviation to keep them separate from the normal
+words. My <code>~/.vimrc</code> file contains the following lines for work on <code>.asm</code> files:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2896,21 +2992,16 @@ help even when the author is not available.</p>
 <dd>
 <p>After the default kernel string is printed, you&#8217;ll notice a short pause that
 didn&#8217;t occur with Tali Forth 1. This is because Tali Forth 2 has more words
-defined in high-level Forth (see <code>forth_code/forth-words.fs</code>) than Tali did.
-The pause happens because they are being compiled on the fly.</p>
+defined in high-level Forth (see <code>forth_code/forth-words.fs</code>). The pause
+happens because they are being compiled on the fly.</p>
 </dd>
-<dt class="hdlist1">What does the word "FEHLT" mean in the code?</dt>
-<dd>
-<p>That&#8217;s German for "missing". During early development, I used it as a marker
-where stuff had to be added, sort of like another level of "TODO". Since there
-is no English word like that, it&#8217;s very easy to find with <code>grep</code>.</p>
-</dd>
-<dt class="hdlist1">What happened to Tali Forth 1?</dt>
+<dt class="hdlist1">What happened to Tali Forth 1 anyway?</dt>
 <dd>
 <p>Tali Forth 1, informally just Tali Forth, was my first Forth.
 As such, it is fondly remembered as a learning experience. You can still find
 it online at GitHub at <a href="https://github.com/scotws/TaliForth" class="bare">https://github.com/scotws/TaliForth</a>.  When
-Tali Forth 2 entered BETA, Tali Forth was discontinued.</p>
+Tali Forth 2 entered BETA, Tali Forth was discontinued. It does not
+receive bug fixes. In fact, new bugs are not even documented.</p>
 </dd>
 </dl>
 </div>
@@ -2922,21 +3013,27 @@ Tali Forth 2 entered BETA, Tali Forth was discontinued.</p>
 </div>
 <div class="dlist">
 <dl>
+<dt class="hdlist1">What does the word "FEHLT" mean in unfinished code?</dt>
+<dd>
+<p>That&#8217;s German for "missing". During development, I use it as a marker
+where stuff has to be added, sort of like another level of "TODO". Since there
+is no English word like that, it&#8217;s very easy to find with <code>grep</code>.</p>
+</dd>
 <dt class="hdlist1">Who&#8217;s "Tali"?</dt>
 <dd>
 <p>I like the name, and we&#8217;re probably not going to have any more kids I can give
 it to. If it sounds vaguely familiar, you&#8217;re probably thinking of Tali&#8217;Zorah vas
 Normandy a character in the <em>Mass
 Effect</em>  universe created by BioWare. This
-software has absolutely nothing to do with either the game or the companies and
-neither do I, expect that I&#8217;ve played the games and enjoyed them.<sup class="footnote">[<a id="_footnoteref_4" class="footnote" href="#_footnote_4" title="View footnote.">4</a>]</sup></p>
+software has absolutely nothing to do with neither the game nor the companies and
+neither do I, expect that I&#8217;ve played the whole series and enjoyed it.<sup class="footnote">[<a id="_footnoteref_4" class="footnote" href="#_footnote_4" title="View footnote.">4</a>]</sup></p>
 </dd>
 <dt class="hdlist1">And who is "Liara"?</dt>
 <dd>
-<p>Liara Forth is a STC Forth for the big sibling of the 6502, the
+<p>Liara Forth is another STC Forth for the big sibling of the 6502, the
 65816. Tali Forth 1 came first, then I wrote Liara
 with that knowledge and learned even more, and now Tali 2 is such much better
-for the experience. Yes, it&#8217;s another <em>Mass Effect</em> 
+for the experience. And yes, it&#8217;s another <em>Mass Effect</em> 
 character.</p>
 </dd>
 </dl>
@@ -3010,7 +3107,7 @@ O&#8217;Reilly Media 1st edition, 2009.</p>
 <a href="https://www.red-gate.com/simple-talk/opinion/geek-of-the-week/chuck-moore-geek" class="bare">https://www.red-gate.com/simple-talk/opinion/geek-of-the-week/chuck-moore-geek</a></p>
 </div>
 <div class="paragraph">
-<p><a id="CnR"></a>[CnR] <em>Forth Programmer&#8217;s Handbook</em>, Edward K. Conklin, Elizabeth Rather,
+<p><a id="CnR"></a>[CnR] <em>Forth Programmer&#8217;s Handbook</em>, Edward K. Conklin and Elizabeth Rather,
 3rd edition 2010</p>
 </div>
 <div class="paragraph">
@@ -3023,7 +3120,7 @@ David Eyes and Ron Lichty
 (Currently not available from the WDC website)</p>
 </div>
 <div class="paragraph">
-<p><a id="EW"></a>[EW] "Forth: The Hacker&#8217;s Language", Elliot Williams
+<p><a id="EW"></a>[EW] "Forth: The Hacker&#8217;s Language", Elliot Williams,
 <a href="https://hackaday.com/2017/01/27/forth-the-hackers-language/" class="bare">https://hackaday.com/2017/01/27/forth-the-hackers-language/</a></p>
 </div>
 <div class="paragraph">
@@ -3032,15 +3129,15 @@ March/April 1992
 <a href="http://www.forth.org/fd/FD-V13N6.pdf}{http://www.forth.org/fd/FD-V13N6.pdf" class="bare">http://www.forth.org/fd/FD-V13N6.pdf}{http://www.forth.org/fd/FD-V13N6.pdf</a></p>
 </div>
 <div class="paragraph">
-<p><a id="JN"></a>[JN] <em>A Beginner&#8217;s Guide to Forth</em>, J.V. Nobel
+<p><a id="JN"></a>[JN] <em>A Beginner&#8217;s Guide to Forth</em>, J.V. Nobel,
 <a href="http://galileo.phys.virginia.edu/classes/551.jvn.fall01/primer.htm" class="bare">http://galileo.phys.virginia.edu/classes/551.jvn.fall01/primer.htm</a></p>
 </div>
 <div class="paragraph">
-<p><a id="LB1"></a>[LB1] <em>Starting Forth</em>, Leo Brodie, new edition 2003
+<p><a id="LB1"></a>[LB1] <em>Starting Forth</em>, Leo Brodie, new edition 2003,
 <a href="https://www.forth.com/starting-forth/}{https://www.forth.com/starting-forth/" class="bare">https://www.forth.com/starting-forth/}{https://www.forth.com/starting-forth/</a></p>
 </div>
 <div class="paragraph">
-<p><a id="LB2"></a>[LB2] <em>Thinking Forth</em>, Leo Brodie, 1984
+<p><a id="LB2"></a>[LB2] <em>Thinking Forth</em>, Leo Brodie, 1984,
 <a href="http://thinking-forth.sourceforge.net/\#21CENTURY" class="bare">http://thinking-forth.sourceforge.net/\#21CENTURY</a></p>
 </div>
 <div class="paragraph">
@@ -3079,7 +3176,7 @@ under <a href="https://www.ubuntu.com/">Ubuntu</a> Linux 16.04 LTS.</p>
 <div id="footer">
 <div id="footer-text">
 Version ALPHA<br>
-Last updated 2018-07-03 00:05:01 CEST
+Last updated 2018-07-03 00:23:55 CEST
 </div>
 </div>
 </body>
