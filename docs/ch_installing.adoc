@@ -3,7 +3,7 @@
 Tali Forth 2 lives on GitHub(((GitHub))) at
 https://github.com/scotws/TaliForth2. This is where you will always find the
 current version. You can either clone the code with git(((git))) or simply
-download it. In fact, to just test Tali Forth, all you need is the binary file
+download it. To just test Tali Forth, all you need is the binary file
 `taliforth-py65mon.bin`.
 
 === Running 
@@ -13,7 +13,7 @@ download it. In fact, to just test Tali Forth, all you need is the binary file
 Tali was written to run out of the box on the py65mon simulator from
 https://github.com/mnaberez/py65.(((py65mon))) This is a Python(((Python)))
 program that should run on various operating systems. Py65mon is also required
-for testing.
+for the test suite.
 
 To install py65mon on Linux(((Linux))), use the command 
 
@@ -22,11 +22,11 @@ To install py65mon on Linux(((Linux))), use the command
 sudo pip install -U py65
 ----
 
-If you don't have PIP(((PIP))) installed, you will have to add it first with
-`sudo apt-get install python-pip`. There is a `setup.py` script as part of the
-package.
+If you don't have `pip`(((pip))) installed, you will have to add it first with
+something like `sudo apt-get install python-pip` (Ubuntu Linux). There is a
+`setup.py` script as part of the package.
 
-==== Running the binary
+==== Running the Binary
 
 To start the emulator, run:
 
@@ -42,10 +42,10 @@ use of the additional commands of the CMOS version and will not run on a stock
 
 === Installing on Your Own Hardware
 
-The Tali Forth project started out as a way to run Forth on my own 65c02 computer,
-the Übersquirrel(((Übersquirrel))). Though it soon developed a life of it's own, a
-central aim of the project is to provide a working, modern Forth that people can install
-on their projects. 
+The Tali Forth project started out as a way to run Forth on my own 65c02
+computer, the Übersquirrel(((Übersquirrel))). Though it soon developed a life of
+its own, a central aim of the project is to provide a working, modern Forth that
+people can install on their projects. 
 
 [#img_uebersquirrel]
 .The functioning Übersquirrel Mark Zero prototype, August 2013. Photo by Scot W. Stevenson

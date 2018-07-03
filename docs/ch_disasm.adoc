@@ -1,4 +1,4 @@
-Tali Forth is currently shipped with a very primitive disasembler, which is
+Tali Forth is currently shipped with a very primitive disassembler, which is
 started with `disasm ( addr u -- )`. 
 
 ==== Format
@@ -7,7 +7,7 @@ The output format is in Simpler Assembler Notation (SAN) which adds the mode of
 an instruction to the main mnemonic, simplifying parsing of code. For instance,
 
 ----
-lda #$01
+lda #1
 sta $1000,x
 sta $80
 lda ($80)
@@ -16,7 +16,7 @@ lda ($80)
 becomes
 
 ----
-lda.# $01
+lda.# 1
 sta.x $1000
 sta.z $80
 lda.di $80
