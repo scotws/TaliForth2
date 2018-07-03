@@ -1,12 +1,9 @@
 TODO/CHANGES for Tali Forth 2 
 Scot W. Stevenson <scot.stevenson@gmail.com>
 First version: 19. Jan 2014
-This version: 02. July 2018
+This version: 04. July 2018
 
 (Note: The list of issues on the GitHub has priority)
-
-TODO POST-ALPHA ("ALL WORDS DO SOMETHING, USUALLY EVEN THE RIGHT THING")
-        - Review (and spellcheck) documentation
 
 --> Milestone BETA
 
@@ -42,6 +39,7 @@ TODO AT SOME POINT
 -----------------------------------------------------------------------
 COMPLETED MAJOR CHANGES (LAST ON TOP WITH DATE)
 
+        - 04. Jul 2018 - Releasing as BETA
         - 02. Jul 2018 - Tested all words
         - 20. Jun 2018 - Handle strings longer than 255 chars
         - 01. Jun 2018 - Added history function
