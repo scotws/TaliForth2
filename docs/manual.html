@@ -983,9 +983,9 @@ One doesn&#8217;t write programs in Forth. Forth is the program.
 <div class="sect2">
 <h3 id="_booting">Booting</h3>
 <div class="paragraph">
-<p>Out of the box, Tali Forth boots a minimal kernel 
-to connect to the <code>py65mon</code>  simulator. By default, this stage ends
-with a line such as</p>
+<p>Out of the box, Tali Forth boots a minimal kernel to connect to the
+<code>py65mon</code>  simulator. By default, this stage ends with a line such
+as</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1005,7 +1005,7 @@ boot string like</p>
 <div class="listingblock">
 <div class="content">
 <pre>Tali Forth 2 for the 65c02
-Version ALPHA 07. Mar 2018
+Version ALPHA 02. July 2018
 Copyright 2014-2018 Scot W. Stevenson
 Tali Forth 2 comes with absolutely NO WARRANTY
 Type 'bye' to exit</pre>
@@ -1036,21 +1036,22 @@ box:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>see within to d.r d. ud.r ud. .r u.r */mod */ mod /mod / action-of is defer@
-defer! while until repeat else then if .( ( drop dup swap ! @ over &gt;r r&gt; r@ nip
-rot -rot tuck , c@ c! +! execute emit type . u. ? false true space 0 1 2 2dup
-?dup + - abs dabs and or xor rshift lshift pick char [char] char+ chars cells
-cell+ here 1- 1+ 2* = &lt;&gt; &lt; &gt; 0= 0&lt;&gt; 0&gt; 0&lt; min max 2drop 2swap 2over 2variable
-2r@ 2r&gt; 2&gt;r invert negate dnegate c, bounds spaces bl -trailing /string refill
-accept unused depth key allot create does&gt; variable constant value s&gt;d d&gt;s d-
-d+ erase blank fill find-name ' ['] name&gt;int int&gt;name name&gt;string &gt;body defer
-latestxt latestnt parse-name parse source source-id : ; compile, [ ] 0branch
+<pre>see 2literal 2constant within d.r d. ud.r ud. .r u.r */mod */ mod /mod /
+action-of is defer@ defer! endcase endof of case while until repeat else then
+if .( ( drop dup swap ! @ over &gt;r r&gt; r@ nip rot -rot tuck , c@ c! +! execute
+emit type .  u. ? false true space 0 1 2 2dup ?dup + - abs dabs and or xor
+rshift lshift pick char [char] char+ chars cells cell+ here 1- 1+ 2* 2/ = &lt;&gt; &lt;
+u&lt; &gt; 0= 0&lt;&gt; 0&gt; 0&lt; min max 2drop 2swap 2over 2! 2@ 2variable 2r@ 2r&gt; 2&gt;r invert
+negate dnegate c, bounds spaces bl -trailing /string refill accept unused depth
+key allot create does&gt; variable constant value to s&gt;d d&gt;s d- d+ erase blank
+fill find-name ' ['] name&gt;int int&gt;name name&gt;string &gt;body defer latestxt
+latestnt parse-name parse source source-id : ; :noname compile, [ ] 0branch
 branch literal sliteral ." s" postpone immediate compile-only never-native
-always-native nc-limit abort abort" do ?do i j loop +loop exit unloop leave
-recurse quit begin again state evaluate base digit? number &gt;number hex decimal
-count m* um* * um/mod ud/mod sm/rem fm/mod \ move cmove&gt; cmove pad &gt;in &lt;# # #s
+always-native nc-limit uf-strip abort abort" do ?do i j loop +loop exit unloop
+leave recurse quit begin again state evaluate base digit? number &gt;number hex
+decimal count m* um* * um/mod sm/rem fm/mod \ move cmove&gt; cmove pad &gt;in &lt;# # #s
 #&gt; hold sign output input cr page at-xy marker words wordsize aligned align
-bell dump .s find word cold bye</pre>
+bell dump .s disasm find word cold bye  ok</pre>
 </div>
 </div>
 <div class="admonitionblock note">
@@ -1060,8 +1061,8 @@ bell dump .s find word cold bye</pre>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-During early development, this list might be outdated. To get the current
-list, run <code>words</code> from inside Tali Forth.
+This list might be outdated. To get the current list, run <code>words</code> from
+inside Tali Forth.
 </td>
 </tr>
 </table>
@@ -1075,9 +1076,9 @@ the dictionary. <sup class="footnote">[<a id="_footnoteref_2" class="footnote" h
 Forth. For more information on individual the words, use the <code>see</code> command.</p>
 </div>
 <div class="paragraph">
-<p>Note that the built-in words are lower case. Newly defined
-words can be in any case and will be distinct&#8201;&#8212;&#8201;<code>KASUMI</code> is a different word
-than  <code>Kasumi</code>.</p>
+<p>Note that the built-in words are lower case. Newly defined words can be in any
+case and will be distinct&#8201;&#8212;&#8201;<code>KASUMI</code> is a different word than
+<code>Kasumi</code>.</p>
 </div>
 <div class="admonitionblock warning">
 <table>
@@ -1107,96 +1108,168 @@ reason not to.</p>
 <div class="paragraph">
 <p>In addition, there are words that are specific to Tali Forth.</p>
 </div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">0branch</dt>
-<dd>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+0branch
+</td>
+<td class="hdlist2">
 <p><code>( f&#8201;&#8212;&#8201;)</code> Branch if zero. Used internally for branching commands such as <code>if</code>.
 In modern Forths, this is usually replaced by <code>cs-pick</code> and <code>cs-roll</code>; Tali Forth
 might switch to these words in the future.</p>
-</dd>
-<dt class="hdlist1">0</dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+0
+</td>
+<td class="hdlist2">
 <p><code>(&#8201;&#8212;&#8201;0 )</code> Push the number 0 on the Data Stack.</p>
-</dd>
-<dt class="hdlist1">1</dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+1
+</td>
+<td class="hdlist2">
 <p><code>(&#8201;&#8212;&#8201;0 )</code> Push the number 1 on the Data Stack.</p>
-</dd>
-<dt class="hdlist1">2</dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+2
+</td>
+<td class="hdlist2">
 <p><code>(&#8201;&#8212;&#8201;0 )</code> Push the number 2 on the Data Stack.</p>
-</dd>
-<dt class="hdlist1">always-native</dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+always-native
+</td>
+<td class="hdlist2">
 <p>Mark last word in dictionary so that it is always natively compiled.</p>
-</dd>
-<dt class="hdlist1">bell</dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+bell
+</td>
+<td class="hdlist2">
 <p>Ring the terminal bell (ASCII 07).</p>
-</dd>
-<dt class="hdlist1">branch</dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+branch
+</td>
+<td class="hdlist2">
 <p>Always take branch. See <code>0branch</code>.</p>
-</dd>
-<dt class="hdlist1">compile-only</dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+compile-only
+</td>
+<td class="hdlist2">
 <p>Mark last word in dictionary as compile-only.</p>
-</dd>
-<dt class="hdlist1">digit?</dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+digit?
+</td>
+<td class="hdlist2">
 <p><code>( char&#8201;&#8212;&#8201;u f | char f )</code> If character is a digit, convert and set flag to
 <code>true</code>, otherwise return the offending character and a <code>false</code> flag.</p>
-</dd>
-<dt class="hdlist1">input</dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+input
+</td>
+<td class="hdlist2">
 <p>Return the address where the vector for the input routine is
 stored (not the vector itself). Used for input redirection for
 <code>emit</code> and others.</p>
-</dd>
-<dt class="hdlist1">int&gt;name</dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+int&gt;name
+</td>
+<td class="hdlist2">
 <p><code>( xt&#8201;&#8212;&#8201;nt )</code> Given the execution execution token (xt), return the
 name token (nt).</p>
-</dd>
-<dt class="hdlist1">latestnt</dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+latestnt
+</td>
+<td class="hdlist2">
 <p><code>(&#8201;&#8212;&#8201;nt )</code> Return the last used name token. The Gforth version of this
 word is called <code>latest</code>.</p>
-</dd>
-<dt class="hdlist1">nc-limit</dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+nc-limit
+</td>
+<td class="hdlist2">
 <p><code>(&#8201;&#8212;&#8201;addr )</code> Return the address where the threshold value for native
 compiling native compiling is kept. To check the value of this parameter, use <code>nc-limit ?</code>.
 The default value is 20.</p>
-</dd>
-<dt class="hdlist1">never-native</dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+never-native
+</td>
+<td class="hdlist2">
 <p>Mark most recent word so it is never natively compiled.</p>
-</dd>
-<dt class="hdlist1">number</dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+number
+</td>
+<td class="hdlist2">
 <p><code>( addr u&#8201;&#8212;&#8201;u | d )</code> Convert a string to a number.  Gforth uses
 <code>s&gt;number?</code> and returns a success flag as well.</p>
-</dd>
-<dt class="hdlist1">output</dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+output
+</td>
+<td class="hdlist2">
 <p><code>(&#8201;&#8212;&#8201;addr )</code> Return the address where the vector for the output routine is
 stored (not the vector itself). Used for output redirection for <code>emit</code> and
 others.</p>
-</dd>
-<dt class="hdlist1">uf-strip</dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+uf-strip
+</td>
+<td class="hdlist2">
 <p><code>(&#8201;&#8212;&#8201;addr)</code> Return the address where the flag is kept that decides
 if the underflow checks are removed during native compiling. To check the value
 of this flag, use <code>uf-strip ?</code>.</p>
-</dd>
-<dt class="hdlist1">wordsize</dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+wordsize
+</td>
+<td class="hdlist2">
 <p><code>( nt&#8201;&#8212;&#8201;u )</code> Given the name token (nt) of a Forth word, return its
 size in bytes. Used to help tune native compiling.</p>
-</dd>
-</dl>
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
@@ -3202,7 +3275,7 @@ under <a href="https://www.ubuntu.com/">Ubuntu</a> Linux 16.04 LTS.</p>
 <a href="#_footnoteref_1">1</a>. Rumor has it that there was another MPU called "Z80", but it ended up being a mere footnote.
 </div>
 <div class="footnote" id="_footnote_2">
-<a href="#_footnoteref_2">2</a>. If you&#8217;re going to quit, speed can&#8217;t be that important
+<a href="#_footnoteref_2">2</a>. If you&#8217;re going to quit anyway, speed can&#8217;t be that important
 </div>
 <div class="footnote" id="_footnote_3">
 <a href="#_footnoteref_3">3</a>. Try reading that last sentence to a friend who isn&#8217;t into computers. Aren&#8217;t abbreviations fun?
