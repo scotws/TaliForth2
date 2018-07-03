@@ -464,8 +464,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_booting">Booting</a></li>
 <li><a href="#_command_line_history">Command-Line History</a></li>
 <li><a href="#_words">Words</a></li>
-<li><a href="#_native_compiling">Native compiling</a></li>
-<li><a href="#_underflow_detection">Underflow detection</a></li>
+<li><a href="#_native_compiling">Native Compiling</a></li>
+<li><a href="#_underflow_detection">Underflow Detection</a></li>
 <li><a href="#_restarting">Restarting</a></li>
 <li><a href="#_gotchas">Gotchas</a></li>
 </ul>
@@ -481,7 +481,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#_developer_guide">Developer Guide</a>
 <ul class="sectlevel1">
-<li><a href="#_how_tali_forth_works">How Tali Forth works</a>
+<li><a href="#_how_tali_forth_works">How Tali Forth Works</a>
 <ul class="sectlevel2">
 <li><a href="#_the_data_stack">The Data Stack</a></li>
 <li><a href="#_dictionary">Dictionary</a></li>
@@ -543,8 +543,7 @@ standardized (ANS Forth).</p>
 <div class="quoteblock">
 <blockquote>
 Forth is well suited to resource-constrained situations. It doesn&#8217;t need lots
-of memory and doesn&#8217;t have much overhead. It can take full advantage of
-whatever hardware or interfaces exist. <a href="#CHM1">[CHM1]</a>
+of memory and doesn&#8217;t have much overhead. <a href="#CHM1">[CHM1]</a>
 </blockquote>
 <div class="attribution">
 &#8212; Charles H. Moore<br>
@@ -555,19 +554,21 @@ whatever hardware or interfaces exist. <a href="#CHM1">[CHM1]</a>
 <h3 id="_the_big_picture">The Big Picture</h3>
 <div class="paragraph">
 <p>This section provides background information on Forth, the 6502 processor, and
-why anybody would want to combine the two. It can be safely skipped if you
-already know all those things.</p>
+why anybody would want to combine the two. It can be skipped if you already know
+all those things.</p>
 </div>
 <div class="sect3">
 <h4 id="_the_6502_cpu">The 6502 CPU</h4>
 <div class="paragraph">
 <p>It is a well-established fact that humanity reached the apex of processor design
-with the 6502 in 1976. Created by a team including Chuck
-Peddle and Bill Mensch, it was the
-engine that powered the 8-bit home computer revolution of the
-1980s.<sup class="footnote">[<a id="_footnoteref_1" class="footnote" href="#_footnote_1" title="View footnote.">1</a>]</sup> The VIC-20, Commodore
-PET, Apple II, and Atari 800
-all used the 6502, among others.</p>
+with the 6502 in 1976.</p>
+</div>
+<div class="paragraph">
+<p>Created by a team including Chuck Peddle and Bill
+Mensch, it was the engine that powered the 8-bit home
+computer revolution of the 1980s.<sup class="footnote">[<a id="_footnoteref_1" class="footnote" href="#_footnote_1" title="View footnote.">1</a>]</sup> The
+VIC-20, Commodore PET, Apple II,
+and Atari 800 all used the 6502, among others.</p>
 </div>
 <div id="img_65c02" class="imageblock">
 <div class="content">
@@ -579,7 +580,7 @@ all used the 6502, among others.</p>
 <p>More than 40 years later, the processor is still in production by the
 <a href="http://www.westerndesigncenter.com/wdc/w65c02s-chip.cfm">Western Design
 Center</a>. Apart from commercial uses, there is an active hobbyist scene
-centered on the website <a href="http://6502.org/">6502.org</a>. Quite a
+centered on the website <a href="http://6502.org/">6502.org</a>. A
 number of people have built their own 8-bit computers based on this chip and
 the instructions there, including a
 <a href="http://wilsonminesco.com/6502primer/">primer</a> by Garth Wilson. It is for these systems that Tali Forth 2 was created.</p>
@@ -601,7 +602,7 @@ The official handbook for the 65c02 is <em>Programming the 65816</em> <a href="#
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-GarthGarth  Wilson answers this question in greater
+Garth  Wilson answers this question in greater
 detail as part of his 6502 primer at <a href="http://wilsonminesco.com/6502primer/" class="bare">http://wilsonminesco.com/6502primer/</a> .
 </td>
 </tr>
@@ -614,7 +615,7 @@ detail as part of his 6502 primer at <a href="http://wilsonminesco.com/6502prime
 <div class="quoteblock">
 <blockquote>
 If C gives you enough rope to hang yourself, Forth is a flamethrower crawling with
- cobras. <a href="#EW">[EW]</a>
+cobras. <a href="#EW">[EW]</a>
 </blockquote>
 <div class="attribution">
 &#8212; Elliot Williams<br>
@@ -643,19 +644,19 @@ A brief history of Forth can be found at
 <div class="paragraph">
 <p>As a language for people who actually need to get things done, it lets you run
 with scissors, play with fire, and cut corners until you&#8217;ve turned a square
-into a circle.  Forth is not for the faint-hearted: It is trivial, for
+into a circle. Forth is not for the faint-hearted: It is trivial, for
 instance, to redefine <code>1</code> as <code>2</code> and <code>true</code> as <code>false</code>. Though you can do really,
 really clever things with few lines of code, the result can be hard for other
 people to understand, leading to the reputation of Forth begin a "write-only
-language".  However, Forth excels when you positively, absolutely have to get
+language". However, Forth excels when you positively, absolutely have to get
 something done with hardware that is really too weak for the job.</p>
 </div>
 <div class="paragraph">
-<p>It should be no surprise that NASA is one of the organizations who
-use Forth. The <em>Cassini</em> mission to Saturn used a
+<p>It should be no surprise that NASA is one of the organizations that
+uses Forth. The <em>Cassini</em> mission to Saturn used a
 <a href="http://www.cpushack.com/2013/02/21/charles-moore-forth-stack-processors/">Forth
 CPU</a>, for instance. It is also perfect for small computers like the 8-bit
-65c02.  After a small boom in the 1980s, more powerful computers led to a
+65c02. After a small boom in the 1980s, more powerful computers led to a
 decline of the language. The "Internet of Things" (IOT)  with embedded small processors has led to a certain amount of
 <a href="https://www.embedded.com/design/programming-languages-and-tools/4431133/Go-Forth-">renewed
 interest</a> in the language. It helps that Forth is easy to implement: It is
@@ -663,7 +664,7 @@ stack-based, uses Reverse Polish Notation (RPN)
 and a simple threaded interpreter model.</p>
 </div>
 <div class="paragraph">
-<p>There is no way this document can provide an adiquate introduction to Forth.
+<p>There is no way this document can provide an adequate introduction to Forth.
 There are quite a number of tutorials, however, such as <em>A Beginner&#8217;s Guide to
 Forth</em> by J.V. Nobel <a href="#JVN">[JVN]</a> or the classic (but slightly
 dated) <em>Starting Forth</em> by Leo Brodie.<a href="#LB1">[LB1]</a>
@@ -677,11 +678,11 @@ Gforth, one of the more powerful free Forths, comes with its own
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-Once you have understood the basics of the language, do yourself a
-favor and read <em>Thinking Forth</em> by Brodie<a href="#LB2">[LB2]</a> which deals
-with the philosophy of the language. Even if you never code a line of Forth
-afterwards, exposure to Forth will change the way you think about programming,
-much like Lisp.
+Once you have understood the basics of the language, do yourself a favor
+and read <em>Thinking Forth</em> by Brodie<a href="#LB2">[LB2]</a> which deals with
+the philosophy of the language. Even if you never code a line of Forth in your
+life, exposure to Forth will change the way you think about programming, much
+like Lisp.
 </td>
 </tr>
 </table>
@@ -697,19 +698,21 @@ shouldn&#8217;t there be a bunch of Forths around already?</p>
 <div class="sect3">
 <h4 id="_fig_forth">FIG Forth</h4>
 <div class="paragraph">
-<p>In fact, the classic Forth availble for the whole group of 8-bit MPUs is FIG
-Forth. "FIG" stands for "Forth Interest Group". Ported to
-various architectures, it was original based on an incarnation for the 6502
-written by Bill Ragsdale and Robert Selzer. There are PDFs of the
-<a href="http://www.forth.org/fig-forth/fig-forth\_6502.pdf">6502 version</a> from September
-1980 freely available&#8201;&#8212;&#8201;Forths are traditionally placed in the public domain&#8201;&#8212;&#8201;and more than one hobbyist has revised it to his machine.</p>
+<p>In fact, the classic Forth available for the whole group of 8-bit MPUs is FIG
+Forth. "FIG" stands for "Forth Interest Group". Ported to various
+architectures, it was original based on an incarnation for the 6502 written by
+Bill Ragsdale and Robert Selzer.
+There are PDFs of the <a href="http://www.forth.org/fig-forth/fig-forth\_6502.pdf">6502
+version</a> from September 1980 freely available&#8201;&#8212;&#8201;there is a tradition of placing
+Forth in the public domain&#8201;&#8212;&#8201;and more than one hobbyist has revised it to his
+machine.</p>
 </div>
 <div class="paragraph">
 <p>However, Forth has changed a lot in the past three decades. There is now a
-standardized version called <a href="https://forth-standard.org/">ANS Forth</a>,
-which includes very basic changes such as how the
-<code>do</code> loop works. Learning the language with FIG Forth is like learning
-English with <em>The Canterbury Tales</em>.</p>
+standardized version called <a href="https://forth-standard.org/">ANS Forth</a>, which
+includes very basic changes such as how the <code>do</code> loop works. Learning the
+language with FIG Forth is like learning English with <em>The Canterbury
+Tales</em>.</p>
 </div>
 </div>
 <div class="sect3">
@@ -1274,17 +1277,18 @@ size in bytes. Used to help tune native compiling.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_native_compiling">Native compiling</h3>
+<h3 id="_native_compiling">Native Compiling</h3>
 <div class="paragraph">
 <p>As the name says, subroutine threaded code encodes the words as a series of
 subroutine jumps. Because of the overhead caused by these jumps, this can make
 the code slow. Therefore, Tali Forth enables native compiling, where the
-machine code from the word itself is included instead of a subroutine jump.</p>
+machine code from the word itself is included instead of a subroutine jump. This
+is also called "inlining".</p>
 </div>
 <div class="paragraph">
-<p>The parameter <code>nc-limit</code> sets the limit
-of how small words have to be to be natively compiled. To get the current value
-(usually 20), check the value of the system variable:</p>
+<p>The parameter <code>nc-limit</code> sets the limit of how small words have to be to be
+natively compiled. To get the current value (usually 20), check the value of
+the system variable:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1292,8 +1296,8 @@ of how small words have to be to be natively compiled. To get the current value
 </div>
 </div>
 <div class="paragraph">
-<p>To set a new limit, save the maximal allowed number of bytes in the
-machine code like any other Forth variable:</p>
+<p>To set a new limit, save the maximal allowed number of bytes in the machine
+code like any other Forth variable:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1305,7 +1309,7 @@ machine code like any other Forth variable:</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_underflow_detection">Underflow detection</h3>
+<h3 id="_underflow_detection">Underflow Detection</h3>
 <div class="paragraph">
 <p>When a word tries to access more words on the stack than it is holding, an
 "underflow" error occurs. Whereas Tali Forth 1 didn&#8217;t check
@@ -1316,24 +1320,38 @@ for these errors, this version does.</p>
 underflow detection for words that are natively compiled into new words. To do
 this, set the system variable <code>uf-strip</code> to <code>true</code>. Note this does not turn off
 underflow detection in the built-in words. Also, words with underflow detection
-which are not included in new words through native compiling will also retain
+that are not included in new words through native compiling will also retain
 their tests.</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_restarting">Restarting</h3>
 <div class="paragraph">
-<p>Tali Forth has a non-standard word <code>cold</code> that resets the system. Note that
-this doesn&#8217;t erase any data in memory, but just moves the pointers back. When
-in doubt, you might be better off quitting and restarting completely.</p>
+<p>Tali Forth has a non-standard word <code>cold</code> that resets the system. This doesn&#8217;t
+erase any data in memory, but just moves the pointers back. When in doubt, you
+might be better off quitting and restarting completely.</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_gotchas">Gotchas</h3>
 <div class="paragraph">
-<p>Tali has a 16-bit cell size (use <code>1 cells 8 * .</code> to get the cells size in
-bits with any Forth), which can trip up calculations when compared to the
-<em>de facto</em> standard Gforth with 64 bits. Take this example:</p>
+<p>Tali has a 16-bit cell size.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Use <code>1 cells 8 * .</code> to get the cells size in bits with any Forth.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>This can trip up calculations when compared to the <em>de facto</em> standard Gforth
+with 64 bits. Take this example:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1342,13 +1360,12 @@ bits with any Forth), which can trip up calculations when compared to the
 </div>
 </div>
 <div class="paragraph">
-<p>Tali has to use the upper cell of a double-celled
-number to correctly report the result, while Gforth doesn&#8217;t. If the conversion
-from double to single is only via a <code>drop</code> instruction, this will produce
-different results.</p>
+<p>Tali has to use the upper cell of a double-celled number to correctly report
+the result, while Gforth doesn&#8217;t. If the conversion from double to single is
+only via a <code>drop</code> instruction, this will produce different results.</p>
 </div>
 <div class="paragraph">
-<p>There is a similiar effect with the Gforth word <code>bounds</code>: Because of Tali&#8217;s 16
+<p>There is a similar effect with the Gforth word <code>bounds</code>: Because of Tali&#8217;s 16
 bit address space, it wraps the upper address if we go beyond $FFFF:</p>
 </div>
 <div class="listingblock">
@@ -1447,7 +1464,7 @@ after the label <code>disassembler:</code>.</p>
 </div>
 <h1 id="_developer_guide" class="sect0">Developer Guide</h1>
 <div class="sect1">
-<h2 id="_how_tali_forth_works">How Tali Forth works</h2>
+<h2 id="_how_tali_forth_works">How Tali Forth Works</h2>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="_the_data_stack">The Data Stack</h3>
@@ -3179,7 +3196,7 @@ are in the very early stages of developing your own Forth.
 <div class="sectionbody">
 <div class="paragraph">
 <p>Tali Forth would never have been possible without the help of a very large
-number of people, very few of whom I have actually even met.</p>
+number of people, very few of whom I have actually met.</p>
 </div>
 <div class="paragraph">
 <p>First, there is the crew at <a href="http://6502.org">6502.org</a> who not
@@ -3191,7 +3208,7 @@ feedback.</p>
 <p>Special thanks go out to Mike Barry and Lee
 Pivonka, who both suggested vast improvements to the code
 in size, structure, and speed. And then there is Sam Colwell
-who contributed the test suite and a whole lot of code.</p>
+who contributed the invaluable test suite and a whole lot of code.</p>
 </div>
 <div class="paragraph">
 <p>Thank you, everybody.</p>
@@ -3263,7 +3280,7 @@ OSBORNE/McGRAW-HILL 1979</p>
 <div class="paragraph">
 <p>The Tali Forth 2 Manual was written with the <a href="https://www.vim.org/">vim</a> editor in
 <a href="https://asciidoctor.org/docs/what-is-asciidoc/">AsciiDoc</a> format, formatted to
-HTML with AsciiDoctor, and version controled with <a href="https://git-scm.com/">Git</a>, all
+HTML with AsciiDoctor, and version controlled with <a href="https://git-scm.com/">Git</a>, all
 under <a href="https://www.ubuntu.com/">Ubuntu</a> Linux 16.04 LTS.</p>
 </div>
 </div>
@@ -3287,7 +3304,7 @@ under <a href="https://www.ubuntu.com/">Ubuntu</a> Linux 16.04 LTS.</p>
 <div id="footer">
 <div id="footer-text">
 Version ALPHA<br>
-Last updated 2018-07-04 00:08:22 CEST
+Last updated 2018-07-04 00:55:28 CEST
 </div>
 </div>
 </body>
