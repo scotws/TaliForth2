@@ -12,7 +12,7 @@ Run `py65mon -m 65c02 -r taliforth-py65mon.bin` from this directory.
 
 ## Introduction
 
-Tali Forth 2 is a subroutine threaded code (STC) implementation of an ANSI-based
+Tali Forth 2 is a subroutine threaded code (STC) implementation of an ANS-based
 Forth for the 65c02 8-bit MPU. The aim is to provide a modern Forth that is easy
 to get started with and can be ported to individial hardware projects,
 especially Single Board Computers (SBC), with little effort. It is free --
@@ -45,7 +45,7 @@ Tali Forth 2 aims to be, roughly in order of priority:
 - **Standardized**. Most Forths available for the 65c02 are based on ancient,
   outdated templates such as FIG Forth. Learning Forth with them is like trying
   to learn modern English by reading Chaucer. Tali Forth (mostly) follows the
-  current ANSI Standard. 
+  current ANS Standard. 
   
 The functional reference for Tali is GNU Forth (Gforth,
 [https://www.gnu.org/software/gforth/](https://www.gnu.org/software/gforth/)).

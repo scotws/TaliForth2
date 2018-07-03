@@ -51,7 +51,7 @@ decimal
 
 \ Test for DIGIT? ( char -- u f | char f )
 
-{ 36 constant max-base -> } \ ANSI standard says 2 - 36
+{ 36 constant max-base -> } \ ANS standard says 2 - 36
 { base @  constant orig-base -> }
 { s" 0123456789" ( addr u ) drop  constant digit_numeral -> }
 { s" abcdefghijklmnopqrstuvwxyz" ( addr u ) drop  constant digit_lower -> }

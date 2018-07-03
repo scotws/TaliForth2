@@ -4,11 +4,17 @@ O'Reilly Media 1st edition, 2009.
 [[[CHM1]]] "Charles H. Moore: Geek of the Week", redgate Hub 2009
 https://www.red-gate.com/simple-talk/opinion/geek-of-the-week/chuck-moore-geek
 
+[[[CHM2]]] "The Evolution of FORTH, an Unusual Language", Charles H. Moore,
+_Byte_ 1980, https://wiki.forth-ev.de/doku.php/projects:the_evolution_of_forth
+
 [[[CnR]]] _Forth Programmer's Handbook_, Edward K. Conklin and Elizabeth Rather,
 3rd edition 2010
 
 [[[DB]]] _Forth Enzyclopedia_, Mitch Derick and Linda Baker,
 Mountain View Press 1982
+
+[[[DH]]] "Some notes on Forth from a novice user", Douglas Hoffman, Feb 1988
+https://wiki.forth-ev.de/doku.php/projects:some_notes_on_forth_from_a_novice_user
 
 [[[EnL]]] _Programming the 65816, including the 6502, 65C02 and 65802_, 
 David Eyes and Ron Lichty

@@ -24,7 +24,7 @@
         : endof postpone else ; immediate compile-only 
         : endcase postpone drop begin ?dup while postpone then repeat ; immediate compile-only 
 
-\ DEFER and friends. Code taken from ANSI Forth specification. Some of
+\ DEFER and friends. Code taken from ANS Forth specification. Some of
 \ these will be moved to assembler code in due course
         : defer! >body ! ;
         : defer@ >body @ ;

@@ -521,10 +521,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Tali Forth 2 is a bare-metal ANSI(ish) Forth for the 65c02 8-bit MPU. It aims
+<p>Tali Forth 2 is a bare-metal ANS(ish) Forth for the 65c02 8-bit MPU. It aims
 to be, roughly in order of importance, easy to try out (just run the included
 binary), simple (subroutine threading model), specific (for the 65c02 only), and
-standardized (ANSI Forth).</p>
+standardized (ANS Forth).</p>
 </div>
 </div>
 </div>
@@ -706,7 +706,7 @@ written by Bill Ragsdale and Robert Selzer. There are PDFs of the
 </div>
 <div class="paragraph">
 <p>However, Forth has changed a lot in the past three decades. There is now a
-standardized version called <a href="https://forth-standard.org/">ANSI Forth</a>,
+standardized version called <a href="https://forth-standard.org/">ANS Forth</a>,
 which includes very basic changes such as how the
 <code>do</code> loop works. Learning the language with FIG Forth is like learning
 English with <em>The Canterbury Tales</em>.</p>
@@ -971,6 +971,15 @@ py65mon kernel. By convention, the name should start with
 <div class="sect1">
 <h2 id="_running_tali_forth">Running Tali Forth</h2>
 <div class="sectionbody">
+<div class="quoteblock">
+<blockquote>
+One doesn&#8217;t write programs in Forth. Forth is the program.
+</blockquote>
+<div class="attribution">
+&#8212; Charles Moore<br>
+<cite>Masterminds of Programming</cite>
+</div>
+</div>
 <div class="sect2">
 <h3 id="_booting">Booting</h3>
 <div class="paragraph">
@@ -1084,10 +1093,10 @@ are recognized.
 </table>
 </div>
 <div class="sect3">
-<h4 id="_the_ansi_standard">The ANSI Standard</h4>
+<h4 id="_the_ans_standard">The ANS Standard</h4>
 <div class="paragraph">
-<p>Tali Forth is orientated on ANSI Forth, but (currently) doesn&#8217;t contain the
-complete set of even the core words. Tali also adopted some words from Gforth
+<p>Tali Forth is orientated on ANS Forth, the standard defined by the American
+National Standards Institute (ANSI). Tali also adopted some words from Gforth
 such as <code>bounds</code>. In practical terms, Tali aims to be a subset of Gforth: If a
 program runs on Tali, it should run on Gforth the same way or have a very good
 reason not to.</p>
@@ -1867,7 +1876,7 @@ future.
 <h4 id="_booting_2">Booting</h4>
 <div class="paragraph">
 <p>The initial commands after reboot flow into each other: <code>cold</code> to <code>abort</code> to
-<code>quit</code>. This is the same as with pre-ANSI Forths.  However, <code>quit</code> now calls
+<code>quit</code>. This is the same as with pre-ANS Forths.  However, <code>quit</code> now calls
 <code>refill</code> to get the input.  <code>refill</code> does different things based on which of the
 four input sources (see above) is active:</p>
 </div>
@@ -2658,11 +2667,13 @@ testbuf 4 type  ( aabc ok )</pre>
 <div class="sectionbody">
 <div class="quoteblock">
 <blockquote>
-Programming computers can be crazy-making. <a href="#LB2">[LB2]</a>
+After spending an entire weekend wrestling with blocks files, stacks, and
+the like, I was horrified and convinced that I had made a mistake. Who
+in their right mind would want to program in this godforsaken language! <a href="#DH">[DH]</a>
 </blockquote>
 <div class="attribution">
-&#8212; Leo Brodie<br>
-<cite>Thinking Forth</cite>
+&#8212; Doug Hoffman<br>
+<cite>Some notes on Forth from a novice user</cite>
 </div>
 </div>
 <div class="sect2">
@@ -2843,6 +2854,15 @@ and 6502 assembler.</p>
 </div>
 <div class="sect2">
 <h3 id="_code_cheat_sheets">Code Cheat Sheets</h3>
+<div class="quoteblock">
+<blockquote>
+Programming computers can be crazy-making. <a href="#LB2">[LB2]</a>
+</blockquote>
+<div class="attribution">
+&#8212; Leo Brodie<br>
+<cite>Thinking Forth</cite>
+</div>
+</div>
 <div class="sect3">
 <h4 id="_the_stack_drawing">The Stack Drawing</h4>
 <div class="paragraph">
@@ -2874,6 +2894,16 @@ and 6502 assembler.</p>
 </div>
 <div class="sect3">
 <h4 id="_coding_idioms">Coding Idioms</h4>
+<div class="quoteblock">
+<blockquote>
+The first modern FORTH was coded in FORTRAN. Shortly thereafter it was recoded
+in assembler. Much later it was coded in FORTH. <a href="#CHM2">[CHM2]</a>
+</blockquote>
+<div class="attribution">
+&#8212; Charles Moore<br>
+<cite>The Evolution of FORTH</cite>
+</div>
+</div>
 <div class="paragraph">
 <p>While coding a Forth, there are certain assembler fragments that get repeated
 over and over again. These could be included as macros, but that can make the
@@ -3045,7 +3075,7 @@ character.</p>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Tali Forth 2 comes with a test suite in the <code>tests</code> folder. It is
-based on the official ANSI test code by John Hayes and was
+based on the official ANS test code by John Hayes and was
 first adapted for Tali Forth by Sam Colwell.</p>
 </div>
 <div class="paragraph">
@@ -3107,12 +3137,20 @@ O&#8217;Reilly Media 1st edition, 2009.</p>
 <a href="https://www.red-gate.com/simple-talk/opinion/geek-of-the-week/chuck-moore-geek" class="bare">https://www.red-gate.com/simple-talk/opinion/geek-of-the-week/chuck-moore-geek</a></p>
 </div>
 <div class="paragraph">
+<p><a id="CHM2"></a>[CHM2] "The Evolution of FORTH, an Unusual Language", Charles H. Moore,
+<em>Byte</em> 1980, <a href="https://wiki.forth-ev.de/doku.php/projects:the_evolution_of_forth" class="bare">https://wiki.forth-ev.de/doku.php/projects:the_evolution_of_forth</a></p>
+</div>
+<div class="paragraph">
 <p><a id="CnR"></a>[CnR] <em>Forth Programmer&#8217;s Handbook</em>, Edward K. Conklin and Elizabeth Rather,
 3rd edition 2010</p>
 </div>
 <div class="paragraph">
 <p><a id="DB"></a>[DB] <em>Forth Enzyclopedia</em>, Mitch Derick and Linda Baker,
 Mountain View Press 1982</p>
+</div>
+<div class="paragraph">
+<p><a id="DH"></a>[DH] "Some notes on Forth from a novice user", Douglas Hoffman, Feb 1988
+<a href="https://wiki.forth-ev.de/doku.php/projects:some_notes_on_forth_from_a_novice_user" class="bare">https://wiki.forth-ev.de/doku.php/projects:some_notes_on_forth_from_a_novice_user</a></p>
 </div>
 <div class="paragraph">
 <p><a id="EnL"></a>[EnL] <em>Programming the 65816, including the 6502, 65C02 and 65802</em>,
@@ -3176,7 +3214,7 @@ under <a href="https://www.ubuntu.com/">Ubuntu</a> Linux 16.04 LTS.</p>
 <div id="footer">
 <div id="footer-text">
 Version ALPHA<br>
-Last updated 2018-07-03 00:23:55 CEST
+Last updated 2018-07-04 00:08:22 CEST
 </div>
 </div>
 </body>

@@ -289,11 +289,11 @@ testing stack ops: swap tuck pick
 { 1 2 3 -rot -> 3 1 2 }
 { 1 2 swap -> 2 1 }
 
-\ There is no formal ANSI test for TUCK, this added 01. July 2018
+\ There is no formal ANS test for TUCK, this added 01. July 2018
 { 2 1 tuck -> 1 2 1 }
 
-\ There is no formal ANSI test for PICK, this added 01. July 2018
-\ Note that ANSI's PICK is different from FIG Forth PICK
+\ There is no formal ANS test for PICK, this added 01. July 2018
+\ Note that ANS's PICK is different from FIG Forth PICK
 { 1      0 pick -> 1 1 }    \ Defined by standard: 0 PICK is same as DUP
 { 1 2    1 pick -> 1 2 1 }  \ Defined by standard: 1 PICK is same as OVER
 { 1 2 3  2 pick -> 1 2 3 1 }
@@ -307,7 +307,7 @@ testing >r r> r@ 2>r 2r> 2r@
 { 123 gr2 -> 123 }
 { 1s gr1 -> 1s } \ return stack holds cells
 
-\ There are no official ANSI tests for 2>R, 2R>, or 2R@, added 22. June 2018
+\ There are no official ANS tests for 2>R, 2R>, or 2R@, added 22. June 2018
 { : gr3 2>r 2r> ; -> }
 { : gr4 2>r 2r@ 2r> 2drop ; -> }
 { : gr5 2>r r> r> ; } \ must reverse sequence, as 2r> is not r> r> 
@@ -1118,7 +1118,7 @@ count-bits 2* constant #bits-ud  \ number of bits in ud
 { gp6 -> <true> }
 
 
-\ Split up long testing word from ANSI Forth in two parts
+\ Split up long testing word from ANS Forth in two parts
 \ to figure out what is wrong
 
 \ Test the numbers 0 to 15 in max-base
@@ -1334,7 +1334,7 @@ testing parse-name marker erase
 { parse-name-test abcde abcde  
     -> <true> }    \ line with white space
 
-\ There is no official ANSI test for MARKER, added 22. June 2018
+\ There is no official ANS test for MARKER, added 22. June 2018
 \ TODO There is currently no test for FIND-NAME, taking it on faith here
 { variable marker_size -> }
 { unused marker_size ! -> }
@@ -1345,7 +1345,7 @@ testing parse-name marker erase
 { parse-name marker_test find-name -> 0 } 
 { marker_size @ unused = -> <true> }
 
-\ There is no official ANSI test of ERASE, added 01. July 2018
+\ There is no official ANS test of ERASE, added 01. July 2018
 { create erase_test -> }
 { 9 c, 1 c, 2 c, 3 c, 9 c, -> }
 { erase_test 1+ 3 erase -> }  \ Erase bytes between 9 

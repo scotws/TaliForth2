@@ -1,5 +1,5 @@
 Tali Forth 2 comes with a test suite(((testing))) in the `tests` folder. It is
-based on the official ANSI test code by John Hayes((("Hayes, John"))) and was
+based on the official ANS test code by John Hayes((("Hayes, John"))) and was
 first adapted for Tali Forth by Sam Colwell((("Colwell, Sam"))). 
 
 To run it, switch to that folder and start the `talitest.py` (((talitest.py)))

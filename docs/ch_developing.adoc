@@ -1,5 +1,7 @@
-[quote, Leo Brodie, Thinking Forth]
-Programming computers can be crazy-making. <<LB2>>
+[quote, Doug Hoffman, Some notes on Forth from a novice user]
+After spending an entire weekend wrestling with blocks files, stacks, and
+the like, I was horrified and convinced that I had made a mistake. Who
+in their right mind would want to program in this godforsaken language! <<DH>>
 
 === Adding New Words
 
@@ -122,6 +124,10 @@ This can be an annoying source of errors.
 
 === Code Cheat Sheets
 
+[quote, Leo Brodie, Thinking Forth]
+Programming computers can be crazy-making. <<LB2>>
+
+
 ==== The Stack Drawing
 
 This is your friend and should probably go on your wall or something.
@@ -149,6 +155,10 @@ This is your friend and should probably go on your wall or something.
 ....
 
 ==== Coding Idioms
+
+[quote, Charles Moore, The Evolution of FORTH, an Unusual Language]
+The first modern FORTH was coded in FORTRAN. Shortly thereafter it was recoded
+in assembler. Much later it was coded in FORTH. <<CHM2>>
 
 While coding a Forth, there are certain assembler fragments that get repeated
 over and over again. These could be included as macros, but that can make the

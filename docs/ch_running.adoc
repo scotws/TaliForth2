@@ -1,4 +1,5 @@
 [quote, Charles Moore, Masterminds of Programming]
+One doesn't write programs in Forth. Forth is the program.
 
 === Booting
 
@@ -81,10 +82,10 @@ WARNING: This behavior is set to change during BETA, so that upper case Forth wo
 are recognized.
                                               
                                                
-==== The ANSI Standard
+==== The ANS Standard
                                    
-Tali Forth is orientated on ANSI Forth, but (currently) doesn't contain the
-complete set of even the core words. Tali also adopted some words from Gforth
+Tali Forth is orientated on ANS Forth, the standard defined by the American
+National Standards Institute (ANSI). Tali also adopted some words from Gforth
 such as `bounds`. In practical terms, Tali aims to be a subset of Gforth: If a
 program runs on Tali, it should run on Gforth the same way or have a very good
 reason not to.

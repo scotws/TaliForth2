@@ -9,10 +9,10 @@
 :icons: font
 :toc: left
 
-Tali Forth 2 is a bare-metal ANSI(ish) Forth for the 65c02 8-bit MPU. It aims
+Tali Forth 2 is a bare-metal ANS(ish) Forth for the 65c02 8-bit MPU. It aims
 to be, roughly in order of importance, easy to try out (just run the included
 binary), simple (subroutine threading model), specific (for the 65c02 only), and
-standardized (ANSI Forth). 
+standardized (ANS Forth). 
 
 [dedication]
 == Dedication

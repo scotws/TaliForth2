@@ -17,7 +17,7 @@ of three milliseconds.
 The tests are broken up into separate files to allow quick turnaround times with
 specific tests. Without any options, the script will run all tests (also
 can be triggered with the `--tests all`. The files roughly follow the separation
-into ANSI word sets (see https://forth-standard.org/standard/words). Words
+into ANS word sets (see https://forth-standard.org/standard/words). Words
 special to Tali Forth have their own file, `tali.fs`. 
 
 Currently, the tests suite is in ALPHA state as all of Tali Forth 2. Some tests
@@ -32,7 +32,7 @@ in this folder) and were distributed with the following copyright:
 \ MAY BE DISTRIBUTED FREELY AS LONG AS THIS COPYRIGHT NOTICE REMAINS.
 ```
 Modification for Tali Forth 2 was by SamCo in 2018. Further tests were adapted
-from the ANSI Forth standard (see
+from the ANS Forth standard (see
 https://forth-standard.org/standard/testsuite) or added *ad hoc*. As in all
 cases with Tali Forth 2, the standard is the behavior of Gforth.
 

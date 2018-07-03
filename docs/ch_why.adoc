@@ -111,7 +111,7 @@ http://www.forth.org/fig-forth/fig-forth\_6502.pdf[6502 version] from September
 -- and more than one hobbyist has revised it to his machine.
 
 However, Forth has changed a lot in the past three decades. There is now a
-standardized version called https://forth-standard.org/[ANSI Forth],
+standardized version called https://forth-standard.org/[ANS Forth],
 which includes very basic changes such as how the
 `do` loop works. Learning the language with FIG Forth is like learning
 English with _The Canterbury Tales_.((("Canterbury Tales, The")))
