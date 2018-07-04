@@ -1918,7 +1918,7 @@ _name_loop:
                 lda (tmptos),y
 
                 ; Make sure it goes into the dictionary in lower case.
-                cmp #$5b         ; ASCII '[' (one past Z)
+                cmp #$5B         ; ASCII '[' (one past Z)
                 bcs _store_name
                 cmp #$41        ; ASCII 'A'
                 bcc _store_name
@@ -3228,7 +3228,7 @@ _compare_string:
                 ; second quick test: Is the first character the same?
                 lda (tmp2)      ; first character of mystery string
                 ; Lowercase the incoming charcter.
-                cmp #$5b        ; ASCII '[' (one past Z)
+                cmp #$5B        ; ASCII '[' (one past Z)
                 bcs _compare_first
                 cmp #$41        ; ASCII 'A'
                 bcc _compare_first
@@ -3270,7 +3270,7 @@ _compare_first:
 _string_loop:
                 lda (tmp2),y    ; last char of mystery string
                 ; Lowercase the incoming charcter.
-                cmp #$5b         ; ASCII '[' (one past Z)
+                cmp #$5B         ; ASCII '[' (one past Z)
                 bcs _check_char
                 cmp #$41        ; ASCII 'A'
                 bcc _check_char
