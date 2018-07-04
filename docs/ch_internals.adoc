@@ -202,12 +202,11 @@ The next pointer is for the **end of the code** (`z_word`) to enable native
 compilation of the word (if allowed and requested). 
 
 The **name string** starts at the eighth byte. The string is _not_
-zero-terminated. By default, the strings of Tali Forth are lower case, but case
-is respected for words the user defines, so `quarian` is a different word than
-`QUARIAN`. 
-
-NOTE: Currently, upper case versions of the ANS Forth words are not recognized.
-This will be changed in future releases.
+zero-terminated.  Tali Forth lowercases names as they are copied into the 
+dictionary and also lowercases during lookup, so `quarian` is the same word as
+`QUARIAN`.  If the name in the dictionary is directly modified, it is important
+to ensure that only lowercase letters are used, or else Tali will not be able
+to find that word.
 
 
 ==== Structure of the Header List
