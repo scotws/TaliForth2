@@ -79,7 +79,7 @@ RTS instruction at the end of each word.
 | FALSE | `false` | ANS core ext | 6 | **auto** |
 | FETCH | `@` | ANS core | 22 | **auto** |
 | FIND | `find` | ANS core | 75 | **auto** |
-| FIND_NAME | `find-name` | Gforth | 106 | **auto** |
+| FIND_NAME | `find-name` | Gforth | 128 | **auto** |
 | FM_SLASH_MOD | `fm/mod` | ANS core | 58 | **auto** |
 | GREATER_THAN | `>` | ANS core | 24 | **auto** |
 | HERE | `here` | ANS core | 10 | **auto** |
