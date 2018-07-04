@@ -1916,6 +1916,19 @@ _got_name:
 
 _name_loop:
                 lda (tmptos),y
+
+                ; Make sure it goes into the dictionary in lower case.
+                cmp #$5b         ; ASCII '[' (one past Z)
+                bcs _store_name
+                cmp #$41        ; ASCII 'A'
+                bcc _store_name
+                ; An uppercase letter has been located.  Make it
+                ; lowercase.
+                clc
+                adc #$20
+                ; Fall into _store_name.
+
+_store_name:
                 sta (tmp1),y
                 iny
                 dec tmp2
