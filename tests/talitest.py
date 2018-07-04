@@ -40,7 +40,7 @@ TALI_ERRORS = ['Undefined word',
 
 # Add name of file with test to the set of LEGAL_TESTS
 LEGAL_TESTS = frozenset(['core', 'string', 'double', 'facility',
-                         'stringlong', 'tali', 'tools'])
+                         'stringlong', 'tali', 'tools', 'cycles'])
 TESTLIST = ' '.join(["'"+str(t)+"' " for t in LEGAL_TESTS])
 
 OUTPUT_HELP = 'Output File, default "'+RESULTS+'"'
@@ -98,6 +98,10 @@ with open(args.output, 'wb') as fout:
     class TaliMachine(monitor.Monitor):
         """Emulator for running Tali Forth 2 test suite"""
 
+        # Used for cycle counting tests.
+        cycle_start = 0
+        cycle_end   = 0
+
         def __init__(self):
             # Use the 65C02 as the CPU type.
             # Don't pass along any of the command line arguments.
@@ -142,10 +146,40 @@ with open(args.output, 'wb') as fout:
                     sys.stdout.write(chr(value))
                     sys.stdout.flush()
 
+            def update_cycle_start(_):
+                """Parameter (originally "address") required by py65mon
+                but unused here as "_"
+                """
+                global cycle_start
+                # When this address is read from, note the cycle time.
+                cycle_start = self._mpu.processorCycles
+                return 0
+
+            def update_cycle_end(_):
+                """Parameter (originally "address") required by py65mon
+                but unused here as "_"
+                """
+                global cycle_start, cycle_end
+                # When this address is read from, note the cycle time.
+                cycle_end = self._mpu.processorCycles
+                # Compute the elapsed time (in CPU cycles).
+                # With a 1MHz clock, this will also be in microseconds.
+                fout.write((" CYCLES: "+str(cycle_end-cycle_start)+" ").encode())
+
+                # Print to the screen if we are not muted.
+                if not args.mute:
+                    sys.stdout.write((" CYCLES: "+str(cycle_end-cycle_start)+" "))
+                    sys.stdout.flush()
+
+                return 0
+
             # Install the above handlers for I/O
             mem = ObservableMemory(subject=self.memory)
             mem.subscribe_to_write([0xF001], putc_results)
             mem.subscribe_to_read([0xF004], getc_from_test)
+            # Install the handlers for timing cycles.
+            mem.subscribe_to_read([0xF002], update_cycle_start)
+            mem.subscribe_to_read([0xF003], update_cycle_end)
             self._mpu.memory = mem
 
     # Start Tali.

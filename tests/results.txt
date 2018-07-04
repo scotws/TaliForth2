@@ -1,7 +1,7 @@
 Tali Forth 2 default kernel for py65mon (18. Feb 2018)
 
 Tali Forth 2 for the 65c02
-Version ALPHA 02. July 2018 
+Version BETA 04. July 2018 
 Copyright 2014-2018 Scot W. Stevenson
 Tali Forth 2 comes with absolutely NO WARRANTY
 Type 'bye' to exit
@@ -86,6 +86,398 @@ create actual-results  20 cells allot  ok
    else >in ! drop  compiled
    then ;  ok
   ok
+ ( Running test 'cycles' from file 'cycles.fs' )  ok
+\ ------------------------------------------------------------------------  ok
+testing cycle counts  ok
+  ok
+\ These tests time the number of cylcles each word takes to run  ok
+\ for a given input.  These tests only work with the talitest.py  ok
+\ script which has handlers watching for the reading of the  ok
+\ special addresses $F002 and $F003 that calculate the number  ok
+\ of cycles between reading from the special addresses.  ok
+  ok
+\ The test access words  ok
+hex  ok
+\ begin_cycles direct byte compiled into ram.  ok
+\ lda $f002  ok
+\ rts  ok
+: begin_cycles [ AD c, 02 c, F0 c, 60 c, ] ;  ok
+\ end_cycles direct byte compiled into ram.  ok
+\ lda $f003  ok
+\ rts  ok
+: end_cycles [ AD c, 03 c, F0 c, 60 c, ] ;  ok
+  ok
+\ Forth versions  ok
+\ : begin_cycles F002 c@ drop ;  ok
+\ : end_cycles F003 c@ drop ;  ok
+  ok
+\ Determine the overhead of the testing words themselves.  ok
+: cycles_overhead begin_cycles end_cycles ;  ok
+cycles_overhead  CYCLES: 16  ok
+  ok
+\ Test a word.  ok
+: cycles_/ 1234 7 begin_cycles / end_cycles ;  ok
+cycles_/  CYCLES: 1520  ok
+  ok
+\ Test a word with lookup overhead.  ok
+begin_cycles end_cycles ( overhead )  CYCLES: 1198  ok
+1234 7 begin_cycles / end_cycles ( actual test )  CYCLES: 4665  ok
+  ok
+\ Test what should be a very small word.  ok
+: cycles_drop 5 begin_cycles drop end_cycles ;  ok
+cycles_drop  CYCLES: 25  ok
+  ok
+ ( Running test 'stringlong' from file 'stringlong.fs' )  ok
+\ ------------------------------------------------------------------------  ok
+testing long strings  ok
+decimal  ok
+  ok
+\ We keep this separate for now because it takes a long, long time -- don't be  ok
+\ suprised if the delay (-d) for talitest.py has to be set to 0.04 secs.  Once  ok
+\ the interface to py65 has been cleaned up, this might be intergrated again.  ok
+\ These are Tali-specific tests, the ANSI test suite has nothing like this.  ok
+  ok
+\ Test strings longer than 255 chars (important for 8-bit systems)  ok
+\ 516 character string  ok
+: s14 s" test                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                " ;  ok
+{ s14 swap drop -> 516 } WRONG NUMBER OF RESULTS: { s14 swap drop -> 516 } ACTUAL RESULT: { 665 665 516 } ok
+{ s14 -trailing -> s14 drop 4 }  ok
+  ok
+: s15 ." abcdefghijklmnopqrstuvwxyz1abcdefghijklmnopqrstuvwxyz2abcdefghijklmnopqrstuvwxyz3abcdefghijklmnopqrstuvwxyz4abcdefghijklmnopqrstuvwxyz5abcdefghijklmnopqrstuvwxyz6abcdefghijklmnopqrstuvwxyz7abcdefghijklmnopqrstuvwxyz8abcdefghijklmnopqrstuvwxyz9abcdefghijklmnopqrstuvwxyz10abcdefghijklmnopqrstuvwxyz11abcdefghijklmnopqrstuvwxyz12abcdefghijklmnopqrstuvwxyz13abcdefghijklmnopqrstuvwxyz14abcdefghijklmnopqrstuvwxyz15abcdefghijklmnopqrstuvwxyz16abcdefghijklmnopqrstuvwxyz17abcdefghijklmnopqrstuvwxyz18abcdefghijklmnopqrstuvwxyz19abcdefghijklmnopqrstuvwxyz20" ;  ok
+\ This should output the alphabet 20 times.  ok
+{ s15 -> } abcdefghijklmnopqrstuvwxyz1abcdefghijklmnopqrstuvwxyz2abcdefghijklmnopqrstuvwxyz3abcdefghijklmnopqrstuvwxyz4abcdefghijklmnopqrstuvwxyz5abcdefghijklmnopqrstuvwxyz6abcdefghijklmnopqrstuvwxyz7abcdefghijklmnopqrstuvwxyz8abcdefghijklmnopqrstuvwxyz9abcdefghijklmnopqrstuvwxyz10abcdefghijklmnopqrstuvwxyz11abcdefghijklmnopqrstuvwxyz12abcdefghijklmnopqrstuvwxyz13abcdefghijklmnopqrstuvwxyz14abcdefghijklmnopqrstuvwxyz15abcdefghijklmnopqrstuvwxyz16abcdefghijklmnopqrstuvwxyz17abcdefghijklmnopqrstuvwxyz18abcdefghijklmnopqrstuvwxyz19abcdefghijklmnopqrstuvwxyz20 ok
+  ok
+ ( Running test 'tali' from file 'tali.fs' )  ok
+\ Repeat definitions for standalone testing  ok
+0 constant 0s  ok
+0 invert constant 1s  ok
+0s constant <false>  ok
+1s constant <true>  ok
+  ok
+\ ------------------------------------------------------------------------  ok
+testing gforth words: bounds find-name latestxt name>int name>string  ok
+\ Test for COLD not implemented  ok
+  ok
+( TODO LATESTXT test missing)  ok
+( TODO NAME>INT test missing)  ok
+( TODO NAME>STRING test missing)  ok
+  ok
+\ Test for FIND-NAME assumes that PARSE-NAME has been tested in core.fs  ok
+{ parse-name drop     find-name  0<> -> <true> } \ need to find any nt  ok
+{ parse-name Chatika  find-name  0=  -> <true> } \ shouldn't find Tali's drone  ok
+  ok
+{ hex -> }  ok
+{ 1000 10 bounds -> 1010 1000 }  ok
+{ ffff 2 bounds -> 0001 ffff }  \ BOUNDS wraps on Tali with 16 bit address space  ok
+{ decimal -> }  ok
+  ok
+\ ------------------------------------------------------------------------  ok
+testing tali-only words: always-native bell compile-only digit? int>name latestnt number 0 1 2  ok
+testing tali-only words: never-native wordsize  ok
+decimal  ok
+  ok
+\ Test for 0BRANCH not implemented  ok
+\ Test for BRANCH not implemented  ok
+\ Test for DISASM not implemented  ok
+\ Test for INPUT not implemented  ok
+\ Test for NC-LIMIT not implemented  ok
+\ Test for OUTPUT not implemented  ok
+\ Test for UF-STRIP not implemented  ok
+  ok
+( TODO ALWAY-NATIVE test missing)  ok
+( TODO BELL test missing)  ok
+( TODO COMPILE-ONLY test missing)  ok
+( TODO INT>NAME test missing)  ok
+( TODO LATESTNT test missing)  ok
+( TODO NEVER-NATVE test missing)  ok
+( TODO WORDSIZE test missing)  ok
+  ok
+  ok
+\ Nothing is too trivial for testing!  ok
+{ 0 -> 0 }  ok
+{ 1 -> 1 }  ok
+{ 2 -> 2 }  ok
+  ok
+  ok
+\ Test for DIGIT? ( char -- u f | char f )  ok
+  ok
+{ 36 constant max-base -> } \ ANS standard says 2 - 36  ok
+{ base @  constant orig-base -> }  ok
+{ s" 0123456789" ( addr u ) drop  constant digit_numeral -> }  ok
+{ s" abcdefghijklmnopqrstuvwxyz" ( addr u ) drop  constant digit_lower -> }  ok
+{ s" ABCDEFGHIJKLMNOPQRSTUVWXYZ" ( addr u ) drop  constant digit_upper -> }  ok
+  ok
+\ "/" and ":" are before and after ASCII numbers  ok
+\ "@" and "[" are before and after upper case ASCII letters  ok
+\ "`" and "{" are before and after lower case ASCII letters  ok
+{ s" /:@[`{"  ( addr u )  drop  constant digit_bad -> }  ok
+  ok
+: digit_numeral ( -- f )  compiled
+   true  compiled
+   base @  10 min  ( don't go outside chars )  0 ?do  compiled
+      digit_numeral i +  ( addr ) c@   compiled
+      dup emit  \ Show user what is going on  compiled
+      dup digit?  ( char  u | char  f )   compiled
+      swap 48 ( ASCII "0" ) +   ( char  f  u | char )   compiled
+      rot =  ( f f )       \ is number what it's supposed to be?  compiled
+      and  ( f )           \ conversion was signaled as success?  compiled
+      and                  \ merge with running tab flag  compiled
+   loop ;   ok
+  ok
+: digit_letters ( -- f )   compiled
+   true  compiled
+   base @  10 - ( grow index with base)  0 ?do  compiled
+      digit_lower i + c@    compiled
+      dup emit  compiled
+      dup digit?    compiled
+      swap 97 ( ASCII "a" ) 10 -  +  compiled
+      rot =   compiled
+      and and   compiled
+  compiled
+      digit_upper i + c@    compiled
+      dup emit  compiled
+      dup digit?   compiled
+      swap 65 ( ASCII "A" ) 10 -  +  compiled
+      rot =   compiled
+      and and   compiled
+   loop ;   ok
+  ok
+: digit_oneoff ( -- f )   compiled
+   true   compiled
+   7 0 ?do  compiled
+      digit_bad i + c@  compiled
+      dup emit  compiled
+      digit?  ( char 0 )   compiled
+      nip invert   compiled
+      and  compiled
+   loop ;  ok
+  ok
+\ All your bases are belong to us. In theory, we could condense this  ok
+\ code further, because Forth, but it would become harder to understand  ok
+: digit_all ( -- f )  compiled
+   true  compiled
+  compiled
+   max-base 1+  2 ?do  compiled
+      decimal cr ." Numerals, base " i . ." : "   compiled
+      i base !  compiled
+      digit_numeral and  compiled
+      dup ."  -> " .  \ print status of base to help find errors  compiled
+   loop   compiled
+     compiled
+   decimal cr  compiled
+   max-base 1+  11 ?do  compiled
+      decimal cr ." Letters, base " i . ." : "   compiled
+      i base !  compiled
+      digit_letters and  compiled
+      dup ."  -> " . \ uncomment for debugging  compiled
+   loop   compiled
+  compiled
+   decimal cr  compiled
+   max-base 1+ 2 ?do  compiled
+      decimal cr ." One-off chars, base " i . ." : "   compiled
+      i base !  compiled
+      digit_oneoff and  compiled
+      dup ."  -> " .  \ uncomment for debugging  compiled
+   loop ;  ok
+  ok
+{ digit_all -> <true> } 
+Numerals, base 2 : 01 -> -1 
+Numerals, base 3 : 012 -> -1 
+Numerals, base 4 : 0123 -> -1 
+Numerals, base 5 : 01234 -> -1 
+Numerals, base 6 : 012345 -> -1 
+Numerals, base 7 : 0123456 -> -1 
+Numerals, base 8 : 01234567 -> -1 
+Numerals, base 9 : 012345678 -> -1 
+Numerals, base 10 : 0123456789 -> -1 
+Numerals, base 11 : 0123456789 -> -1 
+Numerals, base 12 : 0123456789 -> -1 
+Numerals, base 13 : 0123456789 -> -1 
+Numerals, base 14 : 0123456789 -> -1 
+Numerals, base 15 : 0123456789 -> -1 
+Numerals, base 16 : 0123456789 -> -1 
+Numerals, base 17 : 0123456789 -> -1 
+Numerals, base 18 : 0123456789 -> -1 
+Numerals, base 19 : 0123456789 -> -1 
+Numerals, base 20 : 0123456789 -> -1 
+Numerals, base 21 : 0123456789 -> -1 
+Numerals, base 22 : 0123456789 -> -1 
+Numerals, base 23 : 0123456789 -> -1 
+Numerals, base 24 : 0123456789 -> -1 
+Numerals, base 25 : 0123456789 -> -1 
+Numerals, base 26 : 0123456789 -> -1 
+Numerals, base 27 : 0123456789 -> -1 
+Numerals, base 28 : 0123456789 -> -1 
+Numerals, base 29 : 0123456789 -> -1 
+Numerals, base 30 : 0123456789 -> -1 
+Numerals, base 31 : 0123456789 -> -1 
+Numerals, base 32 : 0123456789 -> -1 
+Numerals, base 33 : 0123456789 -> -1 
+Numerals, base 34 : 0123456789 -> -1 
+Numerals, base 35 : 0123456789 -> -1 
+Numerals, base 36 : 0123456789 -> -1 
+
+Letters, base 11 : aA -> -1 
+Letters, base 12 : aAbB -> -1 
+Letters, base 13 : aAbBcC -> -1 
+Letters, base 14 : aAbBcCdD -> -1 
+Letters, base 15 : aAbBcCdDeE -> -1 
+Letters, base 16 : aAbBcCdDeEfF -> -1 
+Letters, base 17 : aAbBcCdDeEfFgG -> -1 
+Letters, base 18 : aAbBcCdDeEfFgGhH -> -1 
+Letters, base 19 : aAbBcCdDeEfFgGhHiI -> -1 
+Letters, base 20 : aAbBcCdDeEfFgGhHiIjJ -> -1 
+Letters, base 21 : aAbBcCdDeEfFgGhHiIjJkK -> -1 
+Letters, base 22 : aAbBcCdDeEfFgGhHiIjJkKlL -> -1 
+Letters, base 23 : aAbBcCdDeEfFgGhHiIjJkKlLmM -> -1 
+Letters, base 24 : aAbBcCdDeEfFgGhHiIjJkKlLmMnN -> -1 
+Letters, base 25 : aAbBcCdDeEfFgGhHiIjJkKlLmMnNoO -> -1 
+Letters, base 26 : aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpP -> -1 
+Letters, base 27 : aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQ -> -1 
+Letters, base 28 : aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrR -> -1 
+Letters, base 29 : aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsS -> -1 
+Letters, base 30 : aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStT -> -1 
+Letters, base 31 : aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuU -> -1 
+Letters, base 32 : aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvV -> -1 
+Letters, base 33 : aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwW -> -1 
+Letters, base 34 : aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxX -> -1 
+Letters, base 35 : aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyY -> -1 
+Letters, base 36 : aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ -> -1 
+
+One-off chars, base 2 : /:@[`{	 -> -1 
+One-off chars, base 3 : /:@[`{	 -> -1 
+One-off chars, base 4 : /:@[`{	 -> -1 
+One-off chars, base 5 : /:@[`{	 -> -1 
+One-off chars, base 6 : /:@[`{	 -> -1 
+One-off chars, base 7 : /:@[`{	 -> -1 
+One-off chars, base 8 : /:@[`{	 -> -1 
+One-off chars, base 9 : /:@[`{	 -> -1 
+One-off chars, base 10 : /:@[`{	 -> -1 
+One-off chars, base 11 : /:@[`{	 -> -1 
+One-off chars, base 12 : /:@[`{	 -> -1 
+One-off chars, base 13 : /:@[`{	 -> -1 
+One-off chars, base 14 : /:@[`{	 -> -1 
+One-off chars, base 15 : /:@[`{	 -> -1 
+One-off chars, base 16 : /:@[`{	 -> -1 
+One-off chars, base 17 : /:@[`{	 -> -1 
+One-off chars, base 18 : /:@[`{	 -> -1 
+One-off chars, base 19 : /:@[`{	 -> -1 
+One-off chars, base 20 : /:@[`{	 -> -1 
+One-off chars, base 21 : /:@[`{	 -> -1 
+One-off chars, base 22 : /:@[`{	 -> -1 
+One-off chars, base 23 : /:@[`{	 -> -1 
+One-off chars, base 24 : /:@[`{	 -> -1 
+One-off chars, base 25 : /:@[`{	 -> -1 
+One-off chars, base 26 : /:@[`{	 -> -1 
+One-off chars, base 27 : /:@[`{	 -> -1 
+One-off chars, base 28 : /:@[`{	 -> -1 
+One-off chars, base 29 : /:@[`{	 -> -1 
+One-off chars, base 30 : /:@[`{	 -> -1 
+One-off chars, base 31 : /:@[`{	 -> -1 
+One-off chars, base 32 : /:@[`{	 -> -1 
+One-off chars, base 33 : /:@[`{	 -> -1 
+One-off chars, base 34 : /:@[`{	 -> -1 
+One-off chars, base 35 : /:@[`{	 -> -1 
+One-off chars, base 36 : /:@[`{	 -> -1  ok
+{ decimal -> }  ok
+  ok
+  ok
+\ TODO find more edge cases for NUMBER  ok
+{ s" 0" number -> 0 }  ok
+{ s" 10" number -> 10 }  ok
+{ s" 100" number -> 100 }  ok
+{ s" 1." number -> 1 0 }  ok
+{ hex -> }  ok
+{ s" 0" number -> 0 }  ok
+{ s" 10" number -> 10 }  ok
+{ s" ff" number -> FF }  ok
+{ decimal -> }  ok
+  ok
+  ok
+ ( Running test 'string' from file 'string.fs' )  ok
+\ ------------------------------------------------------------------------  ok
+testing string words: /string -trailing blank sliteral  ok
+decimal  ok
+  ok
+\ Note the sequence of tests is fixed by https://forth-standard.org/standard/testsuite  ok
+  ok
+{ : s1 s" abcdefghijklmnopqrstuvwxyz" ; -> }  ok
+   ok
+{ s1  5 /string -> s1 swap 5 + swap 5 - }  ok
+{ s1 10 /string -4 /string -> s1 6 /string }  ok
+{ s1  0 /string -> s1 }  ok
+  ok
+{ : s2 s" abc"   ; -> }  ok
+{ : s3 s" jklmn" ; -> }  ok
+{ : s4 s" z"     ; -> }  ok
+{ : s5 s" mnoq"  ; -> }  ok
+{ : s6 s" 12345" ; -> }  ok
+{ : s7 s" "      ; -> }  ok
+  ok
+( TODO SEARCH not implemented )  ok
+\ { s1 s2 search -> s1 <true>  }    ok
+\ { s1 s3 search -> s1  9 /string <true>  }  ok
+\ { s1 s4 search -> s1 25 /string <true>  }  ok
+\ { s1 s5 search -> s1 <false> }  ok
+\ { s1 s6 search -> s1 <false> }  ok
+\ { s1 s7 search -> s1 <true>  }   ok
+  ok
+{ :  s8 s" abc  " ; -> }  ok
+{ :  s9 s"      " ; -> }  ok
+{ : s10 s"    a " ; -> }  ok
+  ok
+{  s1 -trailing -> s1 }        \ "abcdefghijklmnopqrstuvwxyz"  ok
+{  s8 -trailing -> s8 2 - }    \ "abc "  ok
+{  s7 -trailing -> s7 }        \ " "  ok
+{  s9 -trailing -> s9 drop 0 } \ " "  ok
+{ s10 -trailing -> s10 1- }    \ " a "  ok
+  ok
+( TODO COMPARE not implemented )  ok
+\ { s1        s1 compare ->  0  }  ok
+\ { s1  pad swap cmove   ->     }    \ copy s1 to PAD  ok
+\ { s1  pad over compare ->  0  }  ok
+\ { s1     pad 6 compare ->  1  }  ok
+\ { pad 10    s1 compare -> -1  }  ok
+\ { s1     pad 0 compare ->  1  }  ok
+\ { pad  0    s1 compare -> -1  }  ok
+\ { s1        s6 compare ->  1  }  ok
+\ { s6        s1 compare -> -1  }  ok
+  ok
+\ : "abdde" s" abdde" ;  ok
+\ : "abbde" s" abbde" ;  ok
+\ : "abcdf" s" abcdf" ;  ok
+\ : "abcdee" s" abcdee" ;  ok
+  ok
+\ { s1 "abdde"  compare -> -1 }  ok
+\ { s1 "abbde"  compare ->  1 }  ok
+\ { s1 "abcdf"  compare -> -1 }  ok
+\ { s1 "abcdee" compare ->  1 }  ok
+  ok
+: s11 s" 0abc" ;  ok
+: s12 s" 0aBc" ;  ok
+  ok
+\ { s11 s12 compare ->  1 }  ok
+\ { s12 s11 compare -> -1 }  ok
+  ok
+: s13 s" aaaaa a" ;            \ six spaces  ok
+  ok
+{ pad 25 char a fill -> }      \ fill PAD with 25 'a's  ok
+{ pad 5 chars + 6 blank -> }   \ put 6 spaced from character 5  ok
+\ { pad 12 s13 compare -> 0 }    \ PAD should now be same as s13 TODO  ok
+  ok
+( CMOVE and CMOVE> are kept together with MOVE )  ok
+  ok
+( TODO SLITERAL test not implemented yet because it requires COMPARE)   ok
+\ { : s14 [ s1 ] sliteral ; -> }   ok
+\ { s1 s14 compare -> 0 }  ok
+\ { s1 s14 rot = rot rot = -> <true> <false> }  ok
+  ok
+( TODO REPLACES not implemented yet )  ok
+( TODO SUBSTITUTE not implemented yet )  ok
+( TODO UNESCAPE not implemented yet )  ok
+  ok
+\ Tests for long strings are currently in their own file  ok
+  ok
  ( Running test 'tools' from file 'tools.fs' )  ok
 \ ------------------------------------------------------------------------  ok
 testing tools words: .s ? dump name>string see state words  ok
@@ -98,6 +490,169 @@ testing tools words: .s ? dump name>string see state words  ok
 ( TODO NAME>STRING missing )  ok
 ( TODO SEE test missing )  ok
 ( TODO WORDS test missing )  ok
+  ok
+ ( Running test 'double' from file 'double.fs' )  ok
+\ ------------------------------------------------------------------------  ok
+testing double words: 2constant 2variable d+ d- d. d.r d>s dabs dnegate  ok
+decimal  ok
+  ok
+{ 2variable 2v1 -> }  ok
+{ 0. 2v1 2! -> }  ok
+{ 2v1 2@ -> 0. }  ok
+{ -1 -2 2v1 2! -> }  ok
+{ 2v1 2@ -> -1 -2 }  ok
+{ : cd2 2variable ; -> }  ok
+{ cd2 2v2 -> }  ok
+{ : cd3 2v2 2! ; -> }  ok
+{ -2 -1 cd3 -> }  ok
+{ 2v2 2@ -> -2 -1 }  ok
+{ 2variable 2v3 immediate 5 6 2v3 2! -> }  ok
+{ 2v3 2@ -> 5 6 }  ok
+  ok
+\ Repeats in case we call this test alone  ok
+0 constant 0s  ok
+0 invert constant 1s  ok
+0 invert 1 rshift  constant max-int  ok
+0 invert 1 rshift invert  constant min-int  ok
+  ok
+{  0.  5. d+ ->  5. }                         \ small integers   ok
+{ -5.  0. d+ -> -5. }   ok
+{  1.  2. d+ ->  3. }   ok
+{  1. -2. d+ -> -1. }   ok
+{ -1.  2. d+ ->  1. }   ok
+{ -1. -2. d+ -> -3. }   ok
+{ -1.  1. d+ ->  0. }  ok
+{  0  0  0  5 d+ ->  0  5 }                  \ mid range integers   ok
+{ -1  5  0  0 d+ -> -1  5 }   ok
+{  0  0  0 -5 d+ ->  0 -5 }   ok
+{  0 -5 -1  0 d+ -> -1 -5 }   ok
+{  0  1  0  2 d+ ->  0  3 }   ok
+{ -1  1  0 -2 d+ -> -1 -1 }   ok
+{  0 -1  0  2 d+ ->  0  1 }   ok
+{  0 -1 -1 -2 d+ -> -1 -3 }   ok
+{ -1 -1  0  1 d+ -> -1  0 }  ok
+  ok
+{ min-int 0 2dup d+ -> 0 1 }  ok
+{ min-int s>d min-int 0 d+ -> 0 0 }  ok
+  ok
+{ 1 2 2constant 2c1 -> }  ok
+{ 2c1 -> 1 2 }  ok
+{ : cd1 2c1 ; -> }  ok
+{ cd1 -> 1 2 }  ok
+{ : cd2 2constant ; -> }  ok
+{ -1 -2 cd2 2c2 -> }  ok
+{ 2c2 -> -1 -2 }  ok
+{ 4 5 2constant 2c3 immediate 2c3 -> 4 5 }  ok
+{ : cd6 2c3 2literal ; cd6 -> 4 5 }  ok
+  ok
+max-int 2/ constant hi-int \ 001...1   ok
+min-int 2/ constant lo-int \ 110...1  ok
+  ok
+1s max-int  2constant max-2int \ 01...1   ok
+0 min-int   2constant min-2int \ 10...0   ok
+max-2int 2/ 2constant hi-2int  \ 001...1   ok
+min-2int 2/ 2constant lo-2int  \ 110...0  ok
+  ok
+{ : cd1 [ max-2int ] 2literal ; -> }  ok
+{ cd1 -> max-2int }  ok
+{ 2variable 2v4 immediate 5 6 2v4 2! -> }  ok
+{ : cd7 2v4 [ 2@ ] 2literal ; cd7 -> 5 6 }  ok
+{ : cd8 [ 6 7 ] 2v4 [ 2! ] ; 2v4 2@ -> 6 7 }  ok
+  ok
+{  hi-2int       1. d+ -> 0 hi-int 1+ }     \ large double integers   ok
+{  hi-2int     2dup d+ -> 1s 1- max-int }  ok
+{ max-2int min-2int d+ -> -1. }  ok
+{ max-2int  lo-2int d+ -> hi-2int }  ok
+{  lo-2int     2dup d+ -> min-2int }  ok
+{  hi-2int min-2int d+ 1. d+ -> lo-2int }  ok
+  ok
+{  0.  5. d- -> -5. }              \ small integers   ok
+{  5.  0. d- ->  5. }   ok
+{  0. -5. d- ->  5. }   ok
+{  1.  2. d- -> -1. }   ok
+{  1. -2. d- ->  3. }   ok
+{ -1.  2. d- -> -3. }   ok
+{ -1. -2. d- ->  1. }   ok
+{ -1. -1. d- ->  0. }   ok
+{  0  0  0  5 d- ->  0 -5 }        \ mid-range integers   ok
+{ -1  5  0  0 d- -> -1  5 }   ok
+{  0  0 -1 -5 d- ->  1  4 }   ok
+{  0 -5  0  0 d- ->  0 -5 }   ok
+{ -1  1  0  2 d- -> -1 -1 }   ok
+{  0  1 -1 -2 d- ->  1  2 }   ok
+{  0 -1  0  2 d- ->  0 -3 }   ok
+{  0 -1  0 -2 d- ->  0  1 }   ok
+{  0  0  0  1 d- ->  0 -1 }  ok
+{ min-int 0 2dup d- -> 0. }   ok
+{ min-int s>d max-int 0 d- -> 1 1s }   ok
+  ok
+{ max-2int max-2int d- -> 0. }    \ large integers   ok
+{ min-2int min-2int d- -> 0. }  ok
+{ max-2int  hi-2int d- -> lo-2int dnegate }   ok
+{  hi-2int  lo-2int d- -> max-2int }  ok
+{  lo-2int  hi-2int d- -> min-2int 1. d+ }  ok
+{ min-2int min-2int d- -> 0. }  ok
+{ min-2int  lo-2int d- -> lo-2int }  ok
+  ok
+( TODO m*/ not implemented )   ok
+  ok
+\ max-2int 71 73 m*/ 2constant dbl1   ok
+\ min-2int 73 79 m*/ 2constant dbl2  ok
+\ : d>ascii ( d -- caddr u )   ok
+   \ dup >r <# dabs #s r> sign #>    ( -- caddr1 u )   ok
+   \ here swap 2dup 2>r chars dup allot move 2r>   ok
+\ ;  ok
+  ok
+\ dbl1 d>ascii 2constant "dbl1"   ok
+\ dbl2 d>ascii 2constant "dbl2"  ok
+  ok
+\ : doubleoutput   ok
+   \ cr ." you should see lines duplicated:" cr   ok
+   \ 5 spaces "dbl1" type cr   ok
+   \ 5 spaces dbl1 d. cr   ok
+   \ 8 spaces "dbl1" dup >r type cr   ok
+   \ 5 spaces dbl1 r> 3 + d.r cr   ok
+   \ 5 spaces "dbl2" type cr   ok
+   \ 5 spaces dbl2 d. cr   ok
+   \ 10 spaces "dbl2" dup >r type cr   ok
+   \ 5 spaces dbl2 r> 5 + d.r cr   ok
+\ ;  ok
+  ok
+\ { doubleoutput -> }  ok
+  ok
+( TODO D0< not implemented yet )  ok
+( TODO D0= not implemented yet )  ok
+( TODO D2* not implemented yet )  ok
+( TODO D2/ not implemented yet )  ok
+( TODO D< not implemented yet )  ok
+( TODO D= not implemented yet )  ok
+  ok
+{    1234  0 d>s ->  1234   }   ok
+{   -1234 -1 d>s -> -1234   }   ok
+{ max-int  0 d>s -> max-int }   ok
+{ min-int -1 d>s -> min-int }  ok
+  ok
+{       1. dabs -> 1.       }   ok
+{      -1. dabs -> 1.       }   ok
+{ max-2int dabs -> max-2int }   ok
+{ min-2int 1. d+ dabs -> max-2int }  ok
+  ok
+( TODO DMAX not implemented yet )  ok
+( TODO DMIN not implemented yet )  ok
+  ok
+{ 0. dnegate -> 0. }  ok
+{ 1. dnegate -> -1. }  ok
+{ -1. dnegate -> 1. }  ok
+{ max-2int dnegate -> min-2int swap 1+ swap }  ok
+{ min-2int swap 1+ swap dnegate -> max-2int }  ok
+  ok
+( TODO M*/ not implemented yet )  ok
+( TODO M+ not implemented yet )  ok
+( TODO 2ROT not implemented yet )  ok
+( TODO 2VALUE not implemented yet )  ok
+( TODO DU< not implemented yet )  ok
+  ok
+  ok
   ok
  ( Running test 'core' from file 'core.fs' )  ok
 \ From: John Hayes S1I  ok
@@ -1549,525 +2104,11 @@ testing dictionary search rules  ok
 { : gdx   123 ; : gdx   gdx 234 ; -> }  ok
 { gdx -> 123 234 }  ok
   ok
- ( Running test 'string' from file 'string.fs' )  ok
-\ ------------------------------------------------------------------------  ok
-testing string words: /string -trailing blank sliteral  ok
-decimal  ok
-  ok
-\ Note the sequence of tests is fixed by https://forth-standard.org/standard/testsuite  ok
-  ok
-{ : s1 s" abcdefghijklmnopqrstuvwxyz" ; -> }  ok
-   ok
-{ s1  5 /string -> s1 swap 5 + swap 5 - }  ok
-{ s1 10 /string -4 /string -> s1 6 /string }  ok
-{ s1  0 /string -> s1 }  ok
-  ok
-{ : s2 s" abc"   ; -> }  ok
-{ : s3 s" jklmn" ; -> }  ok
-{ : s4 s" z"     ; -> }  ok
-{ : s5 s" mnoq"  ; -> }  ok
-{ : s6 s" 12345" ; -> }  ok
-{ : s7 s" "      ; -> }  ok
-  ok
-( TODO SEARCH not implemented )  ok
-\ { s1 s2 search -> s1 <true>  }    ok
-\ { s1 s3 search -> s1  9 /string <true>  }  ok
-\ { s1 s4 search -> s1 25 /string <true>  }  ok
-\ { s1 s5 search -> s1 <false> }  ok
-\ { s1 s6 search -> s1 <false> }  ok
-\ { s1 s7 search -> s1 <true>  }   ok
-  ok
-{ :  s8 s" abc  " ; -> }  ok
-{ :  s9 s"      " ; -> }  ok
-{ : s10 s"    a " ; -> }  ok
-  ok
-{  s1 -trailing -> s1 }        \ "abcdefghijklmnopqrstuvwxyz"  ok
-{  s8 -trailing -> s8 2 - }    \ "abc "  ok
-{  s7 -trailing -> s7 }        \ " "  ok
-{  s9 -trailing -> s9 drop 0 } \ " "  ok
-{ s10 -trailing -> s10 1- }    \ " a "  ok
-  ok
-( TODO COMPARE not implemented )  ok
-\ { s1        s1 compare ->  0  }  ok
-\ { s1  pad swap cmove   ->     }    \ copy s1 to PAD  ok
-\ { s1  pad over compare ->  0  }  ok
-\ { s1     pad 6 compare ->  1  }  ok
-\ { pad 10    s1 compare -> -1  }  ok
-\ { s1     pad 0 compare ->  1  }  ok
-\ { pad  0    s1 compare -> -1  }  ok
-\ { s1        s6 compare ->  1  }  ok
-\ { s6        s1 compare -> -1  }  ok
-  ok
-\ : "abdde" s" abdde" ;  ok
-\ : "abbde" s" abbde" ;  ok
-\ : "abcdf" s" abcdf" ;  ok
-\ : "abcdee" s" abcdee" ;  ok
-  ok
-\ { s1 "abdde"  compare -> -1 }  ok
-\ { s1 "abbde"  compare ->  1 }  ok
-\ { s1 "abcdf"  compare -> -1 }  ok
-\ { s1 "abcdee" compare ->  1 }  ok
-  ok
-: s11 s" 0abc" ;  ok
-: s12 s" 0aBc" ;  ok
-  ok
-\ { s11 s12 compare ->  1 }  ok
-\ { s12 s11 compare -> -1 }  ok
-  ok
-: s13 s" aaaaa a" ;            \ six spaces  ok
-  ok
-{ pad 25 char a fill -> }      \ fill PAD with 25 'a's  ok
-{ pad 5 chars + 6 blank -> }   \ put 6 spaced from character 5  ok
-\ { pad 12 s13 compare -> 0 }    \ PAD should now be same as s13 TODO  ok
-  ok
-( CMOVE and CMOVE> are kept together with MOVE )  ok
-  ok
-( TODO SLITERAL test not implemented yet because it requires COMPARE)   ok
-\ { : s14 [ s1 ] sliteral ; -> }   ok
-\ { s1 s14 compare -> 0 }  ok
-\ { s1 s14 rot = rot rot = -> <true> <false> }  ok
-  ok
-( TODO REPLACES not implemented yet )  ok
-( TODO SUBSTITUTE not implemented yet )  ok
-( TODO UNESCAPE not implemented yet )  ok
-  ok
-\ Tests for long strings are currently in their own file  ok
-  ok
- ( Running test 'tali' from file 'tali.fs' )  ok
-\ Repeat definitions for standalone testing  ok
-0 constant 0s  ok
-0 invert constant 1s  ok
-0s constant <false>  ok
-1s constant <true>  ok
-  ok
-\ ------------------------------------------------------------------------  ok
-testing gforth words: bounds find-name latestxt name>int name>string  ok
-\ Test for COLD not implemented  ok
-  ok
-( TODO LATESTXT test missing)  ok
-( TODO NAME>INT test missing)  ok
-( TODO NAME>STRING test missing)  ok
-  ok
-\ Test for FIND-NAME assumes that PARSE-NAME has been tested in core.fs  ok
-{ parse-name drop     find-name  0<> -> <true> } \ need to find any nt  ok
-{ parse-name Chatika  find-name  0=  -> <true> } \ shouldn't find Tali's drone  ok
-  ok
-{ hex -> }  ok
-{ 1000 10 bounds -> 1010 1000 }  ok
-{ ffff 2 bounds -> 0001 ffff }  \ BOUNDS wraps on Tali with 16 bit address space  ok
-{ decimal -> }  ok
-  ok
-\ ------------------------------------------------------------------------  ok
-testing tali-only words: always-native bell compile-only digit? int>name latestnt number 0 1 2  ok
-testing tali-only words: never-native wordsize  ok
-decimal  ok
-  ok
-\ Test for 0BRANCH not implemented  ok
-\ Test for BRANCH not implemented  ok
-\ Test for DISASM not implemented  ok
-\ Test for INPUT not implemented  ok
-\ Test for NC-LIMIT not implemented  ok
-\ Test for OUTPUT not implemented  ok
-\ Test for UF-STRIP not implemented  ok
-  ok
-( TODO ALWAY-NATIVE test missing)  ok
-( TODO BELL test missing)  ok
-( TODO COMPILE-ONLY test missing)  ok
-( TODO INT>NAME test missing)  ok
-( TODO LATESTNT test missing)  ok
-( TODO NEVER-NATVE test missing)  ok
-( TODO WORDSIZE test missing)  ok
-  ok
-  ok
-\ Nothing is too trivial for testing!  ok
-{ 0 -> 0 }  ok
-{ 1 -> 1 }  ok
-{ 2 -> 2 }  ok
-  ok
-  ok
-\ Test for DIGIT? ( char -- u f | char f )  ok
-  ok
-{ 36 constant max-base -> } \ ANS standard says 2 - 36  ok
-{ base @  constant orig-base -> }  ok
-{ s" 0123456789" ( addr u ) drop  constant digit_numeral -> }  ok
-{ s" abcdefghijklmnopqrstuvwxyz" ( addr u ) drop  constant digit_lower -> }  ok
-{ s" ABCDEFGHIJKLMNOPQRSTUVWXYZ" ( addr u ) drop  constant digit_upper -> }  ok
-  ok
-\ "/" and ":" are before and after ASCII numbers  ok
-\ "@" and "[" are before and after upper case ASCII letters  ok
-\ "`" and "{" are before and after lower case ASCII letters  ok
-{ s" /:@[`{"  ( addr u )  drop  constant digit_bad -> }  ok
-  ok
-: digit_numeral ( -- f )  compiled
-   true  compiled
-   base @  10 min  ( don't go outside chars )  0 ?do  compiled
-      digit_numeral i +  ( addr ) c@   compiled
-      dup emit  \ Show user what is going on  compiled
-      dup digit?  ( char  u | char  f )   compiled
-      swap 48 ( ASCII "0" ) +   ( char  f  u | char )   compiled
-      rot =  ( f f )       \ is number what it's supposed to be?  compiled
-      and  ( f )           \ conversion was signaled as success?  compiled
-      and                  \ merge with running tab flag  compiled
-   loop ;   ok
-  ok
-: digit_letters ( -- f )   compiled
-   true  compiled
-   base @  10 - ( grow index with base)  0 ?do  compiled
-      digit_lower i + c@    compiled
-      dup emit  compiled
-      dup digit?    compiled
-      swap 97 ( ASCII "a" ) 10 -  +  compiled
-      rot =   compiled
-      and and   compiled
-  compiled
-      digit_upper i + c@    compiled
-      dup emit  compiled
-      dup digit?   compiled
-      swap 65 ( ASCII "A" ) 10 -  +  compiled
-      rot =   compiled
-      and and   compiled
-   loop ;   ok
-  ok
-: digit_oneoff ( -- f )   compiled
-   true   compiled
-   7 0 ?do  compiled
-      digit_bad i + c@  compiled
-      dup emit  compiled
-      digit?  ( char 0 )   compiled
-      nip invert   compiled
-      and  compiled
-   loop ;  ok
-  ok
-\ All your bases are belong to us. In theory, we could condense this  ok
-\ code further, because Forth, but it would become harder to understand  ok
-: digit_all ( -- f )  compiled
-   true  compiled
-  compiled
-   max-base 1+  2 ?do  compiled
-      decimal cr ." Numerals, base " i . ." : "   compiled
-      i base !  compiled
-      digit_numeral and  compiled
-      dup ."  -> " .  \ print status of base to help find errors  compiled
-   loop   compiled
-     compiled
-   decimal cr  compiled
-   max-base 1+  11 ?do  compiled
-      decimal cr ." Letters, base " i . ." : "   compiled
-      i base !  compiled
-      digit_letters and  compiled
-      dup ."  -> " . \ uncomment for debugging  compiled
-   loop   compiled
-  compiled
-   decimal cr  compiled
-   max-base 1+ 2 ?do  compiled
-      decimal cr ." One-off chars, base " i . ." : "   compiled
-      i base !  compiled
-      digit_oneoff and  compiled
-      dup ."  -> " .  \ uncomment for debugging  compiled
-   loop ;  ok
-  ok
-{ digit_all -> <true> } 
-Numerals, base 2 : 01 -> -1 
-Numerals, base 3 : 012 -> -1 
-Numerals, base 4 : 0123 -> -1 
-Numerals, base 5 : 01234 -> -1 
-Numerals, base 6 : 012345 -> -1 
-Numerals, base 7 : 0123456 -> -1 
-Numerals, base 8 : 01234567 -> -1 
-Numerals, base 9 : 012345678 -> -1 
-Numerals, base 10 : 0123456789 -> -1 
-Numerals, base 11 : 0123456789 -> -1 
-Numerals, base 12 : 0123456789 -> -1 
-Numerals, base 13 : 0123456789 -> -1 
-Numerals, base 14 : 0123456789 -> -1 
-Numerals, base 15 : 0123456789 -> -1 
-Numerals, base 16 : 0123456789 -> -1 
-Numerals, base 17 : 0123456789 -> -1 
-Numerals, base 18 : 0123456789 -> -1 
-Numerals, base 19 : 0123456789 -> -1 
-Numerals, base 20 : 0123456789 -> -1 
-Numerals, base 21 : 0123456789 -> -1 
-Numerals, base 22 : 0123456789 -> -1 
-Numerals, base 23 : 0123456789 -> -1 
-Numerals, base 24 : 0123456789 -> -1 
-Numerals, base 25 : 0123456789 -> -1 
-Numerals, base 26 : 0123456789 -> -1 
-Numerals, base 27 : 0123456789 -> -1 
-Numerals, base 28 : 0123456789 -> -1 
-Numerals, base 29 : 0123456789 -> -1 
-Numerals, base 30 : 0123456789 -> -1 
-Numerals, base 31 : 0123456789 -> -1 
-Numerals, base 32 : 0123456789 -> -1 
-Numerals, base 33 : 0123456789 -> -1 
-Numerals, base 34 : 0123456789 -> -1 
-Numerals, base 35 : 0123456789 -> -1 
-Numerals, base 36 : 0123456789 -> -1 
-
-Letters, base 11 : aA -> -1 
-Letters, base 12 : aAbB -> -1 
-Letters, base 13 : aAbBcC -> -1 
-Letters, base 14 : aAbBcCdD -> -1 
-Letters, base 15 : aAbBcCdDeE -> -1 
-Letters, base 16 : aAbBcCdDeEfF -> -1 
-Letters, base 17 : aAbBcCdDeEfFgG -> -1 
-Letters, base 18 : aAbBcCdDeEfFgGhH -> -1 
-Letters, base 19 : aAbBcCdDeEfFgGhHiI -> -1 
-Letters, base 20 : aAbBcCdDeEfFgGhHiIjJ -> -1 
-Letters, base 21 : aAbBcCdDeEfFgGhHiIjJkK -> -1 
-Letters, base 22 : aAbBcCdDeEfFgGhHiIjJkKlL -> -1 
-Letters, base 23 : aAbBcCdDeEfFgGhHiIjJkKlLmM -> -1 
-Letters, base 24 : aAbBcCdDeEfFgGhHiIjJkKlLmMnN -> -1 
-Letters, base 25 : aAbBcCdDeEfFgGhHiIjJkKlLmMnNoO -> -1 
-Letters, base 26 : aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpP -> -1 
-Letters, base 27 : aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQ -> -1 
-Letters, base 28 : aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrR -> -1 
-Letters, base 29 : aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsS -> -1 
-Letters, base 30 : aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStT -> -1 
-Letters, base 31 : aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuU -> -1 
-Letters, base 32 : aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvV -> -1 
-Letters, base 33 : aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwW -> -1 
-Letters, base 34 : aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxX -> -1 
-Letters, base 35 : aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyY -> -1 
-Letters, base 36 : aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ -> -1 
-
-One-off chars, base 2 : /:@[`{	 -> -1 
-One-off chars, base 3 : /:@[`{	 -> -1 
-One-off chars, base 4 : /:@[`{	 -> -1 
-One-off chars, base 5 : /:@[`{	 -> -1 
-One-off chars, base 6 : /:@[`{	 -> -1 
-One-off chars, base 7 : /:@[`{	 -> -1 
-One-off chars, base 8 : /:@[`{	 -> -1 
-One-off chars, base 9 : /:@[`{	 -> -1 
-One-off chars, base 10 : /:@[`{	 -> -1 
-One-off chars, base 11 : /:@[`{	 -> -1 
-One-off chars, base 12 : /:@[`{	 -> -1 
-One-off chars, base 13 : /:@[`{	 -> -1 
-One-off chars, base 14 : /:@[`{	 -> -1 
-One-off chars, base 15 : /:@[`{	 -> -1 
-One-off chars, base 16 : /:@[`{	 -> -1 
-One-off chars, base 17 : /:@[`{	 -> -1 
-One-off chars, base 18 : /:@[`{	 -> -1 
-One-off chars, base 19 : /:@[`{	 -> -1 
-One-off chars, base 20 : /:@[`{	 -> -1 
-One-off chars, base 21 : /:@[`{	 -> -1 
-One-off chars, base 22 : /:@[`{	 -> -1 
-One-off chars, base 23 : /:@[`{	 -> -1 
-One-off chars, base 24 : /:@[`{	 -> -1 
-One-off chars, base 25 : /:@[`{	 -> -1 
-One-off chars, base 26 : /:@[`{	 -> -1 
-One-off chars, base 27 : /:@[`{	 -> -1 
-One-off chars, base 28 : /:@[`{	 -> -1 
-One-off chars, base 29 : /:@[`{	 -> -1 
-One-off chars, base 30 : /:@[`{	 -> -1 
-One-off chars, base 31 : /:@[`{	 -> -1 
-One-off chars, base 32 : /:@[`{	 -> -1 
-One-off chars, base 33 : /:@[`{	 -> -1 
-One-off chars, base 34 : /:@[`{	 -> -1 
-One-off chars, base 35 : /:@[`{	 -> -1 
-One-off chars, base 36 : /:@[`{	 -> -1  ok
-{ decimal -> }  ok
-  ok
-  ok
-\ TODO find more edge cases for NUMBER  ok
-{ s" 0" number -> 0 }  ok
-{ s" 10" number -> 10 }  ok
-{ s" 100" number -> 100 }  ok
-{ s" 1." number -> 1 0 }  ok
-{ hex -> }  ok
-{ s" 0" number -> 0 }  ok
-{ s" 10" number -> 10 }  ok
-{ s" ff" number -> FF }  ok
-{ decimal -> }  ok
-  ok
-  ok
- ( Running test 'double' from file 'double.fs' )  ok
-\ ------------------------------------------------------------------------  ok
-testing double words: 2constant 2variable d+ d- d. d.r d>s dabs dnegate  ok
-decimal  ok
-  ok
-{ 2variable 2v1 -> }  ok
-{ 0. 2v1 2! -> }  ok
-{ 2v1 2@ -> 0. }  ok
-{ -1 -2 2v1 2! -> }  ok
-{ 2v1 2@ -> -1 -2 }  ok
-{ : cd2 2variable ; -> }  ok
-{ cd2 2v2 -> }  ok
-{ : cd3 2v2 2! ; -> }  ok
-{ -2 -1 cd3 -> }  ok
-{ 2v2 2@ -> -2 -1 }  ok
-{ 2variable 2v3 immediate 5 6 2v3 2! -> }  ok
-{ 2v3 2@ -> 5 6 }  ok
-  ok
-\ Repeats in case we call this test alone  ok
-0 constant 0s  ok
-0 invert constant 1s  ok
-0 invert 1 rshift  constant max-int  ok
-0 invert 1 rshift invert  constant min-int  ok
-  ok
-{  0.  5. d+ ->  5. }                         \ small integers   ok
-{ -5.  0. d+ -> -5. }   ok
-{  1.  2. d+ ->  3. }   ok
-{  1. -2. d+ -> -1. }   ok
-{ -1.  2. d+ ->  1. }   ok
-{ -1. -2. d+ -> -3. }   ok
-{ -1.  1. d+ ->  0. }  ok
-{  0  0  0  5 d+ ->  0  5 }                  \ mid range integers   ok
-{ -1  5  0  0 d+ -> -1  5 }   ok
-{  0  0  0 -5 d+ ->  0 -5 }   ok
-{  0 -5 -1  0 d+ -> -1 -5 }   ok
-{  0  1  0  2 d+ ->  0  3 }   ok
-{ -1  1  0 -2 d+ -> -1 -1 }   ok
-{  0 -1  0  2 d+ ->  0  1 }   ok
-{  0 -1 -1 -2 d+ -> -1 -3 }   ok
-{ -1 -1  0  1 d+ -> -1  0 }  ok
-  ok
-{ min-int 0 2dup d+ -> 0 1 }  ok
-{ min-int s>d min-int 0 d+ -> 0 0 }  ok
-  ok
-{ 1 2 2constant 2c1 -> }  ok
-{ 2c1 -> 1 2 }  ok
-{ : cd1 2c1 ; -> }  ok
-{ cd1 -> 1 2 }  ok
-{ : cd2 2constant ; -> }  ok
-{ -1 -2 cd2 2c2 -> }  ok
-{ 2c2 -> -1 -2 }  ok
-{ 4 5 2constant 2c3 immediate 2c3 -> 4 5 }  ok
-{ : cd6 2c3 2literal ; cd6 -> 4 5 }  ok
-  ok
-max-int 2/ constant hi-int \ 001...1   ok
-min-int 2/ constant lo-int \ 110...1  ok
-  ok
-1s max-int  2constant max-2int \ 01...1   ok
-0 min-int   2constant min-2int \ 10...0   ok
-max-2int 2/ 2constant hi-2int  \ 001...1   ok
-min-2int 2/ 2constant lo-2int  \ 110...0  ok
-  ok
-{ : cd1 [ max-2int ] 2literal ; -> }  ok
-{ cd1 -> max-2int }  ok
-{ 2variable 2v4 immediate 5 6 2v4 2! -> }  ok
-{ : cd7 2v4 [ 2@ ] 2literal ; cd7 -> 5 6 }  ok
-{ : cd8 [ 6 7 ] 2v4 [ 2! ] ; 2v4 2@ -> 6 7 }  ok
-  ok
-{  hi-2int       1. d+ -> 0 hi-int 1+ }     \ large double integers   ok
-{  hi-2int     2dup d+ -> 1s 1- max-int }  ok
-{ max-2int min-2int d+ -> -1. }  ok
-{ max-2int  lo-2int d+ -> hi-2int }  ok
-{  lo-2int     2dup d+ -> min-2int }  ok
-{  hi-2int min-2int d+ 1. d+ -> lo-2int }  ok
-  ok
-{  0.  5. d- -> -5. }              \ small integers   ok
-{  5.  0. d- ->  5. }   ok
-{  0. -5. d- ->  5. }   ok
-{  1.  2. d- -> -1. }   ok
-{  1. -2. d- ->  3. }   ok
-{ -1.  2. d- -> -3. }   ok
-{ -1. -2. d- ->  1. }   ok
-{ -1. -1. d- ->  0. }   ok
-{  0  0  0  5 d- ->  0 -5 }        \ mid-range integers   ok
-{ -1  5  0  0 d- -> -1  5 }   ok
-{  0  0 -1 -5 d- ->  1  4 }   ok
-{  0 -5  0  0 d- ->  0 -5 }   ok
-{ -1  1  0  2 d- -> -1 -1 }   ok
-{  0  1 -1 -2 d- ->  1  2 }   ok
-{  0 -1  0  2 d- ->  0 -3 }   ok
-{  0 -1  0 -2 d- ->  0  1 }   ok
-{  0  0  0  1 d- ->  0 -1 }  ok
-{ min-int 0 2dup d- -> 0. }   ok
-{ min-int s>d max-int 0 d- -> 1 1s }   ok
-  ok
-{ max-2int max-2int d- -> 0. }    \ large integers   ok
-{ min-2int min-2int d- -> 0. }  ok
-{ max-2int  hi-2int d- -> lo-2int dnegate }   ok
-{  hi-2int  lo-2int d- -> max-2int }  ok
-{  lo-2int  hi-2int d- -> min-2int 1. d+ }  ok
-{ min-2int min-2int d- -> 0. }  ok
-{ min-2int  lo-2int d- -> lo-2int }  ok
-  ok
-( TODO m*/ not implemented )   ok
-  ok
-\ max-2int 71 73 m*/ 2constant dbl1   ok
-\ min-2int 73 79 m*/ 2constant dbl2  ok
-\ : d>ascii ( d -- caddr u )   ok
-   \ dup >r <# dabs #s r> sign #>    ( -- caddr1 u )   ok
-   \ here swap 2dup 2>r chars dup allot move 2r>   ok
-\ ;  ok
-  ok
-\ dbl1 d>ascii 2constant "dbl1"   ok
-\ dbl2 d>ascii 2constant "dbl2"  ok
-  ok
-\ : doubleoutput   ok
-   \ cr ." you should see lines duplicated:" cr   ok
-   \ 5 spaces "dbl1" type cr   ok
-   \ 5 spaces dbl1 d. cr   ok
-   \ 8 spaces "dbl1" dup >r type cr   ok
-   \ 5 spaces dbl1 r> 3 + d.r cr   ok
-   \ 5 spaces "dbl2" type cr   ok
-   \ 5 spaces dbl2 d. cr   ok
-   \ 10 spaces "dbl2" dup >r type cr   ok
-   \ 5 spaces dbl2 r> 5 + d.r cr   ok
-\ ;  ok
-  ok
-\ { doubleoutput -> }  ok
-  ok
-( TODO D0< not implemented yet )  ok
-( TODO D0= not implemented yet )  ok
-( TODO D2* not implemented yet )  ok
-( TODO D2/ not implemented yet )  ok
-( TODO D< not implemented yet )  ok
-( TODO D= not implemented yet )  ok
-  ok
-{    1234  0 d>s ->  1234   }   ok
-{   -1234 -1 d>s -> -1234   }   ok
-{ max-int  0 d>s -> max-int }   ok
-{ min-int -1 d>s -> min-int }  ok
-  ok
-{       1. dabs -> 1.       }   ok
-{      -1. dabs -> 1.       }   ok
-{ max-2int dabs -> max-2int }   ok
-{ min-2int 1. d+ dabs -> max-2int }  ok
-  ok
-( TODO DMAX not implemented yet )  ok
-( TODO DMIN not implemented yet )  ok
-  ok
-{ 0. dnegate -> 0. }  ok
-{ 1. dnegate -> -1. }  ok
-{ -1. dnegate -> 1. }  ok
-{ max-2int dnegate -> min-2int swap 1+ swap }  ok
-{ min-2int swap 1+ swap dnegate -> max-2int }  ok
-  ok
-( TODO M*/ not implemented yet )  ok
-( TODO M+ not implemented yet )  ok
-( TODO 2ROT not implemented yet )  ok
-( TODO 2VALUE not implemented yet )  ok
-( TODO DU< not implemented yet )  ok
-  ok
-  ok
-  ok
  ( Running test 'facility' from file 'facility.fs' )  ok
 \ ------------------------------------------------------------------------  ok
 testing facility words: at-xy page   ok
   ok
 ( TODO AT-XY test missing )  ok
 ( TODO PAGE test missing )  ok
-  ok
- ( Running test 'stringlong' from file 'stringlong.fs' )  ok
-\ ------------------------------------------------------------------------  ok
-testing long strings  ok
-decimal  ok
-  ok
-\ We keep this separate for now because it takes a long, long time -- don't be  ok
-\ suprised if the delay (-d) for talitest.py has to be set to 0.04 secs.  Once  ok
-\ the interface to py65 has been cleaned up, this might be intergrated again.  ok
-\ These are Tali-specific tests, the ANSI test suite has nothing like this.  ok
-  ok
-\ Test strings longer than 255 chars (important for 8-bit systems)  ok
-\ 516 character string  ok
-: s14 s" test                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                " ;  ok
-{ s14 swap drop -> 516 }  ok
-{ s14 -trailing -> s14 drop 4 }  ok
-  ok
-: s15 ." abcdefghijklmnopqrstuvwxyz1abcdefghijklmnopqrstuvwxyz2abcdefghijklmnopqrstuvwxyz3abcdefghijklmnopqrstuvwxyz4abcdefghijklmnopqrstuvwxyz5abcdefghijklmnopqrstuvwxyz6abcdefghijklmnopqrstuvwxyz7abcdefghijklmnopqrstuvwxyz8abcdefghijklmnopqrstuvwxyz9abcdefghijklmnopqrstuvwxyz10abcdefghijklmnopqrstuvwxyz11abcdefghijklmnopqrstuvwxyz12abcdefghijklmnopqrstuvwxyz13abcdefghijklmnopqrstuvwxyz14abcdefghijklmnopqrstuvwxyz15abcdefghijklmnopqrstuvwxyz16abcdefghijklmnopqrstuvwxyz17abcdefghijklmnopqrstuvwxyz18abcdefghijklmnopqrstuvwxyz19abcdefghijklmnopqrstuvwxyz20" ;  ok
-\ This should output the alphabet 20 times.  ok
-{ s15 -> } abcdefghijklmnopqrstuvwxyz1abcdefghijklmnopqrstuvwxyz2abcdefghijklmnopqrstuvwxyz3abcdefghijklmnopqrstuvwxyz4abcdefghijklmnopqrstuvwxyz5abcdefghijklmnopqrstuvwxyz6abcdefghijklmnopqrstuvwxyz7abcdefghijklmnopqrstuvwxyz8abcdefghijklmnopqrstuvwxyz9abcdefghijklmnopqrstuvwxyz10abcdefghijklmnopqrstuvwxyz11abcdefghijklmnopqrstuvwxyz12abcdefghijklmnopqrstuvwxyz13abcdefghijklmnopqrstuvwxyz14abcdefghijklmnopqrstuvwxyz15abcdefghijklmnopqrstuvwxyz16abcdefghijklmnopqrstuvwxyz17abcdefghijklmnopqrstuvwxyz18abcdefghijklmnopqrstuvwxyz19abcdefghijklmnopqrstuvwxyz20 ok
   ok
 bye 
