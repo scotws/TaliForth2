@@ -150,28 +150,46 @@ with open(args.output, 'wb') as fout:
                 """Parameter (originally "address") required by py65mon
                 but unused here as "_"
                 """
-                global cycle_start
                 # When this address is read from, note the cycle time.
-                cycle_start = self._mpu.processorCycles
+                self.cycle_start = self._mpu.processorCycles
                 return 0
 
             def update_cycle_end(_):
                 """Parameter (originally "address") required by py65mon
                 but unused here as "_"
                 """
-                global cycle_start, cycle_end
                 # When this address is read from, note the cycle time.
-                cycle_end = self._mpu.processorCycles
-                # Compute the elapsed time (in CPU cycles).
-                # With a 1MHz clock, this will also be in microseconds.
-                fout.write((" CYCLES: "+str(cycle_end-cycle_start)+" ").encode())
-
-                # Print to the screen if we are not muted.
-                if not args.mute:
-                    sys.stdout.write((" CYCLES: "+str(cycle_end-cycle_start)+" "))
-                    sys.stdout.flush()
+                self.cycle_end = self._mpu.processorCycles
+#                # Compute the elapsed time (in CPU cycles).
+#                # With a 1MHz clock, this will also be in microseconds.
+#                fout.write((" CYCLES: "+str(self.cycle_end-self.cycle_start)+" ").encode())
+#
+#                # Print to the screen if we are not muted.
+#                if not args.mute:
+#                    sys.stdout.write((" CYCLES: "+str(self.cycle_end-self.cycle_start)+" "))
+#                    sys.stdout.flush()
 
                 return 0
+
+            def read_cycle_count(address):
+                """Break up the 32-bit result into bytes for Tali to
+                read out of virtual memory.  Note that the hex value
+                12345678 is stored in memory as bytes 34 12 78 56.
+                The value will be read (as a double) starting at
+                memory address 0xFF00
+                """
+                if address == 0xFF00:
+                    return ((self.cycle_end-self.cycle_start)&0x00FF0000)>>16
+                elif address == 0xFF01:
+                    return ((self.cycle_end-self.cycle_start)&0xFF000000)>>24
+                elif address == 0xFF02:
+                    return ((self.cycle_end-self.cycle_start)&0x000000FF)
+                elif address == 0xFF03:
+                    return ((self.cycle_end-self.cycle_start)&0x0000FF00)>>8
+                else:
+                    return 0
+
+                    
 
             # Install the above handlers for I/O
             mem = ObservableMemory(subject=self.memory)
@@ -180,6 +198,7 @@ with open(args.output, 'wb') as fout:
             # Install the handlers for timing cycles.
             mem.subscribe_to_read([0xF002], update_cycle_start)
             mem.subscribe_to_read([0xF003], update_cycle_end)
+            mem.subscribe_to_read([0xFF00, 0xFF01, 0xFF02, 0xFF03], read_cycle_count)
             self._mpu.memory = mem
 
     # Start Tali.
