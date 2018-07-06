@@ -1916,6 +1916,19 @@ _got_name:
 
 _name_loop:
                 lda (tmptos),y
+
+                ; Make sure it goes into the dictionary in lower case.
+                cmp #$5B         ; ASCII '[' (one past Z)
+                bcs _store_name
+                cmp #$41        ; ASCII 'A'
+                bcc _store_name
+                ; An uppercase letter has been located.  Make it
+                ; lowercase.
+                clc
+                adc #$20
+                ; Fall into _store_name.
+
+_store_name:
                 sta (tmp1),y
                 iny
                 dec tmp2
@@ -3213,9 +3226,20 @@ _compare_string:
                 ; character
 
                 ; second quick test: Is the first character the same?
-                ldy #8
-                lda (tmp1),y
-                cmp (tmp2)              ; first character of mystery string
+                lda (tmp2)      ; first character of mystery string
+                ; Lowercase the incoming charcter.
+                cmp #$5B        ; ASCII '[' (one past Z)
+                bcs _compare_first
+                cmp #$41        ; ASCII 'A'
+                bcc _compare_first
+                ; An uppercase letter has been located.  Make it
+                ; lowercase.
+                clc
+                adc #$20
+                
+_compare_first:
+                ldy #8          ; Offset in nt to name
+                cmp (tmp1),y    ; first character of current word
                 bne _next_entry
 
                 ; string length are the same and the first character is the
@@ -3245,6 +3269,16 @@ _compare_string:
 
 _string_loop:
                 lda (tmp2),y    ; last char of mystery string
+                ; Lowercase the incoming charcter.
+                cmp #$5B         ; ASCII '[' (one past Z)
+                bcs _check_char
+                cmp #$41        ; ASCII 'A'
+                bcc _check_char
+                ; An uppercase letter has been located.  Make it
+                ; lowercase.
+                clc
+                adc #$20
+_check_char:    
                 cmp (tmp3),y    ; last char of word we're testing against
                 bne _next_entry
 
