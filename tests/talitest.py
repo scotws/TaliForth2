@@ -11,7 +11,7 @@ PROGRAMMERS : Sam Colwell and Scot W. Stevenson
 FILE        : talitest.py
 
 First version: 16. May 2018
-This version: 1. July 2018
+This version: 07. July 2018
 """
 
 import argparse
@@ -39,8 +39,8 @@ TALI_ERRORS = ['Undefined word',
                'Already in compile mode']
 
 # Add name of file with test to the set of LEGAL_TESTS
-LEGAL_TESTS = frozenset(['core', 'string', 'double', 'facility',
-                         'stringlong', 'tali', 'tools', 'cycles'])
+LEGAL_TESTS = ['core', 'string', 'double', 'facility',
+               'stringlong', 'tali', 'tools', 'cycles']
 TESTLIST = ' '.join(["'"+str(t)+"' " for t in LEGAL_TESTS])
 
 OUTPUT_HELP = 'Output File, default "'+RESULTS+'"'
@@ -189,12 +189,11 @@ with open(args.output, 'wb') as fout:
                 else:
                     return 0
 
-                    
-
             # Install the above handlers for I/O
             mem = ObservableMemory(subject=self.memory)
             mem.subscribe_to_write([0xF001], putc_results)
             mem.subscribe_to_read([0xF004], getc_from_test)
+
             # Install the handlers for timing cycles.
             mem.subscribe_to_read([0xF002], update_cycle_start)
             mem.subscribe_to_read([0xF003], update_cycle_end)
