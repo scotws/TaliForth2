@@ -39,8 +39,8 @@ TALI_ERRORS = ['Undefined word',
                'Already in compile mode']
 
 # Add name of file with test to the set of LEGAL_TESTS
-LEGAL_TESTS = frozenset(['core', 'string', 'double', 'facility',
-                         'stringlong', 'tali', 'tools'])
+LEGAL_TESTS = ['core', 'string', 'double', 'facility',
+               'stringlong', 'tali', 'tools']
 TESTLIST = ' '.join(["'"+str(t)+"' " for t in LEGAL_TESTS])
 
 OUTPUT_HELP = 'Output File, default "'+RESULTS+'"'
