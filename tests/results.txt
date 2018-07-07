@@ -1541,6 +1541,7 @@ hex  ok
 here . unused . 6930 12D0  ok
 core_tests  ok
 here . unused . 26EC 5514  ok
+  ok
  ( Running test 'string' from file 'string.fs' )  ok
 \ ------------------------------------------------------------------------  ok
 testing string words: /string -trailing blank sliteral  ok
@@ -1628,6 +1629,7 @@ marker string_tests  ok
 here . unused . 10521 21223  ok
 string_tests  ok
 here . 9964  ok
+  ok
  ( Running test 'double' from file 'double.fs' )  ok
 here . unused . 9964 21780  ok
 marker double_tests  ok
