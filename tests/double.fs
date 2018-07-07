@@ -1,3 +1,6 @@
+here . unused .
+marker double_tests
+
 \ ------------------------------------------------------------------------
 testing double words: 2constant 2variable d+ d- d. d.r d>s dabs dnegate
 decimal
@@ -158,4 +161,6 @@ min-2int 2/ 2constant lo-2int  \ 110...0
 ( TODO 2VALUE not implemented yet )
 ( TODO DU< not implemented yet )
 
-
+here . unused .
+double_tests
+here . unused .

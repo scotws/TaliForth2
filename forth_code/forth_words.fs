@@ -73,17 +73,25 @@
          then
          char+ swap  char+ swap      ( increment addresses )
       loop
-      2drop                          ( get rid of addresses )
-      2dup <> -rot < 2* invert and   ( construct return code )
-   else                              ( if strings are both length 0 )
-      2drop 2drop                    ( leave 0 )
-   then ;
+   ( Modified 2018-07-07 for ANS compatibility )      
+   else                              ( One of the strings is length 0 )
+       drop                          ( remove min from stack )
+   then
+   2drop                             ( get rid of addresses )
+   2dup <> -rot < 2* invert and ;    ( construct return code )
+
 ( Source pforth ) 
 : search   ( c-addr1 u1 c-addr2 u2 -- c-addr3 u3 f )
-   rot 2dup                          ( copy lengths )
+    rot
+    ( Modified 2018-07-07 for ANS compatibility )
+    over 0= if                       ( check for u2=0 )
+       nip nip true                  ( leave c-addr1 u1 true )
+    then    
+    2dup                          ( copy lengths )
     ( This next line used to use u> for comparison of string lengths )
     ( but Tali doesn't have the word yet - SamCo 2018-07-06 )
-   over swap >  swap 0=  or if      ( if u2>u1 or u2=0 )
+    \   over swap >  swap 0=  or if      ( if u2>u1 or u2=0 )
+    > if 
       nip nip  false exit            ( exit with false flag )
    then
    -rot 2over                        ( save c-addr1 u1 )
