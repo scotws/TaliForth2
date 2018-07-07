@@ -1618,14 +1618,14 @@ marker string_tests  ok
   ok
 { : s14 [ s1 ] sliteral ; -> }   ok
 { s1 s14 compare -> 0 }  ok
-{ s1 s14 rot = rot rot = -> -1 ( <true> ) 0 ( <false> ) } INCORRECT RESULT: { s1 s14 rot = rot rot = -> -1 ( <true> ) 0 ( <false> ) } ACTUAL RESULT: { -1 -1 } ok
+{ s1 s14 rot = rot rot = -> -1 ( <true> ) 0 ( <false> ) }  ok
   ok
 ( TODO REPLACES not implemented yet )  ok
 ( TODO SUBSTITUTE not implemented yet )  ok
 ( TODO UNESCAPE not implemented yet )  ok
   ok
 \ Tests for long strings are currently in their own file  ok
-here . unused . 10492 21252  ok
+here . unused . 10521 21223  ok
 string_tests  ok
 here . 9964  ok
  ( Running test 'double' from file 'double.fs' )  ok
