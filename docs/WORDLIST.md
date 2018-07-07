@@ -149,7 +149,7 @@ RTS instruction at the end of each word.
 | SEMICOLON | `;` | ANS core | 49 | **auto** |
 | SIGN | `sign` | ANS core | 24 | **auto** |
 | SLASH_STRING | `/string` | ANS string | 35 | **auto** |
-| SLITERAL | `sliteral` | ANS string | 32 | **auto** |
+| SLITERAL | `sliteral` | ANS string | 115 | **auto** |
 | SM_SLASH_REM | `sm/rem` | ANS core | 44 | **auto** |
 | SOURCE | `source` | ANS core | 20 | **auto** |
 | SOURCE_ID | `source-id` | ANS core ext | 10 | tested |

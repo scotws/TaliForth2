@@ -1,3 +1,8 @@
+hex
+here . unused .
+marker tali_tests
+
+
 \ Repeat definitions for standalone testing
 0 constant 0s
 0 invert constant 1s
@@ -144,4 +149,8 @@ decimal
 { s" 10" number -> 10 }
 { s" ff" number -> FF }
 { decimal -> }
+
+here . unused .
+tali_tests
+here . unused .
 

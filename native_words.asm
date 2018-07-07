@@ -5740,8 +5740,7 @@ z_rshift:       rts
         ; to be interpreted, so it is a state-sensitive word, which in theory
         ; are evil. We follow general usage. Can also be realized as 
         ;     : S" [CHAR] " PARSE POSTPONE SLITERAL ; IMMEDIATE
-        ; but it is used so much we want it in code. Note we limit strings
-        ; to a length of 255 chars for this routine
+        ; but it is used so much we want it in code.
         ; """
 .scope
 xt_s_quote:
@@ -5873,7 +5872,10 @@ _found_string_end:
                 ora state+1             ; paranoid
                 beq _done
 
-                jsr xt_sliteral         ; ( addr u -- )
+                ; Jump into the middle of the sliteral word, after the
+                ; string data has been compiled into the dictionary,
+                ; because we've already done that step.
+                jsr sliteral_const_str         ; ( addr u -- )
 
 _done:
 z_s_quote:      rts
@@ -6039,10 +6041,80 @@ xt_sliteral:
                 bmi +
                 jmp underflow
 *
-                ; We are assuming that ( addr u ) of the current string is in
-                ; a stable area (eg. already in the dictionary)
-                ; Both S" and ." (which calls S") put them there.
+                ; We can't assume that ( addr u ) of the current
+                ; string is in a stable area (eg. already in the
+                ; dictionary.)  Copy the string data into the
+                ; dictionary using move.
+
+                ; Put a jmp over the string data with address to be filled
+                ; in later.
+                lda #$4C
+                jsr cmpl_a
+                ;; Address to be filled in later.
+                jsr cmpl_a
+                jsr cmpl_a
+
+                ; Turn the data stack from ( addr u ) into
+                ; ( here u addr here u ) so move can be called with
+                ; the remaining items on the stack ready for processing.
+                ; Reserve three extra words on the stack.
+                txa
+                sec
+                sbc #6
+                tax
+                ; Move addr down from TOS-4 to TOS-2
+                lda 8,x
+                sta 4,x
+                lda 9,x
+                sta 5,x
+                ; Copy u from TOS-3 to TOS
+                lda 6,x
+                sta 0,x
+                lda 7,x
+                sta 1,x
+                ; Put HERE into TOS-1 and TOS-4
+                lda cp
+                sta 8,x
+                sta 2,x
+                lda cp+1
+                sta 9,x
+                sta 3,x
+
+                ; Copy the string into the dictionary.
+                jsr xt_move
+                ; Update cp.
+                clc
+                lda cp
+                adc 0,x
+                sta cp
+                lda cp+1
+                adc 1,x
+                sta cp+1
                 
+                ; Update the address of the jump-over jmp instruction.
+                ; First determine location of jmp instructions address.
+                ; It should be 2 bytes before the start of the string.
+
+                ; Compute it into tmp1, which is no longer being used.
+                lda 2,x
+                sec
+                sbc #2
+                sta tmp1
+                lda 3,x
+                sbc #0          ; Propagate borrow
+                sta tmp1+1
+
+                ; Update the address of the jump to HERE.
+                lda cp
+                sta (tmp1)
+                ldy #1
+                lda cp+1
+                sta (tmp1),y
+
+                ; Stack is now ( addr2 u ) where addr2 is the new
+                ; location in the dictionary.
+
+sliteral_const_str: 
                 ; Compile a subroutine jump to the runtime of SLITERAL that
                 ; pushes the new ( addr u ) pair to the Data Stack.
                 ; When we're done, the code will look like this:

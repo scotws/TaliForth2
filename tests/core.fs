@@ -19,6 +19,9 @@
 testing core words
 hex
 
+here . unused .
+marker core_tests
+
 \ ------------------------------------------------------------------------
 testing basic assumptions
 
@@ -1195,7 +1198,6 @@ create gn-buf 0 c,
 
 { gn2 -> 10 a }
 
-
 \ ------------------------------------------------------------------------
 testing action-of defer defer! defer@ is
 
@@ -1238,7 +1240,6 @@ testing action-of defer defer! defer@ is
 { 2 3 defer5 -> 6 }
 { ' + is-defer5 -> } 
 { 1 2 defer5 -> 3 }
-
 
 \ ------------------------------------------------------------------------
 testing fill move
@@ -1374,3 +1375,8 @@ testing dictionary search rules
 
 { : gdx   123 ; : gdx   gdx 234 ; -> }
 { gdx -> 123 234 }
+
+hex
+here . unused .
+core_tests
+here . unused .
