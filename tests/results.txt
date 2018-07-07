@@ -1115,7 +1115,6 @@ testing evaluate  ok
 { : ge7 ge2 ge5 ; -> }  ok
 { ge7 -> 124 }  ok
   ok
-  ok
 \ ------------------------------------------------------------------------  ok
 testing source >in word  ok
   ok
@@ -1145,7 +1144,6 @@ drop -> 0 } \ blank line return zero-length string  ok
 : gs4 source >in ! drop ;  ok
 { gs4 123 456   ok
 -> }  ok
-  ok
   ok
 \ ------------------------------------------------------------------------  ok
 testing <# # #s #> hold sign base >number hex decimal  ok
@@ -1342,7 +1340,6 @@ create gn-buf 0 c,  ok
   ok
 { gn2 -> 10 a }  ok
   ok
-  ok
 \ ------------------------------------------------------------------------  ok
 testing action-of defer defer! defer@ is  ok
   ok
@@ -1385,7 +1382,6 @@ testing action-of defer defer! defer@ is  ok
 { 2 3 defer5 -> 6 }  ok
 { ' + is-defer5 -> }   ok
 { 1 2 defer5 -> 3 }  ok
-  ok
   ok
 \ ------------------------------------------------------------------------  ok
 testing fill move  ok

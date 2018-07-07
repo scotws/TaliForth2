@@ -812,7 +812,6 @@ decimal
 { 25 rn2 execute -> 33 22 11 0 }
 hex
 
-
 \ ------------------------------------------------------------------------
 testing case of endof endcase
 
@@ -857,7 +856,6 @@ testing case of endof endcase
 { -2 1 cs2 ->  -99 }
 { -2 2 cs2 -> -199 }
 {  0 2 cs2 ->  299 }
-
 
 \ ------------------------------------------------------------------------
 testing do loop +loop i j unloop leave exit ?do
@@ -951,7 +949,6 @@ variable qdincrement
 { -1  2  1 qd6 ->  2  3  4  5  6  7 6  } 
 {  2 -1  1 qd6 -> -1  0  1          3  }
 
-
 \ ------------------------------------------------------------------------
 testing defining words: : ; constant variable create does> >body value to
 
@@ -1011,7 +1008,6 @@ testing defining words: : ; constant variable create does> >body value to
 { v2 -> -333 }
 { v1 ->  222 }
 
-
 \ ------------------------------------------------------------------------
 testing evaluate
 
@@ -1029,7 +1025,6 @@ testing evaluate
 { ge6 -> 123 }
 { : ge7 ge2 ge5 ; -> }
 { ge7 -> 124 }
-
 
 \ ------------------------------------------------------------------------
 testing source >in word
@@ -1060,7 +1055,6 @@ drop -> 0 } \ blank line return zero-length string
 : gs4 source >in ! drop ;
 { gs4 123 456 
 -> }
-
 
 \ ------------------------------------------------------------------------
 testing <# # #s #> hold sign base >number hex decimal
@@ -1204,8 +1198,6 @@ create gn-buf 0 c,
 
 { gn2 -> 10 a }
 
-
-
 \ ------------------------------------------------------------------------
 testing action-of defer defer! defer@ is
 
@@ -1248,8 +1240,6 @@ testing action-of defer defer! defer@ is
 { 2 3 defer5 -> 6 }
 { ' + is-defer5 -> } 
 { 1 2 defer5 -> 3 }
-
-
 
 \ ------------------------------------------------------------------------
 testing fill move
@@ -1298,7 +1288,6 @@ create cmubuf  97 c, 98 c, 99 c, 100 c, \ "abcd"
 { cmubuf dup char+ swap 3 cmove> -> }
 { seecmubuf -> 100 100 100 100 } \ "dddd"
 
-
 \ ------------------------------------------------------------------------
 testing output: . ." cr emit space spaces type u.
 hex
@@ -1324,7 +1313,6 @@ hex
 ;
 
 { output-test -> }
-
 
 \ ------------------------------------------------------------------------
 testing parse-name marker erase
@@ -1368,7 +1356,6 @@ testing parse-name marker erase
 { erase_test 3 chars +  c@ 0 = -> <true> }
 { erase_test 4 chars +  c@ 9 = -> <true> }
 
-
 \ ------------------------------------------------------------------------
 testing input: accept
 
@@ -1382,7 +1369,6 @@ create abuf 80 chars allot
 ;
 
 { accept-test -> }
-
 
 \ ------------------------------------------------------------------------
 testing dictionary search rules
