@@ -59,6 +59,48 @@
         : 2constant ( d -- ) create swap , , does> dup @ swap cell+ @ ;
         : 2literal ( d -- ) swap postpone literal postpone literal ; immediate
 
+\ String search and comparison words. TODO convert these to assembler
+( Source pforth ) 
+: compare   ( c-addr1 u1 c-addr2 u2 -- n )
+   rot 2swap 2over min               ( no. of characters to check )
+   dup 0> if                         ( if strings not both length 0 )
+      0 do                           ( for each character )
+         over c@  over c@            ( get the characters )
+         <> if                       ( if they're unequal )
+            c@ swap  c@              ( retrieve the characters )
+            < 2* invert              ( construct the return code )
+            nip nip unloop exit      ( and exit )
+         then
+         char+ swap  char+ swap      ( increment addresses )
+      loop
+      2drop                          ( get rid of addresses )
+      2dup <> -rot < 2* invert and   ( construct return code )
+   else                              ( if strings are both length 0 )
+      2drop 2drop                    ( leave 0 )
+   then ;
+( Source pforth ) 
+: search   ( c-addr1 u1 c-addr2 u2 -- c-addr3 u3 f )
+   rot 2dup                          ( copy lengths )
+    ( This next line used to use u> for comparison of string lengths )
+    ( but Tali doesn't have the word yet - SamCo 2018-07-06 )
+   over swap >  swap 0=  or if      ( if u2>u1 or u2=0 )
+      nip nip  false exit            ( exit with false flag )
+   then
+   -rot 2over                        ( save c-addr1 u1 )
+   2swap tuck 2>r                    ( save c-addr2 u2 )
+   - 1+ over +  swap                 ( make c-addr1 c-addr1+u1-u2 )
+   2r> 2swap                         ( retrieve c-addr2 u2 )
+   do
+      2dup i over compare 0= if      ( if we find the string )
+         2drop +  i tuck -           ( calculate c-addr3 u3 )
+         true unloop exit            ( exit with true flag )
+      then
+   loop
+   2drop false ;                     ( leave c-addr1 u1 false )
+
+ 
+        
+
 \ Splash strings. We leave these as high-level words because they are
 \ generated at the end of the boot process and signal that the other
 \ high-level definitions worked (or at least didn't crash)
