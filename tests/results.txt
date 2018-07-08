@@ -2144,8 +2144,8 @@ cycles_overhead 2@ decimal ud. 16  ok
 cycles_/ print_cycles 1480  ok
   ok
 \ Test a word with lookup overhead.  ok
-begin_cycles end_cycles ( overhead ) print_cycles 1368  ok
-1234 7 begin_cycles / end_cycles ( actual test ) print_cycles 5153  ok
+begin_cycles end_cycles ( overhead ) print_cycles 1367  ok
+1234 7 begin_cycles / end_cycles ( actual test ) print_cycles 5151  ok
   ok
 \ Test what should be a very small word.  ok
 : cycles_drop 5 begin_cycles drop end_cycles ;  ok

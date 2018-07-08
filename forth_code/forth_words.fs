@@ -135,10 +135,7 @@ hex
     s" STACK-CELLS"        string_of    20 true endof ( from definitions.asm )
     ( default ) 2drop false false ( one false will dropped by endcase )
     endcase ;
-
-
- 
-        
+decimal        
 
 \ Splash strings. We leave these as high-level words because they are
 \ generated at the end of the boot process and signal that the other
