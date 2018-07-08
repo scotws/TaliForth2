@@ -120,7 +120,7 @@ hex
     s" /HOLD"              string_of    FF true endof
     s" /PAD"               string_of    54 true endof ( 84 decimal )
     s" ADDRESS-UNIT-BITS"  string_of     8 true endof
-\ The following word are OBSOLETE in the 2012 ANS standard.
+\ The following words are OBSOLETE in the 2012 ANS standard.
 \    s" CORE"               string_of  true true endof
 \    s" CORE-EXT"           string_of false true endof ( don't have all of it )
     s" FLOORED"            string_of false true endof ( we have symmetric )
