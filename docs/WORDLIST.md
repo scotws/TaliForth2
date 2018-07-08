@@ -117,7 +117,7 @@ RTS instruction at the end of each word.
 | NIP | `nip` | ANS core ext | 17 | **auto** |
 | NOT_EQUALS | `<>` | ANS core ext | 33 | **auto** |
 | NOT_ROTE | `-rot` | Gforth | 31 | **auto** |
-| NUMBER | `number` | Tali Forth | 138 | **auto** |
+| NUMBER | `number` | Tali Forth | 150 | **auto** |
 | NUMBER_SIGN | `#` | ANS core | 56 | **auto** |
 | NUMBER_SIGN_GREATER | `#>` | ANS core | 37 | **auto** |
 | NUMBER_SIGN_S | `#s` | ANS core | 20 | **auto** |

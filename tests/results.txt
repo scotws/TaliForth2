@@ -108,7 +108,7 @@ create actual-results  20 cells allot  ok
 testing core words  ok
 hex  ok
   ok
-here . unused . 26EC 5514  ok
+here . unused . 2C57 4FA9  ok
 marker core_tests  ok
   ok
 \ ------------------------------------------------------------------------  ok
@@ -1538,16 +1538,16 @@ testing dictionary search rules  ok
 { gdx -> 123 234 }  ok
   ok
 hex  ok
-here . unused . 6930 12D0  ok
+here . unused . 6E9B D65  ok
 core_tests  ok
-here . unused . 26EC 5514  ok
+here . unused . 2C57 4FA9  ok
   ok
  ( Running test 'string' from file 'string.fs' )  ok
 \ ------------------------------------------------------------------------  ok
 testing string words: /string -trailing blank sliteral  ok
 decimal  ok
   ok
-here . unused . 9964 21780  ok
+here . unused . 11351 20393  ok
 marker string_tests  ok
   ok
   ok
@@ -1626,12 +1626,12 @@ marker string_tests  ok
 ( TODO UNESCAPE not implemented yet )  ok
   ok
 \ Tests for long strings are currently in their own file  ok
-here . unused . 10521 21223  ok
+here . unused . 11908 19836  ok
 string_tests  ok
-here . 9964  ok
+here . 11351  ok
   ok
  ( Running test 'double' from file 'double.fs' )  ok
-here . unused . 9964 21780  ok
+here . unused . 11351 20393  ok
 marker double_tests  ok
   ok
 \ ------------------------------------------------------------------------  ok
@@ -1794,9 +1794,9 @@ min-2int 2/ 2constant lo-2int  \ 110...0  ok
 ( TODO 2VALUE not implemented yet )  ok
 ( TODO DU< not implemented yet )  ok
   ok
-here . unused . 10505 21239  ok
+here . unused . 11892 19852  ok
 double_tests  ok
-here . unused . 9964 21780  ok
+here . unused . 11351 20393  ok
   ok
  ( Running test 'facility' from file 'facility.fs' )  ok
 \ ------------------------------------------------------------------------  ok
@@ -1810,7 +1810,7 @@ testing facility words: at-xy page   ok
 testing long strings  ok
 decimal  ok
   ok
-here . unused . 9964 21780  ok
+here . unused . 11351 20393  ok
 marker long_string_tests  ok
   ok
 \ We keep this separate for now because it takes a long, long time -- don't be  ok
@@ -1828,13 +1828,13 @@ marker long_string_tests  ok
 \ This should output the alphabet 20 times.  ok
 { s15 -> } abcdefghijklmnopqrstuvwxyz1abcdefghijklmnopqrstuvwxyz2abcdefghijklmnopqrstuvwxyz3abcdefghijklmnopqrstuvwxyz4abcdefghijklmnopqrstuvwxyz5abcdefghijklmnopqrstuvwxyz6abcdefghijklmnopqrstuvwxyz7abcdefghijklmnopqrstuvwxyz8abcdefghijklmnopqrstuvwxyz9abcdefghijklmnopqrstuvwxyz10abcdefghijklmnopqrstuvwxyz11abcdefghijklmnopqrstuvwxyz12abcdefghijklmnopqrstuvwxyz13abcdefghijklmnopqrstuvwxyz14abcdefghijklmnopqrstuvwxyz15abcdefghijklmnopqrstuvwxyz16abcdefghijklmnopqrstuvwxyz17abcdefghijklmnopqrstuvwxyz18abcdefghijklmnopqrstuvwxyz19abcdefghijklmnopqrstuvwxyz20 ok
   ok
-here . unused . 11110 20634  ok
+here . unused . 12497 19247  ok
 long_string_tests  ok
-here . unused . 9964 21780  ok
+here . unused . 11351 20393  ok
   ok
  ( Running test 'tali' from file 'tali.fs' )  ok
 hex  ok
-here . unused . 26EC 5514  ok
+here . unused . 2C57 4FA9  ok
 marker tali_tests  ok
   ok
   ok
@@ -2083,9 +2083,9 @@ One-off chars, base 36 : /:@[`{	 -> -1  ok
 { s" ff" number -> FF }  ok
 { decimal -> }  ok
   ok
-here . unused . 13204 18540  ok
+here . unused . 14591 17153  ok
 tali_tests  ok
-here . unused . 9964 21780  ok
+here . unused . 11351 20393  ok
   ok
   ok
  ( Running test 'tools' from file 'tools.fs' )  ok
@@ -2144,8 +2144,8 @@ cycles_overhead 2@ decimal ud. 16  ok
 cycles_/ print_cycles 1480  ok
   ok
 \ Test a word with lookup overhead.  ok
-begin_cycles end_cycles ( overhead ) print_cycles 1367  ok
-1234 7 begin_cycles / end_cycles ( actual test ) print_cycles 5061  ok
+begin_cycles end_cycles ( overhead ) print_cycles 1368  ok
+1234 7 begin_cycles / end_cycles ( actual test ) print_cycles 5153  ok
   ok
 \ Test what should be a very small word.  ok
 : cycles_drop 5 begin_cycles drop end_cycles ;  ok

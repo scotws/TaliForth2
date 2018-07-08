@@ -332,8 +332,26 @@ _loop:
                 lda state
                 beq _loop
 
-                ; We're compiling, so there is a bit more work. Note this
-                ; doesn't work with double-cell numbers, only single-cell
+                ; We're compiling, so there is a bit more work.  Check
+                ; status bit 5 to see if it's a single or double-cell
+                ; number.
+                lda #$20
+                bit status
+                beq _single_number
+
+                ; It's a double cell number.  If we swap the
+                ; upper and lower half, we can use the literlal_runtime twice
+                ; to compile it into the dictionary.
+                jsr xt_swap
+                ldy #>literal_runtime
+                lda #<literal_runtime
+                jsr cmpl_subroutine
+                
+                ; compile our number
+                jsr xt_comma
+                
+                ; Fall into _single_number to process the other half.
+_single_number: 
                 ldy #>literal_runtime
                 lda #<literal_runtime
                 jsr cmpl_subroutine

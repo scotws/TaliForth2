@@ -128,6 +128,8 @@
                            ;         WORKWORD contains nt of word being compiled
                            ;       = 0 for :NONAME definitions
                            ;         WORKWORD contains xt of word being compiled
+                           ; Bit 5 = 1 for NUMBER returning a double word
+                           ;       = 0 for NUMBER returning a single word
                            ; Bit 3 = 1 makes CTRL-n recall current history
                            ;       = 0 CTRL-n recalls previous history
                            ; Bit 2 = Current history buffer msb
