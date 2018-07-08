@@ -63,7 +63,7 @@ parts of their internal logic.
 
 ## Seriously super lots more detail 
 
-See `docs\manual.pdf` for the Tali Forth manual, which covers the installation,
-setup and internal structure. The central discussion forum is
+See `docs\manual.html` for the Tali Forth manual, which covers the
+installation, setup and internal structure. The central discussion forum is
 [http://forum.6502.org/viewtopic.php?f=9&t=2926](http://forum.6502.org/viewtopic.php?f=9&t=2926)
 at 6502.org.

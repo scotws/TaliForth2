@@ -33,7 +33,7 @@ the instructions there, including a
 http://wilsonminesco.com/6502primer/[primer] by Garth Wilson((("Wilson,
 Garth"))). It is for these systems that Tali Forth 2 was created.
 
-The most important variant of the 65c02 produced today is the 
+The most important variant of the 6502 produced today is the 
 https://en.wikipedia.org/wiki/WDC\_65C02[65c02](((65c02))), a CMOS chip with
 some additional instructions. It is for this chip that Tali Forth 2 was written.
 
