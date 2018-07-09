@@ -4,9 +4,9 @@ testing cycle counts
 \ These tests time the number of cylcles each word takes to run for a
 \ given input.  These tests only work with the talitest.py script
 \ which has handlers watching for the reading of the special addresses
-\ $F002 and $F003 that calculate the number of cycles between reading
+\ $F006 and $F007; they calculate the number of cycles between reading
 \ from the special addresses.  The cycles elapsed can then be read
-\ from the virtual memory location $FF00 (as a double word)
+\ from the virtual memory location $F008 (as a double word)
 
 \ Take care when editing this file as the whitespace on the ends of lines is
 \ desired to keep the CYCLE: counts lined up.
@@ -14,22 +14,22 @@ testing cycle counts
 hex
 
 \ The location of the result
-FF00 constant cycles
+F008 constant cycles
 
 \ direct byte compiled
-\  lda $f002
-\  lda $f003
-: cycles_overhead [ AD c, 02 c, F0 c, AD c, 03 c, F0 c, ] cycles 2@ ;
+\  lda $f006
+\  lda $f007
+: cycles_overhead [ AD c, 06 c, F0 c, AD c, 07 c, F0 c, ] cycles 2@ ;
 
 \ direct byte compiled
-\  lda $F002
+\  lda $F006
 \  jsr (xt on stack goes here)
-\  lda $f002
+\  lda $f007
 \ then forth code to fetch and print results.
 : cycle_test_runtime
-    [ AD c, 02 c, F0 c,    \ lda $F002
+    [ AD c, 06 c, F0 c,    \ lda $F006
       20 c,  0000 ,        \ jsr (address to be filled in)
-      AD c, 03 c, F0 c, ]  \ lda $F003
+      AD c, 07 c, F0 c, ]  \ lda $F007
     cycles 2@              \ fetch result
     cycles_overhead d-     \ subtract overhead
     ." CYCLES: "

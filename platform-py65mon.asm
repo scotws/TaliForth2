@@ -32,7 +32,7 @@
 ; the basic I/O routines at the beginning of $f000. We don't want to change
 ; that because it would make using it out of the box harder, so we just 
 ; advance past the virtual hardware addresses.
-.advance $f006
+.advance $f010
 
 ; All vectors currently end up in the same place - we restart the system
 ; hard. If you want to use them on actual hardware, you'll have to redirect
