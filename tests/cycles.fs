@@ -29,18 +29,74 @@ FF00 constant cycles
       AD c, 03 c, F0 c, ]  \ lda $F003
     cycles 2@              \ fetch result
     cycles_overhead d-     \ subtract overhead
-    ." CYCLES: "  ud. cr   \ print results
+    ." CYCLES: "
+    \ d.r isn't available
+    2dup 2710 ( 10000) sm/rem swap drop 0= if bl emit then
+    2dup  3e8 (  1000) sm/rem swap drop 0= if bl emit then
+    2dup   64 (   100) sm/rem swap drop 0= if bl emit then
+    2dup    A (    10) sm/rem swap drop 0= if bl emit then
+    ud.   \ print results
 ;
 
 \ cycle_test updates the address of the given xt in cycle_test_runtime
 \ then it runs the test.
+
+\ To test a word, put any arguments it needs on the stack, use tick
+\ (') on the word to get it's execution token (xt) and then put
+\ cycle_test, then any stack cleanup.
+\ eg. 5 ' dup cycle_test 2drop
 : cycle_test ( xt -- )
     [ ' cycle_test_runtime 4 + ] literal ! cycle_test_runtime ;
 
 decimal
-5 ' drop cycle_test
+\ In all of these tests, a 5 is usually just a dummy input for the
+\ word to work with.
+
+\ skipping cold
+\ skipping abort
+\ skipping quit
+\ skipping abort"
+5 ' abs cycle_test drop
+\ accept is a little weird as it needs some input on its own line.
+pad 20 ' accept cycle_test
+some text
+drop
+\ accept test complete
+           ' align         cycle_test       
+5          ' aligned       cycle_test drop  
+5          ' allot         cycle_test       
+: aword ;  ' always-native cycle_test       
+5 5        ' and           cycle_test drop  
+\ skipping at-xy
+           ' \             cycle_test       
+\ not sure if \ starts on this line
+           ' base          cycle_test drop  
+\ skipping begin
+           ' bell          cycle_test       
+           ' bl            cycle_test drop  
+5 5        ' bounds        cycle_test 2drop 
+\ skipping [char]
+\ skipping [']
+\ skipping branch
+\ skipping bye
+5          ' c,            cycle_test       
+5          ' c@            cycle_test drop  
+5 here     ' c!            cycle_test       
+5 5        ' cell+         cycle_test drop  
+5          ' cells         cycle_test drop  
+           ' char          cycle_test w drop
+5 5        ' char+         cycle_test drop  
+5          ' chars         cycle_test drop  
+pad here 5 ' cmove         cycle_test       
+pad here 5 ' cmove>        cycle_test       
+           ' :             cycle_test wrd ; 
+           ' :noname       cycle_test ; drop
+5          ' ,             cycle_test       
+' aword    ' compile,      cycle_test       
+
+5 ' drop    cycle_test
 
 5 ' dup cycle_test 2drop
 
 s" drop" ' find-name cycle_test
-s" cycle_test" ' find-name cycle_test
+s" aword" ' find-name cycle_test
