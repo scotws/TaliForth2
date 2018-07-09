@@ -8,41 +8,39 @@ testing cycle counts
 \ from the special addresses.  The cycles elapsed can then be read
 \ from the virtual memory location $FF00 (as a double word)
 
-
-\ The test access words
 hex
-\ begin_cycles direct byte compiled into ram.
-\ lda $f002
-\ rts
-: begin_cycles [ AD c, 02 c, F0 c, 60 c, ] ;
-\ end_cycles direct byte compiled into ram.
-\ lda $f003
-\ rts
-: end_cycles [ AD c, 03 c, F0 c, 60 c, ] ;
 
 \ The location of the result
 FF00 constant cycles
 
-\ Forth versions
-\ : begin_cycles F002 c@ drop ;
-\ : end_cycles F003 c@ drop ;
+\ direct byte compiled
+\  lda $f002
+\  lda $f003
+: cycles_overhead [ AD c, 02 c, F0 c, AD c, 03 c, F0 c, ] cycles 2@ ;
 
-\ Determine the overhead of the testing words themselves.
-: cycles_overhead_test begin_cycles end_cycles ;
-2variable cycles_overhead
-cycles_overhead_test cycles 2@ cycles_overhead 2!
-cycles_overhead 2@ decimal ud.
+\ direct byte compiled
+\  lda $F002
+\  jsr (xt on stack goes here)
+\  lda $f002
+\ then forth code to fetch and print results.
+: cycle_test_runtime
+    [ AD c, 02 c, F0 c,    \ lda $F002
+      20 c,  0000 ,        \ jsr (address to be filled in)
+      AD c, 03 c, F0 c, ]  \ lda $F003
+    cycles 2@              \ fetch result
+    cycles_overhead d-     \ subtract overhead
+    ." CYCLES: "  ud. cr   \ print results
+;
 
-\ Print the number of cycles (in decimal) with the overhead removed.
-: print_cycles base @ decimal cycles 2@ cycles_overhead 2@ d- ud. base ! ;
-\ Test a word.  ok
-: cycles_/ 1234 7 begin_cycles / end_cycles ;
-cycles_/ print_cycles
+\ cycle_test updates the address of the given xt in cycle_test_runtime
+\ then it runs the test.
+: cycle_test ( xt -- )
+    [ ' cycle_test_runtime 4 + ] literal ! cycle_test_runtime ;
 
-\ Test a word with lookup overhead.
-begin_cycles end_cycles ( overhead ) print_cycles
-1234 7 begin_cycles / end_cycles ( actual test ) print_cycles
+decimal
+5 ' drop cycle_test
 
-\ Test what should be a very small word.
-: cycles_drop 5 begin_cycles drop end_cycles ;
-cycles_drop print_cycles
+5 ' dup cycle_test 2drop
+
+s" drop" ' find-name cycle_test
+s" cycle_test" ' find-name cycle_test
