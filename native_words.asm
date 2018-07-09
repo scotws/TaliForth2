@@ -7727,7 +7727,7 @@ _found_char:
                 lda cp+1
                 adc #0                  ; we only need the carry
                 sta cp+1
-z_word:         
+z_word:         rts
 .scend
 
 
