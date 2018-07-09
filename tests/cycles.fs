@@ -56,6 +56,9 @@ F008 constant cycles
 : 4drop 2drop 2drop ;
 : 6drop 2drop 2drop 2drop ;
 
+variable myvar
+5 myvar !
+
 decimal
 \ In all of these tests, a 5 is usually just a dummy input for the
 \ word to work with.
@@ -194,11 +197,11 @@ char "       ' parse         cycle_test " 2drop
 5 5          ' +             cycle_test drop      
 5 here       ' +!            cycle_test           
 \ skipping     postpone
-here         ' ?             cycle_test         
+myvar        ' ?             cycle_test         
 5            ' ?dup          cycle_test 2drop     
 \ skipping     r>
 \ skipping     recurse
-             ' refill        cycle_test           
+             ' refill        cycle_test          
 
 drop \ refill
 \ skipping     ]
