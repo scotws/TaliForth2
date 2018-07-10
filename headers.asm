@@ -78,9 +78,14 @@ nt_find:
         .word nt_word, xt_find, z_find
         .byte "find"
 
+nt_compare:
+        .byte 7, UF
+        .word nt_find, xt_compare, z_compare
+        .byte "compare"
+
 nt_disasm:
         .byte 6, UF
-        .word nt_find, xt_disasm, z_disasm
+        .word nt_compare, xt_disasm, z_disasm
         .byte "disasm"
 
 nt_dot_s:

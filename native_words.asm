@@ -1362,6 +1362,111 @@ _done:
 z_comma:        rts
 .scend
 
+; ## COMPARE ( addr1 u1 addr2 u2 -- -1 | 0 | 1) "Compare two strings"
+; ## "compare"   auto  ANS string
+        ; """Compare string1 (denoted by addr1 u1) to string2 (denoted by
+        ; addr2 u2).  Return -1 if string1 < string2, 0 if string1 = string2
+        ; and 1 if string1 > string2 (ASCIIbetical comparison).  A string
+        ; that entirely matches the beginning of the other string, but is
+        ; shorterm, is considered less than the longer string.
+.scope
+xt_compare:     
+                ; Make sure there are enough items on the stack.
+                cpx #dsp0-7
+                bne +
+                jmp underflow
+*
+                ; Load the two string addresses into tmp1 and tmp2.
+                lda 2,x
+                sta tmp2
+                lda 3,x
+                sta tmp2+1
+                lda 6,x
+                sta tmp1
+                lda 7,x
+                sta tmp1+1
+
+_compare_loop:
+                ; Check to see if we are out of letters.
+                ; Check string1
+                lda 4,x
+                ora 5,x
+                beq _str1_done
+                ; Check string2
+                lda 0,x
+                ora 1,x
+                beq _greater    ; Str2 empty first
+
+_check_letter:
+                ; Both strings have at least one letter left.
+                ; Check the letters against each other.
+                lda (tmp1)
+                cmp (tmp2)
+                bcc _less
+                beq _next_letter
+                bra _greater
+_next_letter:
+                ; Move both tmp pointers and decrement the counts
+                ; on the stack.
+                ; Increment tmp1
+                inc tmp1
+                bne +
+                inc tmp1+1
+*
+                ; Increment tmp2
+                inc tmp2
+                bne +
+                inc tmp2+1
+*
+                ; Decrement count1 on the stack.
+                lda 4,x
+                bne +
+                dec 5,x
+*
+                dec 4,x
+
+                ; Decrement count2 on the stack.
+                lda 0,x
+                bne +
+                dec 1,x
+*
+                dec 0,x
+
+                ; Loop around and check again.
+                bra _compare_loop
+                
+_str1_done:
+                ; String 1 is out of letters.  Check string 2.
+                lda 0,x
+                ora 1,x
+                beq _equal      ; Both out of letters
+                ; Falls into less (str1 is out but str2 has more)
+_less:
+                ; Return -1
+                lda #$FF
+                sta 6,x
+                sta 7,x
+                bra _done
+_equal:
+                ; Return 0
+                stz 6,x
+                stz 7,x
+                bra _done
+_greater:
+                ; Return 1
+                lda #1
+                sta 6,x
+                stz 7,x
+                ; Falls into _done
+_done:
+                ; Remove all but the result from the stack.
+                txa
+                clc
+                adc #6
+                tax
+                
+z_compare:      rts
+.scend
 
 ; ## COMPILE_COMMA ( xt -- ) "Compile xt"
 ; ## "compile,"  auto  ANS core ext

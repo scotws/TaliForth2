@@ -43,6 +43,7 @@ RTS instruction at the end of each word.
 | COLON | `:` | ANS core | 55 | **auto** |
 | COLON_NONAME | `:NONAME` | ANS core | 29 | **auto** |
 | COMMA | `,` | ANS core | 29 | **auto** |
+| COMPARE | `compare` | ANS string | 106 | **auto** |
 | COMPILE_COMMA | `compile,` | ANS core ext | 283 | **auto** |
 | COMPILE_ONLY | `compile-only` | Tali Forth | 8 | tested |
 | CONSTANT | `constant` | ANS core | 65 | **auto** |
@@ -201,7 +202,7 @@ RTS instruction at the end of each word.
 | ZERO_LESS | `0<` | ANS core | 19 | **auto** |
 | ZERO_UNEQUAL | `0<>` | ANS core ext | 21 | **auto** |
 
-Found **193** native words in `native_words.asm`.
-Of those, **160** were automatically tested and
+Found **194** native words in `native_words.asm`.
+Of those, **161** were automatically tested and
           **0** are not marked as tested at all.
 
