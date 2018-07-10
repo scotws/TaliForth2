@@ -59,35 +59,6 @@
         : 2constant ( d -- ) create swap , , does> dup @ swap cell+ @ ;
         : 2literal ( d -- ) swap postpone literal postpone literal ; immediate
 
-\ String search and comparison words. TODO convert these to assembler
-( Source pforth ) 
-: search   ( c-addr1 u1 c-addr2 u2 -- c-addr3 u3 f )
-    rot
-    ( Modified 2018-07-07 for ANS compatibility )
-    over 0= if                       ( check for u2=0 )
-       nip nip true exit             ( leave c-addr1 u1 true )
-    then    
-    2dup                          ( copy lengths )
-    ( This next line used to use u> for comparison of string lengths )
-    ( but Tali doesn't have the word yet - SamCo 2018-07-06 )
-    \   over swap >  swap 0=  or if      ( if u2>u1 or u2=0 )
-    > if 
-      nip nip  false exit            ( exit with false flag )
-   then
-   -rot 2over                        ( save c-addr1 u1 )
-   2swap tuck 2>r                    ( save c-addr2 u2 )
-   - 1+ over +  swap                 ( make c-addr1 c-addr1+u1-u2 )
-   2r> 2swap                         ( retrieve c-addr2 u2 )
-   do
-      2dup i over compare 0= if      ( if we find the string )
-         2drop +  i tuck -           ( calculate c-addr3 u3 )
-         true unloop exit            ( exit with true flag )
-      then
-   loop
-   2drop false ;                     ( leave c-addr1 u1 false )
-
- 
-        
 
 \ Splash strings. We leave these as high-level words because they are
 \ generated at the end of the boot process and signal that the other
