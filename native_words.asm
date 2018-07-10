@@ -1368,7 +1368,7 @@ z_comma:        rts
         ; addr2 u2).  Return -1 if string1 < string2, 0 if string1 = string2
         ; and 1 if string1 > string2 (ASCIIbetical comparison).  A string
         ; that entirely matches the beginning of the other string, but is
-        ; shorterm, is considered less than the longer string.
+        ; shorter, is considered less than the longer string.
 .scope
 xt_compare:     
                 ; Make sure there are enough items on the stack.
@@ -1385,6 +1385,7 @@ xt_compare:
                 sta tmp1
                 lda 7,x
                 sta tmp1+1
+                ; The counts will be used in-place on the stack.
 
 _compare_loop:
                 ; Check to see if we are out of letters.
@@ -1403,8 +1404,7 @@ _check_letter:
                 lda (tmp1)
                 cmp (tmp2)
                 bcc _less
-                beq _next_letter
-                bra _greater
+                bne _greater
 _next_letter:
                 ; Move both tmp pointers and decrement the counts
                 ; on the stack.
