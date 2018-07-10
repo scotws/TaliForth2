@@ -6039,9 +6039,143 @@ xt_search:
                 bne +
                 jmp underflow
 *
+                ; ANS says if the second string is a zero-length string it
+                ; automatically matches.
+                lda 0,x
+                ora 1,x
+                bne _start_search
 
+                ; The second string is a zero length string.  Just remove
+                ; the second string and put a true flag.
+                inx             ; Remove u2
+                inx
+                lda #$FF        ; Turn addr2 into a true flag
+                sta 0,x
+                sta 1,x
+                jmp z_search
+_start_search:
+                ; Put an offset (starting at zero) on the stack.
+                jsr xt_zero
+_search_loop:
+                ; We stop (not found) when u2 + offset > u1
+                ; Calculate u2+offset into tmp1
+                clc
+                lda 0,x
+                adc 2,x
+                sta tmp1
+                lda 1,x
+                adc 3,x
+                ;sta tmp1+1
+                ; Compare to u1
+                ; Start with the high byte
+                ;lda tmp1+1 ; A already has the upper half.
+                cmp 7,x
+                bcc _init_comparison ; Obviously less
+                bne _not_found
+                ; The upper address byte matched - check the lower byte
+                ; Load u1 first so we can use just a carry to check.
+                lda 6,x
+                cmp tmp1
+                bcs _init_comparison
+
+_not_found:
+                ; The substring isn't in the main string.
+                ; Return just the main string and a false flag.
+                inx             ; Remove offset
+                inx
+                inx             ; Remove u2
+                inx
+                stz 0,x         ; Turn addr2 into a false flag
+                stz 1,x
+                bra z_search
+
+_init_comparison:
+                ; Use tmp1 to hold address in string 1.
+                ; Use tmp2 to hold address in string 2.
+                ; Use tmp3 to hold the number of characters left to check.
                 
-z_search:      rts
+                ; Compute the starting address in string 1
+                ; as addr1 + offset
+                clc
+                lda 8,x
+                adc 0,x
+                sta tmp1
+                lda 9,x
+                adc 1,x
+                sta tmp1+1
+                ; The starting address in string 2 is just addr2.
+                lda 4,x
+                sta tmp2
+                lda 5,x
+                sta tmp2+1
+                ; The number of characters to check is u2.
+                lda 2,x
+                sta tmp3
+                lda 3,x
+                sta tmp3+1
+
+_comparison_loop:
+                ; Check to see if the current characters match.
+                lda (tmp1)
+                cmp (tmp2)
+                beq _letters_match
+
+                ; One of the letters didn't match.
+                ; Increment the offset and try again.
+                jsr xt_one_plus
+                bra _search_loop
+                
+_letters_match: 
+
+                ; The letters match.  Advance the pointers until the
+                ; count reaches zero.
+                inc tmp1
+                bne +
+                inc tmp1+1
+*
+                inc tmp2
+                bne +
+                inc tmp2+1
+*
+                ; Decrement the count of remaining letters to check.
+                lda tmp3
+                bne +
+                dec tmp3+1
+*                
+                dec tmp3
+                ; Check if we've reached zero.
+                lda tmp3
+                ora tmp3+1
+                bne _comparison_loop ; Check the next letter
+
+                ; We've run out of letters and they all match!
+                ; Return (addr1+offset) (u1-offset) true
+                ; Add offset to addr1.
+                clc
+                lda 0,x
+                adc 8,x
+                sta 8,x
+                lda 1,x
+                adc 9,x
+                sta 9,x
+                ; Subtract offset from u1.
+                sec
+                lda 6,x
+                sbc 0,x
+                sta 6,x
+                lda 7,x
+                sbc 1,x
+                sta 7,x
+                ; Replace addr2, u2, and offset with a true flag.
+                inx             ; drop offset
+                inx
+                inx             ; drop u2
+                inx
+                lda #$FF
+                sta 0,x         ; Turn addr2 into a true flag.
+                sta 1,x
+                
+z_search:       rts
 .scend    
 
 

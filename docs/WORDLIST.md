@@ -147,6 +147,7 @@ RTS instruction at the end of each word.
 | RSHIFT | `rshift` | ANS core | 23 | **auto** |
 | S_QUOTE | `s"` | ANS core | 134 | **auto** |
 | S_TO_D | `s>d` | ANS core | 21 | **auto** |
+| SEARCH | `search` | ANS string | 162 | **auto** |
 | SEMICOLON | `;` | ANS core | 49 | **auto** |
 | SIGN | `sign` | ANS core | 24 | **auto** |
 | SLASH_STRING | `/string` | ANS string | 35 | **auto** |
@@ -202,7 +203,7 @@ RTS instruction at the end of each word.
 | ZERO_LESS | `0<` | ANS core | 19 | **auto** |
 | ZERO_UNEQUAL | `0<>` | ANS core ext | 21 | **auto** |
 
-Found **194** native words in `native_words.asm`.
-Of those, **161** were automatically tested and
+Found **195** native words in `native_words.asm`.
+Of those, **162** were automatically tested and
           **0** are not marked as tested at all.
 
