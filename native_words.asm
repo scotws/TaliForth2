@@ -1362,6 +1362,7 @@ _done:
 z_comma:        rts
 .scend
 
+
 ; ## COMPARE ( addr1 u1 addr2 u2 -- -1 | 0 | 1) "Compare two strings"
 ; ## "compare"   auto  ANS string
         ; """Compare string1 (denoted by addr1 u1) to string2 (denoted by
@@ -1467,6 +1468,7 @@ _done:
                 
 z_compare:      rts
 .scend
+
 
 ; ## COMPILE_COMMA ( xt -- ) "Compile xt"
 ; ## "compile,"  auto  ANS core ext
@@ -6018,6 +6020,29 @@ xt_s_to_d:
 _done:                
 z_s_to_d:       rts
 .scend
+
+
+; ## SEARCH ( addr1 u1 addr2 u2 -- addr3 u3 flag) "Search for a substring"
+; ## "search"   auto  ANS string
+        ; """Search for string2 (denoted by addr2 u2) in string1 (denoted by
+        ; addr1 u1).  If a match is found the flag will be true and
+        ; addr3 will have the address of the start of the match and u3 will have
+        ; the number of characters remaining from the match point to the end
+        ; of the original string1.  If a match is not found, the flag will be
+        ; false and addr3 and u3 will be the original string1's addr1 and u1.
+        ; """
+
+.scope
+xt_search:
+                ; Make sure there are enough items on the stack.
+                cpx #dsp0-7
+                bne +
+                jmp underflow
+*
+
+                
+z_search:      rts
+.scend    
 
 
 ; ## SEMICOLON ( -- ) "End compilation of new word"
