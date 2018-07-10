@@ -11,7 +11,7 @@ PROGRAMMERS : Sam Colwell and Scot W. Stevenson
 FILE        : talitest.py
 
 First version: 16. May 2018
-This version: 07. July 2018
+This version: 10. July 2018
 """
 
 import argparse
@@ -244,6 +244,9 @@ with open(args.output, 'r') as rfile:
             continue
 
         if 'INCORRECT RESULT' in line:
+            failed.append(line)
+
+        if 'WRONG NUMBER OF RESULTS' in line:
             failed.append(line)
 
         for error_str in TALI_ERRORS:
