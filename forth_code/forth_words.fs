@@ -61,25 +61,25 @@
 
 \ String search and comparison words. TODO convert these to assembler
 ( Source pforth ) 
-: compare   ( c-addr1 u1 c-addr2 u2 -- n )
-   rot 2swap 2over min               ( no. of characters to check )
-   dup 0> if                         ( if strings not both length 0 )
-      0 do                           ( for each character )
-         over c@  over c@            ( get the characters )
-         <> if                       ( if they're unequal )
-            c@ swap  c@              ( retrieve the characters )
-            < 2* invert              ( construct the return code )
-            nip nip unloop exit      ( and exit )
-         then
-         char+ swap  char+ swap      ( increment addresses )
-      loop
-   ( Modified 2018-07-07 for ANS compatibility )      
-   else                              ( One of the strings is length 0 )
-       drop                          ( remove min from stack )
-   then
-   2drop                             ( get rid of addresses )
-   2dup <> -rot < 2* invert and ;    ( construct return code )
-
+\ : compare   ( c-addr1 u1 c-addr2 u2 -- n )
+\    rot 2swap 2over min               ( no. of characters to check )
+\    dup 0> if                         ( if strings not both length 0 )
+\       0 do                           ( for each character )
+\          over c@  over c@            ( get the characters )
+\          <> if                       ( if they're unequal )
+\             c@ swap  c@              ( retrieve the characters )
+\             < 2* invert              ( construct the return code )
+\             nip nip unloop exit      ( and exit )
+\          then
+\          char+ swap  char+ swap      ( increment addresses )
+\       loop
+\    ( Modified 2018-07-07 for ANS compatibility )      
+\    else                              ( One of the strings is length 0 )
+\        drop                          ( remove min from stack )
+\    then
+\    2drop                             ( get rid of addresses )
+\    2dup <> -rot < 2* invert and ;    ( construct return code )
+\ 
 ( Source pforth ) 
 : search   ( c-addr1 u1 c-addr2 u2 -- c-addr3 u3 f )
     rot
