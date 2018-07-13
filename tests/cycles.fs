@@ -32,13 +32,7 @@ F008 constant cycles
       AD c, 07 c, F0 c, ]  \ lda $F007
     cycles 2@              \ fetch result
     cycles_overhead d-     \ subtract overhead
-    ." CYCLES: "
-    \ d.r isn't available
-    2dup 2710 ( 10000) sm/rem swap drop 0= if bl emit then
-    2dup  3e8 (  1000) sm/rem swap drop 0= if bl emit then
-    2dup   64 (   100) sm/rem swap drop 0= if bl emit then
-    2dup    A (    10) sm/rem swap drop 0= if bl emit then
-    ud.   \ print results
+    ." CYCLES: " 6 ud.r    \ print results
 ;
 
 \ cycle_test updates the address of the given xt in cycle_test_runtime
