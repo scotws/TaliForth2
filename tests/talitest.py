@@ -11,7 +11,7 @@ PROGRAMMERS : Sam Colwell and Scot W. Stevenson
 FILE        : talitest.py
 
 First version: 16. May 2018
-This version: 07. July 2018
+This version: 09. July 2018
 """
 
 import argparse
@@ -176,15 +176,15 @@ with open(args.output, 'wb') as fout:
                 read out of virtual memory.  Note that the hex value
                 12345678 is stored in memory as bytes 34 12 78 56.
                 The value will be read (as a double) starting at
-                memory address 0xFF00
+                memory address 0xF008
                 """
-                if address == 0xFF00:
+                if address == 0xF008:
                     return ((self.cycle_end-self.cycle_start)&0x00FF0000)>>16
-                elif address == 0xFF01:
+                elif address == 0xF009:
                     return ((self.cycle_end-self.cycle_start)&0xFF000000)>>24
-                elif address == 0xFF02:
+                elif address == 0xF00A:
                     return ((self.cycle_end-self.cycle_start)&0x000000FF)
-                elif address == 0xFF03:
+                elif address == 0xF00B:
                     return ((self.cycle_end-self.cycle_start)&0x0000FF00)>>8
                 else:
                     return 0
@@ -195,9 +195,9 @@ with open(args.output, 'wb') as fout:
             mem.subscribe_to_read([0xF004], getc_from_test)
 
             # Install the handlers for timing cycles.
-            mem.subscribe_to_read([0xF002], update_cycle_start)
-            mem.subscribe_to_read([0xF003], update_cycle_end)
-            mem.subscribe_to_read([0xFF00, 0xFF01, 0xFF02, 0xFF03], read_cycle_count)
+            mem.subscribe_to_read([0xF006], update_cycle_start)
+            mem.subscribe_to_read([0xF007], update_cycle_end)
+            mem.subscribe_to_read([0xF008, 0xF009, 0xF00A, 0xF00B], read_cycle_count)
             self._mpu.memory = mem
 
     # Start Tali.
