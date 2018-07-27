@@ -4691,6 +4691,11 @@ _all_converted:
                 lda tmpdsp      ; flag for double
                 beq _single
 
+                ; Set status bit 5 to indicate this is a double number
+                lda status
+                ora #$20
+                sta status
+
                 ; This is a double cell number. If it had a minus, we'll have
                 ; to negate it
                 lda tmpdsp+1
@@ -4704,12 +4709,17 @@ _single:
                 inx
                 inx
 
+                ; Clear status bit 5 to indicate this is a single number
+                lda status
+                and #$DF
+                sta status
+
                 ; If we had a minus, we'll have to negate it
                 lda tmpdsp+1
                 beq _done       ; no minus, all done
 
                 jsr xt_negate
-_done:                
+_done:
 z_number:       rts
 .scend
 

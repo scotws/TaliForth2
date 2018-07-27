@@ -106,8 +106,36 @@
    loop
    2drop false ;                     ( leave c-addr1 u1 false )
 
- 
-        
+\ ENVIRONMENT? for Tali Forth 2
+\ Make a string version of "OF"
+\ Note that endcase will only drop one item (the length) off the stack
+\ in the event none of the string_of paths are taken.  You can add
+\ a "drop" to the default section to compensate for this.
+: string_of postpone 2over postpone compare postpone 0=
+    postpone if postpone 2drop ; immediate compile-only
+hex
+: ENVIRONMENT? ( c-addr u -- false | i*x true )
+    case
+    s" /COUNTED-STRING"    string_of  7FFF true endof
+    s" /HOLD"              string_of    FF true endof
+    s" /PAD"               string_of    54 true endof ( 84 decimal )
+    s" ADDRESS-UNIT-BITS"  string_of     8 true endof
+\ The following words are OBSOLETE in the 2012 ANS standard.
+\    s" CORE"               string_of  true true endof
+\    s" CORE-EXT"           string_of false true endof ( don't have all of it )
+    s" FLOORED"            string_of false true endof ( we have symmetric )
+    s" MAX-CHAR"           string_of   255 true endof
+    s" MAX-D"              string_of 
+                                 7FFFFFFF. true endof
+    s" MAX-N"              string_of  7FFF true endof
+    s" MAX-U"              string_of  FFFF true endof
+    s" MAX-UD"             string_of 
+                                 FFFFFFFF. true endof
+    s" RETURN-STACK-CELLS" string_of    80 true endof
+    s" STACK-CELLS"        string_of    20 true endof ( from definitions.asm )
+    ( default ) 2drop false false ( one false will dropped by endcase )
+    endcase ;
+decimal        
 
 \ Splash strings. We leave these as high-level words because they are
 \ generated at the end of the boot process and signal that the other
