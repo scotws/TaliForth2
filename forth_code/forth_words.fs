@@ -1,6 +1,6 @@
 \ List of high-level Forth words for Tali Forth 2 for the 65c02
 \ Scot W. Stevenson <scot.stevenson@gmail.com>
-\ This version: 25. June 2018
+\ This version: 29. Juli 2018
 
 \ When changing these words, edit them here and then use the 
 \ forth_to_dotbyte.py tool to convert them to the required format
@@ -95,7 +95,7 @@ decimal
 \ generated at the end of the boot process and signal that the other
 \ high-level definitions worked (or at least didn't crash)
         .( Tali Forth 2 for the 65c02)
-        cr .( Version BETA 04. July 2018 )
+        cr .( Version BETA 29. July 2018 )
         cr .( Copyright 2014-2018 Scot W. Stevenson)
         cr .( Tali Forth 2 comes with absolutely NO WARRANTY)
         cr .( Type 'bye' to exit) cr
