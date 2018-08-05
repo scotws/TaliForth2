@@ -1,6 +1,6 @@
 \ List of high-level Forth words for Tali Forth 2 for the 65c02
 \ Scot W. Stevenson <scot.stevenson@gmail.com>
-\ This version: 29. Juli 2018
+\ This version: 05. Aug 2018
 
 \ When changing these words, edit them here and then use the 
 \ forth_to_dotbyte.py tool to convert them to the required format
@@ -52,10 +52,6 @@
         : d.r >r tuck dabs <# #s rot sign #> r> over - spaces type ;
 
 \ Temporary high-level words. TODO convert these to assembler
-        \ An optional version of WITHIN is ROT TUCK > -ROT > INVERT AND  - this
-        \ is from the Forth Standard, see
-        \ https://forth-standard.org/standard/core/WITHIN
-        : within ( n1 n2 n3 -- f )  over - >r - r> u< ;
         : 2constant ( d -- ) create swap , , does> dup @ swap cell+ @ ;
         : 2literal ( d -- ) swap postpone literal postpone literal ; immediate
 
@@ -73,9 +69,6 @@ hex
     s" /HOLD"              string_of    FF true endof
     s" /PAD"               string_of    54 true endof ( 84 decimal )
     s" ADDRESS-UNIT-BITS"  string_of     8 true endof
-\ The following words are OBSOLETE in the 2012 ANS standard.
-\    s" CORE"               string_of  true true endof
-\    s" CORE-EXT"           string_of false true endof ( don't have all of it )
     s" FLOORED"            string_of false true endof ( we have symmetric )
     s" MAX-CHAR"           string_of   255 true endof
     s" MAX-D"              string_of 
@@ -95,7 +88,7 @@ decimal
 \ generated at the end of the boot process and signal that the other
 \ high-level definitions worked (or at least didn't crash)
         .( Tali Forth 2 for the 65c02)
-        cr .( Version BETA 29. July 2018 )
+        cr .( Version BETA 05. Aug 2018 )
         cr .( Copyright 2014-2018 Scot W. Stevenson)
         cr .( Tali Forth 2 comes with absolutely NO WARRANTY)
         cr .( Type 'bye' to exit) cr

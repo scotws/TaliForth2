@@ -192,6 +192,7 @@ RTS instruction at the end of each word.
 | UNUSED | `unused` | ANS core ext | 15 | **auto** |
 | VALUE | `value` | ANS core | 65 | **auto** |
 | VARIABLE | `variable` | ANS core | 24 | **auto** |
+| WITHIN | `within` | ANS core ext | 25 | **auto** |
 | WORD | `word` | ANS core | 73 | **auto** |
 | WORDS | `words` | ANS tools | 56 | tested |
 | WORDSIZE | `wordsize` | Tali Forth | 36 | tested |
@@ -203,7 +204,7 @@ RTS instruction at the end of each word.
 | ZERO_LESS | `0<` | ANS core | 19 | **auto** |
 | ZERO_UNEQUAL | `0<>` | ANS core ext | 21 | **auto** |
 
-Found **195** native words in `native_words.asm`.
-Of those, **162** were automatically tested and
+Found **196** native words in `native_words.asm`.
+Of those, **163** were automatically tested and
           **0** are not marked as tested at all.
 

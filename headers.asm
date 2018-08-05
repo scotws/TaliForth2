@@ -1,7 +1,7 @@
 ; Dictionary Headers for Tali Forth 2
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 05. Dec 2016 (Liara Forth)
-; This version: 26. June 2018
+; This version: 05. Aug 2018
 
 ; Dictionary headers are kept separately from the code, which allows various
 ; tricks in the code. We roughly follow the Gforth terminology: The Execution
@@ -193,9 +193,14 @@ nt_to_in:
         .word nt_less_number_sign, xt_to_in, z_to_in
         .byte ">in"
 
+nt_within:
+        .byte 6, UF
+        .word nt_to_in, xt_within, z_within
+        .byte "within"
+
 nt_pad:
         .byte 3, 0
-        .word nt_to_in, xt_pad, z_pad
+        .word nt_within, xt_pad, z_pad
         .byte "pad"
 
 nt_cmove:
