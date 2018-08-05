@@ -7662,6 +7662,29 @@ xt_u_dot:
 z_u_dot:        rts 
 .scend
 
+; ## U_GREATER_THAN ( n m -- f ) "Return true if NOS > TOS (unsigned)"
+; ## "u>"  auto  ANS core ext
+.scope
+xt_u_greater_than:
+                cpx #dsp0-3
+                bmi +
+                jmp underflow
+*
+                lda 0,x
+                cmp 2,x
+                lda 1,x
+                sbc 3,x
+                inx
+                inx
+
+                lda #0
+                adc #$ff
+                sta 0,x         ; store flag
+                sta 1,x
+                
+z_u_greater_than:    rts
+.scend
+
 ; ## U_LESS_THAN ( n m -- f ) "Return true if NOS < TOS (unsigned)"
 ; ## "u<"  auto  ANS core
 .scope
