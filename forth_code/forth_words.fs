@@ -34,7 +34,6 @@
 \ High level math definitions. The should be moved to actual 65c02 code
 \ for speed at some point. Note we use SM/REM instead of FM/MOD for most
 \ stuff
-        : /mod >r s>d r> sm/rem ;
         : mod /mod drop ;
         : */ >r m* r> sm/rem swap drop ;
         : */mod >r m* r> sm/rem ;

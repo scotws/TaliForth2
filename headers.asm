@@ -223,9 +223,14 @@ nt_backslash:
         .word nt_move, xt_backslash, z_backslash
         .byte $5c
 
+nt_slash_mod:
+        .byte 4, UF
+        .word nt_backslash, xt_slash_mod, z_slash_mod
+        .byte "/mod"
+
 nt_slash:
         .byte 1, UF
-        .word nt_backslash, xt_slash, z_slash
+        .word nt_slash_mod, xt_slash, z_slash
         .byte "/"
 
 nt_fm_slash_mod:
