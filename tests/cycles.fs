@@ -240,6 +240,7 @@ here         ' 2@            cycle_test 2drop
              ' eword         cycle_test drop      
 s" *"        ' type          cycle_test          
 5            ' u.            cycle_test         
+5 5          ' u>            cycle_test drop      
 5 5          ' u<            cycle_test drop      
              ' uf-strip      cycle_test drop      
 5. 5         ' um/mod        cycle_test 2drop     

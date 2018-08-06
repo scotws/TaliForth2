@@ -207,6 +207,19 @@ testing comparisons: true false 0= 0<> = <> 0< 0> < > u< min max within
 { max-uint 0 u< -> <false> }
 { max-uint mid-uint u< -> <false> }
 
+{ 1 0 u> -> <true> }
+{ 2 1 u> -> <true> }
+{ mid-uint 0 u> -> <true> }
+{ max-uint 0 u> -> <true> }
+{ max-uint mid-uint u> -> <true> }
+{ 0 0 u> -> <false> }
+{ 1 1 u> -> <false> }
+{ 0 1 u> -> <false> }
+{ 1 2 u> -> <false> }
+{ 0 mid-uint u> -> <false> }
+{ 0 max-uint u> -> <false> }
+{ mid-uint max-uint u> -> <false> }
+
 { 0 1 min -> 0 }
 { 1 2 min -> 1 }
 { -1 0 min -> -1 }

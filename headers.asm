@@ -758,11 +758,15 @@ nt_greater_than:
         .word nt_zero_equal, xt_greater_than, z_greater_than
         .byte ">"
 
+nt_u_greater_than:
+        .byte 2, UF
+        .word nt_greater_than, xt_u_greater_than, z_u_greater_than
+        .byte "u>"
+
 nt_u_less_than:
         .byte 2, UF
-        .word nt_greater_than, xt_u_less_than, z_u_less_than
+        .word nt_u_greater_than, xt_u_less_than, z_u_less_than
         .byte "u<"
-
 
 nt_less_than:
         .byte 1, UF

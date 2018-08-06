@@ -184,6 +184,7 @@ RTS instruction at the end of each word.
 | TWO_VARIABLE | `2variable` | ANS double | 14 | **auto** |
 | TYPE | `type` | ANS core | 46 | **auto** |
 | U_DOT | `u.` | ANS core | 15 | **auto** |
+| U_GREATER_THAN | `u>` | ANS core ext | 25 | **auto** |
 | U_LESS_THAN | `u<` | ANS core | 25 | **auto** |
 | UF_STRIP | `uf-strip` | Tali Forth | 10 | tested |
 | UM_SLASH_MOD | `um/mod` | ANS core | 69 | **auto** |
@@ -204,7 +205,7 @@ RTS instruction at the end of each word.
 | ZERO_LESS | `0<` | ANS core | 19 | **auto** |
 | ZERO_UNEQUAL | `0<>` | ANS core ext | 21 | **auto** |
 
-Found **196** native words in `native_words.asm`.
-Of those, **163** were automatically tested and
+Found **197** native words in `native_words.asm`.
+Of those, **164** were automatically tested and
           **0** are not marked as tested at all.
 
