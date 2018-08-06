@@ -6271,6 +6271,24 @@ z_sign:         rts
 .scend
 
 
+; ## SLASH ( n1 n2 -- n ) "Divide NOS by TOS"
+; ## "/"  auto  ANS string
+        ; """Forth code is either  >R S>D R> FM/MOD SWAP DROP 
+        ; or >R S>D R> SM/REM SWAP DROP -- we use SM/REM in Tali Forth.
+        ; This code is currently unoptimized.
+        ; """
+xt_slash:
+                jsr xt_to_r
+                jsr xt_s_to_d
+                jsr xt_r_from
+                jsr xt_sm_slash_rem
+                jsr xt_swap
+                inx             ; DROP
+                inx
+
+z_slash:        rts
+
+
 ; ## SLASH_STRING ( addr u n -- addr u ) "Shorten string by n"
 ; ## "/string"  auto  ANS string
         ; """Forth code is
