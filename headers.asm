@@ -78,9 +78,14 @@ nt_find:
         .word nt_word, xt_find, z_find
         .byte "find"
 
+nt_environment_q:
+        .byte 12, UF 
+        .word nt_find, xt_environment_q, z_environment_q
+        .byte "environment?"
+
 nt_search:  
         .byte 6, UF
-        .word nt_find, xt_search, z_search
+        .word nt_environment_q, xt_search, z_search
         .byte "search"
 
 nt_compare:

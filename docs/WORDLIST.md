@@ -70,6 +70,7 @@ RTS instruction at the end of each word.
 | DUMP | `dump` | ANS tools | 72 | tested |
 | DUP | `dup` | ANS core | 17 | **auto** |
 | EMIT | `emit` | ANS core | 14 | **auto** |
+| ENVIRONMENT_Q | `environment?` | ANS core | 16 | **auto** |
 | EQUAL | `=` | ANS core | 31 | **auto** |
 | BLANK | `blank` | ANS string | 86 | **auto** |
 | ERASE | `erase` | ANS core ext | 76 | **auto** |
@@ -210,7 +211,7 @@ RTS instruction at the end of each word.
 | ZERO_LESS | `0<` | ANS core | 19 | **auto** |
 | ZERO_UNEQUAL | `0<>` | ANS core ext | 21 | **auto** |
 
-Found **202** native words in `native_words.asm`.
-Of those, **169** were automatically tested and
+Found **200** native words in `native_words.asm`.
+Of those, **167** were automatically tested and
           **0** are not marked as tested at all.
 
