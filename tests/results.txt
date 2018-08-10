@@ -103,7 +103,6 @@ create actual-results  20 cells allot  ok
 \ THE RANGE OF SIGNED NUMBERS IS -2^(N-1) ... 2^(N-1)-1 AND  ok
 \ THE RANGE OF UNSIGNED NUMBERS IS 0 ... 2^(N)-1.  ok
 \ I HAVEN'T FIGURED OUT HOW TO TEST KEY, QUIT, ABORT, OR ABORT"...  ok
-\ I ALSO HAVEN'T THOUGHT OF A WAY TO TEST ENVIRONMENT?...  ok
   ok
 testing core words  ok
 hex  ok
@@ -1529,6 +1528,33 @@ testing parse-name marker erase  ok
 { erase_test 3 chars +  c@ 0 = -> <true> }  ok
 { erase_test 4 chars +  c@ 9 = -> <true> }  ok
   ok
+  ok
+\ ------------------------------------------------------------------------  ok
+testing environment  ok
+  ok
+\ This is from the ANS Forth specification at   ok
+\ https://forth-standard.org/standard/core/ENVIRONMENTq but the first  ok
+\ test is commented out because it doesn't seem to make sense  ok
+\ { s" x:deferred" environment? dup 0= xor invert -> <true>  } ( Huh? Why true? )  ok
+{ s" x:notfound" environment? dup 0= xor invert -> <false> }  ok
+  ok
+\ These were added for Tali Forth 10. Aug 2018  ok
+hex  ok
+{ s" /COUNTED-STRING"    environment? ->    7FFF <true> }  ok
+{ s" /HOLD"              environment? ->      FF <true> }  ok
+{ s" /PAD"               environment? ->      54 <true> }  ok
+{ s" ADDRESS-UNIT-BITS"  environment? ->       8 <true> }  ok
+{ s" FLOORED"            environment? -> <false> <true> }  ok
+{ s" MAX-CHAR"           environment? ->     255 <true> }  ok
+{ s" MAX-N"              environment? ->    7FFF <true> }  ok
+{ s" MAX-U"              environment? ->    FFFF <true> }  ok
+{ s" RETURN-STACK-CELLS" environment? ->      80 <true> }  ok
+{ s" STACK-CELLS"        environment? ->      20 <true> }  ok
+  ok
+{ s" MAX-D"  environment? -> 7FFFFFFF. <true> }   ok
+{ s" MAX-UD" environment? -> FFFFFFFF. <true> }  ok
+decimal  ok
+  ok
 \ ------------------------------------------------------------------------  ok
 testing input: accept  ok
   ok
@@ -1551,7 +1577,7 @@ testing dictionary search rules  ok
 { gdx -> 123 234 }  ok
   ok
 hex  ok
-here . unused . 6C0B FF5  ok
+here . unused . 6C76 F8A  ok
 core_tests  ok
 here . unused . 2978 5288  ok
   ok

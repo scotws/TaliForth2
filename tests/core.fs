@@ -14,7 +14,6 @@
 \ THE RANGE OF SIGNED NUMBERS IS -2^(N-1) ... 2^(N-1)-1 AND
 \ THE RANGE OF UNSIGNED NUMBERS IS 0 ... 2^(N)-1.
 \ I HAVEN'T FIGURED OUT HOW TO TEST KEY, QUIT, ABORT, OR ABORT"...
-\ I ALSO HAVEN'T THOUGHT OF A WAY TO TEST ENVIRONMENT?...
 
 testing core words
 hex
@@ -1368,6 +1367,33 @@ testing parse-name marker erase
 { erase_test 2 chars +  c@ 0 = -> <true> }
 { erase_test 3 chars +  c@ 0 = -> <true> }
 { erase_test 4 chars +  c@ 9 = -> <true> }
+
+
+\ ------------------------------------------------------------------------
+testing environment
+
+\ This is from the ANS Forth specification at 
+\ https://forth-standard.org/standard/core/ENVIRONMENTq but the first
+\ test is commented out because it doesn't seem to make sense
+\ { s" x:deferred" environment? dup 0= xor invert -> <true>  } ( Huh? Why true? )
+{ s" x:notfound" environment? dup 0= xor invert -> <false> }
+
+\ These were added for Tali Forth 10. Aug 2018
+hex
+{ s" /COUNTED-STRING"    environment? ->    7FFF <true> }
+{ s" /HOLD"              environment? ->      FF <true> }
+{ s" /PAD"               environment? ->      54 <true> }
+{ s" ADDRESS-UNIT-BITS"  environment? ->       8 <true> }
+{ s" FLOORED"            environment? -> <false> <true> }
+{ s" MAX-CHAR"           environment? ->     255 <true> }
+{ s" MAX-N"              environment? ->    7FFF <true> }
+{ s" MAX-U"              environment? ->    FFFF <true> }
+{ s" RETURN-STACK-CELLS" environment? ->      80 <true> }
+{ s" STACK-CELLS"        environment? ->      20 <true> }
+
+{ s" MAX-D"  environment? -> 7FFFFFFF. <true> } 
+{ s" MAX-UD" environment? -> FFFFFFFF. <true> }
+decimal
 
 \ ------------------------------------------------------------------------
 testing input: accept
