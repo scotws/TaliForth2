@@ -1,21 +1,23 @@
 ; List of Strings for Tali Forth 2
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 01. Apr 2016 (for Liara Forth)
-; This version: 31. Jul 2018
+; This version: 10. Aug 2018
 
 ; This file is included by taliforth.asm 
 
 ; STRING TABLE
 ; Since we can't fit a 16-bit address in a register, we use indexes as offsets
 ; to tables as error and string numbers. Unused entries are filled with 0000
+; TODO convert this setup to the way that error strings are handled
 string_table:
-        .word s_ok, s_compiled, 0000, 0000, s_abc_lower ; 0-4
-        .word s_abc_upper                               ; 5
+        .word s_ok, s_compiled, s_redefined, 0000, s_abc_lower ; 0-4
+        .word s_abc_upper                                      ; 5
 
 ; GENERAL
 ; All general strings must be zero-terminated, names start with "s_"
 s_ok:           .byte " ok", 0          ; note space at beginning
 s_compiled:     .byte " compiled", 0    ; note space at beginning
+s_redefined:    .byte "redefined ", 0   ; note space at end
 
 
 ; ALPHABET STRINGS
