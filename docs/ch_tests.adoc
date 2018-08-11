@@ -6,7 +6,53 @@ To run it, switch to that folder and start the `talitest.py` (((talitest.py)))
 program with Python3. The tests should take only a very few minutes to run and
 produce a lot of output, including, at the end, a list of words that didn't
 work. A detailed list of results is saved to the file `results.txt`.
-(((results.txt)))  
+(((results.txt)))
+
+=== User Tests
+
+A special test file named `user.fs` (((user.fs))) is available for users to add
+their own tests.  The results of this will be found just before the cycle
+tests near the end of `results.txt`.  To run only this set of tests, you can
+use the command:
+```
+./talitest.py -t user
+```
+in the tests folder.
+
+=== Cycle Tests
+
+The last set of tests, found in `cycles.fs`, determines cycle counts for the
+various built-in words.  Users who are adding words may want to add cycle
+tests as well and there are instructions for doing that in that file.  The
+cycle tests only work with the simulator and will not work on real hardware.
+
+The cycle tests time (in 65C02 clock cycles) from the jsr that calls a word to
+the rts that returns from the word, including the jsr and rts.  These cycle
+counts are the number of cycles if the word was used directly in interpreted
+mode.  Some words will use more or fewer cycles depending on their input, so
+the cycles reported are for the input provided in the `cycles.fs` file.
+
+==== Cycle Tests and Native Compiling
+
+Because Tali Forth 2 has native compiling capability, small words used in a
+word declaration will have their assembly code compiled directly into the word
+being defined, rather than using a `jsr`.  This means that small words will not
+have the overhead of a `jsr` and `rts` when they are compiled into other words.  
+
+A perfect example of that is the built-in word `ALIGN`.  This word has no
+assembly instructions (except for an `rts`), but the cycle testing shows it
+takes 12 cycles.  This is the number of cycles to run the word by itself, and
+it's the number of cycles to run a `jsr` instruction followed immediately by
+an `rts` instruction.
+
+When this word is compiled into another word, however, Tali will use native
+compiling and will put the (empty) body of this word into the word being
+compiled rather then using a `jsr`, resulting in 0 extra cycles for the word
+being defined.  Twelve cycles will be saved for each small word that is
+natively compiled into a new definition.  See the section on Native Compiling
+for more information.
+
+=== Old Tests
 
 NOTE: During early development, testing was done by hand with a list of words that has
 since been placed in the `old` (((old))) folder. These tests might be still useful if you
