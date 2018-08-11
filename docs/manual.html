@@ -3207,6 +3207,15 @@ counts are the number of cycles if the word was used directly in interpreted
 mode.  Some words will use more or fewer cycles depending on their input, so
 the cycles reported are for the input provided in the <code>cycles.fs</code> file.</p>
 </div>
+<div class="paragraph">
+<p>The cycle tests work with some help from the py65mon simulator and extensions
+to it in <code>talitest.py</code>.  Accesses to special addresses in the 65C02 memory map
+are used to start, stop, and read back the cycle counter in the simulator.
+A special word named <code>cycle_test</code> is created near the top of <code>cycles.fs</code> to
+help with this.  It accepts the xt of the word you want to test (you
+can get the xt of any word by using the word <code>'</code>) and runs that word with the special memory
+accesses before and after, printing out the results.</p>
+</div>
 <div class="sect3">
 <h4 id="_cycle_tests_and_native_compiling">Cycle Tests and Native Compiling</h4>
 <div class="paragraph">
@@ -3225,8 +3234,8 @@ an <code>rts</code> instruction.</p>
 <div class="paragraph">
 <p>When this word is compiled into another word, however, Tali will use native
 compiling and will put the (empty) body of this word into the word being
-compiled rather then using a <code>jsr</code>, resulting in 0 extra cycles for the word
-being defined.  Twelve cycles will be saved for each small word that is
+compiled rather than using a <code>jsr</code>.  This results in 0 extra cycles for the
+word being defined.  Twelve cycles will be saved for each small word that is
 natively compiled into a new definition.  See the section on Native Compiling
 for more information.</p>
 </div>
