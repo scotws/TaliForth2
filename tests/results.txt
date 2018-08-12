@@ -2140,6 +2140,19 @@ testing tools words: .s ? dump name>string see state words  ok
 ( TODO SEE test missing )  ok
 ( TODO WORDS test missing )  ok
   ok
+ ( Running test 'user' from file 'user.fs' )  ok
+\ FILE        : user.fs  ok
+\ DESCRIPTION : This file is for users to add their own tests to the  ok
+\ test suite.  To add a test, the syntax is:  ok
+\ { data_for_word word_to_test -> expected_results }  ok
+\ eg.  ok
+\ { 5 dup -> 5 5 }  ok
+\ If the test passes, Tali will simply report "ok".  If the test does  ok
+\ not pass, an error message will be printed.  Results are logged in  ok
+\ the file results.txt and users can run just this set of tests using  ok
+\ the command:  ok
+\ ./talitest.py -t user  ok
+  ok
  ( Running test 'cycles' from file 'cycles.fs' )  ok
 \ ------------------------------------------------------------------------  ok
 testing cycle counts  ok

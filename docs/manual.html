@@ -516,7 +516,13 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel1">
 <li><a href="#_reporting_problems">Reporting Problems</a></li>
 <li><a href="#_faq">FAQ</a></li>
-<li><a href="#_testing_tali_forth_2">Testing Tali Forth 2</a></li>
+<li><a href="#_testing_tali_forth_2">Testing Tali Forth 2</a>
+<ul class="sectlevel2">
+<li><a href="#_user_tests">User Tests</a></li>
+<li><a href="#_cycle_tests">Cycle Tests</a></li>
+<li><a href="#_old_tests">Old Tests</a></li>
+</ul>
+</li>
 <li><a href="#_thanks">Thanks</a></li>
 <li><a href="#_references_and_further_reading">References and Further Reading</a></li>
 <li><a href="#_colophon">Colophon</a></li>
@@ -3169,6 +3175,74 @@ produce a lot of output, including, at the end, a list of words that didn&#8217;
 work. A detailed list of results is saved to the file <code>results.txt</code>.
 </p>
 </div>
+<div class="sect2">
+<h3 id="_user_tests">User Tests</h3>
+<div class="paragraph">
+<p>A special test file named <code>user.fs</code>  is available for users to add
+their own tests.  The results of this will be found just before the cycle
+tests near the end of <code>results.txt</code>.  To run only this set of tests, you can
+use the command:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>./talitest.py -t user</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>in the tests folder.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_cycle_tests">Cycle Tests</h3>
+<div class="paragraph">
+<p>The last set of tests, found in <code>cycles.fs</code>, determines cycle counts for the
+various built-in words.  Users who are adding words may want to add cycle
+tests as well and there are instructions for doing that in that file.  The
+cycle tests only work with the simulator and will not work on real hardware.</p>
+</div>
+<div class="paragraph">
+<p>The cycle tests time (in 65C02 clock cycles) from the jsr that calls a word to
+the rts that returns from the word, including the jsr and rts.  These cycle
+counts are the number of cycles if the word was used directly in interpreted
+mode.  Some words will use more or fewer cycles depending on their input, so
+the cycles reported are for the input provided in the <code>cycles.fs</code> file.</p>
+</div>
+<div class="paragraph">
+<p>The cycle tests work with some help from the py65mon simulator and extensions
+to it in <code>talitest.py</code>.  Accesses to special addresses in the 65C02 memory map
+are used to start, stop, and read back the cycle counter in the simulator.
+A special word named <code>cycle_test</code> is created near the top of <code>cycles.fs</code> to
+help with this.  It accepts the xt of the word you want to test (you
+can get the xt of any word by using the word <code>'</code>) and runs that word with the special memory
+accesses before and after, printing out the results.</p>
+</div>
+<div class="sect3">
+<h4 id="_cycle_tests_and_native_compiling">Cycle Tests and Native Compiling</h4>
+<div class="paragraph">
+<p>Because Tali Forth 2 has native compiling capability, small words used in a
+word declaration will have their assembly code compiled directly into the word
+being defined, rather than using a <code>jsr</code>.  This means that small words will not
+have the overhead of a <code>jsr</code> and <code>rts</code> when they are compiled into other words.</p>
+</div>
+<div class="paragraph">
+<p>A perfect example of that is the built-in word <code>ALIGN</code>.  This word has no
+assembly instructions (except for an <code>rts</code>), but the cycle testing shows it
+takes 12 cycles.  This is the number of cycles to run the word by itself, and
+it&#8217;s the number of cycles to run a <code>jsr</code> instruction followed immediately by
+an <code>rts</code> instruction.</p>
+</div>
+<div class="paragraph">
+<p>When this word is compiled into another word, however, Tali will use native
+compiling and will put the (empty) body of this word into the word being
+compiled rather than using a <code>jsr</code>.  This results in 0 extra cycles for the
+word being defined.  Twelve cycles will be saved for each small word that is
+natively compiled into a new definition.  See the section on Native Compiling
+for more information.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_old_tests">Old Tests</h3>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -3182,6 +3256,7 @@ are in the very early stages of developing your own Forth.
 </td>
 </tr>
 </table>
+</div>
 </div>
 </div>
 </div>
