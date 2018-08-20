@@ -1408,6 +1408,7 @@ create abuf 80 chars allot
 ;
 
 { accept-test -> }
+Here is some text for accept.
 
 \ ------------------------------------------------------------------------
 testing dictionary search rules

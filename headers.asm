@@ -634,7 +634,7 @@ nt_unused:
         .byte "unused"
 
 nt_accept:
-        .byte 6, UF
+        .byte 6, UF+NN
         .word nt_unused, xt_accept, z_accept
         .byte "accept"
 

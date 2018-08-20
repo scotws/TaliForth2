@@ -1569,7 +1569,10 @@ create abuf 80 chars allot  ok
   ok
 { accept-test -> } 
 please type up to 80 characters:
- WRONG NUMBER OF RESULTS: { accept-test -> } ACTUAL RESULT: { 0 } ok
+Here is some text for accept. 
+received: "Here is some text for accept."
+ ok
+  ok
 \ ------------------------------------------------------------------------  ok
 testing dictionary search rules  ok
   ok
@@ -1577,7 +1580,7 @@ testing dictionary search rules  ok
 { gdx -> 123 234 }  ok
   ok
 hex  ok
-here . unused . 6C76 F8A  ok
+here . unused . 6B38 10C8  ok
 core_tests  ok
 here . unused . 2978 5288  ok
   ok
