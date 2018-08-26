@@ -31,12 +31,6 @@
         : is state @ if postpone ['] postpone defer! else ' defer! then ; immediate
         : action-of state @ if postpone ['] postpone defer@ else ' defer@ then ; immediate
 
-\ High level math definitions. The should be moved to actual 65c02 code
-\ for speed at some point. Note we use SM/REM instead of FM/MOD for most
-\ stuff
-        : */ >r m* r> sm/rem swap drop ;
-        : */mod >r m* r> sm/rem ;
-
 \ Output definitions. Since these usually involve the user, and humans
 \ are slow, these can stay high-level for the moment. However, in this
 \ state they don't check for underflow. Based on

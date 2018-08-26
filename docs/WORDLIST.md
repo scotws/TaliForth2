@@ -161,6 +161,8 @@ RTS instruction at the end of each word.
 | SPACE | `space` | ANS core | 5 | **auto** |
 | SPACES | `spaces` | ANS core | 53 | **auto** |
 | STAR | `*` | ANS core | 12 | **auto** |
+| STAR_SLASH | `*/` | ANS core | 8 | **auto** |
+| STAR_SLASH_MOD | `*/mod` | ANS core | 19 | **auto** |
 | STATE | `state` | ANS core | 10 | **auto** |
 | STORE | `!` | ANS core | 25 | **auto** |
 | SWAP | `swap` | ANS core | 23 | **auto** |
@@ -208,7 +210,7 @@ RTS instruction at the end of each word.
 | ZERO_LESS | `0<` | ANS core | 19 | **auto** |
 | ZERO_UNEQUAL | `0<>` | ANS core ext | 21 | **auto** |
 
-Found **200** native words in `native_words.asm`.
-Of those, **167** were automatically tested and
+Found **202** native words in `native_words.asm`.
+Of those, **169** were automatically tested and
           **0** are not marked as tested at all.
 

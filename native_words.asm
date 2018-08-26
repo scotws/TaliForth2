@@ -6814,6 +6814,44 @@ z_star:         rts
 .scend
 
 
+; ## STAR_SLASH  ( n1 n2 n3 -- n4 ) "n1 * n2 / n3 -->  n"
+; ## "*/"  auto  ANS core
+        ; """Multiply n1 by n2 and divide by n3, returning the result
+        ; without a remainder. This is */MOD without the mod, and 
+        ; can be defined in Fort as : */  */MOD SWAP DROP ; which is
+        ; pretty much what we do here
+        ; """
+xt_star_slash:
+                ; We let */MOD check for underflow
+                jsr xt_star_slash_mod
+                jsr xt_swap
+                inx
+                inx
+z_star_slash:
+                rts
+
+
+; ## STAR_SLASH_MOD  ( n1 n2 n3 -- n4 n5 ) "n1 * n2 / n3 --> n-mod n"
+; ## "*/mod"  auto  ANS core
+        ; """Multiply n1 by n2 producing the intermediate double-cell result
+        ; d. Divide d by n3 producing the single-cell remainder n4 and the
+        ; single-cell quotient n5. In Forth, this is
+        ; : */MOD  >R M* >R SM/REM ;  Note that */ accesses this routine.
+        ; """
+xt_star_slash_mod:
+                cpx #dsp0-3
+                bmi +
+                jmp underflow
+*       
+                jsr xt_to_r
+                jsr xt_m_star
+                jsr xt_r_from
+                jsr xt_sm_slash_rem
+
+z_star_slash_mod:
+                rts
+
+
 ; ## STATE ( -- addr ) "Return the address of compilation state flag"
 ; ## "state"  auto  ANS core
         ; """STATE is true when in compilation state, false otherwise. Note
