@@ -1,6 +1,6 @@
 \ List of high-level Forth words for Tali Forth 2 for the 65c02
 \ Scot W. Stevenson <scot.stevenson@gmail.com>
-\ This version: 06. Aug 2018
+\ This version: 26. Aug 2018
 
 \ When changing these words, edit them here and then use the 
 \ forth_to_dotbyte.py tool to convert them to the required format
@@ -34,7 +34,6 @@
 \ High level math definitions. The should be moved to actual 65c02 code
 \ for speed at some point. Note we use SM/REM instead of FM/MOD for most
 \ stuff
-        : mod /mod drop ;
         : */ >r m* r> sm/rem swap drop ;
         : */mod >r m* r> sm/rem ;
 
@@ -86,7 +85,7 @@ decimal
 \ generated at the end of the boot process and signal that the other
 \ high-level definitions worked (or at least didn't crash)
         .( Tali Forth 2 for the 65c02)
-        cr .( Version BETA 21. Aug 2018 )
+        cr .( Version BETA 26. Aug 2018 )
         cr .( Copyright 2014-2018 Scot W. Stevenson)
         cr .( Tali Forth 2 comes with absolutely NO WARRANTY)
         cr .( Type 'bye' to exit) cr

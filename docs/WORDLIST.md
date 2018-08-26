@@ -109,6 +109,7 @@ RTS instruction at the end of each word.
 | MIN | `min` | ANS core | 31 | **auto** |
 | MINUS | `-` | ANS core | 22 | **auto** |
 | MINUS_TRAILING | `-trailing` | ANS string | 58 | **auto** |
+| MOD | `mod` | ANS core | 12 | **auto** |
 | MOVE | `move` | ANS core | 30 | **auto** |
 | NAME_TO_INT | `name>int` | Gforth | 32 | tested |
 | NAME_TO_STRING | `name>string` | Gforth | 29 | tested |
@@ -207,7 +208,7 @@ RTS instruction at the end of each word.
 | ZERO_LESS | `0<` | ANS core | 19 | **auto** |
 | ZERO_UNEQUAL | `0<>` | ANS core ext | 21 | **auto** |
 
-Found **199** native words in `native_words.asm`.
-Of those, **166** were automatically tested and
+Found **200** native words in `native_words.asm`.
+Of those, **167** were automatically tested and
           **0** are not marked as tested at all.
 
