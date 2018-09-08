@@ -1556,11 +1556,21 @@ _check_size_limit:
                 jsr xt_wordsize         ; ( nt -- u )
 
                 ; We implicitly assume that we don't want to compile anything
-                ; greater than 255 bytes, so we only deal with LSB
-                clc
+                ; greater than 255 bytes, so we only deal with LSB after
+                ; making sure the upper byte of the wordsize is zero.
+                
+                ; Make sure the MSB is zero.
+                lda 1,x
+                bne +
+
+                ; Check the wordsize LSB against the user-defined limit.
+                lda 0,x
                 cmp nc_limit            ; user-defined limit
                 bcc _compile_as_code
-
+*
+                ; If the wordsize is greater than 255 bytes or the
+                ; user-defined limit (whichever is smaller), it will
+                ; be compiled as a jump.
                 jmp _compile_as_jump    ; too far for BRA
 
 _compile_as_code:
