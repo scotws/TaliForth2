@@ -1610,14 +1610,12 @@ _strip_loop:
                 bne _next_entry
 
                 ; LSB is the same, test MSB
-                iny
-                lda _strip_table,y
+                lda _strip_table+1,y
                 cmp 5,x
                 beq _found_entry
 
                 ; MSB is not equal. Pretend though that we've come from LSB
                 ; so we can use the next step for both cases
-                dey
 _next_entry:
                 ; Not a word that needs stripping, so check next entry in table
                 ; Let's see if we're done with the table (marked by zero entry)
@@ -1634,7 +1632,6 @@ _found_entry:
                 ; next table with the same index, which is Y. However, Y is
                 ; pointing to the MSB, so we need to go back to the LSB and
                 ; halve the index before we can use it
-                dey
                 tya
                 lsr
                 tay
@@ -1649,9 +1646,9 @@ _found_entry:
                 clc
                 adc 4,x
                 sta 4,x
-                lda 5,x
-                adc #0                  ; we just care about the carry
-                sta 5,x
+                bcc+
+                inc 5,x                 ; we just care about the carry
+*
 
                 ; Adjust u: Quit earlier. Since we cut off the top and the bottom of the
                 ; code, we have to double the value
