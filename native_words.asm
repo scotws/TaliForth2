@@ -1689,18 +1689,18 @@ _underflow_strip:
                 lda 4,x
                 adc #7
                 sta 4,x
-                lda 5,x
-                adc #0                  ; we just care about the carry
-                sta 5,x
+                bcc +
+                inc 5,x                  ; we just care about the carry
+*
 
                 ; Adjust u: End earlier
                 sec
                 lda 0,x
                 sbc #7
                 sta 0,x
-                lda 1,x
-                sbc #0                  ; we just care about the borrow
-                sta 1,x
+                bcs +
+                dec 1,x                  ; we just care about the borrow
+*
 
                 ; --- END OF SPECIAL CASES ---
 _specials_done:
