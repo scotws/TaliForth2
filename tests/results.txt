@@ -107,7 +107,6 @@ create actual-results  20 cells allot  ok
 testing core words  ok
 hex  ok
   ok
-here . unused . 12AE 6952  ok
 marker core_tests  ok
   ok
 \ ------------------------------------------------------------------------  ok
@@ -1580,16 +1579,15 @@ testing dictionary search rules  ok
 { gdx -> 123 234 }  ok
   ok
 hex  ok
-here . unused . 3C42 3FBE  ok
+\ Free memory used for these tests  ok
 core_tests  ok
-here . unused . 12AE 6952  ok
+  ok
   ok
  ( Running test 'string' from file 'string.fs' )  ok
 \ ------------------------------------------------------------------------  ok
 testing string words: /string -trailing blank sliteral  ok
 decimal  ok
   ok
-here . unused . 4782 26962  ok
 marker string_tests  ok
   ok
   ok
@@ -1668,16 +1666,16 @@ marker string_tests  ok
 ( TODO UNESCAPE not implemented yet )  ok
   ok
 \ Tests for long strings are currently in their own file  ok
-here . unused . 5339 26405  ok
+\ Free memory used for these tests  ok
 string_tests  ok
-here . 4782  ok
+  ok
   ok
  ( Running test 'double' from file 'double.fs' )  ok
-here . unused . 4782 26962  ok
-marker double_tests  ok
-  ok
 \ ------------------------------------------------------------------------  ok
 testing double words: 2constant 2variable d+ d- d. d.r d>s dabs dnegate  ok
+  ok
+marker double_tests  ok
+  ok
 decimal  ok
   ok
 { 2variable 2v1 -> }  ok
@@ -1836,9 +1834,8 @@ min-2int 2/ 2constant lo-2int  \ 110...0  ok
 ( TODO 2VALUE not implemented yet )  ok
 ( TODO DU< not implemented yet )  ok
   ok
-here . unused . 5285 26459  ok
+\ Free memory used for these tests  ok
 double_tests  ok
-here . unused . 4782 26962  ok
   ok
  ( Running test 'facility' from file 'facility.fs' )  ok
 \ ------------------------------------------------------------------------  ok
@@ -1852,7 +1849,6 @@ testing facility words: at-xy page   ok
 testing long strings  ok
 decimal  ok
   ok
-here . unused . 4782 26962  ok
 marker long_string_tests  ok
   ok
 \ We keep this separate for now because it takes a long, long time -- don't be  ok
@@ -1870,13 +1866,13 @@ marker long_string_tests  ok
 \ This should output the alphabet 20 times.  ok
 { s15 -> } abcdefghijklmnopqrstuvwxyz1abcdefghijklmnopqrstuvwxyz2abcdefghijklmnopqrstuvwxyz3abcdefghijklmnopqrstuvwxyz4abcdefghijklmnopqrstuvwxyz5abcdefghijklmnopqrstuvwxyz6abcdefghijklmnopqrstuvwxyz7abcdefghijklmnopqrstuvwxyz8abcdefghijklmnopqrstuvwxyz9abcdefghijklmnopqrstuvwxyz10abcdefghijklmnopqrstuvwxyz11abcdefghijklmnopqrstuvwxyz12abcdefghijklmnopqrstuvwxyz13abcdefghijklmnopqrstuvwxyz14abcdefghijklmnopqrstuvwxyz15abcdefghijklmnopqrstuvwxyz16abcdefghijklmnopqrstuvwxyz17abcdefghijklmnopqrstuvwxyz18abcdefghijklmnopqrstuvwxyz19abcdefghijklmnopqrstuvwxyz20 ok
   ok
-here . unused . 5928 25816  ok
+\ Free memory used for these tests  ok
 long_string_tests  ok
-here . unused . 4782 26962  ok
   ok
  ( Running test 'tali' from file 'tali.fs' )  ok
+\ ------------------------------------------------------------------------  ok
 hex  ok
-here . unused . 12AE 6952  ok
+  ok
 marker tali_tests  ok
   ok
   ok
@@ -2125,9 +2121,8 @@ One-off chars, base 36 : /:@[`{	 -> -1  ok
 { s" ff" number -> FF }  ok
 { decimal -> }  ok
   ok
-here . unused . 6876 24868  ok
+\ Free memory used for these tests  ok
 tali_tests  ok
-here . unused . 4782 26962  ok
   ok
   ok
  ( Running test 'tools' from file 'tools.fs' )  ok
@@ -2144,6 +2139,8 @@ testing tools words: .s ? dump name>string see state words  ok
 ( TODO WORDS test missing )  ok
   ok
  ( Running test 'user' from file 'user.fs' )  ok
+\ ------------------------------------------------------------------------  ok
+  ok
 \ FILE        : user.fs  ok
 \ DESCRIPTION : This file is for users to add their own tests to the  ok
 \ test suite.  To add a test, the syntax is:  ok

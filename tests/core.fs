@@ -18,7 +18,6 @@
 testing core words
 hex
 
-here . unused .
 marker core_tests
 
 \ ------------------------------------------------------------------------
@@ -1417,6 +1416,6 @@ testing dictionary search rules
 { gdx -> 123 234 }
 
 hex
-here . unused .
+\ Free memory used for these tests
 core_tests
-here . unused .
+

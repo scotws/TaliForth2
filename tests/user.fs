@@ -1,3 +1,5 @@
+\ ------------------------------------------------------------------------
+
 \ FILE        : user.fs
 \ DESCRIPTION : This file is for users to add their own tests to the
 \ test suite.  To add a test, the syntax is:

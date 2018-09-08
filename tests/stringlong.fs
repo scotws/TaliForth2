@@ -2,7 +2,6 @@
 testing long strings
 decimal
 
-here . unused .
 marker long_string_tests
 
 \ We keep this separate for now because it takes a long, long time -- don't be
@@ -20,6 +19,5 @@ marker long_string_tests
 \ This should output the alphabet 20 times.
 { s15 -> }
 
-here . unused .
+\ Free memory used for these tests
 long_string_tests
-here . unused .
