@@ -1658,10 +1658,9 @@ _found_entry:
                 lda 0,x
                 sbc tmptos
                 sta 0,x
-                lda 1,x
-                sbc #0                  ; we just care about the borrow
-                sta 1,x
-
+                bcs +
+                dec 1,x                 ; we just care about the borrow
+*                
                 ; drop through to underflow check stripping
 
 _underflow_strip:
