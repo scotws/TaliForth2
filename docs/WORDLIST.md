@@ -44,7 +44,7 @@ RTS instruction at the end of each word.
 | COLON_NONAME | `:NONAME` | ANS core | 29 | **auto** |
 | COMMA | `,` | ANS core | 29 | **auto** |
 | COMPARE | `compare` | ANS string | 104 | **auto** |
-| COMPILE_COMMA | `compile,` | ANS core ext | 283 | **auto** |
+| COMPILE_COMMA | `compile,` | ANS core ext | 277 | **auto** |
 | COMPILE_ONLY | `compile-only` | Tali Forth | 8 | tested |
 | CONSTANT | `constant` | ANS core | 65 | **auto** |
 | COUNT | `count` | ANS core | 23 | **auto** |

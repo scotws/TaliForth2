@@ -1556,11 +1556,21 @@ _check_size_limit:
                 jsr xt_wordsize         ; ( nt -- u )
 
                 ; We implicitly assume that we don't want to compile anything
-                ; greater than 255 bytes, so we only deal with LSB
-                clc
+                ; greater than 255 bytes, so we only deal with LSB after
+                ; making sure the upper byte of the wordsize is zero.
+                
+                ; Make sure the MSB is zero.
+                lda 1,x
+                bne +
+
+                ; Check the wordsize LSB against the user-defined limit.
+                lda 0,x
                 cmp nc_limit            ; user-defined limit
                 bcc _compile_as_code
-
+*
+                ; If the wordsize is greater than 255 bytes or the
+                ; user-defined limit (whichever is smaller), it will
+                ; be compiled as a jump.
                 jmp _compile_as_jump    ; too far for BRA
 
 _compile_as_code:
@@ -1600,14 +1610,12 @@ _strip_loop:
                 bne _next_entry
 
                 ; LSB is the same, test MSB
-                iny
-                lda _strip_table,y
+                lda _strip_table+1,y
                 cmp 5,x
                 beq _found_entry
 
                 ; MSB is not equal. Pretend though that we've come from LSB
                 ; so we can use the next step for both cases
-                dey
 _next_entry:
                 ; Not a word that needs stripping, so check next entry in table
                 ; Let's see if we're done with the table (marked by zero entry)
@@ -1624,7 +1632,6 @@ _found_entry:
                 ; next table with the same index, which is Y. However, Y is
                 ; pointing to the MSB, so we need to go back to the LSB and
                 ; halve the index before we can use it
-                dey
                 tya
                 lsr
                 tay
@@ -1639,9 +1646,9 @@ _found_entry:
                 clc
                 adc 4,x
                 sta 4,x
-                lda 5,x
-                adc #0                  ; we just care about the carry
-                sta 5,x
+                bcc+
+                inc 5,x                 ; we just care about the carry
+*
 
                 ; Adjust u: Quit earlier. Since we cut off the top and the bottom of the
                 ; code, we have to double the value
@@ -1651,10 +1658,9 @@ _found_entry:
                 lda 0,x
                 sbc tmptos
                 sta 0,x
-                lda 1,x
-                sbc #0                  ; we just care about the borrow
-                sta 1,x
-
+                bcs +
+                dec 1,x                 ; we just care about the borrow
+*                
                 ; drop through to underflow check stripping
 
 _underflow_strip:
@@ -1683,18 +1689,18 @@ _underflow_strip:
                 lda 4,x
                 adc #7
                 sta 4,x
-                lda 5,x
-                adc #0                  ; we just care about the carry
-                sta 5,x
+                bcc +
+                inc 5,x                  ; we just care about the carry
+*
 
                 ; Adjust u: End earlier
                 sec
                 lda 0,x
                 sbc #7
                 sta 0,x
-                lda 1,x
-                sbc #0                  ; we just care about the borrow
-                sta 1,x
+                bcs +
+                dec 1,x                  ; we just care about the borrow
+*
 
                 ; --- END OF SPECIAL CASES ---
 _specials_done:

@@ -1,5 +1,6 @@
+\ ------------------------------------------------------------------------
 hex
-here . unused .
+
 marker tali_tests
 
 
@@ -150,7 +151,6 @@ decimal
 { s" ff" number -> FF }
 { decimal -> }
 
-here . unused .
+\ Free memory used for these tests
 tali_tests
-here . unused .
 

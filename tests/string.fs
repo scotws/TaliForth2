@@ -2,7 +2,6 @@
 testing string words: /string -trailing blank sliteral
 decimal
 
-here . unused .
 marker string_tests
 
 
@@ -81,6 +80,6 @@ marker string_tests
 ( TODO UNESCAPE not implemented yet )
 
 \ Tests for long strings are currently in their own file
-here . unused .
+\ Free memory used for these tests
 string_tests
-here .
+
