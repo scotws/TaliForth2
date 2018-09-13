@@ -1547,7 +1547,7 @@ _compile_check:
 
 _check_size_limit:
                 ; Native compile is a legal option, but we need to see what
-                ; limit the user set for size
+                ; limit the user set for size (in nc_limit)
                 lda tmptos
                 sta 0,x
                 lda tmptos+1
@@ -1555,22 +1555,21 @@ _check_size_limit:
 
                 jsr xt_wordsize         ; ( nt -- u )
 
-                ; We implicitly assume that we don't want to compile anything
-                ; greater than 255 bytes, so we only deal with LSB after
-                ; making sure the upper byte of the wordsize is zero.
-                
-                ; Make sure the MSB is zero.
+                ; Check the wordsize MSB against the user-defined limit.
                 lda 1,x
-                bne +
+                cmp nc_limit+1
+                bcc _compile_as_code    ; user-defined limit MSB
+                bne _jumpto_compile_as_jump
 
                 ; Check the wordsize LSB against the user-defined limit.
                 lda 0,x
-                cmp nc_limit            ; user-defined limit
-                bcc _compile_as_code
-*
-                ; If the wordsize is greater than 255 bytes or the
-                ; user-defined limit (whichever is smaller), it will
-                ; be compiled as a jump.
+                cmp nc_limit            ; user-defined limit LSB
+                bcc _compile_as_code    ; Allow native compiling for less
+                beq _compile_as_code    ; than or equal to the limit.
+                
+_jumpto_compile_as_jump: 
+                ; If the wordsize is greater than the user-defined
+                ; limit, it will be compiled as a subroutine jump.
                 jmp _compile_as_jump    ; too far for BRA
 
 _compile_as_code:
