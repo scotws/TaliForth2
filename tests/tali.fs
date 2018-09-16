@@ -151,6 +151,18 @@ decimal
 { s" ff" number -> FF }
 { decimal -> }
 
+\ ------------------------------------------------------------------------
+testing case-insensitivity in Tali using dup
+
+{ 5 dup -> 5 5 }
+{ 5 duP -> 5 5 }
+{ 5 dUp -> 5 5 }
+{ 5 dUP -> 5 5 }
+{ 5 Dup -> 5 5 }
+{ 5 DuP -> 5 5 }
+{ 5 DUp -> 5 5 }
+{ 5 DUP -> 5 5 }
+
 \ Free memory used for these tests
 tali_tests
 
