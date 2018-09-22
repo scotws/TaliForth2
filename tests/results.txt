@@ -1,7 +1,7 @@
 Tali Forth 2 default kernel for py65mon (18. Feb 2018)
 
 Tali Forth 2 for the 65c02
-Version BETA 26. Aug 2018 
+Version BETA 22. Sep 2018 
 Copyright 2014-2018 Scot W. Stevenson
 Tali Forth 2 comes with absolutely NO WARRANTY
 Type 'bye' to exit
