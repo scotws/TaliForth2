@@ -1,7 +1,7 @@
 ; List of Strings for Tali Forth 2
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 01. Apr 2016 (for Liara Forth)
-; This version: 10. Aug 2018
+; This version: 22. Sep 2018
 
 ; This file is included by taliforth.asm 
 

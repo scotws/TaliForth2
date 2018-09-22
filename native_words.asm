@@ -2934,7 +2934,7 @@ z_emit:         ; never reached
         ; ( DEFAULT ) 2DROP FALSE FALSE ( ONE FALSE WILL DROPPED BY ENDCASE )
         ; ENDCASE ;
         ;
-        ; but that uses far more memory and increases the start up time. This
+        ; but that uses lots of memory and increases the start up time. This
         ; word is rarely used so we can try to keep it short at the expense
         ; of speed.
         ; """
@@ -2950,61 +2950,162 @@ xt_environment_q:
                 ; a bit harder by the fact that some of these return a
                 ; double-cell number and some a single-cell one. 
  
-                ; We arrive here with the address of the string to be checked
-                ; on the stack. First, we make a copy. 
-                jsr xt_two_dup          ; ( addr u addr u ) 
-
-                ; Second, we walk through the table with variables that return
+                ; We will walk through the table with variables that return
                 ; a single-cell result
                 ldy #00                 ; counter for table
+
+                ; We use a flag on the the stack to signal if we have a single-cell
+                ; or double-cell number. We use 0 to signal single-cell and 1 for
+                ; double-cell. 
+                phy
+_table_loop:
+                ; We arrived here with the address of the string to be checked
+                ; on the stack. We make a copy. Index is in Y
+                jsr xt_two_dup          ; ( addr u addr u ) 2DUP does not use Y 
 
                 ; We do our work on the TOS to speed things up
                 dex
                 dex                     ; ( addr u addr u ? )
 
-_single_table_loop:
                 ; Get address of string to check from table
                 lda _env_table_single,y
                 sta 0,x
                 iny
                 lda _env_table_single,y
-                sta 2,x
+                sta 1,x                 ; ( addr u addr u addr-t )
+                iny
 
                 ; See if this is the last entry. The LSB is still in A
                 ora 0,x
-                beq _double_loop
+                beq _table_done
 
-                ; We have a string entry. The address there is stored in the
-                ; old-stil address format, that is, the first byte is the 
+                ; We have a string entry. The address there is stored in
+                ; old-style address format, that is, the first byte is the 
                 ; length of the string
+                phy                     ; save Y, which is used by COUNT
                 jsr xt_count            ; ( addr u addr u addr-s u-s )
                 jsr xt_compare          ; ( addr u f ) 
+                ply
 
-                ; If we found a match, return the result 
-                ; HIER HIER 
+                ; If we found a match (flag is zero -- COMPARE is weird
+                ; that way), return the result 
+                lda 0,x
+                ora 1,x
+                beq _got_result
+
+                ; Flag is not zero, so not a perfect match, so try next
+                ; word
+                inx                     ; DROP, now ( addr u )
+                inx
+
+                bra _table_loop
+_got_result:    
+                ; We arrive here with ( addr u -1 ) and know that we've found
+                ; a match. The index of the match+2 is in Y. 
+                inx                     ; drop flag, now ( addr u )
+                inx
+
+                dey                     ; go back to index we had
+                dey
+
+                ; See if this is a single-cell word.
+                pla
+                bne _double_result
+
+                ; Single-cell result
+                lda _env_results_single,y
+                sta 2,x
+                iny
+                lda _env_results_single,y
+                sta 3,x                 ; ( res u )
+
+                bra _set_flag
+
+_double_result:
+                ; This is a double-celled result, which means we have to
+                ; fool around with the index some more. We also need a
+                ; further cell on the stack
+                dex                     ; ( addr u ? )
+                dex
+
+                ; We have ten single-cell words we check, plus the 0000 as
+                ; a marker for the end of the table, so we arrive here
+                ; with Y as 20 or more. To get the index for the double-
+                ; cell words, we move the result
+                tya
+                sec
+                sbc #22
                 
+                ; We have four bytes per entry in the table, but the index
+                ; keeps increasing by two, so we only have to multiply by
+                ; two (shift left once) to get the right result
+                asl
+                tay
+                
+                lda _env_results_double,y
+                sta 2,x
+                iny
+                lda _env_results_double,y
+                sta 3,x                 ; ( res u ? )
+                iny
 
-_double_loop:                
-                ; If that didn't work, we try the double cell results
-                ; We arrive here with ( addr u addr u ? )
+                lda _env_results_double,y
+                sta 4,x
+                iny
+                lda _env_results_double,y
+                sta 5,x                 ; ( res res ? )
 
-                ; If that didn't work either, we don't know this string and
-                ; just return FALSE
-                ; TODO testing
-                inx
-                inx
+                ; fall through to _set_flag
+_set_flag:
+                lda #$ff
+                sta 0,x
+                sta 1,x                 ; ( res f ) 
 
-                stz 0,x
-                stz 1,x
+                bra _done
+_table_done:                
+                ; We're done with a table, because the entry was a zero.
+                ; We arrive here with ( addr u addr u 0 )
+
+                ; We take the flag from stack and increase it by one. If the
+                ; flag is zero, we have just completed the single-cell number
+                ; strings, so we in increase the flag and try again. Otherwise,
+                ; we're done with the double-cell table without having found
+                ; a match, and we're done
+                pla
+                bne _no_match
+
+                ; Flag is zero, increase it to one and start over to check
+                ; double-cell values
+                inc
+                pha
+
+                txa
+                clc
+                adc #6                  ; skip six bytes
+                tax                     ; ( addr u ) 
+
+                bra _table_loop
+_no_match:
+                ; Bummer, not found. We arrive here with 
+                ; ( addr u addr u 0 ) and need to return just a zero
+                txa             
+                clc
+                adc #10
+                tax                     ; ( addr ) - not ( 0 ) !
+
+                jsr xt_false 
 _done:                
 z_environment_q:
                 rts
+.scend
 
 ; Tables for ENVIRONMENT?. We use two separate ones, one for the single-cell
 ; results and one for the double-celled results. The zero cell at the 
 ; end of each table marks its, uh, end. The strings themselves are defined
-; in strings.asm. 
-
+; in strings.asm. Note if we add more entries to the single-cell table, we
+; have to adapt the result code for double printout, where we subtract 22
+; (two bytes each single-cell string and two bytes for the end-of-table
+; marker 0000
 _env_table_single:
         .word envs_cs, envs_hold, envs_pad, envs_aub, envs_floored
         .word envs_max_char, envs_max_n, envs_max_u, envs_rsc
@@ -3028,8 +3129,6 @@ _env_results_single:
 _env_results_double:
         .word $7FFF, $FFFF      ; MAX-D
         .word $FFFF, $FFFF      ; MAX-UD
-
-.scend
  
 
 ; ## EQUAL ( n n -- f ) "See if TOS and NOS are equal"

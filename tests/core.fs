@@ -1384,7 +1384,7 @@ hex
 { s" /PAD"               environment? ->      54 <true> }
 { s" ADDRESS-UNIT-BITS"  environment? ->       8 <true> }
 { s" FLOORED"            environment? -> <false> <true> }
-{ s" MAX-CHAR"           environment? ->     255 <true> }
+{ s" MAX-CHAR"           environment? ->      FF <true> }
 { s" MAX-N"              environment? ->    7FFF <true> }
 { s" MAX-U"              environment? ->    FFFF <true> }
 { s" RETURN-STACK-CELLS" environment? ->      80 <true> }
