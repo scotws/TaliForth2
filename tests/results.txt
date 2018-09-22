@@ -2121,6 +2121,18 @@ One-off chars, base 36 : /:@[`{	 -> -1  ok
 { s" ff" number -> FF }  ok
 { decimal -> }  ok
   ok
+\ ------------------------------------------------------------------------  ok
+testing case-insensitivity in Tali using dup  ok
+  ok
+{ 5 dup -> 5 5 }  ok
+{ 5 duP -> 5 5 }  ok
+{ 5 dUp -> 5 5 }  ok
+{ 5 dUP -> 5 5 }  ok
+{ 5 Dup -> 5 5 }  ok
+{ 5 DuP -> 5 5 }  ok
+{ 5 DUp -> 5 5 }  ok
+{ 5 DUP -> 5 5 }  ok
+  ok
 \ Free memory used for these tests  ok
 tali_tests  ok
   ok
