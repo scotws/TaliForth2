@@ -6563,11 +6563,6 @@ _colonword:
                 ; This word is already in the Dictionary, so we print a
                 ; warning to the user. Luckily for us, the nt of the word
                 ; is already on the stack from FIND-NAME. 
-
-                ; TODO This is a hack because we currently only
-                ; support printing with a line feed at the end. This needs
-                ; to be rewritten so we support both printing methods
-                ; See issue #115 on GitHub
                 lda #<s_redefined       ; address of string "redefined"
                 sta tmp3
                 lda #>s_redefined
