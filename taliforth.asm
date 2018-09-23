@@ -1,7 +1,7 @@
 ; Tali Forth 2 for the 65c02
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 19. Jan 2014 (Tali Forth)
-; This version: 28. Apr 2018
+; This version: 22. Sep 2018
 
 ; This is the main file for Tali Forth 2
 
@@ -435,6 +435,27 @@ _line_done:
 
                 rts
 .scend
+
+is_printable:
+.scope
+        ; """Given a character in A, check if it is a printable ASCII
+        ; character in the range from $20 to $7E inclusive. Returns the
+        ; result in the Carry Flag: 0 (clear) is not printable, 1 (set)
+        ; is printable. Keeps A. See 
+        ; http://www.obelisk.me.uk/6502/algorithms.html for a
+        ; discussion of various ways to do this
+                cmp #AscSP              ; $20
+                bcc _done
+                cmp #'~ + 1             ; $7E
+                bcs _failed
+                sec
+                bra _done
+_failed:
+                clc
+_done:       
+                rts
+.scend
+
 
 underflow:
         ; """Landing area for data stack underflow"""
