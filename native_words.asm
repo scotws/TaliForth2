@@ -2793,7 +2793,7 @@ z_drop:         rts
         ; """DUMP's exact output is defined as "implementation dependent".
         ; This is in assembler because it is 
         ; useful for testing and development, so we want to have it work
-        ; as soon as possible. Uses TMP3
+        ; as soon as possible. Uses TMP2
         ; """
 .scope
 xt_dump:        
