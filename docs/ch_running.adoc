@@ -177,9 +177,11 @@ might be better off quitting and restarting completely.
 
 === Gotchas
 
+==== Cell Size
+
 Tali has a 16-bit cell size. 
 
-NOTE: Use `1 cells 8 * .` to get the cells size in bits with any Forth.
+NOTE: Use `1 cells 8 * .` to get the cell size in bits with any Forth.
 
 This can trip up calculations when compared to the _de facto_ standard Gforth
 with 64 bits. Take this example:
@@ -200,4 +202,20 @@ bit address space, it wraps the upper address if we go beyond $FFFF:
 ( Gforth )      hex FFFF 2 bounds  swap u. u.  ( returns 10001 ffff  ok  )
 ( Tali )        hex FFFF 2 bounds  swap u. u.  ( returns     1 ffff  ok )
 ----
+
+==== Negative ALLOT
+
+The ANSI standard does not define what happens if there is an attempt to free
+more memory with `allot` by passing a negative value than is available. Tali
+will let the user free memory up the beginning of RAM assigned to the Dictionary
+(marked with `cp0` in the code), even though this can mean that the Dictionary
+itself is compromised. This is Forth, you're the boss.
+
+However, any attempt to free more memory than that will set the beginning of RAM
+to `cp0`. Also, the Dictionary Pointer `dp` will point to the _last native word_
+of the Dictionary, which is usually `drop`. Because of this, the high level
+words defined during boot will _not_ be available. There will be an error
+message to document this. Realistically, you'll probably want to restart with
+`cold` if any of this happens.
+
 

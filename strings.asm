@@ -1,7 +1,7 @@
 ; List of Strings for Tali Forth 2
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 01. Apr 2016 (for Liara Forth)
-; This version: 22. Sep 2018
+; This version: 10. Oct 2018
 
 ; This file is included by taliforth.asm 
 
@@ -25,6 +25,7 @@ string_table:
 s_ok:           .byte " ok", 0          ; note space at beginning
 s_compiled:     .byte " compiled", 0    ; note space at beginning
 s_redefined:    .byte "redefined ", 0   ; note space at end
+
 s_abc_lower: .byte "0123456789abcdefghijklmnopqrstuvwxyz"
 s_abc_upper: .byte "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
@@ -44,22 +45,24 @@ s_abc_upper: .byte "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 .alias err_state           7
 .alias err_syntax          8
 .alias err_underflow       9
+.alias err_negallot        10
 
 error_table:
         .word es_allot, es_badsource, es_compileonly, es_defer  ;  0-3
         .word es_divzero, es_noname, es_refill, es_state        ;  4-7
-        .word es_syntax, es_underflow                           ;  8-11
+        .word es_syntax, es_underflow, es_negallot              ;  8-11
 
-es_allot:        .byte "ALLOT using all available memory", 0 
-es_badsource:    .byte "Illegal SOURCE-ID during REFILL", 0
-es_compileonly:  .byte "Interpreting a compile-only word", 0
-es_defer:        .byte "DEFERed word not defined yet", 0
-es_divzero:      .byte "Division by zero", 0
-es_noname:       .byte "Parsing failure", 0
-es_refill:       .byte "QUIT could not get input (REFILL returned -1)", 0
-es_state:        .byte "Already in compile mode", 0
-es_syntax:       .byte "Undefined word", 0
-es_underflow:    .byte "Stack underflow", 0
+es_allot:       .byte "ALLOT using all available memory", 0 
+es_badsource:   .byte "Illegal SOURCE-ID during REFILL", 0
+es_compileonly: .byte "Interpreting a compile-only word", 0
+es_defer:       .byte "DEFERed word not defined yet", 0
+es_divzero:     .byte "Division by zero", 0
+es_noname:      .byte "Parsing failure", 0
+es_refill:      .byte "QUIT could not get input (REFILL returned -1)", 0
+es_state:       .byte "Already in compile mode", 0
+es_syntax:      .byte "Undefined word", 0
+es_underflow:   .byte "Stack underflow", 0
+es_negallot:    .byte "Max memory freed with ALLOT", 0
 
 
 ; ## ENVIRONMENT STRINGS

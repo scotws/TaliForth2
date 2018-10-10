@@ -16,7 +16,7 @@ RTS instruction at the end of each word.
 | AGAIN | `again` | ANS core ext | 36 | tested |
 | ALIGN | `align` | ANS core | 0 | **auto** |
 | ALIGNED | `aligned` | ANS core | 0 | **auto** |
-| ALLOT | `allot` | ANS core | 63 | **auto** |
+| ALLOT | `allot` | ANS core | 108 | **auto** |
 | ALWAYS_NATIVE | `always-native` | Tali Forth | 8 | tested |
 | AND | `and` | ANS core | 21 | **auto** |
 | AT_XY | `at-xy` | ANS facility | 33 | tested |
