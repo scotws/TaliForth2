@@ -636,13 +636,19 @@ ifsym     : t*/    t*/mod swap drop ;
 \ ------------------------------------------------------------------------
 testing here , @ ! cell+ cells c, c@ c! char+ chars 2@ 2! align aligned +! allot pad unused compile,
 
+decimal
 here 1 allot
 here
+9 allot                     \ Growing by 9 and shrinking
+-10 allot                    \ by 10 should bring us back
+here                        \ to where we started.
+constant 3rda
 constant 2nda
 constant 1sta
 { 1sta 2nda u< -> <true> }  \ here must grow with allot ...
 { 1sta 1+ -> 2nda }         \ ... by one address unit
-( TODO missing test: negative allot )
+{ 3rda -> 1sta }            \ and shrink back to the beginning.
+hex
 
 here 1 ,
 here 2 ,
