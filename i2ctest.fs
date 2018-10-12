@@ -275,19 +275,21 @@ cr s" Back on screen 11 after evaluating the string" type
 cr s" Now on screen 12" type
 
 
-( Test screen for testing LOAD and THRU - screen 13 )
-cr s" Now on screen 13 - Line 1" type
-cr s" Line 2" type
-cr s" Line 3" type
-cr s" Line 4" type
-cr s" Line 5" type
-cr s" Line 6" type
-cr s" Line 7" type
-cr s" Line 8" type
-cr s" Line 9" type
-                                             cr s" Line 10" type
-cr s" Line 11" type
-cr s" Line 12" type
-cr s" Line 13" type
-cr s" Line 14" type
-cr s" Line 15" type
+( Test screen for testing LOAD and THRU - screen 13 )           
+cr s" Now on screen 13 - Line 1" type                           
+cr s" Line 2" type                                              
+cr s" Line 3" type                                              
+cr s" Line 4" type                                              
+cr s" Line 5" type                                              
+cr s" Line 6" type                                              
+cr s" Line 7" type                                              
+cr s" Line 8" type                                              
+cr s" Line 9" type                                              
+                                            cr s" Line 10" type 
+cr s" Line 11" type                                             
+cr s" Line 12" type                                             
+cr s" Line 13" type                                             
+cr s" Line 14" type                                             
+cr s" Line 15" type                                             
+
+s" ( Test screen for testing LOAD and THRU - screen 13 )           cr 1 .                                                          cr 2 .                                                          cr 3 .                                                          cr 4 .                                                          cr 5 .                                                          cr 6 .                                                          cr 7 .                                                          cr 8 .                                                          cr 9 .                                                                                                      cr 10 .             cr 11 .                                                         cr 12 .                                                         cr 13 .                                                         cr 14 .                                                         cr 15 .                                                         " evaluate
