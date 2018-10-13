@@ -179,16 +179,6 @@ variable scr 0 scr !
 
 : FLUSH save-buffers empty-buffers ;
 
-\ The standard says to extend EVALUATE to include storing a 0
-\ in BLK.  I'm not sure why as LOAD restores the old value of
-\ BLK.  It only makes sense to put the 0 in BLK at the end, as
-\ EVALUATE might be evaluating a block (eg from LOAD)
-\ UPDATE - this doesn't make sense - if EVALUATE is used on a
-\ string in the middle of a block, it will set BLK to 0 before
-\ the block has completely been evaluated.  Commenting out for
-\ now.
-\ : EVALUATE EVALUATE 0 blk ! ;
-
 \ Note: LOAD currently works because there is only one buffer.
 \ if/when multiple buffers are supported, we'll have to deal
 \ with the fact that it might re-load the old block into a
@@ -215,6 +205,11 @@ decimal
 \    ?dup if block drop then ;
 
 : THRU ( scr# scr# - ) 1+ swap ?do i load loop ;
+
+\ The standard says to extend EVALUATE to include storing a 0
+\ in BLK.  I'm also restoring the previous value when done.
+ : EVALUATE BLK @ >R 0 BLK ! EVALUATE R> BLK ! ;
+
 
 \ ----------------------------
 ( Simple Editor for screens /blocks )
