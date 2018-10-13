@@ -132,7 +132,7 @@ RTS instruction at the end of each word.
 | OVER | `over` | ANS core | 17 | **auto** |
 | PAD | `pad` | ANS core ext | 15 | **auto** |
 | PAGE | `page` | ANS facility | 29 | tested |
-| PARSE_NAME | `parse-name` | ANS core ext | 240 | **auto** |
+| PARSE_NAME | `parse-name` | ANS core ext | 232 | **auto** |
 | PARSE | `parse` | ANS core ext | 142 | tested |
 | PICK | `pick` | ANS core ext | 16 | **auto** |
 | PLUS | `+` | ANS core | 22 | **auto** |

@@ -5492,10 +5492,10 @@ xt_parse_name:
 
                 ; However, TOIN is an index and CIBLEN is a length, so we
                 ; have to subtract one
-                lda tmp1
-                bne +
-                dec tmp1+1
-*               dec tmp1
+;                lda tmp1
+;                bne +
+;                dec tmp1+1
+;*               dec tmp1
 
                 ; We walk through the characters starting at CIB+TOIN, so we
                 ; save a temp version of that in tmp2
