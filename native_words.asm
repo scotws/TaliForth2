@@ -5493,7 +5493,7 @@ xt_parse_name:
                 ; However, TOIN is an index and CIBLEN is a length, so we
                 ; have to subtract one
                 lda tmp1
-                beq +
+                bne +
                 dec tmp1+1
 *               dec tmp1
 
