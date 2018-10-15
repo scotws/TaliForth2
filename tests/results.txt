@@ -2163,8 +2163,8 @@ testing block words: BLK SCR LOAD THRU BUFFER BLOCK UPDATE FLUSH  ok
   ok
 marker block_tests  ok
   ok
-\ Bring in the 4-block ram drive  ok
-{ block_init_ramdrive -> }  ok
+\ Bring in a 4-block ram drive  ok
+{ 4 block_init_ramdrive -> }  ok
   ok
 \ Put a string into the first block.  ok
 { : teststring s" Testing Blocks!" ; -> }  ok
@@ -2315,6 +2315,7 @@ Screen #   2
   ok
 \ Release all of the memory used.  ok
 block_tests  ok
+  ok
  ( Running test 'user' from file 'user.fs' )  ok
 \ ------------------------------------------------------------------------  ok
   ok
@@ -2456,7 +2457,7 @@ char w       ' digit?        cycle_test 2drop      CYCLES:     75 ok
 5 5          ' =             cycle_test drop       CYCLES:     53 ok
 here 5       ' erase         cycle_test            CYCLES:    310 ok
 here 5 5     ' fill          cycle_test            CYCLES:    298 ok
-s" 5"        ' evaluate      cycle_test drop       CYCLES:  15663 ok
+s" 5"        ' evaluate      cycle_test drop       CYCLES:  15664 ok
 5 ' drop     ' execute       cycle_test            CYCLES:     62 ok
 \ skipping     exit  ok
              ' false         cycle_test drop       CYCLES:     24 ok
@@ -2479,7 +2480,7 @@ s" aword"    ' find-name     cycle_test drop       CYCLES:    389 ok
 \ skipping     j  ok
              ' key           cycle_test drop       CYCLES:     48 ok
              ' latestnt      cycle_test drop       CYCLES:     30 ok
-             ' latestxt      cycle_test drop       CYCLES:    103 ok
+             ' latestxt      cycle_test drop       CYCLES:    102 ok
 \ skipping     leave  ok
 \ skipping     [  ok
 \ skipping     <#  ok

@@ -159,7 +159,8 @@ decimal
 \ dictionary.  RAMDRIVE takes the block number and returns the address
 \ in ram.  It provides no bounds checking.
 : block_init_ramdrive
-  s" decimal : ramblocks create 1024 4 * allot does> swap 1024 * + ; 
+  s" decimal 
+  : ramblocks ( u -- ) create 1024 * allot does> swap 1024 * + ; 
   ramblocks ramdrive 
   : blockread_ramdrive  ( addr u -- ) ramdrive swap 1024 move ; 
   : blockwrite_ramdrive ( addr u -- ) ramdrive      1024 move ; 

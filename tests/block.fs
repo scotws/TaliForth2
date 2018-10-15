@@ -3,8 +3,8 @@ testing block words: BLK SCR LOAD THRU BUFFER BLOCK UPDATE FLUSH
 
 marker block_tests
 
-\ Bring in the 4-block ram drive
-{ block_init_ramdrive -> }
+\ Bring in a 4-block ram drive
+{ 4 block_init_ramdrive -> }
 
 \ Put a string into the first block.
 { : teststring s" Testing Blocks!" ; -> }

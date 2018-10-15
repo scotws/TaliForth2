@@ -1,0 +1,39 @@
+Tali supports the optional BLOCK word set.  The 2012 Forth standard
+defines a block as 1024 bytes, and the buffers for them are the same
+size (as opposed to some older forths that had smaller buffers.)
+
+Before these words can be used, the user needs to write two routines:
+one for reading blocks into RAM and one for writing blocks out from
+ram.  Both of these should have the signature (addr blk# -- ).  Once
+these have been written, they can be incorporated into the BLOCK word
+set by changing the deferred words BLOCKREAD and BLOCKWRITE.  That
+might look like:
+
+----
+' myblockreader IS BLOCKREAD
+' myblockwriter IS BLOCKWRITE
+----
+
+Once these two deferred words have been updated, you can use the block
+words.
+
+If you would like to play with some blocks, but don't have any
+hardware or are running Tali in a simulator, fear not!  Tali has a
+built-in RAM drive that can be accessed by running:
+
+----
+4 block_init_ramdrive
+----
+
+This creates a block of ram with 4 blocks in it (numbered 0-3) which
+is enough to play around with.  If you want more blocks, you can
+change the number.  Because they start at zero, the last valid block
+will always be one less than the number you provide.  
+
+Be careful about creating too many blocks as they are 1K each.  It's
+also worth noting that running block_init_ramdrive again will create
+another ramdrive and the existing one will be inaccessible while still
+taking up space in RAM.
+
+
+
