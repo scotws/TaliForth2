@@ -158,13 +158,13 @@ decimal
 \ Provide a word to create a RAM drive with 4 blocks (0-3) in the
 \ dictionary.  RAMDRIVE takes the block number and returns the address
 \ in ram.  It provides no bounds checking.
-decimal
 : block_init_ramdrive
-s" : ramblocks create 1024 4 * allot does> swap 1024 * + ; ramblocks ramdrive
-  : blockread_ramdrive  ( addr u -- ) ramdrive swap 1024 move ;
-  : blockwrite_ramdrive ( addr u -- ) ramdrive      1024 move ;
-  ' blockread_ramdrive is blockread ' blockwrite_ramdrive is blockwrite
-  0 ramdrive 1024 4 * blank"
+  s" decimal : ramblocks create 1024 4 * allot does> swap 1024 * + ; 
+  ramblocks ramdrive 
+  : blockread_ramdrive  ( addr u -- ) ramdrive swap 1024 move ; 
+  : blockwrite_ramdrive ( addr u -- ) ramdrive      1024 move ; 
+  ' blockread_ramdrive is blockread ' blockwrite_ramdrive is blockwrite 
+  0 ramdrive 1024 4 * blank" 
   evaluate                ( Create everything  )
 ;
 
