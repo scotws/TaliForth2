@@ -106,11 +106,11 @@ might switch to these words in the future.
 2:: `( -- 0 )` Push the number 2 on the Data Stack.
 always-native:: Mark last word in dictionary so that it is always natively compiled.
 bell:: Ring the terminal bell (ASCII 07).
-blockread:: `( addr blk# -- )` This is a deferred word the user can change to point 
+block-read:: `( addr blk# -- )` This is a deferred word the user can change to point 
 to their own routine for reading 1K blocks into memory from storage.
-blockwrite:: `( addr blk# -- )` This is a deferred word the user can change to point 
+block-write:: `( addr blk# -- )` This is a deferred word the user can change to point 
 to their own routine for writing 1K blocks from memory to storage.
-block_init_ramdrive:: `( u -- )` Create a ram drive with the given number of blocks 
+block-ramdrive-init:: `( u -- )` Create a ram drive with the given number of blocks 
 (numbered 0 to (u-1)) to
 allow use of the block words with no additional hardware.  Because the blocks are
 only held in ram, they will be lost when the hardware is powered down or the simulator

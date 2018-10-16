@@ -1172,7 +1172,7 @@ bell
 </tr>
 <tr>
 <td class="hdlist1">
-blockread
+block-read
 </td>
 <td class="hdlist2">
 <p><code>( addr blk#&#8201;&#8212;&#8201;)</code> This is a deferred word the user can change to point
@@ -1181,7 +1181,7 @@ to their own routine for reading 1K blocks into memory from storage.</p>
 </tr>
 <tr>
 <td class="hdlist1">
-blockwrite
+block-write
 </td>
 <td class="hdlist2">
 <p><code>( addr blk#&#8201;&#8212;&#8201;)</code> This is a deferred word the user can change to point
@@ -1190,7 +1190,7 @@ to their own routine for writing 1K blocks from memory to storage.</p>
 </tr>
 <tr>
 <td class="hdlist1">
-block_init_ramdrive
+block-ramdrive-init
 </td>
 <td class="hdlist2">
 <p><code>( u&#8201;&#8212;&#8201;)</code> Create a ram drive with the given number of blocks
@@ -1441,20 +1441,21 @@ message to document this. Realistically, you&#8217;ll probably want to restart w
 <div class="paragraph">
 <p>Tali supports the optional BLOCK word set.  The 2012 Forth standard
 defines a block as 1024 bytes, and the buffers for them are the same
-size (as opposed to some older forths that had smaller buffers.)</p>
+size (as opposed to some older forths that had smaller buffers.)  Tali
+comes with one buffer.</p>
 </div>
 <div class="paragraph">
 <p>Before these words can be used, the user needs to write two routines:
 one for reading blocks into RAM and one for writing blocks out from
 ram.  Both of these should have the signature (addr blk#&#8201;&#8212;&#8201;).  Once
 these have been written, they can be incorporated into the BLOCK word
-set by changing the deferred words BLOCKREAD and BLOCKWRITE.  That
+set by changing the deferred words BLOCK-READ and BLOCK-WRITE.  That
 might look like:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>' myblockreader IS BLOCKREAD
-' myblockwriter IS BLOCKWRITE</pre>
+<pre>' myblockreader IS BLOCK-READ
+' myblockwriter IS BLOCK-WRITE</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1468,18 +1469,19 @@ built-in RAM drive that can be accessed by running:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>4 block_init_ramdrive</pre>
+<pre>4 block-ramdrive-init</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>This creates a block of ram with 4 blocks in it (numbered 0-3) which
-is enough to play around with.  If you want more blocks, you can
-change the number.  Because they start at zero, the last valid block
-will always be one less than the number you provide.</p>
+<p>This reserves a chunk of ram with 4 blocks in it (numbered 0-3) which
+is enough to play around with.  It also sets up the routines for
+reading and writing blocks in this ramdrive for you.  If you want more
+blocks, you can change the number.  Because they start at zero, the
+last valid block will always be one less than the number you provide.</p>
 </div>
 <div class="paragraph">
 <p>Be careful about creating too many blocks as they are 1K each.  It&#8217;s
-also worth noting that running block_init_ramdrive again will create
+also worth noting that running block-ramdrive-init again will create
 another ramdrive and the existing one will be inaccessible while still
 taking up space in RAM.</p>
 </div>
@@ -1503,6 +1505,13 @@ Currently, there is no editor included.
 following code to create a very basic screen editor that allows you to
 replace a single line or an entire screen.  Screens are 16 lines
 (numbered 0-15) of 64 characters each, for a total of 1K characters.</p>
+</div>
+<div class="paragraph">
+<p>Note: This editor uses a word named E which may interfere with the use
+of hex.  Once you have entered the editor words, you will need to use
+the hex value "0E" anywhere you want a single "E" value.  This will not
+interfere with hex numbers that have additional digits.  Alternately,
+you can rename the E word and update the O word which uses it.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1547,7 +1556,7 @@ decimal
 <div class="paragraph">
 <p>To use this editor, first select a screen to work with by running list
 on it. If you are planning on using LOAD to run some code later, it&#8217;s
-worth noting that only screens 1-3 can be LOADed.  Screen 0 is
+worth noting that only screens above 0 can be LOADed.  Screen 0 is
 reserved for comments describing what is on the other screens.  It can
 be LISTed and edited, but cannot be LOADed.</p>
 </div>
@@ -1607,7 +1616,7 @@ like:</p>
 <p>This will prompt you, line by line, for the new contents to screen 2.</p>
 </div>
 <div class="paragraph">
-<p>Once you have your screen the way you want it, you can type</p>
+<p>Once you have your screens the way you want them, you can type</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1629,7 +1638,7 @@ To load the Forth code on a screen, just type something like:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>Because a screen only holds 16 lines, you may need to slit your code
+<p>Because a screen only holds 16 lines, you may need to split your code
 across multiple screens.  You can load a series of screens (in order)
 using the THRU command like so:</p>
 </div>
@@ -3611,7 +3620,7 @@ under <a href="https://www.ubuntu.com/">Ubuntu</a> Linux 16.04 LTS.</p>
 <div id="footer">
 <div id="footer-text">
 Version BETA<br>
-Last updated 2018-10-14 21:34:51 EDT
+Last updated 2018-10-15 20:23:23 EDT
 </div>
 </div>
 </body>

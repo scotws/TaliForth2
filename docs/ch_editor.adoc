@@ -5,6 +5,12 @@ following code to create a very basic screen editor that allows you to
 replace a single line or an entire screen.  Screens are 16 lines
 (numbered 0-15) of 64 characters each, for a total of 1K characters.
 
+Note: This editor uses a word named E which may interfere with the use
+of hex.  Once you have entered the editor words, you will need to use
+the hex value "0E" anywhere you want a single "E" value.  This will not
+interfere with hex numbers that have additional digits.  Alternately, 
+you can rename the E word and update the O word which uses it.
+
 ----
 ( Simple Editor for screens /blocks )
 decimal
@@ -46,7 +52,7 @@ decimal
 
 To use this editor, first select a screen to work with by running list
 on it. If you are planning on using LOAD to run some code later, it's
-worth noting that only screens 1-3 can be LOADed.  Screen 0 is
+worth noting that only screens above 0 can be LOADed.  Screen 0 is
 reserved for comments describing what is on the other screens.  It can
 be LISTed and edited, but cannot be LOADed.
 
@@ -97,7 +103,7 @@ like:
 
 This will prompt you, line by line, for the new contents to screen 2.
 
-Once you have your screen the way you want it, you can type
+Once you have your screens the way you want them, you can type
 ----
 FLUSH
 ---- 
@@ -111,7 +117,7 @@ To load the Forth code on a screen, just type something like:
 2 load
 ----
 
-Because a screen only holds 16 lines, you may need to slit your code
+Because a screen only holds 16 lines, you may need to split your code
 across multiple screens.  You can load a series of screens (in order)
 using the THRU command like so:
 ----

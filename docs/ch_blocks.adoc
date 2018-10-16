@@ -1,17 +1,18 @@
 Tali supports the optional BLOCK word set.  The 2012 Forth standard
 defines a block as 1024 bytes, and the buffers for them are the same
-size (as opposed to some older forths that had smaller buffers.)
+size (as opposed to some older forths that had smaller buffers.)  Tali
+comes with one buffer.
 
 Before these words can be used, the user needs to write two routines:
 one for reading blocks into RAM and one for writing blocks out from
 ram.  Both of these should have the signature (addr blk# -- ).  Once
 these have been written, they can be incorporated into the BLOCK word
-set by changing the deferred words BLOCKREAD and BLOCKWRITE.  That
+set by changing the deferred words BLOCK-READ and BLOCK-WRITE.  That
 might look like:
 
 ----
-' myblockreader IS BLOCKREAD
-' myblockwriter IS BLOCKWRITE
+' myblockreader IS BLOCK-READ
+' myblockwriter IS BLOCK-WRITE
 ----
 
 Once these two deferred words have been updated, you can use the block
@@ -22,16 +23,17 @@ hardware or are running Tali in a simulator, fear not!  Tali has a
 built-in RAM drive that can be accessed by running:
 
 ----
-4 block_init_ramdrive
+4 block-ramdrive-init
 ----
 
-This creates a block of ram with 4 blocks in it (numbered 0-3) which
-is enough to play around with.  If you want more blocks, you can
-change the number.  Because they start at zero, the last valid block
-will always be one less than the number you provide.  
+This reserves a chunk of ram with 4 blocks in it (numbered 0-3) which
+is enough to play around with.  It also sets up the routines for
+reading and writing blocks in this ramdrive for you.  If you want more
+blocks, you can change the number.  Because they start at zero, the
+last valid block will always be one less than the number you provide.
 
 Be careful about creating too many blocks as they are 1K each.  It's
-also worth noting that running block_init_ramdrive again will create
+also worth noting that running block-ramdrive-init again will create
 another ramdrive and the existing one will be inaccessible while still
 taking up space in RAM.
 

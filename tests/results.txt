@@ -2164,7 +2164,7 @@ testing block words: BLK SCR LOAD THRU BUFFER BLOCK UPDATE FLUSH  ok
 marker block_tests  ok
   ok
 \ Bring in a 4-block ram drive  ok
-{ 4 block_init_ramdrive -> }  ok
+{ 4 block-ramdrive-init -> }  ok
   ok
 \ Put a string into the first block.  ok
 { : teststring s" Testing Blocks!" ; -> }  ok
@@ -2172,7 +2172,7 @@ marker block_tests  ok
 { teststring 0 block swap move update flush -> }  ok
   ok
 \ See if it's in the ramdrive.  ok
-{ 0 ramdrive teststringlength teststring compare -> 0 }  ok
+{ block-ramdrive teststringlength teststring compare -> 0 }  ok
   ok
 \ We don't have an official editor yet, so bring in just  ok
 \ enough to create some basic screens.  ok
@@ -2216,8 +2216,8 @@ decimal  ok
 { 0 erase-screen flush -> }  ok
   ok
 \ Make sure the test string from before is gone by looking for space  ok
-\ as the beginning of the ramdrive.  ok
-{ s"           " 0 ramdrive 10 compare -> 0 }  ok
+\ at the beginning of the ramdrive.  ok
+{ s"           " block-ramdrive 10 compare -> 0 }  ok
   ok
 \ Enter screens for testing LOAD and THRU  ok
 1 enter-screen 
@@ -2457,7 +2457,7 @@ char w       ' digit?        cycle_test 2drop      CYCLES:     75 ok
 5 5          ' =             cycle_test drop       CYCLES:     53 ok
 here 5       ' erase         cycle_test            CYCLES:    310 ok
 here 5 5     ' fill          cycle_test            CYCLES:    298 ok
-s" 5"        ' evaluate      cycle_test drop       CYCLES:  15664 ok
+s" 5"        ' evaluate      cycle_test drop       CYCLES:  15707 ok
 5 ' drop     ' execute       cycle_test            CYCLES:     62 ok
 \ skipping     exit  ok
              ' false         cycle_test drop       CYCLES:     24 ok
@@ -2475,7 +2475,7 @@ s" aword"    ' find-name     cycle_test drop       CYCLES:    389 ok
 \ skipping     i  ok
 : cword ;    ' immediate     cycle_test            CYCLES:     27 ok
              ' input         cycle_test drop       CYCLES:     28 ok
-' dup        ' int>name      cycle_test drop       CYCLES:   4575 ok
+' dup        ' int>name      cycle_test drop       CYCLES:   4646 ok
 5            ' invert        cycle_test drop       CYCLES:     37 ok
 \ skipping     j  ok
              ' key           cycle_test drop       CYCLES:     48 ok
@@ -2547,7 +2547,7 @@ s" abc" 1    ' /string       cycle_test 2drop      CYCLES:     73 ok
              ' state         cycle_test drop       CYCLES:     28 ok
 5 here       ' !             cycle_test            CYCLES:     54 ok
 5 5          ' swap          cycle_test 2drop      CYCLES:     50 ok
-             ' '             cycle_test aword drop CYCLES:   1039 ok
+             ' '             cycle_test aword drop CYCLES:   1038 ok
 \ postponing   to ( see value )  ok
 ' aword      ' >body         cycle_test drop       CYCLES:    522 ok
              ' >in           cycle_test drop       CYCLES:     28 ok

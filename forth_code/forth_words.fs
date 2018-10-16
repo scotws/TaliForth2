@@ -55,7 +55,11 @@ decimal
 \ TODO: In the future, allow the user to specify how many buffers they
 \ want and allocate them at the end of available RAM.
 
-create blkbuffer 1024 allot ( Single 1024 byte buffer )
+\ This is reference ANS implementation for buffer:.        
+        : buffer: ( u "<name> -- ; -- addr )
+            create allot ;
+
+1024 buffer: blkbuffer ( Single 1024 byte buffer )
 variable buffblocknum 0 buffblocknum !
 variable buffstatus 0 buffstatus ! ( bit 0 = used, bit 1 = dirty )
 
@@ -69,83 +73,84 @@ variable scr 0 scr !
 \ These deferred words need to be redirected to the user's versions
 \ before any of the BLOCK word set words are used.  Both of these
 \ words take ( buffer_address block# -- )
-defer BLOCKREAD  ( addr u -- ) 
-defer BLOCKWRITE ( addr u -- ) 
+defer block-read  ( addr u -- ) 
+defer block-write ( addr u -- ) 
 
 \ Provide a good message if the user tries to use block words before
 \ updating BLOCKREAD or BLOCKWRITE.
 \ TODO: Provide the user a small RAMDRIVE version instead.
-: block_words_deferred
-    cr ." Please assign deferred words BLOCKREAD and BLOCKWRITE "
+: block-words-deferred
+    cr ." Please assign deferred words BLOCK-READ and BLOCK-WRITE "
     ." to your routines, eg. " cr ." ' myreadroutine IS BLOCKREAD" cr
     abort
 ;
 
-' block_words_deferred is BLOCKREAD
-' block_words_deferred is BLOCKWRITE   
+' block-words-deferred is block-read
+' block-words-deferred is block-write   
     
 
-: SAVE-BUFFERS ( -- )
+: save-buffers ( -- )
     buffstatus @ 3 = if
         ( buffer is in use and dirty - flush buffer to storage )
-        blkbuffer buffblocknum @ BLOCKWRITE
+        blkbuffer buffblocknum @ block-write
         ( mark buffer as clean )
         1 buffstatus !
     then ;
     
 
-: BLOCK ( u -- addr ) ( blocknum -- buffer_addr )
+: block ( u -- addr ) ( blocknum -- buffer_addr )
   ( Check for request for the current block )
-  dup buffblocknum @ = if   ( check if it's already in the buffer)
-  buffstatus @ 1 and if   ( and make sure the buffer is in use )
-    drop blkbuffer exit then then
-  ( Check if the current block is dirty )
+  dup buffblocknum @ = if    ( Check if it's already in the buffer)
+      buffstatus @ 1 and if  ( and make sure the buffer is in use )
+          ( It's already in the buffer )
+          drop blkbuffer exit
+      then
+  then
+  ( Check if the current block is in use and dirty )
   buffstatus @ 3 = if
     ( buffer is in use and dirty - flush buffer to storage )
-    blkbuffer buffblocknum @ BLOCKWRITE
+    blkbuffer buffblocknum @ block-write
   then
   ( Get the requested block )
   dup buffblocknum !
-  blkbuffer swap BLOCKREAD
+  blkbuffer swap block-read
   ( Mark buffer as in-use and clean )
   1 buffstatus !
   blkbuffer ( return block buffer address ) ;
 
-: UPDATE ( -- ) buffstatus @ 2 or buffstatus ! ;
+: update ( -- ) buffstatus @ 2 or buffstatus ! ;
 
-: BUFFER ( u -- addr ) ( blocknum -- buffer_addr )
+: buffer ( u -- addr ) ( blocknum -- buffer_addr )
     \ Similar to BLOCK, only it doesn't read.
     buffstatus @ 3 = if
         ( buffer is in use and dirty - flush buffer to storage )
-        blkbuffer buffblocknum @ BLOCKWRITE
+        blkbuffer buffblocknum @ block-write
     then
     buffblocknum !
     ( Mark buffer as in-use and clean )
     1 buffstatus !
     blkbuffer ( return block buffer address ) ;
     
-: EMPTY-BUFFERS ( -- ) 0 buffstatus ! ;
+: empty-buffers ( -- ) 0 buffstatus ! ;
 
-: FLUSH ( -- ) save-buffers empty-buffers ;
+: flush ( -- ) save-buffers empty-buffers ;
 
 \ Note: LOAD currently works because there is only one buffer.
 \ if/when multiple buffers are supported, we'll have to deal
 \ with the fact that it might re-load the old block into a
 \ different buffer.
-decimal
-: LOAD ( scr# - )
-  BLK @ >R                  ( We only need to save BLK    )
-  BLK !                     ( Set BLK to the new block    )
+: load ( scr# - )
+  blk @ >R                  ( We only need to save BLK    )
+  blk !                     ( Set BLK to the new block    )
   16 0 do                   ( Evaluate the block          )
-    BLK @ block             ( Make sure the block is here )
+    blk @ block             ( Make sure the block is here )
     i 64 * +                ( Calculate offset to line    )
-    ( dup 64 cr type key drop )          ( DEBUG )
-    64 (  .s key drop  ) evaluate             ( Evaluate one line at a time )
+    64 evaluate             ( Evaluate one line at a time )
   loop
-  R> dup BLK !              ( Restore the previous block ) 
-  ?dup if block drop then ; ( and load it if not 0       )
+  R> dup blk !              ( Restore the previous block   ) 
+  ?dup if block drop then ; ( and read it back in if not 0 )
 
-: THRU ( scr# scr# - ) 1+ swap ?do i load loop ;
+: thru ( scr# scr# - ) 1+ swap ?do i load loop ;
 
 \ The standard says to extend EVALUATE to include storing a 0
 \ in BLK.  I'm also restoring the previous value when done.
@@ -155,18 +160,25 @@ decimal
 \ ===============================================================
 \ BLOCK Add-ons
 
-\ Provide a word to create a RAM drive with 4 blocks (0-3) in the
-\ dictionary.  RAMDRIVE takes the block number and returns the address
-\ in ram.  It provides no bounds checking.
-: block_init_ramdrive
-  s" decimal 
-  : ramblocks ( u -- ) create 1024 * allot does> swap 1024 * + ; 
-  ramblocks ramdrive 
-  : blockread_ramdrive  ( addr u -- ) ramdrive swap 1024 move ; 
-  : blockwrite_ramdrive ( addr u -- ) ramdrive      1024 move ; 
-  ' blockread_ramdrive is blockread ' blockwrite_ramdrive is blockwrite 
-  0 ramdrive 1024 4 * blank" 
-  evaluate                ( Create everything  )
+\ Provide a word to create a RAM drive, with the given number of
+\ blocks, in the dictionary along with setting up the block words to
+\ use it.  The read/write routines do not provide bounds checking.
+\ Expected use: 4 block-ramdrive-init ( to create blocks 0-3 )
+
+: block-ramdrive-init ( numblocks -- )
+s" decimal
+  1024 * ( Calculate how many bytes are needed for numblocks blocks )
+  dup    ( Save a copy for formatting it at the end )  
+  buffer: block-ramdrive ( Create ramdrive )
+  ( These routines just copy between the buffer and the ramdrive blocks )  
+  : block-read-ramdrive  ( addr u -- ) 
+      block-ramdrive swap 1024 * + swap 1024 move ; 
+  : block-write-ramdrive ( addr u -- ) 
+      block-ramdrive swap 1024 * +      1024 move ; 
+  ' block-read-ramdrive  is block-read 
+  ' block-write-ramdrive is block-write 
+  block-ramdrive swap blank" ( Format with spaces using the calculated size )
+  evaluate  ( Create everything )
 ;
 
 \ ===============================================================

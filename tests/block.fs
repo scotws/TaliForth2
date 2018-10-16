@@ -4,7 +4,7 @@ testing block words: BLK SCR LOAD THRU BUFFER BLOCK UPDATE FLUSH
 marker block_tests
 
 \ Bring in a 4-block ram drive
-{ 4 block_init_ramdrive -> }
+{ 4 block-ramdrive-init -> }
 
 \ Put a string into the first block.
 { : teststring s" Testing Blocks!" ; -> }
@@ -12,7 +12,7 @@ marker block_tests
 { teststring 0 block swap move update flush -> }
 
 \ See if it's in the ramdrive.
-{ 0 ramdrive teststringlength teststring compare -> 0 }
+{ block-ramdrive teststringlength teststring compare -> 0 }
 
 \ We don't have an official editor yet, so bring in just
 \ enough to create some basic screens.
@@ -56,8 +56,8 @@ decimal
 { 0 erase-screen flush -> }
 
 \ Make sure the test string from before is gone by looking for space
-\ as the beginning of the ramdrive.
-{ s"           " 0 ramdrive 10 compare -> 0 }
+\ at the beginning of the ramdrive.
+{ s"           " block-ramdrive 10 compare -> 0 }
 
 \ Enter screens for testing LOAD and THRU
 1 enter-screen
