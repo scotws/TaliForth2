@@ -5,18 +5,18 @@ marker double_tests
 
 decimal
 
-{ 2variable 2v1 -> }
-{ 0. 2v1 2! -> }
-{ 2v1 2@ -> 0. }
-{ -1 -2 2v1 2! -> }
-{ 2v1 2@ -> -1 -2 }
-{ : cd2 2variable ; -> }
-{ cd2 2v2 -> }
-{ : cd3 2v2 2! ; -> }
-{ -2 -1 cd3 -> }
-{ 2v2 2@ -> -2 -1 }
-{ 2variable 2v3 immediate 5 6 2v3 2! -> }
-{ 2v3 2@ -> 5 6 }
+T{ 2variable 2v1 -> }T
+T{ 0. 2v1 2! -> }T
+T{ 2v1 2@ -> 0. }T
+T{ -1 -2 2v1 2! -> }T
+T{ 2v1 2@ -> -1 -2 }T
+T{ : cd2 2variable ; -> }T
+T{ cd2 2v2 -> }T
+T{ : cd3 2v2 2! ; -> }T
+T{ -2 -1 cd3 -> }T
+T{ 2v2 2@ -> -2 -1 }T
+T{ 2variable 2v3 immediate 5 6 2v3 2! -> }T
+T{ 2v3 2@ -> 5 6 }T
 
 \ Repeats in case we call this test alone
 0 constant 0s
@@ -24,35 +24,35 @@ decimal
 0 invert 1 rshift  constant max-int
 0 invert 1 rshift invert  constant min-int
 
-{  0.  5. d+ ->  5. }                         \ small integers 
-{ -5.  0. d+ -> -5. } 
-{  1.  2. d+ ->  3. } 
-{  1. -2. d+ -> -1. } 
-{ -1.  2. d+ ->  1. } 
-{ -1. -2. d+ -> -3. } 
-{ -1.  1. d+ ->  0. }
-{  0  0  0  5 d+ ->  0  5 }                  \ mid range integers 
-{ -1  5  0  0 d+ -> -1  5 } 
-{  0  0  0 -5 d+ ->  0 -5 } 
-{  0 -5 -1  0 d+ -> -1 -5 } 
-{  0  1  0  2 d+ ->  0  3 } 
-{ -1  1  0 -2 d+ -> -1 -1 } 
-{  0 -1  0  2 d+ ->  0  1 } 
-{  0 -1 -1 -2 d+ -> -1 -3 } 
-{ -1 -1  0  1 d+ -> -1  0 }
+T{  0.  5. d+ ->  5. }T                         \ small integers 
+T{ -5.  0. d+ -> -5. }T 
+T{  1.  2. d+ ->  3. }T 
+T{  1. -2. d+ -> -1. }T 
+T{ -1.  2. d+ ->  1. }T 
+T{ -1. -2. d+ -> -3. }T 
+T{ -1.  1. d+ ->  0. }T
+T{  0  0  0  5 d+ ->  0  5 }T                  \ mid range integers 
+T{ -1  5  0  0 d+ -> -1  5 }T 
+T{  0  0  0 -5 d+ ->  0 -5 }T 
+T{  0 -5 -1  0 d+ -> -1 -5 }T 
+T{  0  1  0  2 d+ ->  0  3 }T 
+T{ -1  1  0 -2 d+ -> -1 -1 }T 
+T{  0 -1  0  2 d+ ->  0  1 }T 
+T{  0 -1 -1 -2 d+ -> -1 -3 }T 
+T{ -1 -1  0  1 d+ -> -1  0 }T
 
-{ min-int 0 2dup d+ -> 0 1 }
-{ min-int s>d min-int 0 d+ -> 0 0 }
+T{ min-int 0 2dup d+ -> 0 1 }T
+T{ min-int s>d min-int 0 d+ -> 0 0 }T
 
-{ 1 2 2constant 2c1 -> }
-{ 2c1 -> 1 2 }
-{ : cd1 2c1 ; -> }
-{ cd1 -> 1 2 }
-{ : cd2 2constant ; -> }
-{ -1 -2 cd2 2c2 -> }
-{ 2c2 -> -1 -2 }
-{ 4 5 2constant 2c3 immediate 2c3 -> 4 5 }
-{ : cd6 2c3 2literal ; cd6 -> 4 5 }
+T{ 1 2 2constant 2c1 -> }T
+T{ 2c1 -> 1 2 }T
+T{ : cd1 2c1 ; -> }T
+T{ cd1 -> 1 2 }T
+T{ : cd2 2constant ; -> }T
+T{ -1 -2 cd2 2c2 -> }T
+T{ 2c2 -> -1 -2 }T
+T{ 4 5 2constant 2c3 immediate 2c3 -> 4 5 }T
+T{ : cd6 2c3 2literal ; cd6 -> 4 5 }T
 
 max-int 2/ constant hi-int \ 001...1 
 min-int 2/ constant lo-int \ 110...1
@@ -62,46 +62,46 @@ min-int 2/ constant lo-int \ 110...1
 max-2int 2/ 2constant hi-2int  \ 001...1 
 min-2int 2/ 2constant lo-2int  \ 110...0
 
-{ : cd1 [ max-2int ] 2literal ; -> }
-{ cd1 -> max-2int }
-{ 2variable 2v4 immediate 5 6 2v4 2! -> }
-{ : cd7 2v4 [ 2@ ] 2literal ; cd7 -> 5 6 }
-{ : cd8 [ 6 7 ] 2v4 [ 2! ] ; 2v4 2@ -> 6 7 }
+T{ : cd1 [ max-2int ] 2literal ; -> }T
+T{ cd1 -> max-2int }T
+T{ 2variable 2v4 immediate 5 6 2v4 2! -> }T
+T{ : cd7 2v4 [ 2@ ] 2literal ; cd7 -> 5 6 }T
+T{ : cd8 [ 6 7 ] 2v4 [ 2! ] ; 2v4 2@ -> 6 7 }T
 
-{  hi-2int       1. d+ -> 0 hi-int 1+ }     \ large double integers 
-{  hi-2int     2dup d+ -> 1s 1- max-int }
-{ max-2int min-2int d+ -> -1. }
-{ max-2int  lo-2int d+ -> hi-2int }
-{  lo-2int     2dup d+ -> min-2int }
-{  hi-2int min-2int d+ 1. d+ -> lo-2int }
+T{  hi-2int       1. d+ -> 0 hi-int 1+ }T     \ large double integers 
+T{  hi-2int     2dup d+ -> 1s 1- max-int }T
+T{ max-2int min-2int d+ -> -1. }T
+T{ max-2int  lo-2int d+ -> hi-2int }T
+T{  lo-2int     2dup d+ -> min-2int }T
+T{  hi-2int min-2int d+ 1. d+ -> lo-2int }T
 
-{  0.  5. d- -> -5. }              \ small integers 
-{  5.  0. d- ->  5. } 
-{  0. -5. d- ->  5. } 
-{  1.  2. d- -> -1. } 
-{  1. -2. d- ->  3. } 
-{ -1.  2. d- -> -3. } 
-{ -1. -2. d- ->  1. } 
-{ -1. -1. d- ->  0. } 
-{  0  0  0  5 d- ->  0 -5 }        \ mid-range integers 
-{ -1  5  0  0 d- -> -1  5 } 
-{  0  0 -1 -5 d- ->  1  4 } 
-{  0 -5  0  0 d- ->  0 -5 } 
-{ -1  1  0  2 d- -> -1 -1 } 
-{  0  1 -1 -2 d- ->  1  2 } 
-{  0 -1  0  2 d- ->  0 -3 } 
-{  0 -1  0 -2 d- ->  0  1 } 
-{  0  0  0  1 d- ->  0 -1 }
-{ min-int 0 2dup d- -> 0. } 
-{ min-int s>d max-int 0 d- -> 1 1s } 
+T{  0.  5. d- -> -5. }T              \ small integers 
+T{  5.  0. d- ->  5. }T 
+T{  0. -5. d- ->  5. }T 
+T{  1.  2. d- -> -1. }T 
+T{  1. -2. d- ->  3. }T 
+T{ -1.  2. d- -> -3. }T 
+T{ -1. -2. d- ->  1. }T 
+T{ -1. -1. d- ->  0. }T 
+T{  0  0  0  5 d- ->  0 -5 }T        \ mid-range integers 
+T{ -1  5  0  0 d- -> -1  5 }T 
+T{  0  0 -1 -5 d- ->  1  4 }T 
+T{  0 -5  0  0 d- ->  0 -5 }T 
+T{ -1  1  0  2 d- -> -1 -1 }T 
+T{  0  1 -1 -2 d- ->  1  2 }T 
+T{  0 -1  0  2 d- ->  0 -3 }T 
+T{  0 -1  0 -2 d- ->  0  1 }T 
+T{  0  0  0  1 d- ->  0 -1 }T
+T{ min-int 0 2dup d- -> 0. }T 
+T{ min-int s>d max-int 0 d- -> 1 1s }T 
 
-{ max-2int max-2int d- -> 0. }    \ large integers 
-{ min-2int min-2int d- -> 0. }
-{ max-2int  hi-2int d- -> lo-2int dnegate } 
-{  hi-2int  lo-2int d- -> max-2int }
-{  lo-2int  hi-2int d- -> min-2int 1. d+ }
-{ min-2int min-2int d- -> 0. }
-{ min-2int  lo-2int d- -> lo-2int }
+T{ max-2int max-2int d- -> 0. }T    \ large integers 
+T{ min-2int min-2int d- -> 0. }T
+T{ max-2int  hi-2int d- -> lo-2int dnegate }T 
+T{  hi-2int  lo-2int d- -> max-2int }T
+T{  lo-2int  hi-2int d- -> min-2int 1. d+ }T
+T{ min-2int min-2int d- -> 0. }T
+T{ min-2int  lo-2int d- -> lo-2int }T
 
 ( TODO m*/ not implemented ) 
 
@@ -127,7 +127,7 @@ min-2int 2/ 2constant lo-2int  \ 110...0
    \ 5 spaces dbl2 r> 5 + d.r cr 
 \ ;
 
-\ { doubleoutput -> }
+\ T{ doubleoutput -> }T
 
 ( TODO D0< not implemented yet )
 ( TODO D0= not implemented yet )
@@ -136,24 +136,24 @@ min-2int 2/ 2constant lo-2int  \ 110...0
 ( TODO D< not implemented yet )
 ( TODO D= not implemented yet )
 
-{    1234  0 d>s ->  1234   } 
-{   -1234 -1 d>s -> -1234   } 
-{ max-int  0 d>s -> max-int } 
-{ min-int -1 d>s -> min-int }
+T{    1234  0 d>s ->  1234   }T 
+T{   -1234 -1 d>s -> -1234   }T 
+T{ max-int  0 d>s -> max-int }T 
+T{ min-int -1 d>s -> min-int }T
 
-{       1. dabs -> 1.       } 
-{      -1. dabs -> 1.       } 
-{ max-2int dabs -> max-2int } 
-{ min-2int 1. d+ dabs -> max-2int }
+T{       1. dabs -> 1.       }T 
+T{      -1. dabs -> 1.       }T 
+T{ max-2int dabs -> max-2int }T 
+T{ min-2int 1. d+ dabs -> max-2int }T
 
 ( TODO DMAX not implemented yet )
 ( TODO DMIN not implemented yet )
 
-{ 0. dnegate -> 0. }
-{ 1. dnegate -> -1. }
-{ -1. dnegate -> 1. }
-{ max-2int dnegate -> min-2int swap 1+ swap }
-{ min-2int swap 1+ swap dnegate -> max-2int }
+T{ 0. dnegate -> 0. }T
+T{ 1. dnegate -> -1. }T
+T{ -1. dnegate -> 1. }T
+T{ max-2int dnegate -> min-2int swap 1+ swap }T
+T{ min-2int swap 1+ swap dnegate -> max-2int }T
 
 ( TODO M*/ not implemented yet )
 ( TODO M+ not implemented yet )

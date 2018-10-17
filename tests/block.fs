@@ -4,15 +4,15 @@ testing block words: BLK SCR LOAD THRU BUFFER BLOCK UPDATE FLUSH
 marker block_tests
 
 \ Bring in a 4-block ram drive
-{ 4 block-ramdrive-init -> }
+T{ 4 block-ramdrive-init -> }T
 
 \ Put a string into the first block.
-{ : teststring s" Testing Blocks!" ; -> }
-{ : teststringlength teststring swap drop ; -> }
-{ teststring 0 block swap move update flush -> }
+T{ : teststring s" Testing Blocks!" ; -> }T
+T{ : teststringlength teststring swap drop ; -> }T
+T{ teststring 0 block swap move update flush -> }T
 
 \ See if it's in the ramdrive.
-{ ramdrive teststringlength teststring compare -> 0 }
+T{ ramdrive teststringlength teststring compare -> 0 }T
 
 \ We don't have an official editor yet, so bring in just
 \ enough to create some basic screens.
@@ -53,11 +53,11 @@ decimal
   dup scr ! buffer 1024 blank update ;
 
 
-{ 0 erase-screen flush -> }
+T{ 0 erase-screen flush -> }T
 
 \ Make sure the test string from before is gone by looking for space
 \ at the beginning of the ramdrive.
-{ s"           " ramdrive 10 compare -> 0 }
+T{ s"           " ramdrive 10 compare -> 0 }T
 
 \ Enter screens for testing LOAD and THRU
 1 enter-screen
@@ -79,12 +79,12 @@ decimal
 ( 15 )
 
 \ Load screen 1 and then check for the expected side effects.
-{ 1 load -> }
+T{ 1 load -> }T
 
 \ BLK should be 0 while in the string and 1 while in the rest of the block.
-{ blkinscreen @  -> 1 }
-{ blkinstring @  -> 0 }
-{ blkinscreenA @ -> 1 }
+T{ blkinscreen @  -> 1 }T
+T{ blkinstring @  -> 0 }T
+T{ blkinscreenA @ -> 1 }T
 
 2 enter-screen
 ( Test screen 2 )
@@ -122,17 +122,17 @@ decimal
 ( 14 ) ( blkinscreen4 should be 3 because we are on screen 3 )
 ( 15 ) ( testing the last line )     blk @ constant blkinscreenC
 
-{ 2 list -> }
-{ scr @ -> 2 } \ Screen 2 is the last one we listed.
+T{ 2 list -> }T
+T{ scr @ -> 2 }T \ Screen 2 is the last one we listed.
 
 \ Load screens 2 and 3 with THRU and check for side effects.
 \ shouldbe19 should be 5 + 7 + 7 because screen 2 loads screen 3.
-{ 2 3 thru -> }
+T{ 2 3 thru -> }T
 
-{ blkinscreenB @ -> 2  } \ Note: blkinscreen3 is a variable.
-{ blkinscreenC   -> 3  } \ Note: blkinscreen4 is a constant.
-{ blkinscreenD   -> 2  } \ Note: blkinscreen5 is a constant.
-{ shouldbe19 @   -> 19 }
+T{ blkinscreenB @ -> 2  }T \ Note: blkinscreen3 is a variable.
+T{ blkinscreenC   -> 3  }T \ Note: blkinscreen4 is a constant.
+T{ blkinscreenD   -> 2  }T \ Note: blkinscreen5 is a constant.
+T{ shouldbe19 @   -> 19 }T
 
 \ Release all of the memory used.
 block_tests

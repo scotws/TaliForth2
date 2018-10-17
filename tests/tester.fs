@@ -6,6 +6,9 @@
 \ The main change is lowercasing all of the words as Tali
 \ is case sensitive, as well as replacing tabs with spaces.
 \ A word to display the actual (erroneous) results was also added.
+\ Modified by SamCo 2018-10 to facilitate using standard ANS tests.
+\ The testing words were changed from { and } to T{ and }T to
+\ match the testing words currently being used by ANS standard tests.
 
 \ (C) 1995 JOHNS HOPKINS UNIVERSITY / APPLIED PHYSICS LABORATORY
 \ MAY BE DISTRIBUTED FREELY AS LONG AS THIS COPYRIGHT NOTICE REMAINS.
@@ -46,7 +49,7 @@ create actual-results  20 cells allot
    show-results ;   \ added by SamCo to show what actually happened
 
 \ Syntactic sugar
-: {  ( -- ) ;
+: T{  ( -- ) ;
 
 \ Record depth and content of stack
 : ->  ( ... -- ) 
@@ -58,7 +61,7 @@ create actual-results  20 cells allot
    then ;
 
 \ Compare stack (expected) contents with saved (actual) contents
-: }  ( ... -- ) 
+: }T  ( ... -- ) 
    depth actual-depth @ = if     \ if depths match
       depth ?dup if              \ if there is something on the stack
          0 do                    \ for each stack item
