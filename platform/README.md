@@ -1,4 +1,4 @@
-# Platform-Specific definitions for Tali Forth 2
+# Platform-specific definitions for Tali Forth 2
 First version: 17. Oct 2018
 This version: 17. Oct 2018
 
@@ -20,4 +20,4 @@ your supervillain hide-out, the Evil League of Evil suggests you keep it off of
 GitHub. 
 
 Note that this is being provided as a service only. As always, we take no
-resposibility for the code, and you'll have to keep an eye on it yourself.
+resposibility for anythinig, and you'll have to keep an eye on the code yourself.
