@@ -109,9 +109,7 @@ FLUSH
 ---- 
 to flush your changes out to storage.
 
-You can enter Forth code on these screens.  It's worth noting that the
-\ style comments are not supported in screens, so you will need to use
-the ( ) style comments.
+You can enter Forth code on these screens.  
 To load the Forth code on a screen, just type something like:
 ----
 2 load
