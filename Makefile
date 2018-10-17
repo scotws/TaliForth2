@@ -1,14 +1,14 @@
 # Makefile for Tali Forth 2
-# This version: 16. May 2018
+# This version: 16. Oct 2018
 
 # Note the manual is not automatically updated because not everybody can be
-# expected to have the full LaTeX toolchain installed
+# expected to have the asciidoc toolchain installed
 
 COMMON_SOURCES=taliforth.asm definitions.asm native_words.asm headers.asm strings.asm forth_words.asc user_words.asc
 
 all: taliforth-py65mon.bin | WORDLIST.md
 
-taliforth-%.bin: platform-%.asm $(COMMON_SOURCES)
+taliforth-%.bin: platform/platform-%.asm $(COMMON_SOURCES)
 	ophis -l docs/$*-listing.txt \
 	-m docs/$*-labelmap.txt \
 	-o $@ \
@@ -23,3 +23,11 @@ taliforth-%.bin: platform-%.asm $(COMMON_SOURCES)
 # new words in the label listing
 WORDLIST.md: docs/WORDLIST.md
 	python3 tools/generate_wordlist.py > docs/WORDLIST.md
+
+
+# Some convenience targets to make running the tests and simulation easier.
+tests:	taliforth-py65mon.bin
+	cd tests; ./talitest.py
+
+sim:	taliforth-py65mon.bin
+	py65mon -m 65c02 -r taliforth-py65mon.bin
