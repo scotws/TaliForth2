@@ -1,15 +1,15 @@
-WARNING: Currently, there is no editor included.  
+Currently, there is no editor included.  
 
-If you are using blocks (see the block chapter), you can use the
-following code to create a very basic screen editor that allows you to
-replace a single line or an entire screen.  Screens are 16 lines
-(numbered 0-15) of 64 characters each, for a total of 1K characters.
+If you are using blocks (see the block chapter), you can use the following code
+to create a very basic screen editor that allows you to replace a single line or
+an entire screen. Screens are 16 lines (numbered 0-15) of 64 characters each,
+for a total of 1K characters.
 
-Note: This editor uses a word named E which may interfere with the use
-of hex.  Once you have entered the editor words, you will need to use
-the hex value "0E" anywhere you want a single "E" value.  This will not
+NOTE: This editor uses a word named `E` which may interfere with the use
+of hex. Once you have entered the editor words, you will need to use
+the hex value "0E" anywhere you want a single "E" value. This will not
 interfere with hex numbers that have additional digits.  Alternately, 
-you can rename the E word and update the O word which uses it.
+you can rename the `E` word and update the `O` word which uses it.
 
 ----
 ( Simple Editor for screens /blocks )
@@ -50,11 +50,11 @@ decimal
   dup scr ! buffer 1024 blank update ;
 ----
 
-To use this editor, first select a screen to work with by running list
-on it. If you are planning on using LOAD to run some code later, it's
-worth noting that only screens above 0 can be LOADed.  Screen 0 is
-reserved for comments describing what is on the other screens.  It can
-be LISTed and edited, but cannot be LOADed.
+To use this editor, first select a screen to work with by running list on it. If
+you are planning on using `load` to run some code later, it's worth noting that
+only screens above 0 can be LOADed. Screen 0 is reserved for comments describing
+what is on the other screens.  It can be LISTed and edited, but cannot be
+LOADed.
 
 ----
 1 list
@@ -63,7 +63,6 @@ be LISTed and edited, but cannot be LOADed.
 Tali will show you the current (blank) contents of that screen.
 
 ----
-
 Screen #   1
  0                                                                 
  1                                                                 
@@ -92,7 +91,7 @@ To add some text to line 3, you might say
 
 This will give you a prompt to enter the text to overwrite line 3.
 You can enter up to 64 characters.  Once you have selected a screen
-with LIST, you can use just L to list it again.
+with `list`, you can use just `L` to list it again.
 
 To replace the contents of an entire screen, you can say something
 like:
@@ -104,21 +103,22 @@ like:
 This will prompt you, line by line, for the new contents to screen 2.
 
 Once you have your screens the way you want them, you can type
+
 ----
 FLUSH
 ---- 
-to flush your changes out to storage.
 
-You can enter Forth code on these screens.  
-To load the Forth code on a screen, just type something like:
+to flush your changes out to storage. You can enter Forth code on these
+screens. To load the Forth code on a screen, just type something like:
+
 ----
 2 load
 ----
 
 Because a screen only holds 16 lines, you may need to split your code
 across multiple screens.  You can load a series of screens (in order)
-using the THRU command like so:
+using the `thru` command like so:
+
 ----
 1 3 thru
 ----
-
