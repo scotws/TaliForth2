@@ -12,7 +12,7 @@ marker block_tests
 { teststring 0 block swap move update flush -> }
 
 \ See if it's in the ramdrive.
-{ block-ramdrive teststringlength teststring compare -> 0 }
+{ ramdrive teststringlength teststring compare -> 0 }
 
 \ We don't have an official editor yet, so bring in just
 \ enough to create some basic screens.
@@ -57,7 +57,7 @@ decimal
 
 \ Make sure the test string from before is gone by looking for space
 \ at the beginning of the ramdrive.
-{ s"           " block-ramdrive 10 compare -> 0 }
+{ s"           " ramdrive 10 compare -> 0 }
 
 \ Enter screens for testing LOAD and THRU
 1 enter-screen

@@ -105,7 +105,7 @@ This will prompt you, line by line, for the new contents to screen 2.
 Once you have your screens the way you want them, you can type
 
 ----
-FLUSH
+flush
 ---- 
 
 to flush your changes out to storage. You can enter Forth code on these

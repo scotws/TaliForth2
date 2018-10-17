@@ -56,19 +56,15 @@ decimal
 \ want and allocate them at the end of available RAM.
 
 \ This is reference ANS implementation for buffer:.        
-        : buffer: ( u "<name> -- ; -- addr )
-            create allot ;
+: buffer: ( u "<name> -- ; -- addr )  create allot ;
 
 1024 buffer: blkbuffer ( Single 1024 byte buffer )
-variable buffblocknum 0 buffblocknum !
-variable buffstatus 0 buffstatus ! ( bit 0 = used, bit 1 = dirty )
-
+variable buffblocknum  0 buffblocknum !
+variable buffstatus  0 buffstatus ! ( bit 0 = used, bit 1 = dirty )
 
 \ These are the required variables for the BLOCK word set.
-
-variable blk 0 blk !
-variable scr 0 scr !
-
+variable blk  0 blk !
+variable scr  0 scr !
 
 \ These deferred words need to be redirected to the user's versions
 \ before any of the BLOCK word set words are used.  Both of these
@@ -77,11 +73,12 @@ defer block-read  ( addr u -- )
 defer block-write ( addr u -- ) 
 
 \ Provide a good message if the user tries to use block words before
-\ updating BLOCKREAD or BLOCKWRITE.
+\ updating BLOCK-READ or BLOCK-WRITE.
 \ TODO: Provide the user a small RAMDRIVE version instead.
 : block-words-deferred
     cr ." Please assign deferred words BLOCK-READ and BLOCK-WRITE "
-    ." to your routines, eg. " cr ." ' myreadroutine IS BLOCKREAD" cr
+    ." to your routines, eg. " 
+    cr ." ' myreadroutine IS BLOCK-READ" cr
     abort
 ;
 
@@ -96,7 +93,6 @@ defer block-write ( addr u -- )
         ( mark buffer as clean )
         1 buffstatus !
     then ;
-    
 
 : block ( u -- addr ) ( blocknum -- buffer_addr )
   ( Check for request for the current block )
@@ -140,14 +136,14 @@ defer block-write ( addr u -- )
 \ with the fact that it might re-load the old block into a
 \ different buffer.
 : load ( scr# - )
-  blk @ >R                  ( We only need to save BLK    )
+  blk @ >r                  ( We only need to save BLK    )
   blk !                     ( Set BLK to the new block    )
   16 0 do                   ( Evaluate the block          )
     blk @ block             ( Make sure the block is here )
     i 64 * +                ( Calculate offset to line    )
     64 evaluate             ( Evaluate one line at a time )
   loop
-  R> dup blk !              ( Restore the previous block   ) 
+  r> dup blk !              ( Restore the previous block   ) 
   ?dup if block drop then ; ( and read it back in if not 0 )
 
 : thru ( scr# scr# - ) 1+ swap ?do i load loop ;
@@ -165,19 +161,19 @@ defer block-write ( addr u -- )
 \ use it.  The read/write routines do not provide bounds checking.
 \ Expected use: 4 block-ramdrive-init ( to create blocks 0-3 )
 
-: block-ramdrive-init ( numblocks -- )
+: block-ramdrive-init ( u -- )
 s" decimal
   1024 * ( Calculate how many bytes are needed for numblocks blocks )
   dup    ( Save a copy for formatting it at the end )  
-  buffer: block-ramdrive ( Create ramdrive )
+  buffer: ramdrive ( Create ramdrive )
   ( These routines just copy between the buffer and the ramdrive blocks )  
   : block-read-ramdrive  ( addr u -- ) 
-      block-ramdrive swap 1024 * + swap 1024 move ; 
+      ramdrive swap 1024 * + swap 1024 move ; 
   : block-write-ramdrive ( addr u -- ) 
-      block-ramdrive swap 1024 * +      1024 move ; 
+      ramdrive swap 1024 * +      1024 move ; 
   ' block-read-ramdrive  is block-read 
   ' block-write-ramdrive is block-write 
-  block-ramdrive swap blank" ( Format with spaces using the calculated size )
+  ramdrive swap blank" ( Format with spaces using the calculated size )
   evaluate  ( Create everything )
 ;
 
@@ -188,7 +184,7 @@ s" decimal
 \ generated at the end of the boot process and signal that the other
 \ high-level definitions worked (or at least didn't crash)
         cr .( Tali Forth 2 for the 65c02)
-        cr .( Version BETA 10. Oct 2018 )
+        cr .( Version BETA 17. Oct 2018 )
         cr .( Copyright 2014-2018 Scot W. Stevenson)
         cr .( Tali Forth 2 comes with absolutely NO WARRANTY)
         cr .( Type 'bye' to exit) cr
