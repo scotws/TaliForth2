@@ -1,0 +1,124 @@
+WARNING: Currently, there is no editor included.  
+
+If you are using blocks (see the block chapter), you can use the
+following code to create a very basic screen editor that allows you to
+replace a single line or an entire screen.  Screens are 16 lines
+(numbered 0-15) of 64 characters each, for a total of 1K characters.
+
+Note: This editor uses a word named E which may interfere with the use
+of hex.  Once you have entered the editor words, you will need to use
+the hex value "0E" anywhere you want a single "E" value.  This will not
+interfere with hex numbers that have additional digits.  Alternately, 
+you can rename the E word and update the O word which uses it.
+
+----
+( Simple Editor for screens /blocks )
+decimal
+( List the current screen)
+: L  ( - ) 
+    scr @ block                  ( Load the screen )
+    cr ." Screen #" scr @ 4 u.r  ( Print the screen number )
+    16 0 do
+        cr i 2 u.r space       ( Print the line number )
+        dup i 64 * + 64 type     ( Print the line )
+    loop cr drop ;
+
+( List a given screen )
+: list  ( scr# - )
+    scr ! ( Save the screen number)
+    L ;   ( Print the screen )
+
+( Editor, continued )
+( line provides the address, in the buffer, of the given line )
+: line  ( line# - c-addr)
+    64 *        ( Convert line number to # characters offset )
+    scr @ block ( Get the buffer address for that block )
+    + ;         ( Add the offset )
+
+: E ( line# - ) ( Erase the given line number with spaces )
+    line 64 blank update ;
+
+: O     ( line# - ) ( Overwrite line with new text )
+    dup E                    ( Erase existing text on line )
+    cr dup 2 u.r ."  * " line 64 accept drop update ;
+
+( Editor, continued )
+: enter-screen ( scr# - )
+  dup scr ! buffer drop
+  16 0 do i o loop ;
+: erase-screen ( scr# - )
+  dup scr ! buffer 1024 blank update ;
+----
+
+To use this editor, first select a screen to work with by running list
+on it. If you are planning on using LOAD to run some code later, it's
+worth noting that only screens above 0 can be LOADed.  Screen 0 is
+reserved for comments describing what is on the other screens.  It can
+be LISTed and edited, but cannot be LOADed.
+
+----
+1 list
+----
+
+Tali will show you the current (blank) contents of that screen.
+
+----
+
+Screen #   1
+ 0                                                                 
+ 1                                                                 
+ 2                                                                 
+ 3                                                                 
+ 4                                                                 
+ 5                                                                 
+ 6                                                                 
+ 7                                                                 
+ 8                                                                 
+ 9                                                                 
+10                                                                 
+11                                                                 
+12                                                                 
+13                                                                 
+14                                                                 
+15                                                                 
+ ok
+----
+
+To add some text to line 3, you might say
+
+----
+3 o 
+----
+
+This will give you a prompt to enter the text to overwrite line 3.
+You can enter up to 64 characters.  Once you have selected a screen
+with LIST, you can use just L to list it again.
+
+To replace the contents of an entire screen, you can say something
+like:
+
+----
+2 enter-screen
+----
+
+This will prompt you, line by line, for the new contents to screen 2.
+
+Once you have your screens the way you want them, you can type
+----
+FLUSH
+---- 
+to flush your changes out to storage.
+
+You can enter Forth code on these screens.  
+To load the Forth code on a screen, just type something like:
+----
+2 load
+----
+
+Because a screen only holds 16 lines, you may need to split your code
+across multiple screens.  You can load a series of screens (in order)
+using the THRU command like so:
+----
+1 3 thru
+----
+

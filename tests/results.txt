@@ -1,5 +1,6 @@
 Tali Forth 2 default kernel for py65mon (18. Feb 2018)
 
+redefined evaluate
 Tali Forth 2 for the 65c02
 Version BETA 10. Oct 2018 
 Copyright 2014-2018 Scot W. Stevenson
@@ -2156,6 +2157,165 @@ testing tools words: .s ? dump name>string see state words  ok
 ( TODO SEE test missing )  ok
 ( TODO WORDS test missing )  ok
   ok
+ ( Running test 'block' from file 'block.fs' )  ok
+\ ------------------------------------------------------------------------  ok
+testing block words: BLK SCR LOAD THRU BUFFER BLOCK UPDATE FLUSH  ok
+  ok
+marker block_tests  ok
+  ok
+\ Bring in a 4-block ram drive  ok
+{ 4 block-ramdrive-init -> }  ok
+  ok
+\ Put a string into the first block.  ok
+{ : teststring s" Testing Blocks!" ; -> }  ok
+{ : teststringlength teststring swap drop ; -> }  ok
+{ teststring 0 block swap move update flush -> }  ok
+  ok
+\ See if it's in the ramdrive.  ok
+{ block-ramdrive teststringlength teststring compare -> 0 }  ok
+  ok
+\ We don't have an official editor yet, so bring in just  ok
+\ enough to create some basic screens.  ok
+decimal  ok
+( List the current screen)  ok
+: L  ( - )   compiled
+    scr @ block                  ( Load the screen )  compiled
+    cr ." Screen #" scr @ 4 u.r  ( Print the screen number )  compiled
+    16 0 do  compiled
+        cr i 2 u.r space       ( Print the line number )  compiled
+        dup i 64 * + 64 type     ( Print the line )  compiled
+    loop cr drop ;  ok
+  ok
+( List a given screen )  ok
+: list  ( scr# - )  compiled
+    scr ! ( Save the screen number)  compiled
+    L ;   ( Print the screen )  ok
+  ok
+( Editor, continued )  ok
+( line provides the address, in the buffer, of the given line )  ok
+: line  ( line# - c-addr)  compiled
+    64 *        ( Convert line number to # characters offset )  compiled
+    scr @ block ( Get the buffer address for that block )  compiled
+    + ;         ( Add the offset )  ok
+  ok
+: E ( line# - ) ( Erase the given line number with spaces )  compiled
+    line 64 blank update ;  ok
+  ok
+: O     ( line# - ) ( Overwrite line with new text )  compiled
+    dup E                    ( Erase existing text on line )  compiled
+    cr dup 2 u.r ."  * " line 64 accept drop update ;  ok
+  ok
+( Editor, continued )  ok
+: enter-screen ( scr# - )  compiled
+  dup scr ! buffer drop  compiled
+  16 0 do i o loop ;  ok
+: erase-screen ( scr# - )  compiled
+  dup scr ! buffer 1024 blank update ;  ok
+  ok
+  ok
+{ 0 erase-screen flush -> }  ok
+  ok
+\ Make sure the test string from before is gone by looking for space  ok
+\ at the beginning of the ramdrive.  ok
+{ s"           " block-ramdrive 10 compare -> 0 }  ok
+  ok
+\ Enter screens for testing LOAD and THRU  ok
+1 enter-screen 
+ 0 * ( Test screen 1 ) 
+ 1 * ( 1 ) variable testvalue 
+ 2 * ( 2 ) testvalue 5 ! 
+ 3 * ( 3 ) variable blkinscreen 
+ 4 * ( 4 ) blk @ blkinscreen ! 
+ 5 * ( 5 ) variable blkinstring 
+ 6 * ( 6 ) s" blk @ blkinstring !" evaluate 
+ 7 * ( 7 ) variable blkinscreenA 
+ 8 * ( 8 ) blk @ blkinscreenA ! 
+ 9 * ( 9 ) 
+10 * ( 10 ) 
+11 * ( 11 ) 
+12 * ( 12 ) 
+13 * ( 13 ) 
+14 * ( 14 ) 
+15 * ( 15 )  ok
+  ok
+\ Load screen 1 and then check for the expected side effects.  ok
+{ 1 load -> }  ok
+  ok
+\ BLK should be 0 while in the string and 1 while in the rest of the block.  ok
+{ blkinscreen @  -> 1 }  ok
+{ blkinstring @  -> 0 }  ok
+{ blkinscreenA @ -> 1 }  ok
+  ok
+2 enter-screen 
+ 0 * ( Test screen 2 ) 
+ 1 * ( 1 ) ( Test loading another screen ) 
+ 2 * ( 2 ) variable shouldbe19 ( when "2 3 thru" is run) 
+ 3 * ( 3 ) 5 shouldbe19 ! 
+ 4 * ( 4 ) variable blkinscreenB 
+ 5 * ( 5 ) blk @ blkinscreenB ! ( should be 2 ) 
+ 6 * ( 6 ) 3 load 
+ 7 * ( 7 ) blk @ constant blkinscreenD ( try a different method ) 
+ 8 * ( 8 ) 
+ 9 * ( 9 ) 
+10 * ( 10 ) 
+11 * ( 11 ) 
+12 * ( 12 ) 
+13 * ( 13 ) 
+14 * ( 14 ) 
+15 * ( 15 )   ok
+  ok
+3 enter-screen 
+ 0 * ( Test screen 2 ) 
+ 1 * ( 1 )  
+ 2 * ( 2 )  
+ 3 * ( 3 ) shouldbe19 @ 7 + shouldbe19 ! 
+ 4 * ( 4 )  
+ 5 * ( 5 )  
+ 6 * ( 6 )  
+ 7 * ( 7 )  
+ 8 * ( 8 ) 
+ 9 * ( 9 ) 
+10 * ( 10 ) 
+11 * ( 11 ) 
+12 * ( 12 ) 
+13 * ( 13 ) 
+14 * ( 14 ) ( blkinscreen4 should be 3 because we are on screen 3 ) 
+15 * ( 15 ) ( testing the last line )     blk @ constant blkinscreenC ok
+  ok
+  ok
+{ 2 list -> } 
+Screen #   2
+ 0 ( Test screen 2 )                                               
+ 1 ( 1 ) ( Test loading another screen )                           
+ 2 ( 2 ) variable shouldbe19 ( when "2 3 thru" is run)             
+ 3 ( 3 ) 5 shouldbe19 !                                            
+ 4 ( 4 ) variable blkinscreenB                                     
+ 5 ( 5 ) blk @ blkinscreenB ! ( should be 2 )                      
+ 6 ( 6 ) 3 load                                                    
+ 7 ( 7 ) blk @ constant blkinscreenD ( try a different method )    
+ 8 ( 8 )                                                           
+ 9 ( 9 )                                                           
+10 ( 10 )                                                          
+11 ( 11 )                                                          
+12 ( 12 )                                                          
+13 ( 13 )                                                          
+14 ( 14 )                                                          
+15 ( 15 )                                                          
+ ok
+{ scr @ -> 2 } \ Screen 2 is the last one we listed.  ok
+  ok
+\ Load screens 2 and 3 with THRU and check for side effects.  ok
+\ shouldbe19 should be 5 + 7 + 7 because screen 2 loads screen 3.  ok
+{ 2 3 thru -> }  ok
+  ok
+{ blkinscreenB @ -> 2  } \ Note: blkinscreen3 is a variable.  ok
+{ blkinscreenC   -> 3  } \ Note: blkinscreen4 is a constant.  ok
+{ blkinscreenD   -> 2  } \ Note: blkinscreen5 is a constant.  ok
+{ shouldbe19 @   -> 19 }  ok
+  ok
+\ Release all of the memory used.  ok
+block_tests  ok
+  ok
  ( Running test 'user' from file 'user.fs' )  ok
 \ ------------------------------------------------------------------------  ok
   ok
@@ -2297,7 +2457,7 @@ char w       ' digit?        cycle_test 2drop      CYCLES:     75 ok
 5 5          ' =             cycle_test drop       CYCLES:     53 ok
 here 5       ' erase         cycle_test            CYCLES:    310 ok
 here 5 5     ' fill          cycle_test            CYCLES:    298 ok
-s" 5"        ' evaluate      cycle_test drop       CYCLES:  14435 ok
+s" 5"        ' evaluate      cycle_test drop       CYCLES:  15707 ok
 5 ' drop     ' execute       cycle_test            CYCLES:     62 ok
 \ skipping     exit  ok
              ' false         cycle_test drop       CYCLES:     24 ok
@@ -2305,8 +2465,8 @@ here         ' @             cycle_test drop       CYCLES:     48 ok
 \ making counted string for find  ok
 here 5 c, char a c, char w c, char o c,  ok
 char r c, char d c,  ok
-             ' find          cycle_test 2drop      CYCLES:    668 ok
-s" aword"    ' find-name     cycle_test drop       CYCLES:    390 ok
+             ' find          cycle_test 2drop      CYCLES:    667 ok
+s" aword"    ' find-name     cycle_test drop       CYCLES:    389 ok
 5. 5         ' fm/mod        cycle_test 2drop      CYCLES:   1279 ok
 5 5          ' >             cycle_test drop       CYCLES:     70 ok
              ' here          cycle_test drop       CYCLES:     30 ok
@@ -2315,7 +2475,7 @@ s" aword"    ' find-name     cycle_test drop       CYCLES:    390 ok
 \ skipping     i  ok
 : cword ;    ' immediate     cycle_test            CYCLES:     27 ok
              ' input         cycle_test drop       CYCLES:     28 ok
-' dup        ' int>name      cycle_test drop       CYCLES:   3352 ok
+' dup        ' int>name      cycle_test drop       CYCLES:   4646 ok
 5            ' invert        cycle_test drop       CYCLES:     37 ok
 \ skipping     j  ok
              ' key           cycle_test drop       CYCLES:     48 ok
@@ -2387,7 +2547,7 @@ s" abc" 1    ' /string       cycle_test 2drop      CYCLES:     73 ok
              ' state         cycle_test drop       CYCLES:     28 ok
 5 here       ' !             cycle_test            CYCLES:     54 ok
 5 5          ' swap          cycle_test 2drop      CYCLES:     50 ok
-             ' '             cycle_test aword drop CYCLES:   1039 ok
+             ' '             cycle_test aword drop CYCLES:   1038 ok
 \ postponing   to ( see value )  ok
 ' aword      ' >body         cycle_test drop       CYCLES:    522 ok
              ' >in           cycle_test drop       CYCLES:     28 ok

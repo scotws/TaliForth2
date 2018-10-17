@@ -41,10 +41,11 @@ include::ch_running.adoc[]
 
 == Major Components
 
-=== Editor
+=== Blocks
+include::ch_blocks.adoc[]
 
-WARNING: Currently, there is no editor included. The plan is to include a simple
-line-based editor in the style of `ed`. 
+=== Editor
+include::ch_editor.adoc[]
 
 === Assembler
 

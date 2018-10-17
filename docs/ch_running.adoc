@@ -46,22 +46,24 @@ Tali Forth comes with the following Forth words out of the
 box:
 
 ----
-see 2literal 2constant within d.r d. ud.r ud. .r u.r */mod */ mod /mod /
-action-of is defer@ defer! endcase endof of case while until repeat else then
-if .( ( drop dup swap ! @ over >r r> r@ nip rot -rot tuck , c@ c! +! execute
-emit type .  u. ? false true space 0 1 2 2dup ?dup + - abs dabs and or xor
-rshift lshift pick char [char] char+ chars cells cell+ here 1- 1+ 2* 2/ = <> <
-u< > 0= 0<> 0> 0< min max 2drop 2swap 2over 2! 2@ 2variable 2r@ 2r> 2>r invert
-negate dnegate c, bounds spaces bl -trailing /string refill accept unused depth
-key allot create does> variable constant value to s>d d>s d- d+ erase blank
-fill find-name ' ['] name>int int>name name>string >body defer latestxt
-latestnt parse-name parse source source-id : ; :noname compile, [ ] 0branch
-branch literal sliteral ." s" postpone immediate compile-only never-native
-always-native nc-limit uf-strip abort abort" do ?do i j loop +loop exit unloop
-leave recurse quit begin again state evaluate base digit? number >number hex
-decimal count m* um* * um/mod sm/rem fm/mod \ move cmove> cmove pad >in <# # #s
-#> hold sign output input cr page at-xy marker words wordsize aligned align
-bell dump .s disasm find word cold bye  ok
+see block_init_ramdrive evaluate thru load flush empty-buffers buffer update 
+block save-buffers block_words_deferred blockwrite blockread scr blk buffstatus 
+buffblocknum blkbuffer 2literal 2constant d.r d. ud.r ud. .r u.r action-of is defer@ 
+defer! endcase endof of case while until repeat else then if .( ( drop dup swap ! @ 
+over >r r> r@ nip rot -rot tuck , c@ c! +! execute emit type . u. ? false true 
+space 0 1 2 2dup ?dup + - abs dabs and or xor rshift lshift pick char [char] char+ 
+chars cells cell+ here 1- 1+ 2* 2/ = <> < u< u> > 0= 0<> 0> 0< min max 2drop 2swap 
+2over 2! 2@ 2variable 2r@ 2r> 2>r invert negate dnegate c, bounds spaces bl 
+-trailing /string refill accept unused depth key allot create does> variable constant 
+value to s>d d>s d- d+ erase blank fill find-name ' ['] name>int int>name 
+name>string >body defer latestxt latestnt parse-name parse source source-id : ; :noname 
+compile, [ ] 0branch branch literal sliteral ." s" postpone immediate compile-only 
+never-native always-native nc-limit uf-strip abort abort" do ?do i j loop +loop exit 
+unloop leave recurse quit begin again state evaluate base digit? number >number hex 
+decimal count m* um* * um/mod sm/rem fm/mod / /mod mod */mod */ \ move cmove> cmove 
+pad within >in <# # #s #> hold sign output input cr page at-xy marker words 
+wordsize aligned align bell dump .s disasm compare search environment? find word cold 
+bye
 ----
 
 NOTE: This list might be outdated. To get the current list, run `words` from
@@ -104,6 +106,15 @@ might switch to these words in the future.
 2:: `( -- 0 )` Push the number 2 on the Data Stack.
 always-native:: Mark last word in dictionary so that it is always natively compiled.
 bell:: Ring the terminal bell (ASCII 07).
+block-read:: `( addr blk# -- )` This is a deferred word the user can change to point 
+to their own routine for reading 1K blocks into memory from storage.
+block-write:: `( addr blk# -- )` This is a deferred word the user can change to point 
+to their own routine for writing 1K blocks from memory to storage.
+block-ramdrive-init:: `( u -- )` Create a ram drive with the given number of blocks 
+(numbered 0 to (u-1)) to
+allow use of the block words with no additional hardware.  Because the blocks are
+only held in ram, they will be lost when the hardware is powered down or the simulator
+is stopped.
 branch:: Always take branch. See `0branch`.
 compile-only:: Mark last word in dictionary as compile-only.
 digit?:: `( char -- u f | char f )` If character is a digit, convert and set flag to
@@ -129,7 +140,6 @@ if the underflow checks are removed during native compiling. To check the value
 of this flag, use `uf-strip ?`.
 wordsize:: `( nt -- u )` Given the name token (nt) of a Forth word, return its
 size in bytes. Used to help tune native compiling.
-
 === Native Compiling
 
 As the name says, subroutine threaded code encodes the words as a series of
