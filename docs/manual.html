@@ -972,10 +972,11 @@ people can install on their projects.</p>
 <div class="title">Figure 2. The functioning Übersquirrel Mark Zero prototype, August 2013. Photo by Scot W. Stevenson</div>
 </div>
 <div class="paragraph">
-<p>For this to work, you need to create your own kernel code to
-replace <code>platform-py65mon.asm</code>, the default kernel for use with the
-py65mon kernel. By convention, the name should start with
-<code>platform-</code>.</p>
+<p>For this to work, you need to go to the <code>platform</code> folder and create your own
+kernel code to replace <code>platform-py65mon.asm</code>, the default kernel
+for use with the py65mon kernel. By convention, the name should
+start with <code>platform-</code>. See the <code>README.md</code> file in the the <code>platform</code> folder
+for details.</p>
 </div>
 </div>
 </div>
@@ -3402,11 +3403,12 @@ based on the official ANS test code by John Hayes and was
 first adapted for Tali Forth by Sam Colwell.</p>
 </div>
 <div class="paragraph">
-<p>To run it, switch to that folder and start the <code>talitest.py</code> 
-program with Python3. The tests should take only a very few minutes to run and
-produce a lot of output, including, at the end, a list of words that didn&#8217;t
-work. A detailed list of results is saved to the file <code>results.txt</code>.
-</p>
+<p>To run the complete test, type <code>make test</code> from the main folder (this assumes a
+Unix-type system). Alternatively, switch to the test folder and start the
+<code>talitest.py</code>  program with Python3. The tests should take only
+a very few minutes to run and produce a lot of output, including, at the end, a
+list of words that didn&#8217;t work. A detailed list of results is saved to the file
+<code>results.txt</code>. </p>
 </div>
 <div class="sect2">
 <h3 id="_user_tests">User Tests</h3>
@@ -3606,7 +3608,7 @@ under <a href="https://www.ubuntu.com/">Ubuntu</a> Linux 16.04 LTS.</p>
 <div id="footer">
 <div id="footer-text">
 Version BETA<br>
-Last updated 2018-10-17 09:41:59 CEST
+Last updated 2018-10-17 11:22:39 CEST
 </div>
 </div>
 </body>

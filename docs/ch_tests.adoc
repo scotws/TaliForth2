@@ -2,11 +2,12 @@ Tali Forth 2 comes with a test suite(((testing))) in the `tests` folder. It is
 based on the official ANS test code by John Hayes((("Hayes, John"))) and was
 first adapted for Tali Forth by Sam Colwell((("Colwell, Sam"))). 
 
-To run it, switch to that folder and start the `talitest.py` (((talitest.py)))
-program with Python3. The tests should take only a very few minutes to run and
-produce a lot of output, including, at the end, a list of words that didn't
-work. A detailed list of results is saved to the file `results.txt`.
-(((results.txt)))
+To run the complete test, type `make test` from the main folder (this assumes a
+Unix-type system). Alternatively, switch to the test folder and start the
+`talitest.py` (((talitest.py))) program with Python3. The tests should take only
+a very few minutes to run and produce a lot of output, including, at the end, a
+list of words that didn't work. A detailed list of results is saved to the file
+`results.txt`. (((results.txt)))
 
 === User Tests
 
@@ -65,5 +66,3 @@ for more information.
 NOTE: During early development, testing was done by hand with a list of words that has
 since been placed in the `old` (((old))) folder. These tests might be still useful if you
 are in the very early stages of developing your own Forth.
-
-

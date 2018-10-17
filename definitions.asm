@@ -1,9 +1,12 @@
 ; Definitions for Tali Forth 2
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 01. Apr 2016 (Liara Forth)
-; This version: 02. Jul 2018
+; This version: 17. Oct 2018
 
-; This file is included by taliforth.asm
+; This file is included by taliforth.asm. These are the general
+; definitions; platform-specific definitions such as the
+; memory map are kept in the platfrom folder.
+
 
 ; ZERO PAGE ADDRESSES/VARIABLES
 
