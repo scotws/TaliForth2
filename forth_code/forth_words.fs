@@ -136,13 +136,13 @@ defer block-write ( addr u -- )
 \ with the fact that it might re-load the old block into a
 \ different buffer.
 : load ( scr# - )
-  blk @ >r                  ( We only need to save BLK    )
-  blk !                     ( Set BLK to the new block    )
-  16 0 do                   ( Evaluate the block          )
-    blk @ block             ( Make sure the block is here )
-    i 64 * +                ( Calculate offset to line    )
-    64 evaluate             ( Evaluate one line at a time )
-  loop
+  blk @ >r                  ( We only need to save BLK     )
+                            ( - evaluate saves the rest    )
+  dup blk !                 ( Set BLK to the new block     )
+    
+  block                     ( Load the block into a buffer )
+  1024 evaluate             ( Evaluate the entire block    )
+
   r> dup blk !              ( Restore the previous block   ) 
   ?dup if block drop then ; ( and read it back in if not 0 )
 
@@ -152,6 +152,23 @@ defer block-write ( addr u -- )
 \ in BLK.  I'm also restoring the previous value when done.
 : evaluate blk @ >r 0 blk ! evaluate r> blk ! ;
 
+\ ===============================================================
+\ List ( beginnings of editor )
+( Simple Editor for screens /blocks )
+
+( List the current screen)
+: L  ( - )
+    scr @ block                  ( Load the screen         )
+    cr ." Screen #" scr @ 4 u.r  ( Print the screen number )
+    16 0 do
+        cr i 2 u.r space         ( Print the line number   )
+        dup i 64 * + 64 type     ( Print the line          )
+    loop cr drop ;
+
+( List a given screen )
+: list  ( scr# - )
+    scr ! ( Save the screen number )
+    L ;   ( Print the screen       )
 
 \ ===============================================================
 \ BLOCK Add-ons
