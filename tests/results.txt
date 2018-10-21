@@ -2187,12 +2187,12 @@ decimal  ok
     16 0 do  compiled
         cr i 2 u.r space       ( Print the line number )  compiled
         dup i 64 * + 64 type     ( Print the line )  compiled
-    loop cr drop ;  ok
+    loop cr drop ; redefined l ok
   ok
 ( List a given screen )  ok
 : list  ( scr# - )  compiled
     scr ! ( Save the screen number)  compiled
-    L ;   ( Print the screen )  ok
+    L ;   ( Print the screen ) redefined list ok
   ok
 ( Editor, continued )  ok
 ( line provides the address, in the buffer, of the given line )  ok
@@ -2460,7 +2460,7 @@ char w       ' digit?        cycle_test 2drop      CYCLES:     75 ok
 5 5          ' =             cycle_test drop       CYCLES:     53 ok
 here 5       ' erase         cycle_test            CYCLES:    310 ok
 here 5 5     ' fill          cycle_test            CYCLES:    298 ok
-s" 5"        ' evaluate      cycle_test drop       CYCLES:  15663 ok
+s" 5"        ' evaluate      cycle_test drop       CYCLES:  15778 ok
 5 ' drop     ' execute       cycle_test            CYCLES:     62 ok
 \ skipping     exit  ok
              ' false         cycle_test drop       CYCLES:     24 ok
@@ -2471,14 +2471,14 @@ char r c, char d c,  ok
              ' find          cycle_test 2drop      CYCLES:    667 ok
 s" aword"    ' find-name     cycle_test drop       CYCLES:    389 ok
 5. 5         ' fm/mod        cycle_test 2drop      CYCLES:   1279 ok
-5 5          ' >             cycle_test drop       CYCLES:     70 ok
+5 5          ' >             cycle_test drop       CYCLES:     71 ok
              ' here          cycle_test drop       CYCLES:     30 ok
              ' hex           cycle_test decimal    CYCLES:     14 ok
 \ skipping     hold  ok
 \ skipping     i  ok
 : cword ;    ' immediate     cycle_test            CYCLES:     27 ok
              ' input         cycle_test drop       CYCLES:     28 ok
-' dup        ' int>name      cycle_test drop       CYCLES:   4654 ok
+' dup        ' int>name      cycle_test drop       CYCLES:   4780 ok
 5            ' invert        cycle_test drop       CYCLES:     37 ok
 \ skipping     j  ok
              ' key           cycle_test drop       CYCLES:     48 ok
@@ -2487,7 +2487,7 @@ s" aword"    ' find-name     cycle_test drop       CYCLES:    389 ok
 \ skipping     leave  ok
 \ skipping     [  ok
 \ skipping     <#  ok
-5 5          ' <             cycle_test drop       CYCLES:     70 ok
+5 5          ' <             cycle_test drop       CYCLES:     71 ok
 \ skipping     literal  ok
 \ skipping     loop  ok
 \ skipping     +loop  ok
@@ -2500,7 +2500,7 @@ s" aword"    ' find-name     cycle_test drop       CYCLES:    389 ok
 5 5          ' -             cycle_test drop       CYCLES:     47 ok
 s" txt   "   ' -trailing     cycle_test 2drop      CYCLES:    177 ok
 here s" a"   ' move          cycle_test            CYCLES:    137 ok
-' + int>name ' name>int      cycle_test drop       CYCLES:     60 ok
+' + int>name ' name>int      cycle_test drop       CYCLES:     61 ok
 ' + int>name ' name>string   cycle_test 2drop      CYCLES:     59 ok
              ' nc-limit      cycle_test drop       CYCLES:     28 ok
 5            ' negate        cycle_test drop       CYCLES:     39 ok
