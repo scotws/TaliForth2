@@ -41,10 +41,14 @@
 ;       UF - Contains underflow check
 ;       HC - Has CFA (words created by CREATE and DOES> only)
 
-; Note there are currently two bits unused. By default, all words can be
-; natively compiled (compiled inline) or as a subroutine jump target; the system
-; decides which variant to use based on a threshold the user can set. The NN
-; flag forbids native compiling, the AN flag forces it.  
+; Note there are currently two bits unused.
+
+; By default, all existing words can be natively compiled (compiled inline)
+; or as a subroutine jump target; the system decides which variant to use
+; based on a threshold the user can set.  By default, all user-created words
+; are flagged never-native.  The user can override this by using the
+; always-native word just after defining their new word.
+; The NN flag forbids native compiling, the AN flag forces it.  
 
 ; The last word (top word in code) is always BYE. It is marked as the last word
 ; by its value of 0000 in its Next Header field. The words are sorted with the
