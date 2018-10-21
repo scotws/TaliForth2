@@ -84,7 +84,7 @@ nt_environment_q:
         .byte "environment?"
 
 nt_search:  
-        .byte 6, UF
+        .byte 6, UF+NN
         .word nt_environment_q, xt_search, z_search
         .byte "search"
 
@@ -394,7 +394,7 @@ nt_do:
         .byte "do"
 
 nt_abort_quote:
-        .byte 6, CO+IM
+        .byte 6, CO+IM+NN
         .word nt_do, xt_abort_quote, z_abort_quote
         .byte "abort", $22
 
@@ -479,7 +479,7 @@ nt_left_bracket:
         .byte "["
 
 nt_compile_comma:
-        .byte 8, UF
+        .byte 8, UF+NN
         .word nt_left_bracket, xt_compile_comma, z_compile_comma
         .byte "compile,"
 
@@ -514,7 +514,7 @@ nt_parse:
         .byte "parse"
 
 nt_parse_name:
-        .byte 10, 0
+        .byte 10, NN
         .word nt_parse, xt_parse_name, z_parse_name
         .byte "parse-name"
 
