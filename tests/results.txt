@@ -2405,7 +2405,7 @@ drop \ accept test complete  ok
 5            ' aligned       cycle_test drop       CYCLES:     12 ok
 5            ' allot         cycle_test            CYCLES:     62 ok
 : aword ;    ' always-native cycle_test            CYCLES:     27 ok
-5 5          ' and           cycle_test drop       CYCLES:     46 ok
+5 5          ' and           cycle_test drop       CYCLES:     45 ok
 \ skipping     at-xy  ok
              ' \             cycle_test            CYCLES:     24 ok
              ' base          cycle_test drop       CYCLES:     28 ok
@@ -2425,7 +2425,7 @@ here 5       ' blank         cycle_test            CYCLES:    314 ok
 5            ' cells         cycle_test drop       CYCLES:     29 ok
              ' char          cycle_test w drop     CYCLES:    356 ok
 5            ' char+         cycle_test drop       CYCLES:     26 ok
-5            ' chars         cycle_test drop       CYCLES:     18 ok
+5            ' chars         cycle_test drop       CYCLES:     17 ok
 pad here 5   ' cmove         cycle_test            CYCLES:    177 ok
 pad here 5   ' cmove>        cycle_test            CYCLES:    172 ok
              ' :             cycle_test wrd ;      CYCLES:    842 ok
@@ -2460,7 +2460,7 @@ char w       ' digit?        cycle_test 2drop      CYCLES:     75 ok
 5 5          ' =             cycle_test drop       CYCLES:     53 ok
 here 5       ' erase         cycle_test            CYCLES:    310 ok
 here 5 5     ' fill          cycle_test            CYCLES:    298 ok
-s" 5"        ' evaluate      cycle_test drop       CYCLES:  15778 ok
+s" 5"        ' evaluate      cycle_test drop       CYCLES:  15783 ok
 5 ' drop     ' execute       cycle_test            CYCLES:     62 ok
 \ skipping     exit  ok
              ' false         cycle_test drop       CYCLES:     24 ok
@@ -2536,7 +2536,7 @@ drop \ refill  ok
 5 5 5        ' rot           cycle_test 2drop drop CYCLES:     65 ok
 5 5          ' rshift        cycle_test drop       CYCLES:    115 ok
              ' s"            cycle_test " 2drop    CYCLES:    238 ok
-5            ' s>d           cycle_test 2drop      CYCLES:     36 ok
+5            ' s>d           cycle_test 2drop      CYCLES:     37 ok
 \ skipping     ;  ok
 \ skipping     sign  ok
 s" abc" 1    ' /string       cycle_test 2drop      CYCLES:     73 ok
