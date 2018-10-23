@@ -41,10 +41,14 @@
 ;       UF - Contains underflow check
 ;       HC - Has CFA (words created by CREATE and DOES> only)
 
-; Note there are currently two bits unused. By default, all words can be
-; natively compiled (compiled inline) or as a subroutine jump target; the system
-; decides which variant to use based on a threshold the user can set. The NN
-; flag forbids native compiling, the AN flag forces it.  
+; Note there are currently two bits unused.
+
+; By default, all existing words can be natively compiled (compiled inline)
+; or as a subroutine jump target; the system decides which variant to use
+; based on a threshold the user can set.  By default, all user-created words
+; are flagged never-native.  The user can override this by using the
+; always-native word just after defining their new word.
+; The NN flag forbids native compiling, the AN flag forces it.  
 
 ; The last word (top word in code) is always BYE. It is marked as the last word
 ; by its value of 0000 in its Next Header field. The words are sorted with the
@@ -84,7 +88,7 @@ nt_environment_q:
         .byte "environment?"
 
 nt_search:  
-        .byte 6, UF
+        .byte 6, UF+NN
         .word nt_environment_q, xt_search, z_search
         .byte "search"
 
@@ -394,7 +398,7 @@ nt_do:
         .byte "do"
 
 nt_abort_quote:
-        .byte 6, CO+IM
+        .byte 6, CO+IM+NN
         .word nt_do, xt_abort_quote, z_abort_quote
         .byte "abort", $22
 
@@ -479,7 +483,7 @@ nt_left_bracket:
         .byte "["
 
 nt_compile_comma:
-        .byte 8, UF
+        .byte 8, UF+NN
         .word nt_left_bracket, xt_compile_comma, z_compile_comma
         .byte "compile,"
 
@@ -514,7 +518,7 @@ nt_parse:
         .byte "parse"
 
 nt_parse_name:
-        .byte 10, 0
+        .byte 10, NN
         .word nt_parse, xt_parse_name, z_parse_name
         .byte "parse-name"
 

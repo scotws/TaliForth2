@@ -497,8 +497,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_the_words_code_create_code_and_code_does_code">The Words <code>create</code> and <code>does&gt;</code></a></li>
 <li><a href="#_control_flow">Control Flow</a></li>
 <li><a href="#_native_compiling">Native Compiling</a></li>
+<<<<<<< HEAD
 <li><a href="#_return_stack_special_cases">Return Stack Special Cases</a></li>
 <li><a href="#_underflow_stripping">Underflow Stripping</a></li>
+=======
+>>>>>>> 894e97e2d03dbb19df7eecbe08819e2cda219e76
 <li><a href="#_code_cmove_code_code_cmove_code_and_code_move_code"><code>cmove</code>, <code>cmove&gt;</code> and <code>move</code></a></li>
 </ul>
 </li>
@@ -2853,9 +2856,8 @@ The Forth is:</p>
 <p>An alternative is <code>see</code> which also displays the length of a word. One way or
 another, changing <code>nc-limit</code> should show differences in the Forth words.</p>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_return_stack_special_cases">Return Stack Special Cases</h3>
+<div class="sect3">
+<h4 id="_return_stack_special_cases">Return Stack Special Cases</h4>
 <div class="paragraph">
 <p>There are a few words that cause problems with subroutine threaded code (STC):
 Those that access the Return Stack such as <code>r&gt;</code>, <code>&gt;r</code>, <code>r@</code>, <code>2r&gt;</code>, and <code>2&gt;r</code>.
@@ -2901,15 +2903,15 @@ leaves us with just the six actual instructions in the center of the routine to
 be compiled into the new word.</p>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_underflow_stripping">Underflow Stripping</h3>
+<div class="sect3">
+<h4 id="_underflow_stripping">Underflow Stripping</h4>
 <div class="paragraph">
 <p>As described above, every underflow check adds seven bytes to the word being
 coded. Stripping this check by setting the <code>uf-strip</code> system variable to <code>true</code>
 simply removes these seven bytes from new natively compiled words.</p>
 </div>
 <div class="paragraph">
-<p>It is possible, of course, to have lice and fleas at the some time. For
+<p>It is possible, of course, to have lice and fleas at the same time. For
 instance, this is the code for <code>&gt;r</code>:</p>
 </div>
 <div class="listingblock">
@@ -2946,6 +2948,60 @@ z_to_r:         rts</pre>
 <p>This word has <em>both</em> native compile stripping and underflow detection. However,
 both can be removed from newly native code words, leaving only the eight byte
 core of the word to be compiled.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_enabling_native_compling_on_new_words">Enabling Native Compling on New Words</h4>
+<div class="paragraph">
+<p>By default, user-defined words are flagged with the Never-Native (NN)
+flag.  While the words used in the definition of the new word might
+have been natively compiled into the new word, this new word will
+always be compiled with a JSR when used in future new words.  To
+override this behavior and allow a user-defined word to be natively
+compiled, the user can use the <code>always-native</code> word just after the
+definition has been completed (with a semicolon).  An example of doing
+this might be:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>: double dup + ; always-native</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Please note adding the always-native flag to a word overrides the
+never-native flag and it also causes the word to be natively compiled
+regardless of the setting of <code>nc_limit</code>.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+Do not apply always-native to a word that has any kind of
+control structures in it, such as <code>if</code>, <code>case</code> or any kind of loop.
+If these words ever get native compiled, the JMP instructions used in
+the control structures are copied verbatim, causing them to jump back
+into the original words.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+When adding your own words in assembly, if a word has a <code>jmp</code>
+instruction in it, it should have the NN (Never Native) flag set in the
+headers.asm file and should never have the AN (Always Native) flag set.
+</td>
+</tr>
+</table>
+</div>
 </div>
 </div>
 <div class="sect2">
@@ -3609,7 +3665,11 @@ under <a href="https://www.ubuntu.com/">Ubuntu</a> Linux 16.04 LTS.</p>
 <div id="footer">
 <div id="footer-text">
 Version BETA<br>
+<<<<<<< HEAD
 Last updated 2018-10-17 18:10:00 EDT
+=======
+Last updated 2018-10-20 22:35:00 EDT
+>>>>>>> 894e97e2d03dbb19df7eecbe08819e2cda219e76
 </div>
 </div>
 </body>

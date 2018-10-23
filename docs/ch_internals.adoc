@@ -785,7 +785,7 @@ The Forth is:
 An alternative is `see` which also displays the length of a word. One way or
 another, changing `nc-limit` should show differences in the Forth words.
 
-=== Return Stack Special Cases
+==== Return Stack Special Cases
 
 There are a few words that cause problems with subroutine threaded code (STC):
 Those that access the Return Stack such as `r>`, `>r`, `r@`, `2r>`, and `2>r`.
@@ -827,13 +827,13 @@ they are removed when native compiling is enabled by the word `compile,` This
 leaves us with just the six actual instructions in the center of the routine to
 be compiled into the new word.
 
-=== Underflow Stripping
+==== Underflow Stripping
 
 As described above, every underflow check adds seven bytes to the word being
 coded. Stripping this check by setting the `uf-strip` system variable to `true`
 simply removes these seven bytes from new natively compiled words.
 
-It is possible, of course, to have lice and fleas at the some time. For
+It is possible, of course, to have lice and fleas at the same time. For
 instance, this is the code for `>r`:
 
 ----
@@ -868,6 +868,35 @@ z_to_r:         rts
 This word has _both_ native compile stripping and underflow detection. However,
 both can be removed from newly native code words, leaving only the eight byte
 core of the word to be compiled.
+
+==== Enabling Native Compling on New Words
+
+By default, user-defined words are flagged with the Never-Native (NN)
+flag.  While the words used in the definition of the new word might
+have been natively compiled into the new word, this new word will
+always be compiled with a JSR when used in future new words.  To
+override this behavior and allow a user-defined word to be natively
+compiled, the user can use the `always-native` word just after the
+definition has been completed (with a semicolon).  An example of doing
+this might be:
+
+----
+: double dup + ; always-native
+----
+
+Please note adding the always-native flag to a word overrides the
+never-native flag and it also causes the word to be natively compiled
+regardless of the setting of `nc_limit`.
+
+WARNING: Do not apply always-native to a word that has any kind of
+control structures in it, such as `if`, `case` or any kind of loop.
+If these words ever get native compiled, the JMP instructions used in
+the control structures are copied verbatim, causing them to jump back
+into the original words.
+
+WARNING: When adding your own words in assembly, if a word has a `jmp`
+instruction in it, it should have the NN (Never Native) flag set in the
+headers.asm file and should never have the AN (Always Native) flag set.
 
 === `cmove`, `cmove>` and `move`
 

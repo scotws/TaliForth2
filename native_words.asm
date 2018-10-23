@@ -330,8 +330,7 @@ z_abs:          rts
         ; """ Receive a string of at most n1 characters, placing them at
         ; addr. Return the actual number of characters as n2. Characters
         ; are echoed as they are received. ACCEPT is called by REFILL in
-        ; modern Forths. This version accepts 255 chars max in the 
-        ; current implementation
+        ; modern Forths. 
         ; """
 .scope
 xt_accept:
@@ -350,7 +349,7 @@ xt_accept:
                 stz 0,x
                 stz 1,x
 
-                jmp _done       ; no RTS so we can native compile
+                jmp _done
 
 _not_zero:
                 lda 0,x         ; number of chars to get in tmp2 ...
