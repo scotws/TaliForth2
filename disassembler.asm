@@ -387,7 +387,7 @@ oc_table:
         oc92:   .byte 1, "sta.zi", 0
 ;      (oc93:)
         oc94:   .byte 1, "sty.zx", 0
-        oc95:   .byte 1, "sty.zx", 0
+        oc95:   .byte 1, "sta.zx", 0
         oc96:   .byte 1, "stx.zy", 0
         oc97:   .byte 1, "smb1.z", 0
         oc98:   .byte 0, "tya", 0
