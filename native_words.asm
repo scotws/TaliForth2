@@ -6778,6 +6778,7 @@ _colonword:
                 sta 3,x
 
                 jsr xt_type
+                jsr xt_space
                 bra _common
 _new_word:
                 ; Drop FALSE FIND-NAME flag from the stack
