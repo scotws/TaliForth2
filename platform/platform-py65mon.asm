@@ -132,6 +132,12 @@ kernel_init:
         ; back to the label forth to start the Forth system.
         ; """
 .scope
+                ; Since the default case for Tali is the py65mon emulator, we
+                ; have no use for interrupts. If you are going to include
+                ; them in your system in any way, you're going to have to
+                ; do it from scratch. Sorry.
+                sei             ; Disable interrupts
+                
                 ; We've successfully set everything up, so print the kernel
                 ; string
                 ldx #0

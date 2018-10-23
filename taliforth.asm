@@ -5,9 +5,6 @@
 
 ; This is the main file for Tali Forth 2
 
-; By default, we have 32 KiB of RAM and 32 KiB of ROM. See docs/memorymap.txt
-; for details
-.advance $8000
 
 ; Label used to calculate UNUSED. Silly for Tali Forth, where we assume
 ; 32 KiB RAM and 32 KiB ROM, but kept here to make the code more useful

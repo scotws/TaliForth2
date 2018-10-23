@@ -26,11 +26,6 @@
 ;       use the 65c02 reset for that. Flows into ABORT.
 ;       """
 xt_cold:        
-                ; Since the default case for Tali is the py65mon emulator, we
-                ; have no use for interrupts. If you are going to include
-                ; them in your system in any way, you're going to have to
-                ; do it from scratch. Sorry.
-                sei
                 cld
  
                 ; Set the OUTPUT vector to the default kernel_putc
