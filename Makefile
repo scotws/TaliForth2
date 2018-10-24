@@ -15,6 +15,12 @@ taliforth-%.bin: platform/platform-%.asm $(COMMON_SOURCES)
 	-o $@ \
 	-c $< ;
 
+taliforth-%.prg: platform/platform-%.asm $(COMMON_SOURCES)
+	ophis -l docs/$*-listing.txt \
+	-m docs/$*-labelmap.txt \
+	-o $@ \
+	-c $< ;
+
 # Convert the high-level Forth words to ASCII files that Ophis can include
 %.asc: forth_code/%.fs
 	python3 forth_code/forth_to_ophisbin.py -i $< > $@
