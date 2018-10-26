@@ -51,14 +51,23 @@ people can install on their projects.
 .The functioning Übersquirrel Mark Zero prototype, August 2013. Photo by Scot W. Stevenson
 image::pics/uebersquirrel.jpg[width=50%]
 
+==== The Platform Files
+
 For this to work, you need to go to the `platform` folder and create your own
 kernel(((kernel))) code to replace `platform-py65mon.asm`, the default kernel
 for use with the py65mon(((py65mon))) kernel. By convention, the name should
 start with `platform-`. See the `README.md` file in the the `platform` folder
 for details.
 
-// TODO what belongs in the kernel file
+=== Hardware Projects with Tali Forth 2
 
-// ==== Hardware Projects that run Tali Forth
-// TODO 
+This is a list of projects known to run Tali Forth 2. Please let me know if you
+want to have your project added to the list.
+
+- *Steckschwein* (https://steckschwein.de/) by Thomas Woinke and Marko
+  Lauke. A multi-board 8 MHz 65c02 system. Platform file:
+  `platform-steckschwein.asm` (26. Oct 2018)
+
+
+
 

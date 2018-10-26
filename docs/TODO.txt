@@ -1,20 +1,15 @@
 TODO/CHANGES for Tali Forth 2 
 Scot W. Stevenson <scot.stevenson@gmail.com>
 First version: 19. Jan 2014
-This version: 04. July 2018
+This version: 26. Oct 2018
 
 (Note: The list of issues on the GitHub has priority)
 
 --> Milestone BETA
 
 TODO POST-BETA ("ALL THERE, BUT BEWARE OF SNEAKY BUGS")
-        - Add ASCII output to DUMP
-        - Warn if newly defined word already in Dictionary
-        - Code temporary high-level Forth words such as WITHIN natively
-        - In ALLOT, figure out how to handle release of too much memory
         - Add an editor based on ed
-        - Consider having WORDSIZE take xt and not nt
-        - Renumber error codes in strings.asm
+        - Add block support
 
 --> Milestone RELEASE 1.0
 
@@ -28,11 +23,9 @@ TODO AT SOME POINT
         - Add multitasking (round-robin), this requires USER variables
         - See if MAX and MIN can be combined
         - See if > and < etc can be combined
-        - Consider adding SEARCH and COMPARE, also REPLACES, SUBSTITUTE,
-          and UNESCAPE
         - Consider moving UM* to table-based multiplication
         - Consider implementing KEY? if we can make it work with py65mon
-        - Consider implementing  THROW/CATCH
+        - Consider implementing THROW/CATCH
         - Add an assembler
 
 
