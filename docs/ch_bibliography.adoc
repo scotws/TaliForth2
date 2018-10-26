@@ -30,6 +30,9 @@ http://www.forth.org/fd/FD-V13N6.pdf}{http://www.forth.org/fd/FD-V13N6.pdf
 [[[JN]]] _A Beginner's Guide to Forth_, J.V. Nobel,
 http://galileo.phys.virginia.edu/classes/551.jvn.fall01/primer.htm
 
+[[[BWK]]] _A Tutorial Introduction to the UNIX Text Editor_, B. W. Kernighan,
+http://www.psue.uni-hannover.de/wise2017_2018/material/ed.pdf
+
 [[[LB1]]] _Starting Forth_, Leo Brodie, new edition 2003,
 https://www.forth.com/starting-forth/}{https://www.forth.com/starting-forth/
 

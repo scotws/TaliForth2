@@ -1,50 +1,104 @@
 ==== The Line-Based Editor ed
 
+[quote, B. W. Kernighan, A Tutorial Introduction to the UNIX Text Editor]
+Ed makes no response to most commands – there is no prompting or typing of
+messages like "ready". (This silence is preferred by experienced users, but
+sometimes a hangup for beginners.) <<BWK>>
+
 Tali Forth 2 currently ships with a clone of the `ed` line-based editor of
 Unix fame. It is envoked with `ed ( -- u )`. The formal name is `ed6502`. 
 
 WARNING: `ed` is included in a very primitive form only and should be considered
-ALPHA until further notice.
+ALPHA. 
+
+NOTE: These are preliminary notes. A tutorial with more examples is planned.
 
 ===== Supported Commands
 
-`ed` currently supports only a small number of the commands and features of
-the Unix version:
+`ed` currently supports only a small number of the commands of the Unix version:
 
 [horizontal]
 a:: Add new lines below given line
-c:: Change a line, possibly adding new lines
 d:: Delete line
 i:: Add new lines above given line
-j:: Join two lines to a new line
 q:: Quit if no unsaved work
 Q:: Unconditional quit, unsaved work is lost
-r:: Read lines from memory location provided
-w:: Write text to given memory location
-=:: Print current line number
+w:: Write text to given memory location (eg `7000w`)
+=:: Print value of given parameter (eg `$=` gives number of last line)
+
+For the parameters, these are currently available:
+
+[horizontal]
+ .:: Current line number
+,:: When alone: All lines, the same as `1,$` or `%`
+$:: Last line
+%:: All lines, the same as `1,$` or `,` alone
+
+An empty line (pressing the ENTER key) will advance by one line and print it. A
+simple number will print that line without the line number and make that line
+the new current line.
 
 ==== Future planned commands
 
-There is no time frame for these additions.
+There is no time frame for these additions. 
 
 [horizontal]
++:: Advance by one line, print it and make it the new current line
+-:: Go back by one line, print it and make it the new current line
+c:: Change a line, possibly adding new lines
+e:: Edit lines given as `addr,u` in text buffer
+f:: Show current target address for writes
+j:: Join two lines to a new line
+m:: Move block of text to new line
+r:: Read lines into text buffer
+s:: Substitute one string on line with another
 !:: Execute a shell command (Forth command in our case)
 
+The following parameter features:
+
+[horizontal]
+;:: Range from current line to end, same as `.,$`
 
 ===== Differences to Unix ed
 
-(Apart from missing about 90 percent of the features, that is.)
+(Apart from missing about 90 percent of the features, that is)
+
+- The `w` (write) command takes its parameter before and not after the word.
+  Where Unix ed uses the format `w <FILENAME>`, ed6502 takes the address
+  to write the text to as `7000w`.
+
+WARNING: At this point, it isn't totally clear what happens if the number base
+is set to hexadecimal via `hex`. Use at your own risk.
 
 
 ===== Using `ed` as a Programmming Tool
 
-NOTE: There is a plan to add a tutorial for ed6502 in the future.
+`Ed` can be used to write programs and then execute them with `evaluate`. For
+instance, a session to add a small string could look something like this:
 
+----
+ed
+a
+.( My cat loves tuna)
+.
+7000w <1>
+22 <2>
+q
+----
+<1> Address we save the command to
+<2> Number of characters saved including final line feed
 
-===== Interaction with Blocks and the Block Editor
+Then, we can run the program:
+----
+7000 22 evaluate
+----
 
-`Ed` uses a different convention than the traditional Forth block system: It
-terminates lines with the `CR`, while a block is executed whole. 
+WARNING: Because of a bug in the way that Tali Forth 2 handles whitespace,
+`evaluate` will choke on any whitespace that is not a string. In this case, the
+carrage return causes the error message `Undefined word`. This is being worked
+on. In the meantime, stick to one-line commands and evaluate them without the
+final line feed (one character less). This gives us `7000 21 evaluate` in this
+example.
 
 
 ===== Known Issues
@@ -64,6 +118,15 @@ drop pre-edit <3>
 
 This issue might be taken care of in a future release.
 
+
+==== Developer Information
+
+`Ed` will be massively rewritten under the hood once the code has been
+stabilized, has all features, and a testing suite. Currently, it's somewhat of a
+mess and contains some testing routines that will be removed in the final
+version.
+
+
 ===== Further Information
 
 Given the age of `ed`, there is quite a lot of information on it on the
@@ -73,5 +136,4 @@ Internet:
 * https://www.gnu.org/software/ed/ed.html The offical GNU ed page
 * https://www.gnu.org/software/ed/manual/ed_manual.html The official GNU ed manual
 * https://sanctum.geek.nz/arabesque/actually-using-ed/ Small tutorial of Unix ed
-
-
+* http://www.psue.uni-hannover.de/wise2017_2018/material/ed.pdf A tutorial by B. W. Kernighan (yes, _that_ Kernighan).
