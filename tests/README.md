@@ -3,16 +3,10 @@
 This folder contains the test suite for Tali Forth. To run the tests (assuming
 you have already run make in the main project directory), simply start the
 talitest.py script. To see the options available, run the script with `--help`.
-This script requires python3, the `pexpect` package (available via `pip`), and
-`py65` (also available via pip) to be installed.
+This script requires python3 and `py65` (available via pip) to be installed.
 
 When the test is done, a summary will be printed. The detailed results can be
-found in the file `results.txt`. The script will abort if it detects a crash. If
-you seem to be dropping characters -- for instance, with a "Unknown word" error
-when "rror" was defined instead of "error" -- you'll have to increase the
-waiting period for sending. This can be done with the `--delay` option and
-settings in seconds - for example, `--delay=0.003` would create a sending delay
-of three milliseconds. 
+found in the file `results.txt`. The script will abort if it detects a crash. 
 
 The tests are broken up into separate files to allow quick turnaround times with
 specific tests. Without any options, the script will run all tests (also
@@ -46,8 +40,3 @@ Please submit tests to the GitHub as pull requests at
 https://github.com/scotws/TaliForth2/pulls . While adding tests, the main
 source of errors was the number base. Care must be taken to ensure that **HEX**
 and **DECIMAL** are correctly called.
-
-## Known issues:
-
-- The **ACCEPT** test currenty doesn't work (expects user to type in chars)
-- Because of **ACCEPT** problem, the test for dictionary rules doesn't work
