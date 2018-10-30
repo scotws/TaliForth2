@@ -1572,11 +1572,13 @@ create abuf 80 chars allot  ok
 : accept-test  compiled
    cr ." please type up to 80 characters:" cr  compiled
    abuf 80 accept  compiled
+   dup   compiled
    cr ." received: " [char] " emit  compiled
    abuf swap type [char] " emit cr  compiled
 ;  ok
   ok
-T{ accept-test -> }T 
+\ The text for accept (below the test) is 29 characters long.  ok
+T{ accept-test -> 29 }T 
 please type up to 80 characters:
 Here is some text for accept. 
 received: "Here is some text for accept."
