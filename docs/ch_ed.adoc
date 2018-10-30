@@ -1,0 +1,77 @@
+==== The Line-Based Editor ed
+
+Tali Forth 2 currently ships with a clone of the `ed` line-based editor of
+Unix fame. It is envoked with `ed ( -- u )`. The formal name is `ed6502`. 
+
+WARNING: `ed` is included in a very primitive form only and should be considered
+ALPHA until further notice.
+
+===== Supported Commands
+
+`ed` currently supports only a small number of the commands and features of
+the Unix version:
+
+[horizontal]
+a:: Add new lines below given line
+c:: Change a line, possibly adding new lines
+d:: Delete line
+i:: Add new lines above given line
+j:: Join two lines to a new line
+q:: Quit if no unsaved work
+Q:: Unconditional quit, unsaved work is lost
+r:: Read lines from memory location provided
+w:: Write text to given memory location
+=:: Print current line number
+
+==== Future planned commands
+
+There is no time frame for these additions.
+
+[horizontal]
+!:: Execute a shell command (Forth command in our case)
+
+
+===== Differences to Unix ed
+
+(Apart from missing about 90 percent of the features, that is.)
+
+
+===== Using `ed` as a Programmming Tool
+
+NOTE: There is a plan to add a tutorial for ed6502 in the future.
+
+
+===== Interaction with Blocks and the Block Editor
+
+`Ed` uses a different convention than the traditional Forth block system: It
+terminates lines with the `CR`, while a block is executed whole. 
+
+
+===== Known Issues
+
+`Ed` currently uses memory without releasing it when done. For small, quick
+edits, this probably is not a problem. However, if you known you are going to be
+using more memory, you probably will want to set a marker first.
+
+----
+marker pre-edit <1>
+ed <2>
+drop pre-edit <3>
+----
+<1> Set marker at current value of `here`
+<2> Edit normally
+<3> Drop the return value and call marker, releasing memory
+
+This issue might be taken care of in a future release.
+
+===== Further Information
+
+Given the age of `ed`, there is quite a lot of information on it on the
+Internet: 
+
+* https://en.wikipedia.org/wiki/Ed_(text_editor) Background and history
+* https://www.gnu.org/software/ed/ed.html The offical GNU ed page
+* https://www.gnu.org/software/ed/manual/ed_manual.html The official GNU ed manual
+* https://sanctum.geek.nz/arabesque/actually-using-ed/ Small tutorial of Unix ed
+
+

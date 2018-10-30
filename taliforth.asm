@@ -1,7 +1,7 @@
 ; Tali Forth 2 for the 65c02
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 19. Jan 2014 (Tali Forth)
-; This version: 22. Sep 2018
+; This version: 18. Oct 2018
 
 ; This is the main file for Tali Forth 2
 
@@ -18,6 +18,7 @@ forth:
 
 .require "native_words.asm"     ; Native Forth words. Starts with COLD
 .require "disassembler.asm"     ; Disassembler 
+.require "ed.asm"               ; Line-based editor ed6502
 
 ; High-level Forth words, see forth_code/README.md
 forth_words_start:

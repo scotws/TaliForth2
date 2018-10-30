@@ -69,6 +69,7 @@ RTS instruction at the end of each word.
 | DROP | `drop` | ANS core | 9 | **auto** |
 | DUMP | `dump` | ANS tools | 106 | tested |
 | DUP | `dup` | ANS core | 17 | **auto** |
+| ED | `ed` | Tali Forth | 3 | *fragment* |
 | EMIT | `emit` | ANS core | 14 | **auto** |
 | ENVIRONMENT_Q | `environment?` | ANS core | 128 | **auto** |
 | EQUAL | `=` | ANS core | 31 | **auto** |
@@ -211,7 +212,7 @@ RTS instruction at the end of each word.
 | ZERO_LESS | `0<` | ANS core | 19 | **auto** |
 | ZERO_UNEQUAL | `0<>` | ANS core ext | 21 | **auto** |
 
-Found **203** native words in `native_words.asm`.
+Found **204** native words in `native_words.asm`.
 Of those, **170** were automatically tested and
-          **0** are not marked as tested at all.
+          **1** are not marked as tested at all.
 

@@ -4,7 +4,7 @@
 :email: scot.stevenson@gmail.com
 :keywords: forth, 6502, assembler, programming
 :revnumber: BETA
-:revdate: 04. July 2018
+:revdate: 26. Oct 2018
 :showtitle:
 :icons: font
 :toc: left
@@ -44,8 +44,12 @@ include::ch_running.adoc[]
 === Blocks
 include::ch_blocks.adoc[]
 
-=== Editor
+=== Editors
+
+Tali Forth 2 comes with two editors, which are currently both very primitive.
+
 include::ch_editor.adoc[]
+include::ch_ed.adoc[]
 
 === Assembler
 
