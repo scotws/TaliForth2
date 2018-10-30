@@ -68,6 +68,6 @@ want to have your project added to the list.
   Lauke. A multi-board 8 MHz 65c02 system. Platform file:
   `platform-steckschwein.asm` (26. Oct 2018)
 
-
-
-
+- *SamCo's SBC* (https://github.com/SamCoVT/SBC) by Sam Colwell.  A
+   single-board computer running at 4MHz.  Platform file:
+   `platform-sbc.asm` (29. Oct 2018)
