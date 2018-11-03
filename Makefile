@@ -4,7 +4,7 @@
 # Note the manual is not automatically updated because not everybody can be
 # expected to have the asciidoc toolchain installed
 
-COMMON_SOURCES=taliforth.asm definitions.asm native_words.asm headers.asm strings.asm forth_words.asc user_words.asc disassembler.asm
+COMMON_SOURCES=taliforth.asm definitions.asm native_words.asm headers.asm strings.asm forth_words.asc user_words.asc disassembler.asm ed.asm
 TEST_SOURCES=tests/core.fs tests/string.fs tests/double.fs tests/facility.fs tests/stringlong.fs tests/tali.fs tests/tools.fs tests/block.fs tests/user.fs tests/cycles.fs tests/talitest.py
 
 all: taliforth-py65mon.bin docs/WORDLIST.md

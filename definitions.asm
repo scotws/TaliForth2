@@ -1,7 +1,7 @@
 ; Definitions for Tali Forth 2
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 01. Apr 2016 (Liara Forth)
-; This version: 17. Oct 2018
+; This version: 24. Oct 2018
 
 ; This file is included by taliforth.asm. These are the general
 ; definitions; platform-specific definitions such as the
@@ -37,11 +37,14 @@
 .alias tmp1      user0+32  ; temporary storage
 .alias tmp2      user0+34  ; temporary storage
 .alias tmp3      user0+36  ; temporary storage (especially for print)
-.alias tmpdsp    user0+38  ; temporary DSP (X) storage
+.alias tmpdsp    user0+38  ; temporary DSP (X) storage (two bytes)
 .alias tmptos    user0+40  ; temporary TOS storage
-.alias tohold    user0+42  ; pointer for formatted output 
-.alias scratch   user0+44  ; 8 byte scratchpad (see UM/MOD)
-.alias status    user0+52  ; internal status information
+.alias editor1   user0+42  ; temporary for editors
+.alias editor2   user0+44  ; temporary for editors
+.alias editor3   user0+46  ; temporary for editors
+.alias tohold    user0+48  ; pointer for formatted output 
+.alias scratch   user0+50  ; 8 byte scratchpad (see UM/MOD)
+.alias status    user0+58  ; internal status information
                            ; (used by : :NONAME ; ACCEPT)
                            ; Bit 6 = 1 for normal ":" definitions
                            ;         WORKWORD contains nt of word being compiled
