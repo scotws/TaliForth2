@@ -119,6 +119,8 @@ branch:: Always take branch. See `0branch`.
 compile-only:: Mark last word in dictionary as compile-only.
 digit?:: `( char -- u f | char f )` If character is a digit, convert and set flag to
 `true`, otherwise return the offending character and a `false` flag.
+ed:: Start the command-line editor. There is a whole chapter on this father
+down. 
 input:: Return the address where the vector for the input routine is
 stored (not the vector itself). Used for input redirection for
 `emit` and others.
@@ -140,6 +142,8 @@ if the underflow checks are removed during native compiling. To check the value
 of this flag, use `uf-strip ?`.
 wordsize:: `( nt -- u )` Given the name token (nt) of a Forth word, return its
 size in bytes. Used to help tune native compiling.
+
+
 === Native Compiling
 
 As the name says, subroutine threaded code encodes the words as a series of
@@ -187,6 +191,8 @@ might be better off quitting and restarting completely.
 
 === Gotchas
 
+Some things to look out for when using Tali Forth.
+
 ==== Cell Size
 
 Tali has a 16-bit cell size. 
@@ -213,7 +219,18 @@ bit address space, it wraps the upper address if we go beyond $FFFF:
 ( Tali )        hex FFFF 2 bounds  swap u. u.  ( returns     1 ffff  ok )
 ----
 
-==== Negative ALLOT
+==== Delimiters During Parsing
+
+Both `parse-name` and `parse` skip white space - defined as ASCII characters
+from 00 to 32 (SPACE) inclusive - when the standard talks about "spaces".
+Otherwise, Tali would choke on TABs during compiling, and the `ed` editor
+couldn't be used to edit programs because of the Line Feed characters. This is
+covered in the standard, see the footnote at
+https://forth-standard.org/standard/core/PARSE-NAME by Anton Ertl, referencing 
+http://forth-standard.org/standard/usage#subsubsection.3.4.1.1 and
+http://forth-standard.org/standard/file#subsection.11.3.5 .
+
+==== Negative `allot`
 
 The ANSI standard does not define what happens if there is an attempt to free
 more memory with `allot` by passing a negative value than is available. Tali

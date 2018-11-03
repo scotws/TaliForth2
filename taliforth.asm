@@ -1,10 +1,9 @@
 ; Tali Forth 2 for the 65c02
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 19. Jan 2014 (Tali Forth)
-; This version: 18. Oct 2018
+; This version: 03. Nov 2018
 
 ; This is the main file for Tali Forth 2
-
 
 ; Label used to calculate UNUSED. Silly for Tali Forth, where we assume
 ; 32 KiB RAM and 32 KiB ROM, but kept here to make the code more useful
@@ -451,6 +450,27 @@ is_printable:
 _failed:
                 clc
 _done:       
+                rts
+.scend
+
+
+is_whitespace:
+.scope
+        ; """Given a character in A, check if it is a whitespace
+        ; character, that is, an ASCII value from 0 to 32 (where
+        ; 32 is SPACE). Returns the result in the Carry Flag: 
+        ; 0 (clear) is no, it isn't whitespace, while 1 (set) means
+        ; that it is whitespace. See PARSE and PARSE-NAME for
+        ; a discussion of the uses
+                cmp #00                 ; explicit comparison
+                bcc _done
+                cmp #AscSP + 1
+                bcs _failed
+                sec
+                bra _done
+_failed:
+                clc
+_done:
                 rts
 .scend
 

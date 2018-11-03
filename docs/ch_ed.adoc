@@ -53,6 +53,7 @@ m:: Move block of text to new line
 r:: Read lines into text buffer
 s:: Substitute one string on line with another
 !:: Execute a shell command (Forth command in our case)
+#:: Comment, ignore rest of the line
 
 The following parameter features:
 
@@ -71,7 +72,7 @@ WARNING: At this point, it isn't totally clear what happens if the number base
 is set to hexadecimal via `hex`. Use at your own risk.
 
 
-===== Using `ed` as a Programmming Tool
+===== Using `ed` for programming
 
 `Ed` can be used to write programs and then execute them with `evaluate`. For
 instance, a session to add a small string could look something like this:
@@ -93,14 +94,6 @@ Then, we can run the program:
 7000 22 evaluate
 ----
 
-WARNING: Because of a bug in the way that Tali Forth 2 handles whitespace,
-`evaluate` will choke on any whitespace that is not a string. In this case, the
-carrage return causes the error message `Undefined word`. This is being worked
-on. In the meantime, stick to one-line commands and evaluate them without the
-final line feed (one character less). This gives us `7000 21 evaluate` in this
-example.
-
-
 ===== Known Issues
 
 `Ed` currently uses memory without releasing it when done. For small, quick
@@ -110,11 +103,11 @@ using more memory, you probably will want to set a marker first.
 ----
 marker pre-edit <1>
 ed <2>
-drop pre-edit <3>
+pre-edit <3>
 ----
 <1> Set marker at current value of `here`
 <2> Edit normally
-<3> Drop the return value and call marker, releasing memory
+<3> Call marker, releasing memory
 
 This issue might be taken care of in a future release.
 

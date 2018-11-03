@@ -1337,6 +1337,7 @@ testing parse-name marker erase
 \ Careful editing these, whitespace is significant
 T{ parse-name abcd s" abcd" s= -> <true> }T 
 T{ parse-name   abcde   s" abcde" s= -> <true> }T \ test empty parse area 
+T{ parse-name  abcde s" abcde" s= -> <true> }T \ test TABS instead of spaces
 T{ parse-name 
    nip -> 0 }T    \ empty line 
 T{ parse-name    
