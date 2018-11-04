@@ -829,12 +829,24 @@ z_allot:
 .scend
 
 
+; ## ALLOW_NATIVE ( -- ) "Flag last word to allow nativing compiling"
+; ## "allow-native"  coded  Tali Forth
+xt_allow_native:
+                ldy #1          ; offset for status byte
+                lda (dp),y
+                and #$ff-NN-AN  ; AN and NN flag is clear.
+                sta (dp),y
+z_allow_native:
+                rts
+
+
 ; ## ALWAYS_NATIVE ( -- ) "Flag last word as always natively compiled"
 ; ## "always-native"  tested  Tali Forth
 xt_always_native:
                 ldy #1          ; offset for status byte
                 lda (dp),y
-                ora #AN         ; make sure flag is set
+                ora #AN         ; Make sure AN flag is set
+                and #$ff-NN     ; and NN flag is clear.
                 sta (dp),y
 z_always_native:
                 rts
@@ -5057,7 +5069,8 @@ z_negate:       rts
 xt_never_native:
                 ldy #1          ; offset for status byte
                 lda (dp),y
-                ora #NN         ; make sure flag is set
+                ora #NN         ; Make sure NN flag is set
+                and #$ff-AN     ; and AN flag is clear.
                 sta (dp),y
 z_never_native:
                 rts
