@@ -17,7 +17,8 @@ RTS instruction at the end of each word.
 | ALIGN | `align` | ANS core | 0 | **auto** |
 | ALIGNED | `aligned` | ANS core | 0 | **auto** |
 | ALLOT | `allot` | ANS core | 108 | **auto** |
-| ALWAYS_NATIVE | `always-native` | Tali Forth | 8 | tested |
+| ALLOW_NATIVE | `allow-native` | Tali Forth | 8 | tested |
+| ALWAYS_NATIVE | `always-native` | Tali Forth | 10 | tested |
 | AND | `and` | ANS core | 21 | **auto** |
 | AT_XY | `at-xy` | ANS facility | 33 | tested |
 | BACKSLASH | `\` | ANS core ext | 8 | **auto** |
@@ -117,7 +118,7 @@ RTS instruction at the end of each word.
 | NAME_TO_STRING | `name>string` | Gforth | 29 | tested |
 | NC_LIMIT | `nc-limit` | Tali Forth | 10 | tested |
 | NEGATE | `negate` | ANS core | 20 | **auto** |
-| NEVER_NATIVE | `never-native` | Tali Forth | 8 | tested |
+| NEVER_NATIVE | `never-native` | Tali Forth | 10 | tested |
 | NIP | `nip` | ANS core ext | 17 | **auto** |
 | NOT_EQUALS | `<>` | ANS core ext | 33 | **auto** |
 | NOT_ROTE | `-rot` | Gforth | 31 | **auto** |
@@ -212,7 +213,7 @@ RTS instruction at the end of each word.
 | ZERO_LESS | `0<` | ANS core | 19 | **auto** |
 | ZERO_UNEQUAL | `0<>` | ANS core ext | 21 | **auto** |
 
-Found **204** native words in `native_words.asm`.
+Found **205** native words in `native_words.asm`.
 Of those, **170** were automatically tested and
           **1** are not marked as tested at all.
 

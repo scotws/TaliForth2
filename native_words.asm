@@ -829,8 +829,8 @@ z_allot:
 .scend
 
 
-; ## ALLOW_NATIVE ( -- ) "Flag last word to allow nativing compiling"
-; ## "allow-native"  coded  Tali Forth
+; ## ALLOW_NATIVE ( -- ) "Flag last word to allow native compiling"
+; ## "allow-native"  tested  Tali Forth
 xt_allow_native:
                 ldy #1          ; offset for status byte
                 lda (dp),y
