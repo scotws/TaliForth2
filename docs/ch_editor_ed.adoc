@@ -1,4 +1,4 @@
-==== The Line-Based Editor ed
+TIP: This manual includes <<ed-tutorial,a tutorial>> for `ed`
 
 [quote, B. W. Kernighan, A Tutorial Introduction to the UNIX Text Editor]
 Ed makes no response to most commands – there is no prompting or typing of
@@ -6,14 +6,13 @@ messages like "ready". (This silence is preferred by experienced users, but
 sometimes a hangup for beginners.) <<BWK>>
 
 Tali Forth 2 currently ships with a clone of the `ed` line-based editor of
-Unix fame. It is envoked with `ed ( -- u )`. The formal name is `ed6502`. 
+Unix fame. It is envoked with `ed` and does not change the data stack. The
+formal name is `ed6502`. 
 
 WARNING: `ed` is included in a very primitive form only and should be considered
 ALPHA. 
 
-NOTE: These are preliminary notes. A tutorial with more examples is planned.
-
-===== Supported Commands
+==== Supported Commands
 
 `ed` currently supports only a small number of the commands of the Unix version:
 
@@ -60,7 +59,7 @@ The following parameter features:
 [horizontal]
 ;:: Range from current line to end, same as `.,$`
 
-===== Differences to Unix ed
+==== Differences to Unix ed
 
 (Apart from missing about 90 percent of the features, that is)
 
@@ -72,7 +71,7 @@ WARNING: At this point, it isn't totally clear what happens if the number base
 is set to hexadecimal via `hex`. Use at your own risk.
 
 
-===== Using `ed` for programming
+==== Using `ed` for programming
 
 `Ed` can be used to write programs and then execute them with `evaluate`. For
 instance, a session to add a small string could look something like this:
@@ -80,7 +79,7 @@ instance, a session to add a small string could look something like this:
 ----
 ed
 a
-.( My cat loves tuna)
+.( Shepard, is that ... You're alive?)
 .
 7000w <1>
 22 <2>
@@ -89,12 +88,19 @@ q
 <1> Address we save the command to
 <2> Number of characters saved including final line feed
 
-Then, we can run the program:
+It is a common mistake to forget the `.` (dot) to end the input, and try to
+go immediately to saving the text. Then, we can run the program:
+
 ----
 7000 22 evaluate
 ----
 
-===== Known Issues
+Ǹote that `evaluate` will handle line feeds, carriage returns and other white
+space apart from simple spaces without problems.
+
+==== Known Issues
+
+===== Memory use
 
 `Ed` currently uses memory without releasing it when done. For small, quick
 edits, this probably is not a problem. However, if you known you are going to be
@@ -111,6 +117,13 @@ pre-edit <3>
 
 This issue might be taken care of in a future release.
 
+===== Address of Saved Text
+
+Currently, `ed` returns the data stack just the way it found it. This means
+that you have to remember where you saved the text to with `w` and how long it
+was. A different option would be to return `( -- addr u )`, that is, the address
+and length of the text we saved. If nothing is saved, the program would return a
+zero length as TOS.
 
 ==== Developer Information
 
@@ -119,14 +132,9 @@ stabilized, has all features, and a testing suite. Currently, it's somewhat of a
 mess and contains some testing routines that will be removed in the final
 version.
 
-
-===== Further Information
-
-Given the age of `ed`, there is quite a lot of information on it on the
-Internet: 
-
-* https://en.wikipedia.org/wiki/Ed_(text_editor) Background and history
-* https://www.gnu.org/software/ed/ed.html The offical GNU ed page
-* https://www.gnu.org/software/ed/manual/ed_manual.html The official GNU ed manual
-* https://sanctum.geek.nz/arabesque/actually-using-ed/ Small tutorial of Unix ed
-* http://www.psue.uni-hannover.de/wise2017_2018/material/ed.pdf A tutorial by B. W. Kernighan (yes, _that_ Kernighan).
+The "buffer" of `ed` is a simple linked list of nodes, consisting of a pointer
+to the next entry, a pointer to the string address, and the length of that
+string. Each entry is two byte, making six bytes in total for each node. A value
+of 0000 in the pointer to the next address signals the end of the list. The
+buffer starts at the point of the `cp` (accessed with the Forth word `here`) and
+is only saved to the given location when the `w` command is given.

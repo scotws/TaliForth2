@@ -42,6 +42,5 @@ http://thinking-forth.sourceforge.net/\#21CENTURY
 [[[LL]]] _6502 Assembly Language Programming_, Lance A. Leventhal,
 OSBORNE/McGRAW-HILL 1979
 
-
-
-
+[[[PHS]]] "The Daemon, the Gnu and the Penguin", Peter H. Saulus,
+22. April 2005, http://www.groklaw.net/article.php?story=20050422235450910

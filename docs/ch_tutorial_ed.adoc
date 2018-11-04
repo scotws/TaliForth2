@@ -1,0 +1,274 @@
+[quote, Peter H. Saulus, "The Daemon, the Gnu and the Penguin"] 
+While TECO was known for its complex syntax, ed must have been
+the most user-hostile editor ever created.<<PHS>>
+
+Tali Forth 2 comes with two editors, a traditional block-based editor of the
+type common with Forth, and the line-based editor `ed`, formally known as
+`ed6502`. This second editor is included because I like line-based editors.
+More to the point, the saved text uses less space than the block editor, where
+every block, regardless of how much text is in it, uses 1024 bytes. In contrast,
+`ed` uses one byte per character plus one end-of-line character per line. We'll
+see an example of this later.
+
+The original `ed` was created by Ken Thompson and Dennis Ritchie along with the
+Unix operating system, sometime about 1971. It is terse, small, robust, and has
+a reputation for being completely unhelpful. An error is just signaled with a
+question mark (`?`). There isn't even a prompt unless it is explicitly turned
+on.
+
+NOTE: Newer versions of `ed` allow an option to display an explanation of the
+last error, but Tali doesn't have space for that. Error messages are for wimps.
+And who really needs a prompt anyway?
+
+Commands in `ed` are single-letter commands like `a` or `p`. They can be
+prefixed with a combination of letters and special characters to designate the
+line numbers the command is supposed to work on. For example, `1,4d` deletes
+lines one to four.
+
+
+=== First steps with `ed`
+
+Like its big brother `vi` (or its newer incarnation `vim`), `ed` has various
+modes, except that `ed` is so small it only has two. We start out in the
+_command mode_ in which we accept, well, commands. Using `a` or `i` switches to
+_input mode_ where all of the characters are added to the buffer. The first
+important thing is about how to get out of command mode: You type `.` (the
+period or dot) at the beginning of the line as the only character to return to
+command mode. A typical `ed` session will look something like this:footnote:[All
+quotes in the `ed` tutorial are taken from the _Mass Effect_ games by
+BioWare/EA. As stated already, they hold the rights to all characters and
+whatnot.]
+
+----
+        ed      <1>
+        a       <2>
+        After time adrift among open stars 
+        Along tides of light 
+        And through shoals of dust
+        I will return to where I began.
+        .       <3>
+                <4>
+----
+<1> Start the editor from Tali Forth. It doesn't take anything on the stack.
+<2> Switch to insert mode and type the text.
+<3> The dot alone on the line signals the end of the text. We return to command
+mode.
+<4> The cursor moves down to the next line, without printing any confirmation.
+This is where you continue typing.
+
+When you first use `ed`, you'll spend lots of time print what you've written and
+trying to figure out what the line numbers are. The commands for this are `p`
+(print without line numbers) and `n` (print with line numbers). The first
+special character prefix we'll learn for this is `%` (the percent symbol,
+alternatively a comma) works as well. This makes the command that
+follows it apply to the whole text.
+
+----
+        %p      <1>
+        After time adrift among open stars
+        Along tides of light
+        And through shoals of dust
+        I will return to where I began.
+                <2>
+----
+<1> This could also be `,p`
+<2> Note again we return to an empty line.
+
+The `%n` (or `,n`) command is usually more helpful because it gives you line
+numbers:
+
+----
+        ,n      <1>
+        1       After time adrift among open stars
+        2       Along tides of light
+        3       And through shoals of dust
+        4       I will return to where I began.
+----
+<1> This could also be `%n`
+
+Line numbers are indented automatically by one tab. Note we start counting with
+1, not 0, because this is an editor for real humans.
+
+Just entering the command directly without a line number will print the
+_current line_, which `ed` adjusts depending on what you are doing. After `a` it
+is the last line. 
+
+TIP: To find out which is the current line, type the `=` (equal sign) command.
+
+This session could continue as such: 
+
+----
+        n
+        4       I will return to where I began.
+----
+
+The `d` (delete) command removes a line. Let's explicitly remove the second
+line:
+
+----
+        2d
+
+----
+
+Again, `ed` provides absolutely no feedback on what just happened. We need to
+call `%n` (or `,n`) again if we are unsure:
+
+----
+        %n
+        1       After time adrift among open stars
+        2       And through shoals of dust
+        3       I will return to where I began.
+----
+
+Note that lines three and four have moved up -- they are now lines two and
+three. 
+
+TIP: To avoid confusion, when you have to delete a large number of lines, start
+at the bottom and move upwards towards the beginning of the text.
+
+We can also use comma-separated numbers to indicate a range of lines (say,
+`1,2d`). As you probably will have guessed, or the `,` (or `%`) prefix can be
+used to delete the complete text. Be careful -- in the real version of `ed`, you
+can undo changes with the `u` command.  Tali's version currently doesn't support
+this option. If you delete it, it's gone. 
+
+NOTE: The undo (`u`) function may be added to a future version of `ed` if space
+allows, at least for the last change.
+
+Now, let's say we want to put back the second line. We can do this again with `a`, to
+add text _after_ the first line. Note there is currently no way to paste the
+line we have just deleted. If we can't remember it, we're in trouble.
+
+----
+        1a      <1>
+        And then, I, uh, did something
+        .       <2>
+                <3>
+----
+<1> Add text _after_ the first line.
+<2> The dot takes us out again.
+<3> Still no feedback.
+
+Displaying our whole text with `%n` again, we get:
+
+----
+        %n
+        1       After time adrift among open stars
+        2       And then, I, uh, did something
+        3       And through shoals of dust
+        4       I will return to where I began.
+----
+
+Lines three and four are numbered again as they were. 
+
+Instead of using `1a`, we could have used `2i` to insert the new line _before_
+line number two. Most long-term users of `ed` (like, all three of them) develop
+a preference for `a` or `i`. This is easy because `ed` accepts `0a` as a way to
+add new lines _before_ the first line. In most other circumstances, line `0` is
+illegal. There is also the `$` prefix for the last line.
+
+TIP: The combination `$=` will print the number of the last line.
+
+=== Saving Your Text
+
+The only way to currently save text with `ed` on Tali is to write the buffer to
+a location in memory. 
+
+----
+        7000w   <1>
+        128     <2>
+----
+<1> The address in memory comes immediately before the `w` command with no
+space.
+<2> `ed` returns the number of characters written, including the end-of-line
+characters. Yes, this is actually feedback of sorts. But don't get cocky!
+
+WARNING: Changing the number base hasn't been tested yet, so stick to decimal
+numbers for the time being when saving text.
+
+The `w` command was originally created for files. Tali doesn't have files, just
+addresses. This means that you can write anything anywhere, at the risk of
+completely destroying your system. Really, really don't write anything to 0000,
+which will overwrite the zero page of the 65c02.
+
+=== Getting Out of `ed`
+
+We can leave `ed` at any time with `Q` - note this is the capital letter "q".
+Any unsaved (unwritten, rather) text will be lost. The lowercase `q` will refuse
+to quit if there is still unwritten text. When it doubt, use `q`. 
+
+To access your text from the Forth command line, you can use standard Forth
+words like `type` with the address chosen and the length of the text provided
+after the `w` command.
+
+----
+        7000 128 cr type        <1>
+        After time adrift among open stars
+        And then I, uh, did something
+        And through the shoals of dust
+        I will return to where I began.
+         ok                     <2>
+----
+<1> Place the `cr` word before the `type` word to prevent the first line of the
+text being placed right after the Forth command.
+<2> We're back to the helpful Forth interpreter.
+
+NOTE: In future, `ed` might provide the address and length of the saved text on
+the data stack when quitting. The stack signature of `ed` would then change to
+`( -- addr u )`. This would make further processing of the text easier.
+
+You can also use `dump` to show how compact `ed` stores the text:
+
+----
+7000 128 dump 
+1B58  41 66 74 65 72 20 74 69  6D 65 20 61 64 72 69 66  After ti me adrif
+1B68  74 20 61 6D 6F 6E 67 20  6F 70 65 6E 20 73 74 61  t among  open sta
+1B78  72 73 0A 41 6E 64 20 74  68 65 6E 20 49 2C 20 75  rs.And t hen I, u <1>
+1B88  68 2C 20 64 69 64 20 73  6F 6D 65 74 68 69 6E 67  h, did s omething
+1B98  0A 41 6E 64 20 74 68 72  6F 75 67 68 20 74 68 65  .And thr ough the
+1BA8  20 73 68 6F 61 6C 73 20  6F 66 20 64 75 73 74 0A   shoals  of dust.
+1BB8  49 20 77 69 6C 6C 20 72  65 74 75 72 6E 20 74 6F  I will r eturn to
+1BC8  20 77 68 65 72 65 20 49  20 62 65 67 61 6E 2E 0A   where I  began..
+1BD8   ok
+----
+<1> The dot in the text part of the hexdump at address $157A is not the period at
+the end of the line, but the way `dump` displays the non-printable $0A
+character. This control character marks the end of the line.
+
+Note this text uses 128 bytes, in the block editor it would use one block of
+1024 bytes.
+
+=== Programming with `ed` 
+
+You can use `ed` to write and save programs. Fire it up as usual:
+
+----
+	ed 
+	a 
+	: myloop ( -- )         <1>
+	    101 1 do i . loop   <2>
+	; 
+	myloop 
+	. 
+	7000w 
+	48 
+	q
+----
+<1> Type normally as you would with any other editor.
+<2> Any indentation has to be provided by hand. There is no auto-indent.
+
+Running `7000 48 evaluate` will now print the numbers from 1 to 100.  
+
+
+=== Further Information
+
+This tutorial will be expanded as new commands become available. In the meantime,
+there are other sources:
+
+* https://en.wikipedia.org/wiki/Ed_(text_editor) Background and history
+* https://www.gnu.org/software/ed/ed.html The official GNU ed page
+* https://www.gnu.org/software/ed/manual/ed_manual.html The official GNU ed manual
+* https://sanctum.geek.nz/arabesque/actually-using-ed/ Small tutorial of Unix ed
+* http://www.psue.uni-hannover.de/wise2017_2018/material/ed.pdf A tutorial by B. W. Kernighan (yes, _that_ Kernighan).
+
+

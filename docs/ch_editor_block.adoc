@@ -1,5 +1,3 @@
-==== The Block Editor
-
 If you are using blocks (see the block chapter), you can use the following code
 to create a very basic screen editor that allows you to replace a single line or
 an entire screen. Screens are 16 lines (numbered 0-15) of 64 characters each,

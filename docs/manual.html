@@ -5,7 +5,7 @@
 <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 1.5.5">
-<meta name="keywords" content="forth, 6502, assembler, programming">
+<meta name="keywords" content="forth, 6502, assembler, programming, 8-bit">
 <meta name="author" content="Scot W. Stevenson">
 <title>Manual for Tali Forth 2 for the 65c02</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
@@ -428,7 +428,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <span id="author" class="author">Scot W. Stevenson</span><br>
 <span id="email" class="email"><a href="mailto:scot.stevenson@gmail.com">scot.stevenson@gmail.com</a></span><br>
 <span id="revnumber">version BETA,</span>
-<span id="revdate">26. Oct 2018</span>
+<span id="revdate">03. Nov 2018</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -475,7 +475,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_major_components">Major Components</a>
 <ul class="sectlevel2">
 <li><a href="#_blocks">Blocks</a></li>
-<li><a href="#_editors">Editors</a></li>
+<li><a href="#_the_block_editor">The Block Editor</a></li>
+<li><a href="#_the_line_based_editor_code_ed_code">The Line-Based Editor <code>ed</code></a></li>
 <li><a href="#_assembler">Assembler</a></li>
 <li><a href="#_disassembler">Disassembler</a></li>
 </ul>
@@ -503,6 +504,20 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </ul>
 </li>
 <li><a href="#_future_and_long_term_plans">Future and Long-Term plans</a></li>
+</ul>
+</li>
+<li><a href="#_tutorials">Tutorials</a>
+<ul class="sectlevel1">
+<li><a href="#_working_with_blocks">Working with Blocks</a></li>
+<li><a href="#_the_code_ed_code_line_based_editor_a_id_ed_tutorial_a">The <code>ed</code> Line-Based Editor<a id="ed-tutorial"></a></a>
+<ul class="sectlevel2">
+<li><a href="#_first_steps_with_code_ed_code">First steps with <code>ed</code></a></li>
+<li><a href="#_saving_your_text">Saving Your Text</a></li>
+<li><a href="#_getting_out_of_code_ed_code">Getting Out of <code>ed</code></a></li>
+<li><a href="#_programming_with_code_ed_code">Programming with <code>ed</code></a></li>
+<li><a href="#_further_information">Further Information</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#_appendix">Appendix</a>
@@ -1530,12 +1545,7 @@ the existing one will be inaccessible while still taking up space in RAM.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_editors">Editors</h3>
-<div class="paragraph">
-<p>Tali Forth 2 comes with two editors, which are currently both very primitive.</p>
-</div>
-<div class="sect3">
-<h4 id="_the_block_editor">The Block Editor</h4>
+<h3 id="_the_block_editor">The Block Editor</h3>
 <div class="paragraph">
 <p>If you are using blocks (see the block chapter), you can use the following code
 to create a very basic screen editor that allows you to replace a single line or
@@ -1682,8 +1692,20 @@ using the <code>thru</code> command like so:</p>
 </div>
 </div>
 </div>
-<div class="sect3">
-<h4 id="_the_line_based_editor_ed">The Line-Based Editor ed</h4>
+<div class="sect2">
+<h3 id="_the_line_based_editor_code_ed_code">The Line-Based Editor <code>ed</code></h3>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+This manual includes <a href="#ed-tutorial">a tutorial</a> for <code>ed</code>
+</td>
+</tr>
+</table>
+</div>
 <div class="quoteblock">
 <blockquote>
 Ed makes no response to most commands – there is no prompting or typing of
@@ -1697,7 +1719,8 @@ sometimes a hangup for beginners.) <a href="#BWK">[BWK]</a>
 </div>
 <div class="paragraph">
 <p>Tali Forth 2 currently ships with a clone of the <code>ed</code> line-based editor of
-Unix fame. It is envoked with <code>ed (&#8201;&#8212;&#8201;u )</code>. The formal name is <code>ed6502</code>.</p>
+Unix fame. It is envoked with <code>ed</code> and does not change the data stack. The
+formal name is <code>ed6502</code>.</p>
 </div>
 <div class="admonitionblock warning">
 <table>
@@ -1712,20 +1735,8 @@ ALPHA.
 </tr>
 </table>
 </div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-These are preliminary notes. A tutorial with more examples is planned.
-</td>
-</tr>
-</table>
-</div>
-<div class="sect4">
-<h5 id="_supported_commands">Supported Commands</h5>
+<div class="sect3">
+<h4 id="_supported_commands">Supported Commands</h4>
 <div class="paragraph">
 <p><code>ed</code> currently supports only a small number of the commands of the Unix version:</p>
 </div>
@@ -1832,7 +1843,6 @@ $
 <p>An empty line (pressing the ENTER key) will advance by one line and print it. A
 simple number will print that line without the line number and make that line
 the new current line.</p>
-</div>
 </div>
 </div>
 <div class="sect3">
@@ -1947,8 +1957,9 @@ s
 </tr>
 </table>
 </div>
-<div class="sect4">
-<h5 id="_differences_to_unix_ed">Differences to Unix ed</h5>
+</div>
+<div class="sect3">
+<h4 id="_differences_to_unix_ed">Differences to Unix ed</h4>
 <div class="paragraph">
 <p>(Apart from missing about 90 percent of the features, that is)</p>
 </div>
@@ -1975,8 +1986,8 @@ is set to hexadecimal via <code>hex</code>. Use at your own risk.
 </table>
 </div>
 </div>
-<div class="sect4">
-<h5 id="_using_code_ed_code_for_programming">Using <code>ed</code> for programming</h5>
+<div class="sect3">
+<h4 id="_using_code_ed_code_for_programming">Using <code>ed</code> for programming</h4>
 <div class="paragraph">
 <p><code>Ed</code> can be used to write programs and then execute them with <code>evaluate</code>. For
 instance, a session to add a small string could look something like this:</p>
@@ -1985,7 +1996,7 @@ instance, a session to add a small string could look something like this:</p>
 <div class="content">
 <pre>ed
 a
-.( My cat loves tuna)
+.( Shepard, is that ... You're alive?)
 .
 7000w <i class="conum" data-value="1"></i><b>(1)</b>
 22 <i class="conum" data-value="2"></i><b>(2)</b>
@@ -2005,16 +2016,23 @@ q</pre>
 </table>
 </div>
 <div class="paragraph">
-<p>Then, we can run the program:</p>
+<p>It is a common mistake to forget the <code>.</code> (dot) to end the input, and try to
+go immediately to saving the text. Then, we can run the program:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre>7000 22 evaluate</pre>
 </div>
 </div>
+<div class="paragraph">
+<p>Ǹote that <code>evaluate</code> will handle line feeds, carriage returns and other white
+space apart from simple spaces without problems.</p>
 </div>
+</div>
+<div class="sect3">
+<h4 id="_known_issues">Known Issues</h4>
 <div class="sect4">
-<h5 id="_known_issues">Known Issues</h5>
+<h5 id="_memory_use">Memory use</h5>
 <div class="paragraph">
 <p><code>Ed</code> currently uses memory without releasing it when done. For small, quick
 edits, this probably is not a problem. However, if you known you are going to be
@@ -2047,6 +2065,16 @@ pre-edit <i class="conum" data-value="3"></i><b>(3)</b></pre>
 <p>This issue might be taken care of in a future release.</p>
 </div>
 </div>
+<div class="sect4">
+<h5 id="_address_of_saved_text">Address of Saved Text</h5>
+<div class="paragraph">
+<p>Currently, <code>ed</code> returns the data stack just the way it found it. This means
+that you have to remember where you saved the text to with <code>w</code> and how long it
+was. A different option would be to return <code>(&#8201;&#8212;&#8201;addr u )</code>, that is, the address
+and length of the text we saved. If nothing is saved, the program would return a
+zero length as TOS.</p>
+</div>
+</div>
 </div>
 <div class="sect3">
 <h4 id="_developer_information">Developer Information</h4>
@@ -2056,31 +2084,13 @@ stabilized, has all features, and a testing suite. Currently, it&#8217;s somewha
 mess and contains some testing routines that will be removed in the final
 version.</p>
 </div>
-<div class="sect4">
-<h5 id="_further_information">Further Information</h5>
 <div class="paragraph">
-<p>Given the age of <code>ed</code>, there is quite a lot of information on it on the
-Internet:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="https://en.wikipedia.org/wiki/Ed_(text_editor" class="bare">https://en.wikipedia.org/wiki/Ed_(text_editor</a>) Background and history</p>
-</li>
-<li>
-<p><a href="https://www.gnu.org/software/ed/ed.html" class="bare">https://www.gnu.org/software/ed/ed.html</a> The offical GNU ed page</p>
-</li>
-<li>
-<p><a href="https://www.gnu.org/software/ed/manual/ed_manual.html" class="bare">https://www.gnu.org/software/ed/manual/ed_manual.html</a> The official GNU ed manual</p>
-</li>
-<li>
-<p><a href="https://sanctum.geek.nz/arabesque/actually-using-ed/" class="bare">https://sanctum.geek.nz/arabesque/actually-using-ed/</a> Small tutorial of Unix ed</p>
-</li>
-<li>
-<p><a href="http://www.psue.uni-hannover.de/wise2017_2018/material/ed.pdf" class="bare">http://www.psue.uni-hannover.de/wise2017_2018/material/ed.pdf</a> A tutorial by B. W. Kernighan (yes, <em>that</em> Kernighan).</p>
-</li>
-</ul>
-</div>
+<p>The "buffer" of <code>ed</code> is a simple linked list of nodes, consisting of a pointer
+to the next entry, a pointer to the string address, and the length of that
+string. Each entry is two byte, making six bytes in total for each node. A value
+of 0000 in the pointer to the next address signals the end of the list. The
+buffer starts at the point of the <code>cp</code> (accessed with the Forth word <code>here</code>) and
+is only saved to the given location when the <code>w</code> command is given.</p>
 </div>
 </div>
 </div>
@@ -3827,6 +3837,511 @@ This section is missing. See the GitHub page for further details.
 </div>
 </div>
 </div>
+<h1 id="_tutorials" class="sect0">Tutorials</h1>
+<div class="sect1">
+<h2 id="_working_with_blocks">Working with Blocks</h2>
+<div class="sectionbody">
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+This section is currently missing.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_code_ed_code_line_based_editor_a_id_ed_tutorial_a">The <code>ed</code> Line-Based Editor<a id="ed-tutorial"></a></h2>
+<div class="sectionbody">
+<div class="quoteblock">
+<blockquote>
+While TECO was known for its complex syntax, ed must have been
+the most user-hostile editor ever created.<a href="#PHS">[PHS]</a>
+</blockquote>
+<div class="attribution">
+&#8212; Peter H. Saulus<br>
+<cite>The Daemon, the Gnu and the Penguin</cite>
+</div>
+</div>
+<div class="paragraph">
+<p>Tali Forth 2 comes with two editors, a traditional block-based editor of the
+type common with Forth, and the line-based editor <code>ed</code>, formally known as
+<code>ed6502</code>. This second editor is included because I like line-based editors.
+More to the point, the saved text uses less space than the block editor, where
+every block, regardless of how much text is in it, uses 1024 bytes. In contrast,
+<code>ed</code> uses one byte per character plus one end-of-line character per line. We&#8217;ll
+see an example of this later.</p>
+</div>
+<div class="paragraph">
+<p>The original <code>ed</code> was created by Ken Thompson and Dennis Ritchie along with the
+Unix operating system, sometime about 1971. It is terse, small, robust, and has
+a reputation for being completely unhelpful. An error is just signaled with a
+question mark (<code>?</code>). There isn&#8217;t even a prompt unless it is explicitly turned
+on.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Newer versions of <code>ed</code> allow an option to display an explanation of the
+last error, but Tali doesn&#8217;t have space for that. Error messages are for wimps.
+And who really needs a prompt anyway?
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Commands in <code>ed</code> are single-letter commands like <code>a</code> or <code>p</code>. They can be
+prefixed with a combination of letters and special characters to designate the
+line numbers the command is supposed to work on. For example, <code>1,4d</code> deletes
+lines one to four.</p>
+</div>
+<div class="sect2">
+<h3 id="_first_steps_with_code_ed_code">First steps with <code>ed</code></h3>
+<div class="paragraph">
+<p>Like its big brother <code>vi</code> (or its newer incarnation <code>vim</code>), <code>ed</code> has various
+modes, except that <code>ed</code> is so small it only has two. We start out in the
+<em>command mode</em> in which we accept, well, commands. Using <code>a</code> or <code>i</code> switches to
+<em>input mode</em> where all of the characters are added to the buffer. The first
+important thing is about how to get out of command mode: You type <code>.</code> (the
+period or dot) at the beginning of the line as the only character to return to
+command mode. A typical <code>ed</code> session will look something like this:<sup class="footnote">[<a id="_footnoteref_4" class="footnote" href="#_footnote_4" title="View footnote.">4</a>]</sup></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>        ed      <i class="conum" data-value="1"></i><b>(1)</b>
+        a       <i class="conum" data-value="2"></i><b>(2)</b>
+        After time adrift among open stars
+        Along tides of light
+        And through shoals of dust
+        I will return to where I began.
+        .       <i class="conum" data-value="3"></i><b>(3)</b>
+                <i class="conum" data-value="4"></i><b>(4)</b></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Start the editor from Tali Forth. It doesn&#8217;t take anything on the stack.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Switch to insert mode and type the text.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>The dot alone on the line signals the end of the text. We return to command
+mode.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>The cursor moves down to the next line, without printing any confirmation.
+This is where you continue typing.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>When you first use <code>ed</code>, you&#8217;ll spend lots of time print what you&#8217;ve written and
+trying to figure out what the line numbers are. The commands for this are <code>p</code>
+(print without line numbers) and <code>n</code> (print with line numbers). The first
+special character prefix we&#8217;ll learn for this is <code>%</code> (the percent symbol,
+alternatively a comma) works as well. This makes the command that
+follows it apply to the whole text.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>        %p      <i class="conum" data-value="1"></i><b>(1)</b>
+        After time adrift among open stars
+        Along tides of light
+        And through shoals of dust
+        I will return to where I began.
+                <i class="conum" data-value="2"></i><b>(2)</b></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>This could also be <code>,p</code></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Note again we return to an empty line.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The <code>%n</code> (or <code>,n</code>) command is usually more helpful because it gives you line
+numbers:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>        ,n      <i class="conum" data-value="1"></i><b>(1)</b>
+        1       After time adrift among open stars
+        2       Along tides of light
+        3       And through shoals of dust
+        4       I will return to where I began.</pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>This could also be <code>%n</code></td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Line numbers are indented automatically by one tab. Note we start counting with
+1, not 0, because this is an editor for real humans.</p>
+</div>
+<div class="paragraph">
+<p>Just entering the command directly withouth a line number will print the
+<em>current line</em>, which <code>ed</code> adjusts depending on what you are doing. After <code>a</code> it
+is the last line.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+To find out which is the current line, type the <code>=</code> (equal sign) command.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>This session could continue as such:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>        n
+        4       I will return to where I began.</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>d</code> (delete) command removes a line. Let&#8217;s explicitly remove the second
+line:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>        2d</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Again, <code>ed</code> provides absolutely no feedback on what just happened. We need to
+call <code>%n</code> (or <code>,n</code>) again if we are unsure:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>        %n
+        1       After time adrift among open stars
+        2       And through shoals of dust
+        3       I will return to where I began.</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note that lines three and four have moved up&#8201;&#8212;&#8201;they are now lines two and
+three.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+To avoid confusion, when you have to delete a large number of lines, start
+at the bottom and move upwards towards the beginning of the text.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>We can also use comma-separated numbers to indicate a range of lines (say,
+<code>1,2d</code>). As you probably will have guessed, or the <code>,</code> (or <code>%</code>) prefix can be
+used to delete the complete text. Be careful&#8201;&#8212;&#8201;in the real version of <code>ed</code>, you
+can undo changes with the <code>u</code> command.  Tali&#8217;s version currently doesn&#8217;t support
+this option. If you delete it, it&#8217;s gone.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The undo (<code>u</code>) function may be added to a future version of <code>ed</code> if space
+allows, at least for the last change.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Now, let&#8217;s say we want to put back the second line. We can do this again with <code>a</code>, to
+add text <em>after</em> the first line. Note there is currently no way to paste the
+line we have just deleted. If we can&#8217;t remember it, we&#8217;re in trouble.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>        1a      <i class="conum" data-value="1"></i><b>(1)</b>
+        And then, I, uh, did something
+        .       <i class="conum" data-value="2"></i><b>(2)</b>
+                <i class="conum" data-value="3"></i><b>(3)</b></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Add text <em>after</em> the first line.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The dot takes us out again.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Still no feedback.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Displaying our whole text with <code>%n</code> again, we get:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>        %n
+        1       After time adrift among open stars
+        2       And then, I, uh, did something
+        3       And through shoals of dust
+        4       I will return to where I began.</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Lines three and four are numbered again as they were.</p>
+</div>
+<div class="paragraph">
+<p>Instead of using <code>1a</code>, we could have used <code>2i</code> to insert the new line <em>before</em>
+line number two. Most long-term users of <code>ed</code> (like, all three of them) develop
+a preference for <code>a</code> or <code>i</code>. This is easy because <code>ed</code> accepts <code>0a</code> as a way to
+add new lines <em>before</em> the first line. In most other circumstances, line <code>0</code> is
+illegal. There is also the <code>$</code> prefix for the last line.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+The combination <code>$=</code> will print the number of the last line.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_saving_your_text">Saving Your Text</h3>
+<div class="paragraph">
+<p>The only way to currently save text with <code>ed</code> on Tali is to write the buffer to
+a location in memory.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>        7000w   <i class="conum" data-value="1"></i><b>(1)</b>
+        128     <i class="conum" data-value="2"></i><b>(2)</b></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The address in memory comes immediately before the <code>w</code> command with no
+space.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td><code>ed</code> returns the number of characters written, including the end-of-line
+chracters. Yes, this is actually feedback of sorts. But don&#8217;t get cocky!</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+Changing the number base hasn&#8217;t been tested yet, so stick to decimal
+numbers for the time being when saving text.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The <code>w</code> command was originally created for files. Tali doesn&#8217;t have files, just
+addresses. This means that you can write anything anywhere, at the rist of
+completely destroying your system. Really, really don&#8217;t write anything to 0000,
+which will overwrite the zero page of the 65c02.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_getting_out_of_code_ed_code">Getting Out of <code>ed</code></h3>
+<div class="paragraph">
+<p>We can leave <code>ed</code> at any time with <code>Q</code> - note this is the capital letter "q".
+Any unsaved (unwritten, rather) text will be lost. The lowercase <code>q</code> will refuse
+to quit if there is still unwritten text. When it doubt, use <code>q</code>.</p>
+</div>
+<div class="paragraph">
+<p>To access your text from the Forth command line, you can use standard Forth
+words like <code>type</code> with the address chosen and the length of the text provided
+after the <code>w</code> command.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>        7000 128 cr type        <i class="conum" data-value="1"></i><b>(1)</b>
+        After time adrift among open stars
+        And then I, uh, did something
+        And through the shoals of dust
+        I will return to where I began.
+         ok                     <i class="conum" data-value="2"></i><b>(2)</b></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Place the <code>cr</code> word before the <code>type</code> word to prevent the first line of the
+text being placed right after the Forth command.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>We&#8217;re back to the helpful Forth interpreter.</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+In future, <code>ed</code> might provide the address and length of the saved text on
+the data stack when quitting. The stack signature of <code>ed</code> would then change to
+<code>(&#8201;&#8212;&#8201;addr u )</code>. This would make further processing of the text easier.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>You can also use <code>dump</code> to show how compact <code>ed</code> stores the text:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>7000 128 dump
+1B58  41 66 74 65 72 20 74 69  6D 65 20 61 64 72 69 66  After ti me adrif
+1B68  74 20 61 6D 6F 6E 67 20  6F 70 65 6E 20 73 74 61  t among  open sta
+1B78  72 73 0A 41 6E 64 20 74  68 65 6E 20 49 2C 20 75  rs.And t hen I, u <i class="conum" data-value="1"></i><b>(1)</b>
+1B88  68 2C 20 64 69 64 20 73  6F 6D 65 74 68 69 6E 67  h, did s omething
+1B98  0A 41 6E 64 20 74 68 72  6F 75 67 68 20 74 68 65  .And thr ough the
+1BA8  20 73 68 6F 61 6C 73 20  6F 66 20 64 75 73 74 0A   shoals  of dust.
+1BB8  49 20 77 69 6C 6C 20 72  65 74 75 72 6E 20 74 6F  I will r eturn to
+1BC8  20 77 68 65 72 65 20 49  20 62 65 67 61 6E 2E 0A   where I  began..
+1BD8   ok</pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The dot in the text part of the hexdump at address $157A is not the period at
+the end of the line, but the way <code>dump</code> displays the non-printable $0A
+character. This control character marks the end of the line.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Note this text uses 128 bytes, in the block editor it would use one block of
+1024 bytes.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_programming_with_code_ed_code">Programming with <code>ed</code></h3>
+<div class="paragraph">
+<p>You can use <code>ed</code> to write and save programs. Fire it up as usual:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>	ed
+	a
+	: myloop ( -- )         <i class="conum" data-value="1"></i><b>(1)</b>
+	    101 1 do i . loop   <i class="conum" data-value="2"></i><b>(2)</b>
+	;
+	myloop
+	.
+	7000w
+	48
+	q</pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Type normally as you would with any other editor.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Any indentation has to be provided by hand. There is no auto-indent.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Running <code>7000 48 evaluate</code> will now print the numbers from 1 to 100.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_further_information">Further Information</h3>
+<div class="paragraph">
+<p>This tutorial will be expanded as new commands become available. In the meantime,
+there are other sources:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://en.wikipedia.org/wiki/Ed_(text_editor" class="bare">https://en.wikipedia.org/wiki/Ed_(text_editor</a>) Background and history</p>
+</li>
+<li>
+<p><a href="https://www.gnu.org/software/ed/ed.html" class="bare">https://www.gnu.org/software/ed/ed.html</a> The offical GNU ed page</p>
+</li>
+<li>
+<p><a href="https://www.gnu.org/software/ed/manual/ed_manual.html" class="bare">https://www.gnu.org/software/ed/manual/ed_manual.html</a> The official GNU ed manual</p>
+</li>
+<li>
+<p><a href="https://sanctum.geek.nz/arabesque/actually-using-ed/" class="bare">https://sanctum.geek.nz/arabesque/actually-using-ed/</a> Small tutorial of Unix ed</p>
+</li>
+<li>
+<p><a href="http://www.psue.uni-hannover.de/wise2017_2018/material/ed.pdf" class="bare">http://www.psue.uni-hannover.de/wise2017_2018/material/ed.pdf</a> A tutorial by B. W. Kernighan (yes, <em>that</em> Kernighan).</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
 <h1 id="_appendix" class="sect0">Appendix</h1>
 <div class="sect1">
 <h2 id="_reporting_problems">Reporting Problems</h2>
@@ -3882,7 +4397,7 @@ it to. If it sounds vaguely familiar, you&#8217;re probably thinking of Tali&#82
 Normandy a character in the <em>Mass
 Effect</em>  universe created by BioWare. This
 software has absolutely nothing to do with neither the game nor the companies and
-neither do I, expect that I&#8217;ve played the whole series and enjoyed it.<sup class="footnote">[<a id="_footnoteref_4" class="footnote" href="#_footnote_4" title="View footnote.">4</a>]</sup></p>
+neither do I, expect that I&#8217;ve played the whole series and enjoyed it.<sup class="footnote">[<a id="_footnoteref_5" class="footnote" href="#_footnote_5" title="View footnote.">5</a>]</sup></p>
 </dd>
 <dt class="hdlist1">And who is "Liara"?</dt>
 <dd>
@@ -4082,6 +4597,10 @@ March/April 1992
 <p><a id="LL"></a>[LL] <em>6502 Assembly Language Programming</em>, Lance A. Leventhal,
 OSBORNE/McGRAW-HILL 1979</p>
 </div>
+<div class="paragraph">
+<p><a id="PHS"></a>[PHS] "The Daemon, the Gnu and the Penguin", Peter H. Saulus,
+22. April 2005, <a href="http://www.groklaw.net/article.php?story=20050422235450910" class="bare">http://www.groklaw.net/article.php?story=20050422235450910</a></p>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -4108,13 +4627,16 @@ under <a href="https://www.ubuntu.com/">Ubuntu</a> Linux 16.04 LTS.</p>
 <a href="#_footnoteref_3">3</a>. Try reading that last sentence to a friend who isn&#8217;t into computers. Aren&#8217;t abbreviations fun?
 </div>
 <div class="footnote" id="_footnote_4">
-<a href="#_footnoteref_4">4</a>. Though I do wish they would tell us what happened to the quarian ark in <em>Andromeda</em>.
+<a href="#_footnoteref_4">4</a>. All quotes in the <code>ed</code> tutorial are taken from the <em>Mass Effect</em> games by BioWare/EA. As stated already, they hold the rights to all characters and whatnot.
+</div>
+<div class="footnote" id="_footnote_5">
+<a href="#_footnoteref_5">5</a>. Though I do wish they would tell us what happened to the quarian ark in <em>Andromeda</em>.
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
 Version BETA<br>
-Last updated 2018-11-03 02:49:12 CET
+Last updated 2018-11-04 00:53:23 CET
 </div>
 </div>
 </body>

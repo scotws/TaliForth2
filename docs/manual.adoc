@@ -2,9 +2,9 @@
 :doctype: book
 :author: Scot W. Stevenson
 :email: scot.stevenson@gmail.com
-:keywords: forth, 6502, assembler, programming
+:keywords: forth, 6502, assembler, programming, 8-bit
 :revnumber: BETA
-:revdate: 26. Oct 2018
+:revdate: 03. Nov 2018
 :showtitle:
 :icons: font
 :toc: left
@@ -44,12 +44,11 @@ include::ch_running.adoc[]
 === Blocks
 include::ch_blocks.adoc[]
 
-=== Editors
+=== The Block Editor
+include::ch_editor_block.adoc[]
 
-Tali Forth 2 comes with two editors, which are currently both very primitive.
-
-include::ch_editor.adoc[]
-include::ch_ed.adoc[]
+=== The Line-Based Editor `ed`
+include::ch_editor_ed.adoc[]
 
 === Assembler
 
@@ -71,6 +70,17 @@ include::ch_developing.adoc[]
 
 == Future and Long-Term plans
 WARNING: This section is missing. See the GitHub page for further details.
+
+
+// --------------------------------------------------------
+= Tutorials
+
+== Working with Blocks
+
+WARNING: This section is currently missing.
+
+== The `ed` Line-Based Editor[[ed-tutorial]]
+include::ch_tutorial_ed.adoc[]
 
 
 // --------------------------------------------------------
