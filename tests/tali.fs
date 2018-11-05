@@ -28,25 +28,74 @@ T{ ffff 2 bounds -> 0001 ffff }T  \ BOUNDS wraps on Tali with 16 bit address spa
 T{ decimal -> }T
 
 \ ------------------------------------------------------------------------
-testing tali-only words: always-native bell compile-only digit? int>name latestnt number 0 1 2
-testing tali-only words: never-native wordsize
+testing tali-only words: always-native bell compile-only digit? int>name
+testing tali-only words: latestnt number 0 1 2
+testing tali-only words: allow-native never-native wordsize nc-limit
 decimal
 
 \ Test for 0BRANCH not implemented
 \ Test for BRANCH not implemented
 \ Test for DISASM not implemented
 \ Test for INPUT not implemented
-\ Test for NC-LIMIT not implemented
 \ Test for OUTPUT not implemented
 \ Test for UF-STRIP not implemented
 
-( TODO ALWAY-NATIVE test missing)
 ( TODO BELL test missing)
 ( TODO COMPILE-ONLY test missing)
-( TODO INT>NAME test missing)
-( TODO LATESTNT test missing)
-( TODO NEVER-NATVE test missing)
-( TODO WORDSIZE test missing)
+
+\ Test int>name, latestnt and wordsize
+: one 1 ;
+T{ ' one int>name wordsize -> 8 }T
+T{ latestnt wordsize       -> 8 }T
+
+\ One should have been created with NN flag, so it should be compiled
+\ as a JSR when used (3-bytes).
+: one-a one ;
+T{ ' one-a int>name wordsize -> 3 }T
+
+\ Test allow-native
+: two 1 1 ; allow-native
+\ This should just barely prevent two from being natively compiled.
+15 nc-limit !
+: two-a two ;
+\ This should just barely allow two to be natively compiled.
+16 nc-limit !
+: two-b two ;
+
+T{ ' two   int>name wordsize -> 16 }T
+T{ ' two-a int>name wordsize ->  3 }T
+T{ ' two-b int>name wordsize -> 16 }T
+
+\ Test always-native.
+: three 2 1 ; always-native
+\ Three should always natively compile regardless of nc-limit.
+15 nc-limit !
+: three-a three ;
+16 nc-limit !
+: three-b three ;
+
+T{ ' three   int>name wordsize -> 16 }T
+T{ ' three-a int>name wordsize -> 16 }T
+T{ ' three-b int>name wordsize -> 16 }T
+\ Sneak in an extra test for latestnt.
+T{ latestnt wordsize           -> 16 }T
+
+\ Test never-native.
+\ Because NN is the default, we have to switch to one of the other modes first.
+: four 2 2 ; always-native never-native
+\ Four should never natively compile regardless of nc-limit.
+\ It will always be a JSR when used in another word.
+15 nc-limit !
+: four-a four ;
+16 nc-limit !
+: four-b four ;
+
+T{ ' four   int>name wordsize -> 16 }T
+T{ ' four-a int>name wordsize ->  3 }T
+T{ ' four-b int>name wordsize ->  3 }T
+\ Sneak in an extra test for latestnt.
+T{ latestnt wordsize          ->  3 }T
+
 
 
 \ Nothing is too trivial for testing!

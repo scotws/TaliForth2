@@ -1913,25 +1913,74 @@ T{ ffff 2 bounds -> 0001 ffff }T  \ BOUNDS wraps on Tali with 16 bit address spa
 T{ decimal -> }T  ok
   ok
 \ ------------------------------------------------------------------------  ok
-testing tali-only words: always-native bell compile-only digit? int>name latestnt number 0 1 2  ok
-testing tali-only words: never-native wordsize  ok
+testing tali-only words: always-native bell compile-only digit? int>name  ok
+testing tali-only words: latestnt number 0 1 2  ok
+testing tali-only words: allow-native never-native wordsize nc-limit  ok
 decimal  ok
   ok
 \ Test for 0BRANCH not implemented  ok
 \ Test for BRANCH not implemented  ok
 \ Test for DISASM not implemented  ok
 \ Test for INPUT not implemented  ok
-\ Test for NC-LIMIT not implemented  ok
 \ Test for OUTPUT not implemented  ok
 \ Test for UF-STRIP not implemented  ok
   ok
-( TODO ALWAY-NATIVE test missing)  ok
 ( TODO BELL test missing)  ok
 ( TODO COMPILE-ONLY test missing)  ok
-( TODO INT>NAME test missing)  ok
-( TODO LATESTNT test missing)  ok
-( TODO NEVER-NATVE test missing)  ok
-( TODO WORDSIZE test missing)  ok
+  ok
+\ Test int>name, latestnt and wordsize  ok
+: one 1 ;  ok
+T{ ' one int>name wordsize -> 8 }T  ok
+T{ latestnt wordsize       -> 8 }T  ok
+  ok
+\ One should have been created with NN flag, so it should be compiled  ok
+\ as a JSR when used (3-bytes).  ok
+: one-a one ;  ok
+T{ ' one-a int>name wordsize -> 3 }T  ok
+  ok
+\ Test allow-native  ok
+: two 1 1 ; allow-native  ok
+\ This should just barely prevent two from being natively compiled.  ok
+15 nc-limit !  ok
+: two-a two ;  ok
+\ This should just barely allow two to be natively compiled.  ok
+16 nc-limit !  ok
+: two-b two ;  ok
+  ok
+T{ ' two   int>name wordsize -> 16 }T  ok
+T{ ' two-a int>name wordsize ->  3 }T  ok
+T{ ' two-b int>name wordsize -> 16 }T  ok
+  ok
+\ Test always-native.  ok
+: three 2 1 ; always-native  ok
+\ Three should always natively compile regardless of nc-limit.  ok
+15 nc-limit !  ok
+: three-a three ;  ok
+16 nc-limit !  ok
+: three-b three ;  ok
+  ok
+T{ ' three   int>name wordsize -> 16 }T  ok
+T{ ' three-a int>name wordsize -> 16 }T  ok
+T{ ' three-b int>name wordsize -> 16 }T  ok
+\ Sneak in an extra test for latestnt.  ok
+T{ latestnt wordsize           -> 16 }T  ok
+  ok
+\ Test never-native.  ok
+\ Because NN is the default, we have to switch to one of the other modes first.  ok
+: four 2 2 ; always-native never-native  ok
+\ Four should never natively compile regardless of nc-limit.  ok
+\ It will always be a JSR when used in another word.  ok
+15 nc-limit !  ok
+: four-a four ;  ok
+16 nc-limit !  ok
+: four-b four ;  ok
+  ok
+T{ ' four   int>name wordsize -> 16 }T  ok
+T{ ' four-a int>name wordsize ->  3 }T  ok
+T{ ' four-b int>name wordsize ->  3 }T  ok
+\ Sneak in an extra test for latestnt.  ok
+T{ latestnt wordsize          ->  3 }T  ok
+  ok
   ok
   ok
 \ Nothing is too trivial for testing!  ok
@@ -2407,7 +2456,7 @@ drop \ accept test complete  ok
              ' align         cycle_test            CYCLES:     12 ok
 5            ' aligned       cycle_test drop       CYCLES:     12 ok
 5            ' allot         cycle_test            CYCLES:     62 ok
-: aword ;    ' always-native cycle_test            CYCLES:     27 ok
+: aword ;    ' always-native cycle_test            CYCLES:     29 ok
 5 5          ' and           cycle_test drop       CYCLES:     45 ok
 \ skipping     at-xy  ok
              ' \             cycle_test            CYCLES:     24 ok
@@ -2426,17 +2475,17 @@ here 5       ' blank         cycle_test            CYCLES:    314 ok
 5 here       ' c!            cycle_test            CYCLES:     35 ok
 5            ' cell+         cycle_test drop       CYCLES:     35 ok
 5            ' cells         cycle_test drop       CYCLES:     29 ok
-             ' char          cycle_test w drop     CYCLES:    441 ok
+             ' char          cycle_test w drop     CYCLES:    439 ok
 5            ' char+         cycle_test drop       CYCLES:     26 ok
 5            ' chars         cycle_test drop       CYCLES:     17 ok
 pad here 5   ' cmove         cycle_test            CYCLES:    177 ok
 pad here 5   ' cmove>        cycle_test            CYCLES:    172 ok
-             ' :             cycle_test wrd ;      CYCLES:    995 ok
+             ' :             cycle_test wrd ;      CYCLES:    991 ok
              ' :noname       cycle_test ; drop     CYCLES:     51 ok
 5            ' ,             cycle_test            CYCLES:     55 ok
-' aword      ' compile,      cycle_test            CYCLES:    702 ok
+' aword      ' compile,      cycle_test            CYCLES:    701 ok
 : bword ;    ' compile-only  cycle_test            CYCLES:     27 ok
-5            ' constant      cycle_test mycnst     CYCLES:   1353 ok
+5            ' constant      cycle_test mycnst     CYCLES:   1346 ok
 here         ' count         cycle_test 2drop      CYCLES:     48 ok
 \ skipping     cr  ok
 \ skipping     create  ok
@@ -2463,7 +2512,7 @@ char w       ' digit?        cycle_test 2drop      CYCLES:     75 ok
 5 5          ' =             cycle_test drop       CYCLES:     53 ok
 here 5       ' erase         cycle_test            CYCLES:    310 ok
 here 5 5     ' fill          cycle_test            CYCLES:    298 ok
-s" 5"        ' evaluate      cycle_test drop       CYCLES:  15943 ok
+s" 5"        ' evaluate      cycle_test drop       CYCLES:  15960 ok
 5 ' drop     ' execute       cycle_test            CYCLES:     62 ok
 \ skipping     exit  ok
              ' false         cycle_test drop       CYCLES:     24 ok
@@ -2471,8 +2520,8 @@ here         ' @             cycle_test drop       CYCLES:     48 ok
 \ making counted string for find  ok
 here 5 c, char a c, char w c, char o c,  ok
 char r c, char d c,  ok
-             ' find          cycle_test 2drop      CYCLES:    662 ok
-s" aword"    ' find-name     cycle_test drop       CYCLES:    385 ok
+             ' find          cycle_test 2drop      CYCLES:    659 ok
+s" aword"    ' find-name     cycle_test drop       CYCLES:    382 ok
 5. 5         ' fm/mod        cycle_test 2drop      CYCLES:   1278 ok
 5 5          ' >             cycle_test drop       CYCLES:     70 ok
              ' here          cycle_test drop       CYCLES:     30 ok
@@ -2481,7 +2530,7 @@ s" aword"    ' find-name     cycle_test drop       CYCLES:    385 ok
 \ skipping     i  ok
 : cword ;    ' immediate     cycle_test            CYCLES:     27 ok
              ' input         cycle_test drop       CYCLES:     28 ok
-' dup        ' int>name      cycle_test drop       CYCLES:   4848 ok
+' dup        ' int>name      cycle_test drop       CYCLES:   4790 ok
 5            ' invert        cycle_test drop       CYCLES:     37 ok
 \ skipping     j  ok
              ' key           cycle_test drop       CYCLES:     48 ok
@@ -2495,8 +2544,8 @@ s" aword"    ' find-name     cycle_test drop       CYCLES:    385 ok
 \ skipping     loop  ok
 \ skipping     +loop  ok
 5 5          ' lshift        cycle_test drop       CYCLES:    115 ok
-5 5          ' m*            cycle_test 2drop      CYCLES:    624 ok
-             ' marker        cycle_test marka      CYCLES:   1309 ok
+5 5          ' m*            cycle_test 2drop      CYCLES:    610 ok
+             ' marker        cycle_test marka      CYCLES:   1303 ok
              ' marka         cycle_test            CYCLES:     80 ok
 5 5          ' max           cycle_test drop       CYCLES:     58 ok
 5 5          ' min           cycle_test drop       CYCLES:     43 ok
@@ -2506,12 +2555,12 @@ here s" a"   ' move          cycle_test            CYCLES:    137 ok
 ' + int>name ' name>int      cycle_test drop       CYCLES:     60 ok
 ' + int>name ' name>string   cycle_test 2drop      CYCLES:     59 ok
              ' nc-limit      cycle_test drop       CYCLES:     28 ok
-5            ' negate        cycle_test drop       CYCLES:     39 ok
-: dword ;    ' never-native  cycle_test            CYCLES:     27 ok
+5            ' negate        cycle_test drop       CYCLES:     40 ok
+: dword ;    ' never-native  cycle_test            CYCLES:     29 ok
 5 5          ' nip           cycle_test drop       CYCLES:     37 ok
 5 5          ' <>            cycle_test drop       CYCLES:     57 ok
 5 5 5        ' -rot          cycle_test 2drop drop CYCLES:     65 ok
-s" 5"        ' number        cycle_test drop       CYCLES:   1426 ok
+s" 5"        ' number        cycle_test drop       CYCLES:   1394 ok
 \ skipping     #  ok
 \ skipping     #>  ok
 \ skipping     #s  ok
@@ -2523,7 +2572,7 @@ s" 5"        ' number        cycle_test drop       CYCLES:   1426 ok
 5 5          ' over          cycle_test 2drop drop CYCLES:     37 ok
              ' pad           cycle_test drop       CYCLES:     36 ok
 \ skipping     page  ok
-             ' parse-name    cycle_test a 2drop    CYCLES:    400 ok
+             ' parse-name    cycle_test a 2drop    CYCLES:    398 ok
 char "       ' parse         cycle_test " 2drop    CYCLES:    204 ok
 5 0          ' pick          cycle_test 2drop      CYCLES:     42 ok
 5 5          ' +             cycle_test drop       CYCLES:     47 ok
@@ -2549,15 +2598,15 @@ s" abc" 1    ' /string       cycle_test 2drop      CYCLES:     73 ok
              ' source-id     cycle_test drop       CYCLES:     30 ok
              ' space         cycle_test            CYCLES:     36 ok
 1            ' spaces        cycle_test            CYCLES:     70 ok
-5 5          ' *             cycle_test drop       CYCLES:    513 ok
+5 5          ' *             cycle_test drop       CYCLES:    499 ok
              ' state         cycle_test drop       CYCLES:     28 ok
 5 here       ' !             cycle_test            CYCLES:     54 ok
 5 5          ' swap          cycle_test 2drop      CYCLES:     49 ok
-             ' '             cycle_test aword drop CYCLES:   1255 ok
+             ' '             cycle_test aword drop CYCLES:   1246 ok
 \ postponing   to ( see value )  ok
-' aword      ' >body         cycle_test drop       CYCLES:    526 ok
+' aword      ' >body         cycle_test drop       CYCLES:    521 ok
              ' >in           cycle_test drop       CYCLES:     28 ok
-0. s" 55"    ' >number       cycle_test 4drop      CYCLES:   2469 ok
+0. s" 55"    ' >number       cycle_test 4drop      CYCLES:   2406 ok
 \ skipping     >r  ok
              ' true          cycle_test drop       CYCLES:     26 ok
 5 5          ' tuck          cycle_test 2drop drop CYCLES:     61 ok
@@ -2573,7 +2622,7 @@ here         ' 2@            cycle_test 2drop      CYCLES:     77 ok
 5. here      ' 2!            cycle_test            CYCLES:     88 ok
 5 5 5 5      ' 2swap         cycle_test 4drop      CYCLES:     81 ok
 \ skipping     2>r  ok
-             ' 2variable     cycle_test eword      CYCLES:   1167 ok
+             ' 2variable     cycle_test eword      CYCLES:   1161 ok
              ' eword         cycle_test drop       CYCLES:     45 ok
 s" *"        ' type          cycle_test           *CYCLES:    110 ok
 5            ' u.            cycle_test          5 CYCLES:   3438 ok
@@ -2581,13 +2630,13 @@ s" *"        ' type          cycle_test           *CYCLES:    110 ok
 5 5          ' u<            cycle_test drop       CYCLES:     49 ok
              ' uf-strip      cycle_test drop       CYCLES:     28 ok
 5. 5         ' um/mod        cycle_test 2drop      CYCLES:   1238 ok
-5 5          ' um*           cycle_test 2drop      CYCLES:    492 ok
+5 5          ' um*           cycle_test 2drop      CYCLES:    478 ok
 \ skipping     unloop  ok
              ' unused        cycle_test drop       CYCLES:     36 ok
-5            ' value         cycle_test fword      CYCLES:   1266 ok
+5            ' value         cycle_test fword      CYCLES:   1260 ok
              ' fword         cycle_test drop       CYCLES:     58 ok
-5            ' to            cycle_test fword      CYCLES:   1038 ok
-             ' variable      cycle_test gword      CYCLES:   1211 ok
+5            ' to            cycle_test fword      CYCLES:   1029 ok
+             ' variable      cycle_test gword      CYCLES:   1205 ok
              ' gword         cycle_test drop       CYCLES:     45 ok
 char "       ' word          cycle_test "txt" drop CYCLES:    632 ok
 \ skipping     words  ok
