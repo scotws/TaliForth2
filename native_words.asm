@@ -830,7 +830,7 @@ z_allot:
 
 
 ; ## ALLOW_NATIVE ( -- ) "Flag last word to allow native compiling"
-; ## "allow-native"  tested  Tali Forth
+; ## "allow-native"  auto  Tali Forth
 xt_allow_native:
                 ldy #1          ; offset for status byte
                 lda (dp),y
@@ -841,7 +841,7 @@ z_allow_native:
 
 
 ; ## ALWAYS_NATIVE ( -- ) "Flag last word as always natively compiled"
-; ## "always-native"  tested  Tali Forth
+; ## "always-native"  auto  Tali Forth
 xt_always_native:
                 ldy #1          ; offset for status byte
                 lda (dp),y
@@ -4069,7 +4069,7 @@ z_input:        rts
 
 
 ; ## INT_TO_NAME ( xt -- nt ) "Get name token from execution token"
-; ## "int>name"  tested  Tali Forth
+; ## "int>name"  auto  Tali Forth
         ; """www.complang.tuwien.ac.at/forth/gforth/Docs-html/Name-token.html
         ; This is called >NAME in Gforth, but we change it to 
         ; INT>NAME to match NAME>INT
@@ -4228,7 +4228,7 @@ key_a:
 
 
 ; ## LATESTNT ( -- nt ) "Push most recent nt to the stack"
-; ## "latestnt"  tested  Tali Forth
+; ## "latestnt"  auto  Tali Forth
         ; """www.complang.tuwien.ac.at/forth/gforth/Docs-html/Name-token.html
         ; The Gforth version of this word is called LATEST
         ; """
@@ -4245,7 +4245,7 @@ z_latestnt:     rts
 
 
 ; ## LATESTXT ( -- xt ) "Push most recent xt to the stack"
-; ## "latestxt"  tested  Gforth
+; ## "latestxt"  auto  Gforth
         ; """http://www.complang.tuwien.ac.at/forth/gforth/Docs-html/Anonymous-Definitions.html"""
 xt_latestxt:    
                 jsr xt_latestnt         ; ( nt )
@@ -5065,7 +5065,7 @@ z_negate:       rts
 
 
 ; ## NEVER_NATIVE ( -- ) "Flag last word as never natively compiled"
-; ## "never-native"  tested  Tali Forth
+; ## "never-native"  auto  Tali Forth
 xt_never_native:
                 ldy #1          ; offset for status byte
                 lda (dp),y
@@ -8864,7 +8864,7 @@ z_words:        rts
 
 
 ; ## WORDSIZE ( nt -- u ) "Get size of word in bytes"
-; ## "wordsize"  tested  Tali Forth
+; ## "wordsize"  auto  Tali Forth
         ; """Given an word's name token (nt), return the size of the
         ; word's payload size in bytes (CFA plus PFA) in bytes. Does not
         ; count the final RTS.  """

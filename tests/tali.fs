@@ -29,7 +29,7 @@ T{ decimal -> }T
 
 \ ------------------------------------------------------------------------
 testing tali-only words: always-native bell compile-only digit? int>name
-testing tali-only words: latestnt number 0 1 2
+testing tali-only words: latestnt latestxt number 0 1 2
 testing tali-only words: allow-native never-native wordsize nc-limit
 decimal
 
@@ -43,10 +43,11 @@ decimal
 ( TODO BELL test missing)
 ( TODO COMPILE-ONLY test missing)
 
-\ Test int>name, latestnt and wordsize
+\ Test int>name, latestnt, latestxt, and wordsize
 : one 1 ;
-T{ ' one int>name wordsize -> 8 }T
-T{ latestnt wordsize       -> 8 }T
+T{ ' one int>name wordsize    -> 8 }T
+T{ latestxt int>name wordsize -> 8 }T
+T{ latestnt wordsize          -> 8 }T
 
 \ One should have been created with NN flag, so it should be compiled
 \ as a JSR when used (3-bytes).
@@ -77,8 +78,10 @@ T{ ' two-b int>name wordsize -> 16 }T
 T{ ' three   int>name wordsize -> 16 }T
 T{ ' three-a int>name wordsize -> 16 }T
 T{ ' three-b int>name wordsize -> 16 }T
-\ Sneak in an extra test for latestnt.
+\ Sneak in extra tests for latestnt and latestxt.
 T{ latestnt wordsize           -> 16 }T
+T{ latestxt int>name wordsize  -> 16 }T
+
 
 \ Test never-native.
 \ Because NN is the default, we have to switch to one of the other modes first.
@@ -93,8 +96,9 @@ T{ latestnt wordsize           -> 16 }T
 T{ ' four   int>name wordsize -> 16 }T
 T{ ' four-a int>name wordsize ->  3 }T
 T{ ' four-b int>name wordsize ->  3 }T
-\ Sneak in an extra test for latestnt.
+\ Sneak in extra tests for latestnt and latestxt.
 T{ latestnt wordsize          ->  3 }T
+T{ latestxt int>name wordsize ->  3 }T
 
 
 
@@ -102,7 +106,10 @@ T{ latestnt wordsize          ->  3 }T
 T{ 0 -> 0 }T
 T{ 1 -> 1 }T
 T{ 2 -> 2 }T
-
+\ Slightly less trivial...
+T{ 0 -> 5 5 - }T
+T{ 1 -> 5 4 - }T
+T{ 2 -> 5 3 - }T
 
 \ Test for DIGIT? ( char -- u f | char f )
 
