@@ -17,7 +17,8 @@ RTS instruction at the end of each word.
 | ALIGN | `align` | ANS core | 0 | **auto** |
 | ALIGNED | `aligned` | ANS core | 0 | **auto** |
 | ALLOT | `allot` | ANS core | 108 | **auto** |
-| ALWAYS_NATIVE | `always-native` | Tali Forth | 8 | tested |
+| ALLOW_NATIVE | `allow-native` | Tali Forth | 8 | **auto** |
+| ALWAYS_NATIVE | `always-native` | Tali Forth | 10 | **auto** |
 | AND | `and` | ANS core | 21 | **auto** |
 | AT_XY | `at-xy` | ANS facility | 33 | tested |
 | BACKSLASH | `\` | ANS core ext | 8 | **auto** |
@@ -91,12 +92,12 @@ RTS instruction at the end of each word.
 | I | `i` | ANS core | 25 | **auto** |
 | IMMEDIATE | `immediate` | ANS core | 8 | **auto** |
 | INPUT | `input` | Tali Forth | 10 | tested |
-| INT_TO_NAME | `int>name` | Tali Forth | 85 | tested |
+| INT_TO_NAME | `int>name` | Tali Forth | 85 | **auto** |
 | INVERT | `invert` | ANS core | 19 | **auto** |
 | J | `j` | ANS core | 25 | **auto** |
 | KEY | `key` | ANS core | 9 | tested |
-| LATESTNT | `latestnt` | Tali Forth | 10 | tested |
-| LATESTXT | `latestxt` | Gforth | 6 | tested |
+| LATESTNT | `latestnt` | Tali Forth | 10 | **auto** |
+| LATESTXT | `latestxt` | Gforth | 6 | **auto** |
 | LEAVE | `leave` | ANS core | 5 | **auto** |
 | LEFT_BRACKET | `[` | ANS core | 4 | **auto** |
 | LESS_NUMBER_SIGN | `<#` | ANS core | 13 | **auto** |
@@ -117,7 +118,7 @@ RTS instruction at the end of each word.
 | NAME_TO_STRING | `name>string` | Gforth | 29 | tested |
 | NC_LIMIT | `nc-limit` | Tali Forth | 10 | tested |
 | NEGATE | `negate` | ANS core | 20 | **auto** |
-| NEVER_NATIVE | `never-native` | Tali Forth | 8 | tested |
+| NEVER_NATIVE | `never-native` | Tali Forth | 10 | **auto** |
 | NIP | `nip` | ANS core ext | 17 | **auto** |
 | NOT_EQUALS | `<>` | ANS core ext | 33 | **auto** |
 | NOT_ROTE | `-rot` | Gforth | 31 | **auto** |
@@ -203,7 +204,7 @@ RTS instruction at the end of each word.
 | WITHIN | `within` | ANS core ext | 25 | **auto** |
 | WORD | `word` | ANS core | 73 | **auto** |
 | WORDS | `words` | ANS tools | 56 | tested |
-| WORDSIZE | `wordsize` | Tali Forth | 36 | tested |
+| WORDSIZE | `wordsize` | Tali Forth | 36 | **auto** |
 | XOR | `xor` | ANS core | 21 | **auto** |
 | ZERO | `0` | Tali Forth | 6 | **auto** |
 | ZERO_BRANCH | `0branch` | Tali Forth | 7 | tested |
@@ -212,7 +213,7 @@ RTS instruction at the end of each word.
 | ZERO_LESS | `0<` | ANS core | 19 | **auto** |
 | ZERO_UNEQUAL | `0<>` | ANS core ext | 21 | **auto** |
 
-Found **204** native words in `native_words.asm`.
-Of those, **170** were automatically tested and
+Found **205** native words in `native_words.asm`.
+Of those, **177** were automatically tested and
           **1** are not marked as tested at all.
 

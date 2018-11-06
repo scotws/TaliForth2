@@ -422,9 +422,14 @@ nt_nc_limit:
         .word nt_uf_strip, xt_nc_limit, z_nc_limit
         .byte "nc-limit"
 
+nt_allow_native:
+        .byte 12, 0
+        .word nt_nc_limit, xt_allow_native, z_allow_native
+        .byte "allow-native"
+
 nt_always_native:
         .byte 13, 0
-        .word nt_nc_limit, xt_always_native, z_always_native
+        .word nt_allow_native, xt_always_native, z_always_native
         .byte "always-native"
 
 nt_never_native:
