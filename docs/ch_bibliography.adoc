@@ -16,6 +16,10 @@ Mountain View Press 1982
 [[[DH]]] "Some notes on Forth from a novice user", Douglas Hoffman, Feb 1988
 https://wiki.forth-ev.de/doku.php/projects:some_notes_on_forth_from_a_novice_user
 
+[[[DMR]]] "Reflections on Software Research", Dennis M. Ritchie, Turing Award
+Lecture in _Communications of the ACM_ August 1984 Volume 27 Number 8
+http://www.valleytalk.org/wp-content/uploads/2011/10/p758-ritchie.pdf
+
 [[[EnL]]] _Programming the 65816, including the 6502, 65C02 and 65802_, 
 David Eyes and Ron Lichty
 (Currently not available from the WDC website) 

@@ -2164,6 +2164,16 @@ after the label <code>disassembler:</code>.</p>
 <div class="sect1">
 <h2 id="_how_tali_forth_works">How Tali Forth Works</h2>
 <div class="sectionbody">
+<div class="quoteblock">
+<blockquote>
+Our intent was to create a pleasant computing environment
+for ourselves, and our hope was that others liked it. <a href="#DMR">[DMR]</a>
+</blockquote>
+<div class="attribution">
+&#8212; Dennis M. Ritchie<br>
+<cite>Reflections on Software Research</cite>
+</div>
+</div>
 <div class="sect2">
 <h3 id="_the_data_stack">The Data Stack</h3>
 <div class="paragraph">
@@ -2639,21 +2649,6 @@ In the second case, we use <code>source-id</code> to find out where input is com
 <div class="paragraph">
 <p>Since Tali currently doesn&#8217;t support blocks, we can skip the <code>blk</code> instruction
 and go right to <code>source-id</code>.</p>
-</div>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
-One gotcha with Tali Forth&#8217;s input is that current it only sees spaces,
-but not other whitespace, as delimiters. This means that Forth text files that
-are fed to Tali may not contain tabs. This behavior might be changed in the
-future.
-</td>
-</tr>
-</table>
 </div>
 <div class="sect3">
 <h4 id="_booting_2">Booting</h4>
@@ -4005,7 +4000,7 @@ numbers:</p>
 1, not 0, because this is an editor for real humans.</p>
 </div>
 <div class="paragraph">
-<p>Just entering the command directly withouth a line number will print the
+<p>Just entering the command directly without a line number will print the
 <em>current line</em>, which <code>ed</code> adjusts depending on what you are doing. After <code>a</code> it
 is the last line.</p>
 </div>
@@ -4174,7 +4169,7 @@ space.</td>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
 <td><code>ed</code> returns the number of characters written, including the end-of-line
-chracters. Yes, this is actually feedback of sorts. But don&#8217;t get cocky!</td>
+characters. Yes, this is actually feedback of sorts. But don&#8217;t get cocky!</td>
 </tr>
 </table>
 </div>
@@ -4193,7 +4188,7 @@ numbers for the time being when saving text.
 </div>
 <div class="paragraph">
 <p>The <code>w</code> command was originally created for files. Tali doesn&#8217;t have files, just
-addresses. This means that you can write anything anywhere, at the rist of
+addresses. This means that you can write anything anywhere, at the risk of
 completely destroying your system. Really, really don&#8217;t write anything to 0000,
 which will overwrite the zero page of the 65c02.</p>
 </div>
@@ -4326,7 +4321,7 @@ there are other sources:</p>
 <p><a href="https://en.wikipedia.org/wiki/Ed_(text_editor" class="bare">https://en.wikipedia.org/wiki/Ed_(text_editor</a>) Background and history</p>
 </li>
 <li>
-<p><a href="https://www.gnu.org/software/ed/ed.html" class="bare">https://www.gnu.org/software/ed/ed.html</a> The offical GNU ed page</p>
+<p><a href="https://www.gnu.org/software/ed/ed.html" class="bare">https://www.gnu.org/software/ed/ed.html</a> The official GNU ed page</p>
 </li>
 <li>
 <p><a href="https://www.gnu.org/software/ed/manual/ed_manual.html" class="bare">https://www.gnu.org/software/ed/manual/ed_manual.html</a> The official GNU ed manual</p>
@@ -4564,6 +4559,11 @@ Mountain View Press 1982</p>
 <a href="https://wiki.forth-ev.de/doku.php/projects:some_notes_on_forth_from_a_novice_user" class="bare">https://wiki.forth-ev.de/doku.php/projects:some_notes_on_forth_from_a_novice_user</a></p>
 </div>
 <div class="paragraph">
+<p><a id="DMR"></a>[DMR] "Reflections on Software Research", Dennis M. Ritchie, Turing Award
+Lecture in <em>Communications of the ACM</em> August 1984 Volume 27 Number 8
+<a href="http://www.valleytalk.org/wp-content/uploads/2011/10/p758-ritchie.pdf" class="bare">http://www.valleytalk.org/wp-content/uploads/2011/10/p758-ritchie.pdf</a></p>
+</div>
+<div class="paragraph">
 <p><a id="EnL"></a>[EnL] <em>Programming the 65816, including the 6502, 65C02 and 65802</em>,
 David Eyes and Ron Lichty
 (Currently not available from the WDC website)</p>
@@ -4636,7 +4636,7 @@ under <a href="https://www.ubuntu.com/">Ubuntu</a> Linux 16.04 LTS.</p>
 <div id="footer">
 <div id="footer-text">
 Version BETA<br>
-Last updated 2018-11-04 00:53:23 CET
+Last updated 2018-11-06 11:53:24 CET
 </div>
 </div>
 </body>

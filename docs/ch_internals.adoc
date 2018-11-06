@@ -1,3 +1,7 @@
+[quote, Dennis M. Ritchie, Reflections on Software Research]
+Our intent was to create a pleasant computing environment
+for ourselves, and our hope was that others liked it. <<DMR>>
+
 === The Data Stack
 
 Tali Forth uses the lowest part of the top half of the Zero Page((("Zero
@@ -314,11 +318,6 @@ In the second case, we use `source-id` to find out where input is coming from:
 
 Since Tali currently doesn't support blocks, we can skip the `blk` instruction
 and go right to `source-id`.
-
-WARNING: One gotcha with Tali Forth's input is that current it only sees spaces,
-but not other whitespace, as delimiters. This means that Forth text files that
-are fed to Tali may not contain tabs. This behavior might be changed in the
-future.
 
 ==== Booting
 
