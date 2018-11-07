@@ -39,6 +39,7 @@ RTS instruction at the end of each word.
 | CHAR | `char` | ANS core | 22 | **auto** |
 | CHAR_PLUS | `char+` | ANS core | 0 | **auto** |
 | CHARS | `chars` | ANS core | 7 | **auto** |
+| CLEAVE | `cleave` | Tali Forth | 106 | **auto** |
 | CMOVE | `cmove` | ANS string | 62 | **auto** |
 | CMOVE_UP | `cmove>` | ANS string | 62 | **auto** |
 | COLON | `:` | ANS core | 55 | **auto** |
@@ -213,7 +214,7 @@ RTS instruction at the end of each word.
 | ZERO_LESS | `0<` | ANS core | 19 | **auto** |
 | ZERO_UNEQUAL | `0<>` | ANS core ext | 21 | **auto** |
 
-Found **205** native words in `native_words.asm`.
-Of those, **177** were automatically tested and
+Found **206** native words in `native_words.asm`.
+Of those, **178** were automatically tested and
           **1** are not marked as tested at all.
 
