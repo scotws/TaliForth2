@@ -1243,6 +1243,39 @@ branch
 </tr>
 <tr>
 <td class="hdlist1">
+cleave
+</td>
+<td class="hdlist2">
+<p><code>( addr u c&#8201;&#8212;&#8201;addr2 u2 addr1 u1 )</code> Given a block of character memory and
+a delimiter character, split off the first sub-block and put it in TOS and NOS.
+Leave the rest lower down on the stack. This allows breaking off single words (or
+zero-terminated strings in memory, with a different delimiter) for further
+processing. Use with loops:</p>
+<div class="listingblock">
+<div class="content">
+<pre>: tokenloop ( addr u -- addr u addr u)
+    cr begin
+        bl cleave
+        type cr  \ &lt;-- processing of single word ( addr u ) here
+    dup 0= until
+    2drop ;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For a string such as <code>s" emergency induction port"</code>, this gives us:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>emergency
+induction
+port
+ ok</pre>
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
 compile-only
 </td>
 <td class="hdlist2">
@@ -4636,7 +4669,7 @@ under <a href="https://www.ubuntu.com/">Ubuntu</a> Linux 16.04 LTS.</p>
 <div id="footer">
 <div id="footer-text">
 Version BETA<br>
-Last updated 2018-11-06 11:53:24 CET
+Last updated 2018-11-06 18:25:31 CET
 </div>
 </div>
 </body>

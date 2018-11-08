@@ -116,6 +116,29 @@ allow use of the block words with no additional hardware.  Because the blocks ar
 only held in ram, they will be lost when the hardware is powered down or the simulator
 is stopped.
 branch:: Always take branch. See `0branch`.
+cleave:: `( addr u c -- addr2 u2 addr1 u1 )` Given a block of character memory and
+a delimiter character, split off the first sub-block and put it in TOS and NOS.
+Leave the rest lower down on the stack. This allows breaking off single words (or
+zero-terminated strings in memory, with a different delimiter) for further
+processing. Use with loops:
++
+----
+: tokenloop ( addr u -- addr u addr u)
+    cr begin
+        bl cleave
+        type cr  \ <-- processing of single word ( addr u ) here
+    dup 0= until
+    2drop ; 
+----
++
+For a string such as `s" emergency induction port"`, this gives us:
++
+----
+emergency
+induction
+port
+ ok
+----
 compile-only:: Mark last word in dictionary as compile-only.
 digit?:: `( char -- u f | char f )` If character is a digit, convert and set flag to
 `true`, otherwise return the offending character and a `false` flag.
