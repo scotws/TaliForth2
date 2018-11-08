@@ -2,7 +2,7 @@
 :doctype: book
 :author: Scot W. Stevenson
 :email: scot.stevenson@gmail.com
-:keywords: forth, 6502, assembler, programming, 8-bit
+:keywords: forth, 6502, assembler, programming, 8-bit, vintage, retro
 :revnumber: BETA
 :revdate: 03. Nov 2018
 :showtitle:
@@ -15,7 +15,7 @@ binary), simple (subroutine threading model), specific (for the 65c02 only), and
 standardized (ANS Forth). 
 
 [dedication]
-== Dedication
+= Dedication
 
 For the crew at 6502.org, who made this possible in more ways than one.
 
