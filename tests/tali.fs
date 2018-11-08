@@ -14,7 +14,6 @@ marker tali_tests
 testing gforth words: bounds find-name latestxt name>int name>string
 \ Test for COLD not implemented
 
-( TODO LATESTXT test missing)
 ( TODO NAME>INT test missing)
 ( TODO NAME>STRING test missing)
 
@@ -26,6 +25,34 @@ T{ hex -> }T
 T{ 1000 10 bounds -> 1010 1000 }T
 T{ ffff 2 bounds -> 0001 ffff }T  \ BOUNDS wraps on Tali with 16 bit address space
 T{ decimal -> }T
+
+\ ------------------------------------------------------------------------
+\ testing tali-only words: cleave
+
+\ Normal cases
+
+T{ : s1 s" " ; -> }T \ case 1: empty string
+T{ s1 bl cleave  s" " compare  -rot  s" " compare -> 0 0 }T
+
+T{ : s1 s" aaa" ; -> }T  \ case 2: one word
+T{ s1 bl cleave  s" aaa" compare  -rot  s" " compare -> 0 0 }T
+
+T{ : s1 s" aaa bbb ccc" ; -> }T  \ case 3: lots of words
+T{ s1 bl cleave  s" aaa" compare  -rot  s" bbb ccc" compare -> 0 0 }T
+
+\ Pathological cases
+
+T{ : s1 s"  aaa bbb ccc" ; -> }T \ case 4: Leading space is cleaved
+T{ s1 bl cleave  s" " compare  -rot  s" aaa bbb ccc" compare -> 0 0 }T
+
+T{ : s1 s" aaa bbb ccc " ; -> }T \ case 5: Trailing space is left
+T{ s1 bl cleave  s" aaa" compare  -rot  s" bbb ccc " compare -> 0 0 }T
+
+T{ : s1 s" aaa " ; -> }T  \ case 6: Trailing space on single word is empty
+T{ s1 bl cleave  s" aaa" compare  -rot  s" " compare -> 0 0 }T
+
+T{ : s1 s"  " ; -> }T  \ case 7: Single space as word is two empty words
+T{ s1 bl cleave  s" " compare  -rot  s" " compare -> 0 0 }T
 
 \ ------------------------------------------------------------------------
 testing tali-only words: always-native bell compile-only digit? int>name
@@ -99,8 +126,6 @@ T{ ' four-b int>name wordsize ->  3 }T
 \ Sneak in extra tests for latestnt and latestxt.
 T{ latestnt wordsize          ->  3 }T
 T{ latestxt int>name wordsize ->  3 }T
-
-
 
 \ Nothing is too trivial for testing!
 T{ 0 -> 0 }T

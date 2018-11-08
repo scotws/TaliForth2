@@ -1245,47 +1245,74 @@ xt_cleave:
                 sta 2,x
                 lda 7,x
                 sta 3,x                 ; ( addr u addr u ) 
-
-_loop:
-                ; if we were given an empty string or we consumed all the
-                ; characters it's time to quit
+           
+                ; if we were given an empty string quit immediately. This saves
+                ; a lot of time, and this is all about time
                 lda 0,x
                 ora 1,x
-                beq _end_of_line
-
+                beq _done
+_loop:
+                ; We have at least one character
                 tya                     ; Y is our delimiter storage
                 cmp (2,x) 
-
                 beq _found_delimiter
 
-                ; Not what we're looking for. Increase address ...
-                inc 2,x
-                bne +
-                inc 3,x
-*
-                ; ... and decrease length
+_other_char:
+                ; Decrease length ...
                 lda 0,x
                 bne +
                 dec 1,x
 *
-                dec 0,x         ; ( addr u addr+1 u-1 )
+                dec 0,x         ; ( addr u addr u-1 )
 
+                ; Are we done?
+                lda 0,x
+                ora 1,x
+                beq _end_of_line
+
+                ; No, so increase length as well
+                inc 2,x
+                bne +
+                inc 3,x
+*
                 bra _loop 
 
 _end_of_line:
+                ; We've hit the end of the line. This means that we don't have
+                ; a delimiter in the string. The fastest way to get out of here
+                ; is to just copy the original ( addr u ) to TOS and set the 
+                ; value of 3OS to zero
+                lda 4,x
+                sta 0,x
+                lda 5,x
+                sta 1,x         ; TOS
+
+                lda 6,x
+                sta 2,x
+                lda 7,x
+                sta 3,x         ; ( addr u addr u )
+
+                stz 4,x
+                stz 5,x         ; ( addr 0 addr u )
+
+                bra _done
+
 _found_delimiter: 
+                ; So have a delimiter and have to do this the hard way.
                 ; We arrive here with ( addr u addrw uw) where addrw
                 ; is pointing to the delimiter after the first word, uw is
                 ; the remaining length of the original string, and the 
                 ; original addr u of the whole string
                 ;
-                ;       v------- addr u ------>
-                ;
+                ;       <------- u ----------->
+                ;      addr 
+                ;       v
                 ;       word1 word2 word3 word4
+                ;            ^
+                ;          addrw
+                ;            <---- uw ------->
                 ;
-                ;            A-- addrw uw ---->
-                ;
-                ; We'll return ( addrw+1 uw addr u-uw ). Remember
+                ; We'll return ( addrw+1 uw-1 addr u-uw ). Remember
                 ; these can all be 16-bit values because we're not limiting
                 ; strings to 255 chars
                 
@@ -1295,9 +1322,9 @@ _found_delimiter:
                 lda 6,x         ; LSB first
                 pha
                 lda 7,x
-                pha
+                pha             ; ( addr u addrw uw )
 
-                ; Move addrw down it its spot and increase it by one
+                ; Move addrw in its place and increase by one
                 lda 2,x
                 sta 6,x
                 lda 3,x
@@ -1305,35 +1332,42 @@ _found_delimiter:
 
                 inc 6,x
                 bne +
-                inc 7,x         ; ( addrw+1 u addrw uw ) with addr on stack
+                inc 7,x         ; ( addrw+1 u addrw uw )
 *
                 ; Put addr where it belongs
-                pla             ; MSB
+                pla             ; MSB first
                 sta 3,x
                 pla
-                sta 2,x         ; ( addrw+1 u addr uw ) 
-
-                ; Save uw for later
-                lda 0,x         ; LSB first
+                sta 2,x         ; ( addrw+1 u addr uw )
+                
+                ; Save u on the stack
+                lda 5,x         ; MSB first
                 pha
-                lda 1,x
-                pha
-
-                ; u-uw goes in TOS
                 lda 4,x
+                pha
+
+                ; Move uw over in its place
+                lda 0,x
+                sta 4,x
+                lda 1,x
+                sta 5,x         ; ( addrw+1 uw addr uw )
+
+                ; Now we can use the two copies of uw to set u-uw
+                pla             ; LSB first
                 sec
                 sbc 0,x
                 sta 0,x
-                lda 5,x
-                sbc 1,x
-                sta 1,x         ; ( addrw+1 u addr u-uw )
-
-                ; put uw where it belongs
-                pla             ; MSB first
-                sta 5,x
                 pla
-                sta 4,x
-
+                sbc 1,x
+                sta 1,x         ; ( addrw-1 uw addr u-uw )
+                
+                ; Finally, decrease uw
+                lda 4,x
+                bne +
+                dec 5,x
+*
+                dec 4,x         ; ( addrw-1 uw-1 addr u-uw )
+_done:
                 rts
 z_cleave:
 .scend
