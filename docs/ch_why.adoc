@@ -51,7 +51,7 @@ detail as part of his 6502 primer at http://wilsonminesco.com/6502primer/ .
 If C gives you enough rope to hang yourself, Forth is a flamethrower crawling with
 cobras. <<EW>>
 
-Forth(((Forth)) is the _enfant terrible_ of programming languages. It was
+Forth(((Forth))) is the _enfant terrible_ of programming languages. It was
 invented by Charles "Chuck" H. Moore((("Moore, Charles"))) in the 1960s to do
 work with radio astronomy, way before there were modern operating systems or
 programming languages.
@@ -95,7 +95,7 @@ like Lisp(((Lisp))).
 
 === Writing Your Own Forth
 
-Even if the 65c02 is great and Forth is brilliant, why got to the effort of
+Even if the 65c02 is great and Forth is brilliant, why go to the effort of
 writing a new, bare-metal version of the languages? After almost 50 years,
 shouldn't there be a bunch of Forths around already?
 
@@ -121,4 +121,4 @@ Tales_.((("Canterbury Tales, The")))
 Tali Forth was created to provide an easy to understand modern Forth written
 especially for the 65c02 that anybody can understand, adapt to their own use,
 and maybe actually work with. As part of that effort, the source code is heavily
-commented. And this document tries to explain the internals in more detail.
+commented and this document tries to explain the internals in more detail.

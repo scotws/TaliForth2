@@ -40,3 +40,16 @@ tests/results.txt:	taliforth-py65mon.bin $(TEST_SOURCES)
 
 sim:	taliforth-py65mon.bin
 	py65mon -m 65c02 -r taliforth-py65mon.bin
+
+# Some convenience targets for the documentation.
+docs/manual.html: docs/*.adoc 
+	cd docs; asciidoctor -a toc=left manual.adoc
+
+docs: docs/manual.html
+
+# This one is experimental at the moment.
+docsmd: docs/manual.html
+	cd docs; ./asciidoc_to_markdown.sh 
+
+# A convenience target for preparing for a git commit.
+gitready: docs taliforth-py65mon.bin tests

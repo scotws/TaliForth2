@@ -12,7 +12,7 @@ use.
 To add words to the permanent set, it is best to start a pull request on the
 GitHub page of Tali Forth. How to setup and use `git` and GitHub is beyond the
 scope of this document -- we'll just point out it they are not as complicated as
-they look, and the make experimenting a lot easier.
+they look, and they make experimenting a lot easier.
 
 During development, Tali Forth tends to follow a sequence of steps for new words:
 
@@ -80,7 +80,7 @@ because it will try to perform those operations. Use underscores instead.
 * The Y register, however, is free to be changed by subroutines. This also means
   it should not be expected to survive subroutines unchanged.
 
-* Naively coded words generally should have exactly one point of entry -- the 
+* Natively coded words generally should have exactly one point of entry -- the 
   `xt_word` link -- and exactly one point of exit at `z_word`. In may cases,
   this requires a branch to an internal label `_done` right before `z_word`.
 
@@ -182,9 +182,9 @@ will) so we have the option of adding code analysis tools later.
 ---- 
                 dex
                 dex
-                lda <LSB>      ; or pla, jsr kernel_getc, etc.
+                lda <LSB>      ; or pla, jsr key_a, etc.
                 sta 0,x
-                lda <MSB>      ; or pla, jsr kernel_getc, etc.
+                lda <MSB>      ; or pla, jsr key_a, etc.
                 sta 1,x
 ----
 
@@ -192,9 +192,9 @@ will) so we have the option of adding code analysis tools later.
 
 ----
                 lda 0,x
-                sta <LSB>      ; or pha, jsr kernel_putc, etc
+                sta <LSB>      ; or pha, jsr emit_a, etc
                 lda 1,x
-                sta <MSB>      ; or pha, jsr kernel_putc, etc
+                sta <MSB>      ; or pha, jsr emit_a, etc
                 inx
                 inx
 ----

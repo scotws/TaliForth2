@@ -15,10 +15,14 @@ https://github.com/mnaberez/py65.(((py65mon))) This is a Python(((Python)))
 program that should run on various operating systems. Py65mon is also required
 for the test suite.
 
-To install py65mon on Linux(((Linux))), use the command 
+To install py65mon on Linux(((Linux))), use one of the following commands
 
 [source,bash]
 ----
+# Install for only your user:
+pip install -U py65 --user
+
+# Install for all users:
 sudo pip install -U py65
 ----
 
@@ -58,6 +62,21 @@ kernel(((kernel))) code to replace `platform-py65mon.asm`, the default kernel
 for use with the py65mon(((py65mon))) kernel. By convention, the name should
 start with `platform-`. See the `README.md` file in the the `platform` folder
 for details.
+
+Once you have configured your platform file in the plaform folder, you
+can build a binary (typically programmed into an EEPROM) for your
+hardware with make.  If you made a platform file named
+`platform-mycomp.asm`, then you should `cd` to the main folder of the
+project and run
+
+[source,bash]
+----
+make taliforth-mycomp.bin
+----
+
+The bin file will be created in the main folder.  You should, of
+course, replace the "mycomp" portion of that command with whatever you
+named your platform.
 
 === Hardware Projects with Tali Forth 2
 
