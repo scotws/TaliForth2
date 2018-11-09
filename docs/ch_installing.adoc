@@ -66,8 +66,8 @@ for details.
 Once you have configured your platform file in the plaform folder, you
 can build a binary (typically programmed into an EEPROM) for your
 hardware with make.  If you made a platform file named
-`platform-mycomp.asm`, then you should `cd` to the main folder of the
-project and run
+`platform-mycomp.asm`, then you should `cd` to the main Tali folder 
+and run
 
 [source,bash]
 ----

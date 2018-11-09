@@ -208,7 +208,7 @@ The Tali Forth project started out as a way to run Forth on my own 65c02 compute
 
 For this to work, you need to go to the `platform` folder and create your own kernelkernel code to replace `platform-py65mon.asm`, the default kernel for use with the py65monpy65mon kernel. By convention, the name should start with `platform-`. See the `README.md` file in the the `platform` folder for details.
 
-Once you have configured your platform file in the plaform folder, you can build a binary (typically programmed into an EEPROM) for your hardware with make. If you made a platform file named `platform-mycomp.asm`, then you should `cd` to the main folder of the project and run
+Once you have configured your platform file in the plaform folder, you can build a binary (typically programmed into an EEPROM) for your hardware with make. If you made a platform file named `platform-mycomp.asm`, then you should `cd` to the main Tali folder and run
 
 ``` bash
 make taliforth-mycomp.bin
