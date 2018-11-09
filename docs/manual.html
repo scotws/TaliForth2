@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 1.5.5">
+<meta name="generator" content="Asciidoctor 1.5.6.1">
 <meta name="keywords" content="forth, 6502, assembler, programming, 8-bit, vintage, retro">
 <meta name="author" content="Scot W. Stevenson">
 <title>Manual for Tali Forth 2 for the 65c02</title>
@@ -91,13 +91,12 @@ strong,b{font-weight:bold;line-height:inherit}
 small{font-size:60%;line-height:inherit}
 code{font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;font-weight:400;color:rgba(0,0,0,.9)}
 ul,ol,dl{font-size:1em;line-height:1.6;margin-bottom:1.25em;list-style-position:outside;font-family:inherit}
-ul,ol,ul.no-bullet,ol.no-bullet{margin-left:1.5em}
+ul,ol{margin-left:1.5em}
 ul li ul,ul li ol{margin-left:1.25em;margin-bottom:0;font-size:1em}
 ul.square li ul,ul.circle li ul,ul.disc li ul{list-style:inherit}
 ul.square{list-style-type:square}
 ul.circle{list-style-type:circle}
 ul.disc{list-style-type:disc}
-ul.no-bullet{list-style:none}
 ol li ul,ol li ol{margin-left:1.25em;margin-bottom:0}
 dl dt{margin-bottom:.3125em;font-weight:bold}
 dl dd{margin-bottom:1.25em}
@@ -133,7 +132,11 @@ strong strong{font-weight:400}
 kbd{font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;display:inline-block;color:rgba(0,0,0,.8);font-size:.65em;line-height:1.45;background-color:#f7f7f7;border:1px solid #ccc;-webkit-border-radius:3px;border-radius:3px;-webkit-box-shadow:0 1px 0 rgba(0,0,0,.2),0 0 0 .1em white inset;box-shadow:0 1px 0 rgba(0,0,0,.2),0 0 0 .1em #fff inset;margin:0 .15em;padding:.2em .5em;vertical-align:middle;position:relative;top:-.1em;white-space:nowrap}
 .keyseq kbd:first-child{margin-left:0}
 .keyseq kbd:last-child{margin-right:0}
-.menuseq,.menu{color:rgba(0,0,0,.8)}
+.menuseq,.menuref{color:#000}
+.menuseq b:not(.caret),.menuref{font-weight:inherit}
+.menuseq{word-spacing:-.02em}
+.menuseq b.caret{font-size:1.25em;line-height:.8}
+.menuseq i.caret{font-weight:bold;text-align:center;width:.45em}
 b.button:before,b.button:after{position:relative;top:-1px;font-weight:400}
 b.button:before{content:"[";padding:0 3px 0 2px}
 b.button:after{content:"]";padding:0 2px 0 3px}
@@ -200,7 +203,7 @@ table.tableblock>caption.title{white-space:nowrap;overflow:visible;max-width:0}
 table.tableblock #preamble>.sectionbody>.paragraph:first-of-type p{font-size:inherit}
 .admonitionblock>table{border-collapse:separate;border:0;background:none;width:100%}
 .admonitionblock>table td.icon{text-align:center;width:80px}
-.admonitionblock>table td.icon img{max-width:none}
+.admonitionblock>table td.icon img{max-width:initial}
 .admonitionblock>table td.icon .title{font-weight:bold;font-family:"Open Sans","DejaVu Sans",sans-serif;text-transform:uppercase}
 .admonitionblock>table td.content{padding-left:1.125em;padding-right:1.25em;border-left:1px solid #ddddd8;color:rgba(0,0,0,.6)}
 .admonitionblock>table td.content>:last-child>:last-child{margin-bottom:0}
@@ -256,13 +259,13 @@ table.pyhltable .linenodiv{background:none!important;padding-right:0!important}
 table.tableblock{max-width:100%;border-collapse:separate}
 table.tableblock td>.paragraph:last-child p>p:last-child,table.tableblock th>p:last-child,table.tableblock td>p:last-child{margin-bottom:0}
 table.tableblock,th.tableblock,td.tableblock{border:0 solid #dedede}
-table.grid-all th.tableblock,table.grid-all td.tableblock{border-width:0 1px 1px 0}
-table.grid-all tfoot>tr>th.tableblock,table.grid-all tfoot>tr>td.tableblock{border-width:1px 1px 0 0}
-table.grid-cols th.tableblock,table.grid-cols td.tableblock{border-width:0 1px 0 0}
-table.grid-all *>tr>.tableblock:last-child,table.grid-cols *>tr>.tableblock:last-child{border-right-width:0}
-table.grid-rows th.tableblock,table.grid-rows td.tableblock{border-width:0 0 1px 0}
-table.grid-all tbody>tr:last-child>th.tableblock,table.grid-all tbody>tr:last-child>td.tableblock,table.grid-all thead:last-child>tr>th.tableblock,table.grid-rows tbody>tr:last-child>th.tableblock,table.grid-rows tbody>tr:last-child>td.tableblock,table.grid-rows thead:last-child>tr>th.tableblock{border-bottom-width:0}
-table.grid-rows tfoot>tr>th.tableblock,table.grid-rows tfoot>tr>td.tableblock{border-width:1px 0 0 0}
+table.grid-all>thead>tr>.tableblock,table.grid-all>tbody>tr>.tableblock{border-width:0 1px 1px 0}
+table.grid-all>tfoot>tr>.tableblock{border-width:1px 1px 0 0}
+table.grid-cols>*>tr>.tableblock{border-width:0 1px 0 0}
+table.grid-rows>thead>tr>.tableblock,table.grid-rows>tbody>tr>.tableblock{border-width:0 0 1px 0}
+table.grid-rows>tfoot>tr>.tableblock{border-width:1px 0 0 0}
+table.grid-all>*>tr>.tableblock:last-child,table.grid-cols>*>tr>.tableblock:last-child{border-right-width:0}
+table.grid-all>tbody>tr:last-child>.tableblock,table.grid-all>thead:last-child>tr>.tableblock,table.grid-rows>tbody>tr:last-child>.tableblock,table.grid-rows>thead:last-child>tr>.tableblock{border-bottom-width:0}
 table.frame-all{border-width:1px}
 table.frame-sides{border-width:0 1px}
 table.frame-topbot{border-width:1px 0}
@@ -283,10 +286,12 @@ ul li ol{margin-left:1.5em}
 dl dd{margin-left:1.125em}
 dl dd:last-child,dl dd:last-child>:last-child{margin-bottom:0}
 ol>li p,ul>li p,ul dd,ol dd,.olist .olist,.ulist .ulist,.ulist .olist,.olist .ulist{margin-bottom:.625em}
-ul.unstyled,ol.unnumbered,ul.checklist,ul.none{list-style-type:none}
-ul.unstyled,ol.unnumbered,ul.checklist{margin-left:.625em}
-ul.checklist li>p:first-child>.fa-square-o:first-child,ul.checklist li>p:first-child>.fa-check-square-o:first-child{width:1em;font-size:.85em}
-ul.checklist li>p:first-child>input[type="checkbox"]:first-child{width:1em;position:relative;top:1px}
+ul.checklist,ul.none,ol.none,ul.no-bullet,ol.no-bullet,ol.unnumbered,ul.unstyled,ol.unstyled{list-style-type:none}
+ul.no-bullet,ol.no-bullet,ol.unnumbered{margin-left:.625em}
+ul.unstyled,ol.unstyled{margin-left:0}
+ul.checklist{margin-left:.625em}
+ul.checklist li>p:first-child>.fa-square-o:first-child,ul.checklist li>p:first-child>.fa-check-square-o:first-child{width:1.25em;font-size:.8em;position:relative;bottom:.125em}
+ul.checklist li>p:first-child>input[type="checkbox"]:first-child{margin-right:.25em}
 ul.inline{margin:0 auto .625em auto;margin-left:-1.375em;margin-right:0;padding:0;list-style:none;overflow:hidden}
 ul.inline>li{list-style:none;float:left;margin-left:1.375em;display:block}
 ul.inline>li>*{display:block}
@@ -303,7 +308,8 @@ ol.lowergreek{list-style-type:lower-greek}
 td.hdlist1,td.hdlist2{vertical-align:top;padding:0 .625em}
 td.hdlist1{font-weight:bold;padding-bottom:1.25em}
 .literalblock+.colist,.listingblock+.colist{margin-top:-.5em}
-.colist>table tr>td:first-of-type{padding:0 .75em;line-height:1}
+.colist>table tr>td:first-of-type{padding:.4em .75em 0 .75em;line-height:1;vertical-align:top}
+.colist>table tr>td:first-of-type img{max-width:initial}
 .colist>table tr>td:last-of-type{padding:.25em 0}
 .thumb,.th{line-height:0;display:inline-block;border:solid 4px #fff;-webkit-box-shadow:0 0 0 1px #ddd;box-shadow:0 0 0 1px #ddd}
 .imageblock.left,.imageblock[style*="float: left"]{margin:.25em .625em 1.25em 0}
@@ -366,6 +372,7 @@ div.unbreakable{page-break-inside:avoid}
 .yellow{color:#bfbf00}
 .yellow-background{background-color:#fafa00}
 span.icon>.fa{cursor:default}
+a span.icon>.fa{cursor:inherit}
 .admonitionblock td.icon [class^="fa icon-"]{font-size:2.5em;text-shadow:1px 1px 2px rgba(0,0,0,.5);cursor:default}
 .admonitionblock td.icon .icon-note:before{content:"\f05a";color:#19407c}
 .admonitionblock td.icon .icon-tip:before{content:"\f0eb";text-shadow:1px 1px 2px rgba(155,155,0,.8);color:#111}
@@ -493,7 +500,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_the_words_code_create_code_and_code_does_code">The Words <code>create</code> and <code>does&gt;</code></a></li>
 <li><a href="#_control_flow">Control Flow</a></li>
 <li><a href="#_native_compiling_2">Native Compiling</a></li>
-<li><a href="#__code_cmove_code_code_cmove_code_and_code_move_code"><code>cmove</code>, <code>cmove&gt;</code> and <code>move</code></a></li>
+<li><a href="#_code_cmove_code_code_cmove_code_and_code_move_code"><code>cmove</code>, <code>cmove&gt;</code> and <code>move</code></a></li>
 </ul>
 </li>
 <li><a href="#_developing">Developing</a>
@@ -645,7 +652,7 @@ cobras. <a href="#EW">[EW]</a>
 </div>
 </div>
 <div class="paragraph">
-<p>Forth(Forth is the <em>enfant terrible</em> of programming languages. It was
+<p>Forth is the <em>enfant terrible</em> of programming languages. It was
 invented by Charles "Chuck" H. Moore in the 1960s to do
 work with radio astronomy, way before there were modern operating systems or
 programming languages.</p>
@@ -713,7 +720,7 @@ like Lisp.
 <div class="sect2">
 <h3 id="_writing_your_own_forth">Writing Your Own Forth</h3>
 <div class="paragraph">
-<p>Even if the 65c02 is great and Forth is brilliant, why got to the effort of
+<p>Even if the 65c02 is great and Forth is brilliant, why go to the effort of
 writing a new, bare-metal version of the languages? After almost 50 years,
 shouldn&#8217;t there be a bunch of Forths around already?</p>
 </div>
@@ -743,7 +750,7 @@ Tales</em>.</p>
 <p>Tali Forth was created to provide an easy to understand modern Forth written
 especially for the 65c02 that anybody can understand, adapt to their own use,
 and maybe actually work with. As part of that effort, the source code is heavily
-commented. And this document tries to explain the internals in more detail.</p>
+commented and this document tries to explain the internals in more detail.</p>
 </div>
 </div>
 </div>
@@ -832,9 +839,10 @@ variants, but uses more space and is slower.</p>
 </div>
 <div class="paragraph">
 <p>Our lack of registers and the goal of creating a simple and easy to understand
-Forth makes subroutine threading the most attractive solution. We try to
-mitigate the pain caused by the 12 cycle cost of each and every <code>jsr</code>-<code>rts</code>
-combination by including a relatively high number of native words.</p>
+Forth makes subroutine threading the most attractive solution, so Tali 2 is an
+STC Forth. We try to mitigate the pain caused by the 12 cycle cost of each and
+every <code>jsr</code>-<code>rts</code> combination by including a relatively high number of native
+words.</p>
 </div>
 </div>
 <div class="sect3">
@@ -942,11 +950,15 @@ program that should run on various operating systems. Py65mon is also required
 for the test suite.</p>
 </div>
 <div class="paragraph">
-<p>To install py65mon on Linux, use the command</p>
+<p>To install py65mon on Linux, use one of the following commands</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">sudo pip install -U py65</code></pre>
+<pre class="highlight"><code class="language-bash" data-lang="bash"># Install for only your user:
+pip install -U py65 --user
+
+# Install for all users:
+sudo pip install -U py65</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -994,6 +1006,23 @@ kernel code to replace <code>platform-py65mon.asm</code>, the default kernel
 for use with the py65mon kernel. By convention, the name should
 start with <code>platform-</code>. See the <code>README.md</code> file in the the <code>platform</code> folder
 for details.</p>
+</div>
+<div class="paragraph">
+<p>Once you have configured your platform file in the plaform folder, you
+can build a binary (typically programmed into an EEPROM) for your
+hardware with make.  If you made a platform file named
+<code>platform-mycomp.asm</code>, then you should <code>cd</code> to the main Tali folder
+and run</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">make taliforth-mycomp.bin</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The bin file will be created in the main folder.  You should, of
+course, replace the "mycomp" portion of that command with whatever you
+named your platform.</p>
 </div>
 </div>
 </div>
@@ -1088,24 +1117,24 @@ box:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>see block_init_ramdrive evaluate thru load flush empty-buffers buffer update
-block save-buffers block_words_deferred blockwrite blockread scr blk buffstatus
-buffblocknum blkbuffer 2literal 2constant d.r d. ud.r ud. .r u.r action-of is defer@
-defer! endcase endof of case while until repeat else then if .( ( drop dup swap ! @
-over &gt;r r&gt; r@ nip rot -rot tuck , c@ c! +! execute emit type . u. ? false true
-space 0 1 2 2dup ?dup + - abs dabs and or xor rshift lshift pick char [char] char+
-chars cells cell+ here 1- 1+ 2* 2/ = &lt;&gt; &lt; u&lt; u&gt; &gt; 0= 0&lt;&gt; 0&gt; 0&lt; min max 2drop 2swap
-2over 2! 2@ 2variable 2r@ 2r&gt; 2&gt;r invert negate dnegate c, bounds spaces bl
--trailing /string refill accept unused depth key allot create does&gt; variable constant
-value to s&gt;d d&gt;s d- d+ erase blank fill find-name ' ['] name&gt;int int&gt;name
-name&gt;string &gt;body defer latestxt latestnt parse-name parse source source-id : ; :noname
-compile, [ ] 0branch branch literal sliteral ." s" postpone immediate compile-only
-never-native always-native nc-limit uf-strip abort abort" do ?do i j loop +loop exit
-unloop leave recurse quit begin again state evaluate base digit? number &gt;number hex
-decimal count m* um* * um/mod sm/rem fm/mod / /mod mod */mod */ \ move cmove&gt; cmove
-pad within &gt;in &lt;# # #s #&gt; hold sign output input cr page at-xy marker words
-wordsize aligned align bell dump .s disasm compare search environment? find word cold
-bye</pre>
+<pre>see block-ramdrive-init list l evaluate thru load flush empty-buffers buffer
+update block save-buffers block-words-deferred block-write block-read scr blk
+buffstatus buffblocknum blkbuffer buffer: 2literal 2constant d.r d. ud.r ud. .r u.r
+action-of is defer@ defer! endcase endof of case while until repeat else then if .( (
+drop dup swap ! @ over &gt;r r&gt; r@ nip rot -rot tuck , c@ c! +! execute emit type .
+u. ? false true space 0 1 2 2dup ?dup + - abs dabs and or xor rshift lshift pick
+char [char] char+ chars cells cell+ here 1- 1+ 2* 2/ = &lt;&gt; &lt; u&lt; u&gt; &gt; 0= 0&lt;&gt; 0&gt; 0&lt;
+min max 2drop 2swap 2over 2! 2@ 2variable 2r@ 2r&gt; 2&gt;r invert negate dnegate c,
+bounds spaces bl -trailing /string refill accept unused depth key allot create does&gt;
+variable constant value to s&gt;d d&gt;s d- d+ erase blank fill find-name ' ['] name&gt;int
+int&gt;name name&gt;string &gt;body defer latestxt latestnt parse-name parse source source-id :
+; :noname compile, [ ] 0branch branch literal sliteral ." s" postpone immediate
+compile-only never-native always-native allow-native nc-limit uf-strip abort abort" do ?do
+i j loop +loop exit unloop leave recurse quit begin again state evaluate base
+digit? number &gt;number hex decimal count m* um* * um/mod sm/rem fm/mod / /mod mod
+*/mod */ \ move cmove&gt; cmove pad cleave within &gt;in &lt;# # #s #&gt; hold sign output
+input cr page at-xy marker words wordsize aligned align bell dump .s disasm compare
+search environment? find word ed cold bye</pre>
 </div>
 </div>
 <div class="admonitionblock note">
@@ -1185,6 +1214,15 @@ might switch to these words in the future.</p>
 </td>
 <td class="hdlist2">
 <p><code>(&#8201;&#8212;&#8201;0 )</code> Push the number 2 on the Data Stack.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+allow-native
+</td>
+<td class="hdlist2">
+<p>Mark last word in dictionary to that it can be natively
+compiled if it is less than or equal to nc-limit in size.</p>
 </td>
 </tr>
 <tr>
@@ -1417,7 +1455,7 @@ code like any other Forth variable:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>To complete turn off native compiling, set this value to zero.</p>
+<p>To completely turn off native compiling, set this value to zero.</p>
 </div>
 </div>
 <div class="sect2">
@@ -2634,7 +2672,7 @@ forms. There are four possible input sources:</p>
 <div class="ulist">
 <ul>
 <li>
-<p>The keyboard ("user input device")</p>
+<p>The keyboard ("user input device", can be redirected)</p>
 </li>
 <li>
 <p>A character string in memory</p>
@@ -2649,7 +2687,7 @@ forms. There are four possible input sources:</p>
 </div>
 <div class="paragraph">
 <p>To check which one is being used, we first call <code>blk</code> which gives us the number
-of a mass storage block being used, or 0 for the "user input device" (keyboard).
+of a mass storage block being used, or 0 for the one of the other input sources.
 In the second case, we use <code>source-id</code> to find out where input is coming from:</p>
 </div>
 <table class="tableblock frame-all grid-all">
@@ -2667,7 +2705,7 @@ In the second case, we use <code>source-id</code> to find out where input is com
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">keyboard</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">keyboard (can be redirected)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">-1</p></td>
@@ -2675,13 +2713,30 @@ In the second case, we use <code>source-id</code> to find out where input is com
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>n</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">file-id</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">file-id (not currently supported)</p></td>
 </tr>
 </tbody>
 </table>
 <div class="paragraph">
-<p>Since Tali currently doesn&#8217;t support blocks, we can skip the <code>blk</code> instruction
-and go right to <code>source-id</code>.</p>
+<p>The input can be redirected by storing the address of your routine in
+the memory location given by the word <code>output</code>.  Tali expects this
+routine to wait until a character is available and to return the
+character in A, rather than on the stack.</p>
+</div>
+<div class="paragraph">
+<p>The output can similarly be redirected by storing the address of your
+routine in the memory location given by the word <code>input</code>.  Tali
+expects this routine to accept the character to out in A, rather than
+on the stack.</p>
+</div>
+<div class="paragraph">
+<p>Both the input routine and output routine may use the tmp1, tmp2, and
+tmp3 memory locations (defined in assembly.asm), but they need to
+push/pop them so they can restore the original values before
+returning.  If the input or output routines are written in Forth,
+extra care needs to be taken because many of the Forth words use these
+tmp variables and it&#8217;s not immediately obvious without checking the
+assembly for each word.</p>
 </div>
 <div class="sect3">
 <h4 id="_booting_2">Booting</h4>
@@ -2899,7 +2954,7 @@ We now have this:</p>
 </div>
 <div class="paragraph">
 <p>Note we added a label <code>c</code>. Now, when <code>(does&gt;)</code> reaches its own <code>rts</code>, it finds
-the <code>rts</code> to the main routine on its stack. This is Good Thing&#8482;, because it
+the <code>rts</code> to the main routine on its stack. This is a Good Thing&#8482;, because it
 aborts the execution of the rest of <code>constant</code>, and we don&#8217;t want to do
 <code>dodoes</code> or <code>fetch</code> now. We&#8217;re back at the main routine.</p>
 </div>
@@ -3127,7 +3182,7 @@ a list of what we want to happen at compile time and what at run time. Let&#8217
 start with a simple <code>do</code>-<code>loop</code>.</p>
 </div>
 <div class="sect4">
-<h5 id="__code_do_code_at_compile_time"><code>do</code> at compile-time:</h5>
+<h5 id="_code_do_code_at_compile_time"><code>do</code> at compile-time:</h5>
 <div class="ulist">
 <ul>
 <li>
@@ -3148,7 +3203,7 @@ where the loop contents begin</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="__code_do_code_at_run_time"><code>do</code> at run-time:</h5>
+<h5 id="_code_do_code_at_run_time"><code>do</code> at run-time:</h5>
 <div class="ulist">
 <ul>
 <li>
@@ -3162,7 +3217,7 @@ away with considering them at the same time.</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="__code_loop_code_at_compile_time"><code>loop</code> at compile time:</h5>
+<h5 id="_code_loop_code_at_compile_time"><code>loop</code> at compile time:</h5>
 <div class="ulist">
 <ul>
 <li>
@@ -3188,7 +3243,7 @@ construct to the Return Stack at run-time</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="__code_loop_code_at_run_time_which_is_code_loop_code"><code>loop</code> at run-time (which is <code>(+loop)</code>)</h5>
+<h5 id="_code_loop_code_at_run_time_which_is_code_loop_code"><code>loop</code> at run-time (which is <code>(+loop)</code>)</h5>
 <div class="ulist">
 <ul>
 <li>
@@ -3337,7 +3392,26 @@ The Forth is:</p>
 </div>
 <div class="paragraph">
 <p>An alternative is <code>see</code> which also displays the length of a word. One way or
-another, changing <code>nc-limit</code> should show differences in the Forth words.</p>
+another, changing <code>nc-limit</code> should show differences in the Forth
+words.</p>
+</div>
+<div class="paragraph">
+<p>While a new word may have built-in words natively compiled into it,
+all new words are flagged Never-Native by default because a word needs
+to meet some special criteria to be safe to native compile.  In
+particular, the word cannot have any control structures (if, loop,
+begin, again, etc) and, if written in assembly, cannot have any JMP
+instructions in it (except for error handling, such as underflow
+detection).</p>
+</div>
+<div class="paragraph">
+<p>If you are certain your new word meets these criteria,
+then you can enable native compilation of this word into other words
+by invoking the word <code>allow-native</code> or the word <code>always-native</code>
+immediately after the definition of your new word.  The <code>allow-native</code>
+will use the <code>nc-limit</code> value to determine when to natively compiled just like
+it does for the built-in words, and <code>always-native</code> will always
+natively compile regardless of the setting of <code>nc-limit</code>.</p>
 </div>
 <div class="sect3">
 <h4 id="_return_stack_special_cases">Return Stack Special Cases</h4>
@@ -3488,7 +3562,7 @@ headers.asm file and should never have the AN (Always Native) flag set.
 </div>
 </div>
 <div class="sect2">
-<h3 id="__code_cmove_code_code_cmove_code_and_code_move_code"><code>cmove</code>, <code>cmove&gt;</code> and <code>move</code></h3>
+<h3 id="_code_cmove_code_code_cmove_code_and_code_move_code"><code>cmove</code>, <code>cmove&gt;</code> and <code>move</code></h3>
 <div class="paragraph">
 <p>The three moving words <code>cmove</code>, <code>cmove&gt;</code> and <code>move</code> show subtle differences
 that can trip up new users and are reflected by different code under the hood.
@@ -3500,7 +3574,7 @@ word that works on address units (which in our case is also bytes).</p>
 <p>If the source and destination regions show no overlap, all three words work the
 same. However, if there is overlap, <code>cmove</code> and <code>cmove&gt;</code> demonstrate a behavior
 called "propagation" or "clobbering" : Some of the characters are overwritten.
-`move: does not show this behavior. This example shows the difference:</p>
+<code>move</code> does not show this behavior. This example shows the difference:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3551,7 +3625,7 @@ use.</p>
 <p>To add words to the permanent set, it is best to start a pull request on the
 GitHub page of Tali Forth. How to setup and use <code>git</code> and GitHub is beyond the
 scope of this document&#8201;&#8212;&#8201;we&#8217;ll just point out it they are not as complicated as
-they look, and the make experimenting a lot easier.</p>
+they look, and they make experimenting a lot easier.</p>
 </div>
 <div class="paragraph">
 <p>During development, Tali Forth tends to follow a sequence of steps for new words:</p>
@@ -3644,7 +3718,7 @@ if there is no other alternative.</p>
 it should not be expected to survive subroutines unchanged.</p>
 </li>
 <li>
-<p>Naively coded words generally should have exactly one point of entry&#8201;&#8212;&#8201;the
+<p>Natively coded words generally should have exactly one point of entry&#8201;&#8212;&#8201;the
 <code>xt_word</code> link&#8201;&#8212;&#8201;and exactly one point of exit at <code>z_word</code>. In may cases,
 this requires a branch to an internal label <code>_done</code> right before <code>z_word</code>.</p>
 </li>
@@ -3804,9 +3878,9 @@ X register of the 65c02) points to the LSB of the TOS value.</p>
 <div class="content">
 <pre>                dex
                 dex
-                lda &lt;LSB&gt;      ; or pla, jsr kernel_getc, etc.
+                lda &lt;LSB&gt;      ; or pla, jsr key_a, etc.
                 sta 0,x
-                lda &lt;MSB&gt;      ; or pla, jsr kernel_getc, etc.
+                lda &lt;MSB&gt;      ; or pla, jsr key_a, etc.
                 sta 1,x</pre>
 </div>
 </div>
@@ -3820,9 +3894,9 @@ X register of the 65c02) points to the LSB of the TOS value.</p>
 <div class="listingblock">
 <div class="content">
 <pre>                lda 0,x
-                sta &lt;LSB&gt;      ; or pha, jsr kernel_putc, etc
+                sta &lt;LSB&gt;      ; or pha, jsr emit_a, etc
                 lda 1,x
-                sta &lt;MSB&gt;      ; or pha, jsr kernel_putc, etc
+                sta &lt;MSB&gt;      ; or pha, jsr emit_a, etc
                 inx
                 inx</pre>
 </div>
@@ -4568,70 +4642,70 @@ who contributed the invaluable test suite and a whole lot of code.</p>
 <h2 id="_references_and_further_reading">References and Further Reading</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><a id="FB"></a>[FB] <em>Masterminds of Programming</em>, Federico Biancuzzi,
+<p>[<a id="FB"></a>] <em>Masterminds of Programming</em>, Federico Biancuzzi,
 O&#8217;Reilly Media 1st edition, 2009.</p>
 </div>
 <div class="paragraph">
-<p><a id="CHM1"></a>[CHM1] "Charles H. Moore: Geek of the Week", redgate Hub 2009
+<p>[<a id="CHM1"></a>] "Charles H. Moore: Geek of the Week", redgate Hub 2009
 <a href="https://www.red-gate.com/simple-talk/opinion/geek-of-the-week/chuck-moore-geek" class="bare">https://www.red-gate.com/simple-talk/opinion/geek-of-the-week/chuck-moore-geek</a></p>
 </div>
 <div class="paragraph">
-<p><a id="CHM2"></a>[CHM2] "The Evolution of FORTH, an Unusual Language", Charles H. Moore,
+<p>[<a id="CHM2"></a>] "The Evolution of FORTH, an Unusual Language", Charles H. Moore,
 <em>Byte</em> 1980, <a href="https://wiki.forth-ev.de/doku.php/projects:the_evolution_of_forth" class="bare">https://wiki.forth-ev.de/doku.php/projects:the_evolution_of_forth</a></p>
 </div>
 <div class="paragraph">
-<p><a id="CnR"></a>[CnR] <em>Forth Programmer&#8217;s Handbook</em>, Edward K. Conklin and Elizabeth Rather,
+<p>[<a id="CnR"></a>] <em>Forth Programmer&#8217;s Handbook</em>, Edward K. Conklin and Elizabeth Rather,
 3rd edition 2010</p>
 </div>
 <div class="paragraph">
-<p><a id="DB"></a>[DB] <em>Forth Enzyclopedia</em>, Mitch Derick and Linda Baker,
+<p>[<a id="DB"></a>] <em>Forth Enzyclopedia</em>, Mitch Derick and Linda Baker,
 Mountain View Press 1982</p>
 </div>
 <div class="paragraph">
-<p><a id="DH"></a>[DH] "Some notes on Forth from a novice user", Douglas Hoffman, Feb 1988
+<p>[<a id="DH"></a>] "Some notes on Forth from a novice user", Douglas Hoffman, Feb 1988
 <a href="https://wiki.forth-ev.de/doku.php/projects:some_notes_on_forth_from_a_novice_user" class="bare">https://wiki.forth-ev.de/doku.php/projects:some_notes_on_forth_from_a_novice_user</a></p>
 </div>
 <div class="paragraph">
-<p><a id="DMR"></a>[DMR] "Reflections on Software Research", Dennis M. Ritchie, Turing Award
+<p>[<a id="DMR"></a>] "Reflections on Software Research", Dennis M. Ritchie, Turing Award
 Lecture in <em>Communications of the ACM</em> August 1984 Volume 27 Number 8
 <a href="http://www.valleytalk.org/wp-content/uploads/2011/10/p758-ritchie.pdf" class="bare">http://www.valleytalk.org/wp-content/uploads/2011/10/p758-ritchie.pdf</a></p>
 </div>
 <div class="paragraph">
-<p><a id="EnL"></a>[EnL] <em>Programming the 65816, including the 6502, 65C02 and 65802</em>,
+<p>[<a id="EnL"></a>] <em>Programming the 65816, including the 6502, 65C02 and 65802</em>,
 David Eyes and Ron Lichty
 (Currently not available from the WDC website)</p>
 </div>
 <div class="paragraph">
-<p><a id="EW"></a>[EW] "Forth: The Hacker&#8217;s Language", Elliot Williams,
+<p>[<a id="EW"></a>] "Forth: The Hacker&#8217;s Language", Elliot Williams,
 <a href="https://hackaday.com/2017/01/27/forth-the-hackers-language/" class="bare">https://hackaday.com/2017/01/27/forth-the-hackers-language/</a></p>
 </div>
 <div class="paragraph">
-<p><a id="GK"></a>[GK] "Forth System Comparisons", Guy Kelly, in <em>Forth Dimensions</em> V13N6,
+<p>[<a id="GK"></a>] "Forth System Comparisons", Guy Kelly, in <em>Forth Dimensions</em> V13N6,
 March/April 1992
 <a href="http://www.forth.org/fd/FD-V13N6.pdf}{http://www.forth.org/fd/FD-V13N6.pdf" class="bare">http://www.forth.org/fd/FD-V13N6.pdf}{http://www.forth.org/fd/FD-V13N6.pdf</a></p>
 </div>
 <div class="paragraph">
-<p><a id="JN"></a>[JN] <em>A Beginner&#8217;s Guide to Forth</em>, J.V. Nobel,
+<p>[<a id="JN"></a>] <em>A Beginner&#8217;s Guide to Forth</em>, J.V. Nobel,
 <a href="http://galileo.phys.virginia.edu/classes/551.jvn.fall01/primer.htm" class="bare">http://galileo.phys.virginia.edu/classes/551.jvn.fall01/primer.htm</a></p>
 </div>
 <div class="paragraph">
-<p><a id="BWK"></a>[BWK] <em>A Tutorial Introduction to the UNIX Text Editor</em>, B. W. Kernighan,
+<p>[<a id="BWK"></a>] <em>A Tutorial Introduction to the UNIX Text Editor</em>, B. W. Kernighan,
 <a href="http://www.psue.uni-hannover.de/wise2017_2018/material/ed.pdf" class="bare">http://www.psue.uni-hannover.de/wise2017_2018/material/ed.pdf</a></p>
 </div>
 <div class="paragraph">
-<p><a id="LB1"></a>[LB1] <em>Starting Forth</em>, Leo Brodie, new edition 2003,
+<p>[<a id="LB1"></a>] <em>Starting Forth</em>, Leo Brodie, new edition 2003,
 <a href="https://www.forth.com/starting-forth/}{https://www.forth.com/starting-forth/" class="bare">https://www.forth.com/starting-forth/}{https://www.forth.com/starting-forth/</a></p>
 </div>
 <div class="paragraph">
-<p><a id="LB2"></a>[LB2] <em>Thinking Forth</em>, Leo Brodie, 1984,
+<p>[<a id="LB2"></a>] <em>Thinking Forth</em>, Leo Brodie, 1984,
 <a href="http://thinking-forth.sourceforge.net/\#21CENTURY" class="bare">http://thinking-forth.sourceforge.net/\#21CENTURY</a></p>
 </div>
 <div class="paragraph">
-<p><a id="LL"></a>[LL] <em>6502 Assembly Language Programming</em>, Lance A. Leventhal,
+<p>[<a id="LL"></a>] <em>6502 Assembly Language Programming</em>, Lance A. Leventhal,
 OSBORNE/McGRAW-HILL 1979</p>
 </div>
 <div class="paragraph">
-<p><a id="PHS"></a>[PHS] "The Daemon, the Gnu and the Penguin", Peter H. Saulus,
+<p>[<a id="PHS"></a>] "The Daemon, the Gnu and the Penguin", Peter H. Saulus,
 22. April 2005, <a href="http://www.groklaw.net/article.php?story=20050422235450910" class="bare">http://www.groklaw.net/article.php?story=20050422235450910</a></p>
 </div>
 </div>
@@ -4669,7 +4743,7 @@ under <a href="https://www.ubuntu.com/">Ubuntu</a> Linux 16.04 LTS.</p>
 <div id="footer">
 <div id="footer-text">
 Version BETA<br>
-Last updated 2018-11-08 10:48:17 CET
+Last updated 2018-11-08 21:03:01 EST
 </div>
 </div>
 </body>

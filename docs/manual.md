@@ -1,4 +1,4 @@
-# Manual for Tali Forth 2 for the 65c02 
+## Manual for Tali Forth 2 for the 65c02
 
 Tali Forth 2 is a bare-metal ANS(ish) Forth for the 65c02 8-bit MPU. It aims to be, roughly in order of importance, easy to try out (just run the included binary), simple (subroutine threading model), specific (for the 65c02 only), and standardized (ANS Forth).
 
@@ -40,7 +40,7 @@ But why program in 8-bit assembler at all? The 65c02 is fun to work with because
 >
 > —  Elliot Williams Forth: The Hacker's language
 
-Forth(Forth(Forth is the *enfant terrible* of programming languages. It was invented by Charles "Chuck" H. MooreMoore, Charles in the 1960s to do work with radio astronomy, way before there were modern operating systems or programming languages.
+ForthForth is the *enfant terrible* of programming languages. It was invented by Charles "Chuck" H. MooreMoore, Charles in the 1960s to do work with radio astronomy, way before there were modern operating systems or programming languages.
 
 > **Tip**
 >
@@ -58,7 +58,7 @@ There is no way this document can provide an adequate introduction to Forth. The
 
 ### Writing Your Own Forth
 
-Even if the 65c02 is great and Forth is brilliant, why got to the effort of writing a new, bare-metal version of the languages? After almost 50 years, shouldn’t there be a bunch of Forths around already?
+Even if the 65c02 is great and Forth is brilliant, why go to the effort of writing a new, bare-metal version of the languages? After almost 50 years, shouldn’t there be a bunch of Forths around already?
 
 #### FIG Forth
 
@@ -68,7 +68,7 @@ However, Forth has changed a lot in the past three decades. There is now a stand
 
 #### A Modern Forth for the 65c02
 
-Tali Forth was created to provide an easy to understand modern Forth written especially for the 65c02 that anybody can understand, adapt to their own use, and maybe actually work with. As part of that effort, the source code is heavily commented. And this document tries to explain the internals in more detail.
+Tali Forth was created to provide an easy to understand modern Forth written especially for the 65c02 that anybody can understand, adapt to their own use, and maybe actually work with. As part of that effort, the source code is heavily commented and this document tries to explain the internals in more detail.
 
 ## Overview of Tali Forth
 
@@ -108,7 +108,7 @@ The reverse of DTC in that it is slower, but uses less space than the other Fort
 Subroutine threading (STC)  
 Converts the words to a simple series of `jsr` combinations. Easy to understand and less complex than the other variants, but uses more space and is slower.
 
-Our lack of registers and the goal of creating a simple and easy to understand Forth makes subroutine threading the most attractive solution. We try to mitigate the pain caused by the 12 cycle cost of each and every `jsr`-`rts` combination by including a relatively high number of native words.
+Our lack of registers and the goal of creating a simple and easy to understand Forth makes subroutine threading the most attractive solution, so Tali 2 is an STC Forth. We try to mitigate the pain caused by the 12 cycle cost of each and every `jsr`-`rts` combination by including a relatively high number of native words.
 
 #### Register Use
 
@@ -176,9 +176,13 @@ Tali Forth 2 lives on GitHubGitHub at <https://github.com/scotws/TaliForth2>. Th
 
 Tali was written to run out of the box on the py65mon simulator from <https://github.com/mnaberez/py65>.py65mon This is a PythonPython program that should run on various operating systems. Py65mon is also required for the test suite.
 
-To install py65mon on LinuxLinux, use the command
+To install py65mon on LinuxLinux, use one of the following commands
 
 ``` bash
+# Install for only your user:
+pip install -U py65 --user
+
+# Install for all users:
 sudo pip install -U py65
 ```
 
@@ -203,6 +207,14 @@ The Tali Forth project started out as a way to run Forth on my own 65c02 compute
 #### The Platform Files
 
 For this to work, you need to go to the `platform` folder and create your own kernelkernel code to replace `platform-py65mon.asm`, the default kernel for use with the py65monpy65mon kernel. By convention, the name should start with `platform-`. See the `README.md` file in the the `platform` folder for details.
+
+Once you have configured your platform file in the plaform folder, you can build a binary (typically programmed into an EEPROM) for your hardware with make. If you made a platform file named `platform-mycomp.asm`, then you should `cd` to the main Tali folder and run
+
+``` bash
+make taliforth-mycomp.bin
+```
+
+The bin file will be created in the main folder. You should, of course, replace the "mycomp" portion of that command with whatever you named your platform.
 
 ### Hardware Projects with Tali Forth 2
 
@@ -244,24 +256,24 @@ Tali’s command line includes a simple, eight-element history function. To acce
 
 Tali Forth comes with the following Forth words out of the box:
 
-    see block_init_ramdrive evaluate thru load flush empty-buffers buffer update
-    block save-buffers block_words_deferred blockwrite blockread scr blk buffstatus
-    buffblocknum blkbuffer 2literal 2constant d.r d. ud.r ud. .r u.r action-of is defer@
-    defer! endcase endof of case while until repeat else then if .( ( drop dup swap ! @
-    over >r r> r@ nip rot -rot tuck , c@ c! +! execute emit type . u. ? false true
-    space 0 1 2 2dup ?dup + - abs dabs and or xor rshift lshift pick char [char] char+
-    chars cells cell+ here 1- 1+ 2* 2/ = <> < u< u> > 0= 0<> 0> 0< min max 2drop 2swap
-    2over 2! 2@ 2variable 2r@ 2r> 2>r invert negate dnegate c, bounds spaces bl
-    -trailing /string refill accept unused depth key allot create does> variable constant
-    value to s>d d>s d- d+ erase blank fill find-name ' ['] name>int int>name
-    name>string >body defer latestxt latestnt parse-name parse source source-id : ; :noname
-    compile, [ ] 0branch branch literal sliteral ." s" postpone immediate compile-only
-    never-native always-native nc-limit uf-strip abort abort" do ?do i j loop +loop exit
-    unloop leave recurse quit begin again state evaluate base digit? number >number hex
-    decimal count m* um* * um/mod sm/rem fm/mod / /mod mod */mod */ \ move cmove> cmove
-    pad within >in <# # #s #> hold sign output input cr page at-xy marker words
-    wordsize aligned align bell dump .s disasm compare search environment? find word cold
-    bye
+    see block-ramdrive-init list l evaluate thru load flush empty-buffers buffer
+    update block save-buffers block-words-deferred block-write block-read scr blk
+    buffstatus buffblocknum blkbuffer buffer: 2literal 2constant d.r d. ud.r ud. .r u.r
+    action-of is defer@ defer! endcase endof of case while until repeat else then if .( (
+    drop dup swap ! @ over >r r> r@ nip rot -rot tuck , c@ c! +! execute emit type .
+    u. ? false true space 0 1 2 2dup ?dup + - abs dabs and or xor rshift lshift pick
+    char [char] char+ chars cells cell+ here 1- 1+ 2* 2/ = <> < u< u> > 0= 0<> 0> 0<
+    min max 2drop 2swap 2over 2! 2@ 2variable 2r@ 2r> 2>r invert negate dnegate c,
+    bounds spaces bl -trailing /string refill accept unused depth key allot create does>
+    variable constant value to s>d d>s d- d+ erase blank fill find-name ' ['] name>int
+    int>name name>string >body defer latestxt latestnt parse-name parse source source-id :
+    ; :noname compile, [ ] 0branch branch literal sliteral ." s" postpone immediate
+    compile-only never-native always-native allow-native nc-limit uf-strip abort abort" do ?do
+    i j loop +loop exit unloop leave recurse quit begin again state evaluate base
+    digit? number >number hex decimal count m* um* * um/mod sm/rem fm/mod / /mod mod
+    */mod */ \ move cmove> cmove pad cleave within >in <# # #s #> hold sign output
+    input cr page at-xy marker words wordsize aligned align bell dump .s disasm compare
+    search environment? find word ed cold bye
 
 > **Note**
 >
@@ -302,30 +314,34 @@ In addition, there are words that are specific to Tali Forth.
 <td><p><code>( — 0 )</code> Push the number 2 on the Data Stack.</p></td>
 </tr>
 <tr class="odd">
+<td><p>allow-native</p></td>
+<td><p>Mark last word in dictionary to that it can be natively compiled if it is less than or equal to nc-limit in size.</p></td>
+</tr>
+<tr class="even">
 <td><p>always-native</p></td>
 <td><p>Mark last word in dictionary so that it is always natively compiled.</p></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><p>bell</p></td>
 <td><p>Ring the terminal bell (ASCII 07).</p></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><p>block-read</p></td>
 <td><p><code>( addr blk# — )</code> This is a deferred word the user can change to point to their own routine for reading 1K blocks into memory from storage.</p></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><p>block-write</p></td>
 <td><p><code>( addr blk# — )</code> This is a deferred word the user can change to point to their own routine for writing 1K blocks from memory to storage.</p></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><p>block-ramdrive-init</p></td>
 <td><p><code>( u — )</code> Create a ram drive with the given number of blocks (numbered 0 to (u-1)) to allow use of the block words with no additional hardware. Because the blocks are only held in ram, they will be lost when the hardware is powered down or the simulator is stopped.</p></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><p>branch</p></td>
 <td><p>Always take branch. See <code>0branch</code>.</p></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><p>cleave</p></td>
 <td><p><code>( addr u c — addr2 u2 addr1 u1 )</code> Given a block of character memory and a delimiter character, split off the first sub-block and put it in TOS and NOS. Leave the rest lower down on the stack. This allows breaking off single words (or zero-terminated strings in memory, with a different delimiter) for further processing. Use with loops:</p>
 <pre><code>: tokenloop ( addr u -- addr u addr u)
@@ -340,51 +356,51 @@ induction
 port
  ok</code></pre></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><p>compile-only</p></td>
 <td><p>Mark last word in dictionary as compile-only.</p></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><p>digit?</p></td>
 <td><p><code>( char — u f | char f )</code> If character is a digit, convert and set flag to <code>true</code>, otherwise return the offending character and a <code>false</code> flag.</p></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><p>ed</p></td>
 <td><p>Start the command-line editor. There is a whole chapter on this father down.</p></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><p>input</p></td>
 <td><p>Return the address where the vector for the input routine is stored (not the vector itself). Used for input redirection for <code>emit</code> and others.</p></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><p>int&gt;name</p></td>
 <td><p><code>( xt — nt )</code> Given the execution execution token (xt), return the name token (nt).</p></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><p>latestnt</p></td>
 <td><p><code>( — nt )</code> Return the last used name token. The Gforth version of this word is called <code>latest</code>.</p></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><p>nc-limit</p></td>
 <td><p><code>( — addr )</code> Return the address where the threshold value for native compiling native compiling is kept. To check the value of this parameter, use <code>nc-limit ?</code>. The default value is 20.</p></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><p>never-native</p></td>
 <td><p>Mark most recent word so it is never natively compiled.</p></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><p>number</p></td>
 <td><p><code>( addr u — u | d )</code> Convert a string to a number. Gforth uses <code>s&gt;number?</code> and returns a success flag as well.</p></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><p>output</p></td>
 <td><p><code>( — addr )</code> Return the address where the vector for the output routine is stored (not the vector itself). Used for output redirection for <code>emit</code> and others.</p></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><p>uf-strip</p></td>
 <td><p><code>( — addr)</code> Return the address where the flag is kept that decides if the underflow checks are removed during native compiling. To check the value of this flag, use <code>uf-strip ?</code>.</p></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><p>wordsize</p></td>
 <td><p><code>( nt — u )</code> Given the name token (nt) of a Forth word, return its size in bytes. Used to help tune native compiling.</p></td>
 </tr>
@@ -403,7 +419,7 @@ To set a new limit, save the maximal allowed number of bytes in the machine code
 
     40 nc-limit !
 
-To complete turn off native compiling, set this value to zero.
+To completely turn off native compiling, set this value to zero.
 
 ### Underflow Detection
 
@@ -1079,7 +1095,7 @@ Note that some of these values are hard-coded into the test suite; see the file 
 
 Tali Forth follows the ANS Forth input model with `refill` instead of older forms. There are four possible input sources:
 
--   The keyboard ("user input device")
+-   The keyboard ("user input device", can be redirected)
 
 -   A character string in memory
 
@@ -1087,7 +1103,7 @@ Tali Forth follows the ANS Forth input model with `refill` instead of older form
 
 -   A text file
 
-To check which one is being used, we first call `blk` which gives us the number of a mass storage block being used, or 0 for the "user input device" (keyboard). In the second case, we use `source-id` to find out where input is coming from:
+To check which one is being used, we first call `blk` which gives us the number of a mass storage block being used, or 0 for the one of the other input sources. In the second case, we use `source-id` to find out where input is coming from:
 
 <table>
 <caption>Non-block input sources</caption>
@@ -1104,7 +1120,7 @@ To check which one is being used, we first call `blk` which gives us the number 
 <tbody>
 <tr class="odd">
 <td><p>0</p></td>
-<td><p>keyboard</p></td>
+<td><p>keyboard (can be redirected)</p></td>
 </tr>
 <tr class="even">
 <td><p>-1</p></td>
@@ -1112,12 +1128,16 @@ To check which one is being used, we first call `blk` which gives us the number 
 </tr>
 <tr class="odd">
 <td><p><code>n</code></p></td>
-<td><p>file-id</p></td>
+<td><p>file-id (not currently supported)</p></td>
 </tr>
 </tbody>
 </table>
 
-Since Tali currently doesn’t support blocks, we can skip the `blk` instruction and go right to `source-id`.
+The input can be redirected by storing the address of your routine in the memory location given by the word `output`. Tali expects this routine to wait until a character is available and to return the character in A, rather than on the stack.
+
+The output can similarly be redirected by storing the address of your routine in the memory location given by the word `input`. Tali expects this routine to accept the character to out in A, rather than on the stack.
+
+Both the input routine and output routine may use the tmp1, tmp2, and tmp3 memory locations (defined in assembly.asm), but they need to push/pop them so they can restore the original values before returning. If the input or output routines are written in Forth, extra care needs to be taken because many of the Forth words use these tmp variables and it’s not immediately obvious without checking the assembly for each word.
 
 #### Booting
 
@@ -1226,7 +1246,7 @@ Now the tricks start. `(does>)` takes this address off the stack and uses it to 
             jsr a                   ; in CFA, modified by (DOES>)
        c:   4200                    ; in PFA (little-endian)
 
-Note we added a label `c`. Now, when `(does>)` reaches its own `rts`, it finds the `rts` to the main routine on its stack. This is Good Thing™, because it aborts the execution of the rest of `constant`, and we don’t want to do `dodoes` or `fetch` now. We’re back at the main routine.
+Note we added a label `c`. Now, when `(does>)` reaches its own `rts`, it finds the `rts` to the main routine on its stack. This is a Good Thing™, because it aborts the execution of the rest of `constant`, and we don’t want to do `dodoes` or `fetch` now. We’re back at the main routine.
 
 #### Sequence 3: Executing `life`
 
@@ -1425,6 +1445,10 @@ To experiment with various parameters for native compiling, the Forth word `word
 
 An alternative is `see` which also displays the length of a word. One way or another, changing `nc-limit` should show differences in the Forth words.
 
+While a new word may have built-in words natively compiled into it, all new words are flagged Never-Native by default because a word needs to meet some special criteria to be safe to native compile. In particular, the word cannot have any control structures (if, loop, begin, again, etc) and, if written in assembly, cannot have any JMP instructions in it (except for error handling, such as underflow detection).
+
+If you are certain your new word meets these criteria, then you can enable native compilation of this word into other words by invoking the word `allow-native` or the word `always-native` immediately after the definition of your new word. The `allow-native` will use the `nc-limit` value to determine when to natively compiled just like it does for the built-in words, and `always-native` will always natively compile regardless of the setting of `nc-limit`.
+
 #### Return Stack Special Cases
 
 There are a few words that cause problems with subroutine threaded code (STC): Those that access the Return Stack such as `r>`, `>r`, `r@`, `2r>`, and `2>r`. We first have to remove the return address on the top of the stack, only to replace it again before we return to the caller. This mechanism would normally prevent the word from being natively compiled at all, because we’d try to remove a return address that doesn’t exit.
@@ -1510,7 +1534,7 @@ Please note adding the always-native flag to a word overrides the never-native f
 
 The three moving words `cmove`, `cmove>` and `move` show subtle differences that can trip up new users and are reflected by different code under the hood. `cmove` and `cmove>` are the traditional Forth words that work on characters (which in the case of Tali Forth are bytes), whereas `move` is a more modern word that works on address units (which in our case is also bytes).
 
-If the source and destination regions show no overlap, all three words work the same. However, if there is overlap, `cmove` and `cmove>` demonstrate a behavior called "propagation" or "clobbering" : Some of the characters are overwritten. \`move: does not show this behavior. This example shows the difference:
+If the source and destination regions show no overlap, all three words work the same. However, if there is overlap, `cmove` and `cmove>` demonstrate a behavior called "propagation" or "clobbering" : Some of the characters are overwritten. `move` does not show this behavior. This example shows the difference:
 
     create testbuf  char a c,  char b c,  char c c,  char d c,  ( ok )
     testbuf 4 type  ( abcd ok )
@@ -1534,7 +1558,7 @@ In practice, `move` is usually what you want to use.
 
 The simplest way to add new words to Tali Forth is to include them in the file `forth_code/user_words.fs`. This is the suggested place to put them for personal use.
 
-To add words to the permanent set, it is best to start a pull request on the GitHub page of Tali Forth. How to setup and use `git` and GitHub is beyond the scope of this document — we’ll just point out it they are not as complicated as they look, and the make experimenting a lot easier.
+To add words to the permanent set, it is best to start a pull request on the GitHub page of Tali Forth. How to setup and use `git` and GitHub is beyond the scope of this document — we’ll just point out it they are not as complicated as they look, and they make experimenting a lot easier.
 
 During development, Tali Forth tends to follow a sequence of steps for new words:
 
@@ -1576,7 +1600,7 @@ Ophis has some quirks. For instance, you cannot use math symbols in label names,
 
 -   The Y register, however, is free to be changed by subroutines. This also means it should not be expected to survive subroutines unchanged.
 
--   Naively coded words generally should have exactly one point of entry — the `xt_word` link — and exactly one point of exit at `z_word`. In may cases, this requires a branch to an internal label `_done` right before `z_word`.
+-   Natively coded words generally should have exactly one point of entry — the `xt_word` link — and exactly one point of exit at `z_word`. In may cases, this requires a branch to an internal label `_done` right before `z_word`.
 
 -   Because of the way native compiling works, the trick of combining `jsr`-`rts` pairs to a single `jmp` instruction (usually) doesn’t work.
 
@@ -1657,9 +1681,9 @@ Some of these fragments could be written in other variants, such as the "push va
 
                     dex
                     dex
-                    lda <LSB>      ; or pla, jsr kernel_getc, etc.
+                    lda <LSB>      ; or pla, jsr key_a, etc.
                     sta 0,x
-                    lda <MSB>      ; or pla, jsr kernel_getc, etc.
+                    lda <MSB>      ; or pla, jsr key_a, etc.
                     sta 1,x
 
 -   `pop` a value off the Data Stack
@@ -1667,9 +1691,9 @@ Some of these fragments could be written in other variants, such as the "push va
 <!-- -->
 
                     lda 0,x
-                    sta <LSB>      ; or pha, jsr kernel_putc, etc
+                    sta <LSB>      ; or pha, jsr emit_a, etc
                     lda 1,x
-                    sta <MSB>      ; or pha, jsr kernel_putc, etc
+                    sta <MSB>      ; or pha, jsr emit_a, etc
                     inx
                     inx
 
@@ -1983,37 +2007,37 @@ Thank you, everybody.
 
 # References and Further Reading
 
-\[FB\] *Masterminds of Programming*, Federico Biancuzzi, O’Reilly Media 1st edition, 2009.
+\[\] *Masterminds of Programming*, Federico Biancuzzi, O’Reilly Media 1st edition, 2009.
 
-\[CHM1\] "Charles H. Moore: Geek of the Week", redgate Hub 2009 <https://www.red-gate.com/simple-talk/opinion/geek-of-the-week/chuck-moore-geek>
+\[\] "Charles H. Moore: Geek of the Week", redgate Hub 2009 <https://www.red-gate.com/simple-talk/opinion/geek-of-the-week/chuck-moore-geek>
 
-\[CHM2\] "The Evolution of FORTH, an Unusual Language", Charles H. Moore, *Byte* 1980, <https://wiki.forth-ev.de/doku.php/projects:the_evolution_of_forth>
+\[\] "The Evolution of FORTH, an Unusual Language", Charles H. Moore, *Byte* 1980, <https://wiki.forth-ev.de/doku.php/projects:the_evolution_of_forth>
 
-\[CnR\] *Forth Programmer’s Handbook*, Edward K. Conklin and Elizabeth Rather, 3rd edition 2010
+\[\] *Forth Programmer’s Handbook*, Edward K. Conklin and Elizabeth Rather, 3rd edition 2010
 
-\[DB\] *Forth Enzyclopedia*, Mitch Derick and Linda Baker, Mountain View Press 1982
+\[\] *Forth Enzyclopedia*, Mitch Derick and Linda Baker, Mountain View Press 1982
 
-\[DH\] "Some notes on Forth from a novice user", Douglas Hoffman, Feb 1988 <https://wiki.forth-ev.de/doku.php/projects:some_notes_on_forth_from_a_novice_user>
+\[\] "Some notes on Forth from a novice user", Douglas Hoffman, Feb 1988 <https://wiki.forth-ev.de/doku.php/projects:some_notes_on_forth_from_a_novice_user>
 
-\[DMR\] "Reflections on Software Research", Dennis M. Ritchie, Turing Award Lecture in *Communications of the ACM* August 1984 Volume 27 Number 8 <http://www.valleytalk.org/wp-content/uploads/2011/10/p758-ritchie.pdf>
+\[\] "Reflections on Software Research", Dennis M. Ritchie, Turing Award Lecture in *Communications of the ACM* August 1984 Volume 27 Number 8 <http://www.valleytalk.org/wp-content/uploads/2011/10/p758-ritchie.pdf>
 
-\[EnL\] *Programming the 65816, including the 6502, 65C02 and 65802*, David Eyes and Ron Lichty (Currently not available from the WDC website)
+\[\] *Programming the 65816, including the 6502, 65C02 and 65802*, David Eyes and Ron Lichty (Currently not available from the WDC website)
 
-\[EW\] "Forth: The Hacker’s Language", Elliot Williams, <https://hackaday.com/2017/01/27/forth-the-hackers-language/>
+\[\] "Forth: The Hacker’s Language", Elliot Williams, <https://hackaday.com/2017/01/27/forth-the-hackers-language/>
 
-\[GK\] "Forth System Comparisons", Guy Kelly, in *Forth Dimensions* V13N6, March/April 1992 [http://www.forth.org/fd/FD-V13N6.pdf}{http://www.forth.org/fd/FD-V13N6.pdf](http://www.forth.org/fd/FD-V13N6.pdf}{http://www.forth.org/fd/FD-V13N6.pdf)
+\[\] "Forth System Comparisons", Guy Kelly, in *Forth Dimensions* V13N6, March/April 1992 [http://www.forth.org/fd/FD-V13N6.pdf}{http://www.forth.org/fd/FD-V13N6.pdf](http://www.forth.org/fd/FD-V13N6.pdf}{http://www.forth.org/fd/FD-V13N6.pdf)
 
-\[JN\] *A Beginner’s Guide to Forth*, J.V. Nobel, <http://galileo.phys.virginia.edu/classes/551.jvn.fall01/primer.htm>
+\[\] *A Beginner’s Guide to Forth*, J.V. Nobel, <http://galileo.phys.virginia.edu/classes/551.jvn.fall01/primer.htm>
 
-\[BWK\] *A Tutorial Introduction to the UNIX Text Editor*, B. W. Kernighan, <http://www.psue.uni-hannover.de/wise2017_2018/material/ed.pdf>
+\[\] *A Tutorial Introduction to the UNIX Text Editor*, B. W. Kernighan, <http://www.psue.uni-hannover.de/wise2017_2018/material/ed.pdf>
 
-\[LB1\] *Starting Forth*, Leo Brodie, new edition 2003, [https://www.forth.com/starting-forth/}{https://www.forth.com/starting-forth/](https://www.forth.com/starting-forth/}{https://www.forth.com/starting-forth/)
+\[\] *Starting Forth*, Leo Brodie, new edition 2003, [https://www.forth.com/starting-forth/}{https://www.forth.com/starting-forth/](https://www.forth.com/starting-forth/}{https://www.forth.com/starting-forth/)
 
-\[LB2\] *Thinking Forth*, Leo Brodie, 1984, [http://thinking-forth.sourceforge.net/\\\#21CENTURY](http://thinking-forth.sourceforge.net/\#21CENTURY)
+\[\] *Thinking Forth*, Leo Brodie, 1984, [http://thinking-forth.sourceforge.net/\\\#21CENTURY](http://thinking-forth.sourceforge.net/\#21CENTURY)
 
-\[LL\] *6502 Assembly Language Programming*, Lance A. Leventhal, OSBORNE/McGRAW-HILL 1979
+\[\] *6502 Assembly Language Programming*, Lance A. Leventhal, OSBORNE/McGRAW-HILL 1979
 
-\[PHS\] "The Daemon, the Gnu and the Penguin", Peter H. Saulus, 22. April 2005, <http://www.groklaw.net/article.php?story=20050422235450910>
+\[\] "The Daemon, the Gnu and the Penguin", Peter H. Saulus, 22. April 2005, <http://www.groklaw.net/article.php?story=20050422235450910>
 
 The Tali Forth 2 Manual was written with the [vim](https://www.vim.org/) editor in [AsciiDoc](https://asciidoctor.org/docs/what-is-asciidoc/) format, formatted to HTML with AsciiDoctor, and version controlled with [Git](https://git-scm.com/), all under [Ubuntu](https://www.ubuntu.com/) Linux 16.04 LTS.
 

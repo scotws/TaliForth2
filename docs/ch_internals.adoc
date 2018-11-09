@@ -296,13 +296,13 @@ Note that some of these values are hard-coded into the test suite; see the file
 Tali Forth follows the ANS Forth input model with `refill` instead of older
 forms. There are four possible input sources:
 
-* The keyboard ("user input device")
+* The keyboard ("user input device", can be redirected)
 * A character string in memory
 * A block file
 * A text file
 
 To check which one is being used, we first call `blk` which gives us the number
-of a mass storage block being used, or 0 for the "user input device" (keyboard).
+of a mass storage block being used, or 0 for the one of the other input sources.
 In the second case, we use `source-id` to find out where input is coming from:
 
 .Non-block input sources
@@ -310,14 +310,29 @@ In the second case, we use `source-id` to find out where input is coming from:
 |===
 | Value | Source
 
-| 0 | keyboard
+| 0 | keyboard (can be redirected)
 | -1 | string in memory
-| `n` | file-id
+| `n` | file-id (not currently supported)
 
 |===
 
-Since Tali currently doesn't support blocks, we can skip the `blk` instruction
-and go right to `source-id`.
+The input can be redirected by storing the address of your routine in
+the memory location given by the word `output`.  Tali expects this
+routine to wait until a character is available and to return the
+character in A, rather than on the stack.
+
+The output can similarly be redirected by storing the address of your
+routine in the memory location given by the word `input`.  Tali
+expects this routine to accept the character to out in A, rather than
+on the stack.
+
+Both the input routine and output routine may use the tmp1, tmp2, and
+tmp3 memory locations (defined in assembly.asm), but they need to
+push/pop them so they can restore the original values before
+returning.  If the input or output routines are written in Forth,
+extra care needs to be taken because many of the Forth words use these
+tmp variables and it's not immediately obvious without checking the
+assembly for each word.
 
 ==== Booting
 
@@ -457,7 +472,7 @@ We now have this:
 ----
 
 Note we added a label `c`. Now, when `(does>)` reaches its own `rts`, it finds
-the `rts` to the main routine on its stack. This is Good Thing(TM), because it
+the `rts` to the main routine on its stack. This is a Good Thing(TM), because it
 aborts the execution of the rest of `constant`, and we don't want to do
 `dodoes` or `fetch` now. We're back at the main routine. 
 
@@ -782,7 +797,24 @@ The Forth is:
 ----
 
 An alternative is `see` which also displays the length of a word. One way or
-another, changing `nc-limit` should show differences in the Forth words.
+another, changing `nc-limit` should show differences in the Forth
+words.
+
+While a new word may have built-in words natively compiled into it,
+all new words are flagged Never-Native by default because a word needs
+to meet some special criteria to be safe to native compile.  In
+particular, the word cannot have any control structures (if, loop,
+begin, again, etc) and, if written in assembly, cannot have any JMP
+instructions in it (except for error handling, such as underflow
+detection).  
+
+If you are certain your new word meets these criteria,
+then you can enable native compilation of this word into other words
+by invoking the word `allow-native` or the word `always-native`
+immediately after the definition of your new word.  The `allow-native`
+will use the `nc-limit` value to determine when to natively compiled just like
+it does for the built-in words, and `always-native` will always
+natively compile regardless of the setting of `nc-limit`.
 
 ==== Return Stack Special Cases
 
@@ -908,7 +940,7 @@ word that works on address units (which in our case is also bytes).
 If the source and destination regions show no overlap, all three words work the
 same. However, if there is overlap, `cmove` and `cmove>` demonstrate a behavior
 called "propagation" or "clobbering" : Some of the characters are overwritten.
-`move: does not show this behavior. This example shows the difference:
+`move` does not show this behavior. This example shows the difference:
 
 ----
 create testbuf  char a c,  char b c,  char c c,  char d c,  ( ok )

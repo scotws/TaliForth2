@@ -47,9 +47,10 @@ series of `jsr` combinations. Easy to understand and less complex than the other
 variants, but uses more space and is slower.
 
 Our lack of registers and the goal of creating a simple and easy to understand
-Forth makes subroutine threading the most attractive solution. We try to
-mitigate the pain caused by the 12 cycle cost of each and every `jsr`-`rts`
-combination by including a relatively high number of native words.
+Forth makes subroutine threading the most attractive solution, so Tali 2 is an
+STC Forth. We try to mitigate the pain caused by the 12 cycle cost of each and
+every `jsr`-`rts` combination by including a relatively high number of native
+words.
 
 
 ==== Register Use
