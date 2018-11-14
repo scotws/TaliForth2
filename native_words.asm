@@ -6558,7 +6558,7 @@ z_rshift:       rts
 xt_s_backslash_quote:
                 ; tmp2 will be used to determine if we are handling
                 ; escaped characters or not.  In this case, we are,
-                ; so set it to 1 (the upper byte will be used to
+                ; so set it to $FF (the upper byte will be used to
                 ; determine if we just had a \ and the next character
                 ; needs to be modifed as an escaped character).
                 lda #$FF
@@ -6571,8 +6571,24 @@ _done:
 z_s_backslash_quote:
                 rts
 .scend
-                
 
+; This is a helper function for s_backslash_quote to convert a character
+; from ASCII to the corresponding hex value, eg 'F'->15
+convert_hex_value:
+.scope
+        cmp #'A
+        bcc _Digit
+        ; It's A-F
+        and #$DF                ; Make it uppercase.
+        sec
+        sbc #'7                 ; gives value 10 for 'A'
+        rts
+_Digit:
+        ; It's 0-9
+        sec
+        sbc #'0
+        rts
+.scend
 
 ; ## S_QUOTE ( "string" -- )( -- addr u ) "Store string in memory"
 ; ## "s""  auto  ANS core
@@ -6628,7 +6644,21 @@ _savechars_loop:
                 bcc _input_fine
 
                 ; Input buffer is empty.  Refill it.
-                jsr xt_refill           ; ( -- f )  
+                ; Refill calls accept, which uses tmp2 and tmp3.
+                ; Save and restore them.
+                lda tmp2
+                pha
+                lda tmp2+1
+                pha
+                lda tmp3    ; Only tmp3 used, so don't bother with tmp3+1
+                pha
+                jsr xt_refill           ; ( -- f )
+                pla
+                sta tmp3
+                pla
+                sta tmp2+1
+                pla
+                sta tmp2
 
                 ; Check result of refill.
                 lda 0,x
@@ -6661,13 +6691,13 @@ _input_fine:
 
                 ; Get the character
                 lda (tmp1)
-
+        
                 ; Check to see if we are handling escaped characters.
                 bit tmp2
                 bmi _handle_escapes    ; Only checking bit 7
                 jmp _regular_char
         
-_handle_escapes:        
+_handle_escapes:
                 ; We are handling escaped characters.  See if we have
                 ; already seen the backslash.
                 bit tmp2+1
@@ -6684,17 +6714,37 @@ _handle_escapes:
                 lda #1
                 bit tmp2+1
                 bne _esc_x_second_digit
+        
                 ; First digit.
                 inc tmp2+1  ; Adjust flag for second digit next time.
                 lda (tmp1)  ; Get the char again.
-                ; SAMCO TODO: Convert to hex
+                ; Convert to hex
+                jsr convert_hex_value
+                ; This is the upper nybble, so move it up.
+                clc
+                rol
+                clc
+                rol
+                clc
+                rol
+                clc
+                rol
                 sta tmp3    ; Save it for later.
                 bra _next_character
 
 _esc_x_second_digit:
                 ; We are on the second hex digit of a \x sequence.
+
+                ; Clear the escaped character flag (because we are
+                ; handling it right here)
+                stz tmp2+1
+        
                 lda (tmp1)
-                ; SAMCO TODO: Convert to hex, combine with value in tmp3
+
+                ; Convert to hex, combine with value in tmp3
+                jsr convert_hex_value
+                ora tmp3
+        
                 bra _save_character
 
 
@@ -6792,12 +6842,12 @@ _check_esc_x:
                 ; and combine them as two hex digits.  We do this by
                 ; clearing bit 6 of tmp2+1 to indicate we are in a digit
                 ; and using bit 0 to keep track of which digit we are on.
+
                 lda #$BE        ; Clear bits 6 and 0
-                and tmp2+1
                 sta tmp2+1
                 bra _next_character
 _check_esc_backslash:
-                cmp #'q
+                cmp #$5C
                 bne _not_escaped
                 ; Backslash (ASCII value 92)
                 lda #92
@@ -6828,9 +6878,10 @@ _save_character:
 _next_character:        
                 ; Move on to the next character.
                 inc toin
-                bne _savechars_loop
+                bne _savechars_loop_longjump
                 inc toin+1
-                bra _savechars_loop
+_savechars_loop_longjump:       
+                jmp _savechars_loop
 
 _found_string_end:
                 ; Use up the delimiter.
