@@ -6701,8 +6701,10 @@ _handle_escapes:
                 ; We are handling escaped characters.  See if we have
                 ; already seen the backslash.
                 bit tmp2+1
-                bpl _not_escaped
-
+                bmi _escaped
+                jmp _not_escaped
+        
+_escaped:       
                 ; We have seen a backslash (previous character)
 
                 ; Check to see if we are in the middle of a \x sequence
@@ -6730,7 +6732,7 @@ _handle_escapes:
                 clc
                 rol
                 sta tmp3    ; Save it for later.
-                bra _next_character
+                jmp _next_character
 
 _esc_x_second_digit:
                 ; We are on the second hex digit of a \x sequence.
@@ -6745,7 +6747,7 @@ _esc_x_second_digit:
                 jsr convert_hex_value
                 ora tmp3
         
-                bra _save_character
+                jmp _save_character
 
 
 _check_esc_chars:       
@@ -6759,13 +6761,13 @@ _check_esc_a:
                 bne _check_esc_b
                 ; BEL (ASCII value 7)
                 lda #7
-                bra _save_character
+                jmp _save_character
 _check_esc_b:
                 cmp #'b
                 bne _check_esc_e
                 ; Backspace (ASCII value 8)
                 lda #8
-                bra _save_character
+                jmp _save_character
 _check_esc_e:
                 cmp #'e
                 bne _check_esc_f
