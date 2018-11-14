@@ -6545,6 +6545,35 @@ _done:
 z_rshift:       rts
 
 
+; ## S_BACKSLASH_QUOTE ( "string" -- )( -- addr u ) "Store string in memory"
+; ## "s\""  auto  ANS core
+        ; """https://forth-standard.org/standard/core/Seq
+        ; Store address and length of string given, returning ( addr u ).
+        ; ANS core claims this is compile-only, but the file set expands it
+        ; to be interpreted, so it is a state-sensitive word, which in theory
+        ; are evil. We follow general usage.  This is just like S" except
+        ; that it allows for some special escaped characters.
+        ; """
+.scope
+xt_s_backslash_quote:
+                ; tmp2 will be used to determine if we are handling
+                ; escaped characters or not.  In this case, we are,
+                ; so set it to 1 (the upper byte will be used to
+                ; determine if we just had a \ and the next character
+                ; needs to be modifed as an escaped character.
+                lda #1
+                sta tmp2
+                stz tmp2+1
+                ; Now that the flag is set, jump into s_quote to process
+                ; the string.
+                jsr s_quote_start
+_done:
+z_s_backslash_quote:
+                rts
+.scend
+                
+
+
 ; ## S_QUOTE ( "string" -- )( -- addr u ) "Store string in memory"
 ; ## "s""  auto  ANS core
         ; """https://forth-standard.org/standard/core/Sq
@@ -6557,6 +6586,12 @@ z_rshift:       rts
         ; """
 .scope
 xt_s_quote:
+                ; tmp2 will be used to determine if we are handling
+                ; escaped characters or not.  In this case, we are
+                ; not, so set it to zero.
+                stz tmp2
+                stz tmp2+1
+s_quote_start:  
                 ; Make room on the data stack for the address.
                 dex
                 dex
