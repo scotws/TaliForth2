@@ -6560,8 +6560,8 @@ xt_s_backslash_quote:
                 ; escaped characters or not.  In this case, we are,
                 ; so set it to 1 (the upper byte will be used to
                 ; determine if we just had a \ and the next character
-                ; needs to be modifed as an escaped character.
-                lda #1
+                ; needs to be modifed as an escaped character).
+                lda #$FF
                 sta tmp2
                 stz tmp2+1
                 ; Now that the flag is set, jump into s_quote to process
@@ -6659,13 +6659,173 @@ _input_fine:
                 adc toin+1      ; MSB
                 sta tmp1+1
 
-                ; Check if the current character is the end of the string.
+                ; Get the character
                 lda (tmp1)
+
+                ; Check to see if we are handling escaped characters.
+                bit tmp2
+                bmi _handle_escapes    ; Only checking bit 7
+                jmp _regular_char
+        
+_handle_escapes:        
+                ; We are handling escaped characters.  See if we have
+                ; already seen the backslash.
+                bit tmp2+1
+                bpl _not_escaped
+
+                ; We have seen a backslash (previous character)
+
+                ; Check to see if we are in the middle of a \x sequence
+                ; (bit 6 of tmp2+1 will be clear in that case )
+                bvs _check_esc_chars
+
+                ; We are in the middle of a \x sequence.
+                ; Check to see if we are on the first or second digit.
+                lda #1
+                bit tmp2+1
+                bne _esc_x_second_digit
+                ; First digit.
+                inc tmp2+1  ; Adjust flag for second digit next time.
+                lda (tmp1)  ; Get the char again.
+                ; SAMCO TODO: Convert to hex
+                sta tmp3    ; Save it for later.
+                bra _next_character
+
+_esc_x_second_digit:
+                ; We are on the second hex digit of a \x sequence.
+                lda (tmp1)
+                ; SAMCO TODO: Convert to hex, combine with value in tmp3
+                bra _save_character
+
+
+_check_esc_chars:       
+                ; Clear the escaped character flag (because we are
+                ; handling it right here)
+                stz tmp2+1
+
+                ; Process the escaped character
+_check_esc_a:
+                cmp #'a
+                bne _check_esc_b
+                ; BEL (ASCII value 7)
+                lda #7
+                bra _save_character
+_check_esc_b:
+                cmp #'b
+                bne _check_esc_e
+                ; Backspace (ASCII value 8)
+                lda #8
+                bra _save_character
+_check_esc_e:
+                cmp #'e
+                bne _check_esc_f
+                ; ESC (ASCII value 27)
+                lda #27
+                bra _save_character
+_check_esc_f:
+                cmp #'f
+                bne _check_esc_l
+                ; FF (ASCII value 12)
+                lda #12
+                bra _save_character
+_check_esc_l:
+                cmp #'l
+                bne _check_esc_m
+                ; LF (ASCII value 10)
+                lda #10
+                bra _save_character
+_check_esc_m:
+                cmp #'m
+                bne _check_esc_n
+                ; CR/LF pair (ASCII values 13, 10)
+                lda #13
+                jsr cmpl_a
+                lda #10
+                bra _save_character
+_check_esc_n:
+                cmp #'n
+                bne _check_esc_q
+                ; newline, impl. dependant, using LF (ASCII values 10)
+                lda #10
+                bra _save_character
+_check_esc_q:
+                cmp #'q
+                bne _check_esc_r
+                ; Double quote (ASCII value 34)
+                lda #34
+                bra _save_character
+_check_esc_r:
+                cmp #'r
+                bne _check_esc_t
+                ; CR (ASCII value 13)
+                lda #13
+                bra _save_character
+_check_esc_t:
+                cmp #'t
+                bne _check_esc_v
+                ; Horizontal TAB (ASCII value 9)
+                lda #9
+                bra _save_character
+_check_esc_v:
+                cmp #'v
+                bne _check_esc_z
+                ; Vertical TAB (ASCII value 11)
+                lda #11
+                bra _save_character
+_check_esc_z:
+                cmp #'z
+                bne _check_esc_quote
+                ; NULL (ASCII value 0)
+                lda #0
+                bra _save_character
+_check_esc_quote:
+                cmp #$22
+                bne _check_esc_x
+                ; Double quote (ASCII value 34)
+                lda #34
+                bra _save_character
+_check_esc_x:
+                cmp #'x
+                bne _check_esc_backslash
+                ; This one is difficult.  We need to get the next TWO
+                ; characters (which might require a refill in the middle)
+                ; and combine them as two hex digits.  We do this by
+                ; clearing bit 6 of tmp2+1 to indicate we are in a digit
+                ; and using bit 0 to keep track of which digit we are on.
+                lda #$BE        ; Clear bits 6 and 0
+                and tmp2+1
+                sta tmp2+1
+                bra _next_character
+_check_esc_backslash:
+                cmp #'q
+                bne _not_escaped
+                ; Backslash (ASCII value 92)
+                lda #92
+                bra _save_character
+
+_not_escaped:
+                ; Check for the backslash to see if we should escape
+                ; the next char.
+                cmp #$5C    ; The backslash char
+                bne _regular_char
+
+                ; We found a backslash.  Don't save anyhing, but set
+                ; a flag (in tmp2+1) to handle the next char.  We don't
+                ; try to get the next char here as it may require a
+                ; refill of the input buffer.
+                lda #$FF
+                sta tmp2+1
+                bra _next_character
+
+_regular_char:   
+                ; Check if the current character is the end of the string.
                 cmp #$22        ; ASCII for "
                 beq _found_string_end
+_save_character:      
                 ; If we didn't reach the end of the string, compile this
                 ; character into the dictionary
                 jsr cmpl_a
+_next_character:        
                 ; Move on to the next character.
                 inc toin
                 bne _savechars_loop
