@@ -1857,6 +1857,114 @@ testing facility words: at-xy page   ok
 ( TODO AT-XY test missing )  ok
 ( TODO PAGE test missing )  ok
   ok
+ ( Running test 'ed' from file 'ed.fs' )  ok
+\ ------------------------------------------------------------------------  ok
+testing editor words: ed  ok
+  ok
+\ TODO Rewrite compare strings once s\" is online (check for linefeed character)  ok
+  ok
+decimal  ok
+marker ed-tests   ok
+  ok
+\ Use 8000 (decimal) as write area. This may have to be changed if tests crash  ok
+\ to a higher value. Currently, we are already using 7000 (check with HERE)  ok
+  ok
+\ --- a command ---  ok
+\ Simple adding of text  ok
+ed 
+a 
+abcdefgh 
+ijklmnop 
+. 
+8000w 
+18 
+q  ok
+  ok
+T{ 8000 c@ -> char a }T  ok
+T{ 8000 8  s" abcdefgh" compare -> 0 }T  ok
+T{ 8008 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character  ok
+T{ 8009 8  s" ijklmnop" compare -> 0 }T  ok
+  ok
+\ Add text to end of existing text  ok
+ed 
+a 
+abcdefgh 
+ijklmnop 
+. 
+a 
+qrstuvwx 
+. 
+8000w 
+27 
+q  ok
+T{ 8000 8  s" abcdefgh" compare -> 0 }T  ok
+T{ 8008 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character  ok
+T{ 8009 8  s" ijklmnop" compare -> 0 }T  ok
+T{ 8017 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character  ok
+T{ 8018 8  s" qrstuvwx" compare -> 0 }T  ok
+  ok
+  ok
+\ Add a line between two lines of existing text  ok
+ed 
+a 
+abcdefgh 
+ijklmnop 
+. 
+1a 
+qrstuvwx 
+. 
+8000w 
+27 
+q  ok
+T{ 8000 8  s" abcdefgh" compare -> 0 }T  ok
+T{ 8008 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character  ok
+T{ 8009 8  s" qrstuvwx" compare -> 0 }T  ok
+T{ 8017 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character  ok
+T{ 8018 8  s" ijklmnop" compare -> 0 }T  ok
+  ok
+\ Add two lines between two existing lines of existing text  ok
+ed 
+a 
+aaaa 
+bbbb 
+. 
+1a 
+cccc 
+dddd 
+. 
+8000w 
+20 
+q  ok
+T{ 8000 4  s" aaaa" compare -> 0 }T  ok
+T{ 8004 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character  ok
+T{ 8005 4  s" cccc" compare -> 0 }T  ok
+T{ 8009 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character  ok
+T{ 8010 4  s" dddd" compare -> 0 }T  ok
+T{ 8014 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character  ok
+T{ 8015 4  s" bbbb" compare -> 0 }T  ok
+  ok
+  ok
+\ Add a line above existing text  ok
+ed 
+a 
+abcdefgh 
+. 
+0a 
+ijklmnop 
+. 
+8000w 
+18 
+q  ok
+T{ 8000 8  s" ijklmnop" compare -> 0 }T  ok
+T{ 8008 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character  ok
+T{ 8009 8  s" abcdefgh" compare -> 0 }T  ok
+  ok
+  ok
+  ok
+\ Free memory used for these tests  ok
+ed-tests  ok
+  ok
+  ok
  ( Running test 'stringlong' from file 'stringlong.fs' )  ok
 \ ------------------------------------------------------------------------  ok
 testing long strings  ok
