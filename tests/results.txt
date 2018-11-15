@@ -1894,7 +1894,11 @@ decimal  ok
 marker ed-tests   ok
   ok
 \ Use 10000 (decimal) as write area. This may have to be changed if tests crash  ok
-\ to a higher value. Currently, we are already using 7000 (check with HERE)  ok
+\ to a higher value. Currently, we are already using 7000 (check with HERE).  ok
+\ Note ed tests will usually return with ( 0 0 ) on the stack because of the   ok
+\ target address  ok
+  ok
+\ === SIMPLE TESTS ===  ok
   ok
 \ --- a command ---  ok
   ok
@@ -1908,7 +1912,7 @@ ijklmnop
 18 
 q  ok
   ok
-T{ 10000 c@ -> char a }T  ok
+T{ 10000 c@ -> 0 0 char a }T  ok
 T{ 10000 8  s" abcdefgh" compare -> 0 }T  ok
 T{ 8008 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character INCORRECT RESULT: T{ 8008 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character ACTUAL RESULT: { 1 } ok
 T{ 8009 8  s" ijklmnop" compare -> 0 }T INCORRECT RESULT: T{ 8009 8  s" ijklmnop" compare -> 0 }T ACTUAL RESULT: { -1 } ok
@@ -2000,7 +2004,7 @@ bbbb
 10000w 
 5 
 q  ok
-T{ 10000 4  s" bbbb" compare -> 0 }T  ok
+T{ 10000 4  s" bbbb" compare -> 0 0 0 }T  ok
   ok
 \ Delete second of two lines  ok
 ed 
@@ -2012,8 +2016,9 @@ bbbb
 10000w 
 5 
 q  ok
-T{ 10000 4  s" aaaa" compare -> 0 }T  ok
+T{ 10000 4  s" aaaa" compare -> 0 0 0 }T  ok
   ok
+\ === END OF ED TESTS ===  ok
   ok
 \ Free memory used for these tests  ok
 ed-tests  ok
