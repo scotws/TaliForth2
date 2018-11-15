@@ -1893,24 +1893,25 @@ testing editor words: ed  ok
 decimal  ok
 marker ed-tests   ok
   ok
-\ Use 8000 (decimal) as write area. This may have to be changed if tests crash  ok
+\ Use 10000 (decimal) as write area. This may have to be changed if tests crash  ok
 \ to a higher value. Currently, we are already using 7000 (check with HERE)  ok
   ok
 \ --- a command ---  ok
+  ok
 \ Simple adding of text  ok
 ed 
 a 
 abcdefgh 
 ijklmnop 
 . 
-8000w 
+10000w 
 18 
 q  ok
   ok
-T{ 8000 c@ -> char a }T  ok
-T{ 8000 8  s" abcdefgh" compare -> 0 }T  ok
-T{ 8008 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character  ok
-T{ 8009 8  s" ijklmnop" compare -> 0 }T  ok
+T{ 10000 c@ -> char a }T  ok
+T{ 10000 8  s" abcdefgh" compare -> 0 }T  ok
+T{ 8008 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character INCORRECT RESULT: T{ 8008 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character ACTUAL RESULT: { 1 } ok
+T{ 8009 8  s" ijklmnop" compare -> 0 }T INCORRECT RESULT: T{ 8009 8  s" ijklmnop" compare -> 0 }T ACTUAL RESULT: { -1 } ok
   ok
 \ Add text to end of existing text  ok
 ed 
@@ -1921,14 +1922,14 @@ ijklmnop
 a 
 qrstuvwx 
 . 
-8000w 
+10000w 
 27 
 q  ok
-T{ 8000 8  s" abcdefgh" compare -> 0 }T  ok
-T{ 8008 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character  ok
-T{ 8009 8  s" ijklmnop" compare -> 0 }T  ok
-T{ 8017 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character  ok
-T{ 8018 8  s" qrstuvwx" compare -> 0 }T  ok
+T{ 10000 8  s" abcdefgh" compare -> 0 }T  ok
+T{ 8008 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character INCORRECT RESULT: T{ 8008 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character ACTUAL RESULT: { 1 } ok
+T{ 8009 8  s" ijklmnop" compare -> 0 }T INCORRECT RESULT: T{ 8009 8  s" ijklmnop" compare -> 0 }T ACTUAL RESULT: { -1 } ok
+T{ 8017 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character INCORRECT RESULT: T{ 8017 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character ACTUAL RESULT: { 1 } ok
+T{ 8018 8  s" qrstuvwx" compare -> 0 }T INCORRECT RESULT: T{ 8018 8  s" qrstuvwx" compare -> 0 }T ACTUAL RESULT: { -1 } ok
   ok
   ok
 \ Add a line between two lines of existing text  ok
@@ -1940,14 +1941,14 @@ ijklmnop
 1a 
 qrstuvwx 
 . 
-8000w 
+10000w 
 27 
 q  ok
-T{ 8000 8  s" abcdefgh" compare -> 0 }T  ok
-T{ 8008 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character  ok
-T{ 8009 8  s" qrstuvwx" compare -> 0 }T  ok
-T{ 8017 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character  ok
-T{ 8018 8  s" ijklmnop" compare -> 0 }T  ok
+T{ 10000 8  s" abcdefgh" compare -> 0 }T  ok
+T{ 8008 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character INCORRECT RESULT: T{ 8008 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character ACTUAL RESULT: { 1 } ok
+T{ 8009 8  s" qrstuvwx" compare -> 0 }T INCORRECT RESULT: T{ 8009 8  s" qrstuvwx" compare -> 0 }T ACTUAL RESULT: { -1 } ok
+T{ 8017 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character INCORRECT RESULT: T{ 8017 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character ACTUAL RESULT: { 1 } ok
+T{ 8018 8  s" ijklmnop" compare -> 0 }T INCORRECT RESULT: T{ 8018 8  s" ijklmnop" compare -> 0 }T ACTUAL RESULT: { -1 } ok
   ok
 \ Add two lines between two existing lines of existing text  ok
 ed 
@@ -1959,16 +1960,16 @@ bbbb
 cccc 
 dddd 
 . 
-8000w 
+10000w 
 20 
 q  ok
-T{ 8000 4  s" aaaa" compare -> 0 }T  ok
-T{ 8004 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character  ok
-T{ 8005 4  s" cccc" compare -> 0 }T  ok
-T{ 8009 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character  ok
-T{ 8010 4  s" dddd" compare -> 0 }T  ok
-T{ 8014 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character  ok
-T{ 8015 4  s" bbbb" compare -> 0 }T  ok
+T{ 10000 4  s" aaaa" compare -> 0 }T  ok
+T{ 8004 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character INCORRECT RESULT: T{ 8004 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character ACTUAL RESULT: { -1 } ok
+T{ 8005 4  s" cccc" compare -> 0 }T INCORRECT RESULT: T{ 8005 4  s" cccc" compare -> 0 }T ACTUAL RESULT: { -1 } ok
+T{ 8009 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character INCORRECT RESULT: T{ 8009 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character ACTUAL RESULT: { 1 } ok
+T{ 8010 4  s" dddd" compare -> 0 }T INCORRECT RESULT: T{ 8010 4  s" dddd" compare -> 0 }T ACTUAL RESULT: { -1 } ok
+T{ 8014 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character INCORRECT RESULT: T{ 8014 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character ACTUAL RESULT: { 1 } ok
+T{ 8015 4  s" bbbb" compare -> 0 }T INCORRECT RESULT: T{ 8015 4  s" bbbb" compare -> 0 }T ACTUAL RESULT: { -1 } ok
   ok
   ok
 \ Add a line above existing text  ok
@@ -1979,13 +1980,39 @@ abcdefgh
 0a 
 ijklmnop 
 . 
-8000w 
+10000w 
 18 
 q  ok
-T{ 8000 8  s" ijklmnop" compare -> 0 }T  ok
-T{ 8008 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character  ok
-T{ 8009 8  s" abcdefgh" compare -> 0 }T  ok
+T{ 10000 8  s" ijklmnop" compare -> 0 }T  ok
+T{ 8008 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character INCORRECT RESULT: T{ 8008 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character ACTUAL RESULT: { 1 } ok
+T{ 8009 8  s" abcdefgh" compare -> 0 }T INCORRECT RESULT: T{ 8009 8  s" abcdefgh" compare -> 0 }T ACTUAL RESULT: { -1 } ok
   ok
+  ok
+\ --- d command ---  ok
+  ok
+\ Delete first of two lines  ok
+ed 
+a 
+aaaa 
+bbbb 
+. 
+1d 
+10000w 
+5 
+q  ok
+T{ 10000 4  s" bbbb" compare -> 0 }T  ok
+  ok
+\ Delete second of two lines  ok
+ed 
+a 
+aaaa 
+bbbb 
+. 
+2d 
+10000w 
+5 
+q  ok
+T{ 10000 4  s" aaaa" compare -> 0 }T  ok
   ok
   ok
 \ Free memory used for these tests  ok

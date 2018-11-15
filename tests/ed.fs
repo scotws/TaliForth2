@@ -6,21 +6,22 @@ testing editor words: ed
 decimal
 marker ed-tests 
 
-\ Use 8000 (decimal) as write area. This may have to be changed if tests crash
+\ Use 10000 (decimal) as write area. This may have to be changed if tests crash
 \ to a higher value. Currently, we are already using 7000 (check with HERE)
 
 \ --- a command ---
+
 \ Simple adding of text
 ed
 a
 abcdefgh
 ijklmnop
 .
-8000w
+10000w
 q
 
-T{ 8000 c@ -> char a }T
-T{ 8000 8  s" abcdefgh" compare -> 0 }T
+T{ 10000 c@ -> char a }T
+T{ 10000 8  s" abcdefgh" compare -> 0 }T
 T{ 8008 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character
 T{ 8009 8  s" ijklmnop" compare -> 0 }T
 
@@ -33,9 +34,9 @@ ijklmnop
 a
 qrstuvwx
 .
-8000w
+10000w
 q
-T{ 8000 8  s" abcdefgh" compare -> 0 }T
+T{ 10000 8  s" abcdefgh" compare -> 0 }T
 T{ 8008 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character
 T{ 8009 8  s" ijklmnop" compare -> 0 }T
 T{ 8017 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character
@@ -51,9 +52,9 @@ ijklmnop
 1a
 qrstuvwx
 .
-8000w
+10000w
 q
-T{ 8000 8  s" abcdefgh" compare -> 0 }T
+T{ 10000 8  s" abcdefgh" compare -> 0 }T
 T{ 8008 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character
 T{ 8009 8  s" qrstuvwx" compare -> 0 }T
 T{ 8017 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character
@@ -69,9 +70,9 @@ bbbb
 cccc
 dddd
 .
-8000w
+10000w
 q
-T{ 8000 4  s" aaaa" compare -> 0 }T
+T{ 10000 4  s" aaaa" compare -> 0 }T
 T{ 8004 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character
 T{ 8005 4  s" cccc" compare -> 0 }T
 T{ 8009 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character
@@ -88,12 +89,36 @@ abcdefgh
 0a
 ijklmnop
 .
-8000w
+10000w
 q
-T{ 8000 8  s" ijklmnop" compare -> 0 }T
+T{ 10000 8  s" ijklmnop" compare -> 0 }T
 T{ 8008 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character
 T{ 8009 8  s" abcdefgh" compare -> 0 }T
 
+
+\ --- d command ---
+
+\ Delete first of two lines
+ed
+a
+aaaa
+bbbb
+.
+1d
+10000w
+q
+T{ 10000 4  s" bbbb" compare -> 0 }T
+
+\ Delete second of two lines
+ed
+a
+aaaa
+bbbb
+.
+2d
+10000w
+q
+T{ 10000 4  s" aaaa" compare -> 0 }T
 
 
 \ Free memory used for these tests
