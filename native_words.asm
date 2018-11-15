@@ -6097,27 +6097,29 @@ z_plus:         rts
 ; ## PLUS_STORE ( n addr -- ) "Add number to value at given address"
 ; ## "+!"  auto  ANS core
         ; """https://forth-standard.org/standard/core/PlusStore"""
+        ; We use the HERE address temporarily because tmp1 interferes with
+        ; too much stuff, expecially TYPE.
 xt_plus_store:
                 cpx #dsp0-3
                 bmi +
                 jmp underflow
 *
-                ; move address to tmp1 so we can work with it
+                ; move address to cp so we can work with it
                 lda 0,x
-                sta tmp1
+                sta cp
                 lda 1,x
-                sta tmp1+1
+                sta cp+1
 
                 ldy #0          ; LSB
-                lda (tmp1),y
+                lda (cp),y
                 clc
                 adc 2,x
-                sta (tmp1),y
+                sta (cp),y
 
                 iny             ; MSB
-                lda (tmp1),y
+                lda (cp),y
                 adc 3,x
-                sta (tmp1),y
+                sta (cp),y
 
                 inx
                 inx
