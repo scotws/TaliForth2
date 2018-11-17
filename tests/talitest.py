@@ -11,7 +11,7 @@ PROGRAMMERS : Sam Colwell and Scot W. Stevenson
 FILE        : talitest.py
 
 First version: 16. May 2018
-This version: 29. July 2018
+This version: 15. Nov 2018
 """
 
 import argparse
@@ -39,7 +39,7 @@ TALI_ERRORS = ['Undefined word',
                'Already in compile mode']
 
 # Add name of file with test to the set of LEGAL_TESTS
-LEGAL_TESTS = ['core', 'string', 'double', 'facility',
+LEGAL_TESTS = ['core', 'string', 'double', 'facility', 'ed',
                'stringlong', 'tali', 'tools', 'block', 'user', 'cycles']
 TESTLIST = ' '.join(["'"+str(t)+"' " for t in LEGAL_TESTS])
 

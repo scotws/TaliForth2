@@ -146,6 +146,19 @@ digit?:: `( char -- u f | char f )` If character is a digit, convert and set fla
 `true`, otherwise return the offending character and a `false` flag.
 ed:: Start the command-line editor. There is a whole chapter on this father
 down. 
+hexstore:: `( addr u addr1 -- u2 )` Given a string with numbers of the current
+base seperated by spaces, store the numbers at the address `addr1`, returning
+the number of elements. Non-number elements are skipped, an zero-length string
+produces a zero output. Use as a poor man's assembler:
++
+----
+        hex  s" ca ca 95 00 74 01" myprog hexstore
+        myprog swap execute
+----
++
+With this behavior, `hexstore` functions as a reverse `dump`. The names "store"
+or "numberstore" might have been more appropriate, but "hexstore" as the
+association of the Unix command `hexdump` and should be easier to understand.
 input:: Return the address where the vector for the input routine is
 stored (not the vector itself). Used for input redirection for
 `emit` and others.

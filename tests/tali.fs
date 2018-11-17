@@ -27,9 +27,9 @@ T{ ffff 2 bounds -> 0001 ffff }T  \ BOUNDS wraps on Tali with 16 bit address spa
 T{ decimal -> }T
 
 \ ------------------------------------------------------------------------
-\ testing tali-only words: cleave
+\ testing tali-only words: cleave hexstore
 
-\ Normal cases
+\ Cleave: Normal cases
 
 T{ : s1 s" " ; -> }T \ case 1: empty string
 T{ s1 bl cleave  s" " compare  -rot  s" " compare -> 0 0 }T
@@ -40,7 +40,7 @@ T{ s1 bl cleave  s" aaa" compare  -rot  s" " compare -> 0 0 }T
 T{ : s1 s" aaa bbb ccc" ; -> }T  \ case 3: lots of words
 T{ s1 bl cleave  s" aaa" compare  -rot  s" bbb ccc" compare -> 0 0 }T
 
-\ Pathological cases
+\ Cleave: Pathological cases
 
 T{ : s1 s"  aaa bbb ccc" ; -> }T \ case 4: Leading space is cleaved
 T{ s1 bl cleave  s" " compare  -rot  s" aaa bbb ccc" compare -> 0 0 }T
@@ -53,6 +53,33 @@ T{ s1 bl cleave  s" aaa" compare  -rot  s" " compare -> 0 0 }T
 
 T{ : s1 s"  " ; -> }T  \ case 7: Single space as word is two empty words
 T{ s1 bl cleave  s" " compare  -rot  s" " compare -> 0 0 }T
+
+
+\ Hexstore: Normal cases
+
+create hs-test 5 allot
+
+decimal
+create hs-want-dec  1 c, 2 c, 3 c, 4 c, 5 c, 
+T{ s" 1 2 3 4 5" hs-test hexstore  hs-test swap  hs-want-dec 5  compare -> 0 }T
+T{ s" 1" hs-test hexstore  hs-test swap  hs-want-dec 1  compare -> 0 }T
+
+hex
+create hs-want-hex  0A c, 0B c, 0C c, 0D c, 0E c, 
+T{ s" 0A 0B 0C 0D 0E" hs-test hexstore  hs-test swap  hs-want-hex 5  compare -> 0 }T
+T{ s" 0A" hs-test hexstore  hs-test swap  hs-want-hex 1  compare -> 0 }T
+
+\ Hexstore: Pathological cases
+
+decimal
+T{ s" " hs-test hexstore  hs-test swap  s" " compare -> 0 }T
+T{ s" emergency" hs-test hexstore  hs-test swap  s" " compare -> 0 }T
+T{ s" emergency induction port" hs-test hexstore  hs-test swap  s" " compare -> 0 }T
+
+create hs-want-dec-path  01 c, 02 c,
+T{ s" 01 HONK! 02" hs-test hexstore  hs-test swap  hs-want-dec-path 2 compare -> 0 }T
+T{ s" HONK! 01 02" hs-test hexstore  hs-test swap  hs-want-dec-path 2 compare -> 0 }T
+T{ s" 01 02 HONK!" hs-test hexstore  hs-test swap  hs-want-dec-path 2 compare -> 0 }T
 
 \ ------------------------------------------------------------------------
 testing tali-only words: always-native bell compile-only digit? int>name

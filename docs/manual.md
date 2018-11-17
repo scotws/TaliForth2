@@ -1,4 +1,4 @@
-## Manual for Tali Forth 2 for the 65c02
+# Manual for Tali Forth 2 for the 65c02
 
 Tali Forth 2 is a bare-metal ANS(ish) Forth for the 65c02 8-bit MPU. It aims to be, roughly in order of importance, easy to try out (just run the included binary), simple (subroutine threading model), specific (for the 65c02 only), and standardized (ANS Forth).
 
@@ -369,38 +369,45 @@ port
 <td><p>Start the command-line editor. There is a whole chapter on this father down.</p></td>
 </tr>
 <tr class="even">
+<td><p>hexstore</p></td>
+<td><p><code>( addr u addr1 — u2 )</code> Given a string with numbers of the current base seperated by spaces, store the numbers at the address <code>addr1</code>, returning the number of elements. Non-number elements are skipped, an zero-length string produces a zero output. Use as a poor man’s assembler:</p>
+<pre><code>        hex  s&quot; ca ca 95 00 74 01&quot; myprog hexstore
+        myprog swap execute</code></pre>
+<p>With this behavior, <code>hexstore</code> functions as a reverse <code>dump</code>. The names &quot;store&quot; or &quot;numberstore&quot; might have been more appropriate, but &quot;hexstore&quot; as the association of the Unix command <code>hexdump</code> and should be easier to understand.</p></td>
+</tr>
+<tr class="odd">
 <td><p>input</p></td>
 <td><p>Return the address where the vector for the input routine is stored (not the vector itself). Used for input redirection for <code>emit</code> and others.</p></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><p>int&gt;name</p></td>
 <td><p><code>( xt — nt )</code> Given the execution execution token (xt), return the name token (nt).</p></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><p>latestnt</p></td>
 <td><p><code>( — nt )</code> Return the last used name token. The Gforth version of this word is called <code>latest</code>.</p></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><p>nc-limit</p></td>
 <td><p><code>( — addr )</code> Return the address where the threshold value for native compiling native compiling is kept. To check the value of this parameter, use <code>nc-limit ?</code>. The default value is 20.</p></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><p>never-native</p></td>
 <td><p>Mark most recent word so it is never natively compiled.</p></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><p>number</p></td>
 <td><p><code>( addr u — u | d )</code> Convert a string to a number. Gforth uses <code>s&gt;number?</code> and returns a success flag as well.</p></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><p>output</p></td>
 <td><p><code>( — addr )</code> Return the address where the vector for the output routine is stored (not the vector itself). Used for output redirection for <code>emit</code> and others.</p></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><p>uf-strip</p></td>
 <td><p><code>( — addr)</code> Return the address where the flag is kept that decides if the underflow checks are removed during native compiling. To check the value of this flag, use <code>uf-strip ?</code>.</p></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><p>wordsize</p></td>
 <td><p><code>( nt — u )</code> Given the name token (nt) of a Forth word, return its size in bytes. Used to help tune native compiling.</p></td>
 </tr>
@@ -2007,37 +2014,37 @@ Thank you, everybody.
 
 # References and Further Reading
 
-\[\] *Masterminds of Programming*, Federico Biancuzzi, O’Reilly Media 1st edition, 2009.
+\[FB\] *Masterminds of Programming*, Federico Biancuzzi, O’Reilly Media 1st edition, 2009.
 
-\[\] "Charles H. Moore: Geek of the Week", redgate Hub 2009 <https://www.red-gate.com/simple-talk/opinion/geek-of-the-week/chuck-moore-geek>
+\[CHM1\] "Charles H. Moore: Geek of the Week", redgate Hub 2009 <https://www.red-gate.com/simple-talk/opinion/geek-of-the-week/chuck-moore-geek>
 
-\[\] "The Evolution of FORTH, an Unusual Language", Charles H. Moore, *Byte* 1980, <https://wiki.forth-ev.de/doku.php/projects:the_evolution_of_forth>
+\[CHM2\] "The Evolution of FORTH, an Unusual Language", Charles H. Moore, *Byte* 1980, <https://wiki.forth-ev.de/doku.php/projects:the_evolution_of_forth>
 
-\[\] *Forth Programmer’s Handbook*, Edward K. Conklin and Elizabeth Rather, 3rd edition 2010
+\[CnR\] *Forth Programmer’s Handbook*, Edward K. Conklin and Elizabeth Rather, 3rd edition 2010
 
-\[\] *Forth Enzyclopedia*, Mitch Derick and Linda Baker, Mountain View Press 1982
+\[DB\] *Forth Enzyclopedia*, Mitch Derick and Linda Baker, Mountain View Press 1982
 
-\[\] "Some notes on Forth from a novice user", Douglas Hoffman, Feb 1988 <https://wiki.forth-ev.de/doku.php/projects:some_notes_on_forth_from_a_novice_user>
+\[DH\] "Some notes on Forth from a novice user", Douglas Hoffman, Feb 1988 <https://wiki.forth-ev.de/doku.php/projects:some_notes_on_forth_from_a_novice_user>
 
-\[\] "Reflections on Software Research", Dennis M. Ritchie, Turing Award Lecture in *Communications of the ACM* August 1984 Volume 27 Number 8 <http://www.valleytalk.org/wp-content/uploads/2011/10/p758-ritchie.pdf>
+\[DMR\] "Reflections on Software Research", Dennis M. Ritchie, Turing Award Lecture in *Communications of the ACM* August 1984 Volume 27 Number 8 <http://www.valleytalk.org/wp-content/uploads/2011/10/p758-ritchie.pdf>
 
-\[\] *Programming the 65816, including the 6502, 65C02 and 65802*, David Eyes and Ron Lichty (Currently not available from the WDC website)
+\[EnL\] *Programming the 65816, including the 6502, 65C02 and 65802*, David Eyes and Ron Lichty (Currently not available from the WDC website)
 
-\[\] "Forth: The Hacker’s Language", Elliot Williams, <https://hackaday.com/2017/01/27/forth-the-hackers-language/>
+\[EW\] "Forth: The Hacker’s Language", Elliot Williams, <https://hackaday.com/2017/01/27/forth-the-hackers-language/>
 
-\[\] "Forth System Comparisons", Guy Kelly, in *Forth Dimensions* V13N6, March/April 1992 [http://www.forth.org/fd/FD-V13N6.pdf}{http://www.forth.org/fd/FD-V13N6.pdf](http://www.forth.org/fd/FD-V13N6.pdf}{http://www.forth.org/fd/FD-V13N6.pdf)
+\[GK\] "Forth System Comparisons", Guy Kelly, in *Forth Dimensions* V13N6, March/April 1992 [http://www.forth.org/fd/FD-V13N6.pdf}{http://www.forth.org/fd/FD-V13N6.pdf](http://www.forth.org/fd/FD-V13N6.pdf}{http://www.forth.org/fd/FD-V13N6.pdf)
 
-\[\] *A Beginner’s Guide to Forth*, J.V. Nobel, <http://galileo.phys.virginia.edu/classes/551.jvn.fall01/primer.htm>
+\[JN\] *A Beginner’s Guide to Forth*, J.V. Nobel, <http://galileo.phys.virginia.edu/classes/551.jvn.fall01/primer.htm>
 
-\[\] *A Tutorial Introduction to the UNIX Text Editor*, B. W. Kernighan, <http://www.psue.uni-hannover.de/wise2017_2018/material/ed.pdf>
+\[BWK\] *A Tutorial Introduction to the UNIX Text Editor*, B. W. Kernighan, <http://www.psue.uni-hannover.de/wise2017_2018/material/ed.pdf>
 
-\[\] *Starting Forth*, Leo Brodie, new edition 2003, [https://www.forth.com/starting-forth/}{https://www.forth.com/starting-forth/](https://www.forth.com/starting-forth/}{https://www.forth.com/starting-forth/)
+\[LB1\] *Starting Forth*, Leo Brodie, new edition 2003, [https://www.forth.com/starting-forth/}{https://www.forth.com/starting-forth/](https://www.forth.com/starting-forth/}{https://www.forth.com/starting-forth/)
 
-\[\] *Thinking Forth*, Leo Brodie, 1984, [http://thinking-forth.sourceforge.net/\\\#21CENTURY](http://thinking-forth.sourceforge.net/\#21CENTURY)
+\[LB2\] *Thinking Forth*, Leo Brodie, 1984, [http://thinking-forth.sourceforge.net/\\\#21CENTURY](http://thinking-forth.sourceforge.net/\#21CENTURY)
 
-\[\] *6502 Assembly Language Programming*, Lance A. Leventhal, OSBORNE/McGRAW-HILL 1979
+\[LL\] *6502 Assembly Language Programming*, Lance A. Leventhal, OSBORNE/McGRAW-HILL 1979
 
-\[\] "The Daemon, the Gnu and the Penguin", Peter H. Saulus, 22. April 2005, <http://www.groklaw.net/article.php?story=20050422235450910>
+\[PHS\] "The Daemon, the Gnu and the Penguin", Peter H. Saulus, 22. April 2005, <http://www.groklaw.net/article.php?story=20050422235450910>
 
 The Tali Forth 2 Manual was written with the [vim](https://www.vim.org/) editor in [AsciiDoc](https://asciidoctor.org/docs/what-is-asciidoc/) format, formatted to HTML with AsciiDoctor, and version controlled with [Git](https://git-scm.com/), all under [Ubuntu](https://www.ubuntu.com/) Linux 16.04 LTS.
 
