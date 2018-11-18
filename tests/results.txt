@@ -803,19 +803,19 @@ T{ 1 cells 1 < -> <false> }T  ok
 T{ 1 cells 1 chars mod -> 0 }T  ok
 T{ 1s bits 10 < -> <false> }T  ok
   ok
-\ T{ 0 1st ! -> }T  ok
-\ T{ 1 1st +! -> }T  ok
-\ T{ 1st @ -> 1 }T  ok
-\ T{ -1 1st +! 1st @ -> 0 }T  ok
+T{ 0 1st ! -> }T  ok
+T{ 1 1st +! -> }T  ok
+T{ 1st @ -> 1 }T  ok
+T{ -1 1st +! 1st @ -> 0 }T  ok
   ok
-\ ( here + unused + buffer size must be total RAM, that is, $7FFF )  ok
-\ T{ pad here - -> FF }T \ PAD must have offset of $FF  ok
-\ T{ here unused + 3FF + -> 7FFF }T  ok
-\   ok
-\ :noname dup + ; constant dup+   ok
-\ T{ : q dup+ compile, ; -> }T   ok
-\ T{ : as [ q ] ; -> }T   ok
-\ T{ 123 as -> 246 }T  ok
+( here + unused + buffer size must be total RAM, that is, $7FFF )  ok
+T{ pad here - -> FF }T \ PAD must have offset of $FF  ok
+T{ here unused + 3FF + -> 7FFF }T  ok
+  ok
+:noname dup + ; constant dup+   ok
+T{ : q dup+ compile, ; -> }T   ok
+T{ : as [ q ] ; -> }T   ok
+T{ 123 as -> 246 }T  ok
   ok
 \ ------------------------------------------------------------------------  ok
 testing char [char] [ ] bl s"  ok
