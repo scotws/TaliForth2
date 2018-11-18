@@ -6104,22 +6104,22 @@ xt_plus_store:
                 bmi +
                 jmp underflow
 *
-                ; move address to cp so we can work with it
+                ; move address to tmp1 so we can work with it
                 lda 0,x
-                sta cp
+                sta tmp1
                 lda 1,x
-                sta cp+1
+                sta tmp1+1
 
                 ldy #0          ; LSB
-                lda (cp),y
+                lda (tmp1),y
                 clc
                 adc 2,x
-                sta (cp),y
+                sta (tmp1),y
 
                 iny             ; MSB
-                lda (cp),y
+                lda (tmp1),y
                 adc 3,x
-                sta (cp),y
+                sta (tmp1),y
 
                 inx
                 inx

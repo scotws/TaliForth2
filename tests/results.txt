@@ -803,19 +803,19 @@ T{ 1 cells 1 < -> <false> }T  ok
 T{ 1 cells 1 chars mod -> 0 }T  ok
 T{ 1s bits 10 < -> <false> }T  ok
   ok
-T{ 0 1st ! -> }T  ok
-T{ 1 1st +! -> }T  ok
-T{ 1st @ -> 1 }T  ok
-T{ -1 1st +! 1st @ -> 0 }T  ok
+\ T{ 0 1st ! -> }T  ok
+\ T{ 1 1st +! -> }T  ok
+\ T{ 1st @ -> 1 }T  ok
+\ T{ -1 1st +! 1st @ -> 0 }T  ok
   ok
-( here + unused + buffer size must be total RAM, that is, $7FFF )  ok
-T{ pad here - -> FF }T \ PAD must have offset of $FF  ok
-T{ here unused + 3FF + -> 7FFF }T  ok
-  ok
-:noname dup + ; constant dup+   ok
-T{ : q dup+ compile, ; -> }T   ok
-T{ : as [ q ] ; -> }T   ok
-T{ 123 as -> 246 }T  ok
+\ ( here + unused + buffer size must be total RAM, that is, $7FFF )  ok
+\ T{ pad here - -> FF }T \ PAD must have offset of $FF  ok
+\ T{ here unused + 3FF + -> 7FFF }T  ok
+\   ok
+\ :noname dup + ; constant dup+   ok
+\ T{ : q dup+ compile, ; -> }T   ok
+\ T{ : as [ q ] ; -> }T   ok
+\ T{ 123 as -> 246 }T  ok
   ok
 \ ------------------------------------------------------------------------  ok
 testing char [char] [ ] bl s"  ok
@@ -1598,7 +1598,7 @@ core_tests  ok
   ok
  ( Running test 'string' from file 'string.fs' )  ok
 \ ------------------------------------------------------------------------  ok
-testing string words: /string -trailing blank sliteral  ok
+testing string words: /string -trailing blank sliteral s" s\"  ok
 decimal  ok
   ok
 marker string_tests  ok
@@ -1677,6 +1677,27 @@ T{ s1 s14 rot = rot rot = -> -1 ( <true> ) 0 ( <false> ) }T  ok
 ( TODO REPLACES not implemented yet )  ok
 ( TODO SUBSTITUTE not implemented yet )  ok
 ( TODO UNESCAPE not implemented yet )  ok
+  ok
+\ Test s\"  ok
+create result  ok
+ 7 c, ( \a )  ok
+ 8 c, ( \b )  ok
+27 c, ( \e )  ok
+12 c, ( \f )  ok
+10 c, ( \l )  ok
+13 c, 10 c, ( \m )  ok
+10 c, ( \n - Tali does just a linefeed for \n )  ok
+34 c, ( \q )  ok
+13 c, ( \r )  ok
+ 9 c, ( \t )  ok
+11 c, ( \v )  ok
+ 0 c, ( \z )  ok
+34 c, ( \" )  ok
+65 c, ( \x41 )  ok
+92 c, ( \\ )  ok
+  ok
+T{ result here result - ( Make a string out of result )  ok
+   s\" \a\b\e\f\l\m\n\q\r\t\v\z\"\x41\\" compare -> 0 }T  ok
   ok
 \ Tests for long strings are currently in their own file  ok
 \ Free memory used for these tests  ok
@@ -2671,7 +2692,7 @@ char w       ' digit?        cycle_test 2drop      CYCLES:     75 ok
 \ skipping     does  ok
 \ skipping     .  ok
 \ skipping     ."  ok
-             ' s"            cycle_test " 2drop    CYCLES:    238 ok
+             ' s"            cycle_test " 2drop    CYCLES:    252 ok
 5            ' drop          cycle_test            CYCLES:     21 ok
 \ skipping     dump  ok
 5            ' dup           cycle_test 2drop      CYCLES:     37 ok
@@ -2679,7 +2700,7 @@ char w       ' digit?        cycle_test 2drop      CYCLES:     75 ok
 5 5          ' =             cycle_test drop       CYCLES:     53 ok
 here 5       ' erase         cycle_test            CYCLES:    310 ok
 here 5 5     ' fill          cycle_test            CYCLES:    298 ok
-s" 5"        ' evaluate      cycle_test drop       CYCLES:  15482 ok
+s" 5"        ' evaluate      cycle_test drop       CYCLES:  15523 ok
 5 ' drop     ' execute       cycle_test            CYCLES:     62 ok
 \ skipping     exit  ok
              ' false         cycle_test drop       CYCLES:     24 ok
@@ -2754,7 +2775,7 @@ drop \ refill  ok
 \ skipping     ]  ok
 5 5 5        ' rot           cycle_test 2drop drop CYCLES:     65 ok
 5 5          ' rshift        cycle_test drop       CYCLES:    115 ok
-             ' s"            cycle_test " 2drop    CYCLES:    238 ok
+             ' s"            cycle_test " 2drop    CYCLES:    252 ok
 5            ' s>d           cycle_test 2drop      CYCLES:     36 ok
 \ skipping     ;  ok
 \ skipping     sign  ok
@@ -2773,7 +2794,7 @@ s" abc" 1    ' /string       cycle_test 2drop      CYCLES:     73 ok
 \ postponing   to ( see value )  ok
 ' aword      ' >body         cycle_test drop       CYCLES:    516 ok
              ' >in           cycle_test drop       CYCLES:     28 ok
-0. s" 55"    ' >number       cycle_test 4drop      CYCLES:   2349 ok
+0. s" 55"    ' >number       cycle_test 4drop      CYCLES:   2348 ok
 \ skipping     >r  ok
              ' true          cycle_test drop       CYCLES:     26 ok
 5 5          ' tuck          cycle_test 2drop drop CYCLES:     61 ok
@@ -2784,7 +2805,7 @@ here         ' 2@            cycle_test 2drop      CYCLES:     77 ok
 5 5 5 5      ' 2over         cycle_test 6drop      CYCLES:     57 ok
 \ skipping     2r@  ok
 \ skipping     2r>  ok
-5            ' 2/            cycle_test drop       CYCLES:     35 ok
+5            ' 2/            cycle_test drop       CYCLES:     36 ok
 5            ' 2*            cycle_test drop       CYCLES:     29 ok
 5. here      ' 2!            cycle_test            CYCLES:     88 ok
 5 5 5 5      ' 2swap         cycle_test 4drop      CYCLES:     81 ok
@@ -2805,7 +2826,7 @@ s" *"        ' type          cycle_test           *CYCLES:    110 ok
 5            ' to            cycle_test fword      CYCLES:   1034 ok
              ' variable      cycle_test gword      CYCLES:   1209 ok
              ' gword         cycle_test drop       CYCLES:     45 ok
-char "       ' word          cycle_test "txt" drop CYCLES:    633 ok
+char "       ' word          cycle_test "txt" drop CYCLES:    634 ok
 \ skipping     words  ok
 ' aword      ' wordsize      cycle_test drop       CYCLES:     73 ok
 5 5          ' xor           cycle_test drop       CYCLES:     45 ok

@@ -1,5 +1,5 @@
 \ ------------------------------------------------------------------------
-testing string words: /string -trailing blank sliteral
+testing string words: /string -trailing blank sliteral s" s\"
 decimal
 
 marker string_tests
@@ -78,6 +78,27 @@ T{ s1 s14 rot = rot rot = -> -1 ( <true> ) 0 ( <false> ) }T
 ( TODO REPLACES not implemented yet )
 ( TODO SUBSTITUTE not implemented yet )
 ( TODO UNESCAPE not implemented yet )
+
+\ Test s\"
+create result
+ 7 c, ( \a )
+ 8 c, ( \b )
+27 c, ( \e )
+12 c, ( \f )
+10 c, ( \l )
+13 c, 10 c, ( \m )
+10 c, ( \n - Tali does just a linefeed for \n )
+34 c, ( \q )
+13 c, ( \r )
+ 9 c, ( \t )
+11 c, ( \v )
+ 0 c, ( \z )
+34 c, ( \" )
+65 c, ( \x41 )
+92 c, ( \\ )
+
+T{ result here result - ( Make a string out of result )
+   s\" \a\b\e\f\l\m\n\q\r\t\v\z\"\x41\\" compare -> 0 }T
 
 \ Tests for long strings are currently in their own file
 \ Free memory used for these tests
