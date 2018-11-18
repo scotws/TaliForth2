@@ -3,6 +3,10 @@
 # Scot W. Stevenson <scot.stevenson@gmail.com>
 # First version: 27. Feb 2018
 # First version: 01. Mar 2018
+
+# This version : 18. Nov 2018
+# Modfied by SamCo to use regular expressions to locate/remove comments.
+
 """Convert Forth code to compact ASCII to use for inclusion into Ophis
 
 Takes normal Forth code and strips out the comments before being
@@ -13,50 +17,31 @@ with the .inclbin command. Outputs result on standard output
 
 import argparse
 import sys
+import re
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-i', '--input', dest='source', required=True,
                     help='Forth source code file (required)')
 args = parser.parse_args()
 
-
-def has_bracket_comment(string):
-    """Takes a string, return a bool if contains a Forth comment of the
-    form of ( this )."""
-
-    result = False
-    words = set(string.split())
-
-    # The problem is that ( has to occur on its own, separated by spaces,
-    # while ) can occur at the end of a word without a leading space. We
-    # should probably check for something like ') this (' but that is
-    # going to be so rare it doesn't seem to be worth it
-
-    # We have one special case that applies, the definition of '(' itself
-
-    if '(' in words and ')' in string and ': (' not in string:
-        result = True
-
-    return result
-
-
-def remove_bracket_comment(string):
-    """Strips a Forth comment in the form of ( this ) out of a string.
-    Might have problems with the .( print ) format."""
-
-    # Add space to front of string so we can search for ' ('
-    # This avoids the false positive '.('
-    work = ' '+string.strip()
-
-    while ' (' in work:
-        start = work.find(' (')
-        end = work.find(')', start)
-        work = work[:start]+work[end+1:]
-
-    return work.strip()
-
-
 def main():
+
+    # Regular expressions used to find/remove Forth comments:
+
+    # ((Beginning of line followed by "(" ) or (whitespace followed by
+    # "(" )) followed by whitespace followed by zero or more non-")"
+    # characters followed by ")"
+    paren_comment = re.compile(r"(^\(|\s\()\s[^)]*\)")
+
+    # ((Beginning of line followed by ":" ) or (whitespace followed by
+    # ":" )) followed by whitespace followed by "(" followed by
+    # whitespace
+    paren_definition = re.compile(r"(^:|\s:)\s\(\s")
+
+    # ((Beginning of line followed by "\" ) or (whitespace followed by
+    # "\" )) followed by whitespace followed by anything all the way
+    # to the end of the line
+    backslash_comment = re.compile(r"(^\\|\s\\)\s.*$")
 
     all_words = []
 
@@ -65,16 +50,24 @@ def main():
         for n, line in enumerate(f.readlines(), 1):
 
             line = line.strip()
+            
+            # Remove all ( ... ) comments.
+            # Take special care not to remove a definition of "(" 
+            if not paren_definition.search(line):
+                line = paren_comment.sub(" ", line)
 
+            # Remove all \ ... comments
+            line = backslash_comment.sub("", line)
+
+            # Paren comments were replaced with a space.
+            # Remove any space from the beginning/end of the line.
+            line = line.strip()
+
+            # Ignore lines that are now blank.
             if line == '':
                 continue
 
-            if line[0] == '\\':
-                continue
-
-            if has_bracket_comment(line):
-                line = remove_bracket_comment(line)
-
+            # Add only the non-comment words to the results.
             words = line.split()
             all_words.extend(words)
 
