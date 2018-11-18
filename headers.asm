@@ -463,7 +463,7 @@ nt_s_backslash_quote:
         .byte "s", $5C, $22
 
 nt_s_quote:
-        .byte 2, IM
+        .byte 2, IM+NN
         .word nt_s_backslash_quote, xt_s_quote, z_s_quote
         .byte "s", $22
 
