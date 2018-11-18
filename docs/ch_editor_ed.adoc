@@ -31,6 +31,7 @@ For the parameters, these are currently available:
 [horizontal]
  .:: Current line number
 ,:: When alone: All lines, the same as `1,$` or `%`
+;:: Range from current line to end, same as `.,$`
 $:: Last line
 %:: All lines, the same as `1,$` or `,` alone
 
@@ -49,15 +50,10 @@ c:: Change a line, possibly adding new lines
 e:: Edit lines given as `addr,u` in text buffer
 j:: Join two lines to a new line
 m:: Move block of text to new line
-r:: Read lines into text buffer
+r:: Append text from a block to end of text buffer
 s:: Substitute one string on line with another
 !:: Execute a shell command (Forth command in our case)
 #:: Comment, ignore rest of the line
-
-The following parameter features:
-
-[horizontal]
-;:: Range from current line to end, same as `.,$`
 
 ==== Differences to Unix ed
 

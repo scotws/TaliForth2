@@ -132,9 +132,6 @@ used to delete the complete text. Be careful -- in the real version of `ed`, you
 can undo changes with the `u` command.  Tali's version currently doesn't support
 this option. If you delete it, it's gone. 
 
-NOTE: The undo (`u`) function may be added to a future version of `ed` if space
-allows, at least for the last change.
-
 Now, let's say we want to put back the second line. We can do this again with `a`, to
 add text _after_ the first line. Note there is currently no way to paste the
 line we have just deleted. If we can't remember it, we're in trouble.
@@ -167,7 +164,8 @@ a preference for `a` or `i`. This is easy because `ed` accepts `0a` as a way to
 add new lines _before_ the first line. In most other circumstances, line `0` is
 illegal. There is also the `$` prefix for the last line.
 
-TIP: The combination `$=` will print the number of the last line.
+TIP: The combination `$=` will print the number of the last line. Just `=` will
+print the current line.
 
 === Saving Your Text
 
