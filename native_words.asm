@@ -6725,14 +6725,10 @@ _escaped:
                 ; Convert to hex
                 jsr convert_hex_value
                 ; This is the upper nybble, so move it up.
-                clc
-                rol
-                clc
-                rol
-                clc
-                rol
-                clc
-                rol
+                asl
+                asl
+                asl
+                asl
                 sta tmp3    ; Save it for later.
                 jmp _next_character
 
