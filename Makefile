@@ -52,4 +52,4 @@ docsmd: docs/manual.html
 	cd docs; ./asciidoc_to_markdown.sh 
 
 # A convenience target for preparing for a git commit.
-gitready: docs taliforth-py65mon.bin tests
+gitready: docs all tests
