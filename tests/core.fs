@@ -725,7 +725,7 @@ T{ : as [ q ] ; -> }T
 T{ 123 as -> 246 }T
 
 \ ------------------------------------------------------------------------
-testing char [char] [ ] bl s"
+testing char [char] [ ] bl s" s\"
 
 T{ bl -> 20 }T
 T{ char X -> 58 }T
@@ -739,6 +739,29 @@ T{ gc3 -> 58 }T
 T{ : gc4 s" XY" ; -> }T
 T{ gc4 swap drop -> 2 }T
 T{ gc4 drop dup c@ swap char+ c@ -> 58 59 }T
+
+\ Test s\"
+decimal
+create result
+ 7 c, ( \a )
+ 8 c, ( \b )
+27 c, ( \e )
+12 c, ( \f )
+10 c, ( \l )
+13 c, 10 c, ( \m )
+10 c, ( \n - Tali does just a linefeed for \n )
+34 c, ( \q )
+13 c, ( \r )
+ 9 c, ( \t )
+11 c, ( \v )
+ 0 c, ( \z )
+34 c, ( \" )
+65 c, ( \x41 )
+92 c, ( \\ )
+
+T{ result here result - 2dup dump ( Make a string out of result )
+   s\" \a\b\e\f\l\m\n\q\r\t\v\z\"\x41\\" 2dup dump compare -> 0 }T
+hex
 
 \ ------------------------------------------------------------------------
 testing ' ['] find execute immediate count literal postpone state

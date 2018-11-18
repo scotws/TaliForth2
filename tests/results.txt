@@ -818,7 +818,7 @@ T{ : as [ q ] ; -> }T   ok
 T{ 123 as -> 246 }T  ok
   ok
 \ ------------------------------------------------------------------------  ok
-testing char [char] [ ] bl s"  ok
+testing char [char] [ ] bl s" s\"  ok
   ok
 T{ bl -> 20 }T  ok
 T{ char X -> 58 }T  ok
@@ -832,6 +832,33 @@ T{ gc3 -> 58 }T  ok
 T{ : gc4 s" XY" ; -> }T  ok
 T{ gc4 swap drop -> 2 }T  ok
 T{ gc4 drop dup c@ swap char+ c@ -> 58 59 }T  ok
+  ok
+\ Test s\"  ok
+decimal  ok
+create result  ok
+ 7 c, ( \a )  ok
+ 8 c, ( \b )  ok
+27 c, ( \e )  ok
+12 c, ( \f )  ok
+10 c, ( \l )  ok
+13 c, 10 c, ( \m )  ok
+10 c, ( \n - Tali does just a linefeed for \n )  ok
+34 c, ( \q )  ok
+13 c, ( \r )  ok
+ 9 c, ( \t )  ok
+11 c, ( \v )  ok
+ 0 c, ( \z )  ok
+34 c, ( \" )  ok
+65 c, ( \x41 )  ok
+92 c, ( \\ )  ok
+  ok
+T{ result here result - 2dup dump ( Make a string out of result ) 
+1F6D  07 08 1B 0C 0A 0D 0A 0A  22 0D 09 0B 00 22 41 5C  ........ "...."A\
+1F7D   ok
+   s\" \a\b\e\f\l\m\n\q\r\t\v\z\"\x41\\" 2dup dump compare -> 0 }T 
+1F80  07 08 1B 0C 0A 0D 0A 0A  22 0D 09 0B 00 22 41 5C  ........ "...."A\
+1F90   ok
+hex  ok
   ok
 \ ------------------------------------------------------------------------  ok
 testing ' ['] find execute immediate count literal postpone state  ok
@@ -1598,7 +1625,7 @@ core_tests  ok
   ok
  ( Running test 'string' from file 'string.fs' )  ok
 \ ------------------------------------------------------------------------  ok
-testing string words: /string -trailing blank sliteral s" s\"  ok
+testing string words: /string -trailing blank sliteral  ok
 decimal  ok
   ok
 marker string_tests  ok
@@ -1677,27 +1704,6 @@ T{ s1 s14 rot = rot rot = -> -1 ( <true> ) 0 ( <false> ) }T  ok
 ( TODO REPLACES not implemented yet )  ok
 ( TODO SUBSTITUTE not implemented yet )  ok
 ( TODO UNESCAPE not implemented yet )  ok
-  ok
-\ Test s\"  ok
-create result  ok
- 7 c, ( \a )  ok
- 8 c, ( \b )  ok
-27 c, ( \e )  ok
-12 c, ( \f )  ok
-10 c, ( \l )  ok
-13 c, 10 c, ( \m )  ok
-10 c, ( \n - Tali does just a linefeed for \n )  ok
-34 c, ( \q )  ok
-13 c, ( \r )  ok
- 9 c, ( \t )  ok
-11 c, ( \v )  ok
- 0 c, ( \z )  ok
-34 c, ( \" )  ok
-65 c, ( \x41 )  ok
-92 c, ( \\ )  ok
-  ok
-T{ result here result - ( Make a string out of result )  ok
-   s\" \a\b\e\f\l\m\n\q\r\t\v\z\"\x41\\" compare -> 0 }T  ok
   ok
 \ Tests for long strings are currently in their own file  ok
 \ Free memory used for these tests  ok
