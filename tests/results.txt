@@ -1912,10 +1912,10 @@ ijklmnop
 18 
 q  ok
   ok
-T{ 10000 c@ -> 0 0 char a }T  ok
+T{ 10000 c@ -> 0 0 char a }T INCORRECT RESULT: T{ 10000 c@ -> 0 0 char a }T ACTUAL RESULT: { 10000 0 97 } ok
 T{ 10000 8  s" abcdefgh" compare -> 0 }T  ok
-T{ 8008 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character INCORRECT RESULT: T{ 8008 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character ACTUAL RESULT: { 1 } ok
-T{ 8009 8  s" ijklmnop" compare -> 0 }T INCORRECT RESULT: T{ 8009 8  s" ijklmnop" compare -> 0 }T ACTUAL RESULT: { -1 } ok
+T{ 10008 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character  ok
+T{ 10009 8  s" ijklmnop" compare -> 0 }T  ok
   ok
 \ Add text to end of existing text  ok
 ed 
@@ -1929,11 +1929,11 @@ qrstuvwx
 10000w 
 27 
 q  ok
-T{ 10000 8  s" abcdefgh" compare -> 0 }T  ok
-T{ 8008 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character INCORRECT RESULT: T{ 8008 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character ACTUAL RESULT: { 1 } ok
-T{ 8009 8  s" ijklmnop" compare -> 0 }T INCORRECT RESULT: T{ 8009 8  s" ijklmnop" compare -> 0 }T ACTUAL RESULT: { -1 } ok
-T{ 8017 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character INCORRECT RESULT: T{ 8017 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character ACTUAL RESULT: { 1 } ok
-T{ 8018 8  s" qrstuvwx" compare -> 0 }T INCORRECT RESULT: T{ 8018 8  s" qrstuvwx" compare -> 0 }T ACTUAL RESULT: { -1 } ok
+T{ 10000 8  s" abcdefgh" compare -> 0 0 0 }T INCORRECT RESULT: T{ 10000 8  s" abcdefgh" compare -> 0 0 0 }T ACTUAL RESULT: { 10000 0 1 } ok
+T{ 10008 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character  ok
+T{ 10009 8  s" ijklmnop" compare -> 0 }T INCORRECT RESULT: T{ 10009 8  s" ijklmnop" compare -> 0 }T ACTUAL RESULT: { -1 } ok
+T{ 10017 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character  ok
+T{ 10018 8  s" qrstuvwx" compare -> 0 }T INCORRECT RESULT: T{ 10018 8  s" qrstuvwx" compare -> 0 }T ACTUAL RESULT: { -1 } ok
   ok
   ok
 \ Add a line between two lines of existing text  ok
@@ -1948,11 +1948,11 @@ qrstuvwx
 10000w 
 27 
 q  ok
-T{ 10000 8  s" abcdefgh" compare -> 0 }T  ok
-T{ 8008 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character INCORRECT RESULT: T{ 8008 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character ACTUAL RESULT: { 1 } ok
-T{ 8009 8  s" qrstuvwx" compare -> 0 }T INCORRECT RESULT: T{ 8009 8  s" qrstuvwx" compare -> 0 }T ACTUAL RESULT: { -1 } ok
-T{ 8017 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character INCORRECT RESULT: T{ 8017 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character ACTUAL RESULT: { 1 } ok
-T{ 8018 8  s" ijklmnop" compare -> 0 }T INCORRECT RESULT: T{ 8018 8  s" ijklmnop" compare -> 0 }T ACTUAL RESULT: { -1 } ok
+T{ 10000 8  s" abcdefgh" compare -> 0 0 0 }T INCORRECT RESULT: T{ 10000 8  s" abcdefgh" compare -> 0 0 0 }T ACTUAL RESULT: { 10000 0 0 } ok
+T{ 10008 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character  ok
+T{ 10009 8  s" qrstuvwx" compare -> 0 }T  ok
+T{ 10017 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character  ok
+T{ 10018 8  s" ijklmnop" compare -> 0 }T  ok
   ok
 \ Add two lines between two existing lines of existing text  ok
 ed 
@@ -1967,13 +1967,13 @@ dddd
 10000w 
 20 
 q  ok
-T{ 10000 4  s" aaaa" compare -> 0 }T  ok
-T{ 8004 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character INCORRECT RESULT: T{ 8004 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character ACTUAL RESULT: { -1 } ok
-T{ 8005 4  s" cccc" compare -> 0 }T INCORRECT RESULT: T{ 8005 4  s" cccc" compare -> 0 }T ACTUAL RESULT: { -1 } ok
-T{ 8009 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character INCORRECT RESULT: T{ 8009 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character ACTUAL RESULT: { 1 } ok
-T{ 8010 4  s" dddd" compare -> 0 }T INCORRECT RESULT: T{ 8010 4  s" dddd" compare -> 0 }T ACTUAL RESULT: { -1 } ok
-T{ 8014 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character INCORRECT RESULT: T{ 8014 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character ACTUAL RESULT: { 1 } ok
-T{ 8015 4  s" bbbb" compare -> 0 }T INCORRECT RESULT: T{ 8015 4  s" bbbb" compare -> 0 }T ACTUAL RESULT: { -1 } ok
+T{ 10000 4  s" aaaa" compare -> 0 0 0 }T INCORRECT RESULT: T{ 10000 4  s" aaaa" compare -> 0 0 0 }T ACTUAL RESULT: { 10000 0 0 } ok
+T{ 10004 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character  ok
+T{ 10005 4  s" cccc" compare -> 0 }T  ok
+T{ 10009 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character  ok
+T{ 10010 4  s" dddd" compare -> 0 }T  ok
+T{ 10014 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character  ok
+T{ 10015 4  s" bbbb" compare -> 0 }T  ok
   ok
   ok
 \ Add a line above existing text  ok
@@ -1987,9 +1987,9 @@ ijklmnop
 10000w 
 18 
 q  ok
-T{ 10000 8  s" ijklmnop" compare -> 0 }T  ok
-T{ 8008 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character INCORRECT RESULT: T{ 8008 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character ACTUAL RESULT: { 1 } ok
-T{ 8009 8  s" abcdefgh" compare -> 0 }T INCORRECT RESULT: T{ 8009 8  s" abcdefgh" compare -> 0 }T ACTUAL RESULT: { -1 } ok
+T{ 10000 8  s" ijklmnop" compare -> 0 0 0 }T INCORRECT RESULT: T{ 10000 8  s" ijklmnop" compare -> 0 0 0 }T ACTUAL RESULT: { 10000 0 0 } ok
+T{ 10008 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character  ok
+T{ 10009 8  s" abcdefgh" compare -> 0 }T  ok
   ok
   ok
 \ --- d command ---  ok
@@ -2004,7 +2004,7 @@ bbbb
 10000w 
 5 
 q  ok
-T{ 10000 4  s" bbbb" compare -> 0 0 0 }T  ok
+T{ 10000 4  s" bbbb" compare -> 0 0 0 }T INCORRECT RESULT: T{ 10000 4  s" bbbb" compare -> 0 0 0 }T ACTUAL RESULT: { 10000 0 0 } ok
   ok
 \ Delete second of two lines  ok
 ed 
@@ -2016,13 +2016,12 @@ bbbb
 10000w 
 5 
 q  ok
-T{ 10000 4  s" aaaa" compare -> 0 0 0 }T  ok
+T{ 10000 4  s" aaaa" compare -> 0 0 0 }T INCORRECT RESULT: T{ 10000 4  s" aaaa" compare -> 0 0 0 }T ACTUAL RESULT: { 10000 0 0 } ok
   ok
 \ === END OF ED TESTS ===  ok
   ok
 \ Free memory used for these tests  ok
 ed-tests  ok
-  ok
   ok
  ( Running test 'stringlong' from file 'stringlong.fs' )  ok
 \ ------------------------------------------------------------------------  ok
@@ -2738,7 +2737,7 @@ char w       ' digit?        cycle_test 2drop      CYCLES:     75 ok
 5 5          ' =             cycle_test drop       CYCLES:     53 ok
 here 5       ' erase         cycle_test            CYCLES:    310 ok
 here 5 5     ' fill          cycle_test            CYCLES:    298 ok
-s" 5"        ' evaluate      cycle_test drop       CYCLES:  15531 ok
+s" 5"        ' evaluate      cycle_test drop       CYCLES:  15524 ok
 5 ' drop     ' execute       cycle_test            CYCLES:     62 ok
 \ skipping     exit  ok
              ' false         cycle_test drop       CYCLES:     24 ok
