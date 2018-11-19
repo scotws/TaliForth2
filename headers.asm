@@ -457,9 +457,14 @@ nt_postpone:
         .word nt_immediate, xt_postpone, z_postpone
         .byte "postpone"
 
+nt_s_backslash_quote:
+        .byte 3, IM
+        .word nt_postpone, xt_s_backslash_quote, z_s_backslash_quote
+        .byte "s", $5C, $22
+
 nt_s_quote:
-        .byte 2, IM
-        .word nt_postpone, xt_s_quote, z_s_quote
+        .byte 2, IM+NN
+        .word nt_s_backslash_quote, xt_s_quote, z_s_quote
         .byte "s", $22
 
 nt_dot_quote:

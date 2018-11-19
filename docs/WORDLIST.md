@@ -150,7 +150,8 @@ RTS instruction at the end of each word.
 | RIGHT_BRACKET | `]` | ANS core | 6 | **auto** |
 | ROT | `rot` | ANS core | 31 | **auto** |
 | RSHIFT | `rshift` | ANS core | 23 | **auto** |
-| S_QUOTE | `s"` | ANS core | 134 | **auto** |
+| S_BACKSLASH_QUOTE | `s\"` | ANS core | 9 | **auto** |
+| S_QUOTE | `s"` | ANS core | 352 | **auto** |
 | S_TO_D | `s>d` | ANS core | 21 | **auto** |
 | SEARCH | `search` | ANS string | 162 | **auto** |
 | SEMICOLON | `;` | ANS core | 131 | **auto** |
@@ -214,7 +215,7 @@ RTS instruction at the end of each word.
 | ZERO_LESS | `0<` | ANS core | 19 | **auto** |
 | ZERO_UNEQUAL | `0<>` | ANS core ext | 21 | **auto** |
 
-Found **206** native words in `native_words.asm`.
-Of those, **178** were automatically tested and
+Found **207** native words in `native_words.asm`.
+Of those, **179** were automatically tested and
           **1** are not marked as tested at all.
 
