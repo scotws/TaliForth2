@@ -1,7 +1,7 @@
 ; ed6502 - Ed-like line-based editor for Tali Forth 2 
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 13. Okt 2018
-; This version: 17. Nov 2018
+; This version: 23. Nov 2018
 
 ; Ed is a line-orientated editor for Tali Forth 2 based on the classic Unix
 ; editor of the same name. It is included because a) I like line editors and
@@ -87,8 +87,9 @@ ed6502:
 
 _input_loop: 
                 ; Set parameter flag to none (bit 7); default printing is
-                ; without line numbers (bit 6)
-                lda #%11000000
+                ; without line numbers (bit 0). We leave the changed flag (bit
+                ; 6) because we might be coming from a previous add
+                lda #%10000001
                 trb ed_flags
 
                 ; We really don't want to have to write a complete
@@ -779,6 +780,18 @@ _entry_cmd_i:
                 inx
                 inx                     ;  DROP ( addr-t u-t para1 )
 
+                ; If we weren't given a parameter, make the current line the
+                ; parameter
+                bit ed_flags
+                bmi _cmd_a_have_para
+
+                ; No parameter, take current line
+                lda ed_cur
+                sta 0,x
+                lda ed_cur+1
+                sta 1,x                 ;  ( addr-t u-t cur ) drop through
+
+_cmd_a_have_para:
                 jsr _num_to_addr        ;  ( addr-t u-t addr1 ) 
                 jsr xt_cr
 
@@ -1120,9 +1133,8 @@ _cmd_f_have_para:
                 ; We do no sanity tests at all. This is Forth, if the user
                 ; wants to blow up the Zero Page and the Stack, sure, go right
                 ; ahead, whatever
-
-                ; TODO Tests
                 jsr xt_over
+                jsr xt_cr
                 jsr xt_u_dot
 
                 lda 2,x
@@ -1280,7 +1292,6 @@ _cmd_q:
 
                 bit ed_flags            ; bit 6 is change flag
                 bvc +
-
                 jmp _error_2drop
 *
                 jmp _all_done            ; can't fall thru because of PLX
@@ -1423,17 +1434,23 @@ _cmd_w_loop:
 
 _cmd_w_eol:
                 ; We're at the end of the text buffer and arrive here with
-                ; ( addr-tn addr-n ) ( R: addr-t ) What we do now is print the
-                ; number of characters saved
+                ; ( addr-tn addr-n ) ( R: addr-t ) What we do now is calculate
+                ; the number of characters saved and put that value in the 3OS
+                ; position
                 jsr xt_swap             ; SWAP ( addr-t u-t addr-n addr-tn ) ( R: addr-t ) 
                 jsr xt_r_from           ; R> ( addr-t u-t addr-n addr-tn addr-t ) 
                 jsr xt_minus            ; - ( addr-t u-t addr-n u ) 
-                jsr xt_dup              ; DUP ( addr-t u-t addr-n u u ) 
+
+                lda 0,x
+                sta 4,x
+                lda 1,x
+                sta 5,x                 ; ( addr-t u addr-n u )
 
                 ; Unix ed puts the number of characters on a new line, so we
                 ; do as well
                 jsr xt_cr
-                jsr xt_u_dot            ; U. ( addr-t u-t addr-n u ) 
+                jsr xt_dup              ; DUP ( addr-t u addr-n u u ) 
+                jsr xt_u_dot            ; U. ( addr-t u addr-n u ) 
                 jsr xt_cr
 
                 ; Reset the changed flag

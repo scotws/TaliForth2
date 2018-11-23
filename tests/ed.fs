@@ -15,56 +15,47 @@ marker ed-tests
 
 \ --- a command ---
 
-\ Simple adding of text
+\ Simple adding of text; want aaaa bbbb
 ed
 a
-abcdefgh
-ijklmnop
+aaaa
+bbbb
 .
 10000w
 q
 
-T{ 10000 c@ -> 0 0 char a }T
-T{ 10000 8  s" abcdefgh" compare -> 0 }T
-T{ 10008 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character
-T{ 10009 8  s" ijklmnop" compare -> 0 }T
+T{ 10000 10  s\" aaaa\nbbbb\n" compare -> 10000 10 0 }T
 
-\ Add text to end of existing text
+\ Add text to end of existing text; want aaaa bbbb cccc
 ed
 a
-abcdefgh
-ijklmnop
+aaaa
+bbbb
 .
 a
-qrstuvwx
+cccc
 .
 10000w
 q
-T{ 10000 8  s" abcdefgh" compare -> 0 0 0 }T
-T{ 10008 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character
-T{ 10009 8  s" ijklmnop" compare -> 0 }T
-T{ 10017 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character
-T{ 10018 8  s" qrstuvwx" compare -> 0 }T
+T{ 10000 15  s\" aaaa\nbbbb\ncccc\n" compare -> 10000 15 0 }T
 
 
 \ Add a line between two lines of existing text
+\ Want aaaa cccc bbbb
 ed
 a
-abcdefgh
-ijklmnop
+aaaa
+bbbb
 .
 1a
-qrstuvwx
+cccc
 .
 10000w
 q
-T{ 10000 8  s" abcdefgh" compare -> 0 0 0 }T
-T{ 10008 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character
-T{ 10009 8  s" qrstuvwx" compare -> 0 }T
-T{ 10017 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character
-T{ 10018 8  s" ijklmnop" compare -> 0 }T
+T{ 10000 15  s\" aaaa\ncccc\nbbbb\n" compare -> 10000 15 0 }T
 
 \ Add two lines between two existing lines of existing text
+\ Want: aaaa cccc dddd bbbb
 ed
 a
 aaaa
@@ -76,33 +67,24 @@ dddd
 .
 10000w
 q
-T{ 10000 4  s" aaaa" compare -> 0 0 0 }T
-T{ 10004 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character
-T{ 10005 4  s" cccc" compare -> 0 }T
-T{ 10009 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character
-T{ 10010 4  s" dddd" compare -> 0 }T
-T{ 10014 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character
-T{ 10015 4  s" bbbb" compare -> 0 }T
+T{ 10000 20  s\" aaaa\ncccc\ndddd\nbbbb\n" compare -> 10000 20 0 }T
 
-
-\ Add a line above existing text
+\ Add a line above existing text; want bbbb aaaa 
 ed
 a
-abcdefgh
+aaaa
 .
 0a
-ijklmnop
+bbbb
 .
 10000w
 q
-T{ 10000 8  s" ijklmnop" compare -> 0 0 0 }T
-T{ 10008 1  s" 10" here hexstore  here swap  compare -> 0 }T  \ Linefeed character
-T{ 10009 8  s" abcdefgh" compare -> 0 }T
+T{ 10000 10  s\" bbbb\naaaa\n" compare -> 10000 10 0 }T
 
 
 \ --- d command ---
 
-\ Delete first of two lines
+\ Delete first of two lines; want bbbb
 ed
 a
 aaaa
@@ -111,9 +93,9 @@ bbbb
 1d
 10000w
 q
-T{ 10000 4  s" bbbb" compare -> 0 0 0 }T
+T{ 10000 5  s\" bbbb\n" compare -> 10000 5 0 }T
 
-\ Delete second of two lines
+\ Delete second of two lines; want aaaa
 ed
 a
 aaaa
@@ -122,7 +104,7 @@ bbbb
 2d
 10000w
 q
-T{ 10000 4  s" aaaa" compare -> 0 0 0 }T
+T{ 10000 5  s\" aaaa\n" compare -> 10000 5 0 }T
 
 \ === END OF ED TESTS ===
 
