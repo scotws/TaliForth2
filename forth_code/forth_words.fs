@@ -93,8 +93,11 @@ variable buffblocknum  0 buffblocknum !
 variable buffstatus  0 buffstatus ! ( bit 0 = used, bit 1 = dirty )
 
 \ These are the required variables for the BLOCK word set.
-variable blk  0 blk !
-variable scr  0 scr !
+\ SamCo 2018-11-23 Now included in Tali already, just initialize them.
+\ variable blk
+0 blk !
+\ variable scr
+0 scr !
 
 \ These deferred words need to be redirected to the user's versions
 \ before any of the BLOCK word set words are used.  Both of these

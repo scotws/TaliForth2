@@ -74,6 +74,15 @@ xt_cold:
                 lda #>cp0
                 sta cp+1
 
+                ; Put the user variables right at the beginning of the
+                ; dictionary.
+                lda cp
+                sta up
+                lda cp+1
+                sta up+1
+                ; Reserve 256 bytes for user variables.
+                inc cp+1
+
                 lda #<buffer0   ; input buffer
                 sta cib
                 lda #>buffer0
@@ -965,6 +974,20 @@ xt_bl:
 z_bl:           rts
 .scend
 
+; ## BLK ( -- addr ) "Push address of block being interpreted"
+; ## "block"  auto  ANS block
+        ; """https://forth-standard.org/standard/block/BLK"""
+xt_blk:
+                ; BLK is at UP + 0
+                dex
+                dex
+                lda up
+                sta 0,x
+                lda up+1
+                sta 1,x
+
+z_blk:         rts
+                
 
 ; ## BOUNDS ( addr u -- addr+u addr ) "Prepare address for looping"
 ; ## "bounds"  auto  Gforth
@@ -6964,6 +6987,22 @@ _done:
 z_s_to_d:       rts
 .scend
 
+; ## SCR ( -- addr ) "Push address of variable holding last screen listed"
+; ## "scr"  auto  ANS block ext
+        ; """https://forth-standard.org/standard/block/SCR"""
+xt_scr:
+                ; SCR is at UP + 2
+                dex
+                dex
+                clc
+                lda up
+                adc #2          ; Add offset
+                sta 0,x
+                lda up+1
+                adc #0          ; Adding carry
+                sta 1,x
+
+z_scr:          rts
 
 ; ## SEARCH ( addr1 u1 addr2 u2 -- addr3 u3 flag) "Search for a substring"
 ; ## "search"   auto  ANS string
@@ -9068,6 +9107,19 @@ xt_unused:
                 
 z_unused:       rts
 
+
+; ## USERADDR ( -- addr ) "Push base address of user variables"
+; ## "useraddr"  coded  Tali Forth
+xt_useraddr:        
+                dex
+                dex
+                lda #<up
+                sta 0,x
+                lda #>up
+                sta 1,x
+
+z_useraddr:         rts
+                
 
 ; ## VALUE ( n "name" -- ) "Define a value"
 ; ## "value"  auto  ANS core

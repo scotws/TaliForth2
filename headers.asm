@@ -77,9 +77,18 @@ nt_ed:                  ; ed6502
         .word nt_cold, xt_ed, z_ed
         .byte "ed"
 
+nt_blk:
+        .byte 3, 0
+        .word nt_ed, xt_blk, z_blk
+        .byte "blk"
+
+nt_scr: .byte 3, 0
+        .word nt_blk, xt_scr, z_scr
+        .byte "scr"
+
 nt_word:
         .byte 4, UF
-        .word nt_ed, xt_word, z_word
+        .word nt_scr, xt_word, z_word
         .byte "word"
 
 nt_find:

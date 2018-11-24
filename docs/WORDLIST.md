@@ -7,7 +7,7 @@ RTS instruction at the end of each word.
 
 | NAME | FORTH WORD | SOURCE | BYTES | STATUS |
 | :--- | :--------- | :---   | ----: | :----  |
-| COLD | `cold` | Tali Forth | 225 | tested |
+| COLD | `cold` | Tali Forth | 235 | tested |
 | ABORT | `abort` | ANS core | 68 | tested |
 | QUIT | `quit` | ANS core | 66 | tested |
 | ABORT_QUOTE | `abort"` | ANS core | 10 | tested |
@@ -26,6 +26,7 @@ RTS instruction at the end of each word.
 | BEGIN | `begin` | ANS core | 3 | **auto** |
 | BELL | `bell` | Tali Forth | 5 | tested |
 | BL | `bl` | ANS core | 8 | **auto** |
+| BLK | `block` | ANS block | 10 | **auto** |
 | BOUNDS | `bounds` | Gforth | 28 | **auto** |
 | BRACKET_CHAR | `[char]` | ANS core | 6 | **auto** |
 | BRACKET_TICK | `[']` | ANS core | 6 | **auto** |
@@ -153,6 +154,7 @@ RTS instruction at the end of each word.
 | S_BACKSLASH_QUOTE | `s\"` | ANS core | 9 | **auto** |
 | S_QUOTE | `s"` | ANS core | 348 | **auto** |
 | S_TO_D | `s>d` | ANS core | 21 | **auto** |
+| SCR | `scr` | ANS block ext | 15 | **auto** |
 | SEARCH | `search` | ANS string | 162 | **auto** |
 | SEMICOLON | `;` | ANS core | 131 | **auto** |
 | SIGN | `sign` | ANS core | 24 | **auto** |
@@ -201,6 +203,7 @@ RTS instruction at the end of each word.
 | UM_STAR | `um*` | ANS core | 73 | **auto** |
 | UNLOOP | `unloop` | ANS core | 6 | **auto** |
 | UNUSED | `unused` | ANS core ext | 15 | **auto** |
+| USERADDR | `useraddr` | Tali Forth | 10 | *coded* |
 | VALUE | `value` | ANS core | 65 | **auto** |
 | VARIABLE | `variable` | ANS core | 24 | **auto** |
 | WITHIN | `within` | ANS core ext | 25 | **auto** |
@@ -215,7 +218,7 @@ RTS instruction at the end of each word.
 | ZERO_LESS | `0<` | ANS core | 19 | **auto** |
 | ZERO_UNEQUAL | `0<>` | ANS core ext | 21 | **auto** |
 
-Found **207** native words in `native_words.asm`.
-Of those, **179** were automatically tested and
-          **1** are not marked as tested at all.
+Found **210** native words in `native_words.asm`.
+Of those, **181** were automatically tested and
+          **2** are not marked as tested at all.
 

@@ -58,10 +58,13 @@
                            ; Bit 1 = Current history buffer (0-7, wraps)
                            ; Bit 0 = Current history buffer lsb
                            ; status+1 is used by ACCEPT to hold history lengths.
+.alias up        user0+60  ; User Pointer (Address of user variables)
+                           ; BLK : UP + 0
+                           ; SCR : UP + 2
                 
-; Bytes used for variables: 54 ($0000-$0035) 
-; First usable Data Stack location: $0036 (decimal 54) 
-; Bytes avaible for Data Stack: 128-54 = 65 --> 32 16-bit cells
+; Bytes used for variables: 62 ($0000-$003D) 
+; First usable Data Stack location: $003E (decimal 62) 
+; Bytes avaible for Data Stack: 128-62 = 66 --> 33 16-bit cells
 
 .alias dsp0      $78            ; initial Data Stack Pointer, see docs/stack.md
 
