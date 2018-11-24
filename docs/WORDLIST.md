@@ -203,7 +203,7 @@ RTS instruction at the end of each word.
 | UM_STAR | `um*` | ANS core | 73 | **auto** |
 | UNLOOP | `unloop` | ANS core | 6 | **auto** |
 | UNUSED | `unused` | ANS core ext | 15 | **auto** |
-| USERADDR | `useraddr` | Tali Forth | 10 | *coded* |
+| USERADDR | `useraddr` | Tali Forth | 10 | tested |
 | VALUE | `value` | ANS core | 65 | **auto** |
 | VARIABLE | `variable` | ANS core | 24 | **auto** |
 | WITHIN | `within` | ANS core ext | 25 | **auto** |
@@ -220,5 +220,5 @@ RTS instruction at the end of each word.
 
 Found **210** native words in `native_words.asm`.
 Of those, **181** were automatically tested and
-          **2** are not marked as tested at all.
+          **1** are not marked as tested at all.
 

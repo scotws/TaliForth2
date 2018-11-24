@@ -9109,7 +9109,7 @@ z_unused:       rts
 
 
 ; ## USERADDR ( -- addr ) "Push base address of user variables"
-; ## "useraddr"  coded  Tali Forth
+; ## "useraddr"  tested  Tali Forth
 xt_useraddr:        
                 dex
                 dex

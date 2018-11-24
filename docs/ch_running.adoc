@@ -175,9 +175,11 @@ number:: `( addr u -- u | d )` Convert a string to a number.  Gforth uses
 output:: `( -- addr )` Return the address where the vector for the output routine is
 stored (not the vector itself). Used for output redirection for `emit` and
 others.
-uf-strip:: `( -- addr)` Return the address where the flag is kept that decides
+uf-strip:: `( -- addr )` Return the address where the flag is kept that decides
 if the underflow checks are removed during native compiling. To check the value
 of this flag, use `uf-strip ?`.
+useraddr:: `( -- addr )` Return the base address of the block of memory holding the
+user variables.
 wordsize:: `( nt -- u )` Given the name token (nt) of a Forth word, return its
 size in bytes. Used to help tune native compiling.
 

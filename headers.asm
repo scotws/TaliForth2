@@ -82,13 +82,19 @@ nt_blk:
         .word nt_ed, xt_blk, z_blk
         .byte "blk"
 
-nt_scr: .byte 3, 0
+nt_scr:
+        .byte 3, 0
         .word nt_blk, xt_scr, z_scr
         .byte "scr"
 
+nt_useraddr:
+        .byte 8, 0
+        .word nt_scr, xt_useraddr, z_useraddr
+        .byte "useraddr"
+
 nt_word:
         .byte 4, UF
-        .word nt_scr, xt_word, z_word
+        .word nt_useraddr, xt_word, z_word
         .byte "word"
 
 nt_find:
