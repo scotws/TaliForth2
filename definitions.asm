@@ -59,8 +59,13 @@
                            ; Bit 0 = Current history buffer lsb
                            ; status+1 is used by ACCEPT to hold history lengths.
 .alias up        user0+60  ; User Pointer (Address of user variables)
-                           ; BLK : UP + 0
-                           ; SCR : UP + 2
+.alias blk_offset 0        ; BLK : UP + 0
+.alias scr_offset 2        ; SCR : UP + 2
+.alias current_offset 4    ; CURRENT : UP + 4 (Compilation wordlist)
+.alias wordlists_offset 6  ; WORDLISTS : UP + 6 to UP + 27
+                           ;             (FORTH, EDITOR, ASSEMBLER, +8 more)
+.alias search_order_offset 28
+                           ; SEARCH-ORDER : UP + 28 to UP + 43
                 
 ; Bytes used for variables: 62 ($0000-$003D) 
 ; First usable Data Stack location: $003E (decimal 62) 

@@ -3980,13 +3980,16 @@ _compare_first:
                 ; because we've already compared the first char. 
 
                 ; The string of the word we're testing against is 8 bytes down
+
                 lda tmp1
+                pha             ; Preserve tmp1 on the return stack.
                 clc
                 adc #8
-                sta tmp3        ; we preserve tmp1
+                sta tmp1        ; Reusing tmp1 temporarily for string check.
                 lda tmp1+1
+                pha             ; Preserve tmp1+1 on the return stack.
                 adc #0          ; we only need the carry
-                sta tmp3+1
+                sta tmp1+1
 
                 ldy 0,x         ; index is length of string minus 1
                 dey
@@ -4003,13 +4006,20 @@ _string_loop:
                 clc
                 adc #$20
 _check_char:    
-                cmp (tmp3),y    ; last char of word we're testing against
-                bne _next_entry
+                cmp (tmp1),y    ; last char of word we're testing against
+                bne _next_entry_tmp1
 
                 dey
                 bne _string_loop
 
+_success_tmp1:  
+                pla             ; Restore tmp1 from the return stack.
+                sta tmp1+1
+                pla
+                sta tmp1
+
 _success:
+
                 ; The strings match. Put correct nt NOS, because we'll drop
                 ; TOS before we leave
                 lda tmp1
@@ -4019,7 +4029,12 @@ _success:
 
                 bra _done
 
-_next_entry:
+_next_entry_tmp1:
+                pla             ; Restore tmp1 from the return stack.
+                sta tmp1+1
+                pla
+                sta tmp1
+_next_entry:    
                 ; Not the same, so we get the next word. Next header
                 ; address is two bytes down
                 ldy #2

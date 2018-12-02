@@ -1114,4 +1114,24 @@ nt_drop:
         .word nt_dup, xt_drop, z_drop
         .byte "drop"
 
+; END of FORTH-WORDLIST
+
+
+; EDITOR-WORDLIST
+
+editor_dictionary_start:
+;nt_line:
+;        .byte 4, 0
+;        .word 0000      ; End of the editor dictionary
+;        .word xt_line, z_line
+;        .byte "line"
+        
+; END of EDITOR-WORDLIST
+
+        
+; ASSEMBLER-WORDLIST
+
+; END of ASSEMBLER-WORDLIST        
+
+        
 ; END
