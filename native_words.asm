@@ -6803,12 +6803,226 @@ _Digit:
         rts
 .scend
 
+
+; ## SEARCH_WORDLIST ( caddr u wid -- 0 | xt 1 | xt -1) "Search for a word in a wordlist"
+; ## "search_wordlist" tested ANS search
+        ; """https://forth-standard.org/standard/search/SEARCH_WORDLIST"""
+.scope
+xt_search_wordlist:
+                cpx #dsp0-5
+                bmi +
+                jmp underflow
+*
+
+                ; Set up tmp1 with the wordlist indicated by wid
+                ; on the stack.  Start by putting the base address
+                ; of the wordlists in tmp2.
+                lda up
+                clc
+                adc #wordlists_offset
+                sta tmp2
+                lda up+1
+                adc #0          ; Adding carry
+                sta tmp2+1
+        
+                ; Add the wid (in cells) to the base address.
+                lda 0,x
+                asl             ; Convert wid to offset in cells (x2)
+                adc tmp2
+                sta tmp2
+                bcc +
+                inc tmp2+1      ; Propagate carry if needed.
+                ; tmp2 now holds the address of the dictionary pointer
+                ; for the given wordlist.
+*
+                ; Remove the wid from the stack.
+                inx
+                inx
+        
+                ; check for special case of an empty string (length zero)
+                lda 0,x
+                ora 1,x
+                bne _have_string
+                jmp _done
+
+_have_string:
+                ; set up first loop iteration
+                lda (tmp2)              ; nt of first word in Dictionary
+                sta tmp1
+        
+                inc tmp2                ; Move to the upper byte
+                bne +
+                inc tmp2+1
+*
+                lda (tmp2)
+                sta tmp1+1
+
+                ; Reuse tmp2 to hold the address of the mystery string.
+                lda 2,x                 ; Address of mystery string
+                sta tmp2
+                lda 3,x
+                sta tmp2+1
+
+_loop:
+                ; first quick test: Are strings the same length?
+                lda (tmp1)
+                cmp 0,x
+                bne _next_entry
+
+_compare_string:
+                ; are the same length, so we now have to compare each
+                ; character
+
+                ; second quick test: Is the first character the same?
+                lda (tmp2)      ; first character of mystery string
+                ; Lowercase the incoming charcter.
+                cmp #$5B        ; ASCII '[' (one past Z)
+                bcs _compare_first
+                cmp #$41        ; ASCII 'A'
+                bcc _compare_first
+                ; An uppercase letter has been located.  Make it
+                ; lowercase.
+                clc
+                adc #$20
+                
+_compare_first:
+                ldy #8          ; Offset in nt to name
+                cmp (tmp1),y    ; first character of current word
+                bne _next_entry
+
+                ; string length are the same and the first character is the
+                ; same. If the length of the string is 1, we're already done
+                lda 0,x
+                dec
+                beq _success
+
+                ; No such luck: The strings are the same length and the first
+                ; char is the same, but the word is more than one char long.
+                ; So we suck it up and compare every single character. We go
+                ; from back to front, because words like CELLS and CELL+ would
+                ; take longer otherwise. We can also shorten the loop by one
+                ; because we've already compared the first char. 
+
+                ; The string of the word we're testing against is 8 bytes down
+
+                lda tmp1
+                pha             ; Preserve tmp1 on the return stack.
+                clc
+                adc #8
+                sta tmp1        ; Reusing tmp1 temporarily for string check.
+                lda tmp1+1
+                pha             ; Preserve tmp1+1 on the return stack.
+                adc #0          ; we only need the carry
+                sta tmp1+1
+
+                ldy 0,x         ; index is length of string minus 1
+                dey
+
+_string_loop:
+                lda (tmp2),y    ; last char of mystery string
+                ; Lowercase the incoming charcter.
+                cmp #$5B         ; ASCII '[' (one past Z)
+                bcs _check_char
+                cmp #$41        ; ASCII 'A'
+                bcc _check_char
+                ; An uppercase letter has been located.  Make it
+                ; lowercase.
+                clc
+                adc #$20
+_check_char:    
+                cmp (tmp1),y    ; last char of word we're testing against
+                bne _next_entry_tmp1
+
+                dey
+                bne _string_loop
+
+_success_tmp1:  
+                pla             ; Restore tmp1 from the return stack.
+                sta tmp1+1
+                pla
+                sta tmp1
+
+_success:
+
+                ; The strings match. Drop the count and put correct nt TOS
+                inx
+                inx
+                lda tmp1
+                sta 0,x
+                lda tmp1+1
+                sta 1,x
+                ; Change the nt into an xt, but save a copy of the nt
+                ; to look up whether the word is immediate or not.
+                jsr xt_dup              ; ( nt nt ) 
+                jsr xt_name_to_int      ; ( nt xt )
+                jsr xt_swap             ; ( xt nt ) 
+
+                ldy #0                  ; Prepare flag
+
+                ; The flags are in the second byte of the header
+                inc 0,x
+                bne +
+                inc 1,x                 ; ( xt nt+1 )
+*
+                lda (0,x)               ; ( xt char )
+                and #IM
+                bne _immediate          ; bit set, we're immediate
+
+                lda #$ff                ; We're not immediate, return -1
+                sta 0,x
+                sta 1,x
+                bra _done_nodrop
+_immediate:
+                lda #1                  ; We're immediate, return 1
+                sta 0,x
+                stz 1,x
+
+                bra _done_nodrop
+
+_next_entry_tmp1:
+                pla             ; Restore tmp1 from the return stack.
+                sta tmp1+1
+                pla
+                sta tmp1
+_next_entry:    
+                ; Not the same, so we get the next word. Next header
+                ; address is two bytes down
+                ldy #2
+                lda (tmp1),y
+                pha
+                iny
+                lda (tmp1),y
+                sta tmp1+1
+                pla
+                sta tmp1
+
+                ; If we got a zero, we've walked the whole Dictionary and
+                ; return as a failure, otherwise try again
+                ora tmp1+1
+                beq _fail_done
+                jmp _loop     
+
+_fail_done:
+                stz 2,x         ; failure flag
+                stz 3,x
+_done: 
+                inx
+                inx
+_done_nodrop:   
+z_search_wordlist:
+                rts
+.scend
+        
         
 ; ## SET_CURRENT ( wid -- ) "Set the compilation wordlist"
 ; ## "set-current" tested ANS search
         ; """https://forth-standard.org/standard/search/SET-CURRENT"""
 .scope
 xt_set_current:
+                cpx #dsp0-1
+                bmi +
+                jmp underflow
+*
                 ; Save the value from the data stack.
                 ldy #current_offset
                 lda 0,x

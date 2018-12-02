@@ -113,13 +113,18 @@ nt_get_current:
         .byte "get-current"
                 
 nt_set_current:
-        .byte 11, 0
+        .byte 11, UF
         .word nt_get_current, xt_set_current, z_set_current
         .byte "set-current"
+
+nt_search_wordlist:
+        .byte 15, UF
+        .word nt_set_current, xt_search_wordlist, z_search_wordlist
+        .byte "search-wordlist"
                 
 nt_blk:
         .byte 3, 0
-        .word nt_set_current, xt_blk, z_blk
+        .word nt_search_wordlist, xt_blk, z_blk
         .byte "blk"
 
 nt_scr:
