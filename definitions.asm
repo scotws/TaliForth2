@@ -64,8 +64,10 @@
 .alias current_offset 4    ; CURRENT : UP + 4 (Compilation wordlist)
 .alias wordlists_offset 6  ; WORDLISTS : UP + 6 to UP + 27
                            ;             (FORTH, EDITOR, ASSEMBLER, +8 more)
-.alias search_order_offset 28
-                           ; SEARCH-ORDER : UP + 28 to UP + 43
+.alias order_num_offset 28 ; #ORDER : UP + 28
+                           ;          (Number of wordlists in search order)
+.alias search_order_offset 30
+                           ; SEARCH-ORDER : UP + 30 to UP + 45
                 
 ; Bytes used for variables: 62 ($0000-$003D) 
 ; First usable Data Stack location: $003E (decimal 62) 

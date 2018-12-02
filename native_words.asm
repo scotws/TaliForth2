@@ -83,6 +83,46 @@ xt_cold:
                 ; Reserve 256 bytes for user variables.
                 inc cp+1
 
+                ; Set up the initial dictionary.
+                ; TODO: Load this from a table in ROM
+                ldy #current_offset
+                lda #0
+                sta (up),y      ; Set CURRENT to 0 (FORTH-WORDLIST).
+                iny
+                sta (up),y
+
+                ldy #wordlists_offset
+                lda #<dictionary_start
+                sta (up),y      ; FORTH-WORDLIST
+                iny
+                lda #>dictionary_start
+                sta (up),y
+
+                iny
+                lda #<editor_dictionary_start
+                sta (up),y      ; EDITOR-WORDLIST
+                iny
+                lda #>editor_dictionary_start
+                sta (up),y
+
+                ; TODO - Initialize ASSEMBLER-WORDLIST
+
+                ; Initialize search order list.
+                ldy #order_num_offset
+                lda #1
+                sta (up),y      ; Initialize #ORDER to 1
+                iny
+                lda #0
+                sta (up),y
+
+                ldy #search_order_offset
+                lda #0
+                sta (up),y      ; Only the FORTH-WORDLIST in the
+                iny             ; initial search order.
+                lda #0
+                sta (up),y
+        
+
                 lda #<buffer0   ; input buffer
                 sta cib
                 lda #>buffer0
@@ -9606,7 +9646,7 @@ z_zero_unequal: rts
 ; We can't really add LINE because it depends on BLOCK and that hasn't
 ; been brought into native-words yet.  For now, we'll add some dummy
 ; words.
-; ## LINE-TEST ( line# -- addr ) "A test word in the editor wordlist"
+; ## LINE_TEST ( line# -- addr ) "A test word in the editor wordlist"
 ; ## "line-test"  coded  Tali
 .scope
 xt_line_test:
