@@ -105,7 +105,13 @@ xt_cold:
                 lda #>editor_dictionary_start
                 sta (up),y
 
-                ; TODO - Initialize ASSEMBLER-WORDLIST
+                iny
+                lda #<assembler_dictionary_start
+                sta (up),y      ; ASSEMBLER-WORDLIST
+                iny
+                lda #>assembler_dictionary_start
+                sta (up),y
+
 
                 ; Initialize search order list.
                 ldy #order_num_offset
@@ -9647,7 +9653,7 @@ z_zero_unequal: rts
 ; been brought into native-words yet.  For now, we'll add some dummy
 ; words.
 ; ## LINE_TEST ( line# -- addr ) "A test word in the editor wordlist"
-; ## "line-test"  coded  Tali
+; ## "line-test"  coded  Tali Editor
 .scope
 xt_line_test:
                 cpx #dsp0-1
@@ -9662,5 +9668,18 @@ xt_line_test:
 z_line_test:    rts
 .scend
 
+
+; ==========================================================
+; ASSEMBLER words
+        
+; We're only adding NOP at the moment to test wordlists.
+; ## NOP ( -- ) "Compile an assembly NOP instruction"
+; ## "nop"  auto  Tali Assembler
+xt_nop:        
+                lda #$EA        ; NOP
+                jsr cmpl_a
+
+z_nop:      rts
+        
 
 ; END

@@ -1131,6 +1131,13 @@ nt_line:
         
 ; ASSEMBLER-WORDLIST
 
+assembler_dictionary_start:
+nt_asm_nop:
+        .byte 3, IM
+        .word 0000
+        .word xt_nop, z_nop
+        .byte "nop"
+                
 ; END of ASSEMBLER-WORDLIST        
 
         
