@@ -1120,11 +1120,11 @@ nt_drop:
 ; EDITOR-WORDLIST
 
 editor_dictionary_start:
-;nt_line:
-;        .byte 4, 0
-;        .word 0000      ; End of the editor dictionary
-;        .word xt_line, z_line
-;        .byte "line"
+nt_line:
+        .byte 9, 0
+        .word 0000      ; End of the editor dictionary
+        .word xt_line_test, z_line_test
+        .byte "line-test"
         
 ; END of EDITOR-WORDLIST
 

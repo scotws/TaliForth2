@@ -9594,4 +9594,33 @@ _got_zero:
 z_zero_unequal: rts
 .scend
 
+
+
+
+
+; ==========================================================
+; EDITOR words        
+
+; TODO: Put LINE here.
+        
+; We can't really add LINE because it depends on BLOCK and that hasn't
+; been brought into native-words yet.  For now, we'll add some dummy
+; words.
+; ## LINE-TEST ( line# -- addr ) "A test word in the editor wordlist"
+; ## "line-test"  coded  Tali
+.scope
+xt_line_test:
+                cpx #dsp0-1
+                bmi +
+                jmp underflow
+*
+                ; For now, we'll just double the given number.
+                ; That will allow us to test.
+                jsr xt_dup
+                jsr xt_plus
+
+z_line_test:    rts
+.scend
+
+
 ; END
