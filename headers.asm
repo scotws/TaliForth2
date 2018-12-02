@@ -87,9 +87,14 @@ nt_editor_wordlist:
         .word nt_forth_wordlist, xt_editor_wordlist, z_editor_wordlist
         .byte "editor-wordlist"
                 
+nt_assembler_wordlist:
+        .byte 18, 0
+        .word nt_editor_wordlist, xt_assembler_wordlist, z_assembler_wordlist
+        .byte "assembler-wordlist"
+                
 nt_blk:
         .byte 3, 0
-        .word nt_editor_wordlist, xt_blk, z_blk
+        .word nt_assembler_wordlist, xt_blk, z_blk
         .byte "blk"
 
 nt_scr:

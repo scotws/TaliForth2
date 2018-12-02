@@ -929,6 +929,20 @@ xt_and:
 z_and:          rts
 
 
+; ## ASSEMBLER_WORDLIST ( -- u ) "WID for the Assembler wordlist"
+; ## "assembler-wordlist"  tested  Tali Assembler
+xt_assembler_wordlist:        
+                dex             ; The WID for the Assembler is 2.
+                dex
+                lda #2
+                sta 0,x
+                stz 1,x
+
+z_assembler_wordlist:
+                rts
+
+        
+
 ; ## AT_XY ( n m -- ) "Move cursor to position given"
 ; ## "at-xy"  tested  ANS facility
         ; """https://forth-standard.org/standard/facility/AT-XY
