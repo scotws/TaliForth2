@@ -96,10 +96,30 @@ nt_number_sign_order:
         .byte 6, 0
         .word nt_assembler_wordlist, xt_number_sign_order, z_number_sign_order
         .byte "#order"
+
+nt_get_order:
+        .byte 9, 0
+        .word nt_number_sign_order, xt_get_order, z_get_order
+        .byte "get-order"
+
+nt_set_order:
+        .byte 9, 0
+        .word nt_get_order, xt_set_order, z_set_order
+        .byte "set-order"
+
+nt_get_current:
+        .byte 11, 0
+        .word nt_set_order, xt_get_current, z_get_current
+        .byte "get-current"
+                
+nt_set_current:
+        .byte 11, 0
+        .word nt_get_current, xt_set_current, z_set_current
+        .byte "set-current"
                 
 nt_blk:
         .byte 3, 0
-        .word nt_number_sign_order, xt_blk, z_blk
+        .word nt_set_current, xt_blk, z_blk
         .byte "blk"
 
 nt_scr:

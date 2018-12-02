@@ -4204,6 +4204,74 @@ _done:
 z_fm_slash_mod: rts
 .scend
 
+
+; ## GET_CURRENT ( -- wid ) "Get the id of the compilation wordlist"
+; ## "get-current" tested ANS search
+        ; """https://forth-standard.org/standard/search/GET-CURRENT"""
+.scope
+xt_get_current:
+                ; This is a little different than some of the variables
+                ; in the user area as we want the value rather than
+                ; the address.
+                dex
+                dex
+                ldy #current_offset
+                lda (up),y
+                sta 0,x
+                iny
+                lda (up),y
+                sta 1,x
+                
+z_get_current:  rts
+.scend        
+
+; ## GET_ORDER ( -- wid_n .. wid_1 n) "Get the current search order"
+; ## "get-order" tested ANS search
+        ; """https://forth-standard.org/standard/search/GET-ORDER"""
+.scope
+xt_get_order:
+                ; Get #ORDER - the number of wordlists in the search order.
+                ldy #order_num_offset
+                lda (up),y
+                asl             ; Multiply by 2 for cells
+                sta tmp1
+                beq _done       ; If zero, there are no wordlists.
+_loop:  
+                ; Count down towards the front of the list.
+                ; By decrementing first, we also turn the length into an offset.
+                dec tmp1
+                dec tmp1        ; Count down by cells.
+
+                ; Get a pointer to the current wordlist, working back to front.
+                lda #search_order_offset
+                clc
+                adc tmp1
+                tay
+                ; Put that wordlist id on the stack.
+                dex
+                dex
+                lda (up),y
+                sta 0,x
+                iny
+                lda (up),y
+                sta 1,x
+                ; See if that was the last one to process (first in the list).
+                lda #0
+                cmp tmp1
+                bne _loop
+_done:
+                ; Put the number of items on the stack.
+                dex
+                dex
+                ldy #order_num_offset
+                lda (up),y
+                sta 0,x
+                stz 1,x         ; We only support 8 wordlists.
+                
+z_get_order:    rts
+.scend        
+
+        
 ; ## GREATER_THAN ( n n -- f ) "See if NOS is greater than TOS"
 ; ## ">"  auto  ANS core
         ; """https://forth-standard.org/standard/core/more"""
@@ -6735,6 +6803,91 @@ _Digit:
         rts
 .scend
 
+        
+; ## SET_CURRENT ( wid -- ) "Set the compilation wordlist"
+; ## "set-current" tested ANS search
+        ; """https://forth-standard.org/standard/search/SET-CURRENT"""
+.scope
+xt_set_current:
+                ; Save the value from the data stack.
+                ldy #current_offset
+                lda 0,x
+                sta (up),y
+                iny
+                lda 1,x
+                sta (up),y
+                ; Remove the TOS.
+                inx
+                inx
+                
+z_set_current:  rts
+.scend
+
+
+; ## SET_ORDER ( wid_n .. wid_1 n -- ) "Set the current search order"
+; ## "set-order" tested ANS search
+        ; """https://forth-standard.org/standard/search/SET-ORDER"""
+.scope
+xt_set_order:
+                ; Test for -1 TOS
+                lda #$FF
+                cmp 1,x
+                bne _start
+                cmp 0,x
+                bne _start
+
+                ; There is a -1 TOS.  Replace it with the default
+                ; search order, which is just the FORTH-WORDLIST.
+                dex             ; Make room for the count.
+                dex
+                stz 3,x         ; FORTH-WORDLIST is 0
+                stz 2,x
+                stz 1,x         ; Count is 1.
+                lda #1
+                sta 0,x
+                ; Continue processing with ( forth-wordlist 1 -- )
+
+_start: 
+
+        
+                ; Set #ORDER - the number of wordlists in the search order.
+                ldy #order_num_offset
+                lda 0,x
+                sta (up),y
+                sta tmp1        ; Save a copy for zero check and looping.
+                iny             ; Only the low byte is saved in tmp1 as
+                lda 1,x         ; only 8 wordlists are allowed.
+                sta (up),y      
+
+                inx             ; Drop the count off the data stack.
+                inx
+
+                ; Check if there are zero wordlists.
+                lda tmp1    
+                beq _done       ; If zero, there are no wordlists.
+
+                ; Move the wordlist ids from the data stack to the search order.
+                ldy #search_order_offset
+_loop:  
+                ; Move one wordlist id over into the search order.
+                lda 0,x
+                sta (up),y
+                iny
+                lda 1,x
+                sta (up),y
+                iny
+                ; Remove it from the data stack.
+                inx
+                inx
+                ; See if that was the last one to process (first in the list).
+                dec tmp1
+                bne _loop
+_done:
+z_set_order:    rts
+.scend        
+        
+
+        
 ; ## S_QUOTE ( "string" -- )( -- addr u ) "Store string in memory"
 ; ## "s""  auto  ANS core
         ; """https://forth-standard.org/standard/core/Sq
