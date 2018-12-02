@@ -77,9 +77,14 @@ nt_ed:                  ; ed6502
         .word nt_cold, xt_ed, z_ed
         .byte "ed"
 
+nt_forth_wordlist:
+        .byte 14, 0
+        .word nt_ed, xt_forth_wordlist, z_forth_wordlist
+        .byte "forth-wordlist"
+                
 nt_blk:
         .byte 3, 0
-        .word nt_ed, xt_blk, z_blk
+        .word nt_forth_wordlist, xt_blk, z_blk
         .byte "blk"
 
 nt_scr:

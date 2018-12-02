@@ -3692,6 +3692,19 @@ z_erase:
 z_fill:         rts
 .scend
 
+; ## FORTH_WORDLIST ( -- u ) "WID for the Forth Wordlist"
+; ## "forth-wordlist"  coded  ANS search
+        ; """https://forth-standard.org/standard/search/FORTH-WORDLIST"""
+xt_forth_wordlist:        
+                dex             ; The WID for Forth is 0.
+                dex
+                stz 0,x
+                stz 1,x
+
+z_forth_wordlist:
+                rts
+
+        
 
 ; ## EVALUATE ( addr u -- ) "Execute a string"
 ; ## "evaluate"  auto  ANS core
