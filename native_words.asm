@@ -3296,6 +3296,19 @@ xt_ed:
 z_ed:       rts 
 
 
+; ## EDITOR_WORDLIST ( -- u ) "WID for the Editor wordlist"
+; ## "editor-wordlist"  tested  Tali Editor
+xt_editor_wordlist:        
+                dex             ; The WID for the Editor is 1.
+                dex
+                lda #1
+                sta 0,x
+                stz 1,x
+
+z_editor_wordlist:
+                rts
+
+
 ; ## EMIT ( char -- ) "Print character to current output"
 ; ## "emit"  auto  ANS core
         ; """https://forth-standard.org/standard/core/EMIT
@@ -3692,8 +3705,9 @@ z_erase:
 z_fill:         rts
 .scend
 
+        
 ; ## FORTH_WORDLIST ( -- u ) "WID for the Forth Wordlist"
-; ## "forth-wordlist"  coded  ANS search
+; ## "forth-wordlist"  tested  ANS search
         ; """https://forth-standard.org/standard/search/FORTH-WORDLIST"""
 xt_forth_wordlist:        
                 dex             ; The WID for Forth is 0.
@@ -3705,7 +3719,6 @@ z_forth_wordlist:
                 rts
 
         
-
 ; ## EVALUATE ( addr u -- ) "Execute a string"
 ; ## "evaluate"  auto  ANS core
         ; """https://forth-standard.org/standard/core/EVALUATE
