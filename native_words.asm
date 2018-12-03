@@ -83,12 +83,27 @@ xt_cold:
                 ; Reserve 256 bytes for user variables.
                 inc cp+1
 
+                ; Zero out the user variables.
+                ldy #0
+                lda #0
+_zero_user_vars_loop:
+                sta (up),y
+                iny
+                bne _zero_user_vars_loop
+
                 ; Set up the initial dictionary.
                 ; TODO: Load this from a table in ROM
                 ldy #current_offset
                 lda #0
                 sta (up),y      ; Set CURRENT to 0 (FORTH-WORDLIST).
                 iny
+                sta (up),y
+
+                ldy #num_wordlists_offset
+                lda #3          ; 3 wordlists to start:
+                sta (up),y      ; FORTH, EDITOR, and ASSEMBLER
+                iny
+                lda #0
                 sta (up),y
 
                 ldy #wordlists_offset
@@ -114,7 +129,7 @@ xt_cold:
 
 
                 ; Initialize search order list.
-                ldy #order_num_offset
+                ldy #num_order_offset
                 lda #1
                 sta (up),y      ; Initialize #ORDER to 1
                 iny
@@ -2609,6 +2624,20 @@ xt_defer:
 z_defer:        rts
 .scend
 
+        
+; ## DEFINITIONS ( -- ) "Make first wordlist in search order the current wordlist"
+; ## "definitions" tested ANS search
+xt_definitions:
+                ldy #search_order_offset
+                lda (up),y
+                ldy #current_offset
+                sta (up),y
+                ldy #search_order_offset+1
+                lda (up),y
+                ldy #current_offset+1
+                sta (up),y
+z_definitions:  rts
+        
 
 ; ## DEPTH ( -- u ) "Get number of cells (not bytes) used by stack"
 ; ## "depth"  auto  ANS core
@@ -4231,7 +4260,7 @@ z_get_current:  rts
 .scope
 xt_get_order:
                 ; Get #ORDER - the number of wordlists in the search order.
-                ldy #order_num_offset
+                ldy #num_order_offset
                 lda (up),y
                 asl             ; Multiply by 2 for cells
                 sta tmp1
@@ -4263,7 +4292,7 @@ _done:
                 ; Put the number of items on the stack.
                 dex
                 dex
-                ldy #order_num_offset
+                ldy #num_order_offset
                 lda (up),y
                 sta 0,x
                 stz 1,x         ; We only support 8 wordlists.
@@ -5766,12 +5795,12 @@ z_number_sign_greater:
 ; ## NUMBER_SIGN_ORDER ( -- addr ) "User variable: number of wordlists in search order"
 ; ## "#order"  auto  Tali search
 xt_number_sign_order:
-                ; #ORDER is at UP + order_num_offset 
+                ; #ORDER is at UP + num_order_offset 
                 dex
                 dex
                 clc
                 lda up
-                adc #order_num_offset   ; Add offset
+                adc #num_order_offset   ; Add offset
                 sta 0,x
                 lda up+1
                 adc #0          ; Adding carry
@@ -6842,6 +6871,13 @@ xt_search_wordlist:
                 ; check for special case of an empty string (length zero)
                 lda 0,x
                 ora 1,x
+                bne _check_wordlist
+                jmp _done
+_check_wordlist:        
+                ; Check for special case of empty wordlist
+                ; (dictionary pointer, in tmp2, is 0)
+                lda tmp2
+                ora tmp2+1
                 bne _have_string
                 jmp _done
 
@@ -7065,7 +7101,7 @@ _start:
 
         
                 ; Set #ORDER - the number of wordlists in the search order.
-                ldy #order_num_offset
+                ldy #num_order_offset
                 lda 0,x
                 sta (up),y
                 sta tmp1        ; Save a copy for zero check and looping.
@@ -9744,6 +9780,32 @@ _found_char:
 z_word:         rts
 .scend
 
+; ## WORDLIST ( -- wid ) "Create new wordlist (from pool of 8)"
+; ## "wordlist" tested ANS search
+        ; """https://forth-standard.org/standard/search/WORDLIST"""
+.scope
+xt_wordlist:
+                ; Get the current number of wordlists
+                ldy #num_wordlists_offset
+                lda (up),y
+                ; See if we are already at the max.
+                cmp #11         ; 3 starting wordlists + 8 user wordlists
+                bne _ok
+        
+                ; Print an error message if all wordlists used.
+                lda #err_wordlist
+                jmp error
+
+_ok:            ina             ; Increment the wordlist#
+                sta (up),y      ; Save it (only lower byte used)
+                dex             ; and put it on the stack.
+                dex
+                sta 0,x
+                stz 1,x         ; 8 is the max, so upper byte is always zero.
+        
+z_wordlist:     rts
+.scend
+        
 
 ; ## WORDS ( -- ) "Print known words from Dictionary"
 ; ## "words"  tested  ANS tools

@@ -122,9 +122,19 @@ nt_search_wordlist:
         .word nt_set_current, xt_search_wordlist, z_search_wordlist
         .byte "search-wordlist"
                 
+nt_wordlist:
+        .byte 8, 0
+        .word nt_search_wordlist, xt_wordlist, z_wordlist
+        .byte "wordlist"
+
+nt_definitions:
+        .byte 11, 0
+        .word nt_wordlist, xt_definitions, z_definitions
+        .byte "definitions"
+                
 nt_blk:
         .byte 3, 0
-        .word nt_search_wordlist, xt_blk, z_blk
+        .word nt_definitions, xt_blk, z_blk
         .byte "blk"
 
 nt_scr:
