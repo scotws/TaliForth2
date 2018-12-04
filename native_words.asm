@@ -5116,11 +5116,19 @@ z_m_star:       rts
         ;       jsr marker_runtime
         ;       <Original CP MSB>
         ;       <Original CP LSB>
-        ;       <Original DP MSB>
+        ;       <Original DP MSB> ( for CURRENT wordlist )
         ;       <Original DP LSB>
+        ;       < USER variables from offset 4 to 47 >
+        ;
+        ;       The user variables include:
+        ;       CURRENT
+        ;       <All wordlists> (currently 11)
+        ;       <#ORDER>
+        ;       <All search order> (currently 8)
         ;
         ; This code uses tmp1 and tmp2
         ; """
+.scope
 xt_marker:
                 ; Before we do anything, we need to save CP, which
                 ; after all is the whole point of this operation. CREATE
@@ -5167,8 +5175,21 @@ xt_marker:
                 pla                     ; LSB
                 jsr cmpl_word
 
-z_marker:       rts
+                ; Add the user variables for the wordlists and search order.
+                ; We're compiling them in byte order.
+                ldy #4                  ; Start at CURRENT
+_marker_loop:
+                lda (up),y
+                jsr cmpl_a
+                iny
+                tya
+                cmp #48                 ; One past the end of the search order.
+                bne _marker_loop
 
+z_marker:       rts
+.scend
+
+.scope        
 marker_runtime:
         ; """Restore Dictionary and memory (DP and CP) to where the were
         ; when this marker was defined. We arrive here with the return
@@ -5202,11 +5223,25 @@ marker_runtime:
                 iny
                 lda (tmp1),y
                 sta dp+1
-                jsr dp_to_current
 
+                ; Conveniently, the offset into both tmp1 and UP is 4
+                ; to start restoring the wordlists and search order.
+                ldy #4
+_marker_restore_loop:
+                ; Copy from the dictionary back on top of the wordlists
+                ; and search order.
+                lda (tmp1), y
+                sta (up), y
+                iny
+                tya
+                cmp #48                 ; One past the end of the search order.
+                bne _marker_restore_loop
+
+                jsr dp_to_current       ; Move the CURRENT DP back.
                 ; The return instruction takes us back to the original caller
                 rts
-
+.scend
+        
 
 ; ## MAX ( n n -- n ) "Keep larger of two numbers"
 ; ## "max"  auto  ANS core
