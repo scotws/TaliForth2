@@ -4091,11 +4091,6 @@ _have_string:
                 lda (up),y
                 sta tmp1+1
         
-;                lda dp                  ; nt of first word in Dictionary
-;                sta tmp1
-;                lda dp+1
-;                sta tmp1+1
-
                 lda 2,x                 ; Address of mystery string
                 sta tmp2
                 lda 3,x
@@ -9880,15 +9875,47 @@ xt_words:
                 ; line
                 jsr xt_cr
 
-                ; start with last word in Dictionary
-                jsr xt_latestnt         ; ( nt ) 
-
                 ; We pretty-format the output by inserting a line break
                 ; before the end of the line. We can get away with pushing
                 ; the counter to the stack because this is usually an
                 ; interactive word and speed is not that important
                 lda #0
                 pha
+
+                ; Set up for traversing the wordlist search order.
+                dex                     ; Make room on the stack for
+                dex                     ; a dictionary pointer.
+                stz tmp3                ; Start at the beginning of
+                                        ; the search order.
+_wordlist_loop: 
+                ldy #num_order_offset
+                lda tmp3
+                cmp (up),y              ; Check to see if we are done
+                bne _have_wordlist
+
+                ; We ran out of wordlists to search.
+                bra _words_done
+_have_wordlist: 
+
+                ; start with last word in Dictionary
+                ; Get the current wordlist id
+                asl                     ; Turn offset into cells offset.
+                clc
+                adc #search_order_offset
+                tay
+                lda (up),y              ; Only the lower byte is needed.
+
+                ; Get the DP for that wordlist.
+                asl                     ; Turn offset into cells offset.
+                clc
+                adc #wordlists_offset
+                tay
+                lda (up),y              ; Save the DP for this wordlist
+                sta 0,x                 ; on the stack. ( nt )
+                iny
+                lda (up),y
+                sta 1,x
+
 _loop:
                 jsr xt_dup              ; ( nt nt ) 
                 jsr xt_name_to_string   ; ( nt addr u )
@@ -9921,6 +9948,11 @@ _loop:
                 ora 1,x
                 bne _loop
 
+                ; Move on to the next wordlist in the search order.
+                inc tmp3
+                bra _wordlist_loop
+
+_words_done:     
                 pla                     ; dump counter
 
                 inx
