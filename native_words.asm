@@ -4511,15 +4511,40 @@ xt_int_to_name:
                 jmp underflow
 *
                 ; Unfortunately, to find the header, we have to walk through
-                ; the whole Dictonary
-                lda dp
-                sta tmp2        ; Save latest word nt in tmp2
-                lda dp+1
+                ; all of the wordlists.
+
+                ; We are running out of tmp variables.
+                ; (I'm assuming there is a reason this is avoiding tmp1)
+                ; so hold the current wordlist on the data stack.
+                ; This searches all of the wordlists in id order.
+                dex
+                dex
+                stz 0,x
+                stz 1,x
+_wordlist_loop:
+                ; A needs to have the current wordlist id in it at
+                ; the top of this loop.
+                lda 0,x                 ; Get the current wordlist.
+                ; Get the DP for that wordlist.
+                asl                     ; Turn offset into cells offset.
+                clc
+                adc #wordlists_offset
+                tay
+                lda (up),y              ; Save the DP for this wordlist
+                sta tmp2                ; into tmp2
+                iny
+                lda (up),y
                 sta tmp2+1
 
-                lda 0,x
+                ; Check for an empty wordlist (DP will be 0)
+                lda tmp2
+                ora tmp2+1
+                beq _next_wordlist
+                
+
+                lda 2,x         ; Target xt is now behind wordlist id.
                 sta tmp3        ; Save target xt in tmp3
-                lda 1,x
+                lda 3,x
                 sta tmp3+1
 _loop:
                 ldy #4          ; xt is four bytes down
@@ -4557,13 +4582,29 @@ _no_match:
                 sta tmp2
                 bra _loop
 _zero:
-                ; if next word is zero, the xt has no nt.
-                ; We return a zero to indicate that.
+                ; if next word is zero, the xt has no nt in this wordlist
                 pla             ; Leftover from above loop
+_next_wordlist: 
+                ; Move on to the next wordlist.
+                lda 0,x
+                inc
+                sta 0,x
+                cmp #max_wordlists
+                bne _wordlist_loop
+
+                ; We didn't find it in any of the wordlists.
+                ; Remove the wordlist id from the stack.
+                inx
+                inx
+        
+                ; We return a zero to indicate that we didn't find it.
                 stz 0,x
                 stz 1,x
                 bra z_int_to_name
 _match:
+                ; We found it.. remove wordlist id from stack.
+                inx
+                inx
                 ; It's a match! Replace TOS with nt
                 lda tmp2
                 sta 0,x

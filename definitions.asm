@@ -70,6 +70,8 @@
                            ;          (Number of wordlists in search order)
 .alias search_order_offset 32
                            ; SEARCH-ORDER : UP + 32 to UP + 47
+
+.alias max_wordlists 11
                 
 ; Bytes used for variables: 62 ($0000-$003D) 
 ; First usable Data Stack location: $003E (decimal 62) 
