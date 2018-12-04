@@ -902,10 +902,25 @@ z_allot:
 ; ## ALLOW_NATIVE ( -- ) "Flag last word to allow native compiling"
 ; ## "allow-native"  auto  Tali Forth
 xt_allow_native:
+                ; Determine which wordlist is CURRENT
+                ldy #current_offset
+                lda (up),y      ; Only grabbing the lsb
+                asl             ; Turn it into an offset (in cells)
+
+                ; Get the dictionary pointer for that wordlist.
+                clc
+                adc #wordlists_offset   ; Add offset to Wordlists base.
+                tay
+                lda (up),y              ; Get the dp for that wordlist.
+                sta tmp1
+                iny
+                lda (up),y
+                sta tmp1+1
+
                 ldy #1          ; offset for status byte
-                lda (dp),y
+                lda (tmp1),y
                 and #$ff-NN-AN  ; AN and NN flag is clear.
-                sta (dp),y
+                sta (tmp1),y
 z_allow_native:
                 rts
 
@@ -913,11 +928,26 @@ z_allow_native:
 ; ## ALWAYS_NATIVE ( -- ) "Flag last word as always natively compiled"
 ; ## "always-native"  auto  Tali Forth
 xt_always_native:
+                ; Determine which wordlist is CURRENT
+                ldy #current_offset
+                lda (up),y      ; Only grabbing the lsb
+                asl             ; Turn it into an offset (in cells)
+
+                ; Get the dictionary pointer for that wordlist.
+                clc
+                adc #wordlists_offset   ; Add offset to Wordlists base.
+                tay
+                lda (up),y              ; Get the dp for that wordlist.
+                sta tmp1
+                iny
+                lda (up),y
+                sta tmp1+1
+
                 ldy #1          ; offset for status byte
-                lda (dp),y
+                lda (tmp1),y
                 ora #AN         ; Make sure AN flag is set
                 and #$ff-NN     ; and NN flag is clear.
-                sta (dp),y
+                sta (tmp1),y
 z_always_native:
                 rts
 
@@ -1616,30 +1646,53 @@ xt_colon:
                 ora status
                 sta status
 
-                ; CREATE is going to change DP to point to the new word's
+                ; CREATE is going to change the DP to point to the new word's
                 ; header. While this is fine for (say) variables, it would mean
                 ; that FIND-NAME etc would find a half-finished word when
                 ; looking in the Dictionary. To prevent this, we save the old
                 ; version of DP and restore it later. The new DP is placed in
                 ; the variable WORKWORD until we're finished with a SEMICOLON.
-                lda dp+1        ; CREATE uses lots of tmp variables
+
+                ; Determine which wordlist is CURRENT
+                ldy #current_offset
+                lda (up),y      ; Only grabbing the lsb
+                asl             ; Turn it into an offset (in cells)
+
+                ; Get the dictionary pointer for that wordlist.
+                clc                    
+                adc #wordlists_offset   ; Add offset to Wordlists base.
+                tay
+                lda (up),y              ; Get the dp for that wordlist.
                 pha
-                lda dp
+                iny                     ; Move up to dp+1
+                lda (up),y
                 pha
 
                 jsr xt_create
 
                 ; Get the nt (not the xt!) of the new word as described above.
                 ; Only COLON, SEMICOLON and RECURSE get to access WORKWORD
-                lda dp
+
+                ; Determine which wordlist is CURRENT
+                ldy #current_offset
+                lda (up),y      ; Only grabbing the lsb
+                asl             ; Turn it into an offset (in cells)
+
+                ; Get the dictionary pointer for that wordlist.
+                clc
+                adc #wordlists_offset   ; Add offset to Wordlists base.
+                tay
+                lda (up),y              ; Get the dp for that wordlist.
                 sta workword
-                lda dp+1
+                iny
+                lda (up),y
                 sta workword+1
 
-                pla
-                sta dp
-                pla
-                sta dp+1
+                pla                     ; Original DP+1 first
+                sta (up),y
+                dey                     ; Move back to DP
+                pla                     l Original DP
+                sta (up),y
 
                 ; CREATE includes a subroutine jump to DOVAR by default. We
                 ; back up three bytes and overwrite that.
@@ -2138,10 +2191,25 @@ z_compile_comma:
         ; """
 .scope
 xt_compile_only:
+                ; Determine which wordlist is CURRENT
+                ldy #current_offset
+                lda (up),y      ; Only grabbing the lsb
+                asl             ; Turn it into an offset (in cells)
+
+                ; Get the dictionary pointer for that wordlist.
+                clc
+                adc #wordlists_offset   ; Add offset to Wordlists base.
+                tay
+                lda (up),y              ; Get the dp for that wordlist.
+                sta tmp1
+                iny
+                lda (up),y
+                sta tmp1+1
+
                 ldy #1          ; offset for status byte
-                lda (dp),y
+                lda (tmp1),y
                 ora #CO        ; make sure bit 7 is set
-                sta (dp),y
+                sta (tmp1),y
                 
 z_compile_only: rts
 .scend
@@ -4428,10 +4496,25 @@ z_i:            rts
         ; error message.
         ; """
 xt_immediate:
+                ; Determine which wordlist is CURRENT
+                ldy #current_offset
+                lda (up),y      ; Only grabbing the lsb
+                asl             ; Turn it into an offset (in cells)
+
+                ; Get the dictionary pointer for that wordlist.
+                clc
+                adc #wordlists_offset   ; Add offset to Wordlists base.
+                tay
+                lda (up),y              ; Get the dp for that wordlist.
+                sta tmp1
+                iny
+                lda (up),y
+                sta tmp1+1
+
                 ldy #1          ; offset for status byte
-                lda (dp),y
+                lda (tmp1),y
                 ora #IM        ; make sure bit 7 is set
-                sta (dp),y
+                sta (tmp1),y
 
 z_immediate:    rts
 
@@ -5450,11 +5533,26 @@ z_negate:       rts
 ; ## NEVER_NATIVE ( -- ) "Flag last word as never natively compiled"
 ; ## "never-native"  auto  Tali Forth
 xt_never_native:
+                ; Determine which wordlist is CURRENT
+                ldy #current_offset
+                lda (up),y      ; Only grabbing the lsb
+                asl             ; Turn it into an offset (in cells)
+
+                ; Get the dictionary pointer for that wordlist.
+                clc
+                adc #wordlists_offset   ; Add offset to Wordlists base.
+                tay
+                lda (up),y              ; Get the dp for that wordlist.
+                sta tmp1
+                iny
+                lda (up),y
+                sta tmp1+1
+
                 ldy #1          ; offset for status byte
-                lda (dp),y
+                lda (tmp1),y
                 ora #NN         ; Make sure NN flag is set
                 and #$ff-AN     ; and AN flag is clear.
-                sta (dp),y
+                sta (tmp1),y
 z_never_native:
                 rts
 
