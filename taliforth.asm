@@ -548,6 +548,7 @@ print_u:
         ; the equivalent of the Forth word  0 <# #S #> TYPE  which is
         ; basically U. without the SPACE at the end. Used for various
         ; outputs
+        ; """
 .scope
                 dex                     ; 0
                 dex
@@ -562,4 +563,46 @@ print_u:
                 rts
 .scend
 
+current_to_dp:
+        ; """Look up the CURRENT (compilation) dictionary pointer
+        ; in the wordlist set and put it into the DP zero-page
+        ; variable.  Uses A and Y.
+        ; """
+                ; Determine which wordlist is CURRENT
+                ldy #current_offset
+                lda (up),y      ; Only grabbing the lsb
+                asl             ; Turn it into an offset (in cells)
+
+                ; Get the dictionary pointer for that wordlist.
+                clc
+                adc #wordlists_offset   ; Add offset to Wordlists base.
+                tay
+                lda (up),y              ; Get the dp for that wordlist.
+                sta dp
+                iny
+                lda (up),y
+                sta dp+1
+                rts
+
+dp_to_current:
+        ; """Look up which wordlist is CURRENT and update its pointer
+        ; with the value in dp.  Uses A and Y.
+        ; """
+                ; Determine which wordlist is CURRENT
+                ldy #current_offset
+                lda (up),y      ; Only grabbing the lsb
+                asl             ; Turn it into an offset (in cells)
+
+                ; Get the dictionary pointer for that wordlist.
+                clc
+                adc #wordlists_offset   ; Add offset to Wordlists base.
+                tay
+                lda dp
+                sta (up),y              ; Get the dp for that wordlist.
+                iny
+                lda dp+1
+                sta (up),y
+                rts
+                
+        
 ; END
