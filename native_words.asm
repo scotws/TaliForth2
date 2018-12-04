@@ -4055,14 +4055,46 @@ xt_find_name:
                 ; check for special case of an empty string (length zero)
                 lda 0,x
                 ora 1,x
-                beq _fail_done          ; this might have to be JMP
+                bne _nonempty
+                jmp _fail_done
+        
+_nonempty:      
+                ; Set up for traversing the wordlist search order.
+                stz tmp3                ; Start at the beginning
+_wordlist_loop: 
+                ldy #num_order_offset
+                lda tmp3
+                cmp (up),y              ; Check to see if we are done
+                bne _have_string
 
-_have_string:
+                ; We ran out of wordlists to search.
+                jmp _fail_done
+
+_have_string:                
                 ; set up first loop iteration
-                lda dp                  ; nt of first word in Dictionary
+
+                ; Get the current wordlist id
+                asl                     ; Turn offset into cells offset.
+                clc
+                adc #search_order_offset
+                tay
+                lda (up),y              ; Only the lower byte is needed.
+
+                ; Get the DP for that wordlist.
+                asl                     ; Turn offset into cells offset.
+                clc
+                adc #wordlists_offset
+                tay
+                lda (up),y
                 sta tmp1
-                lda dp+1
+                iny
+                lda (up),y
                 sta tmp1+1
+        
+;                lda dp                  ; nt of first word in Dictionary
+;                sta tmp1
+;                lda dp+1
+;                sta tmp1+1
 
                 lda 2,x                 ; Address of mystery string
                 sta tmp2
@@ -4179,7 +4211,11 @@ _next_entry:
                 ; If we got a zero, we've walked the whole Dictionary and
                 ; return as a failure, otherwise try again
                 ora tmp1+1
-                bne _loop       ; fall through to _fail_done
+                bne _loop
+
+                ; Move on to the next wordlist in the search order.
+                inc tmp3
+                jmp _wordlist_loop
 
 _fail_done:
                 stz 2,x         ; failure flag
