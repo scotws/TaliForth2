@@ -84,7 +84,7 @@ envs_max_n:     .byte 5, "MAX-N"
 envs_max_u:     .byte 5, "MAX-U"
 envs_rsc:       .byte 18, "RETURN-STACK-CELLS"
 envs_sc:        .byte 11, "STACK-CELLS"
-
+envs_wl:        .byte 9, "WORDLISTS"
 ; These return a double-cell number
 envs_max_d:     .byte 5, "MAX-D"
 envs_max_ud:    .byte 6, "MAX-UD"

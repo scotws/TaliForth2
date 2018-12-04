@@ -3600,7 +3600,7 @@ z_environment_q:
 _env_table_single:
         .word envs_cs, envs_hold, envs_pad, envs_aub, envs_floored
         .word envs_max_char, envs_max_n, envs_max_u, envs_rsc
-        .word envs_sc, 0000
+        .word envs_sc, envs_wl, 0000
 
 _env_table_double:
         .word envs_max_d, envs_max_ud, 0000
@@ -3616,6 +3616,7 @@ _env_results_single:
         .word $FFFF     ; MAX-U
         .word $0080     ; RETURN-STACK-CELLS
         .word $0020     ; STACK-CELLS (from definitions.asm)
+        .word $0008     ; WORDLISTS
 
 _env_results_double:
         .word $7FFF, $FFFF      ; MAX-D
