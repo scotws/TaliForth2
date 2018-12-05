@@ -3972,18 +3972,19 @@ xt_find:
                 bmi +
                 jmp underflow
 *
-                ; Convert ancient-type counted string address to 
-                ; modern format
-                jsr xt_count            ; ( caddr -- addr u )
-
                 ; Save address in case conversion fails. We use the
                 ; Return Stack instead of temporary variables like TMP1
                 ; because this is shorter and anybody still using FIND
                 ; can't be worried about speed anyway
-                lda 3,x                 ; MSB
+                lda 1,x                 ; MSB
                 pha
-                lda 2,x                 ; LSB
+                lda 0,x                 ; LSB
                 pha
+
+                ; Convert ancient-type counted string address to
+                ; modern format
+                jsr xt_count            ; ( caddr -- addr u )
+
 
                 jsr xt_find_name        ; ( addr u -- nt | 0 )
 
@@ -3995,19 +3996,11 @@ xt_find:
                 ; flag
                 jsr xt_false            ; ( 0 0 ) 
 
-                ; The address needs to be turned back into a counted
-                ; string, but this is as easy as subtracing 1.
+                ; The address needs to be restored.
                 pla                     ; LSB of address
                 sta 2,x
                 pla
                 sta 3,x                 ; MSB of address
-                ; Subtract 1 to turn back into counted string.
-                lda #0
-                cmp 2,x
-                bne +
-                dec 3,x
-*
-                dec 2,x
 
                 bra _done               ; ( addr 0 ) 
 _found_word:
