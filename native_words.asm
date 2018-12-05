@@ -3519,13 +3519,13 @@ _double_result:
                 dex                     ; ( addr u ? )
                 dex
 
-                ; We have ten single-cell words we check, plus the 0000 as
+                ; We have 11 single-cell words we check, plus the 0000 as
                 ; a marker for the end of the table, so we arrive here
-                ; with Y as 20 or more. To get the index for the double-
+                ; with Y as 22 or more. To get the index for the double-
                 ; cell words, we move the result
                 tya
                 sec
-                sbc #22
+                sbc #24
                 
                 ; We have four bytes per entry in the table, but the index
                 ; keeps increasing by two, so we only have to multiply by
