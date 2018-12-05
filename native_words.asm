@@ -3995,10 +3995,19 @@ xt_find:
                 ; flag
                 jsr xt_false            ; ( 0 0 ) 
 
+                ; The address needs to be turned back into a counted
+                ; string, but this is as easy as subtracing 1.
                 pla                     ; LSB of address
                 sta 2,x
                 pla
                 sta 3,x                 ; MSB of address
+                ; Subtract 1 to turn back into counted string.
+                lda #0
+                cmp 2,x
+                bne +
+                dec 3,x
+*
+                dec 2,x
 
                 bra _done               ; ( addr 0 ) 
 _found_word:
