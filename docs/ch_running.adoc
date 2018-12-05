@@ -184,6 +184,55 @@ wordsize:: `( nt -- u )` Given the name token (nt) of a Forth word, return its
 size in bytes. Used to help tune native compiling.
 
 
+=== Wordlists and Search Order
+
+Tali Forth implements the optional Search-Order words, including the extended
+words.  These words can be used to hide certain words or to rearrange the order
+the words are searched in, allowing configurable substitution in the case of
+words that have the same name but live in different wordlists.
+
+On startup, only the FORTH-WORDLIST is in the search order, so only those words
+will be found.  Tali also comes with an EDITOR-WORDLIST and an
+ASSEMBLER-WORDLIST, however those are not fully populated (mostly empty would be
+a better description of the current situation).  Room for 8 user wordlists is
+available, and the search order can also hold 8 wordlist identifiers. See
+https://forth-standard.org/standard/search for more information on wordlists and
+the search order.
+
+The WORDLIST word will create a new wordlist (or print an error message if all 8
+user wordlists have already been created).  It puts the wordlist identifer (wid)
+on the stack.  This is simply a number that uniquely identifes the wordlist, and
+it's common practice to give it a name rather than use the number directly.  An
+example might look like:
+
+----
+wordlist constant MY-WORDLIST
+----
+
+While this creates a new wordlist and gives it a name, the wordlist isn't
+currently set up to be used.  When Tali starts, only the FORTH-WORDLIST is set
+up in the search order and all compilation of new words goes into the
+FORTH-WORDLIST.  After creating a new wordlist, you need to set it up for new
+words to be compiled to it using SET-CURRENT and you need to add it to the
+search order using SET-ORDER if you want the new words to be found.
+
+----
+\ Set up the new wordlist as the current (compilation) wordlist
+\ New words are always put in the current wordlist.
+MY-WORDLIST set-current
+
+\ Put this wordlist in the search order so it will be searched
+\ before the FORTH-WORDLIST.  To set the search order, put the
+\ wids on the stack in reverse order (last one listed is seached
+\ first), then the number of wids, and then SET-ORDER.
+FORTH-WORDLIST MY-WORDLIST 2 set-order
+
+: new-word s" This word is in MY-WORDLIST"
+
+\ Go back to compiling into the FORTH-WORDLIST.
+FORTH-WORDLIST set-current
+----
+
 === Native Compiling
 
 As the name says, subroutine threaded code encodes the words as a series of
