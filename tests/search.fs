@@ -5,22 +5,6 @@ testing wordlist definitions forth-wordlist search-wordlist find
 decimal
 marker search_tests
 
-
-\ OPTIONAL search-order words needed for some tests.
-: ONLY forth-wordlist 1 set-order ;
-: (wordlist) ( wid "<name>" -- ; )
-   CREATE ,
-   DOES>
-     @ >R
-     GET-ORDER NIP
-     R> SWAP SET-ORDER
-;
-FORTH-WORDLIST (wordlist) FORTH 
-: ALSO ( -- )
-   GET-ORDER OVER SWAP 1+ SET-ORDER
-;
-: PREVIOUS ( -- ) GET-ORDER NIP 1- SET-ORDER ; 
-
 \ Set the wordlists to a known state to start.
 forth-wordlist 1 set-order
 forth-wordlist set-current
