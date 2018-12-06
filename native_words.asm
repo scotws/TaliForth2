@@ -10331,7 +10331,7 @@ z_line_test:    rts
         
 ; We're only adding NOP at the moment to test wordlists.
 ; ## NOP ( -- ) "Compile an assembly NOP instruction"
-; ## "nop"  auto  Tali Assembler
+; ## "nop"  coded  Tali Assembler
 xt_nop:        
                 lda #$EA        ; NOP
                 jsr cmpl_a
