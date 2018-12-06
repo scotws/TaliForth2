@@ -2640,7 +2640,7 @@ z_defer:        rts
 
         
 ; ## DEFINITIONS ( -- ) "Make first wordlist in search order the current wordlist"
-; ## "definitions" tested ANS search
+; ## "definitions" auto ANS search
 xt_definitions:
                 ldy #search_order_offset
                 lda (up),y
@@ -3766,7 +3766,7 @@ z_fill:         rts
 
         
 ; ## FORTH_WORDLIST ( -- u ) "WID for the Forth Wordlist"
-; ## "forth-wordlist"  tested  ANS search
+; ## "forth-wordlist"  auto  ANS search
         ; """https://forth-standard.org/standard/search/FORTH-WORDLIST"""
 xt_forth_wordlist:        
                 dex             ; The WID for Forth is 0.
@@ -4093,7 +4093,7 @@ _have_string:
                 iny
                 lda (up),y
                 sta tmp1+1
-        
+
                 lda 2,x                 ; Address of mystery string
                 sta tmp2
                 lda 3,x
@@ -4284,7 +4284,7 @@ z_fm_slash_mod: rts
 
 
 ; ## GET_CURRENT ( -- wid ) "Get the id of the compilation wordlist"
-; ## "get-current" tested ANS search
+; ## "get-current" auto ANS search
         ; """https://forth-standard.org/standard/search/GET-CURRENT"""
 .scope
 xt_get_current:
@@ -4304,7 +4304,7 @@ z_get_current:  rts
 .scend        
 
 ; ## GET_ORDER ( -- wid_n .. wid_1 n) "Get the current search order"
-; ## "get-order" tested ANS search
+; ## "get-order" auto ANS search
         ; """https://forth-standard.org/standard/search/GET-ORDER"""
 .scope
 xt_get_order:
@@ -6964,7 +6964,7 @@ _Digit:
 
 
 ; ## SEARCH_WORDLIST ( caddr u wid -- 0 | xt 1 | xt -1) "Search for a word in a wordlist"
-; ## "search_wordlist" tested ANS search
+; ## "search_wordlist" auto ANS search
         ; """https://forth-standard.org/standard/search/SEARCH_WORDLIST"""
 .scope
 xt_search_wordlist:
@@ -7181,7 +7181,7 @@ z_search_wordlist:
         
         
 ; ## SET_CURRENT ( wid -- ) "Set the compilation wordlist"
-; ## "set-current" tested ANS search
+; ## "set-current" auto ANS search
         ; """https://forth-standard.org/standard/search/SET-CURRENT"""
 .scope
 xt_set_current:
@@ -7205,7 +7205,7 @@ z_set_current:  rts
 
 
 ; ## SET_ORDER ( wid_n .. wid_1 n -- ) "Set the current search order"
-; ## "set-order" tested ANS search
+; ## "set-order" auto ANS search
         ; """https://forth-standard.org/standard/search/SET-ORDER"""
 .scope
 xt_set_order:
@@ -9913,7 +9913,7 @@ z_word:         rts
 .scend
 
 ; ## WORDLIST ( -- wid ) "Create new wordlist (from pool of 8)"
-; ## "wordlist" tested ANS search
+; ## "wordlist" auto ANS search
         ; """https://forth-standard.org/standard/search/WORDLIST"""
 .scope
 xt_wordlist:

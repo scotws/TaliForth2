@@ -2711,6 +2711,7 @@ T{ c"x"   FIND -> c"x"   0 }T  ok
   ok
   ok
 search_tests  ok
+  ok
  ( Running test 'user' from file 'user.fs' )  ok
 \ ------------------------------------------------------------------------  ok
   ok

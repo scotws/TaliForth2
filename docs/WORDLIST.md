@@ -60,7 +60,7 @@ RTS instruction at the end of each word.
 | DABS | `dabs` | ANS double | 34 | **auto** |
 | DECIMAL | `decimal` | ANS core | 6 | **auto** |
 | DEFER | `defer` | ANS core ext | 50 | **auto** |
-| DEFINITIONS | `definitions` | ANS search | 16 | tested |
+| DEFINITIONS | `definitions` | ANS search | 16 | **auto** |
 | DEPTH | `depth` | ANS core | 14 | **auto** |
 | DIGIT_QUESTION | `digit?` | Tali Forth | 56 | **auto** |
 | DISASM | `disasm` | Tali Forth | 10 | tested |
@@ -82,7 +82,7 @@ RTS instruction at the end of each word.
 | BLANK | `blank` | ANS string | 86 | **auto** |
 | ERASE | `erase` | ANS core ext | 76 | **auto** |
 | FILL | `fill` | ANS core | 70 | **auto** |
-| FORTH_WORDLIST | `forth-wordlist` | ANS search | 6 | tested |
+| FORTH_WORDLIST | `forth-wordlist` | ANS search | 6 | **auto** |
 | EVALUATE | `evaluate` | ANS core | 100 | **auto** |
 | EXECUTE | `execute` | ANS core | 10 | **auto** |
 | EXIT | `exit` | ANS core | 1 | **auto** |
@@ -91,8 +91,8 @@ RTS instruction at the end of each word.
 | FIND | `find` | ANS core | 75 | **auto** |
 | FIND_NAME | `find-name` | Gforth | 176 | **auto** |
 | FM_SLASH_MOD | `fm/mod` | ANS core | 58 | **auto** |
-| GET_CURRENT | `get-current` | ANS search | 13 | tested |
-| GET_ORDER | `get-order` | ANS search | 46 | tested |
+| GET_CURRENT | `get-current` | ANS search | 13 | **auto** |
+| GET_ORDER | `get-order` | ANS search | 46 | **auto** |
 | GREATER_THAN | `>` | ANS core | 24 | **auto** |
 | HERE | `here` | ANS core | 10 | **auto** |
 | HEX | `hex` | ANS core ext | 6 | **auto** |
@@ -159,9 +159,9 @@ RTS instruction at the end of each word.
 | ROT | `rot` | ANS core | 31 | **auto** |
 | RSHIFT | `rshift` | ANS core | 23 | **auto** |
 | S_BACKSLASH_QUOTE | `s\"` | ANS core | 9 | **auto** |
-| SEARCH_WORDLIST | `search_wordlist` | ANS search | 228 | tested |
-| SET_CURRENT | `set-current` | ANS search | 20 | tested |
-| SET_ORDER | `set-order` | ANS search | 59 | tested |
+| SEARCH_WORDLIST | `search_wordlist` | ANS search | 228 | **auto** |
+| SET_CURRENT | `set-current` | ANS search | 20 | **auto** |
+| SET_ORDER | `set-order` | ANS search | 59 | **auto** |
 | S_QUOTE | `s"` | ANS core | 348 | **auto** |
 | S_TO_D | `s>d` | ANS core | 21 | **auto** |
 | SCR | `scr` | ANS block ext | 15 | **auto** |
@@ -218,7 +218,7 @@ RTS instruction at the end of each word.
 | VARIABLE | `variable` | ANS core | 24 | **auto** |
 | WITHIN | `within` | ANS core ext | 25 | **auto** |
 | WORD | `word` | ANS core | 73 | **auto** |
-| WORDLIST | `wordlist` | ANS search | 22 | tested |
+| WORDLIST | `wordlist` | ANS search | 22 | **auto** |
 | WORDS | `words` | ANS tools | 92 | tested |
 | WORDSIZE | `wordsize` | Tali Forth | 36 | **auto** |
 | XOR | `xor` | ANS core | 21 | **auto** |
@@ -232,6 +232,6 @@ RTS instruction at the end of each word.
 | NOP | `nop` | Tali Assembler | 5 | *coded* |
 
 Found **223** native words in `native_words.asm`.
-Of those, **182** were automatically tested and
+Of those, **190** were automatically tested and
           **3** are not marked as tested at all.
 
