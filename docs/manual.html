@@ -473,6 +473,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_booting">Booting</a></li>
 <li><a href="#_command_line_history">Command-Line History</a></li>
 <li><a href="#_words">Words</a></li>
+<li><a href="#_wordlists_and_search_order">Wordlists and Search Order</a></li>
 <li><a href="#_native_compiling">Native Compiling</a></li>
 <li><a href="#_underflow_detection">Underflow Detection</a></li>
 <li><a href="#_restarting">Restarting</a></li>
@@ -1454,6 +1455,62 @@ size in bytes. Used to help tune native compiling.</p>
 </td>
 </tr>
 </table>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_wordlists_and_search_order">Wordlists and Search Order</h3>
+<div class="paragraph">
+<p>Tali Forth implements the optional Search-Order words, including the extended
+words.  These words can be used to hide certain words or to rearrange the order
+the words are searched in, allowing configurable substitution in the case of
+words that have the same name but live in different wordlists.</p>
+</div>
+<div class="paragraph">
+<p>On startup, only the FORTH-WORDLIST is in the search order, so only those words
+will be found.  Tali also comes with an EDITOR-WORDLIST and an
+ASSEMBLER-WORDLIST, however those are not fully populated (mostly empty would be
+a better description of the current situation).  Room for 8 user wordlists is
+available, and the search order can also hold 8 wordlist identifiers. See
+<a href="https://forth-standard.org/standard/search" class="bare">https://forth-standard.org/standard/search</a> for more information on wordlists and
+the search order.</p>
+</div>
+<div class="paragraph">
+<p>The WORDLIST word will create a new wordlist (or print an error message if all 8
+user wordlists have already been created).  It puts the wordlist identifer (wid)
+on the stack.  This is simply a number that uniquely identifes the wordlist, and
+it&#8217;s common practice to give it a name rather than use the number directly.  An
+example might look like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>wordlist constant MY-WORDLIST</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>While this creates a new wordlist and gives it a name, the wordlist isn&#8217;t
+currently set up to be used.  When Tali starts, only the FORTH-WORDLIST is set
+up in the search order and all compilation of new words goes into the
+FORTH-WORDLIST.  After creating a new wordlist, you need to set it up for new
+words to be compiled to it using SET-CURRENT and you need to add it to the
+search order using SET-ORDER if you want the new words to be found.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>\ Set up the new wordlist as the current (compilation) wordlist
+\ New words are always put in the current wordlist.
+MY-WORDLIST set-current
+
+\ Put this wordlist in the search order so it will be searched
+\ before the FORTH-WORDLIST.  To set the search order, put the
+\ wids on the stack in reverse order (last one listed is seached
+\ first), then the number of wids, and then SET-ORDER.
+FORTH-WORDLIST MY-WORDLIST 2 set-order
+
+: new-word s" This word is in MY-WORDLIST"
+
+\ Go back to compiling into the FORTH-WORDLIST.
+FORTH-WORDLIST set-current</pre>
 </div>
 </div>
 </div>
