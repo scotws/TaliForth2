@@ -38,7 +38,7 @@
 \ are slow, these can stay high-level for the moment. However, in this
 \ state they don't check for underflow. Based on
 \ https://github.com/philburk/pforth/blob/master/fth/numberio.fth
-        : u.r >r 0 <# #s #> r> over - spaces type ;
+\        : u.r >r 0 <# #s #> r> over - spaces type ;
         : .r >r dup abs 0 <# #s rot sign #> r> over - spaces type ;
         : ud. <# #s #> type space ;
         : ud.r >r <# #s #> r> over - spaces type ;
@@ -183,19 +183,22 @@ decimal
 ( Simple Editor for screens /blocks )
 
 ( List the current screen)
-: L  ( - )
-    scr @ block                  ( Load the screen         )
-    cr ." Screen #" scr @ 4 u.r  ( Print the screen number )
-    16 0 do
-        cr i 2 u.r space         ( Print the line number   )
-        dup i 64 * + 64 type     ( Print the line          )
-    loop cr drop ;
+\ : L  ( - )
+\     scr @ block                  ( Load the screen         )
+\     cr ." Screen #" scr @ 4 u.r  ( Print the screen number )
+\     16 0 do
+\         cr i 2 u.r space         ( Print the line number   )
+\         dup i 64 * + 64 type     ( Print the line          )
+\     loop cr drop ;
 
+\ LIST is made using L from the editor wordset.
+forth-wordlist editor-wordlist 2 set-order
 ( List a given screen )
 : list  ( scr# - )
     scr ! ( Save the screen number )
     L ;   ( Print the screen       )
-
+\ Go back to just the forth wordset.
+forth-wordlist 1 set-order
 \ ===============================================================
 \ BLOCK Add-ons
 

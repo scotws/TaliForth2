@@ -9910,6 +9910,32 @@ xt_u_dot:
 z_u_dot:        rts 
 .scend
 
+
+; ## U_DOT_R ( u u -- ) "Print TOS as unsigned number with fixed with"
+; ## "u."  auto  ANS core ext
+        ; """https://forth-standard.org/standard/core/UDotR"""
+
+.scope
+xt_u_dot_r:         
+                cpx #dsp0-3
+                bmi +
+                jmp underflow
+*
+                jsr xt_to_r
+                jsr xt_zero
+                jsr xt_less_number_sign
+                jsr xt_number_sign_s
+                jsr xt_number_sign_greater
+                jsr xt_r_from
+                jsr xt_over
+                jsr xt_minus
+                jsr xt_spaces
+                jsr xt_type
+
+z_u_dot_r:      rts 
+.scend
+        
+        
 ; ## U_GREATER_THAN ( n m -- f ) "Return true if NOS > TOS (unsigned)"
 ; ## "u>"  auto  ANS core ext
         ; """https://forth-standard.org/standard/core/Umore"""
@@ -10727,25 +10753,96 @@ z_zero_unequal: rts
 ; ==========================================================
 ; EDITOR words        
 
-; TODO: Put LINE here.
-        
-; We can't really add LINE because it depends on BLOCK and that hasn't
-; been brought into native-words yet.  For now, we'll add some dummy
-; words.
-; ## LINE_TEST ( line# -- addr ) "A test word in the editor wordlist"
-; ## "line-test"  coded  Tali Editor
+; ## L ( -- ) "List the current scren"
+; ## "l"  tested  Tali Editor
 .scope
-xt_line_test:
-                cpx #dsp0-1
-                bmi +
-                jmp underflow
-*
-                ; For now, we'll just double the given number.
-                ; That will allow us to test.
-                jsr xt_dup
-                jsr xt_plus
+xt_l:
+                ; Load the current screen
+                dex             ; Put SCR on the stack.
+                dex
+                ldy #scr_offset
+                lda (up),y
+                sta 0,x
+                iny
+                lda (up),y
+                sta 1,x
+                jsr xt_block    ; Get the current screen.
 
-z_line_test:    rts
+                jsr xt_cr
+
+                ; Print the screen number.
+                ; We're using sliteral, so we need to set up the
+                ; appropriate data structure (see sliteral)
+                bra _after_screen_msg
+_screen_msg:        
+.byte "Screen #"
+_after_screen_msg:
+                jsr sliteral_runtime
+.word _screen_msg, _after_screen_msg-_screen_msg
+                jsr xt_type
+
+                ; Put the screen number and printed size for u.r on the stack.
+                jsr xt_scr
+                jsr xt_fetch
+                dex
+                dex
+                lda #4
+                sta 0,x
+                stz 1,x
+                jsr xt_u_dot_r
+
+                ; The address of the buffer is currently on the stack.
+                ; Print 64 chars at a time.  TYPE uses tmp1, so we'll
+                ; keep track of the line number in tmp3.
+                stz tmp3
+_line_loop:
+                jsr xt_cr
+                ; Print the line number (2-space fixed width)
+                dex
+                dex
+                dex
+                dex
+                stz 3,x
+                lda tmp3
+                sta 2,x
+                stz 1,x
+                lda #2
+                sta 0,x
+                jsr xt_u_dot_r
+                jsr xt_space
+
+                ; Print one line using the address on the stack.
+                jsr xt_dup
+                dex
+                dex
+                lda #64
+                sta 0,x
+                stz 1,x
+                jsr xt_type
+
+                ; Add 64 to the address on the stack to move to the next line.
+                clc
+                lda #64
+                adc 0,x
+                sta 0,x
+                lda 1,x
+                adc #0      ; Add carry
+                sta 1,x
+
+                ; Increment the line number (held in tmp3)
+                inc tmp3
+
+                ; See if we are done.
+                lda tmp3
+                cmp #16
+                bne _line_loop
+
+                jsr xt_cr
+                ; Drop the address on the stack.
+                inx
+                inx
+                
+z_l:            rts
 .scend
 
 

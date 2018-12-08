@@ -1122,9 +1122,14 @@ nt_question:
         .word nt_false, xt_question, z_question
         .byte "?"
 
+nt_u_dot_r:     
+        .byte 3, UF
+        .word nt_question, xt_u_dot_r, z_u_dot_r
+        .byte "u.r"
+        
 nt_u_dot:
         .byte 2, UF
-        .word nt_question, xt_u_dot, z_u_dot
+        .word nt_u_dot_r, xt_u_dot, z_u_dot
         .byte "u."
 
 nt_dot:
@@ -1241,10 +1246,10 @@ nt_drop:
 
 editor_dictionary_start:
 nt_line:
-        .byte 9, 0
+        .byte 1, 0
         .word 0000      ; End of the editor dictionary
-        .word xt_line_test, z_line_test
-        .byte "line-test"
+        .word xt_l, z_l
+        .byte "l"
         
 ; END of EDITOR-WORDLIST
 
