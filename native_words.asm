@@ -4040,6 +4040,15 @@ xt_forth_wordlist:
 z_forth_wordlist:
                 rts
 
+
+; This is a special jsr target to skip the zeroing of BLK at the beginning
+; of evaluate.  It's used by LOAD to allow setting BLK while the block is
+; being evaluated.  Evaluate's normal behavior is to zero BLK.
+load_evaluate:
+                ; Set a flag (using tmp1) to not zero BLK
+                lda #1
+                sta tmp1
+                bra load_evaluate_start
         
 ; ## EVALUATE ( addr u -- ) "Execute a string"
 ; ## "evaluate"  auto  ANS core
@@ -4057,6 +4066,11 @@ xt_evaluate:
                 bmi +
                 jmp underflow
 *
+
+                ; Clear the flag to zero BLK.  Only LOAD will set the flag,
+                ; and will set the block number.
+                stz tmp1
+        
                 ; If u is zero (which can happen a lot for the user-defined
                 ; words), just leave again
                 lda 0,x
@@ -4069,7 +4083,30 @@ xt_evaluate:
                 inx
 
                 bra _done
+
+; Special entry point for LOAD to bypass the zeroing of BLK.        
+load_evaluate_start:  
 _got_work:
+                ; Save the current value of BLK on the return stack.
+                ldy #blk_offset+1
+                lda (up),y
+                pha
+                dey
+                lda (up),y
+                pha
+
+                ; See if we should zero BLK.
+                lda tmp1
+                bne _nozero
+        
+                ; Set BLK to zero.
+                ; lda #0        ; A is already zero from loading tmp1
+                sta (up),y
+                iny
+                sta (up),y
+_nozero:        
+        
+        
                 ; We follow pforth's example of pushing SOURCE, SOURCE-ID,
                 ; and >IN to the Return Stack. All go MSB first
                 lda toin+1      ; >IN
@@ -4139,7 +4176,15 @@ _got_work:
                 sta toin
                 pla
                 sta toin+1
-_done:
+
+                ; Restore BLK from the return stack.
+                ldy #blk_offset
+                pla
+                sta (up),y
+                iny
+                pla
+                sta (up),y
+_done:  
 z_evaluate:     rts
 .scend
 
@@ -5147,6 +5192,76 @@ literal_runtime:
 .scend
 
 
+; ## LOAD ( scr# -- ) "Load the Forth code in a screen/block"
+; ## "load"  auto  ANS block
+        ; """https://forth-standard.org/standard/block/LOAD
+        ; Note: LOAD current works because there is only one buffer.
+        ; if/when multiple buffers are supported, we'll have to deal
+        ; with the fact that it might re-load the old block into a
+        ; different buffer.
+        ; """
+.scope        
+xt_load:
+                ; Save the current value of BLK on the return stack.
+                ldy #blk_offset+1
+                lda (up),y
+                pha
+                dey
+                lda (up),y
+                pha
+                ; Set BLK to the given block/screen number.
+;                ldy #blk_offset
+                lda 0,x
+                sta (up),y
+                iny
+                lda 1,x
+                sta (up),y
+                ; Load that block into a buffer
+                jsr xt_block
+                ; Put 1024 on the stack for the screen length.
+                dex
+                dex
+                lda #4
+                sta 1,x
+                stz 0,x
+
+                ; Jump to a special evluate target. This bypasses the underflow
+                ; check and the saving and zeroing of BLK.
+                jsr load_evaluate
+
+                ; Restore the value of BLK from before the LOAD command.
+                ldy #blk_offset
+                pla
+                sta (up),y
+                iny
+                pla
+                sta (up),y
+           
+                ; If BLK is not zero, read it back into the buffer.
+                ; A still has MSB
+                dey
+                ora (up),y
+                beq _done
+
+                ; The block needs to be read back into the buffer.
+                dex
+                dex
+                ldy #blk_offset
+                lda (up),y
+                sta 0,x
+                iny
+                lda (up),y
+                sta 1,x
+                jsr xt_block
+                ; Drop the buffer address.
+                inx
+                inx
+        
+_done:  
+z_load:         rts
+.scend        
+
+        
 ; ## LOOP ( -- ) "Finish loop construct"
 ; ## "loop"  auto  ANS core
         ; """https://forth-standard.org/standard/core/LOOP

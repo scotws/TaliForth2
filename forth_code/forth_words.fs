@@ -153,30 +153,30 @@ decimal
 \     1 buffstatus !
 \     blkbuffer ( return block buffer address ) ;
     
-: empty-buffers ( -- ) 0 buffstatus ! ;
+\ : empty-buffers ( -- ) 0 buffstatus ! ;
 
-: flush ( -- ) save-buffers empty-buffers ;
+\ : flush ( -- ) save-buffers empty-buffers ;
 
 \ Note: LOAD currently works because there is only one buffer.
 \ if/when multiple buffers are supported, we'll have to deal
 \ with the fact that it might re-load the old block into a
 \ different buffer.
-: load ( scr# - )
-  blk @ >r                  ( We only need to save BLK     )
-                            ( - evaluate saves the rest    )
-  dup blk !                 ( Set BLK to the new block     )
+\ : load ( scr# - )
+\   blk @ >r                  ( We only need to save BLK     )
+\                             ( - evaluate saves the rest    )
+\   dup blk !                 ( Set BLK to the new block     )
     
-  block                     ( Load the block into a buffer )
-  1024 evaluate             ( Evaluate the entire block    )
+\   block                     ( Load the block into a buffer )
+\   1024 evaluate             ( Evaluate the entire block    )
 
-  r> dup blk !              ( Restore the previous block   ) 
-  ?dup if block drop then ; ( and read it back in if not 0 )
+\   r> dup blk !              ( Restore the previous block   ) 
+\   ?dup if block drop then ; ( and read it back in if not 0 )
 
 : thru ( scr# scr# - ) 1+ swap ?do i load loop ;
 
 \ The standard says to extend EVALUATE to include storing a 0
 \ in BLK.  I'm also restoring the previous value when done.
-: evaluate blk @ >r 0 blk ! evaluate r> blk ! ;
+\ : evaluate blk @ >r 0 blk ! evaluate r> blk ! ;
 
 \ ===============================================================
 \ List ( beginnings of editor )

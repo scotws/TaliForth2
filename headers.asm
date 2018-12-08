@@ -132,9 +132,19 @@ nt_definitions:
         .word nt_wordlist, xt_definitions, z_definitions
         .byte "definitions"
 
+nt_load:
+        .byte 4, 0
+        .word nt_definitions, xt_load, z_load
+        .byte "load"
+
+nt_flush:
+        .byte 5, 0
+        .word nt_load, xt_flush, z_flush
+        .byte "flush"
+                
 nt_empty_buffers:
         .byte 13, 0
-        .word nt_definitions, xt_empty_buffers, z_empty_buffers
+        .word nt_flush, xt_empty_buffers, z_empty_buffers
         .byte "empty-buffers"
                 
 nt_buffer:
