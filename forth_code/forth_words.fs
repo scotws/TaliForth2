@@ -192,13 +192,13 @@ decimal
 \     loop cr drop ;
 
 \ LIST is made using L from the editor wordset.
-forth-wordlist editor-wordlist 2 set-order
+\ forth-wordlist editor-wordlist 2 set-order
 ( List a given screen )
-: list  ( scr# - )
-    scr ! ( Save the screen number )
-    L ;   ( Print the screen       )
+\ : list  ( scr# - )
+\     scr ! ( Save the screen number )
+\     L ;   ( Print the screen       )
 \ Go back to just the forth wordset.
-forth-wordlist 1 set-order
+\ forth-wordlist 1 set-order
 \ ===============================================================
 \ BLOCK Add-ons
 

@@ -5130,6 +5130,24 @@ z_less_than:    rts
 .scend
 
 
+; ## LIST ( scr# -- ) "List the given screen"
+; ## "list"  tested  ANS block ext
+.scope
+xt_list:
+                cpx #dsp0-1
+                bmi +
+                jmp underflow
+*
+                ; Save the screen number in SCR
+                jsr xt_scr
+                jsr xt_store
+                ; Use L from the editor-wordlist to display the screen.
+                jsr xt_l
+z_list:         rts
+.scend
+        
+        
+
 ; ## LITERAL ( n -- ) "Store TOS to be push on stack during runtime"
 ; ## "literal"  auto  ANS core
         ; """https://forth-standard.org/standard/core/LITERAL
@@ -10753,7 +10771,7 @@ z_zero_unequal: rts
 ; ==========================================================
 ; EDITOR words        
 
-; ## L ( -- ) "List the current scren"
+; ## L ( -- ) "List the current screen"
 ; ## "l"  tested  Tali Editor
 .scope
 xt_l:
