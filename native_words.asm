@@ -1316,6 +1316,53 @@ xt_buffblocknum:
 
 z_buffblocknum: rts
 
+        
+; ## BUFFER ( u -- a-addr ) "Get a buffer for a block"
+; ## "buffer"  auto  ANS block
+        ; """https://forth-standard.org/standard/block/BUFFER"""
+.scope        
+xt_buffer:
+                ; Check the buffer status
+                ldy #buffstatus_offset
+                lda (up),y      ; Only bits 0 and 1 are used, so only
+                cmp #3          ; LSB is needed.
+                bne _buffer_available ; Unused or not dirty = available
+        
+                ; We need to save the block.
+                jsr xt_blkbuffer
+                jsr xt_buffblocknum
+                jsr xt_fetch
+                jsr xt_block_write
+
+_buffer_available:
+                ; Save the block number.
+                ldy #buffblocknum_offset
+                lda 0,x
+                sta (up),y
+                iny
+                lda 1,x
+                sta (up),y
+        
+                ; Mark the buffer as clean and in-use.
+                lda #1
+                ldy #buffstatus_offset
+                sta (up),y
+
+_done:  
+                ; Return the buffer address.
+                ldy #blkbuffer_offset
+                lda (up),y
+                sta 0,x
+                iny
+                lda (up),y
+                sta 1,x
+
+                
+z_buffer:       rts
+.scend        
+
+        
+        
 ; ## BUFFER_COLON ( u "<name>" -- ; -- addr ) "Create an uninitialized buffer"
 ; ## "buffer:"  auto  ANS core ext
                 ; """https://forth-standard.org/standard/core/BUFFERColon

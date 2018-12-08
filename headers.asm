@@ -132,9 +132,14 @@ nt_definitions:
         .word nt_wordlist, xt_definitions, z_definitions
         .byte "definitions"
 
+nt_buffer:
+        .byte 6, 0
+        .word nt_definitions, xt_buffer, z_buffer
+        .byte "buffer"
+                
 nt_update:
         .byte 6, 0
-        .word nt_definitions, xt_update, z_update
+        .word nt_buffer, xt_update, z_update
         .byte "update"
                 
 nt_block:

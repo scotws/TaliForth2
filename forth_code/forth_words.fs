@@ -142,16 +142,16 @@ decimal
 
 \ : update ( -- ) buffstatus @ 2 or buffstatus ! ;
 
-: buffer ( u -- addr ) ( blocknum -- buffer_addr )
-    \ Similar to BLOCK, only it doesn't read.
-    buffstatus @ 3 = if
-        ( buffer is in use and dirty - flush buffer to storage )
-        blkbuffer buffblocknum @ block-write
-    then
-    buffblocknum !
-    ( Mark buffer as in-use and clean )
-    1 buffstatus !
-    blkbuffer ( return block buffer address ) ;
+\ : buffer ( u -- addr ) ( blocknum -- buffer_addr )
+\     \ Similar to BLOCK, only it doesn't read.
+\     buffstatus @ 3 = if
+\         ( buffer is in use and dirty - flush buffer to storage )
+\         blkbuffer buffblocknum @ block-write
+\     then
+\     buffblocknum !
+\     ( Mark buffer as in-use and clean )
+\     1 buffstatus !
+\     blkbuffer ( return block buffer address ) ;
     
 : empty-buffers ( -- ) 0 buffstatus ! ;
 
