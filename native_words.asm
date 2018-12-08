@@ -4014,6 +4014,19 @@ z_erase:
 z_fill:         rts
 .scend
 
+
+; ## FLUSH ( -- ) "Save dirty buffers and empty buffers"
+; ## "flush"  auto  ANS block
+        ; """https://forth-standard.org/standard/block/FLUSH"""
+xt_flush:
+                jsr xt_save_buffers
+                ; Set the buffer status to empty.
+                ldy #buffstatus_offset
+                lda #0
+                sta (up),y      ; Only LSB is used.
+z_flush:
+                rts
+        
         
 ; ## FORTH_WORDLIST ( -- u ) "WID for the Forth Wordlist"
 ; ## "forth-wordlist"  auto  ANS search
