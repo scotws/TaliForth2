@@ -1208,6 +1208,17 @@ xt_buffblocknum:
 
 z_buffblocknum: rts
 
+; ## BUFFER_COLON ( u "<name>" -- ; -- addr ) "Create an uninitialized buffer"
+; ## "buffer:"  auto  ANS core ext
+                ; """https://forth-standard.org/standard/core/BUFFERColon
+                ; Create a buffer of size u that puts its address on the stack
+                ; when its name is used.
+                ; """
+xt_buffer_colon:
+                jsr xt_create
+                jsr xt_allot
+z_buffer_colon: rts
+                
                 
 ; ## BUFFSTATUS ( -- addr ) "Push address of variable holding buffer status"
 ; ## "buffstatus"  auto  Tali block

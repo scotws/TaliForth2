@@ -157,9 +157,14 @@ nt_buffstatus:
         .word nt_buffblocknum, xt_buffstatus, z_buffstatus
         .byte "buffstatus"
 
+nt_buffer_colon:
+        .byte 7, 0
+        .word nt_buffstatus, xt_buffer_colon, z_buffer_colon
+        .byte "buffer:"
+
 nt_useraddr:
         .byte 8, 0
-        .word nt_buffstatus, xt_useraddr, z_useraddr
+        .word nt_buffer_colon, xt_useraddr, z_useraddr
         .byte "useraddr"
 
 nt_word:

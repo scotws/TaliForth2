@@ -86,7 +86,7 @@ decimal
 \ want and allocate them at the end of available RAM.
 
 \ This is reference ANS implementation for buffer:.        
-: buffer: ( u "<name> -- ; -- addr )  create allot ;
+\ : buffer: ( u "<name> -- ; -- addr )  create allot ;
 
 \ 1024 buffer: blkbuffer ( Single 1024 byte buffer )
 \ variable buffblocknum  0 buffblocknum !
