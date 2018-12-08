@@ -9986,6 +9986,19 @@ xt_unused:
 z_unused:       rts
 
 
+; ## UPDATE ( -- ) "Mark current block as dirty"
+; ## "update"  auto  ANS block
+        ; """https://forth-standard.org/standard/block/UPDATE"""
+xt_update:
+                ; Turn on the dirty bit.
+                ldy #buffstatus_offset
+                lda (up),y
+                ora #2          ; Turn on dirty flag (bit 2)
+                sta (up),y
+
+z_update:       rts
+        
+
 ; ## USERADDR ( -- addr ) "Push address of base address of user variables"
 ; ## "useraddr"  tested  Tali Forth
 xt_useraddr:        

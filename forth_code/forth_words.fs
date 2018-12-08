@@ -140,7 +140,7 @@ decimal
 \   1 buffstatus !
 \   blkbuffer ( return block buffer address ) ;
 
-: update ( -- ) buffstatus @ 2 or buffstatus ! ;
+\ : update ( -- ) buffstatus @ 2 or buffstatus ! ;
 
 : buffer ( u -- addr ) ( blocknum -- buffer_addr )
     \ Similar to BLOCK, only it doesn't read.
