@@ -7760,6 +7760,33 @@ _done:
 z_s_to_d:       rts
 .scend
 
+
+; ## SAVE_BUFFERS ( -- ) "Save all dirty buffers to storage"
+; ## "save-buffers"  auto  ANS block
+        ; """https://forth-standard.org/standard/block/SAVE-BUFFERS"""
+.scope        
+xt_save_buffers:
+                ; Check the buffer status
+                ldy #buffstatus_offset
+                lda (up),y      ; Only bits 0 and 1 are used, so only
+                cmp #3          ; LSB is needed.
+                bne _done       ; Either not used or not dirty = done!
+        
+                ; We need to save the block.
+                jsr xt_blkbuffer
+                jsr xt_buffblocknum
+                jsr xt_fetch
+                jsr xt_block_write
+                ; Mark the buffer as clean now.
+                lda #1
+                ldy #buffstatus_offset
+                sta (up),y
+                
+_done:  
+z_save_buffers: rts
+.scend        
+        
+
 ; ## SCR ( -- addr ) "Push address of variable holding last screen listed"
 ; ## "scr"  auto  ANS block ext
         ; """https://forth-standard.org/standard/block/SCR"""

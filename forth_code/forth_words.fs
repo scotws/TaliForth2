@@ -112,13 +112,13 @@ decimal
 \ ' block-words-deferred is block-write   
     
 
-: save-buffers ( -- )
-    buffstatus @ 3 = if
-        ( buffer is in use and dirty - flush buffer to storage )
-        blkbuffer buffblocknum @ block-write
-        ( mark buffer as clean )
-        1 buffstatus !
-    then ;
+\ : save-buffers ( -- )
+\     buffstatus @ 3 = if
+\         ( buffer is in use and dirty - flush buffer to storage )
+\         blkbuffer buffblocknum @ block-write
+\         ( mark buffer as clean )
+\         1 buffstatus !
+\     then ;
 
 : block ( u -- addr ) ( blocknum -- buffer_addr )
   ( Check for request for the current block )
