@@ -1103,6 +1103,38 @@ xt_blkbuffer:
 z_blkbuffer:    rts                
                 
 
+; ## BLOCK_READ ( addr u -- ) "Read a block from storage (deferred word)"
+; ## "block-read"  auto  Tali block
+        ; """BLOCK-READ is a deferred word that the user needs to override
+        ; with their own version to read a block from storage.
+        ; The stack parameters are ( buffer_address block# -- ).
+        ; """
+xt_block_read:
+                jsr dodefer
+.word           xt_block_word_deferred
+
+z_block_read:    rts                
+
+; This is the default error message the deferred words BLOCK-READ and
+; BLOCK-WRITE start with.  This word is not included in the dictionary.
+xt_block_word_deferred:
+        lda #err_blockdefer
+        jmp error
+z_block_word_deferred:  
+
+; ## BLOCK_WRITE ( addr u -- ) "Write a block to storage (deferred word)"
+; ## "block-write"  auto  Tali block
+        ; """BLOCK-WRITE is a deferred word that the user needs to override
+        ; with their own version to write a block to storage.
+        ; The stack parameters are ( buffer_address block# -- ).
+        ; """
+xt_block_write:
+                jsr dodefer
+.word           xt_block_word_deferred
+
+z_block_write:    rts                
+                
+
 ; ## BOUNDS ( addr u -- addr+u addr ) "Prepare address for looping"
 ; ## "bounds"  auto  Gforth
         ; """http://www.complang.tuwien.ac.at/forth/gforth/Docs-html/Memory-Blocks.html

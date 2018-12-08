@@ -95,21 +95,21 @@ decimal
 \ These deferred words need to be redirected to the user's versions
 \ before any of the BLOCK word set words are used.  Both of these
 \ words take ( buffer_address block# -- )
-defer block-read  ( addr u -- ) 
-defer block-write ( addr u -- ) 
+\ defer block-read  ( addr u -- ) 
+\ defer block-write ( addr u -- ) 
 
 \ Provide a good message if the user tries to use block words before
 \ updating BLOCK-READ or BLOCK-WRITE.
 \ TODO: Provide the user a small RAMDRIVE version instead.
-: block-words-deferred
-    cr ." Please assign deferred words BLOCK-READ and BLOCK-WRITE "
-    ." to your routines, eg. " 
-    cr ." ' myreadroutine IS BLOCK-READ" cr
-    abort
-;
+\ : block-words-deferred
+\    cr ." Please assign deferred words BLOCK-READ and BLOCK-WRITE "
+\    ." to your routines, eg. " 
+\    cr ." ' myreadroutine IS BLOCK-READ" cr
+\    abort
+\ ;
 
-' block-words-deferred is block-read
-' block-words-deferred is block-write   
+\ ' block-words-deferred is block-read
+\ ' block-words-deferred is block-write   
     
 
 : save-buffers ( -- )

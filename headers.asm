@@ -132,9 +132,19 @@ nt_definitions:
         .word nt_wordlist, xt_definitions, z_definitions
         .byte "definitions"
                 
+nt_block_read:
+        .byte 10, HC+NN ; Deferred words need the HC (Code Field) flag.
+        .word nt_definitions, xt_block_read, z_block_read
+        .byte "block-read"
+
+nt_block_write:
+        .byte 11, HC+NN ; Deferred words need the HC (Code Field) flag.
+        .word nt_block_read, xt_block_write, z_block_write
+        .byte "block-write"
+                
 nt_blk:
         .byte 3, 0
-        .word nt_definitions, xt_blk, z_blk
+        .word nt_block_write, xt_blk, z_blk
         .byte "blk"
 
 nt_scr:
