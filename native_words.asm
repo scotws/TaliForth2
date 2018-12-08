@@ -5477,6 +5477,11 @@ _loop:
                 dec 1,x
 *               dec 0,x
 
+                ; Check if there are any characters left.
+                lda 0,x
+                ora 1,x
+                beq _done       ; Count has reached zero - we're done!
+                
                 bra _loop
 
 _done:
