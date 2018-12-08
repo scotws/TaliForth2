@@ -132,9 +132,14 @@ nt_definitions:
         .word nt_wordlist, xt_definitions, z_definitions
         .byte "definitions"
 
+nt_block_ramdrive_init:
+        .byte 19, UF
+        .word nt_definitions, xt_block_ramdrive_init, z_block_ramdrive_init
+        .byte "block-ramdrive-init"
+
 nt_list:
         .byte 4, UF
-        .word nt_definitions, xt_list, z_list
+        .word nt_block_ramdrive_init, xt_list, z_list
         .byte "list"
 
 nt_load:

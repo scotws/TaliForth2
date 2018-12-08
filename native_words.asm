@@ -1177,6 +1177,46 @@ _done:
                 
 z_block:        rts
 .scend        
+
+
+; ## BLOCK_RAMDRIVE_INIT ( u -- ) "Create a ramdrive for blocks"
+; ## "block-ramdrive-init"  auto  Tali block
+        ; """Create a RAM drive, with the given number of
+        ; blocks, in the dictionary along with setting up the block words to
+        ; use it.  The read/write routines do not provide bounds checking.
+        ; Expected use: 4 block-ramdrive-init ( to create blocks 0-3 )
+        ; """
+xt_block_ramdrive_init:
+                cpx #dsp0-1
+                bmi +
+                jmp underflow
+*
+                ; Store the string to run here as a string literal.
+                ; See SLITERAL for the format information.
+                jmp _after_ramdrive_code
+_ramdrive_code:        
+.byte "base @ swap decimal"
+.byte " 1024 *" ; ( Calculate how many bytes are needed for numblocks blocks )
+.byte " dup"    ; ( Save a copy for formatting it at the end )
+.byte " buffer: ramdrive" ; ( Create ramdrive )
+; ( These routines just copy between the buffer and the ramdrive blocks )
+.byte " : block-read-ramdrive"  ; ( addr u -- )
+.byte " ramdrive swap 1024 * + swap 1024 move ;"
+.byte " : block-write-ramdrive" ; ( addr u -- )
+.byte " ramdrive swap 1024 * + 1024 move ;"
+.byte " ' block-read-ramdrive is block-read"
+.byte " ' block-write-ramdrive is block-write"
+.byte " ramdrive swap blank base !"
+_after_ramdrive_code:
+                jsr sliteral_runtime
+.word _ramdrive_code, _after_ramdrive_code-_ramdrive_code
+
+                ; The address and length of the ramdrive code is
+                ; now on the stack.  Call EVALUATE to run it.
+                jsr xt_evaluate
+                
+z_block_ramdrive_init:
+                rts                
         
 
 ; ## BLOCK_READ ( addr u -- ) "Read a block from storage (deferred word)"

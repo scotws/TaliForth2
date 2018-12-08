@@ -207,21 +207,21 @@ decimal
 \ use it.  The read/write routines do not provide bounds checking.
 \ Expected use: 4 block-ramdrive-init ( to create blocks 0-3 )
 
-: block-ramdrive-init ( u -- )
-s" decimal
-  1024 * ( Calculate how many bytes are needed for numblocks blocks )
-  dup    ( Save a copy for formatting it at the end )  
-  buffer: ramdrive ( Create ramdrive )
+\ : block-ramdrive-init ( u -- )
+\ s" decimal
+\   1024 * ( Calculate how many bytes are needed for numblocks blocks )
+\   dup    ( Save a copy for formatting it at the end )  
+\   buffer: ramdrive ( Create ramdrive )
   ( These routines just copy between the buffer and the ramdrive blocks )  
-  : block-read-ramdrive  ( addr u -- ) 
-      ramdrive swap 1024 * + swap 1024 move ; 
-  : block-write-ramdrive ( addr u -- ) 
-      ramdrive swap 1024 * +      1024 move ; 
-  ' block-read-ramdrive  is block-read 
-  ' block-write-ramdrive is block-write 
-  ramdrive swap blank" ( Format with spaces using the calculated size )
-  evaluate  ( Create everything )
-;
+\   : block-read-ramdrive  ( addr u -- ) 
+\       ramdrive swap 1024 * + swap 1024 move ; 
+\   : block-write-ramdrive ( addr u -- ) 
+\       ramdrive swap 1024 * +      1024 move ; 
+\   ' block-read-ramdrive  is block-read 
+\   ' block-write-ramdrive is block-write 
+\   ramdrive swap blank" ( Format with spaces using the calculated size )
+\   evaluate  ( Create everything )
+\ ;
 
 \ ===============================================================
 
