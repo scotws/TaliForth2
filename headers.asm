@@ -142,9 +142,24 @@ nt_scr:
         .word nt_blk, xt_scr, z_scr
         .byte "scr"
 
+nt_blkbuffer:
+        .byte 9, 0
+        .word nt_scr, xt_blkbuffer, z_blkbuffer
+        .byte "blkbuffer"
+
+nt_buffblocknum:
+        .byte 12, 0
+        .word nt_blkbuffer, xt_buffblocknum, z_buffblocknum
+        .byte "buffblocknum"
+
+nt_buffstatus:
+        .byte 10, 0
+        .word nt_buffblocknum, xt_buffstatus, z_buffstatus
+        .byte "buffstatus"
+
 nt_useraddr:
         .byte 8, 0
-        .word nt_scr, xt_useraddr, z_useraddr
+        .word nt_buffstatus, xt_useraddr, z_useraddr
         .byte "useraddr"
 
 nt_word:

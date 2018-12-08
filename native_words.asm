@@ -93,6 +93,7 @@ _zero_user_vars_loop:
 
                 ; Set up the initial dictionary.
                 ; TODO: Load this from a table in ROM
+                ; Wordlists:
                 ldy #current_offset
                 lda #0
                 sta (up),y      ; Set CURRENT to 0 (FORTH-WORDLIST).
@@ -127,7 +128,6 @@ _zero_user_vars_loop:
                 lda #>assembler_dictionary_start
                 sta (up),y
 
-
                 ; Initialize search order list.
                 ldy #num_order_offset
                 lda #1
@@ -142,8 +142,22 @@ _zero_user_vars_loop:
                 iny             ; initial search order.
                 lda #0
                 sta (up),y
-        
 
+                ; Initialize Block buffer
+                ; Use HERE as the buffer address.
+                ldy #blkbuffer_offset
+                lda cp
+                sta (up),y
+                iny
+                lda cp+1
+                sta (up),y
+                ; Reserve 1024 bytes
+                lda #4
+                clc
+                adc cp+1
+                sta cp+1
+                ; END OF USER VAR INITIALIZATION
+        
                 lda #<buffer0   ; input buffer
                 sta cib
                 lda #>buffer0
@@ -1055,15 +1069,38 @@ z_bl:           rts
 ; ## "block"  auto  ANS block
         ; """https://forth-standard.org/standard/block/BLK"""
 xt_blk:
-                ; BLK is at UP + 0
+                ; BLK is at UP + blk_offset
                 dex
                 dex
+                clc
                 lda up
+                adc #blk_offset ; Add offset
                 sta 0,x
                 lda up+1
+                adc #0          ; Adding carry
                 sta 1,x
 
-z_blk:         rts
+z_blk:          rts
+
+
+; ## BLKBUFFER ( -- addr ) "Push address of block buffer"
+; ## "blkbuffer"  auto  Tali block
+xt_blkbuffer:
+                ; blkbuffer address is at UP + blkbuffer_offset.
+                ; Unlike some of the other user variables, we actually
+                ; want to push the address stored here, which will
+                ; point to somewhere outside of the user variables.
+                dex
+                dex
+                ; Put the address on the stack.
+                ldy #blkbuffer_offset
+                lda (up),y
+                sta 0,x
+                iny             ; Move along to the next byte
+                lda (up),y
+                sta 1,x
+
+z_blkbuffer:    rts                
                 
 
 ; ## BOUNDS ( addr u -- addr+u addr ) "Prepare address for looping"
@@ -1154,6 +1191,41 @@ branch_runtime:
                 jmp (tmp1)
 .scend
 
+
+; ## BUFFBLOCKNUM ( -- addr ) "Push address of variable holding block in buffer"
+; ## "buffblocknum"  auto  Tali block
+xt_buffblocknum:
+                ; BUFFBLOCKNUM is at UP + buffblocknum_offset
+                dex
+                dex
+                clc
+                lda up
+                adc #buffblocknum_offset        ; Add offset 
+                sta 0,x
+                lda up+1
+                adc #0                          ; Adding carry
+                sta 1,x
+
+z_buffblocknum: rts
+
+                
+; ## BUFFSTATUS ( -- addr ) "Push address of variable holding buffer status"
+; ## "buffstatus"  auto  Tali block
+xt_buffstatus:
+                ; BUFFSTATUS is at UP + buffstatus_offset
+                dex
+                dex
+                clc
+                lda up
+                adc #buffstatus_offset  ; Add offset 
+                sta 0,x
+                lda up+1
+                adc #0                  ; Adding carry
+                sta 1,x
+
+z_buffstatus: rts
+
+                
 
 ; ## BYE ( -- ) "Break"
 ; ## "bye"  tested  ANS tools ext
@@ -7644,12 +7716,12 @@ z_s_to_d:       rts
 ; ## "scr"  auto  ANS block ext
         ; """https://forth-standard.org/standard/block/SCR"""
 xt_scr:
-                ; SCR is at UP + 2
+                ; SCR is at UP + scr_offset
                 dex
                 dex
                 clc
                 lda up
-                adc #2          ; Add offset
+                adc #scr_offset ; Add offset
                 sta 0,x
                 lda up+1
                 adc #0          ; Adding carry
@@ -9763,7 +9835,7 @@ xt_unused:
 z_unused:       rts
 
 
-; ## USERADDR ( -- addr ) "Push base address of user variables"
+; ## USERADDR ( -- addr ) "Push address of base address of user variables"
 ; ## "useraddr"  tested  Tali Forth
 xt_useraddr:        
                 dex

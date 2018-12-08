@@ -88,9 +88,9 @@ decimal
 \ This is reference ANS implementation for buffer:.        
 : buffer: ( u "<name> -- ; -- addr )  create allot ;
 
-1024 buffer: blkbuffer ( Single 1024 byte buffer )
-variable buffblocknum  0 buffblocknum !
-variable buffstatus  0 buffstatus ! ( bit 0 = used, bit 1 = dirty )
+\ 1024 buffer: blkbuffer ( Single 1024 byte buffer )
+\ variable buffblocknum  0 buffblocknum !
+\ variable buffstatus  0 buffstatus ! ( bit 0 = used, bit 1 = dirty )
 
 \ These deferred words need to be redirected to the user's versions
 \ before any of the BLOCK word set words are used.  Both of these

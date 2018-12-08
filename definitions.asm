@@ -58,9 +58,12 @@
                            ; Bit 1 = Current history buffer (0-7, wraps)
                            ; Bit 0 = Current history buffer lsb
                            ; status+1 is used by ACCEPT to hold history lengths.
+        
 .alias up        user0+60  ; User Pointer (Address of user variables)
+; Block variables                
 .alias blk_offset 0        ; BLK : UP + 0
 .alias scr_offset 2        ; SCR : UP + 2
+; Wordlists                
 .alias current_offset 4    ; CURRENT : UP + 4 (Compilation wordlist)
 .alias num_wordlists_offset 6
                            ; #WORDLISTS : UP + 6
@@ -70,8 +73,12 @@
                            ;          (Number of wordlists in search order)
 .alias search_order_offset 32
                            ; SEARCH-ORDER : UP + 32 to UP + 47
-
 .alias max_wordlists 11
+; Buffer variables
+.alias blkbuffer_offset    48   ; Address of buffer
+.alias buffblocknum_offset 50   ; Block number current in buffer
+.alias buffstatus_offset   52   ; Status of buffer (bit 0 = used, bit 1 = dirty)
+        
                 
 ; Bytes used for variables: 62 ($0000-$003D) 
 ; First usable Data Stack location: $003E (decimal 62) 
