@@ -1103,6 +1103,82 @@ xt_blkbuffer:
 z_blkbuffer:    rts                
                 
 
+; ## BLOCK ( u -- a-addr ) "Fetch a block into a buffer"
+; ## "block"  auto  ANS block
+        ; """https://forth-standard.org/standard/block/BLOCK"""
+.scope        
+xt_block:
+                ; See if the block requested is the same as the one
+                ; we currently have in the buffer.
+                ; Check the LSB.
+                ldy #buffblocknum_offset
+                lda (up),y
+                cmp 0,x
+                bne _not_in_buffer
+                ; Check the MSB.
+                iny
+                lda (up),y
+                cmp 1,x
+                bne _not_in_buffer
+
+                ; The block is in the buffer.  See if the buffer is in use.
+                ldy #buffstatus_offset
+                lda (up),y
+                and #1          ; Check the in-use flag (bit 0)
+                bne _done       ; It's already in the buffer and in use.
+                                ; _done will replace the block# with the
+                                ; buffer address.
+
+_not_in_buffer: 
+
+                ; Check the buffer status
+                ldy #buffstatus_offset
+                lda (up),y      ; Only bits 0 and 1 are used, so only
+                cmp #3          ; LSB is needed.
+                bne _buffer_available ; Unused or not dirty = available
+        
+                ; We need to save the block.
+                jsr xt_blkbuffer
+                jsr xt_buffblocknum
+                jsr xt_fetch
+                jsr xt_block_write
+
+_buffer_available:
+                ; Save the block number.
+                ldy #buffblocknum_offset
+                lda 0,x
+                sta (up),y
+                iny
+                lda 1,x
+                sta (up),y
+                ; Get the requested block.
+                jsr xt_blkbuffer
+                jsr xt_swap
+                jsr xt_block_read
+        
+                ; Mark the buffer as clean and in-use.
+                lda #1
+                ldy #buffstatus_offset
+                sta (up),y
+
+                ; Make room on the stack for the return address.
+                dex
+                dex
+                
+_done:  
+                ; It's in the buffer.  Return the buffer address.
+                ldy #blkbuffer_offset
+                lda (up),y
+                sta 0,x
+                iny
+                lda (up),y
+                sta 1,x
+
+                
+z_block:        rts
+.scend        
+        
+
 ; ## BLOCK_READ ( addr u -- ) "Read a block from storage (deferred word)"
 ; ## "block-read"  auto  Tali block
         ; """BLOCK-READ is a deferred word that the user needs to override

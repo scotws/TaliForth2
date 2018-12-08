@@ -120,25 +120,25 @@ decimal
 \         1 buffstatus !
 \     then ;
 
-: block ( u -- addr ) ( blocknum -- buffer_addr )
-  ( Check for request for the current block )
-  dup buffblocknum @ = if    ( Check if it's already in the buffer)
-      buffstatus @ 1 and if  ( and make sure the buffer is in use )
-          ( It's already in the buffer )
-          drop blkbuffer exit
-      then
-  then
-  ( Check if the current block is in use and dirty )
-  buffstatus @ 3 = if
-    ( buffer is in use and dirty - flush buffer to storage )
-    blkbuffer buffblocknum @ block-write
-  then
-  ( Get the requested block )
-  dup buffblocknum !
-  blkbuffer swap block-read
-  ( Mark buffer as in-use and clean )
-  1 buffstatus !
-  blkbuffer ( return block buffer address ) ;
+\ : block ( u -- addr ) ( blocknum -- buffer_addr )
+\   ( Check for request for the current block )
+\   dup buffblocknum @ = if    ( Check if it's already in the buffer)
+\       buffstatus @ 1 and if  ( and make sure the buffer is in use )
+\           ( It's already in the buffer )
+\           drop blkbuffer exit
+\       then
+\   then
+\   ( Check if the current block is in use and dirty )
+\   buffstatus @ 3 = if
+\     ( buffer is in use and dirty - flush buffer to storage )
+\     blkbuffer buffblocknum @ block-write
+\   then
+\   ( Get the requested block )
+\   dup buffblocknum !
+\   blkbuffer swap block-read
+\   ( Mark buffer as in-use and clean )
+\   1 buffstatus !
+\   blkbuffer ( return block buffer address ) ;
 
 : update ( -- ) buffstatus @ 2 or buffstatus ! ;
 

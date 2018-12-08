@@ -131,10 +131,15 @@ nt_definitions:
         .byte 11, 0
         .word nt_wordlist, xt_definitions, z_definitions
         .byte "definitions"
+
+nt_block:
+        .byte 5, 0
+        .word nt_definitions, xt_block, z_block
+        .byte "block"
                 
 nt_save_buffers:
         .byte 12, 0
-        .word nt_definitions, xt_save_buffers, z_save_buffers
+        .word nt_block, xt_save_buffers, z_save_buffers
         .byte "save-buffers"
                 
 nt_block_read:
