@@ -142,9 +142,14 @@ nt_list:
         .word nt_block_ramdrive_init, xt_list, z_list
         .byte "list"
 
+nt_thru:
+        .byte 4, UF
+        .word nt_list, xt_thru, z_thru
+        .byte "thru"
+        
 nt_load:
-        .byte 4, 0
-        .word nt_list, xt_load, z_load
+        .byte 4, UF
+        .word nt_thru, xt_load, z_load
         .byte "load"
 
 nt_flush:

@@ -76,10 +76,6 @@
 				2drop 2r>            ( addr2+n addr2 )
 				swap - ;
 
-
-\ BLOCK extended word
-: thru ( scr# scr# - ) 1+ swap ?do i load loop ;
-
 \ ===============================================================
 
 \ Extended words for the optional Search-Order wordset.

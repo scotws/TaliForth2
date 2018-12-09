@@ -5172,6 +5172,7 @@ z_less_than:    rts
 
 ; ## LIST ( scr# -- ) "List the given screen"
 ; ## "list"  tested  ANS block ext
+        ; """https://forth-standard.org/standard/block/LIST"""
 .scope
 xt_list:
                 cpx #dsp0-1
@@ -5185,7 +5186,6 @@ xt_list:
                 jsr xt_l
 z_list:         rts
 .scend
-        
         
 
 ; ## LITERAL ( n -- ) "Store TOS to be push on stack during runtime"
@@ -5260,6 +5260,10 @@ literal_runtime:
         ; """
 .scope        
 xt_load:
+                cpx #dsp0-1
+                bmi +
+                jmp underflow
+*
                 ; Save the current value of BLK on the return stack.
                 ldy #blk_offset+1
                 lda (up),y
@@ -9016,6 +9020,88 @@ xt_swap:
 z_swap:         rts
 .scend
 
+
+; ## THRU ( scr# scr# -- ) "Load screens in the given range"
+; ## "list"  tested  ANS block ext
+        ; """https://forth-standard.org/standard/block/THRU"""
+.scope
+xt_thru:
+                cpx #dsp0-3
+                bmi +
+                jmp underflow
+*
+                ; We need to loop here, and can't use the data stack
+                ; because the LOADed screens might use it.  We'll
+                ; need to use the same trick that DO loops use, holding
+                ; the limit and current index on the return stack.
+
+                ; Put the ending screen number on the return stack
+                lda 1,x
+                pha
+                lda 0,x
+                pha
+                inx
+                inx
+_thru_loop:     
+                ; Put the starting screen number on the stack,
+                ; but keep a copy
+                lda 1,x
+                pha
+                lda 0,x
+                pha
+
+                ; Load this screen.
+                jsr xt_load
+
+                ; Get the number and limit back off the stack.  Rather than
+                ; waste time making room on the stack, just use tmp1 and tmp2.
+        
+                ; Get the screen we just loaded.
+                pla
+                sta tmp1
+                pla
+                sta tmp1+1
+                ; Get the ending screen.
+                pla
+                sta tmp2
+                pla
+                sta tmp2+1
+
+                ; See if we just loaded the last screen.
+                ; A already has the MSB of the last screen in it.
+                cmp tmp1+1
+                bne _next_screen
+                lda tmp2        ; Compare the LSB
+                cmp tmp1
+                bne _next_screen
+                bra _done       ; We just did the last screen.
+
+_next_screen:
+                ; Put the ending screen back on the data stack.
+                lda tmp2+1
+                pha
+                lda tmp2
+                pha
+                ; Increment the current screen.
+                inc tmp1
+                bne +
+                inc tmp1+1
+*
+                ; Put the current screen on the stack to prepare for
+                ; the next loop.
+                dex
+                dex
+                lda tmp1
+                sta 0,x
+                lda tmp1+1
+                sta 1,x
+                bra _thru_loop
+                
+                
+_done:  
+z_thru:         rts
+.scend
+        
 
 ; ## TICK ( "name" -- xt ) "Return a word's execution token (xt)"
 ; ## "'"  auto  ANS core
