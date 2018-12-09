@@ -17,21 +17,7 @@ T{ ramdrive teststringlength teststring compare -> 0 }T
 \ We don't have an official editor yet, so bring in just
 \ enough to create some basic screens.
 decimal
-( List the current screen)
-: L  ( - ) 
-    scr @ block                  ( Load the screen )
-    cr ." Screen #" scr @ 4 u.r  ( Print the screen number )
-    16 0 do
-        cr i 2 u.r space       ( Print the line number )
-        dup i 64 * + 64 type     ( Print the line )
-    loop cr drop ;
-
-( List a given screen )
-: list  ( scr# - )
-    scr ! ( Save the screen number)
-    L ;   ( Print the screen )
-
-( Editor, continued )
+( Editor )
 ( line provides the address, in the buffer, of the given line )
 : line  ( line# - c-addr)
     64 *        ( Convert line number to # characters offset )
