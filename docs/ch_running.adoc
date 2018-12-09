@@ -113,9 +113,9 @@ to their own routine for reading 1K blocks into memory from storage.
 block-read-vector:: `( -- addr )` This is the address of the vector
 for block-read.  Save the xt of your word here.
 block-write:: `( addr blk# -- )` This is a vectored word the user can change to point 
+to their own routine for writing 1K blocks from memory to storage.
 block-write-vector:: `( -- addr )` This is the address of the vector
 for block-write.  Save the xt of your word here.
-to their own routine for writing 1K blocks from memory to storage.
 block-ramdrive-init:: `( u -- )` Create a ram drive with the given number of blocks 
 (numbered 0 to (u-1)) to
 allow use of the block words with no additional hardware.  Because the blocks are
