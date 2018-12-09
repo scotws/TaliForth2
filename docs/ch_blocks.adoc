@@ -6,16 +6,18 @@ currently comes with one buffer.
 Before these words can be used, the user needs to write two routines: one for
 reading blocks into RAM and one for writing blocks out from RAM. Both of these
 should have the signature `( addr blk# -- )`. Once these have been written, they
-can be incorporated into the BLOCK word set by changing the deferred words
+can be incorporated into the BLOCK word set by changing the vectors for words
 `block-read` and `block-write`. That might look like:
 
 ----
-' myblockreader IS BLOCK-READ
-' myblockwriter IS BLOCK-WRITE
+' myblockreader BLOCK-READ-VECTOR !
+' myblockwriter BLOCK-WRITE-VECTOR !
 ----
 
-Once these two deferred words have been updated, you can use the block
-words.
+These vectors determine what runs when the words `block-read` and
+`block-write` are used.  Both of these words start with an error
+message asking you to update the vectors.  Once these two vectors have
+been updated, you can use the block words.
 
 If you would like to play with some blocks, but don't have any
 hardware or are running Tali in a simulator, fear not!  Tali has a
@@ -33,4 +35,5 @@ than the number you provide.
 
 Be careful about creating too many blocks as they are 1K each.  It's also worth
 noting that running `block-ramdrive-init` again will create another ramdrive and
-the existing one will be inaccessible while still taking up space in RAM.
+the existing one will be inaccessible while still taking up space in
+RAM.

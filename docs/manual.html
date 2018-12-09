@@ -1247,8 +1247,17 @@ bell
 block-read
 </td>
 <td class="hdlist2">
-<p><code>( addr blk#&#8201;&#8212;&#8201;)</code> This is a deferred word the user can change to point
+<p><code>( addr blk#&#8201;&#8212;&#8201;)</code> This is a vectored word the user can change to point
 to their own routine for reading 1K blocks into memory from storage.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+block-read-vector
+</td>
+<td class="hdlist2">
+<p><code>(&#8201;&#8212;&#8201;addr )</code> This is the address of the vector
+for block-read.  Save the xt of your word here.</p>
 </td>
 </tr>
 <tr>
@@ -1256,7 +1265,16 @@ to their own routine for reading 1K blocks into memory from storage.</p>
 block-write
 </td>
 <td class="hdlist2">
-<p><code>( addr blk#&#8201;&#8212;&#8201;)</code> This is a deferred word the user can change to point
+<p><code>( addr blk#&#8201;&#8212;&#8201;)</code> This is a vectored word the user can change to point</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+block-write-vector
+</td>
+<td class="hdlist2">
+<p><code>(&#8201;&#8212;&#8201;addr )</code> This is the address of the vector
+for block-write.  Save the xt of your word here.
 to their own routine for writing 1K blocks from memory to storage.</p>
 </td>
 </tr>
@@ -1667,18 +1685,20 @@ currently comes with one buffer.</p>
 <p>Before these words can be used, the user needs to write two routines: one for
 reading blocks into RAM and one for writing blocks out from RAM. Both of these
 should have the signature <code>( addr blk#&#8201;&#8212;&#8201;)</code>. Once these have been written, they
-can be incorporated into the BLOCK word set by changing the deferred words
+can be incorporated into the BLOCK word set by changing the vectors for words
 <code>block-read</code> and <code>block-write</code>. That might look like:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>' myblockreader IS BLOCK-READ
-' myblockwriter IS BLOCK-WRITE</pre>
+<pre>' myblockreader BLOCK-READ-VECTOR !
+' myblockwriter BLOCK-WRITE-VECTOR !</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Once these two deferred words have been updated, you can use the block
-words.</p>
+<p>These vectors determine what runs when the words <code>block-read</code> and
+<code>block-write</code> are used.  Both of these words start with an error
+message asking you to update the vectors.  Once these two vectors have
+been updated, you can use the block words.</p>
 </div>
 <div class="paragraph">
 <p>If you would like to play with some blocks, but don&#8217;t have any
@@ -1700,7 +1720,8 @@ than the number you provide.</p>
 <div class="paragraph">
 <p>Be careful about creating too many blocks as they are 1K each.  It&#8217;s also worth
 noting that running <code>block-ramdrive-init</code> again will create another ramdrive and
-the existing one will be inaccessible while still taking up space in RAM.</p>
+the existing one will be inaccessible while still taking up space in
+RAM.</p>
 </div>
 </div>
 <div class="sect2">
