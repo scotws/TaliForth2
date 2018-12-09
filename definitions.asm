@@ -78,7 +78,9 @@
 .alias blkbuffer_offset    48   ; Address of buffer
 .alias buffblocknum_offset 50   ; Block number current in buffer
 .alias buffstatus_offset   52   ; Status of buffer (bit 0 = used, bit 1 = dirty)
-        
+; Block I/O vectors
+.alias blockread_offset    54   ; Vector to block reading routine
+.alias blockwrite_offset   56   ; Vector to block writing routine        
                 
 ; Bytes used for variables: 62 ($0000-$003D) 
 ; First usable Data Stack location: $003E (decimal 62) 

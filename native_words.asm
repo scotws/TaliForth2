@@ -136,12 +136,30 @@ _zero_user_vars_loop:
                 lda #0
                 sta (up),y
 
-                ldy #search_order_offset
-                lda #0
-                sta (up),y      ; Only the FORTH-WORDLIST in the
-                iny             ; initial search order.
-                lda #0
+                ; USER memory is already initialized to zero.
+                ; ldy #search_order_offset
+                ; lda #0
+                ; sta (up),y      ; Only the FORTH-WORDLIST in the
+                ; iny             ; initial search order.
+                ; lda #0
+                ; sta (up),y
+
+                ; Initialize the block I/O words.
+                ; Initialize block read vector.
+                ldy #blockread_offset
+                lda #<xt_block_word_error
                 sta (up),y
+                iny
+                lda #>xt_block_word_error
+                sta (up),y
+                ; Initialize write vector too.
+                iny
+                lda #<xt_block_word_error
+                sta (up),y
+                iny
+                lda #>xt_block_word_error
+                sta (up),y
+                
 
                 ; Initialize Block buffer
                 ; Use HERE as the buffer address.
@@ -1204,8 +1222,8 @@ _ramdrive_code:
 .byte " ramdrive swap 1024 * + swap 1024 move ;"
 .byte " : block-write-ramdrive" ; ( addr u -- )
 .byte " ramdrive swap 1024 * + 1024 move ;"
-.byte " ' block-read-ramdrive is block-read"
-.byte " ' block-write-ramdrive is block-write"
+.byte " ' block-read-ramdrive block-read-vector !" ; ( Replace I/O vectors )
+.byte " ' block-write-ramdrive block-write-vector !"
 .byte " ramdrive swap blank base !"
 _after_ramdrive_code:
                 jsr sliteral_runtime
@@ -1221,34 +1239,91 @@ z_block_ramdrive_init:
 
 ; ## BLOCK_READ ( addr u -- ) "Read a block from storage (deferred word)"
 ; ## "block-read"  auto  Tali block
-        ; """BLOCK-READ is a deferred word that the user needs to override
+        ; """BLOCK-READ is a vectored word that the user needs to override
         ; with their own version to read a block from storage.
         ; The stack parameters are ( buffer_address block# -- ).
         ; """
 xt_block_read:
-                jsr dodefer
-.word           xt_block_word_deferred
+                ; Execute the BLOCK-READ-VECTOR
+                ldy #blockread_offset
+                lda (up),y
+                sta tmp1
+                iny
+                lda (up),y
+                sta tmp1+1
+                jmp (tmp1)
 
-z_block_read:   rts                
+z_block_read:   ; No RTS needed
 
-; This is the default error message the deferred words BLOCK-READ and
+
+; ## BLOCK_READ_VECTOR ( -- addr ) "Address of the block-read vector"
+; ## "block-read-vector"  auto  Tali block
+        ; """BLOCK-READ is a vectored word that the user needs to override
+        ; with their own version to read a block from storage.
+        ; This word gives the address of the vector so it can be replaced.
+        ; """
+xt_block_read_vector:
+                ; Get the BLOCK-READ-VECTOR address
+                dex
+                dex
+                clc
+                lda up
+                adc #blockread_offset
+                sta 0,x
+                lda up+1
+                adc #0          ; Add carry
+                sta 1,x
+
+z_block_read_vector:
+                rts
+
+                
+; This is the default error message the vectored words BLOCK-READ and
 ; BLOCK-WRITE start with.  This word is not included in the dictionary.
-xt_block_word_deferred:
-                lda #err_blockdefer
+xt_block_word_error:
+                lda #err_blockwords
                 jmp error
-z_block_word_deferred:  
+z_block_word_error:  
 
 ; ## BLOCK_WRITE ( addr u -- ) "Write a block to storage (deferred word)"
 ; ## "block-write"  auto  Tali block
-        ; """BLOCK-WRITE is a deferred word that the user needs to override
+        ; """BLOCK-WRITE is a vectored word that the user needs to override
         ; with their own version to write a block to storage.
         ; The stack parameters are ( buffer_address block# -- ).
         ; """
 xt_block_write:
-                jsr dodefer
-.word           xt_block_word_deferred
+                ; Execute the BLOCK-READ-VECTOR
+                ldy #blockwrite_offset
+                lda (up),y
+                sta tmp1
+                iny
+                lda (up),y
+                sta tmp1+1
+                jmp (tmp1)
 
-z_block_write:  rts                
+z_block_write:  ; No RTS needed
+
+
+; ## BLOCK_WRITE_VECTOR ( -- addr ) "Address of the block-write vector"
+; ## "block-write-vector"  auto  Tali block
+        ; """BLOCK-WRITE is a vectored word that the user needs to override
+        ; with their own version to write a block to storage.
+        ; This word gives the address of the vector so it can be replaced.
+        ; """
+xt_block_write_vector:
+                ; Get the BLOCK-WRITE-VECTOR address
+                dex
+                dex
+                clc
+                lda up
+                adc #blockwrite_offset
+                sta 0,x
+                lda up+1
+                adc #0          ; Add carry
+                sta 1,x
+
+z_block_write_vector:
+                rts
                 
 
 ; ## BOUNDS ( addr u -- addr+u addr ) "Prepare address for looping"
