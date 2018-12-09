@@ -1229,13 +1229,13 @@ xt_block_read:
                 jsr dodefer
 .word           xt_block_word_deferred
 
-z_block_read:    rts                
+z_block_read:   rts                
 
 ; This is the default error message the deferred words BLOCK-READ and
 ; BLOCK-WRITE start with.  This word is not included in the dictionary.
 xt_block_word_deferred:
-        lda #err_blockdefer
-        jmp error
+                lda #err_blockdefer
+                jmp error
 z_block_word_deferred:  
 
 ; ## BLOCK_WRITE ( addr u -- ) "Write a block to storage (deferred word)"
@@ -1248,7 +1248,7 @@ xt_block_write:
                 jsr dodefer
 .word           xt_block_word_deferred
 
-z_block_write:    rts                
+z_block_write:  rts                
                 
 
 ; ## BOUNDS ( addr u -- addr+u addr ) "Prepare address for looping"
@@ -1429,7 +1429,7 @@ xt_buffstatus:
                 adc #0                  ; Adding carry
                 sta 1,x
 
-z_buffstatus: rts
+z_buffstatus:   rts
 
                 
 
@@ -1921,7 +1921,7 @@ xt_colon:
                 ; Restore original DP
                 pla                  
                 sta dp
-                pla  
+                pla
                 sta dp+1
                 jsr dp_to_current
 
@@ -4086,7 +4086,7 @@ z_forth_wordlist:
 ; being evaluated.  Evaluate's normal behavior is to zero BLK.
 load_evaluate:
                 ; Set a flag (using tmp1) to not zero BLK
-                lda #1
+                lda #$FF
                 sta tmp1
                 bra load_evaluate_start
         
@@ -5272,7 +5272,7 @@ xt_load:
                 lda (up),y
                 pha
                 ; Set BLK to the given block/screen number.
-;                ldy #blk_offset
+;                ldy #blk_offset    ; blk_offset already in y
                 lda 0,x
                 sta (up),y
                 iny
@@ -5288,7 +5288,7 @@ xt_load:
                 stz 0,x
 
                 ; Jump to a special evluate target. This bypasses the underflow
-                ; check and the saving and zeroing of BLK.
+                ; check and skips the zeroing of BLK.
                 jsr load_evaluate
 
                 ; Restore the value of BLK from before the LOAD command.
@@ -8087,7 +8087,7 @@ z_s_to_d:       rts
 
 
 ; ## SAVE_BUFFERS ( -- ) "Save all dirty buffers to storage"
-; ## "save-buffers"  auto  ANS block
+; ## "save-buffers"  tested  ANS block
         ; """https://forth-standard.org/standard/block/SAVE-BUFFERS"""
 .scope        
 xt_save_buffers:
@@ -10055,7 +10055,7 @@ z_u_dot:        rts
 .scend
 
 
-; ## U_DOT_R ( u u -- ) "Print TOS as unsigned number with fixed with"
+; ## U_DOT_R ( u u -- ) "Print NOS as unsigned number with TOS with"
 ; ## "u."  auto  ANS core ext
         ; """https://forth-standard.org/standard/core/UDotR"""
 
@@ -10366,7 +10366,7 @@ xt_useraddr:
                 lda #>up
                 sta 1,x
 
-z_useraddr:         rts
+z_useraddr:     rts
                 
 
 ; ## VALUE ( n "name" -- ) "Define a value"
