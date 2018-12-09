@@ -10056,7 +10056,7 @@ z_u_dot:        rts
 
 
 ; ## U_DOT_R ( u u -- ) "Print NOS as unsigned number with TOS with"
-; ## "u."  auto  ANS core ext
+; ## "u.r"  auto  ANS core ext
         ; """https://forth-standard.org/standard/core/UDotR"""
 
 .scope

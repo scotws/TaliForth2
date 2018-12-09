@@ -177,7 +177,7 @@ RTS instruction at the end of each word.
 | SET_ORDER | `set-order` | ANS search | 59 | **auto** |
 | S_QUOTE | `s"` | ANS core | 348 | **auto** |
 | S_TO_D | `s>d` | ANS core | 21 | **auto** |
-| SAVE_BUFFERS | `save-buffers` | ANS block | 26 | **auto** |
+| SAVE_BUFFERS | `save-buffers` | ANS block | 26 | tested |
 | SCR | `scr` | ANS block ext | 15 | **auto** |
 | SEARCH | `search` | ANS string | 162 | **auto** |
 | SEMICOLON | `;` | ANS core | 134 | **auto** |
@@ -221,7 +221,7 @@ RTS instruction at the end of each word.
 | TWO_VARIABLE | `2variable` | ANS double | 14 | **auto** |
 | TYPE | `type` | ANS core | 46 | **auto** |
 | U_DOT | `u.` | ANS core | 15 | **auto** |
-| U_DOT_R | `u.` | ANS core ext | 37 | **auto** |
+| U_DOT_R | `u.r` | ANS core ext | 37 | **auto** |
 | U_GREATER_THAN | `u>` | ANS core ext | 25 | **auto** |
 | U_LESS_THAN | `u<` | ANS core | 25 | **auto** |
 | UF_STRIP | `uf-strip` | Tali Forth | 10 | tested |
@@ -249,6 +249,6 @@ RTS instruction at the end of each word.
 | NOP | `nop` | Tali Assembler | 5 | *coded* |
 
 Found **240** native words in `native_words.asm`.
-Of those, **204** were automatically tested and
+Of those, **203** were automatically tested and
           **2** are not marked as tested at all.
 
