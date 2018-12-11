@@ -1,21 +1,20 @@
 ; Definitions for Tali Forth 2
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 01. Apr 2016 (Liara Forth)
-; This version: 24. Oct 2018
+; This version: 11. Dec 2018
 
 ; This file is included by taliforth.asm. These are the general
 ; definitions; platform-specific definitions such as the
-; memory map are kept in the platfrom folder.
+; memory map are kept in the platform folder.
 
 
 ; ZERO PAGE ADDRESSES/VARIABLES
 
-; These are as close to the definitions in Liara Forth as possible.
-; They are kept at the top of Zero Page, with the most important variables
-; at the top because the Data Stack grows towards this area from dsp0: If
-; there is an overflow, the lower, less important variables will be
-; clobbered first, giving the system a chance to recover. In other words,
-; they are part of the floodplain.
+; These are kept at the top of Zero Page, with the most important variables at
+; the top because the Data Stack grows towards this area from dsp0: If there is
+; an overflow, the lower, less important variables will be clobbered first,
+; giving the system a chance to recover. In other words, they are part of the
+; floodplain.
 
 .alias cp        user0+0  ; Compiler Pointer
 .alias dp        user0+2  ; Dictionary Pointer
@@ -60,9 +59,11 @@
                            ; status+1 is used by ACCEPT to hold history lengths.
         
 .alias up        user0+60  ; User Pointer (Address of user variables)
+
 ; Block variables                
 .alias blk_offset 0        ; BLK : UP + 0
 .alias scr_offset 2        ; SCR : UP + 2
+
 ; Wordlists                
 .alias current_offset 4    ; CURRENT : UP + 4 (Compilation wordlist)
 .alias num_wordlists_offset 6
@@ -74,6 +75,7 @@
 .alias search_order_offset 32
                            ; SEARCH-ORDER : UP + 32 to UP + 47
 .alias max_wordlists 11
+
 ; Buffer variables
 .alias blkbuffer_offset    48   ; Address of buffer
 .alias buffblocknum_offset 50   ; Block number current in buffer

@@ -1,6 +1,6 @@
 \ List of high-level Forth words for Tali Forth 2 for the 65c02
 \ Scot W. Stevenson <scot.stevenson@gmail.com>
-\ This version: 15. Nov 2018
+\ This version: 11. Dec 2018
 
 \ Note version date is not changed for simple update of date
 \ string in splash quotes at end of file
@@ -38,7 +38,6 @@
 \ are slow, these can stay high-level for the moment. However, in this
 \ state they don't check for underflow. Based on
 \ https://github.com/philburk/pforth/blob/master/fth/numberio.fth
-\        : u.r >r 0 <# #s #> r> over - spaces type ;
         : .r >r dup abs 0 <# #s rot sign #> r> over - spaces type ;
         : ud. <# #s #> type space ;
         : ud.r >r <# #s #> r> over - spaces type ;

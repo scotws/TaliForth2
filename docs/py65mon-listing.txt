@@ -4959,7 +4959,7 @@
  A52F  D0 05     BNE  $A536
  A531  A9 0B     LDA  #$0B
  A533  4C 7F CE  JMP  $CE7F
- A536  1A        INA  
+ A536  1A        INC  
  A537  91 3C     STA  ($3C), Y
  A539  CA        DEX  
  A53A  CA        DEX  
