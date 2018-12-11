@@ -7,7 +7,7 @@ RTS instruction at the end of each word.
 
 | NAME | FORTH WORD | SOURCE | BYTES | STATUS |
 | :--- | :--------- | :---   | ----: | :----  |
-| COLD | `cold` | Tali Forth | 335 | tested |
+| COLD | `cold` | Tali Forth | 345 | tested |
 | ABORT | `abort` | ANS core | 68 | tested |
 | QUIT | `quit` | ANS core | 66 | tested |
 | ABORT_QUOTE | `abort"` | ANS core | 10 | tested |
@@ -30,9 +30,11 @@ RTS instruction at the end of each word.
 | BLK | `block` | ANS block | 15 | **auto** |
 | BLKBUFFER | `blkbuffer` | Tali block | 13 | **auto** |
 | BLOCK | `block` | ANS block | 82 | **auto** |
-| BLOCK_RAMDRIVE_INIT | `block-ramdrive-init` | Tali block | 288 | **auto** |
-| BLOCK_READ | `block-read` | Tali block | 5 | **auto** |
-| BLOCK_WRITE | `block-write` | Tali block | 5 | **auto** |
+| BLOCK_RAMDRIVE_INIT | `block-ramdrive-init` | Tali block | 300 | **auto** |
+| BLOCK_READ | `block-read` | Tali block | 14 | **auto** |
+| BLOCK_READ_VECTOR | `block-read-vector` | Tali block | 15 | **auto** |
+| BLOCK_WRITE | `block-write` | Tali block | 14 | **auto** |
+| BLOCK_WRITE_VECTOR | `block-write-vector` | Tali block | 15 | **auto** |
 | BOUNDS | `bounds` | Gforth | 28 | **auto** |
 | BRACKET_CHAR | `[char]` | ANS core | 6 | **auto** |
 | BRACKET_TICK | `[']` | ANS core | 6 | **auto** |
@@ -248,7 +250,7 @@ RTS instruction at the end of each word.
 | L | `l` | Tali Editor | 123 | tested |
 | NOP | `nop` | Tali Assembler | 5 | *coded* |
 
-Found **240** native words in `native_words.asm`.
-Of those, **203** were automatically tested and
+Found **242** native words in `native_words.asm`.
+Of those, **205** were automatically tested and
           **2** are not marked as tested at all.
 

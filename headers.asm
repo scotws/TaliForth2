@@ -182,14 +182,24 @@ nt_save_buffers:
         .word nt_block, xt_save_buffers, z_save_buffers
         .byte "save-buffers"
                 
+nt_block_read_vector:
+        .byte 17, HC+NN ; Deferred words need the HC (Code Field) flag.
+        .word nt_save_buffers, xt_block_read_vector, z_block_read_vector
+        .byte "block-read-vector"
+
 nt_block_read:
         .byte 10, HC+NN ; Deferred words need the HC (Code Field) flag.
-        .word nt_save_buffers, xt_block_read, z_block_read
+        .word nt_block_read_vector, xt_block_read, z_block_read
         .byte "block-read"
 
+nt_block_write_vector:
+        .byte 18, NN ; Deferred words need the HC (Code Field) flag.
+        .word nt_block_read, xt_block_write_vector, z_block_write_vector
+        .byte "block-write-vector"
+                
 nt_block_write:
-        .byte 11, HC+NN ; Deferred words need the HC (Code Field) flag.
-        .word nt_block_read, xt_block_write, z_block_write
+        .byte 11, NN ; Deferred words need the HC (Code Field) flag.
+        .word nt_block_write_vector, xt_block_write, z_block_write
         .byte "block-write"
                 
 nt_blk:
