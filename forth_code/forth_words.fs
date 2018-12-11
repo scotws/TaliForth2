@@ -1,13 +1,13 @@
 \ List of high-level Forth words for Tali Forth 2 for the 65c02
-\ Scot W. Stevenson <scot.stevenson@gmail.com>
 \ This version: 11. Dec 2018
 
-\ Note version date is not changed for simple update of date
+\ Version date is not changed for simple update of date
 \ string in splash quotes at end of file
 
 \ When changing these words, edit them here and then use the 
-\ forth_to_dotbyte.py tool to convert them to the required format
-\ for inclusion in Ophis. See forth_words/README.md for details
+\ forth_to_ophisbin.py tool to convert them to the required format
+\ for inclusion in Ophis. This will be done automatically when "make"
+\ is run from the top level. See forth_words/README.md for details
 
 \ Output and comment. Because it still blows my mind that we can
 \ define this stuff this simply 
@@ -107,7 +107,7 @@ FORTH-WORDLIST (wordlist) FORTH
 \ generated at the end of the boot process and signal that the other
 \ high-level definitions worked (or at least didn't crash)
         cr .( Tali Forth 2 for the 65c02)
-        cr .( Version BETA 15. Nov 2018 )
+        cr .( Version BETA 11. Dec 2018 )
         cr .( Copyright 2014-2018 Scot W. Stevenson)
         cr .( Tali Forth 2 comes with absolutely NO WARRANTY)
         cr .( Type 'bye' to exit) cr

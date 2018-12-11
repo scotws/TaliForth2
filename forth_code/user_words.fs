@@ -1,10 +1,11 @@
 \ List of optional Forth words for Tali Forth 2 for the 65c02
 \ Scot W. Stevenson <scot.stevenson@gmail.com>
-\ This version: 02. Jul 2018
+\ This version: 11. Dec 2018
 
 \ When changing these words, edit them here and then use the 
-\ forth_to_dotbyte.py tool to convert them to the required format
-\ for inclusion in Ophis. See forth_words/README.md for details
+\ forth_to_ophisbin.py tool to convert them to the required format
+\ for inclusion in Ophis. This is handled automatically by "make"
+\ when run from the top level. See forth_words/README.md for details
 
 \ Only uncomment the words you want to actually have included in Tali Forth 2.
 \ By default, that will be SEE.
