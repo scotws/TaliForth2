@@ -40,8 +40,8 @@ def main():
 
     # ((Beginning of line followed by "\" ) or (whitespace followed by
     # "\" )) followed by whitespace followed by anything all the way
-    # to the end of the line
-    backslash_comment = re.compile(r"(^\\|\s\\)\s.*$")
+    # to the end of the line.
+    backslash_comment = re.compile(r"(^\\|\s\\)(\s.*)?$")
 
     all_words = []
 
