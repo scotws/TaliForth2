@@ -1286,9 +1286,7 @@ nt_line:
 ; immediate addressing is replaced by an "h" (for example, the label code for
 ; "lda.#" is "xt_adm_lda_h"). All opcodes are immediate. 
 
-
-assembler_dictionary_start:
-nt_asm_nop:
+nt_asm_nop:             ; NOP is last entry in assembler wordlist
         .byte 3, IM
         .word 0000
         .word xt_asm_nop, z_asm_nop
@@ -1300,6 +1298,7 @@ nt_asm_ldx_h:
         .word xt_asm_ldx_h, z_asm_ldx_h
         .byte "ldx.#"
 
+assembler_dictionary_start:
 nt_asm_lda_h:
         .byte 5, IM
         .word nt_asm_ldx_h

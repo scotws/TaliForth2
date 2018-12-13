@@ -56,7 +56,7 @@
  8066  A9 CB     LDA  #$CB
  8068  91 3C     STA  ($3C), Y
  806A  C8        INY  
- 806B  A9 73     LDA  #$73
+ 806B  A9 8B     LDA  #$8B
  806D  91 3C     STA  ($3C), Y
  806F  C8        INY  
  8070  A9 CB     LDA  #$CB

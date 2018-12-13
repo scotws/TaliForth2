@@ -1678,10 +1678,10 @@ $CB5E | dictionary_start                | headers.asm:1261
 $CB5E | nt_drop                         | headers.asm:1262
 $CB6A | editor_dictionary_start         | headers.asm:1272
 $CB6A | nt_line                         | headers.asm:1273
-$CB73 | assembler_dictionary_start      | headers.asm:1290
-$CB73 | nt_asm_nop                      | headers.asm:1291
-$CB7E | nt_asm_ldx_h                    | headers.asm:1297
-$CB8B | nt_asm_lda_h                    | headers.asm:1303
+$CB73 | nt_asm_nop                      | headers.asm:1289
+$CB7E | nt_asm_ldx_h                    | headers.asm:1295
+$CB8B | assembler_dictionary_start      | headers.asm:1301
+$CB8B | nt_asm_lda_h                    | headers.asm:1302
 $CB98 | string_table                    | strings.asm:21
 $CBA4 | s_ok                            | strings.asm:25
 $CBA8 | s_compiled                      | strings.asm:26
