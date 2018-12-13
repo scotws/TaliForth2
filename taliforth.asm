@@ -1,7 +1,7 @@
 ; Tali Forth 2 for the 65c02
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 19. Jan 2014 (Tali Forth)
-; This version: 03. Nov 2018
+; This version: 13. Dec 2018
 
 ; This is the main file for Tali Forth 2
 
@@ -16,7 +16,8 @@ code0:
 forth:
 
 .require "native_words.asm"     ; Native Forth words. Starts with COLD
-.require "disassembler.asm"     ; Disassembler 
+.require "assembler.asm"        ; SAN assembler
+.require "disassembler.asm"     ; SAN disassembler 
 .require "ed.asm"               ; Line-based editor ed6502
 
 ; High-level Forth words, see forth_code/README.md
@@ -72,7 +73,8 @@ cmpl_word:
                 tya             ; fall thru for MSB
 cmpl_a:
                 ; This is the entry point to compile a single byte which
-                ; is passed in A
+                ; is passed in A. The built-in assembler assumes that this
+                ; routine does not modify Y.
                 sta (cp)
                 inc cp
                 bne _done

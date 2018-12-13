@@ -11069,17 +11069,5 @@ z_l:            rts
 .scend
 
 
-; ==========================================================
-; ASSEMBLER words
-        
-; We're only adding NOP at the moment to test wordlists.
-; ## NOP ( -- ) "Compile an assembly NOP instruction"
-; ## "nop"  coded  Tali Assembler
-xt_nop:        
-                lda #$EA        ; NOP
-                jsr cmpl_a
-
-z_nop:      rts
-        
 
 ; END

@@ -248,9 +248,8 @@ RTS instruction at the end of each word.
 | ZERO_LESS | `0<` | ANS core | 19 | **auto** |
 | ZERO_UNEQUAL | `0<>` | ANS core ext | 21 | **auto** |
 | L | `l` | Tali Editor | 123 | tested |
-| NOP | `nop` | Tali Assembler | 5 | *coded* |
 
-Found **242** native words in `native_words.asm`.
+Found **241** native words in `native_words.asm`.
 Of those, **205** were automatically tested and
-          **2** are not marked as tested at all.
+          **1** are not marked as tested at all.
 
