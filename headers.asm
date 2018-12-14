@@ -1,7 +1,7 @@
 ; Dictionary Headers for Tali Forth 2
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 05. Dec 2016 (Liara Forth)
-; This version: 11. Dec 2018
+; This version: 14. Dec 2018
 
 ; Dictionary headers are kept separately from the code, which allows various
 ; tricks in the code. We roughly follow the Gforth terminology: The Execution
@@ -262,9 +262,19 @@ nt_compare:
         .word nt_search, xt_compare, z_compare
         .byte "compare"
 
+nt_code:
+        .byte 4, 0
+        .word nt_compare, xt_code, z_code
+        .byte "code"
+
+nt_end_code:
+        .byte 8, 0
+        .word nt_code, xt_end_code, z_end_code
+        .byte "end-code"
+
 nt_disasm:
         .byte 6, UF
-        .word nt_compare, xt_disasm, z_disasm
+        .word nt_end_code, xt_disasm, z_disasm
         .byte "disasm"
 
 nt_dot_s:
@@ -1287,24 +1297,31 @@ nt_line:
 ; "lda.#" is "xt_adm_lda_h"). All opcodes are immediate. 
 
 nt_asm_nop:             ; NOP is last entry in assembler wordlist
-        .byte 3, IM
+        .byte 3, IM+CO
         .word 0000
         .word xt_asm_nop, z_asm_nop
         .byte "nop"
 
 nt_asm_ldx_h:
-        .byte 5, IM
+        .byte 5, IM+CO
         .word nt_asm_nop
         .word xt_asm_ldx_h, z_asm_ldx_h
         .byte "ldx.#"
 
-assembler_dictionary_start:
 nt_asm_lda_h:
-        .byte 5, IM
+        .byte 5, IM+CO
         .word nt_asm_ldx_h
         .word xt_asm_lda_h, z_asm_lda_h
         .byte "lda.#"
                
+assembler_dictionary_start:
+
+nt_asm_push_a:
+        .byte 6, IM+CO
+        .word nt_asm_lda_h
+        .word xt_asm_push_a, z_asm_push_a
+        .byte "push-a"
+
 ; END of ASSEMBLER-WORDLIST        
 
         
