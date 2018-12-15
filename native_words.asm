@@ -1957,7 +1957,16 @@ z_cmove_up:     rts
         ; """https://forth-standard.org/standard/tools/CODE
         ; Start a region of SAN assembler that is associated with
         ; "name" and executed at run time. This region terminates with
-        ; END-NAME. See the documentation on assembler use for details.
+        ; END-NAME. For example:
+        ;       
+        ;       code "NAME"
+        ;               <ASSEMBLER INSTRUCTIONS>        
+        ;       end-code
+        ;
+        ; Note there is no colon before CODE or name, though this is a form of
+        ; a defining word. See the documentation on assembler use for details
+        ; as well as
+        ; http://www.complang.tuwien.ac.at/forth/gforth/Docs-html/Code-and-_003bcode.html.
         ; """
 .scope
 xt_code:

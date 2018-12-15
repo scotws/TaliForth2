@@ -1,7 +1,7 @@
 ; Dictionary Headers for Tali Forth 2
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 05. Dec 2016 (Liara Forth)
-; This version: 14. Dec 2018
+; This version: 15. Dec 2018
 
 ; Dictionary headers are kept separately from the code, which allows various
 ; tricks in the code. We roughly follow the Gforth terminology: The Execution
@@ -1297,28 +1297,33 @@ nt_line:
 ; "lda.#" is "xt_adm_lda_h"). All opcodes are immediate. 
 
 nt_asm_nop:             ; NOP is last entry in assembler wordlist
-        .byte 3, IM+CO
+        .byte 3, IM
         .word 0000
         .word xt_asm_nop, z_asm_nop
         .byte "nop"
 
 nt_asm_ldx_h:
-        .byte 5, IM+CO
+        .byte 5, IM
         .word nt_asm_nop
         .word xt_asm_ldx_h, z_asm_ldx_h
         .byte "ldx.#"
 
 nt_asm_lda_h:
-        .byte 5, IM+CO
+        .byte 5, IM
         .word nt_asm_ldx_h
         .word xt_asm_lda_h, z_asm_lda_h
         .byte "lda.#"
+
+nt_asm_rts:
+        .byte 3, IM
+        .word nt_asm_lda_h
+        .word xt_asm_rts, z_asm_rts
+        .byte "rts"
                
 assembler_dictionary_start:
-
 nt_asm_push_a:
-        .byte 6, IM+CO
-        .word nt_asm_lda_h
+        .byte 6, IM
+        .word nt_asm_rts
         .word xt_asm_push_a, z_asm_push_a
         .byte "push-a"
 

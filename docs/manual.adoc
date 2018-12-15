@@ -4,7 +4,7 @@
 :email: scot.stevenson@gmail.com
 :keywords: forth, 6502, assembler, programming, 8-bit, vintage, retro
 :revnumber: BETA
-:revdate: 03. Nov 2018
+:revdate: 15. Dez 2018
 :showtitle:
 :icons: font
 :toc: left
@@ -51,9 +51,7 @@ include::ch_editor_block.adoc[]
 include::ch_editor_ed.adoc[]
 
 === Assembler
-
-WARNING: Currently, there is no assembler included. The plan is to include a simple
-assembler based on Simpler Assembler Notation (SAN).
+include::ch_assembler.adoc[]
 
 === Disassembler
 include::ch_disasm.adoc[]

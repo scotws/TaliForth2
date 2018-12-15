@@ -1,0 +1,118 @@
+WARNING: This chapter is work in progress and currently more a collection of
+notes.
+
+// TODO move this to own intro and link GitHub page for SAN
+
+Tali Forth is shipped with a built-in assembler that uses the Simpler Assembler
+Format (SAN). 
+
+NOTE: The code was originally part of a stand-alone 65c02 assembler in Forth
+named tan65c02. See https://github.com/scotws/tasm65c02 for details.
+
+==== Simple ways of inserting assembler code
+
+Because Tali Forth is a Subroutine Threaded (STC) Forth, inserting assembler
+instructions is spectacularly easy. In fact, the only real problem is accessing
+the assembler wordlist, which is normally not in the search tree because of its
+length. This, then, is one way to add assembler code:
+
+----
+forth-wordlist assembler-wordlist 2 set-order
+here .          \ Remember where we are, for example 4799
+1 lda.#         \ LDA #1
+push-a          \ Pseudo-instruction, pushes A on the Forth data stack
+rts             \ End subroutine. Don't use BRK!
+4799 execute    \ Run our code
+.s              \ Will show 1 as TOS
+----
+
+The first line is required to give the user access to the list of assembler
+mnemonics. They are usually not in the current wordlist path because of their
+sheer number.
+
+// TODO add CODE and END-CODE as convenience words
+
+NOTE: There is a separate tutorial planned for wordlists and their use
+
+Note that this way, you can freely intermingel Forth high-level words and
+assembler instructions. For example, this will work:
+
+----
+hex
+10 lda.#        \ LDA #$10, which is decimal 16
+decimal
+10 ldx.#        \ LDX #10
+----
+
+Running the disassembler gives us (actual addresses may vary):
+
+----
+12BF  lda.# 10
+12C1  ldx.# 0A
+----
+
+This example also shows why this can be dangerous. This allows us to use various
+different formatting tricks like putting more than one assembler instruction in
+a line or intermixing comments:
+
+----
+dec.a dec.a     \ DEC twice
+nop ( just chilling ) nop ( still don't want to work )
+nop ( not going to happen ) nop ( just go away already! )
+----
+
+
+==== Even simpler ways to insert assembler code
+
+Probably the very simplest way is to add the opcodes and operands directly with
+the `c,` instruction.
+
+Tali Forth also provides a special word called `hexstore` to add strings of
+numbers.
+
+==== Directives
+
+The assembler currently has no directives, though some are planned.
+
+==== Pseudo-Instructions / Macros
+
+**push-a** takes the byte in the Accumulator A and pushes it to the top of the
+Forth Data Stack. This is a convenience word for
+
+----
+dex
+dex
+sta.zx 0        ; STA 0,X
+stz.zx 1        ; STZ 1,X
+----
+
+==== Under the hood
+
+The assembler instructions are in fact just normal, very simple Forth words that 
+send the opcode and the length of the instruction in bytes to common routines
+for processing.
+
+The assembler instructions will trigger an underflow error if there is no
+operand on the stack when required.
+
+----
+lda.#   \ requires operand first on the stack -> triggers error
+----
+
+==== Gotchas
+
+Working with assembler requires an intimate knowledge of Tali Forth's internals.
+Some of the things that range from just very dangerous to downright suicidal
+are:
+
+*Using the X register.* Tali Forth uses X to hold the Data Stack pointer.
+Manipulating it risks crashing the whole system beyond any hope of recovery. If
+for some reason you feel you must use X, be careful to save and restore the
+original value, such as:
+
+----
+phx
+( do something with X )
+plx
+----
+
