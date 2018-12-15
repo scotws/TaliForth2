@@ -1,0 +1,333 @@
+Blocks are a simple system for dealing with non-volatile storage.  Originally,
+the storage medium would have been a floppy disk drive, but hobbyists are more
+likely to attach I2C or SPI flash memory to their system.  These storage devices
+often have more than 64K (the full address space of the 65C02) of storage, so
+the block words help to deal with the larger address space and the fact that
+there is a limited amount of RAM in the system.
+
+The block words do not use a file system and expect to access the storage memory
+directly.  The storage space is divided into 1K chunks, or "blocks", and each is
+given a number.  On Tali, this allows for 64K blocks, or up to 64MB of storage.
+The user can request that a block is brought into RAM, operate on the data, and
+then request that the modified version be saved back to storage.
+
+What the blocks hold is up to the user.  They can hold text, Forth code, or
+binary data.  Support for text and Forth code is provided by Tali, and the user
+can easily provide support for storing binary data in their programs.
+
+=== First steps with blocks
+
+In order to facilitate playing with blocks, Tali comes with a special word
+`block-ramdrive-init` that takes the number of blocks you want to use and
+allocates a RAM drive to simulate a mass-storage device.  It also sets up the
+read and write vectors to routines that will move the data in and out of the
+allocated RAM.
+
+If you have an actual storage device, such as a flash memory, you will need to
+write routines for transferring 1K from storage to RAM and from RAM to storage.
+The addresses (xt) of these routines need to be placed in the existing variables
+`BLOCK-READ-VECTOR` and `BLOCK-WRITE-VECTOR`, respectively.
+
+To get started on this tutorial, we will use the ramdrive with 4 blocks
+allocated.  If you forget this step, you will see an error message about
+BLOCK-READ-VECTOR and BLOCK-WRITE-VECTOR when you try to use any of the block
+words.
+
+----
+4 block-ramdrive-init
+----
+
+This command takes a moment as all of the block memory is initialized to the
+value BLANK (a space) on the assumption you will be placing text there.  When
+complete, you will have 4 blocks (numbered 0-3) available to play with.
+
+When using blocks for text or Forth code, the 1K block is further divided into
+16 lines of 64 characters each.  Newlines are typically not used in blocks at
+all, and the unused space is filled with spaces to get to the next line.  Blocks
+that have this type of text data in them are also called a "screen".
+
+
+To see the contents of a block in screen format, you can use the built-in `list`
+command.  It takes the block number (called a screen number when storing text)
+and displays the contents of that block.  Typing the command `0 list` will list
+the contents of block 0.
+
+----
+0 list 
+Screen #   0
+ 0                                                                 
+ 1                                                                 
+ 2                                                                 
+ 3                                                                 
+ 4                                                                 
+ 5                                                                 
+ 6                                                                 
+ 7                                                                 
+ 8                                                                 
+ 9                                                                 
+10                                                                 
+11                                                                 
+12                                                                 
+13                                                                 
+14                                                                 
+15
+ ok
+----
+As you can see, this screen is currently blank.  It's actually 16 lines each
+containing 64 spaces.
+
+Block 0 is special in that it is the only block you cannot load Forth code from.
+Because of this, block 0 is commonly used to hold a text description of what is
+in the other blocks.
+
+=== Editing a screen
+
+In order to edit a block, we will need to bring in the screen editor.  It
+lives in the EDITOR-WORDLIST, which is not used when Tali starts.  To add the
+editor words, run:
+----
+forth-wordlist editor-wordlist 2 set-order
+----
+This tells Tali to use both the editor words and the forth words.
+
+You can only edit one screen at a time.  To select a screen, simply `list` it.
+All further operations will edit that screen until a new screen is listed.  The
+block number of the screen being edited is held in the `SCR` variable, and the
+`list` word simply saves the block number there before displaying it on the
+screen; many of the other editing words look in `SCR` to see which block is
+being edited.
+
+The following words can be used to edit a screen:
+
+[horizontal]
+list:: `( scr# -- )` List the block in screen (16 lines of 64 chars) format.  This word also
+select the given block for futher editing if desired.
+l:: `( -- )` List the current screen (previously listead with `list`)
+el:: `( line# -- )` Erase a line on the previously listed screen.
+o:: `( line# -- )` Overwrite an entire line on the previously listed screen.
+Enter the replacement text at the * prompt.
+enter-screen:: `( scr# -- )` Prompt for all of the lines on the given screen number
+erase-screen:: `( scr# -- )` Erase the given screen by filling with BLANK (spaces)
+
+Because block 0 has already been listed above, we will simply add a message on
+line 2.
+
+----
+2 o
+ 2 * Load screen 2 to get a smiley!
+----
+
+Now if we list screen 0, we should see our message:
+
+----
+0 list 
+Screen #   0
+ 0                                                                 
+ 1                                                                 
+ 2 Load screen 2 to get a smiley!                                  
+ 3                                                                 
+ 4                                                                 
+ 5                                                                 
+ 6                                                                 
+ 7                                                                 
+ 8                                                                 
+ 9                                                                 
+10                                                                 
+11                                                                 
+12                                                                 
+13                                                                 
+14                                                                 
+15                                                                 
+  ok
+----
+
+Now we will entire screen 2 using `enter-screen`.  It will prompt line by line
+for the text.  Pressing ENTER without typing any text will leave that line
+blank.
+
+----
+2 enter-screen 
+ 0 * ( Make a smiley word and then run it!    SCC 2018-12 ) 
+ 1 * : smiley ." :)" ; 
+ 2 *  
+ 3 *  
+ 4 *  
+ 5 * smiley 
+ 6 *  
+ 7 *  
+ 8 *  
+ 9 *  
+10 *  
+11 *  
+12 *  
+13 *  
+14 *  
+15 *   ok
+----
+
+It is customary for the very first line to be a comment (Tali only supports
+parenthesis comments in blocks) with a description, the programmer's initials,
+and the date.  On line 1 we have entered the word definition, and on line 5 we
+are running the word.
+
+To get Tali to run this code, we use the word `load` on the block number.
+----
+2 load :) ok
+----
+If your forth code doesn't fit on one screen, you can spread it across
+contiguous screens and load all of them with the `thru` command.  If you had
+filled screens 1-3 with forth code and wanted to load all of it, you would run:
+
+----
+1 3 thru
+----
+
+For reasons explained in the next chapter, the modified screen data is only
+saved back to the mass storage (in this case, our ramdrive) when the screen
+number is changed and accessed (typically with `list`).  To force Tali to save
+any changes to the mass storage, you can use the `flush` command.  It takes no
+arguments and simply saves any changed back to the mass storage.
+
+----
+flush
+----
+
+=== Working with blocks
+
+Blocks can also be used by applications to store data.  The block words bring
+the blocks from mass storage into a 1K buffer where the data can be read or
+written.  If changes are made to the buffer, the `update` word needs to be run
+to indicate that there are updates to the data and that it needs to be saved
+back to mass storage before another block can be brought in to the buffer.
+
+Because the ANS spec does not specify how many buffers there are, portable Forth
+code needs to assume that there is only 1, and that the loading of any block
+might replace the buffered version of a previouly loaded block.  This is a very
+good assumption for Tali, as it currently only has 1 block buffer.
+
+The following words will be used to deal with blocks:
+
+[horizontal]
+block:: `( block# -- addr )` Load the given block into a buffer.  If the buffer
+has been updated, it will save the contents out to block storage before loading
+the new block.  Returns the address of the buffer.
+buffer:: `( block# -- addr )` Identical to block, except that it doesn't
+actually load the block from storage.  The contents in the buffer are undefined,
+but will be saved back to the given block number if updated.  Returns the
+address of the buffer.
+update:: `( -- )` Mark the most recent buffer as updated (dirty) so it will be
+saved back to storage at a later time.
+flush:: `( -- )` Save any updated buffers to storage and mark all buffers empty.
+save-buffers:: `( -- )` Save any updated buffers to storage.
+empty-buffers:: `( -- )` Mark all buffers as empty, even if they have been
+updated and not saved.  Can be used to abandon edits.
+load:: `( blk# -- )` Interpret the contents of the given block.
+
+The following variables are used with blocks:
+
+[horizontal]
+BLK:: The block number currently being interpreted by a `load` or `thru`
+command. BLK is 0 when interpreting from the keyboard or from a string.
+SCR:: The screen number currently being edited.  Set by `list`, but you can set
+it yourself if you want.
+
+==== A simple block example
+[.float-group]
+--
+image::pics/blocks-block.png[float=left]
+
+To load a block, just give the block number to the `block` word like so:
+
+
+`1 block`
+
+
+This will load the block into the buffer and return the address of the buffer on
+the stack.  The buffer will be marked as "in-use" with block 1 and also marked
+as "clean".  The address on the stack can be used to access the contents of the
+buffer.  As long as the buffer has not been marked as "dirty" with the word
+`update`, you can call `block` again and it will simply replace the buffer with
+the new block data.
+
+Note: On larger forths with multiple buffers, using block again may bring the
+requested block into a different buffer.  Tali only has a single buffer, so the
+buffer contents will be replaced every time.
+--
+
+[.float-group]
+--
+image::pics/blocks-update.png[float=left]
+
+Let's modify the data in block 1.  The editor words handle the blocks behind the
+scenes, so we will use `move` to copy some strings into the buffer.
+
+
+`( Assuming "1 block" was recently run )` +
+`( and buffer address is still there )` +
+`128 +         ( Move to line 2)` +
+`s" Hello!"` +
+`rot swap move ( Copy Hello! into line )` +
+`update        ( Tell Tali it's modified )` +
+
+
+These commands put the string "Hello!" onto line 2, which can be seen by running
+`1 list` afterwards.  The modification, however, hasn't been transferred to
+storage yet.  If power were lost or the processor reset at this point, the data
+would be lost.
+--
+
+[.float-group]
+--
+image::pics/blocks-newblock.png[float=left]
+We also want to make a change to block 3, so we will bring that block in next.
+
+`3 block`
+
+The block-handling built-in to Forth will see that the buffer is in use and is
+no longer a clean copy because it has been updated.  This will cause Tali to
+write block 1 back to mass storage before bringing in block 3.  Once block 3 is
+in the buffer, it will be marked as "in-use" with block 3 and "clean".
+
+--
+
+[.float-group]
+--
+image::pics/blocks-update3.png[float=left]
+
+Let's modify the data in block 3 now.
+
+
+`( Assuming "3 block" was recently run )` +
+`( and buffer address is still there )` +
+`256 +         ( Move to line 4)` +
+`s" Hi there!"` +
+`rot swap move ( Copy string into line )` +
+`update        ( Tell Tali it's modified )` +
+
+After this code is run, the buffer will be modified, marked as updated/dirty,
+but once again it won't actually be saved back to mass storage right at this
+point.
+
+--
+
+[.float-group]
+--
+image::pics/blocks-flush.png[float=left]
+
+To force the updated version of block 3 to be written back to mass storage, we
+can use the command:
+
+`flush`
+
+If the buffer is in use and dirty, it will be written back to mass storage.
+Then the buffer will be marked empty.
+
+If you want to write the changes but keep the block in the buffer, you can use
+the command `save-buffers` instead of flush.  That would be useful in a
+situation where you want to save the block changed right now, but also want to
+keep making changes in the buffer.
+
+If you want to abandon the changes in the buffer, you can use the command
+`empty-buffers`.  This will not save even a dirty buffer, and marks the buffer
+as empty.
+--

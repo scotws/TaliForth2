@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 1.5.6.1">
+<meta name="generator" content="Asciidoctor 1.5.5">
 <meta name="keywords" content="forth, 6502, assembler, programming, 8-bit, vintage, retro">
 <meta name="author" content="Scot W. Stevenson">
 <title>Manual for Tali Forth 2 for the 65c02</title>
@@ -91,12 +91,13 @@ strong,b{font-weight:bold;line-height:inherit}
 small{font-size:60%;line-height:inherit}
 code{font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;font-weight:400;color:rgba(0,0,0,.9)}
 ul,ol,dl{font-size:1em;line-height:1.6;margin-bottom:1.25em;list-style-position:outside;font-family:inherit}
-ul,ol{margin-left:1.5em}
+ul,ol,ul.no-bullet,ol.no-bullet{margin-left:1.5em}
 ul li ul,ul li ol{margin-left:1.25em;margin-bottom:0;font-size:1em}
 ul.square li ul,ul.circle li ul,ul.disc li ul{list-style:inherit}
 ul.square{list-style-type:square}
 ul.circle{list-style-type:circle}
 ul.disc{list-style-type:disc}
+ul.no-bullet{list-style:none}
 ol li ul,ol li ol{margin-left:1.25em;margin-bottom:0}
 dl dt{margin-bottom:.3125em;font-weight:bold}
 dl dd{margin-bottom:1.25em}
@@ -132,11 +133,7 @@ strong strong{font-weight:400}
 kbd{font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;display:inline-block;color:rgba(0,0,0,.8);font-size:.65em;line-height:1.45;background-color:#f7f7f7;border:1px solid #ccc;-webkit-border-radius:3px;border-radius:3px;-webkit-box-shadow:0 1px 0 rgba(0,0,0,.2),0 0 0 .1em white inset;box-shadow:0 1px 0 rgba(0,0,0,.2),0 0 0 .1em #fff inset;margin:0 .15em;padding:.2em .5em;vertical-align:middle;position:relative;top:-.1em;white-space:nowrap}
 .keyseq kbd:first-child{margin-left:0}
 .keyseq kbd:last-child{margin-right:0}
-.menuseq,.menuref{color:#000}
-.menuseq b:not(.caret),.menuref{font-weight:inherit}
-.menuseq{word-spacing:-.02em}
-.menuseq b.caret{font-size:1.25em;line-height:.8}
-.menuseq i.caret{font-weight:bold;text-align:center;width:.45em}
+.menuseq,.menu{color:rgba(0,0,0,.8)}
 b.button:before,b.button:after{position:relative;top:-1px;font-weight:400}
 b.button:before{content:"[";padding:0 3px 0 2px}
 b.button:after{content:"]";padding:0 2px 0 3px}
@@ -203,7 +200,7 @@ table.tableblock>caption.title{white-space:nowrap;overflow:visible;max-width:0}
 table.tableblock #preamble>.sectionbody>.paragraph:first-of-type p{font-size:inherit}
 .admonitionblock>table{border-collapse:separate;border:0;background:none;width:100%}
 .admonitionblock>table td.icon{text-align:center;width:80px}
-.admonitionblock>table td.icon img{max-width:initial}
+.admonitionblock>table td.icon img{max-width:none}
 .admonitionblock>table td.icon .title{font-weight:bold;font-family:"Open Sans","DejaVu Sans",sans-serif;text-transform:uppercase}
 .admonitionblock>table td.content{padding-left:1.125em;padding-right:1.25em;border-left:1px solid #ddddd8;color:rgba(0,0,0,.6)}
 .admonitionblock>table td.content>:last-child>:last-child{margin-bottom:0}
@@ -259,13 +256,13 @@ table.pyhltable .linenodiv{background:none!important;padding-right:0!important}
 table.tableblock{max-width:100%;border-collapse:separate}
 table.tableblock td>.paragraph:last-child p>p:last-child,table.tableblock th>p:last-child,table.tableblock td>p:last-child{margin-bottom:0}
 table.tableblock,th.tableblock,td.tableblock{border:0 solid #dedede}
-table.grid-all>thead>tr>.tableblock,table.grid-all>tbody>tr>.tableblock{border-width:0 1px 1px 0}
-table.grid-all>tfoot>tr>.tableblock{border-width:1px 1px 0 0}
-table.grid-cols>*>tr>.tableblock{border-width:0 1px 0 0}
-table.grid-rows>thead>tr>.tableblock,table.grid-rows>tbody>tr>.tableblock{border-width:0 0 1px 0}
-table.grid-rows>tfoot>tr>.tableblock{border-width:1px 0 0 0}
-table.grid-all>*>tr>.tableblock:last-child,table.grid-cols>*>tr>.tableblock:last-child{border-right-width:0}
-table.grid-all>tbody>tr:last-child>.tableblock,table.grid-all>thead:last-child>tr>.tableblock,table.grid-rows>tbody>tr:last-child>.tableblock,table.grid-rows>thead:last-child>tr>.tableblock{border-bottom-width:0}
+table.grid-all th.tableblock,table.grid-all td.tableblock{border-width:0 1px 1px 0}
+table.grid-all tfoot>tr>th.tableblock,table.grid-all tfoot>tr>td.tableblock{border-width:1px 1px 0 0}
+table.grid-cols th.tableblock,table.grid-cols td.tableblock{border-width:0 1px 0 0}
+table.grid-all *>tr>.tableblock:last-child,table.grid-cols *>tr>.tableblock:last-child{border-right-width:0}
+table.grid-rows th.tableblock,table.grid-rows td.tableblock{border-width:0 0 1px 0}
+table.grid-all tbody>tr:last-child>th.tableblock,table.grid-all tbody>tr:last-child>td.tableblock,table.grid-all thead:last-child>tr>th.tableblock,table.grid-rows tbody>tr:last-child>th.tableblock,table.grid-rows tbody>tr:last-child>td.tableblock,table.grid-rows thead:last-child>tr>th.tableblock{border-bottom-width:0}
+table.grid-rows tfoot>tr>th.tableblock,table.grid-rows tfoot>tr>td.tableblock{border-width:1px 0 0 0}
 table.frame-all{border-width:1px}
 table.frame-sides{border-width:0 1px}
 table.frame-topbot{border-width:1px 0}
@@ -286,12 +283,10 @@ ul li ol{margin-left:1.5em}
 dl dd{margin-left:1.125em}
 dl dd:last-child,dl dd:last-child>:last-child{margin-bottom:0}
 ol>li p,ul>li p,ul dd,ol dd,.olist .olist,.ulist .ulist,.ulist .olist,.olist .ulist{margin-bottom:.625em}
-ul.checklist,ul.none,ol.none,ul.no-bullet,ol.no-bullet,ol.unnumbered,ul.unstyled,ol.unstyled{list-style-type:none}
-ul.no-bullet,ol.no-bullet,ol.unnumbered{margin-left:.625em}
-ul.unstyled,ol.unstyled{margin-left:0}
-ul.checklist{margin-left:.625em}
-ul.checklist li>p:first-child>.fa-square-o:first-child,ul.checklist li>p:first-child>.fa-check-square-o:first-child{width:1.25em;font-size:.8em;position:relative;bottom:.125em}
-ul.checklist li>p:first-child>input[type="checkbox"]:first-child{margin-right:.25em}
+ul.unstyled,ol.unnumbered,ul.checklist,ul.none{list-style-type:none}
+ul.unstyled,ol.unnumbered,ul.checklist{margin-left:.625em}
+ul.checklist li>p:first-child>.fa-square-o:first-child,ul.checklist li>p:first-child>.fa-check-square-o:first-child{width:1em;font-size:.85em}
+ul.checklist li>p:first-child>input[type="checkbox"]:first-child{width:1em;position:relative;top:1px}
 ul.inline{margin:0 auto .625em auto;margin-left:-1.375em;margin-right:0;padding:0;list-style:none;overflow:hidden}
 ul.inline>li{list-style:none;float:left;margin-left:1.375em;display:block}
 ul.inline>li>*{display:block}
@@ -308,8 +303,7 @@ ol.lowergreek{list-style-type:lower-greek}
 td.hdlist1,td.hdlist2{vertical-align:top;padding:0 .625em}
 td.hdlist1{font-weight:bold;padding-bottom:1.25em}
 .literalblock+.colist,.listingblock+.colist{margin-top:-.5em}
-.colist>table tr>td:first-of-type{padding:.4em .75em 0 .75em;line-height:1;vertical-align:top}
-.colist>table tr>td:first-of-type img{max-width:initial}
+.colist>table tr>td:first-of-type{padding:0 .75em;line-height:1}
 .colist>table tr>td:last-of-type{padding:.25em 0}
 .thumb,.th{line-height:0;display:inline-block;border:solid 4px #fff;-webkit-box-shadow:0 0 0 1px #ddd;box-shadow:0 0 0 1px #ddd}
 .imageblock.left,.imageblock[style*="float: left"]{margin:.25em .625em 1.25em 0}
@@ -372,7 +366,6 @@ div.unbreakable{page-break-inside:avoid}
 .yellow{color:#bfbf00}
 .yellow-background{background-color:#fafa00}
 span.icon>.fa{cursor:default}
-a span.icon>.fa{cursor:inherit}
 .admonitionblock td.icon [class^="fa icon-"]{font-size:2.5em;text-shadow:1px 1px 2px rgba(0,0,0,.5);cursor:default}
 .admonitionblock td.icon .icon-note:before{content:"\f05a";color:#19407c}
 .admonitionblock td.icon .icon-tip:before{content:"\f0eb";text-shadow:1px 1px 2px rgba(155,155,0,.8);color:#111}
@@ -501,7 +494,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_the_words_code_create_code_and_code_does_code">The Words <code>create</code> and <code>does&gt;</code></a></li>
 <li><a href="#_control_flow">Control Flow</a></li>
 <li><a href="#_native_compiling_2">Native Compiling</a></li>
-<li><a href="#_code_cmove_code_code_cmove_code_and_code_move_code"><code>cmove</code>, <code>cmove&gt;</code> and <code>move</code></a></li>
+<li><a href="#__code_cmove_code_code_cmove_code_and_code_move_code"><code>cmove</code>, <code>cmove&gt;</code> and <code>move</code></a></li>
 </ul>
 </li>
 <li><a href="#_developing">Developing</a>
@@ -516,7 +509,13 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#_tutorials">Tutorials</a>
 <ul class="sectlevel1">
-<li><a href="#_working_with_blocks">Working with Blocks</a></li>
+<li><a href="#_working_with_blocks">Working with Blocks</a>
+<ul class="sectlevel2">
+<li><a href="#_first_steps_with_blocks">First steps with blocks</a></li>
+<li><a href="#_editing_a_screen">Editing a screen</a></li>
+<li><a href="#_working_with_blocks_2">Working with blocks</a></li>
+</ul>
+</li>
 <li><a href="#_the_code_ed_code_line_based_editor_a_id_ed_tutorial_a">The <code>ed</code> Line-Based Editor<a id="ed-tutorial"></a></a>
 <ul class="sectlevel2">
 <li><a href="#_first_steps_with_code_ed_code">First steps with <code>ed</code></a></li>
@@ -3284,7 +3283,7 @@ a list of what we want to happen at compile time and what at run time. Let&#8217
 start with a simple <code>do</code>-<code>loop</code>.</p>
 </div>
 <div class="sect4">
-<h5 id="_code_do_code_at_compile_time"><code>do</code> at compile-time:</h5>
+<h5 id="__code_do_code_at_compile_time"><code>do</code> at compile-time:</h5>
 <div class="ulist">
 <ul>
 <li>
@@ -3305,7 +3304,7 @@ where the loop contents begin</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_code_do_code_at_run_time"><code>do</code> at run-time:</h5>
+<h5 id="__code_do_code_at_run_time"><code>do</code> at run-time:</h5>
 <div class="ulist">
 <ul>
 <li>
@@ -3319,7 +3318,7 @@ away with considering them at the same time.</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_code_loop_code_at_compile_time"><code>loop</code> at compile time:</h5>
+<h5 id="__code_loop_code_at_compile_time"><code>loop</code> at compile time:</h5>
 <div class="ulist">
 <ul>
 <li>
@@ -3345,7 +3344,7 @@ construct to the Return Stack at run-time</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_code_loop_code_at_run_time_which_is_code_loop_code"><code>loop</code> at run-time (which is <code>(+loop)</code>)</h5>
+<h5 id="__code_loop_code_at_run_time_which_is_code_loop_code"><code>loop</code> at run-time (which is <code>(+loop)</code>)</h5>
 <div class="ulist">
 <ul>
 <li>
@@ -3664,7 +3663,7 @@ headers.asm file and should never have the AN (Always Native) flag set.
 </div>
 </div>
 <div class="sect2">
-<h3 id="_code_cmove_code_code_cmove_code_and_code_move_code"><code>cmove</code>, <code>cmove&gt;</code> and <code>move</code></h3>
+<h3 id="__code_cmove_code_code_cmove_code_and_code_move_code"><code>cmove</code>, <code>cmove&gt;</code> and <code>move</code></h3>
 <div class="paragraph">
 <p>The three moving words <code>cmove</code>, <code>cmove&gt;</code> and <code>move</code> show subtle differences
 that can trip up new users and are reflected by different code under the hood.
@@ -4045,17 +4044,526 @@ This section is missing. See the GitHub page for further details.
 <div class="sect1">
 <h2 id="_working_with_blocks">Working with Blocks</h2>
 <div class="sectionbody">
-<div class="admonitionblock warning">
+<div class="paragraph">
+<p>Blocks are a simple system for dealing with non-volatile storage.  Originally,
+the storage medium would have been a floppy disk drive, but hobbyists are more
+likely to attach I2C or SPI flash memory to their system.  These storage devices
+often have more than 64K (the full address space of the 65C02) of storage, so
+the block words help to deal with the larger address space and the fact that
+there is a limited amount of RAM in the system.</p>
+</div>
+<div class="paragraph">
+<p>The block words do not use a file system and expect to access the storage memory
+directly.  The storage space is divided into 1K chunks, or "blocks", and each is
+given a number.  On Tali, this allows for 64K blocks, or up to 64MB of storage.
+The user can request that a block is brought into RAM, operate on the data, and
+then request that the modified version be saved back to storage.</p>
+</div>
+<div class="paragraph">
+<p>What the blocks hold is up to the user.  They can hold text, Forth code, or
+binary data.  Support for text and Forth code is provided by Tali, and the user
+can easily provide support for storing binary data in their programs.</p>
+</div>
+<div class="sect2">
+<h3 id="_first_steps_with_blocks">First steps with blocks</h3>
+<div class="paragraph">
+<p>In order to facilitate playing with blocks, Tali comes with a special word
+<code>block-ramdrive-init</code> that takes the number of blocks you want to use and
+allocates a RAM drive to simulate a mass-storage device.  It also sets up the
+read and write vectors to routines that will move the data in and out of the
+allocated RAM.</p>
+</div>
+<div class="paragraph">
+<p>If you have an actual storage device, such as a flash memory, you will need to
+write routines for transferring 1K from storage to RAM and from RAM to storage.
+The addresses (xt) of these routines need to be placed in the existing variables
+<code>BLOCK-READ-VECTOR</code> and <code>BLOCK-WRITE-VECTOR</code>, respectively.</p>
+</div>
+<div class="paragraph">
+<p>To get started on this tutorial, we will use the ramdrive with 4 blocks
+allocated.  If you forget this step, you will see an error message about
+BLOCK-READ-VECTOR and BLOCK-WRITE-VECTOR when you try to use any of the block
+words.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>4 block-ramdrive-init</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This command takes a moment as all of the block memory is initialized to the
+value BLANK (a space) on the assumption you will be placing text there.  When
+complete, you will have 4 blocks (numbered 0-3) available to play with.</p>
+</div>
+<div class="paragraph">
+<p>When using blocks for text or Forth code, the 1K block is further divided into
+16 lines of 64 characters each.  Newlines are typically not used in blocks at
+all, and the unused space is filled with spaces to get to the next line.  Blocks
+that have this type of text data in them are also called a "screen".</p>
+</div>
+<div class="paragraph">
+<p>To see the contents of a block in screen format, you can use the built-in <code>list</code>
+command.  It takes the block number (called a screen number when storing text)
+and displays the contents of that block.  Typing the command <code>0 list</code> will list
+the contents of block 0.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>0 list
+Screen #   0
+ 0
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+ ok</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As you can see, this screen is currently blank.  It&#8217;s actually 16 lines each
+containing 64 spaces.</p>
+</div>
+<div class="paragraph">
+<p>Block 0 is special in that it is the only block you cannot load Forth code from.
+Because of this, block 0 is commonly used to hold a text description of what is
+in the other blocks.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_editing_a_screen">Editing a screen</h3>
+<div class="paragraph">
+<p>In order to edit a block, we will need to bring in the screen editor.  It
+lives in the EDITOR-WORDLIST, which is not used when Tali starts.  To add the
+editor words, run:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>forth-wordlist editor-wordlist 2 set-order</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This tells Tali to use both the editor words and the forth words.</p>
+</div>
+<div class="paragraph">
+<p>You can only edit one screen at a time.  To select a screen, simply <code>list</code> it.
+All further operations will edit that screen until a new screen is listed.  The
+block number of the screen being edited is held in the <code>SCR</code> variable, and the
+<code>list</code> word simply saves the block number there before displaying it on the
+screen; many of the other editing words look in <code>SCR</code> to see which block is
+being edited.</p>
+</div>
+<div class="paragraph">
+<p>The following words can be used to edit a screen:</p>
+</div>
+<div class="hdlist">
 <table>
 <tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
+<td class="hdlist1">
+list
 </td>
-<td class="content">
-This section is currently missing.
+<td class="hdlist2">
+<p><code>( scr#&#8201;&#8212;&#8201;)</code> List the block in screen (16 lines of 64 chars) format.  This word also
+select the given block for futher editing if desired.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+l
+</td>
+<td class="hdlist2">
+<p><code>(&#8201;&#8212;&#8201;)</code> List the current screen (previously listead with <code>list</code>)</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+el
+</td>
+<td class="hdlist2">
+<p><code>( line#&#8201;&#8212;&#8201;)</code> Erase a line on the previously listed screen.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+o
+</td>
+<td class="hdlist2">
+<p><code>( line#&#8201;&#8212;&#8201;)</code> Overwrite an entire line on the previously listed screen.
+Enter the replacement text at the * prompt.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+enter-screen
+</td>
+<td class="hdlist2">
+<p><code>( scr#&#8201;&#8212;&#8201;)</code> Prompt for all of the lines on the given screen number</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+erase-screen
+</td>
+<td class="hdlist2">
+<p><code>( scr#&#8201;&#8212;&#8201;)</code> Erase the given screen by filling with BLANK (spaces)</p>
 </td>
 </tr>
 </table>
+</div>
+<div class="paragraph">
+<p>Because block 0 has already been listed above, we will simply add a message on
+line 2.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>2 o
+ 2 * Load screen 2 to get a smiley!</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now if we list screen 0, we should see our message:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>0 list
+Screen #   0
+ 0
+ 1
+ 2 Load screen 2 to get a smiley!
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+  ok</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now we will entire screen 2 using <code>enter-screen</code>.  It will prompt line by line
+for the text.  Pressing ENTER without typing any text will leave that line
+blank.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>2 enter-screen
+ 0 * ( Make a smiley word and then run it!    SCC 2018-12 )
+ 1 * : smiley ." :)" ;
+ 2 *
+ 3 *
+ 4 *
+ 5 * smiley
+ 6 *
+ 7 *
+ 8 *
+ 9 *
+10 *
+11 *
+12 *
+13 *
+14 *
+15 *   ok</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>It is customary for the very first line to be a comment (Tali only supports
+parenthesis comments in blocks) with a description, the programmer&#8217;s initials,
+and the date.  On line 1 we have entered the word definition, and on line 5 we
+are running the word.</p>
+</div>
+<div class="paragraph">
+<p>To get Tali to run this code, we use the word <code>load</code> on the block number.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>2 load :) ok</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If your forth code doesn&#8217;t fit on one screen, you can spread it across
+contiguous screens and load all of them with the <code>thru</code> command.  If you had
+filled screens 1-3 with forth code and wanted to load all of it, you would run:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>1 3 thru</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For reasons explained in the next chapter, the modified screen data is only
+saved back to the mass storage (in this case, our ramdrive) when the screen
+number is changed and accessed (typically with <code>list</code>).  To force Tali to save
+any changes to the mass storage, you can use the <code>flush</code> command.  It takes no
+arguments and simply saves any changed back to the mass storage.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>flush</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_working_with_blocks_2">Working with blocks</h3>
+<div class="paragraph">
+<p>Blocks can also be used by applications to store data.  The block words bring
+the blocks from mass storage into a 1K buffer where the data can be read or
+written.  If changes are made to the buffer, the <code>update</code> word needs to be run
+to indicate that there are updates to the data and that it needs to be saved
+back to mass storage before another block can be brought in to the buffer.</p>
+</div>
+<div class="paragraph">
+<p>Because the ANS spec does not specify how many buffers there are, portable Forth
+code needs to assume that there is only 1, and that the loading of any block
+might replace the buffered version of a previouly loaded block.  This is a very
+good assumption for Tali, as it currently only has 1 block buffer.</p>
+</div>
+<div class="paragraph">
+<p>The following words will be used to deal with blocks:</p>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+block
+</td>
+<td class="hdlist2">
+<p><code>( block#&#8201;&#8212;&#8201;addr )</code> Load the given block into a buffer.  If the buffer
+has been updated, it will save the contents out to block storage before loading
+the new block.  Returns the address of the buffer.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+buffer
+</td>
+<td class="hdlist2">
+<p><code>( block#&#8201;&#8212;&#8201;addr )</code> Identical to block, except that it doesn&#8217;t
+actually load the block from storage.  The contents in the buffer are undefined,
+but will be saved back to the given block number if updated.  Returns the
+address of the buffer.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+update
+</td>
+<td class="hdlist2">
+<p><code>(&#8201;&#8212;&#8201;)</code> Mark the most recent buffer as updated (dirty) so it will be
+saved back to storage at a later time.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+flush
+</td>
+<td class="hdlist2">
+<p><code>(&#8201;&#8212;&#8201;)</code> Save any updated buffers to storage and mark all buffers empty.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+save-buffers
+</td>
+<td class="hdlist2">
+<p><code>(&#8201;&#8212;&#8201;)</code> Save any updated buffers to storage.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+empty-buffers
+</td>
+<td class="hdlist2">
+<p><code>(&#8201;&#8212;&#8201;)</code> Mark all buffers as empty, even if they have been
+updated and not saved.  Can be used to abandon edits.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+load
+</td>
+<td class="hdlist2">
+<p><code>( blk#&#8201;&#8212;&#8201;)</code> Interpret the contents of the given block.</p>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The following variables are used with blocks:</p>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+BLK
+</td>
+<td class="hdlist2">
+<p>The block number currently being interpreted by a <code>load</code> or <code>thru</code>
+command. BLK is 0 when interpreting from the keyboard or from a string.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+SCR
+</td>
+<td class="hdlist2">
+<p>The screen number currently being edited.  Set by <code>list</code>, but you can set
+it yourself if you want.</p>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_a_simple_block_example">A simple block example</h4>
+<div class="openblock float-group">
+<div class="content">
+<div class="imageblock" style="float: left">
+<div class="content">
+<img src="pics/blocks-block.png" alt="blocks block">
+</div>
+</div>
+<div class="paragraph">
+<p>To load a block, just give the block number to the <code>block</code> word like so:</p>
+</div>
+<div class="paragraph">
+<p><code>1 block</code></p>
+</div>
+<div class="paragraph">
+<p>This will load the block into the buffer and return the address of the buffer on
+the stack.  The buffer will be marked as "in-use" with block 1 and also marked
+as "clean".  The address on the stack can be used to access the contents of the
+buffer.  As long as the buffer has not been marked as "dirty" with the word
+<code>update</code>, you can call <code>block</code> again and it will simply replace the buffer with
+the new block data.</p>
+</div>
+<div class="paragraph">
+<p>Note: On larger forths with multiple buffers, using block again may bring the
+requested block into a different buffer.  Tali only has a single buffer, so the
+buffer contents will be replaced every time.</p>
+</div>
+</div>
+</div>
+<div class="openblock float-group">
+<div class="content">
+<div class="imageblock" style="float: left">
+<div class="content">
+<img src="pics/blocks-update.png" alt="blocks update">
+</div>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s modify the data in block 1.  The editor words handle the blocks behind the
+scenes, so we will use <code>move</code> to copy some strings into the buffer.</p>
+</div>
+<div class="paragraph">
+<p><code>( Assuming "1 block" was recently run )</code><br>
+<code>( and buffer address is still there )</code><br>
+<code>128 +         ( Move to line 2)</code><br>
+<code>s" Hello!"</code><br>
+<code>rot swap move ( Copy Hello! into line )</code><br>
+<code>update        ( Tell Tali it&#8217;s modified )</code><br></p>
+</div>
+<div class="paragraph">
+<p>These commands put the string "Hello!" onto line 2, which can be seen by running
+<code>1 list</code> afterwards.  The modification, however, hasn&#8217;t been transferred to
+storage yet.  If power were lost or the processor reset at this point, the data
+would be lost.</p>
+</div>
+</div>
+</div>
+<div class="openblock float-group">
+<div class="content">
+<div class="imageblock" style="float: left">
+<div class="content">
+<img src="pics/blocks-newblock.png" alt="blocks newblock">
+</div>
+</div>
+<div class="paragraph">
+<p>We also want to make a change to block 3, so we will bring that block in next.</p>
+</div>
+<div class="paragraph">
+<p><code>3 block</code></p>
+</div>
+<div class="paragraph">
+<p>The block-handling built-in to Forth will see that the buffer is in use and is
+no longer a clean copy because it has been updated.  This will cause Tali to
+write block 1 back to mass storage before bringing in block 3.  Once block 3 is
+in the buffer, it will be marked as "in-use" with block 3 and "clean".</p>
+</div>
+</div>
+</div>
+<div class="openblock float-group">
+<div class="content">
+<div class="imageblock" style="float: left">
+<div class="content">
+<img src="pics/blocks-update3.png" alt="blocks update3">
+</div>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s modify the data in block 3 now.</p>
+</div>
+<div class="paragraph">
+<p><code>( Assuming "3 block" was recently run )</code><br>
+<code>( and buffer address is still there )</code><br>
+<code>256 +         ( Move to line 4)</code><br>
+<code>s" Hi there!"</code><br>
+<code>rot swap move ( Copy string into line )</code><br>
+<code>update        ( Tell Tali it&#8217;s modified )</code><br></p>
+</div>
+<div class="paragraph">
+<p>After this code is run, the buffer will be modified, marked as updated/dirty,
+but once again it won&#8217;t actually be saved back to mass storage right at this
+point.</p>
+</div>
+</div>
+</div>
+<div class="openblock float-group">
+<div class="content">
+<div class="imageblock" style="float: left">
+<div class="content">
+<img src="pics/blocks-flush.png" alt="blocks flush">
+</div>
+</div>
+<div class="paragraph">
+<p>To force the updated version of block 3 to be written back to mass storage, we
+can use the command:</p>
+</div>
+<div class="paragraph">
+<p><code>flush</code></p>
+</div>
+<div class="paragraph">
+<p>If the buffer is in use and dirty, it will be written back to mass storage.
+Then the buffer will be marked empty.</p>
+</div>
+<div class="paragraph">
+<p>If you want to write the changes but keep the block in the buffer, you can use
+the command <code>save-buffers</code> instead of flush.  That would be useful in a
+situation where you want to save the block changed right now, but also want to
+keep making changes in the buffer.</p>
+</div>
+<div class="paragraph">
+<p>If you want to abandon the changes in the buffer, you can use the command
+<code>empty-buffers</code>.  This will not save even a dirty buffer, and marks the buffer
+as empty.</p>
+</div>
+</div>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -4732,70 +5240,70 @@ who contributed the invaluable test suite and a whole lot of code.</p>
 <h2 id="_references_and_further_reading">References and Further Reading</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>[<a id="FB"></a>] <em>Masterminds of Programming</em>, Federico Biancuzzi,
+<p><a id="FB"></a>[FB] <em>Masterminds of Programming</em>, Federico Biancuzzi,
 O&#8217;Reilly Media 1st edition, 2009.</p>
 </div>
 <div class="paragraph">
-<p>[<a id="CHM1"></a>] "Charles H. Moore: Geek of the Week", redgate Hub 2009
+<p><a id="CHM1"></a>[CHM1] "Charles H. Moore: Geek of the Week", redgate Hub 2009
 <a href="https://www.red-gate.com/simple-talk/opinion/geek-of-the-week/chuck-moore-geek" class="bare">https://www.red-gate.com/simple-talk/opinion/geek-of-the-week/chuck-moore-geek</a></p>
 </div>
 <div class="paragraph">
-<p>[<a id="CHM2"></a>] "The Evolution of FORTH, an Unusual Language", Charles H. Moore,
+<p><a id="CHM2"></a>[CHM2] "The Evolution of FORTH, an Unusual Language", Charles H. Moore,
 <em>Byte</em> 1980, <a href="https://wiki.forth-ev.de/doku.php/projects:the_evolution_of_forth" class="bare">https://wiki.forth-ev.de/doku.php/projects:the_evolution_of_forth</a></p>
 </div>
 <div class="paragraph">
-<p>[<a id="CnR"></a>] <em>Forth Programmer&#8217;s Handbook</em>, Edward K. Conklin and Elizabeth Rather,
+<p><a id="CnR"></a>[CnR] <em>Forth Programmer&#8217;s Handbook</em>, Edward K. Conklin and Elizabeth Rather,
 3rd edition 2010</p>
 </div>
 <div class="paragraph">
-<p>[<a id="DB"></a>] <em>Forth Enzyclopedia</em>, Mitch Derick and Linda Baker,
+<p><a id="DB"></a>[DB] <em>Forth Enzyclopedia</em>, Mitch Derick and Linda Baker,
 Mountain View Press 1982</p>
 </div>
 <div class="paragraph">
-<p>[<a id="DH"></a>] "Some notes on Forth from a novice user", Douglas Hoffman, Feb 1988
+<p><a id="DH"></a>[DH] "Some notes on Forth from a novice user", Douglas Hoffman, Feb 1988
 <a href="https://wiki.forth-ev.de/doku.php/projects:some_notes_on_forth_from_a_novice_user" class="bare">https://wiki.forth-ev.de/doku.php/projects:some_notes_on_forth_from_a_novice_user</a></p>
 </div>
 <div class="paragraph">
-<p>[<a id="DMR"></a>] "Reflections on Software Research", Dennis M. Ritchie, Turing Award
+<p><a id="DMR"></a>[DMR] "Reflections on Software Research", Dennis M. Ritchie, Turing Award
 Lecture in <em>Communications of the ACM</em> August 1984 Volume 27 Number 8
 <a href="http://www.valleytalk.org/wp-content/uploads/2011/10/p758-ritchie.pdf" class="bare">http://www.valleytalk.org/wp-content/uploads/2011/10/p758-ritchie.pdf</a></p>
 </div>
 <div class="paragraph">
-<p>[<a id="EnL"></a>] <em>Programming the 65816, including the 6502, 65C02 and 65802</em>,
+<p><a id="EnL"></a>[EnL] <em>Programming the 65816, including the 6502, 65C02 and 65802</em>,
 David Eyes and Ron Lichty
 (Currently not available from the WDC website)</p>
 </div>
 <div class="paragraph">
-<p>[<a id="EW"></a>] "Forth: The Hacker&#8217;s Language", Elliot Williams,
+<p><a id="EW"></a>[EW] "Forth: The Hacker&#8217;s Language", Elliot Williams,
 <a href="https://hackaday.com/2017/01/27/forth-the-hackers-language/" class="bare">https://hackaday.com/2017/01/27/forth-the-hackers-language/</a></p>
 </div>
 <div class="paragraph">
-<p>[<a id="GK"></a>] "Forth System Comparisons", Guy Kelly, in <em>Forth Dimensions</em> V13N6,
+<p><a id="GK"></a>[GK] "Forth System Comparisons", Guy Kelly, in <em>Forth Dimensions</em> V13N6,
 March/April 1992
 <a href="http://www.forth.org/fd/FD-V13N6.pdf}{http://www.forth.org/fd/FD-V13N6.pdf" class="bare">http://www.forth.org/fd/FD-V13N6.pdf}{http://www.forth.org/fd/FD-V13N6.pdf</a></p>
 </div>
 <div class="paragraph">
-<p>[<a id="JN"></a>] <em>A Beginner&#8217;s Guide to Forth</em>, J.V. Nobel,
+<p><a id="JN"></a>[JN] <em>A Beginner&#8217;s Guide to Forth</em>, J.V. Nobel,
 <a href="http://galileo.phys.virginia.edu/classes/551.jvn.fall01/primer.htm" class="bare">http://galileo.phys.virginia.edu/classes/551.jvn.fall01/primer.htm</a></p>
 </div>
 <div class="paragraph">
-<p>[<a id="BWK"></a>] <em>A Tutorial Introduction to the UNIX Text Editor</em>, B. W. Kernighan,
+<p><a id="BWK"></a>[BWK] <em>A Tutorial Introduction to the UNIX Text Editor</em>, B. W. Kernighan,
 <a href="http://www.psue.uni-hannover.de/wise2017_2018/material/ed.pdf" class="bare">http://www.psue.uni-hannover.de/wise2017_2018/material/ed.pdf</a></p>
 </div>
 <div class="paragraph">
-<p>[<a id="LB1"></a>] <em>Starting Forth</em>, Leo Brodie, new edition 2003,
+<p><a id="LB1"></a>[LB1] <em>Starting Forth</em>, Leo Brodie, new edition 2003,
 <a href="https://www.forth.com/starting-forth/}{https://www.forth.com/starting-forth/" class="bare">https://www.forth.com/starting-forth/}{https://www.forth.com/starting-forth/</a></p>
 </div>
 <div class="paragraph">
-<p>[<a id="LB2"></a>] <em>Thinking Forth</em>, Leo Brodie, 1984,
+<p><a id="LB2"></a>[LB2] <em>Thinking Forth</em>, Leo Brodie, 1984,
 <a href="http://thinking-forth.sourceforge.net/\#21CENTURY" class="bare">http://thinking-forth.sourceforge.net/\#21CENTURY</a></p>
 </div>
 <div class="paragraph">
-<p>[<a id="LL"></a>] <em>6502 Assembly Language Programming</em>, Lance A. Leventhal,
+<p><a id="LL"></a>[LL] <em>6502 Assembly Language Programming</em>, Lance A. Leventhal,
 OSBORNE/McGRAW-HILL 1979</p>
 </div>
 <div class="paragraph">
-<p>[<a id="PHS"></a>] "The Daemon, the Gnu and the Penguin", Peter H. Saulus,
+<p><a id="PHS"></a>[PHS] "The Daemon, the Gnu and the Penguin", Peter H. Saulus,
 22. April 2005, <a href="http://www.groklaw.net/article.php?story=20050422235450910" class="bare">http://www.groklaw.net/article.php?story=20050422235450910</a></p>
 </div>
 </div>
@@ -4833,7 +5341,7 @@ under <a href="https://www.ubuntu.com/">Ubuntu</a> Linux 16.04 LTS.</p>
 <div id="footer">
 <div id="footer-text">
 Version BETA<br>
-Last updated 2018-11-17 22:19:20 EST
+Last updated 2018-12-15 13:07:55 EST
 </div>
 </div>
 </body>

@@ -77,7 +77,7 @@ WARNING: This section is missing. See the GitHub page for further details.
 
 == Working with Blocks
 
-WARNING: This section is currently missing.
+include::ch_tutorial_blocks.adoc[]
 
 == The `ed` Line-Based Editor[[ed-tutorial]]
 include::ch_tutorial_ed.adoc[]
