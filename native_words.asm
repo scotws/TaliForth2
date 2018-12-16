@@ -4034,7 +4034,7 @@ _env_results_single:
         .word $FFFF     ; MAX-U
         .word $0080     ; RETURN-STACK-CELLS
         .word $0020     ; STACK-CELLS (from definitions.asm)
-        .word $0008     ; WORDLISTS
+        .word $0009     ; WORDLISTS
 
 _env_results_double:
         .word $7FFF, $FFFF      ; MAX-D

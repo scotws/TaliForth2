@@ -1861,7 +1861,7 @@
  8EAC  26 DB 36 DB 3C DB 41 DB 53 DB 5B DB 64 DB 6A DB  |&.6.<.A.S.[.d.j.|
  8EBC  70 DB 83 DB 8F DB 00 00 99 DB 9F DB 00 00 FF 7F  |p...............|
  8ECC  FF 00 54 00 08 00 00 00 FF 00 FF 7F FF FF 80 00  |..T.............|
- 8EDC  20 00 08 00 FF 7F FF FF FF FF FF FF              | ...........    |
+ 8EDC  20 00 09 00 FF 7F FF FF FF FF FF FF              | ...........    |
  8EE8  E0 75     CPX  #$75
  8EEA  30 03     BMI  $8EEF
  8EEC  4C DE DC  JMP  $DCDE

@@ -1587,7 +1587,7 @@ T{ s" MAX-N"              environment? ->    7FFF <true> }T  ok
 T{ s" MAX-U"              environment? ->    FFFF <true> }T  ok
 T{ s" RETURN-STACK-CELLS" environment? ->      80 <true> }T  ok
 T{ s" STACK-CELLS"        environment? ->      20 <true> }T  ok
-T{ s" WORDLISTS"          environment? ->       8 <true> }T  ok
+T{ s" WORDLISTS"          environment? ->       9 <true> }T  ok
   ok
 T{ s" MAX-D"  environment? -> 7FFFFFFF. <true> }T   ok
 T{ s" MAX-UD" environment? -> FFFFFFFF. <true> }T  ok
