@@ -94,20 +94,19 @@ _zero_user_vars_loop:
                 ; Set up the initial dictionary.
                 ; TODO: Load this from a table in ROM
                 ; Wordlists:
-                ldy #current_offset
+                ldy #current_offset     ; Byte variable CURRENT
                 lda #0
                 sta (up),y      ; Set CURRENT to 0 (FORTH-WORDLIST).
                 iny
-                sta (up),y
 
-                ldy #num_wordlists_offset
-                lda #3          ; 3 wordlists to start:
-                sta (up),y      ; FORTH, EDITOR, and ASSEMBLER
+                ; Y is already at #WORDLISTS
+                ; ldy #num_wordlists_offset   ; Byte variable #WORDLISTS
+                lda #4          ; 4 wordlists to start:
+                sta (up),y      ; FORTH, EDITOR, and ASSEMBLER, ROOT
                 iny
-                lda #0
-                sta (up),y
 
-                ldy #wordlists_offset
+                ; Y is already at WORDLISTS
+                ; ldy #wordlists_offset
                 lda #<dictionary_start
                 sta (up),y      ; FORTH-WORDLIST
                 iny
@@ -128,21 +127,23 @@ _zero_user_vars_loop:
                 lda #>assembler_dictionary_start
                 sta (up),y
 
+                iny
+                lda #<root_dictionary_start
+                sta (up),y      ; ROOT-WORDLIST
+                iny
+                lda #>root_dictionary_start
+                sta (up),y
+
                 ; Initialize search order list.
-                ldy #num_order_offset
+                ldy #num_order_offset   ; Byte variable #ORDER
                 lda #1
                 sta (up),y      ; Initialize #ORDER to 1
-                iny
-                lda #0
-                sta (up),y
 
                 ; USER memory is already initialized to zero.
                 ; ldy #search_order_offset
                 ; lda #0
                 ; sta (up),y      ; Only the FORTH-WORDLIST in the
-                ; iny             ; initial search order.
-                ; lda #0
-                ; sta (up),y
+                                  ; initial search order.
 
                 ; Initialize the block I/O words.
                 ; Initialize block read vector.
@@ -7406,6 +7407,19 @@ z_right_bracket:
                 rts
 
 
+; ## ROOT_WORDLIST ( -- u ) "WID for the Root (minimal) wordlist"
+; ## "root-wordlist"  tested  Tali Editor
+xt_root_wordlist:        
+                dex             ; The WID for the Root wordlist is 3.
+                dex
+                lda #3
+                sta 0,x
+                stz 1,x
+
+z_root_wordlist:
+                rts
+        
+
 ; ## ROT ( a b c -- b c a ) "Rotate first three stack entries downwards"
 ; ## "rot"  auto  ANS core
         ; """https://forth-standard.org/standard/core/ROT
@@ -7762,8 +7776,9 @@ xt_set_order:
                 ; search order, which is just the FORTH-WORDLIST.
                 dex             ; Make room for the count.
                 dex
-                stz 3,x         ; FORTH-WORDLIST is 0
-                stz 2,x
+                stz 3,x         ; ROOT-WORDLIST is 3
+                lda #3
+                sta 2,x
                 stz 1,x         ; Count is 1.
                 lda #1
                 sta 0,x

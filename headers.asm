@@ -97,9 +97,14 @@ nt_assembler_wordlist:
         .word nt_editor_wordlist, xt_assembler_wordlist, z_assembler_wordlist
         .byte "assembler-wordlist"
 
+nt_root_wordlist:
+        .byte 13, 0
+        .word nt_assembler_wordlist, xt_root_wordlist, z_root_wordlist
+        .byte "root-wordlist"
+                
 nt_get_order:
         .byte 9, 0
-        .word nt_assembler_wordlist, xt_get_order, z_get_order
+        .word nt_root_wordlist, xt_get_order, z_get_order
         .byte "get-order"
 
 nt_set_order:
@@ -1298,7 +1303,7 @@ nt_root_forth:
         .word nt_root_forth_wordlist, xt_forth, z_forth
         .byte "forth"
         
-root_wordlist_start:    
+root_dictionary_start:    
 nt_root_set_order:
         .byte 9, 0
         .word nt_root_forth, xt_set_order, z_set_order
