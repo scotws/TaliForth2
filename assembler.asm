@@ -1,7 +1,7 @@
 ; Assembler for Tali Forth 2 
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 07. Nov 2014 (as tasm65c02)
-; This version: 13. Dez 2018
+; This version: 15. Dez 2018
 
 ; This is the built-in assembler for Tali Forth 2. Once the assembler wordlist
 ; is established, the opcodes are available as normal Forth words. The format
@@ -64,15 +64,15 @@ z_asm_rts:
 
 
 ; ==========================================================
-; PSEUDO-INSTRUCTIONS
+; PSEUDO-INSTRUCTIONS AND MACROS
 
 xt_asm_push_a:
         ; """push-a puts the content of the 65c02 Accumulator on the Forth
         ; data stack as the TOS. This is a convience routine that encodes the
-        ; instructions  DEX DEX  STA 0,X  STZ 1,X
+        ; instructions  DEX  DEX  STA 0,X  STZ 1,X
         ; """
         ; TODO if we have more than one pseudo-instruction like this, consider
-        ; using a common loop for different byte sequences
+        ; using a common loop for the various byte sequences
 .scope
                 ldy #0
 _loop:
@@ -87,7 +87,7 @@ _done:
 z_asm_push_a:
                 rts
 _data:
-        ; We can't use 00 as a terminator because of STA 0,X
+        ; We can't use 00 as a terminator because STA 0,X assembles to 95 00
         .byte $CA, $CA, $95, 00, $74, $01 
         .byte $FF               ; terminator 
 .scend
@@ -95,6 +95,9 @@ _data:
 
 ; ==========================================================
 ; DIRECTIVES
+
+        ; TODO there are currently no directives available. See 
+        ; https://github.com/scotws/tasm65c02 for possible future directives
 
 
 ; ==========================================================

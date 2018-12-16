@@ -2,7 +2,7 @@
 # Convert SAN data file to assembler routines and headers
 # Scot W. Stevenson <scot.stevenson@gmail.com>
 # First version: 13. Dec 2018
-# This version: 13. Dec 2018
+# This version: 15. Dec 2018
 """Convert SAN data to assembler routines and headers
 
 Assumes the file "opcodes65c02.txt" in the current directory with three
@@ -16,30 +16,77 @@ This is a one-shot program and is not maintained. Use at your own risk.
 
 SOURCE = 'opcodes65c02.txt'
 
-TEMPLATE_ASSEMBLER = 'xt_asm_{0}:\n'\
-        '        jsr asm_common\n'\
-        '        .byte ${1}, {2}\n'\
-        'z_asm_{0}:\n'
+TEMPLATE_ASSEMBLER = 'xt_asm_{4}:\t\t; {0} \ {3}\n'\
+        '\t\tlda #${1}\n'\
+        '\t\tldx #{2}\n'\
+        'z_asm_{4}:\n'
+
+TEMPLATE_HEADER = 'nt_asm_{2}:\n'\
+        '\t\t.byte {1}, IM\n'\
+        '\t\t.word {3}\n'\
+        '\t\t.word xt_asm_{2}, z_asm_{2}\n'\
+        '\t\t.byte "{0}"\n'
+
+TEMPLATE_TEST = ''
 
 
-TEMPLATE_HEADER = 'nt_{0}:\n'\
-        '        .byte {1}, IM\n'\
-        '        .word 0000, xt_{2}, z_{3}\n'\
-        '        .byte "{4}"\n'
+def cleanup_opcode(ocs):
+    """Given an opcode hex value in the form of a string such as '0xea',
+    remove the '0x' prefix and return the actual two digits as uppercase
+    string.
+    """
+    return ocs[2:].upper()
+
+
+def labelize_mnemonic(mne):
+    """Given a SAN mnemonic in the form of a string such as 'and.z', convert
+    any dot to an underscore for use in the labels. Also convert any '#' into
+    an 'h' so 'lda.#' becomes 'lda_h'.
+    """
+    s1 = mne.replace('.', '_')
+    s2 = s1.replace ('#', 'h')
+    return s2
 
 
 def main():
     """Main function"""
 
+    assembler_list = []
+    header_list = []
+    test_list = []
+
     with open(SOURCE) as opcode_list:
+
+        previous_header = '0000'
 
         for line in opcode_list:
             ws = line.split()
 
-            if ws[1] == 'UNUSED':
-                continue 
+            co = cleanup_opcode(ws[1])
+            lm = labelize_mnemonic(ws[0])
 
-            print(ws[0], ":", ws[1], ws[2])
+            assembler_list.append(TEMPLATE_ASSEMBLER.format(ws[0],\
+                    co, ws[2], ws[0].upper(), lm))
+
+            header_list.append(TEMPLATE_HEADER.format(ws[0], ws[2], lm,\
+                    previous_header))
+
+            previous_header = 'nt_asm_{0}'.format(lm)
+
+    # Print out everyting to standard output. The user can redirect this to
+    # a file and edit the rest by hand
+    for l in assembler_list:
+        print(l)
+
+    print('-'*80)
+
+    for l in header_list:
+        print(l)
+
+    print('-'*80)
+
+    for l in test_list:
+        print(l)
 
 
 if __name__ == '__main__':

@@ -1,13 +1,14 @@
 WARNING: This chapter is work in progress and currently more a collection of
 notes.
 
-// TODO move this to own intro and link GitHub page for SAN
+// TODO move this to own intro in the Appendix and link GitHub page for SAN
 
 Tali Forth is shipped with a built-in assembler that uses the Simpler Assembler
 Format (SAN). 
 
 NOTE: The code was originally part of a stand-alone 65c02 assembler in Forth
-named tan65c02. See https://github.com/scotws/tasm65c02 for details.
+named tasm65c02. See https://github.com/scotws/tasm65c02 for details. Tasm65c02
+is in the public domain.
 
 ==== Simple ways of inserting assembler code
 
@@ -39,10 +40,12 @@ assembler instructions. For example, this will work:
 
 ----
 hex
-10 lda.#        \ LDA #$10, which is decimal 16
+10 lda.#        <1>
 decimal
-10 ldx.#        \ LDX #10
+10 ldx.#        <2>
 ----
+<1> Operand is decimal 16 as `LDA #$10`
+<2> Operand is decimal 10 as `LDA #10`
 
 Running the disassembler gives us (actual addresses may vary):
 
@@ -51,9 +54,8 @@ Running the disassembler gives us (actual addresses may vary):
 12C1  ldx.# 0A
 ----
 
-This example also shows why this can be dangerous. This allows us to use various
-different formatting tricks like putting more than one assembler instruction in
-a line or intermixing comments:
+This also allows the use various different formatting tricks like putting more
+than one assembler instruction in a line or including in-line comments:
 
 ----
 dec.a dec.a     \ DEC twice
@@ -72,7 +74,8 @@ numbers.
 
 ==== Directives
 
-The assembler currently has no directives, though some are planned.
+WARNING: This early version of the assembler has no directives. They will be
+adapted from Tasm65c02 in time.
 
 ==== Pseudo-Instructions / Macros
 
@@ -86,7 +89,7 @@ sta.zx 0        ; STA 0,X
 stz.zx 1        ; STZ 1,X
 ----
 
-==== Under the hood
+==== Under the Hood
 
 The assembler instructions are in fact just normal, very simple Forth words that 
 send the opcode and the length of the instruction in bytes to common routines
@@ -99,7 +102,7 @@ operand on the stack when required.
 lda.#   \ requires operand first on the stack -> triggers error
 ----
 
-==== Gotchas
+==== Gotchas and Known Issues
 
 Working with assembler requires an intimate knowledge of Tali Forth's internals.
 Some of the things that range from just very dangerous to downright suicidal
@@ -115,4 +118,9 @@ phx
 ( do something with X )
 plx
 ----
+
+*Branch instruction operands* currently have to be calculated by hand. This will
+change in a future version.
+
+
 
