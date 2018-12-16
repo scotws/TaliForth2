@@ -6563,6 +6563,24 @@ z_one_plus:     rts
 .scend
 
 
+; ## ONLY ( -- ) "Set earch order to minimum wordlist"
+; ## "only"  auto  ANS search ext
+        ; """https://forth-standard.org/standard/search/ONLY"""
+.scope
+xt_only:
+                ; Put -1 on data stack.
+                dex
+                dex
+                lda #$FF
+                sta 0,x
+                sta 1,x
+                ; Invoke set-order to set the minimum search order.
+                jsr xt_set_order
+
+z_only:         rts
+.scend        
+
+        
 ; ## OR ( m n -- n ) "Logically OR TOS and NOS"
 ; ## "or"  auto  ANS core
         ; """https://forth-standard.org/standard/core/OR"""

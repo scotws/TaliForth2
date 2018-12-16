@@ -79,7 +79,6 @@
 
 \ Extended words for the optional Search-Order wordset.
 \ These are as provided in the ANS 2012 standard.
-: ONLY -1 set-order ;
 : ALSO ( -- )
    GET-ORDER OVER SWAP 1+ SET-ORDER
 ;
