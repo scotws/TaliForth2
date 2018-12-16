@@ -1,4 +1,4 @@
-# Manual for Tali Forth 2 for the 65c02
+# Manual for Tali Forth 2 for the 65c02 
 
 Tali Forth 2 is a bare-metal ANS(ish) Forth for the 65c02 8-bit MPU. It aims to be, roughly in order of importance, easy to try out (just run the included binary), simple (subroutine threading model), specific (for the 65c02 only), and standardized (ANS Forth).
 
@@ -824,7 +824,109 @@ The "buffer" of `ed` is a simple linked list of nodes, consisting of a pointer t
 
 > **Warning**
 >
-> Currently, there is no assembler included. The plan is to include a simple assembler based on Simpler Assembler Notation (SAN).
+> This chapter is work in progress and currently more a collection of notes.
+
+Tali Forth is shipped with a built-in assembler that uses the Simpler Assembler Format (SAN).
+
+> **Note**
+>
+> The code was originally part of a stand-alone 65c02 assembler in Forth named tasm65c02. See <https://github.com/scotws/tasm65c02> for details. Tasm65c02 is in the public domain.
+
+#### Simple ways of inserting assembler code
+
+Because Tali Forth is a Subroutine Threaded (STC) Forth, inserting assembler instructions is spectacularly easy. In fact, the only real problem is accessing the assembler wordlist, which is normally not in the search tree because of its length. This, then, is one way to add assembler code:
+
+    forth-wordlist assembler-wordlist 2 set-order
+    here            \ Remember where we are
+    1 lda.#         \ LDA #1
+    push-a          \ Pseudo-instruction, pushes A on the Forth data stack
+    rts             \ End subroutine. Don't use BRK!
+    execute         \ Run our code using value from HERE
+    .s              \ Will show 1 as TOS
+
+The first line is required to give the user access to the list of assembler mnemonics. They are usually not in the current wordlist path because of their sheer number. Note we use `rts`, not `brk`, as the last instruction to return to the command line.
+
+> **Note**
+>
+> There is a separate tutorial planned for wordlists and their use.
+
+Note you can freely intermingel Forth high-level words and assembler instructions. For example, this will work:
+
+    hex
+    10 lda.#        \ LDA #$10
+    decimal
+    10 ldx.#        \ LDA #10
+
+Running the disassembler gives us (actual addresses may vary):
+
+    12BF  lda.# 10
+    12C1  ldx.# 0A
+
+This also allows the use various different formatting tricks like putting more than one assembler instruction in a line or including in-line comments:
+
+    dec.a dec.a     \ DEC twice
+    nop ( just chilling ) nop ( still don't want to work )
+    nop ( not going to happen ) nop ( just go away already! )
+
+#### Accessing Forth words from inside the assembler
+
+To execute Forth words when then assembler code is run, we need to store a subroutine jump to the word’s execution token (xt). This we can get with `'` (the "tick"). For instance, to print the byte in the accumulator:
+
+    here
+    10 lda.#
+    push-a          
+    ' u. jsr        
+    rts
+    execute
+
+-   Push the value from A to TOS
+
+-   Code a subroutine jump to `u.`
+
+This will print `10`.
+
+#### Even simpler ways to insert assembler code
+
+Probably the very simplest way is to add the opcodes and operands directly with the `c,` instruction. Tali Forth also provides a special word called `hexstore` to add strings of numbers.
+
+#### Directives
+
+> **Warning**
+>
+> This early version of the assembler has no directives. They will be adapted from tasm65c02 in time.
+
+#### Pseudo-instructions and macros
+
+**push-a** takes the byte in the Accumulator A and pushes it to the top of the Forth Data Stack. This is a convenience macro for
+
+    dex
+    dex
+    sta.zx 0        ; STA 0,X
+    stz.zx 1        ; STZ 1,X
+
+#### Under the hood
+
+The assembler instructions are in fact just normal, very simple Forth words that send the opcode and the length of the instruction in bytes to common routines for processing.
+
+The assembler instructions will trigger an underflow error if there is no operand on the stack when required.
+
+    lda.#   \ requires operand first on the stack -> triggers error
+
+#### Gotchas and known issues
+
+Working with assembler requires an intimate knowledge of Tali Forth’s internals. Some of the things that range from just very dangerous to downright suicidal are:
+
+**Using the X register.** Tali Forth uses X to hold the Data Stack pointer. Manipulating it risks crashing the whole system beyond any hope of recovery. If for some reason you feel you must use X, be careful to save and restore the original value, such as:
+
+    phx
+    ( do something with X )
+    plx
+
+**Branch instruction operands** currently have to be calculated by hand. This will change in a future version.
+
+**The Forth word `and`** cannot be used when the assembler wordlist is first in the search order because the assembler instruction of the same name will be called instead.
+
+**`brk` is a two-byte instruction** because the assembler enforces the signature byte. You shouldn’t use `brk` anyway.
 
 ### Disassembler
 

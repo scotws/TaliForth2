@@ -28,7 +28,7 @@ TEMPLATE_HEADER = 'nt_asm_{2}:\n'\
         '\t\t.word xt_asm_{2}, z_asm_{2}\n'\
         '\t\t.byte "{0}"\n'
 
-TEMPLATE_TEST = ''
+TEMPLATE_OPC = 'T{{ {0} {1} s" {3}{2}" opcode-test -> -1 -1 }}T'
 
 
 def cleanup_opcode(ocs):
@@ -54,7 +54,12 @@ def main():
 
     assembler_list = []
     header_list = []
-    test_list = []
+    test_opc_list = []
+    test_opr_list = []
+
+    # Fake operands for testing: 1 byte, 2 byte, 3 byte instructions
+    # First entry is dummy value. Note spaces.
+    fake_opr = ['UNUSED', '', '12 ', '1122 ']
 
     with open(SOURCE) as opcode_list:
 
@@ -63,16 +68,20 @@ def main():
         for line in opcode_list:
             ws = line.split()
 
-            co = cleanup_opcode(ws[1])
             lm = labelize_mnemonic(ws[0])
+            co = cleanup_opcode(ws[1])
+            lgth = int(ws[2])
 
             assembler_list.append(TEMPLATE_ASSEMBLER.format(ws[0],\
-                    co, ws[2], ws[0].upper(), lm))
+                    co, lgth, ws[0].upper(), lm))
 
             header_list.append(TEMPLATE_HEADER.format(ws[0], len(ws[0]), lm,\
                     previous_header))
 
             previous_header = 'nt_asm_{0}'.format(lm)
+
+            test_opc_list.append(TEMPLATE_OPC.format('0'+co, lgth,\
+                ws[0], fake_opr[lgth]))
 
     # Print out everyting to standard output. The user can redirect this to
     # a file and edit the rest by hand
@@ -86,8 +95,9 @@ def main():
 
     print('-'*80)
 
-    for l in test_list:
+    for l in test_opc_list:
         print(l)
+
 
 
 if __name__ == '__main__':

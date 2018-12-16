@@ -2293,7 +2293,8 @@ Format (SAN).</p>
 </td>
 <td class="content">
 The code was originally part of a stand-alone 65c02 assembler in Forth
-named tan65c02. See <a href="https://github.com/scotws/tasm65c02" class="bare">https://github.com/scotws/tasm65c02</a> for details.
+named tasm65c02. See <a href="https://github.com/scotws/tasm65c02" class="bare">https://github.com/scotws/tasm65c02</a> for details. Tasm65c02
+is in the public domain.
 </td>
 </tr>
 </table>
@@ -2309,18 +2310,19 @@ length. This, then, is one way to add assembler code:</p>
 <div class="listingblock">
 <div class="content">
 <pre>forth-wordlist assembler-wordlist 2 set-order
-here .          \ Remember where we are, for example 4799
+here            \ Remember where we are
 1 lda.#         \ LDA #1
 push-a          \ Pseudo-instruction, pushes A on the Forth data stack
 rts             \ End subroutine. Don't use BRK!
-4799 execute    \ Run our code
+execute         \ Run our code using value from HERE
 .s              \ Will show 1 as TOS</pre>
 </div>
 </div>
 <div class="paragraph">
 <p>The first line is required to give the user access to the list of assembler
 mnemonics. They are usually not in the current wordlist path because of their
-sheer number.</p>
+sheer number. Note we use <code>rts</code>, not <code>brk</code>, as the last instruction to return to
+the command line.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -2329,21 +2331,21 @@ sheer number.</p>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-There is a separate tutorial planned for wordlists and their use
+There is a separate tutorial planned for wordlists and their use.
 </td>
 </tr>
 </table>
 </div>
 <div class="paragraph">
-<p>Note that this way, you can freely intermingel Forth high-level words and
+<p>Note you can freely intermingel Forth high-level words and
 assembler instructions. For example, this will work:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre>hex
-10 lda.#        \ LDA #$10, which is decimal 16
+10 lda.#        \ LDA #$10
 decimal
-10 ldx.#        \ LDX #10</pre>
+10 ldx.#        \ LDA #10</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2356,9 +2358,8 @@ decimal
 </div>
 </div>
 <div class="paragraph">
-<p>This example also shows why this can be dangerous. This allows us to use various
-different formatting tricks like putting more than one assembler instruction in
-a line or intermixing comments:</p>
+<p>This also allows the use various different formatting tricks like putting more
+than one assembler instruction in a line or including in-line comments:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2369,34 +2370,74 @@ nop ( not going to happen ) nop ( just go away already! )</pre>
 </div>
 </div>
 <div class="sect3">
+<h4 id="_accessing_forth_words_from_inside_the_assembler">Accessing Forth words from inside the assembler</h4>
+<div class="paragraph">
+<p>To execute Forth words when then assembler code is run, we need to store a
+subroutine jump to the word&#8217;s execution token (xt). This we can get with <code>'</code>
+(the "tick"). For instance, to print the byte in the accumulator:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>here
+10 lda.#
+push-a          <i class="conum" data-value="1"></i><b>(1)</b>
+' u. jsr        <i class="conum" data-value="2"></i><b>(2)</b>
+rts
+execute</pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Push the value from A to TOS</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Code a subroutine jump to <code>u.</code></td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>This will print <code>10</code>.</p>
+</div>
+</div>
+<div class="sect3">
 <h4 id="_even_simpler_ways_to_insert_assembler_code">Even simpler ways to insert assembler code</h4>
 <div class="paragraph">
 <p>Probably the very simplest way is to add the opcodes and operands directly with
-the <code>c,</code> instruction.</p>
-</div>
-<div class="paragraph">
-<p>Tali Forth also provides a special word called <code>hexstore</code> to add strings of
-numbers.</p>
+the <code>c,</code> instruction. Tali Forth also provides a special word called <code>hexstore</code>
+to add strings of numbers.</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_directives">Directives</h4>
-<div class="paragraph">
-<p>The assembler currently has no directives, though some are planned.</p>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+This early version of the assembler has no directives. They will be
+adapted from tasm65c02 in time.
+</td>
+</tr>
+</table>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_pseudo_instructions_macros">Pseudo-Instructions / Macros</h4>
+<h4 id="_pseudo_instructions_and_macros">Pseudo-instructions and macros</h4>
 <div class="paragraph">
 <p><strong>push-a</strong> takes the byte in the Accumulator A and pushes it to the top of the
-Forth Data Stack. This is a convenience word for</p>
+Forth Data Stack. This is a convenience macro for</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre>dex
 dex
-sta.dx 0        ; STA 0,X
-stz.dx 1        ; STZ 1,X</pre>
+sta.zx 0        ; STA 0,X
+stz.zx 1        ; STZ 1,X</pre>
 </div>
 </div>
 </div>
@@ -2418,7 +2459,7 @@ operand on the stack when required.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_gotchas_2">Gotchas</h4>
+<h4 id="_gotchas_and_known_issues">Gotchas and known issues</h4>
 <div class="paragraph">
 <p>Working with assembler requires an intimate knowledge of Tali Forth&#8217;s internals.
 Some of the things that range from just very dangerous to downright suicidal
@@ -2436,6 +2477,19 @@ original value, such as:</p>
 ( do something with X )
 plx</pre>
 </div>
+</div>
+<div class="paragraph">
+<p><strong>Branch instruction operands</strong> currently have to be calculated by hand. This will
+change in a future version.</p>
+</div>
+<div class="paragraph">
+<p><strong>The Forth word <code>and</code></strong> cannot be used when the assembler wordlist is first in
+the search order because the assembler instruction of the same name will be
+called instead.</p>
+</div>
+<div class="paragraph">
+<p><strong><code>brk</code> is a two-byte instruction</strong> because the assembler enforces the signature
+byte. You shouldn&#8217;t use <code>brk</code> anyway.</p>
 </div>
 </div>
 </div>
@@ -5498,7 +5552,7 @@ under <a href="https://www.ubuntu.com/">Ubuntu</a> Linux 16.04 LTS.</p>
 <div id="footer">
 <div id="footer-text">
 Version BETA<br>
-Last updated 2018-12-15 13:07:55 EST
+Last updated 2018-12-16 10:14:09 CET
 </div>
 </div>
 </body>

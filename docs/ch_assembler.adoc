@@ -19,32 +19,30 @@ length. This, then, is one way to add assembler code:
 
 ----
 forth-wordlist assembler-wordlist 2 set-order
-here .          \ Remember where we are, for example 4799
+here            \ Remember where we are
 1 lda.#         \ LDA #1
 push-a          \ Pseudo-instruction, pushes A on the Forth data stack
 rts             \ End subroutine. Don't use BRK!
-4799 execute    \ Run our code
+execute         \ Run our code using value from HERE
 .s              \ Will show 1 as TOS
 ----
 
 The first line is required to give the user access to the list of assembler
 mnemonics. They are usually not in the current wordlist path because of their
 sheer number. Note we use `rts`, not `brk`, as the last instruction to return to
-the normal Forth level.
+the command line.
 
-NOTE: There is a separate tutorial planned for wordlists and their use
+NOTE: There is a separate tutorial planned for wordlists and their use.
 
 Note you can freely intermingel Forth high-level words and
 assembler instructions. For example, this will work:
 
 ----
 hex
-10 lda.#        <1>
+10 lda.#        \ LDA #$10
 decimal
-10 ldx.#        <2>
+10 ldx.#        \ LDA #10
 ----
-<1> Operand is decimal 16 as `LDA #$10`
-<2> Operand is decimal 10 as `LDA #10`
 
 Running the disassembler gives us (actual addresses may vary):
 
@@ -62,17 +60,33 @@ nop ( just chilling ) nop ( still don't want to work )
 nop ( not going to happen ) nop ( just go away already! )
 ----
 
+==== Accessing Forth words from inside the assembler
+
+To execute Forth words when then assembler code is run, we need to store a
+subroutine jump to the word's execution token (xt). This we can get with `'`
+(the "tick"). For instance, to print the byte in the accumulator:
+
+----
+here
+10 lda.#
+push-a          <1>
+' u. jsr        <2>
+rts
+execute
+----
+<1> Push the value from A to TOS
+<2> Code a subroutine jump to `u.`
+
+This will print `10`.
+
 
 ==== Even simpler ways to insert assembler code
 
 Probably the very simplest way is to add the opcodes and operands directly with
-the `c,` instruction.
+the `c,` instruction. Tali Forth also provides a special word called `hexstore`
+to add strings of numbers.
 
 // TODO examples for `c,`
-
-Tali Forth also provides a special word called `hexstore` to add strings of
-numbers.
-
 // TODO explain HEXSTORE
 
 
@@ -82,10 +96,10 @@ WARNING: This early version of the assembler has no directives. They will be
 adapted from tasm65c02 in time.
 
 
-==== Pseudo-Instructions / Macros
+==== Pseudo-instructions and macros
 
 **push-a** takes the byte in the Accumulator A and pushes it to the top of the
-Forth Data Stack. This is a convenience word for
+Forth Data Stack. This is a convenience macro for
 
 ----
 dex
