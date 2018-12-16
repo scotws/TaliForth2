@@ -6474,25 +6474,6 @@ z_number_sign_greater:
                 rts
 
 
-;; ## NUMBER_SIGN_ORDER ( -- addr ) "User variable: number of wordlists in search order"
-;; ## "#order"  auto  Tali search
-;xt_number_sign_order:
-;                ; #ORDER is at UP + num_order_offset 
-;                dex
-;                dex
-;                clc
-;                lda up
-;                adc #num_order_offset   ; Add offset
-;                sta 0,x
-;                lda up+1
-;                adc #0          ; Adding carry
-;                sta 1,x
-;
-;z_number_sign_order:
-;                rts
-
-
-        
 ; ## NUMBER_SIGN_S ( d -- addr u ) "Completely convert pictured output"
 ; ## "#s"  auto  ANS core
         ; """https://forth-standard.org/standard/core/numS
