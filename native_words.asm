@@ -7149,6 +7149,20 @@ z_postpone:     rts
 .scend
 
 
+; ## PREVIOUS ( -- ) "Remove the first wordlist in the search order"
+; ## "previous"  auto  ANS search ext
+        ; """http://forth-standard.org/standard/search/PREVIOUS"""
+.scope        
+xt_previous:
+                jsr xt_get_order
+                jsr xt_nip
+                jsr xt_one_minus
+                jsr xt_set_order
+z_previous:     rts
+.scend
+
+
+        
 ; ## QUESTION ( addr -- ) "Print content of a variable"
 ; ## "?"  tested  ANS tools
         ; """https://forth-standard.org/standard/tools/q

@@ -78,13 +78,11 @@
 \ ===============================================================
 
 \ Extended words for the optional Search-Order wordset.
-\ These are as provided in the ANS 2012 standard.
-: PREVIOUS ( -- ) GET-ORDER NIP 1- SET-ORDER ; 
 \ This one isn't provided by ANS, but is simple to implement.
 : ORDER ( -- ) cr get-order 0 ?do
-        dup 0=  if ." FORTH-WORDLIST "  drop    else
-        dup 1 = if ." EDITOR-WORDLIST " drop    else
-        dup 2 = if ." ASSEMBLER-WORDLIST " drop else
+        dup 0=  if ." FORTH "  drop    else
+        dup 1 = if ." EDITOR " drop    else
+        dup 2 = if ." ASSEMBLER " drop else
                    . ( just print the number )
         then then then loop ;        
 
