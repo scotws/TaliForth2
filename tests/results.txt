@@ -99,7 +99,7 @@ marker asm-tests   ok
 \ Add assembler wordlist. This currently kills <true>  ok
 forth-wordlist assembler-wordlist 2 set-order  ok
   ok
-  ok
+\ Test code length and correct operand insertion  ok
 : opcode-test ( opc len addr u -- f )  compiled
    here        ( opc len addr u here0 )  compiled
    dup >r      ( opc len addr u here0 ) ( R: here0 )  compiled
@@ -124,17 +124,35 @@ forth-wordlist assembler-wordlist 2 set-order  ok
 : little-endian? ( u-want addr u -- f )  compiled
    here -rot      ( u-want here0 addr u )  compiled
    evaluate       ( u-want here0 )  compiled
-   \ cr dup 3 dump cr   \ Manual check for paranoia  compiled
+   \ cr dup 3 dump cr   \ Manual check, insert if paranoia attacks  compiled
    1+             ( u-want here0+1 ) \ Skip opcode  compiled
    @              ( u-want u-have )  compiled
    =              ( f )   compiled
 ;  ok
   ok
+\ Test correct operand for two-byte instructions. Note there is little  ok
+\ difference between this code and little-endian? at the moment. However, this  ok
+\ routine here will have to modified for branch instructions at a later date.  ok
+: correct-operand? ( u-want addr u -- f )  compiled
+   here -rot      ( u-want here0 addr u )  compiled
+   evaluate       ( u-want here0 )  compiled
+   1+             ( u-want here0+1 )  compiled
+   c@             ( u-want u-got )  compiled
+   =              ( f )  compiled
+;   ok
+  ok
+\ --------------------------------------------------------------------------  ok
+  ok
 \ Testing all assembler instructions: Opcode and length  ok
 T{ 0ea 1 s" nop" opcode-test -> -1 -1 }T  ok
 T{ 0a9 2 s" 0ff lda.#" opcode-test -> -1 -1 }T  ok
   ok
-\ Testing all three-byte instructions: Little endian  ok
+\ Testing two-byte instructions for correct operand saving. This is paranoid,  ok
+\ one should be enough  ok
+T{ 12 s" 12 lda.#" correct-operand? -> -1 }T  ok
+  ok
+\ Testing three-byte instructions for little endian. This is paranoid, one  ok
+\ should be enough  ok
 T{ 1122 s" 1122 sta" little-endian? -> -1 }T  ok
   ok
   ok

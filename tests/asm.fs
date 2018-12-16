@@ -6,7 +6,7 @@ marker asm-tests
 \ Add assembler wordlist. This currently kills <true>
 forth-wordlist assembler-wordlist 2 set-order
 
-
+\ Test code length and correct operand insertion
 : opcode-test ( opc len addr u -- f )
    here        ( opc len addr u here0 )
    dup >r      ( opc len addr u here0 ) ( R: here0 )
@@ -31,17 +31,35 @@ forth-wordlist assembler-wordlist 2 set-order
 : little-endian? ( u-want addr u -- f )
    here -rot      ( u-want here0 addr u )
    evaluate       ( u-want here0 )
-   \ cr dup 3 dump cr   \ Manual check for paranoia
+   \ cr dup 3 dump cr   \ Manual check, insert if paranoia attacks
    1+             ( u-want here0+1 ) \ Skip opcode
    @              ( u-want u-have )
    =              ( f ) 
 ;
 
+\ Test correct operand for two-byte instructions. Note there is little
+\ difference between this code and little-endian? at the moment. However, this
+\ routine here will have to modified for branch instructions at a later date.
+: correct-operand? ( u-want addr u -- f )
+   here -rot      ( u-want here0 addr u )
+   evaluate       ( u-want here0 )
+   1+             ( u-want here0+1 )
+   c@             ( u-want u-got )
+   =              ( f )
+; 
+
+\ --------------------------------------------------------------------------
+
 \ Testing all assembler instructions: Opcode and length
 T{ 0ea 1 s" nop" opcode-test -> -1 -1 }T
 T{ 0a9 2 s" 0ff lda.#" opcode-test -> -1 -1 }T
 
-\ Testing all three-byte instructions: Little endian
+\ Testing two-byte instructions for correct operand saving. This is paranoid,
+\ one should be enough
+T{ 12 s" 12 lda.#" correct-operand? -> -1 }T
+
+\ Testing three-byte instructions for little endian. This is paranoid, one
+\ should be enough
 T{ 1122 s" 1122 sta" little-endian? -> -1 }T
 
 
