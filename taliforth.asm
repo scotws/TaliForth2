@@ -572,7 +572,7 @@ current_to_dp:
         ; """
                 ; Determine which wordlist is CURRENT
                 ldy #current_offset
-                lda (up),y      ; Only grabbing the lsb
+                lda (up),y      ; CURRENT is a byte variable
                 asl             ; Turn it into an offset (in cells)
 
                 ; Get the dictionary pointer for that wordlist.
@@ -592,7 +592,7 @@ dp_to_current:
         ; """
                 ; Determine which wordlist is CURRENT
                 ldy #current_offset
-                lda (up),y      ; Only grabbing the lsb
+                lda (up),y      ; CURRENT is a byte variable
                 asl             ; Turn it into an offset (in cells)
 
                 ; Get the dictionary pointer for that wordlist.

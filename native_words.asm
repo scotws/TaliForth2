@@ -3024,13 +3024,9 @@ z_defer:        rts
 ; ## DEFINITIONS ( -- ) "Make first wordlist in search order the current wordlist"
 ; ## "definitions" auto ANS search
 xt_definitions:
-                ldy #search_order_offset
-                lda (up),y
-                ldy #current_offset
-                sta (up),y
-                ldy #search_order_offset+1
-                lda (up),y
-                ldy #current_offset+1
+                ldy #search_order_offset    ; Transfer byte variable
+                lda (up),y                  ; SEARCH_ORDER[0] to
+                ldy #current_offset         ; byte variable CURRENT.
                 sta (up),y
 z_definitions:  rts
         
@@ -4530,7 +4526,7 @@ _nonempty:
                 ; Set up for traversing the wordlist search order.
                 stz tmp3                ; Start at the beginning
 _wordlist_loop: 
-                ldy #num_order_offset
+                ldy #num_order_offset   ; Compare to byte variable #ORDER
                 lda tmp3
                 cmp (up),y              ; Check to see if we are done
                 bne _have_string
@@ -4542,11 +4538,11 @@ _have_string:
                 ; set up first loop iteration
 
                 ; Get the current wordlist id
-                asl                     ; Turn offset into cells offset.
-                clc
+                clc             ; SEARCH-ORDER is array of bytes.
                 adc #search_order_offset
-                tay
-                lda (up),y              ; Only the lower byte is needed.
+                tay             
+                lda (up),y      ; Get the id byte, which is the offset
+                                ; into the cell array WORDLISTS
 
                 ; Get the DP for that wordlist.
                 asl                     ; Turn offset into cells offset.
@@ -4760,10 +4756,8 @@ xt_get_current:
                 dex
                 ldy #current_offset
                 lda (up),y
-                sta 0,x
-                iny
-                lda (up),y
-                sta 1,x
+                sta 0,x         ; CURRENT is a byte variable
+                stz 1,x         ; so the MSB is zero.
                 
 z_get_current:  rts
 .scend        
@@ -4776,14 +4770,12 @@ xt_get_order:
                 ; Get #ORDER - the number of wordlists in the search order.
                 ldy #num_order_offset
                 lda (up),y
-                asl             ; Multiply by 2 for cells
                 sta tmp1
                 beq _done       ; If zero, there are no wordlists.
 _loop:  
                 ; Count down towards the front of the list.
                 ; By decrementing first, we also turn the length into an offset.
-                dec tmp1
-                dec tmp1        ; Count down by cells.
+                dec tmp1        ; Count down by bytes.
 
                 ; Get a pointer to the current wordlist, working back to front.
                 lda #search_order_offset
@@ -4794,10 +4786,8 @@ _loop:
                 dex
                 dex
                 lda (up),y
-                sta 0,x
-                iny
-                lda (up),y
-                sta 1,x
+                sta 0,x         ; Search order array is bytes, so
+                stz 1,x         ; put a zero in the high byte.
                 ; See if that was the last one to process (first in the list).
                 lda #0
                 cmp tmp1
@@ -5678,13 +5668,13 @@ z_m_star:       rts
         ;       <Original CP LSB>
         ;       <Original DP MSB> ( for CURRENT wordlist )
         ;       <Original DP LSB>
-        ;       < USER variables from offset 4 to 47 >
+        ;       < USER variables from offset 4 to 39 >
         ;
         ;       The user variables include:
-        ;       CURRENT
-        ;       <All wordlists> (currently 11)
-        ;       <#ORDER>
-        ;       <All search order> (currently 8)
+        ;       CURRENT (byte variable)
+        ;       <All wordlists> (currently 12) (cell array)
+        ;       <#ORDER> (byte variable)
+        ;       <All search order> (currently 9) (byte array)
         ;
         ; This code uses tmp1 and tmp2
         ; """
@@ -5743,7 +5733,7 @@ _marker_loop:
                 jsr cmpl_a
                 iny
                 tya
-                cmp #48                 ; One past the end of the search order.
+                cmp #40                 ; One past the end of the search order.
                 bne _marker_loop
 
 z_marker:       rts
@@ -5794,7 +5784,7 @@ _marker_restore_loop:
                 sta (up), y
                 iny
                 tya
-                cmp #48                 ; One past the end of the search order.
+                cmp #40                 ; One past the end of the search order.
                 bne _marker_restore_loop
 
                 jsr dp_to_current       ; Move the CURRENT DP back.
@@ -6484,22 +6474,22 @@ z_number_sign_greater:
                 rts
 
 
-; ## NUMBER_SIGN_ORDER ( -- addr ) "User variable: number of wordlists in search order"
-; ## "#order"  auto  Tali search
-xt_number_sign_order:
-                ; #ORDER is at UP + num_order_offset 
-                dex
-                dex
-                clc
-                lda up
-                adc #num_order_offset   ; Add offset
-                sta 0,x
-                lda up+1
-                adc #0          ; Adding carry
-                sta 1,x
-
-z_number_sign_order:
-                rts
+;; ## NUMBER_SIGN_ORDER ( -- addr ) "User variable: number of wordlists in search order"
+;; ## "#order"  auto  Tali search
+;xt_number_sign_order:
+;                ; #ORDER is at UP + num_order_offset 
+;                dex
+;                dex
+;                clc
+;                lda up
+;                adc #num_order_offset   ; Add offset
+;                sta 0,x
+;                lda up+1
+;                adc #0          ; Adding carry
+;                sta 1,x
+;
+;z_number_sign_order:
+;                rts
 
 
         
@@ -7753,11 +7743,8 @@ xt_set_current:
 *
                 ; Save the value from the data stack.
                 ldy #current_offset
-                lda 0,x
-                sta (up),y
-                iny
-                lda 1,x
-                sta (up),y
+                lda 0,x         ; CURRENT is byte variable
+                sta (up),y      ; so only the LSB is used.
                 ; Remove the TOS.
                 inx
                 inx
@@ -7795,11 +7782,11 @@ _start:
                 ; Set #ORDER - the number of wordlists in the search order.
                 ldy #num_order_offset
                 lda 0,x
-                sta (up),y
+                sta (up),y      ; #ORDER is a byte variable.
                 sta tmp1        ; Save a copy for zero check and looping.
-                iny             ; Only the low byte is saved in tmp1 as
-                lda 1,x         ; only 8 wordlists are allowed.
-                sta (up),y      
+                                ; Only the low byte is saved in tmp1 as
+                                ; only 8 wordlists are allowed.
+                                
 
                 inx             ; Drop the count off the data stack.
                 inx
@@ -7812,11 +7799,8 @@ _start:
                 ldy #search_order_offset
 _loop:  
                 ; Move one wordlist id over into the search order.
-                lda 0,x
-                sta (up),y
-                iny
-                lda 1,x
-                sta (up),y
+                lda 0,x         ; The search order is a byte array
+                sta (up),y      ; so only save the LSB
                 iny
                 ; Remove it from the data stack.
                 inx
@@ -10629,9 +10613,10 @@ z_word:         rts
 xt_wordlist:
                 ; Get the current number of wordlists
                 ldy #num_wordlists_offset
-                lda (up),y
+                lda (up),y      ; This is a byte variable, so only
+                                ; the LSB needs to be checked.
                 ; See if we are already at the max.
-                cmp #11         ; 3 starting wordlists + 8 user wordlists
+                cmp #max_wordlists
                 bne _ok
         
                 ; Print an error message if all wordlists used.
@@ -10639,11 +10624,11 @@ xt_wordlist:
                 jmp error
 
 _ok:            inc             ; Increment the wordlist#
-                sta (up),y      ; Save it (only lower byte used)
+                sta (up),y      ; Save it into byte variable #wordlists
                 dex             ; and put it on the stack.
                 dex
                 sta 0,x
-                stz 1,x         ; 8 is the max, so upper byte is always zero.
+                stz 1,x         ; 12 is the max, so upper byte is always zero.
         
 z_wordlist:     rts
 .scend
@@ -10677,9 +10662,9 @@ xt_words:
                 stz tmp3                ; Start at the beginning of
                                         ; the search order.
 _wordlist_loop: 
-                ldy #num_order_offset
-                lda tmp3
-                cmp (up),y              ; Check to see if we are done
+                ldy #num_order_offset   ; Check against byte variable #ORDER.
+                lda tmp3                
+                cmp (up),y              ; See if we are done.
                 bne _have_wordlist
 
                 ; We ran out of wordlists to search.
@@ -10688,11 +10673,10 @@ _have_wordlist:
 
                 ; start with last word in Dictionary
                 ; Get the current wordlist id
-                asl                     ; Turn offset into cells offset.
-                clc
+                clc                     ; Index into byte array SEARCH-ORDER.
                 adc #search_order_offset
                 tay
-                lda (up),y              ; Only the lower byte is needed.
+                lda (up),y              ; Get the index into array WORDLISTS
 
                 ; Get the DP for that wordlist.
                 asl                     ; Turn offset into cells offset.

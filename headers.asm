@@ -92,14 +92,9 @@ nt_assembler_wordlist:
         .word nt_editor_wordlist, xt_assembler_wordlist, z_assembler_wordlist
         .byte "assembler-wordlist"
 
-nt_number_sign_order:
-        .byte 6, 0
-        .word nt_assembler_wordlist, xt_number_sign_order, z_number_sign_order
-        .byte "#order"
-
 nt_get_order:
         .byte 9, 0
-        .word nt_number_sign_order, xt_get_order, z_get_order
+        .word nt_assembler_wordlist, xt_get_order, z_get_order
         .byte "get-order"
 
 nt_set_order:
