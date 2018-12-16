@@ -79,12 +79,17 @@
 
 \ Extended words for the optional Search-Order wordset.
 \ This one isn't provided by ANS, but is simple to implement.
-: ORDER ( -- ) cr get-order 0 ?do
+\ Print wordlist name, or number if name not known.
+: .wid ( wid -- )
         dup 0=  if ." FORTH "  drop    else
         dup 1 = if ." EDITOR " drop    else
         dup 2 = if ." ASSEMBLER " drop else
+        dup 3 = if ." ROOT " drop      else        
                    . ( just print the number )
-        then then then loop ;        
+        then then then then ;
+: ORDER ( -- )
+        cr get-order 0 ?do .wid loop
+        space space get-current .wid ;        
 
 \ ===============================================================
 
