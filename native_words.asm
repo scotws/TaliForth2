@@ -4194,6 +4194,18 @@ z_forth_wordlist:
                 rts
 
 
+; ## FORTH ( -- ) "Replace first WID in search order with Forth-Wordlist"
+; ## "forth"  auto  ANS search ext
+        ; """https://forth-standard.org/standard/search/FORTH"""
+xt_forth:        
+                ldy #search_order_offset
+                lda #0          ; The WID for Forth is 0.
+                
+                sta (up),y
+z_forth:
+                rts
+
+
 ; This is a special jsr target to skip the zeroing of BLK at the beginning
 ; of evaluate.  It's used by LOAD to allow setting BLK while the block is
 ; being evaluated.  Evaluate's normal behavior is to zero BLK.

@@ -77,9 +77,14 @@ nt_ed:                  ; ed6502
         .word nt_cold, xt_ed, z_ed
         .byte "ed"
 
+nt_forth:
+        .byte 5, 0
+        .word nt_ed, xt_forth, z_forth
+        .byte "forth"
+
 nt_forth_wordlist:
         .byte 14, 0
-        .word nt_ed, xt_forth_wordlist, z_forth_wordlist
+        .word nt_forth, xt_forth_wordlist, z_forth_wordlist
         .byte "forth-wordlist"
                 
 nt_editor_wordlist:
@@ -1288,10 +1293,15 @@ nt_root_forth_wordlist:
         .word nt_root_words, xt_forth_wordlist, z_forth_wordlist
         .byte "forth-wordlist"
 
+nt_root_forth:
+        .byte 5, 0
+        .word nt_root_forth_wordlist, xt_forth, z_forth
+        .byte "forth"
+        
 root_wordlist_start:    
 nt_root_set_order:
         .byte 9, 0
-        .word nt_root_forth_wordlist, xt_set_order, z_set_order
+        .word nt_root_forth, xt_set_order, z_set_order
         .byte "set-order"
 
 ; END of ROOT-WORDLIST

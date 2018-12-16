@@ -80,14 +80,6 @@
 \ Extended words for the optional Search-Order wordset.
 \ These are as provided in the ANS 2012 standard.
 : ONLY forth-wordlist 1 set-order ;
-: (wordlist) ( wid "<name>" -- ; )
-   CREATE ,
-   DOES>
-     @ >R
-     GET-ORDER NIP
-     R> SWAP SET-ORDER
-;
-FORTH-WORDLIST (wordlist) FORTH 
 : ALSO ( -- )
    GET-ORDER OVER SWAP 1+ SET-ORDER
 ;

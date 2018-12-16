@@ -77,7 +77,7 @@
 .alias num_wordlists_offset 5
                            ; #WORDLISTS (byte) : UP + 5
 .alias wordlists_offset 6  ; WORDLISTS (cells) : UP + 6 to UP + 29
-                           ;             (ROOT, FORTH, EDITOR, ASSEMBLER, +8 more)
+                           ;             (FORTH, EDITOR, ASSEMBLER, ROOT, +8 more)
 .alias num_order_offset 30 ; #ORDER (byte) : UP + 30
                            ;          (Number of wordlists in search order)
 .alias search_order_offset 31
