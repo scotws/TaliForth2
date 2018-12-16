@@ -1,4 +1,4 @@
-## Manual for Tali Forth 2 for the 65c02
+# Manual for Tali Forth 2 for the 65c02
 
 Tali Forth 2 is a bare-metal ANS(ish) Forth for the 65c02 8-bit MPU. It aims to be, roughly in order of importance, easy to try out (just run the included binary), simple (subroutine threading model), specific (for the 65c02 only), and standardized (ANS Forth).
 
@@ -327,11 +327,19 @@ In addition, there are words that are specific to Tali Forth.
 </tr>
 <tr class="even">
 <td><p>block-read</p></td>
-<td><p><code>( addr blk# — )</code> This is a deferred word the user can change to point to their own routine for reading 1K blocks into memory from storage.</p></td>
+<td><p><code>( addr blk# — )</code> This is a vectored word the user can change to point to their own routine for reading 1K blocks into memory from storage.</p></td>
 </tr>
 <tr class="odd">
+<td><p>block-read-vector</p></td>
+<td><p><code>( — addr )</code> This is the address of the vector for block-read. Save the xt of your word here.</p></td>
+</tr>
+<tr class="even">
 <td><p>block-write</p></td>
-<td><p><code>( addr blk# — )</code> This is a deferred word the user can change to point to their own routine for writing 1K blocks from memory to storage.</p></td>
+<td><p><code>( addr blk# — )</code> This is a vectored word the user can change to point to their own routine for writing 1K blocks from memory to storage.</p></td>
+</tr>
+<tr class="odd">
+<td><p>block-write-vector</p></td>
+<td><p><code>( — addr )</code> This is the address of the vector for block-write. Save the xt of your word here.</p></td>
 </tr>
 <tr class="even">
 <td><p>block-ramdrive-init</p></td>
@@ -405,14 +413,45 @@ port
 </tr>
 <tr class="even">
 <td><p>uf-strip</p></td>
-<td><p><code>( — addr)</code> Return the address where the flag is kept that decides if the underflow checks are removed during native compiling. To check the value of this flag, use <code>uf-strip ?</code>.</p></td>
+<td><p><code>( — addr )</code> Return the address where the flag is kept that decides if the underflow checks are removed during native compiling. To check the value of this flag, use <code>uf-strip ?</code>.</p></td>
 </tr>
 <tr class="odd">
+<td><p>useraddr</p></td>
+<td><p><code>( — addr )</code> Return the base address of the block of memory holding the user variables.</p></td>
+</tr>
+<tr class="even">
 <td><p>wordsize</p></td>
 <td><p><code>( nt — u )</code> Given the name token (nt) of a Forth word, return its size in bytes. Used to help tune native compiling.</p></td>
 </tr>
 </tbody>
 </table>
+
+### Wordlists and Search Order
+
+Tali Forth implements the optional Search-Order words, including the extended words. These words can be used to hide certain words or to rearrange the order the words are searched in, allowing configurable substitution in the case of words that have the same name but live in different wordlists.
+
+On startup, only the FORTH-WORDLIST is in the search order, so only those words will be found. Tali also comes with an EDITOR-WORDLIST and an ASSEMBLER-WORDLIST, however those are not fully populated (mostly empty would be a better description of the current situation). Room for 8 user wordlists is available, and the search order can also hold 8 wordlist identifiers. See <https://forth-standard.org/standard/search> for more information on wordlists and the search order.
+
+The WORDLIST word will create a new wordlist (or print an error message if all 8 user wordlists have already been created). It puts the wordlist identifer (wid) on the stack. This is simply a number that uniquely identifes the wordlist, and it’s common practice to give it a name rather than use the number directly. An example might look like:
+
+    wordlist constant MY-WORDLIST
+
+While this creates a new wordlist and gives it a name, the wordlist isn’t currently set up to be used. When Tali starts, only the FORTH-WORDLIST is set up in the search order and all compilation of new words goes into the FORTH-WORDLIST. After creating a new wordlist, you need to set it up for new words to be compiled to it using SET-CURRENT and you need to add it to the search order using SET-ORDER if you want the new words to be found.
+
+    \ Set up the new wordlist as the current (compilation) wordlist
+    \ New words are always put in the current wordlist.
+    MY-WORDLIST set-current
+
+    \ Put this wordlist in the search order so it will be searched
+    \ before the FORTH-WORDLIST.  To set the search order, put the
+    \ wids on the stack in reverse order (last one listed is seached
+    \ first), then the number of wids, and then SET-ORDER.
+    FORTH-WORDLIST MY-WORDLIST 2 set-order
+
+    : new-word s" This word is in MY-WORDLIST"
+
+    \ Go back to compiling into the FORTH-WORDLIST.
+    FORTH-WORDLIST set-current
 
 ### Native Compiling
 
@@ -478,12 +517,12 @@ However, any attempt to free more memory than that will set the beginning of RAM
 
 Tali supports the optional BLOCK word set. The 2012 Forth standard defines a block as 1024 bytes, and the buffers for them are the same size (as opposed to some older forths that had smaller buffers.) Tali currently comes with one buffer.
 
-Before these words can be used, the user needs to write two routines: one for reading blocks into RAM and one for writing blocks out from RAM. Both of these should have the signature `( addr blk# — )`. Once these have been written, they can be incorporated into the BLOCK word set by changing the deferred words `block-read` and `block-write`. That might look like:
+Before these words can be used, the user needs to write two routines: one for reading blocks into RAM and one for writing blocks out from RAM. Both of these should have the signature `( addr blk# — )`. Once these have been written, they can be incorporated into the BLOCK word set by changing the vectors for words `block-read` and `block-write`. That might look like:
 
-    ' myblockreader IS BLOCK-READ
-    ' myblockwriter IS BLOCK-WRITE
+    ' myblockreader BLOCK-READ-VECTOR !
+    ' myblockwriter BLOCK-WRITE-VECTOR !
 
-Once these two deferred words have been updated, you can use the block words.
+These vectors determine what runs when the words `block-read` and `block-write` are used. Both of these words start with an error message asking you to update the vectors. Once these two vectors have been updated, you can use the block words.
 
 If you would like to play with some blocks, but don’t have any hardware or are running Tali in a simulator, fear not! Tali has a built-in RAM drive that can be accessed by running:
 
@@ -609,22 +648,26 @@ Tali Forth 2 currently ships with a clone of the `ed` line-based editor of Unix 
 <td><p>Delete line</p></td>
 </tr>
 <tr class="odd">
+<td><p>f</p></td>
+<td><p>Show current target address for writes (<code>w</code>)</p></td>
+</tr>
+<tr class="even">
 <td><p>i</p></td>
 <td><p>Add new lines above given line</p></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><p>q</p></td>
 <td><p>Quit if no unsaved work</p></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><p>Q</p></td>
 <td><p>Unconditional quit, unsaved work is lost</p></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><p>w</p></td>
 <td><p>Write text to given memory location (eg <code>7000w</code>)</p></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><p>=</p></td>
 <td><p>Print value of given parameter (eg <code>$=</code> gives number of last line)</p></td>
 </tr>
@@ -648,10 +691,14 @@ For the parameters, these are currently available:
 <td><p>When alone: All lines, the same as <code>1,$</code> or <code>%</code></p></td>
 </tr>
 <tr class="odd">
+<td><p>;</p></td>
+<td><p>Range from current line to end, same as <code>.,$</code></p></td>
+</tr>
+<tr class="even">
 <td><p>$</p></td>
 <td><p>Last line</p></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><p>%</p></td>
 <td><p>All lines, the same as <code>1,$</code> or <code>,</code> alone</p></td>
 </tr>
@@ -687,47 +734,28 @@ There is no time frame for these additions.
 <td><p>Edit lines given as <code>addr,u</code> in text buffer</p></td>
 </tr>
 <tr class="odd">
-<td><p>f</p></td>
-<td><p>Show current target address for writes</p></td>
-</tr>
-<tr class="even">
 <td><p>j</p></td>
 <td><p>Join two lines to a new line</p></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><p>m</p></td>
 <td><p>Move block of text to new line</p></td>
 </tr>
-<tr class="even">
-<td><p>r</p></td>
-<td><p>Read lines into text buffer</p></td>
-</tr>
 <tr class="odd">
+<td><p>r</p></td>
+<td><p>Append text from a block to end of text buffer</p></td>
+</tr>
+<tr class="even">
 <td><p>s</p></td>
 <td><p>Substitute one string on line with another</p></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><p>!</p></td>
 <td><p>Execute a shell command (Forth command in our case)</p></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><p>#</p></td>
 <td><p>Comment, ignore rest of the line</p></td>
-</tr>
-</tbody>
-</table>
-
-The following parameter features:
-
-<table>
-<colgroup>
-<col width="15%" />
-<col width="85%" />
-</colgroup>
-<tbody>
-<tr class="odd">
-<td><p>;</p></td>
-<td><p>Range from current line to end, same as <code>.,$</code></p></td>
 </tr>
 </tbody>
 </table>
@@ -1722,9 +1750,279 @@ One option for these is to add abbreviations to your favorite editor, which shou
 
 ## Working with Blocks
 
-> **Warning**
->
-> This section is currently missing.
+Blocks are a simple system for dealing with non-volatile storage. Originally, the storage medium would have been a floppy disk drive, but hobbyists are more likely to attach I2C or SPI flash memory to their system. These storage devices often have more than 64K (the full address space of the 65C02) of storage, so the block words help to deal with the larger address space and the fact that there is a limited amount of RAM in the system.
+
+The block words do not use a file system and expect to access the storage memory directly. The storage space is divided into 1K chunks, or "blocks", and each is given a number. On Tali, this allows for 64K blocks, or up to 64MB of storage. The user can request that a block is brought into RAM, operate on the data, and then request that the modified version be saved back to storage.
+
+What the blocks hold is up to the user. They can hold text, Forth code, or binary data. Support for text and Forth code is provided by Tali, and the user can easily provide support for storing binary data in their programs.
+
+### First steps with blocks
+
+In order to facilitate playing with blocks, Tali comes with a special word `block-ramdrive-init` that takes the number of blocks you want to use and allocates a RAM drive to simulate a mass-storage device. It also sets up the read and write vectors to routines that will move the data in and out of the allocated RAM.
+
+If you have an actual storage device, such as a flash memory, you will need to write routines for transferring 1K from storage to RAM and from RAM to storage. The addresses (xt) of these routines need to be placed in the existing variables `BLOCK-READ-VECTOR` and `BLOCK-WRITE-VECTOR`, respectively.
+
+To get started on this tutorial, we will use the ramdrive with 4 blocks allocated. If you forget this step, you will see an error message about BLOCK-READ-VECTOR and BLOCK-WRITE-VECTOR when you try to use any of the block words.
+
+    4 block-ramdrive-init
+
+This command takes a moment as all of the block memory is initialized to the value BLANK (a space) on the assumption you will be placing text there. When complete, you will have 4 blocks (numbered 0-3) available to play with.
+
+When using blocks for text or Forth code, the 1K block is further divided into 16 lines of 64 characters each. Newlines are typically not used in blocks at all, and the unused space is filled with spaces to get to the next line. Blocks that have this type of text data in them are also called a "screen".
+
+To see the contents of a block in screen format, you can use the built-in `list` command. It takes the block number (called a screen number when storing text) and displays the contents of that block. Typing the command `0 list` will list the contents of block 0.
+
+    0 list
+    Screen #   0
+     0
+     1
+     2
+     3
+     4
+     5
+     6
+     7
+     8
+     9
+    10
+    11
+    12
+    13
+    14
+    15
+     ok
+
+As you can see, this screen is currently blank. It’s actually 16 lines each containing 64 spaces.
+
+Block 0 is special in that it is the only block you cannot load Forth code from. Because of this, block 0 is commonly used to hold a text description of what is in the other blocks.
+
+### Editing a screen
+
+In order to edit a block, we will need to bring in the screen editor. It lives in the EDITOR-WORDLIST, which is not used when Tali starts. To add the editor words, run:
+
+    forth-wordlist editor-wordlist 2 set-order
+
+This tells Tali to use both the editor words and the forth words.
+
+You can only edit one screen at a time. To select a screen, simply `list` it. All further operations will edit that screen until a new screen is listed. The block number of the screen being edited is held in the `SCR` variable, and the `list` word simply saves the block number there before displaying it on the screen; many of the other editing words look in `SCR` to see which block is being edited.
+
+The following words can be used to edit a screen:
+
+<table>
+<colgroup>
+<col width="15%" />
+<col width="85%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><p>list</p></td>
+<td><p><code>( scr# — )</code> List the block in screen (16 lines of 64 chars) format. This word also select the given block for futher editing if desired.</p></td>
+</tr>
+<tr class="even">
+<td><p>l</p></td>
+<td><p><code>( — )</code> List the current screen (previously listead with <code>list</code>)</p></td>
+</tr>
+<tr class="odd">
+<td><p>el</p></td>
+<td><p><code>( line# — )</code> Erase a line on the previously listed screen.</p></td>
+</tr>
+<tr class="even">
+<td><p>o</p></td>
+<td><p><code>( line# — )</code> Overwrite an entire line on the previously listed screen. Enter the replacement text at the * prompt.</p></td>
+</tr>
+<tr class="odd">
+<td><p>enter-screen</p></td>
+<td><p><code>( scr# — )</code> Prompt for all of the lines on the given screen number</p></td>
+</tr>
+<tr class="even">
+<td><p>erase-screen</p></td>
+<td><p><code>( scr# — )</code> Erase the given screen by filling with BLANK (spaces)</p></td>
+</tr>
+</tbody>
+</table>
+
+Because block 0 has already been listed above, we will simply add a message on line 2.
+
+    2 o
+     2 * Load screen 2 to get a smiley!
+
+Now if we list screen 0, we should see our message:
+
+    0 list
+    Screen #   0
+     0
+     1
+     2 Load screen 2 to get a smiley!
+     3
+     4
+     5
+     6
+     7
+     8
+     9
+    10
+    11
+    12
+    13
+    14
+    15
+      ok
+
+Now we will entire screen 2 using `enter-screen`. It will prompt line by line for the text. Pressing ENTER without typing any text will leave that line blank.
+
+    2 enter-screen
+     0 * ( Make a smiley word and then run it!    SCC 2018-12 )
+     1 * : smiley ." :)" ;
+     2 *
+     3 *
+     4 *
+     5 * smiley
+     6 *
+     7 *
+     8 *
+     9 *
+    10 *
+    11 *
+    12 *
+    13 *
+    14 *
+    15 *   ok
+
+It is customary for the very first line to be a comment (Tali only supports parenthesis comments in blocks) with a description, the programmer’s initials, and the date. On line 1 we have entered the word definition, and on line 5 we are running the word.
+
+To get Tali to run this code, we use the word `load` on the block number.
+
+    2 load :) ok
+
+If your forth code doesn’t fit on one screen, you can spread it across contiguous screens and load all of them with the `thru` command. If you had filled screens 1-3 with forth code and wanted to load all of it, you would run:
+
+    1 3 thru
+
+For reasons explained in the next chapter, the modified screen data is only saved back to the mass storage (in this case, our ramdrive) when the screen number is changed and accessed (typically with `list`). To force Tali to save any changes to the mass storage, you can use the `flush` command. It takes no arguments and simply saves any changed back to the mass storage.
+
+    flush
+
+### Working with blocks
+
+Blocks can also be used by applications to store data. The block words bring the blocks from mass storage into a 1K buffer where the data can be read or written. If changes are made to the buffer, the `update` word needs to be run to indicate that there are updates to the data and that it needs to be saved back to mass storage before another block can be brought in to the buffer.
+
+Because the ANS spec does not specify how many buffers there are, portable Forth code needs to assume that there is only 1, and that the loading of any block might replace the buffered version of a previouly loaded block. This is a very good assumption for Tali, as it currently only has 1 block buffer.
+
+The following words will be used to deal with blocks:
+
+<table>
+<colgroup>
+<col width="15%" />
+<col width="85%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><p>block</p></td>
+<td><p><code>( block# — addr )</code> Load the given block into a buffer. If the buffer has been updated, it will save the contents out to block storage before loading the new block. Returns the address of the buffer.</p></td>
+</tr>
+<tr class="even">
+<td><p>buffer</p></td>
+<td><p><code>( block# — addr )</code> Identical to block, except that it doesn’t actually load the block from storage. The contents in the buffer are undefined, but will be saved back to the given block number if updated. Returns the address of the buffer.</p></td>
+</tr>
+<tr class="odd">
+<td><p>update</p></td>
+<td><p><code>( — )</code> Mark the most recent buffer as updated (dirty) so it will be saved back to storage at a later time.</p></td>
+</tr>
+<tr class="even">
+<td><p>flush</p></td>
+<td><p><code>( — )</code> Save any updated buffers to storage and mark all buffers empty.</p></td>
+</tr>
+<tr class="odd">
+<td><p>save-buffers</p></td>
+<td><p><code>( — )</code> Save any updated buffers to storage.</p></td>
+</tr>
+<tr class="even">
+<td><p>empty-buffers</p></td>
+<td><p><code>( — )</code> Mark all buffers as empty, even if they have been updated and not saved. Can be used to abandon edits.</p></td>
+</tr>
+<tr class="odd">
+<td><p>load</p></td>
+<td><p><code>( blk# — )</code> Interpret the contents of the given block.</p></td>
+</tr>
+</tbody>
+</table>
+
+The following variables are used with blocks:
+
+<table>
+<colgroup>
+<col width="15%" />
+<col width="85%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><p>BLK</p></td>
+<td><p>The block number currently being interpreted by a <code>load</code> or <code>thru</code> command. BLK is 0 when interpreting from the keyboard or from a string.</p></td>
+</tr>
+<tr class="even">
+<td><p>SCR</p></td>
+<td><p>The screen number currently being edited. Set by <code>list</code>, but you can set it yourself if you want.</p></td>
+</tr>
+</tbody>
+</table>
+
+#### A simple block example
+
+![blocks block](pics/blocks-block.png)
+
+To load a block, just give the block number to the `block` word like so:
+
+`1 block`
+
+This will load the block into the buffer and return the address of the buffer on the stack. The buffer will be marked as "in-use" with block 1 and also marked as "clean". The address on the stack can be used to access the contents of the buffer. As long as the buffer has not been marked as "dirty" with the word `update`, you can call `block` again and it will simply replace the buffer with the new block data.
+
+Note: On larger forths with multiple buffers, using block again may bring the requested block into a different buffer. Tali only has a single buffer, so the buffer contents will be replaced every time.
+
+![blocks update](pics/blocks-update.png)
+
+Let’s modify the data in block 1. The editor words handle the blocks behind the scenes, so we will use `move` to copy some strings into the buffer.
+
+`( Assuming "1 block" was recently run )`
+`( and buffer address is still there )`
+`128 +         ( Move to line 2)`
+`s" Hello!"`
+`rot swap move ( Copy Hello! into line )`
+`update        ( Tell Tali it’s modified )`
+
+These commands put the string "Hello!" onto line 2, which can be seen by running `1 list` afterwards. The modification, however, hasn’t been transferred to storage yet. If power were lost or the processor reset at this point, the data would be lost.
+
+![blocks newblock](pics/blocks-newblock.png)
+
+We also want to make a change to block 3, so we will bring that block in next.
+
+`3 block`
+
+The block-handling built-in to Forth will see that the buffer is in use and is no longer a clean copy because it has been updated. This will cause Tali to write block 1 back to mass storage before bringing in block 3. Once block 3 is in the buffer, it will be marked as "in-use" with block 3 and "clean".
+
+![blocks update3](pics/blocks-update3.png)
+
+Let’s modify the data in block 3 now.
+
+`( Assuming "3 block" was recently run )`
+`( and buffer address is still there )`
+`256 +         ( Move to line 4)`
+`s" Hi there!"`
+`rot swap move ( Copy string into line )`
+`update        ( Tell Tali it’s modified )`
+
+After this code is run, the buffer will be modified, marked as updated/dirty, but once again it won’t actually be saved back to mass storage right at this point.
+
+![blocks flush](pics/blocks-flush.png)
+
+To force the updated version of block 3 to be written back to mass storage, we can use the command:
+
+`flush`
+
+If the buffer is in use and dirty, it will be written back to mass storage. Then the buffer will be marked empty.
+
+If you want to write the changes but keep the block in the buffer, you can use the command `save-buffers` instead of flush. That would be useful in a situation where you want to save the block changed right now, but also want to keep making changes in the buffer.
+
+If you want to abandon the changes in the buffer, you can use the command `empty-buffers`. This will not save even a dirty buffer, and marks the buffer as empty.
 
 ## The `ed` Line-Based Editor
 
@@ -1818,10 +2116,6 @@ Note that lines three and four have moved up — they are now lines two and 
 
 We can also use comma-separated numbers to indicate a range of lines (say, `1,2d`). As you probably will have guessed, or the `,` (or `%`) prefix can be used to delete the complete text. Be careful — in the real version of `ed`, you can undo changes with the `u` command. Tali’s version currently doesn’t support this option. If you delete it, it’s gone.
 
-> **Note**
->
-> The undo (`u`) function may be added to a future version of `ed` if space allows, at least for the last change.
-
 Now, let’s say we want to put back the second line. We can do this again with `a`, to add text *after* the first line. Note there is currently no way to paste the line we have just deleted. If we can’t remember it, we’re in trouble.
 
             1a      
@@ -1849,7 +2143,7 @@ Instead of using `1a`, we could have used `2i` to insert the new line *before* l
 
 > **Tip**
 >
-> The combination `$=` will print the number of the last line.
+> The combination `$=` will print the number of the last line. Just `=` will print the current line.
 
 ### Saving Your Text
 
@@ -2014,37 +2308,37 @@ Thank you, everybody.
 
 # References and Further Reading
 
-\[\] *Masterminds of Programming*, Federico Biancuzzi, O’Reilly Media 1st edition, 2009.
+\[FB\] *Masterminds of Programming*, Federico Biancuzzi, O’Reilly Media 1st edition, 2009.
 
-\[\] "Charles H. Moore: Geek of the Week", redgate Hub 2009 <https://www.red-gate.com/simple-talk/opinion/geek-of-the-week/chuck-moore-geek>
+\[CHM1\] "Charles H. Moore: Geek of the Week", redgate Hub 2009 <https://www.red-gate.com/simple-talk/opinion/geek-of-the-week/chuck-moore-geek>
 
-\[\] "The Evolution of FORTH, an Unusual Language", Charles H. Moore, *Byte* 1980, <https://wiki.forth-ev.de/doku.php/projects:the_evolution_of_forth>
+\[CHM2\] "The Evolution of FORTH, an Unusual Language", Charles H. Moore, *Byte* 1980, <https://wiki.forth-ev.de/doku.php/projects:the_evolution_of_forth>
 
-\[\] *Forth Programmer’s Handbook*, Edward K. Conklin and Elizabeth Rather, 3rd edition 2010
+\[CnR\] *Forth Programmer’s Handbook*, Edward K. Conklin and Elizabeth Rather, 3rd edition 2010
 
-\[\] *Forth Enzyclopedia*, Mitch Derick and Linda Baker, Mountain View Press 1982
+\[DB\] *Forth Enzyclopedia*, Mitch Derick and Linda Baker, Mountain View Press 1982
 
-\[\] "Some notes on Forth from a novice user", Douglas Hoffman, Feb 1988 <https://wiki.forth-ev.de/doku.php/projects:some_notes_on_forth_from_a_novice_user>
+\[DH\] "Some notes on Forth from a novice user", Douglas Hoffman, Feb 1988 <https://wiki.forth-ev.de/doku.php/projects:some_notes_on_forth_from_a_novice_user>
 
-\[\] "Reflections on Software Research", Dennis M. Ritchie, Turing Award Lecture in *Communications of the ACM* August 1984 Volume 27 Number 8 <http://www.valleytalk.org/wp-content/uploads/2011/10/p758-ritchie.pdf>
+\[DMR\] "Reflections on Software Research", Dennis M. Ritchie, Turing Award Lecture in *Communications of the ACM* August 1984 Volume 27 Number 8 <http://www.valleytalk.org/wp-content/uploads/2011/10/p758-ritchie.pdf>
 
-\[\] *Programming the 65816, including the 6502, 65C02 and 65802*, David Eyes and Ron Lichty (Currently not available from the WDC website)
+\[EnL\] *Programming the 65816, including the 6502, 65C02 and 65802*, David Eyes and Ron Lichty (Currently not available from the WDC website)
 
-\[\] "Forth: The Hacker’s Language", Elliot Williams, <https://hackaday.com/2017/01/27/forth-the-hackers-language/>
+\[EW\] "Forth: The Hacker’s Language", Elliot Williams, <https://hackaday.com/2017/01/27/forth-the-hackers-language/>
 
-\[\] "Forth System Comparisons", Guy Kelly, in *Forth Dimensions* V13N6, March/April 1992 [http://www.forth.org/fd/FD-V13N6.pdf}{http://www.forth.org/fd/FD-V13N6.pdf](http://www.forth.org/fd/FD-V13N6.pdf}{http://www.forth.org/fd/FD-V13N6.pdf)
+\[GK\] "Forth System Comparisons", Guy Kelly, in *Forth Dimensions* V13N6, March/April 1992 [http://www.forth.org/fd/FD-V13N6.pdf}{http://www.forth.org/fd/FD-V13N6.pdf](http://www.forth.org/fd/FD-V13N6.pdf}{http://www.forth.org/fd/FD-V13N6.pdf)
 
-\[\] *A Beginner’s Guide to Forth*, J.V. Nobel, <http://galileo.phys.virginia.edu/classes/551.jvn.fall01/primer.htm>
+\[JN\] *A Beginner’s Guide to Forth*, J.V. Nobel, <http://galileo.phys.virginia.edu/classes/551.jvn.fall01/primer.htm>
 
-\[\] *A Tutorial Introduction to the UNIX Text Editor*, B. W. Kernighan, <http://www.psue.uni-hannover.de/wise2017_2018/material/ed.pdf>
+\[BWK\] *A Tutorial Introduction to the UNIX Text Editor*, B. W. Kernighan, <http://www.psue.uni-hannover.de/wise2017_2018/material/ed.pdf>
 
-\[\] *Starting Forth*, Leo Brodie, new edition 2003, [https://www.forth.com/starting-forth/}{https://www.forth.com/starting-forth/](https://www.forth.com/starting-forth/}{https://www.forth.com/starting-forth/)
+\[LB1\] *Starting Forth*, Leo Brodie, new edition 2003, [https://www.forth.com/starting-forth/}{https://www.forth.com/starting-forth/](https://www.forth.com/starting-forth/}{https://www.forth.com/starting-forth/)
 
-\[\] *Thinking Forth*, Leo Brodie, 1984, [http://thinking-forth.sourceforge.net/\\\#21CENTURY](http://thinking-forth.sourceforge.net/\#21CENTURY)
+\[LB2\] *Thinking Forth*, Leo Brodie, 1984, [http://thinking-forth.sourceforge.net/\\\#21CENTURY](http://thinking-forth.sourceforge.net/\#21CENTURY)
 
-\[\] *6502 Assembly Language Programming*, Lance A. Leventhal, OSBORNE/McGRAW-HILL 1979
+\[LL\] *6502 Assembly Language Programming*, Lance A. Leventhal, OSBORNE/McGRAW-HILL 1979
 
-\[\] "The Daemon, the Gnu and the Penguin", Peter H. Saulus, 22. April 2005, <http://www.groklaw.net/article.php?story=20050422235450910>
+\[PHS\] "The Daemon, the Gnu and the Penguin", Peter H. Saulus, 22. April 2005, <http://www.groklaw.net/article.php?story=20050422235450910>
 
 The Tali Forth 2 Manual was written with the [vim](https://www.vim.org/) editor in [AsciiDoc](https://asciidoctor.org/docs/what-is-asciidoc/) format, formatted to HTML with AsciiDoctor, and version controlled with [Git](https://git-scm.com/), all under [Ubuntu](https://www.ubuntu.com/) Linux 16.04 LTS.
 
