@@ -18,7 +18,8 @@ SOURCE = 'opcodes65c02.txt'
 
 TEMPLATE_ASSEMBLER = 'xt_asm_{4}:\t\t; {0} \ {3}\n'\
         '\t\tlda #${1}\n'\
-        '\t\tldx #{2}\n'\
+        '\t\tldy #{2}\n'\
+        '\t\tjmp asm_common\n'\
         'z_asm_{4}:\n'
 
 TEMPLATE_HEADER = 'nt_asm_{2}:\n'\

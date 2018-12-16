@@ -94,21 +94,49 @@ create actual-results  20 cells allot  ok
 \ ------------------------------------------------------------------------  ok
 testing assembler words  ok
   ok
-marker asm_tests   ok
+marker asm-tests   ok
   ok
-\ Call up assembler word set  ok
+\ Add assembler wordlist. This currently kills <true>  ok
+forth-wordlist assembler-wordlist 2 set-order  ok
   ok
   ok
-\ Testing assember instructions  ok
+: opcode-test ( opc len addr u -- f )  compiled
+   here        ( opc len addr u here0 )  compiled
+   dup >r      ( opc len addr u here0 ) ( R: here0 )  compiled
+   -rot        ( opc len here0 addr u ) ( R: here0 )  compiled
+   evaluate    ( opc len here0 ) ( R: here0 )  compiled
+  compiled
+   \ See if length is correct  compiled
+   here swap -    ( opc len n ) ( R: here0 )  compiled
+   =              ( opc f ) ( R: here0 )  compiled
+   swap           ( f opc ) ( R: here0 )  compiled
+  compiled
+   \ See if opcode is correct. We can't use AND for the last step because that  compiled
+   \ is replaced by the assembler instruction of the same name  compiled
+   r> c@          ( f opc c )  compiled
+   =              ( f f )   compiled
+;  ok
+  ok
+\ Test for little endian behavior with three-byte instructions  ok
+\ For instance, 'sta 1122' must become 8D 22 11. Note that Tali stores the cell  ok
+\ values little-endian as well, which makes this test confusing at first glance.  ok
+\ Insert  CR DUP 3 DUMP CR  after EVALUTE to convince yourself that this is okay  ok
+: little-endian? ( u-want addr u -- f )  compiled
+   here -rot      ( u-want here0 addr u )  compiled
+   evaluate       ( u-want here0 )  compiled
+   \ cr dup 3 dump cr   \ Manual check for paranoia  compiled
+   1+             ( u-want here0+1 ) \ Skip opcode  compiled
+   @              ( u-want u-have )  compiled
+   =              ( f )   compiled
+;  ok
+  ok
+\ Testing all assembler instructions: Opcode and length  ok
+T{ 0ea 1 s" nop" opcode-test -> -1 -1 }T  ok
+T{ 0a9 2 s" 0ff lda.#" opcode-test -> -1 -1 }T  ok
+  ok
+\ Testing all three-byte instructions: Little endian  ok
+T{ 1122 s" 1122 sta" little-endian? -> -1 }T  ok
+  ok
   ok
 \ Testing pseudo-instructions  ok
-  ok
-\ Testing directives  ok
-  ok
-  ok
-\ Assember testing done! Remove assembler word set  ok
-  ok
-\ Release all of the memory used  ok
-asm_tests  ok
-  ok
-bye 
+T{ here  0a lda.# push-a  execute -> 0a }T 
