@@ -82,9 +82,14 @@ nt_forth:
         .word nt_ed, xt_forth, z_forth
         .byte "forth"
 
+nt_to_order:
+        .byte 6, 0
+        .word nt_forth, xt_to_order, z_to_order
+        .byte ">order"
+
 nt_previous:
         .byte 8, 0
-        .word nt_forth, xt_previous, z_previous
+        .word nt_to_order, xt_previous, z_previous
         .byte "previous"
 
 nt_also:

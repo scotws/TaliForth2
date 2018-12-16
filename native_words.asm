@@ -9652,6 +9652,25 @@ z_to_number:    rts
 .scend
 
 
+; ## TO_ORDER ( wid -- ) "Add wordlist at beginning of search order"
+; ## ">order"  tested  Gforth search
+        ; """https://www.complang.tuwien.ac.at/forth/gforth/Docs-html/Word-Lists.html"""
+.scope
+xt_to_order:
+                ; Put the wid on the return stack for now.
+                jsr xt_to_r
+                ; Get the current search order.
+                jsr xt_get_order
+                ; Get back the wid and add it to the list.
+                jsr xt_r_from
+                jsr xt_swap
+                jsr xt_one_plus
+                ; Set the search order with the new list.
+                jsr xt_set_order
+z_to_order:     rts
+.scend
+        
+        
 ; ## TO_R ( n -- )(R: -- n) "Push TOS to the Return Stack"
 ; ## ">r"  auto  ANS core
         ; """https://forth-standard.org/standard/core/toR
