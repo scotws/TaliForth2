@@ -38,29 +38,890 @@
 
 ; TODO make sure lower words are BRA not JMP to asm_common
 
-xt_asm_nop:      
-                lda #$EA        ; nop / NOP
-                ldy #1
-                jmp asm_common
-z_asm_nop:
+xt_asm_adc_h:		; adc.# \ ADC.#
+		lda #$69
+		ldx #2
+z_asm_adc_h:
 
-xt_asm_lda_h:
-                lda #$A9        ; lda.# / LDA #nn
-                ldy #2
-                jmp asm_common
+xt_asm_adc_x:		; adc.x \ ADC.X
+		lda #$7D
+		ldx #3
+z_asm_adc_x:
+
+xt_asm_adc_y:		; adc.y \ ADC.Y
+		lda #$79
+		ldx #3
+z_asm_adc_y:
+
+xt_asm_adc_z:		; adc.z \ ADC.Z
+		lda #$65
+		ldx #2
+z_asm_adc_z:
+
+xt_asm_adc_zi:		; adc.zi \ ADC.ZI
+		lda #$72
+		ldx #2
+z_asm_adc_zi:
+
+xt_asm_adc_ziy:		; adc.ziy \ ADC.ZIY
+		lda #$71
+		ldx #2
+z_asm_adc_ziy:
+
+xt_asm_adc_zx:		; adc.zx \ ADC.ZX
+		lda #$75
+		ldx #2
+z_asm_adc_zx:
+
+xt_asm_adc_zxi:		; adc.zxi \ ADC.ZXI
+		lda #$61
+		ldx #2
+z_asm_adc_zxi:
+
+xt_asm_and:		; and \ AND
+		lda #$2D
+		ldx #3
+z_asm_and:
+
+xt_asm_and_h:		; and.# \ AND.#
+		lda #$29
+		ldx #2
+z_asm_and_h:
+
+xt_asm_and_x:		; and.x \ AND.X
+		lda #$3D
+		ldx #3
+z_asm_and_x:
+
+xt_asm_and_y:		; and.y \ AND.Y
+		lda #$39
+		ldx #3
+z_asm_and_y:
+
+xt_asm_and_z:		; and.z \ AND.Z
+		lda #$25
+		ldx #2
+z_asm_and_z:
+
+xt_asm_and_zi:		; and.zi \ AND.ZI
+		lda #$32
+		ldx #2
+z_asm_and_zi:
+
+xt_asm_and_ziy:		; and.ziy \ AND.ZIY
+		lda #$31
+		ldx #2
+z_asm_and_ziy:
+
+xt_asm_and_zx:		; and.zx \ AND.ZX
+		lda #$35
+		ldx #2
+z_asm_and_zx:
+
+xt_asm_and_zxi:		; and.zxi \ AND.ZXI
+		lda #$21
+		ldx #2
+z_asm_and_zxi:
+
+xt_asm_asl:		; asl \ ASL
+		lda #$0E
+		ldx #3
+z_asm_asl:
+
+xt_asm_asl_a:		; asl.a \ ASL.A
+		lda #$0A
+		ldx #1
+z_asm_asl_a:
+
+xt_asm_asl_x:		; asl.x \ ASL.X
+		lda #$1E
+		ldx #3
+z_asm_asl_x:
+
+xt_asm_asl_z:		; asl.z \ ASL.Z
+		lda #$06
+		ldx #2
+z_asm_asl_z:
+
+xt_asm_asl_zx:		; asl.zx \ ASL.ZX
+		lda #$16
+		ldx #2
+z_asm_asl_zx:
+
+xt_asm_bcc:		; bcc \ BCC
+		lda #$90
+		ldx #2
+z_asm_bcc:
+
+xt_asm_bcs:		; bcs \ BCS
+		lda #$B0
+		ldx #2
+z_asm_bcs:
+
+xt_asm_beq:		; beq \ BEQ
+		lda #$F0
+		ldx #2
+z_asm_beq:
+
+xt_asm_bit:		; bit \ BIT
+		lda #$2C
+		ldx #3
+z_asm_bit:
+
+xt_asm_bit_h:		; bit.# \ BIT.#
+		lda #$89
+		ldx #2
+z_asm_bit_h:
+
+xt_asm_bit_x:		; bit.x \ BIT.X
+		lda #$3C
+		ldx #3
+z_asm_bit_x:
+
+xt_asm_bit_z:		; bit.z \ BIT.Z
+		lda #$24
+		ldx #2
+z_asm_bit_z:
+
+xt_asm_bit_zx:		; bit.zx \ BIT.ZX
+		lda #$34
+		ldx #2
+z_asm_bit_zx:
+
+xt_asm_bmi:		; bmi \ BMI
+		lda #$30
+		ldx #2
+z_asm_bmi:
+
+xt_asm_bne:		; bne \ BNE
+		lda #$D0
+		ldx #2
+z_asm_bne:
+
+xt_asm_bpl:		; bpl \ BPL
+		lda #$10
+		ldx #2
+z_asm_bpl:
+
+xt_asm_bra:		; bra \ BRA
+		lda #$80
+		ldx #2
+z_asm_bra:
+
+xt_asm_brk:		; brk \ BRK
+		lda #$00
+		ldx #2
+z_asm_brk:
+
+xt_asm_bvc:		; bvc \ BVC
+		lda #$50
+		ldx #2
+z_asm_bvc:
+
+xt_asm_bvs:		; bvs \ BVS
+		lda #$70
+		ldx #2
+z_asm_bvs:
+
+xt_asm_clc:		; clc \ CLC
+		lda #$18
+		ldx #1
+z_asm_clc:
+
+xt_asm_cld:		; cld \ CLD
+		lda #$D8
+		ldx #1
+z_asm_cld:
+
+xt_asm_cli:		; cli \ CLI
+		lda #$58
+		ldx #1
+z_asm_cli:
+
+xt_asm_clv:		; clv \ CLV
+		lda #$B8
+		ldx #1
+z_asm_clv:
+
+xt_asm_cmp:		; cmp \ CMP
+		lda #$CD
+		ldx #3
+z_asm_cmp:
+
+xt_asm_cmp_h:		; cmp.# \ CMP.#
+		lda #$C9
+		ldx #2
+z_asm_cmp_h:
+
+xt_asm_cmp_x:		; cmp.x \ CMP.X
+		lda #$DD
+		ldx #3
+z_asm_cmp_x:
+
+xt_asm_cmp_y:		; cmp.y \ CMP.Y
+		lda #$D9
+		ldx #3
+z_asm_cmp_y:
+
+xt_asm_cmp_z:		; cmp.z \ CMP.Z
+		lda #$C5
+		ldx #2
+z_asm_cmp_z:
+
+xt_asm_cmp_zi:		; cmp.zi \ CMP.ZI
+		lda #$D2
+		ldx #2
+z_asm_cmp_zi:
+
+xt_asm_cmp_ziy:		; cmp.ziy \ CMP.ZIY
+		lda #$D1
+		ldx #2
+z_asm_cmp_ziy:
+
+xt_asm_cmp_zx:		; cmp.zx \ CMP.ZX
+		lda #$D5
+		ldx #2
+z_asm_cmp_zx:
+
+xt_asm_cmp_zxi:		; cmp.zxi \ CMP.ZXI
+		lda #$C1
+		ldx #2
+z_asm_cmp_zxi:
+
+xt_asm_cpx:		; cpx \ CPX
+		lda #$EC
+		ldx #3
+z_asm_cpx:
+
+xt_asm_cpx_h:		; cpx.# \ CPX.#
+		lda #$E0
+		ldx #2
+z_asm_cpx_h:
+
+xt_asm_cpx_z:		; cpx.z \ CPX.Z
+		lda #$E4
+		ldx #2
+z_asm_cpx_z:
+
+xt_asm_cpy:		; cpy \ CPY
+		lda #$CC
+		ldx #3
+z_asm_cpy:
+
+xt_asm_cpy_h:		; cpy.# \ CPY.#
+		lda #$C0
+		ldx #2
+z_asm_cpy_h:
+
+xt_asm_cpy_z:		; cpy.z \ CPY.Z
+		lda #$C4
+		ldx #2
+z_asm_cpy_z:
+
+xt_asm_dec:		; dec \ DEC
+		lda #$CE
+		ldx #3
+z_asm_dec:
+
+xt_asm_dec_a:		; dec.a \ DEC.A
+		lda #$3A
+		ldx #1
+z_asm_dec_a:
+
+xt_asm_dec_x:		; dec.x \ DEC.X
+		lda #$DE
+		ldx #3
+z_asm_dec_x:
+
+xt_asm_dec_z:		; dec.z \ DEC.Z
+		lda #$C6
+		ldx #2
+z_asm_dec_z:
+
+xt_asm_dec_zx:		; dec.zx \ DEC.ZX
+		lda #$D6
+		ldx #2
+z_asm_dec_zx:
+
+xt_asm_dex:		; dex \ DEX
+		lda #$CA
+		ldx #1
+z_asm_dex:
+
+xt_asm_dey:		; dey \ DEY
+		lda #$88
+		ldx #1
+z_asm_dey:
+
+xt_asm_eor:		; eor \ EOR
+		lda #$4D
+		ldx #3
+z_asm_eor:
+
+xt_asm_eor_h:		; eor.# \ EOR.#
+		lda #$49
+		ldx #2
+z_asm_eor_h:
+
+xt_asm_eor_x:		; eor.x \ EOR.X
+		lda #$5D
+		ldx #3
+z_asm_eor_x:
+
+xt_asm_eor_y:		; eor.y \ EOR.Y
+		lda #$59
+		ldx #3
+z_asm_eor_y:
+
+xt_asm_eor_z:		; eor.z \ EOR.Z
+		lda #$45
+		ldx #2
+z_asm_eor_z:
+
+xt_asm_eor_zi:		; eor.zi \ EOR.ZI
+		lda #$52
+		ldx #2
+z_asm_eor_zi:
+
+xt_asm_eor_ziy:		; eor.ziy \ EOR.ZIY
+		lda #$51
+		ldx #2
+z_asm_eor_ziy:
+
+xt_asm_eor_zx:		; eor.zx \ EOR.ZX
+		lda #$55
+		ldx #2
+z_asm_eor_zx:
+
+xt_asm_eor_zxi:		; eor.zxi \ EOR.ZXI
+		lda #$41
+		ldx #2
+z_asm_eor_zxi:
+
+xt_asm_inc:		; inc \ INC
+		lda #$EE
+		ldx #3
+z_asm_inc:
+
+xt_asm_inc_a:		; inc.a \ INC.A
+		lda #$1A
+		ldx #1
+z_asm_inc_a:
+
+xt_asm_inc_x:		; inc.x \ INC.X
+		lda #$FE
+		ldx #3
+z_asm_inc_x:
+
+xt_asm_inc_z:		; inc.z \ INC.Z
+		lda #$E6
+		ldx #2
+z_asm_inc_z:
+
+xt_asm_inc_zx:		; inc.zx \ INC.ZX
+		lda #$F6
+		ldx #2
+z_asm_inc_zx:
+
+xt_asm_inx:		; inx \ INX
+		lda #$E8
+		ldx #1
+z_asm_inx:
+
+xt_asm_iny:		; iny \ INY
+		lda #$C8
+		ldx #1
+z_asm_iny:
+
+xt_asm_jmp:		; jmp \ JMP
+		lda #$4C
+		ldx #3
+z_asm_jmp:
+
+xt_asm_jmp_i:		; jmp.i \ JMP.I
+		lda #$6C
+		ldx #3
+z_asm_jmp_i:
+
+xt_asm_jmp_xi:		; jmp.xi \ JMP.XI
+		lda #$7C
+		ldx #3
+z_asm_jmp_xi:
+
+xt_asm_jsr:		; jsr \ JSR
+		lda #$20
+		ldx #3
+z_asm_jsr:
+
+xt_asm_lda:		; lda \ LDA
+		lda #$AD
+		ldx #3
+z_asm_lda:
+
+xt_asm_lda_h:		; lda.# \ LDA.#
+		lda #$A9
+		ldx #2
 z_asm_lda_h:
 
-xt_asm_ldx_h:
-                lda #$A2        ; ldx.# / LDX #nn
-                ldy #2
-                jmp asm_common
+xt_asm_lda_x:		; lda.x \ LDA.X
+		lda #$BD
+		ldx #3
+z_asm_lda_x:
+
+xt_asm_lda_y:		; lda.y \ LDA.Y
+		lda #$B9
+		ldx #3
+z_asm_lda_y:
+
+xt_asm_lda_z:		; lda.z \ LDA.Z
+		lda #$A5
+		ldx #2
+z_asm_lda_z:
+
+xt_asm_lda_zi:		; lda.zi \ LDA.ZI
+		lda #$B2
+		ldx #2
+z_asm_lda_zi:
+
+xt_asm_lda_ziy:		; lda.ziy \ LDA.ZIY
+		lda #$B1
+		ldx #2
+z_asm_lda_ziy:
+
+xt_asm_lda_zx:		; lda.zx \ LDA.ZX
+		lda #$B5
+		ldx #2
+z_asm_lda_zx:
+
+xt_asm_lda_zxi:		; lda.zxi \ LDA.ZXI
+		lda #$A1
+		ldx #2
+z_asm_lda_zxi:
+
+xt_asm_ldx:		; ldx \ LDX
+		lda #$AE
+		ldx #3
+z_asm_ldx:
+
+xt_asm_ldx_h:		; ldx.# \ LDX.#
+		lda #$A2
+		ldx #2
 z_asm_ldx_h:
 
-xt_asm_rts:
-                lda #$60        ; rts / RTS
-                ldy #1
-                jmp asm_common
+xt_asm_ldx_y:		; ldx.y \ LDX.Y
+		lda #$BE
+		ldx #3
+z_asm_ldx_y:
+
+xt_asm_ldx_z:		; ldx.z \ LDX.Z
+		lda #$A6
+		ldx #2
+z_asm_ldx_z:
+
+xt_asm_ldx_zy:		; ldx.zy \ LDX.ZY
+		lda #$B6
+		ldx #2
+z_asm_ldx_zy:
+
+xt_asm_ldy:		; ldy \ LDY
+		lda #$AC
+		ldx #3
+z_asm_ldy:
+
+xt_asm_ldy_h:		; ldy.# \ LDY.#
+		lda #$A0
+		ldx #2
+z_asm_ldy_h:
+
+xt_asm_ldy_x:		; ldy.x \ LDY.X
+		lda #$BC
+		ldx #3
+z_asm_ldy_x:
+
+xt_asm_ldy_z:		; ldy.z \ LDY.Z
+		lda #$A4
+		ldx #2
+z_asm_ldy_z:
+
+xt_asm_ldy_zx:		; ldy.zx \ LDY.ZX
+		lda #$B4
+		ldx #2
+z_asm_ldy_zx:
+
+xt_asm_lsr:		; lsr \ LSR
+		lda #$4E
+		ldx #3
+z_asm_lsr:
+
+xt_asm_lsr_a:		; lsr.a \ LSR.A
+		lda #$4A
+		ldx #1
+z_asm_lsr_a:
+
+xt_asm_lsr_x:		; lsr.x \ LSR.X
+		lda #$5E
+		ldx #3
+z_asm_lsr_x:
+
+xt_asm_lsr_z:		; lsr.z \ LSR.Z
+		lda #$46
+		ldx #2
+z_asm_lsr_z:
+
+xt_asm_lsr_zx:		; lsr.zx \ LSR.ZX
+		lda #$56
+		ldx #2
+z_asm_lsr_zx:
+
+xt_asm_nop:		; nop \ NOP
+		lda #$EA
+		ldx #1
+z_asm_nop:
+
+xt_asm_ora:		; ora \ ORA
+		lda #$0D
+		ldx #3
+z_asm_ora:
+
+xt_asm_ora_h:		; ora.# \ ORA.#
+		lda #$09
+		ldx #2
+z_asm_ora_h:
+
+xt_asm_ora_x:		; ora.x \ ORA.X
+		lda #$1D
+		ldx #3
+z_asm_ora_x:
+
+xt_asm_ora_y:		; ora.y \ ORA.Y
+		lda #$19
+		ldx #3
+z_asm_ora_y:
+
+xt_asm_ora_z:		; ora.z \ ORA.Z
+		lda #$05
+		ldx #2
+z_asm_ora_z:
+
+xt_asm_ora_zi:		; ora.zi \ ORA.ZI
+		lda #$12
+		ldx #2
+z_asm_ora_zi:
+
+xt_asm_ora_ziy:		; ora.ziy \ ORA.ZIY
+		lda #$11
+		ldx #2
+z_asm_ora_ziy:
+
+xt_asm_ora_zx:		; ora.zx \ ORA.ZX
+		lda #$15
+		ldx #2
+z_asm_ora_zx:
+
+xt_asm_ora_zxi:		; ora.zxi \ ORA.ZXI
+		lda #$01
+		ldx #2
+z_asm_ora_zxi:
+
+xt_asm_pha:		; pha \ PHA
+		lda #$48
+		ldx #1
+z_asm_pha:
+
+xt_asm_php:		; php \ PHP
+		lda #$08
+		ldx #1
+z_asm_php:
+
+xt_asm_phx:		; phx \ PHX
+		lda #$DA
+		ldx #1
+z_asm_phx:
+
+xt_asm_phy:		; phy \ PHY
+		lda #$5A
+		ldx #1
+z_asm_phy:
+
+xt_asm_pla:		; pla \ PLA
+		lda #$68
+		ldx #1
+z_asm_pla:
+
+xt_asm_plp:		; plp \ PLP
+		lda #$28
+		ldx #1
+z_asm_plp:
+
+xt_asm_plx:		; plx \ PLX
+		lda #$FA
+		ldx #1
+z_asm_plx:
+
+xt_asm_ply:		; ply \ PLY
+		lda #$7A
+		ldx #1
+z_asm_ply:
+
+xt_asm_rol:		; rol \ ROL
+		lda #$2E
+		ldx #3
+z_asm_rol:
+
+xt_asm_rol_a:		; rol.a \ ROL.A
+		lda #$2A
+		ldx #1
+z_asm_rol_a:
+
+xt_asm_rol_x:		; rol.x \ ROL.X
+		lda #$3E
+		ldx #3
+z_asm_rol_x:
+
+xt_asm_rol_z:		; rol.z \ ROL.Z
+		lda #$26
+		ldx #2
+z_asm_rol_z:
+
+xt_asm_rol_zx:		; rol.zx \ ROL.ZX
+		lda #$36
+		ldx #2
+z_asm_rol_zx:
+
+xt_asm_ror:		; ror \ ROR
+		lda #$6E
+		ldx #3
+z_asm_ror:
+
+xt_asm_ror_a:		; ror.a \ ROR.A
+		lda #$6A
+		ldx #1
+z_asm_ror_a:
+
+xt_asm_ror_x:		; ror.x \ ROR.X
+		lda #$7E
+		ldx #3
+z_asm_ror_x:
+
+xt_asm_ror_z:		; ror.z \ ROR.Z
+		lda #$66
+		ldx #2
+z_asm_ror_z:
+
+xt_asm_ror_zx:		; ror.zx \ ROR.ZX
+		lda #$76
+		ldx #2
+z_asm_ror_zx:
+
+xt_asm_rti:		; rti \ RTI
+		lda #$40
+		ldx #1
+z_asm_rti:
+
+xt_asm_rts:		; rts \ RTS
+		lda #$60
+		ldx #1
 z_asm_rts:
+
+xt_asm_sbc:		; sbc \ SBC
+		lda #$ED
+		ldx #3
+z_asm_sbc:
+
+xt_asm_sbc_h:		; sbc.# \ SBC.#
+		lda #$E9
+		ldx #2
+z_asm_sbc_h:
+
+xt_asm_sbc_x:		; sbc.x \ SBC.X
+		lda #$FD
+		ldx #3
+z_asm_sbc_x:
+
+xt_asm_sbc_y:		; sbc.y \ SBC.Y
+		lda #$F9
+		ldx #3
+z_asm_sbc_y:
+
+xt_asm_sbc_z:		; sbc.z \ SBC.Z
+		lda #$E5
+		ldx #2
+z_asm_sbc_z:
+
+xt_asm_sbc_zi:		; sbc.zi \ SBC.ZI
+		lda #$F2
+		ldx #2
+z_asm_sbc_zi:
+
+xt_asm_sbc_ziy:		; sbc.ziy \ SBC.ZIY
+		lda #$F1
+		ldx #2
+z_asm_sbc_ziy:
+
+xt_asm_sbc_zx:		; sbc.zx \ SBC.ZX
+		lda #$F5
+		ldx #2
+z_asm_sbc_zx:
+
+xt_asm_sbc_zxi:		; sbc.zxi \ SBC.ZXI
+		lda #$E1
+		ldx #2
+z_asm_sbc_zxi:
+
+xt_asm_sec:		; sec \ SEC
+		lda #$38
+		ldx #1
+z_asm_sec:
+
+xt_asm_sed:		; sed \ SED
+		lda #$F8
+		ldx #1
+z_asm_sed:
+
+xt_asm_sei:		; sei \ SEI
+		lda #$78
+		ldx #1
+z_asm_sei:
+
+xt_asm_sta:		; sta \ STA
+		lda #$8D
+		ldx #3
+z_asm_sta:
+
+xt_asm_sta_x:		; sta.x \ STA.X
+		lda #$9D
+		ldx #3
+z_asm_sta_x:
+
+xt_asm_sta_y:		; sta.y \ STA.Y
+		lda #$99
+		ldx #3
+z_asm_sta_y:
+
+xt_asm_sta_z:		; sta.z \ STA.Z
+		lda #$85
+		ldx #2
+z_asm_sta_z:
+
+xt_asm_sta_zi:		; sta.zi \ STA.ZI
+		lda #$92
+		ldx #2
+z_asm_sta_zi:
+
+xt_asm_sta_ziy:		; sta.ziy \ STA.ZIY
+		lda #$91
+		ldx #2
+z_asm_sta_ziy:
+
+xt_asm_sta_zx:		; sta.zx \ STA.ZX
+		lda #$95
+		ldx #2
+z_asm_sta_zx:
+
+xt_asm_sta_zxi:		; sta.zxi \ STA.ZXI
+		lda #$81
+		ldx #2
+z_asm_sta_zxi:
+
+xt_asm_stx:		; stx \ STX
+		lda #$8E
+		ldx #3
+z_asm_stx:
+
+xt_asm_stx_z:		; stx.z \ STX.Z
+		lda #$86
+		ldx #2
+z_asm_stx_z:
+
+xt_asm_stx_zy:		; stx.zy \ STX.ZY
+		lda #$96
+		ldx #2
+z_asm_stx_zy:
+
+xt_asm_sty:		; sty \ STY
+		lda #$8C
+		ldx #3
+z_asm_sty:
+
+xt_asm_sty_z:		; sty.z \ STY.Z
+		lda #$84
+		ldx #2
+z_asm_sty_z:
+
+xt_asm_sty_zx:		; sty.zx \ STY.ZX
+		lda #$94
+		ldx #2
+z_asm_sty_zx:
+
+xt_asm_stz:		; stz \ STZ
+		lda #$9C
+		ldx #3
+z_asm_stz:
+
+xt_asm_stz_x:		; stz.x \ STZ.X
+		lda #$9E
+		ldx #3
+z_asm_stz_x:
+
+xt_asm_stz_z:		; stz.z \ STZ.Z
+		lda #$64
+		ldx #2
+z_asm_stz_z:
+
+xt_asm_stz_zx:		; stz.zx \ STZ.ZX
+		lda #$74
+		ldx #2
+z_asm_stz_zx:
+
+xt_asm_tax:		; tax \ TAX
+		lda #$AA
+		ldx #1
+z_asm_tax:
+
+xt_asm_tay:		; tay \ TAY
+		lda #$A8
+		ldx #1
+z_asm_tay:
+
+xt_asm_trb:		; trb \ TRB
+		lda #$1C
+		ldx #3
+z_asm_trb:
+
+xt_asm_trb_z:		; trb.z \ TRB.Z
+		lda #$14
+		ldx #2
+z_asm_trb_z:
+
+xt_asm_tsb:		; tsb \ TSB
+		lda #$0C
+		ldx #3
+z_asm_tsb:
+
+xt_asm_tsb_z:		; tsb.z \ TSB.Z
+		lda #$04
+		ldx #2
+z_asm_tsb_z:
+
+xt_asm_tsx:		; tsx \ TSX
+		lda #$BA
+		ldx #1
+z_asm_tsx:
+
+xt_asm_txa:		; txa \ TXA
+		lda #$8A
+		ldx #1
+z_asm_txa:
+
+xt_asm_txs:		; txs \ TXS
+		lda #$9A
+		ldx #1
+z_asm_txs:
+
+xt_asm_tya:		; tya \ TYA
+		lda #$98
+		ldx #1
+z_asm_tya:
 
 
 ; ==========================================================

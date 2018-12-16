@@ -68,7 +68,7 @@ def main():
             assembler_list.append(TEMPLATE_ASSEMBLER.format(ws[0],\
                     co, ws[2], ws[0].upper(), lm))
 
-            header_list.append(TEMPLATE_HEADER.format(ws[0], ws[2], lm,\
+            header_list.append(TEMPLATE_HEADER.format(ws[0], len(ws[0]), lm,\
                     previous_header))
 
             previous_header = 'nt_asm_{0}'.format(lm)
