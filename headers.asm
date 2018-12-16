@@ -1272,6 +1272,31 @@ nt_drop:
 ; END of FORTH-WORDLIST
 
 
+; ROOT-WORDLIST
+        
+        ; This is a short wordlist that has just the words needed to
+        ; set the wordlists.  These words are also included in the
+        ; FORTH-WORDLIST as well.
+
+nt_root_words:
+        .byte 5, 0
+        .word 0000, xt_words, z_words
+        .byte "words"
+
+nt_root_forth_wordlist:
+        .byte 14, 0
+        .word nt_root_words, xt_forth_wordlist, z_forth_wordlist
+        .byte "forth-wordlist"
+
+root_wordlist_start:    
+nt_root_set_order:
+        .byte 9, 0
+        .word nt_root_forth_wordlist, xt_set_order, z_set_order
+        .byte "set-order"
+
+; END of ROOT-WORDLIST
+        
+
 ; EDITOR-WORDLIST
 
 editor_dictionary_start:
