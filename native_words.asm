@@ -944,6 +944,20 @@ z_allow_native:
                 rts
 
 
+; ## ALSO ( -- ) "Make room in the search order for another wordlist"
+; ## "also"  auto  ANS search ext
+        ; """http://forth-standard.org/standard/search/ALSO"""
+.scope        
+xt_also:
+                jsr xt_get_order
+                jsr xt_over
+                jsr xt_swap
+                jsr xt_one_plus
+                jsr xt_set_order
+z_also:         rts
+.scend
+        
+
 ; ## ALWAYS_NATIVE ( -- ) "Flag last word as always natively compiled"
 ; ## "always-native"  auto  Tali Forth
 xt_always_native:

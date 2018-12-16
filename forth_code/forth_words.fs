@@ -79,9 +79,6 @@
 
 \ Extended words for the optional Search-Order wordset.
 \ These are as provided in the ANS 2012 standard.
-: ALSO ( -- )
-   GET-ORDER OVER SWAP 1+ SET-ORDER
-;
 : PREVIOUS ( -- ) GET-ORDER NIP 1- SET-ORDER ; 
 \ This one isn't provided by ANS, but is simple to implement.
 : ORDER ( -- ) cr get-order 0 ?do

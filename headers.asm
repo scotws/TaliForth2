@@ -82,9 +82,14 @@ nt_forth:
         .word nt_ed, xt_forth, z_forth
         .byte "forth"
 
+nt_also:
+        .byte 4, 0
+        .word nt_forth, xt_also, z_also
+        .byte "also"
+
 nt_only:
         .byte 4, 0
-        .word nt_forth, xt_only, z_only
+        .word nt_also, xt_only, z_only
         .byte "only"
 
 nt_forth_wordlist:
