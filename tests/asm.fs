@@ -243,4 +243,4 @@ T{ 098 1 s" tya" opcode-test -> -1 -1 }T
 \ TODO currently no directives available
 
 \ Return to original state
-decimal  only  asm-tests
+decimal ( only forth ) asm-tests

@@ -50,8 +50,8 @@ T{ so2 -> 0 }T	    \ 0 SET-ORDER leaves an empty search order
 
 T{ so3 -> so4 }T	   \ -1 SET-ORDER is the same as ONLY
 
-\ ALSO test
-T{ ALSO GET-ORDER ONLY -> get-orderlist OVER SWAP 1+ }T
+\ ALSO test   Note: Modified from ANS test to restore FORTH wordlist
+T{ ALSO GET-ORDER ONLY FORTH -> get-orderlist OVER SWAP 1+ }T
 
 \ ONLY tests
 T{ ONLY FORTH GET-ORDER -> get-orderlist }T

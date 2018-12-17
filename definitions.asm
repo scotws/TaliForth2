@@ -60,35 +60,40 @@
         
 .alias up        user0+60  ; User Pointer (Address of user variables)
 
-; Block variables                
-.alias blk_offset 0        ; BLK : UP + 0
-.alias scr_offset 2        ; SCR : UP + 2
-
-; Wordlists                
-.alias current_offset 4    ; CURRENT : UP + 4 (Compilation wordlist)
-.alias num_wordlists_offset 6
-                           ; #WORDLISTS : UP + 6
-.alias wordlists_offset 8  ; WORDLISTS : UP + 8 to UP + 29
-                           ;             (FORTH, EDITOR, ASSEMBLER, +8 more)
-.alias num_order_offset 30 ; #ORDER : UP + 30
-                           ;          (Number of wordlists in search order)
-.alias search_order_offset 32
-                           ; SEARCH-ORDER : UP + 32 to UP + 47
-.alias max_wordlists 11
-
-; Buffer variables
-.alias blkbuffer_offset    48   ; Address of buffer
-.alias buffblocknum_offset 50   ; Block number current in buffer
-.alias buffstatus_offset   52   ; Status of buffer (bit 0 = used, bit 1 = dirty)
-; Block I/O vectors
-.alias blockread_offset    54   ; Vector to block reading routine
-.alias blockwrite_offset   56   ; Vector to block writing routine        
-                
+; Zero Page:                
 ; Bytes used for variables: 62 ($0000-$003D) 
 ; First usable Data Stack location: $003E (decimal 62) 
 ; Bytes avaible for Data Stack: 128-62 = 66 --> 33 16-bit cells
 
 .alias dsp0      $78            ; initial Data Stack Pointer, see docs/stack.md
+
+; User Variables:
+; Block variables                
+.alias blk_offset 0        ; BLK : UP + 0
+.alias scr_offset 2        ; SCR : UP + 2
+
+; Wordlists                
+.alias current_offset 4    ; CURRENT (byte) : UP + 4 (Compilation wordlist)
+.alias num_wordlists_offset 5
+                           ; #WORDLISTS (byte) : UP + 5
+.alias wordlists_offset 6  ; WORDLISTS (cells) : UP + 6 to UP + 29
+                           ;             (FORTH, EDITOR, ASSEMBLER, ROOT, +8 more)
+.alias num_order_offset 30 ; #ORDER (byte) : UP + 30
+                           ;          (Number of wordlists in search order)
+.alias search_order_offset 31
+                           ; SEARCH-ORDER (bytes) : UP + 31 to UP + 39
+                           ; Allowing for 9 to keep offsets even.
+.alias max_wordlists 12    ; Maximum number of wordlists supported
+                           ; 4 Tali built-ins + 8 user wordlists 
+
+; Buffer variables
+.alias blkbuffer_offset    40   ; Address of buffer
+.alias buffblocknum_offset 42   ; Block number current in buffer
+.alias buffstatus_offset   44   ; Status of buffer (bit 0 = used, bit 1 = dirty)
+; Block I/O vectors
+.alias blockread_offset    46   ; Vector to block reading routine
+.alias blockwrite_offset   48   ; Vector to block writing routine
+       
 
 ; ASCII CHARACTERS
 
@@ -102,7 +107,6 @@
 .alias AscDEL  $7f  ; delete (CTRL-h)
 .alias AscCP   $10  ; CTRL-p (used to recall previous input history)
 .alias AscCN   $0e  ; CTRL-n (used to recall next input history)
-    
 
 ; DICTIONARY FLAGS
 

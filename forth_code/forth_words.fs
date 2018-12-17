@@ -78,27 +78,18 @@
 \ ===============================================================
 
 \ Extended words for the optional Search-Order wordset.
-\ These are as provided in the ANS 2012 standard.
-: ONLY forth-wordlist 1 set-order ;
-: (wordlist) ( wid "<name>" -- ; )
-   CREATE ,
-   DOES>
-     @ >R
-     GET-ORDER NIP
-     R> SWAP SET-ORDER
-;
-FORTH-WORDLIST (wordlist) FORTH 
-: ALSO ( -- )
-   GET-ORDER OVER SWAP 1+ SET-ORDER
-;
-: PREVIOUS ( -- ) GET-ORDER NIP 1- SET-ORDER ; 
 \ This one isn't provided by ANS, but is simple to implement.
-: ORDER ( -- ) cr get-order 0 ?do
-        dup 0=  if ." FORTH-WORDLIST "  drop    else
-        dup 1 = if ." EDITOR-WORDLIST " drop    else
-        dup 2 = if ." ASSEMBLER-WORDLIST " drop else
+\ Print wordlist name, or number if name not known.
+: .wid ( wid -- )
+        dup 0=  if ." FORTH "  drop    else
+        dup 1 = if ." EDITOR " drop    else
+        dup 2 = if ." ASSEMBLER " drop else
+        dup 3 = if ." ROOT " drop      else        
                    . ( just print the number )
-        then then then loop ;        
+        then then then then ;
+: ORDER ( -- )
+        cr get-order 0 ?do .wid loop
+        space space get-current .wid ;        
 
 \ ===============================================================
 

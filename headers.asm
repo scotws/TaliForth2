@@ -77,9 +77,34 @@ nt_ed:                  ; ed6502
         .word nt_cold, xt_ed, z_ed
         .byte "ed"
 
+nt_forth:
+        .byte 5, 0
+        .word nt_ed, xt_forth, z_forth
+        .byte "forth"
+
+nt_to_order:
+        .byte 6, 0
+        .word nt_forth, xt_to_order, z_to_order
+        .byte ">order"
+
+nt_previous:
+        .byte 8, 0
+        .word nt_to_order, xt_previous, z_previous
+        .byte "previous"
+
+nt_also:
+        .byte 4, 0
+        .word nt_previous, xt_also, z_also
+        .byte "also"
+
+nt_only:
+        .byte 4, 0
+        .word nt_also, xt_only, z_only
+        .byte "only"
+
 nt_forth_wordlist:
         .byte 14, 0
-        .word nt_ed, xt_forth_wordlist, z_forth_wordlist
+        .word nt_only, xt_forth_wordlist, z_forth_wordlist
         .byte "forth-wordlist"
                 
 nt_editor_wordlist:
@@ -92,14 +117,14 @@ nt_assembler_wordlist:
         .word nt_editor_wordlist, xt_assembler_wordlist, z_assembler_wordlist
         .byte "assembler-wordlist"
 
-nt_number_sign_order:
-        .byte 6, 0
-        .word nt_assembler_wordlist, xt_number_sign_order, z_number_sign_order
-        .byte "#order"
-
+nt_root_wordlist:
+        .byte 13, 0
+        .word nt_assembler_wordlist, xt_root_wordlist, z_root_wordlist
+        .byte "root-wordlist"
+                
 nt_get_order:
         .byte 9, 0
-        .word nt_number_sign_order, xt_get_order, z_get_order
+        .word nt_root_wordlist, xt_get_order, z_get_order
         .byte "get-order"
 
 nt_set_order:
@@ -1276,6 +1301,36 @@ nt_drop:
 
 ; END of FORTH-WORDLIST
 
+
+; ROOT-WORDLIST
+        
+        ; This is a short wordlist that has just the words needed to
+        ; set the wordlists.  These words are also included in the
+        ; FORTH-WORDLIST as well.
+
+nt_root_words:
+        .byte 5, 0
+        .word 0000, xt_words, z_words
+        .byte "words"
+
+nt_root_forth_wordlist:
+        .byte 14, 0
+        .word nt_root_words, xt_forth_wordlist, z_forth_wordlist
+        .byte "forth-wordlist"
+
+nt_root_forth:
+        .byte 5, 0
+        .word nt_root_forth_wordlist, xt_forth, z_forth
+        .byte "forth"
+        
+root_dictionary_start:    
+nt_root_set_order:
+        .byte 9, 0
+        .word nt_root_forth, xt_set_order, z_set_order
+        .byte "set-order"
+
+; END of ROOT-WORDLIST
+        
 
 ; EDITOR-WORDLIST
 

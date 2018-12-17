@@ -94,20 +94,19 @@ _zero_user_vars_loop:
                 ; Set up the initial dictionary.
                 ; TODO: Load this from a table in ROM
                 ; Wordlists:
-                ldy #current_offset
+                ldy #current_offset     ; Byte variable CURRENT
                 lda #0
                 sta (up),y      ; Set CURRENT to 0 (FORTH-WORDLIST).
                 iny
-                sta (up),y
 
-                ldy #num_wordlists_offset
-                lda #3          ; 3 wordlists to start:
-                sta (up),y      ; FORTH, EDITOR, and ASSEMBLER
+                ; Y is already at #WORDLISTS
+                ; ldy #num_wordlists_offset   ; Byte variable #WORDLISTS
+                lda #4          ; 4 wordlists to start:
+                sta (up),y      ; FORTH, EDITOR, and ASSEMBLER, ROOT
                 iny
-                lda #0
-                sta (up),y
 
-                ldy #wordlists_offset
+                ; Y is already at WORDLISTS
+                ; ldy #wordlists_offset
                 lda #<dictionary_start
                 sta (up),y      ; FORTH-WORDLIST
                 iny
@@ -128,21 +127,23 @@ _zero_user_vars_loop:
                 lda #>assembler_dictionary_start
                 sta (up),y
 
+                iny
+                lda #<root_dictionary_start
+                sta (up),y      ; ROOT-WORDLIST
+                iny
+                lda #>root_dictionary_start
+                sta (up),y
+
                 ; Initialize search order list.
-                ldy #num_order_offset
+                ldy #num_order_offset   ; Byte variable #ORDER
                 lda #1
                 sta (up),y      ; Initialize #ORDER to 1
-                iny
-                lda #0
-                sta (up),y
 
                 ; USER memory is already initialized to zero.
                 ; ldy #search_order_offset
                 ; lda #0
                 ; sta (up),y      ; Only the FORTH-WORDLIST in the
-                ; iny             ; initial search order.
-                ; lda #0
-                ; sta (up),y
+                                  ; initial search order.
 
                 ; Initialize the block I/O words.
                 ; Initialize block read vector.
@@ -942,6 +943,20 @@ xt_allow_native:
 z_allow_native:
                 rts
 
+
+; ## ALSO ( -- ) "Make room in the search order for another wordlist"
+; ## "also"  auto  ANS search ext
+        ; """http://forth-standard.org/standard/search/ALSO"""
+.scope        
+xt_also:
+                jsr xt_get_order
+                jsr xt_over
+                jsr xt_swap
+                jsr xt_one_plus
+                jsr xt_set_order
+z_also:         rts
+.scend
+        
 
 ; ## ALWAYS_NATIVE ( -- ) "Flag last word as always natively compiled"
 ; ## "always-native"  auto  Tali Forth
@@ -3024,13 +3039,9 @@ z_defer:        rts
 ; ## DEFINITIONS ( -- ) "Make first wordlist in search order the current wordlist"
 ; ## "definitions" auto ANS search
 xt_definitions:
-                ldy #search_order_offset
-                lda (up),y
-                ldy #current_offset
-                sta (up),y
-                ldy #search_order_offset+1
-                lda (up),y
-                ldy #current_offset+1
+                ldy #search_order_offset    ; Transfer byte variable
+                lda (up),y                  ; SEARCH_ORDER[0] to
+                ldy #current_offset         ; byte variable CURRENT.
                 sta (up),y
 z_definitions:  rts
         
@@ -4023,7 +4034,7 @@ _env_results_single:
         .word $FFFF     ; MAX-U
         .word $0080     ; RETURN-STACK-CELLS
         .word $0020     ; STACK-CELLS (from definitions.asm)
-        .word $0008     ; WORDLISTS
+        .word $0009     ; WORDLISTS
 
 _env_results_double:
         .word $7FFF, $FFFF      ; MAX-D
@@ -4195,6 +4206,18 @@ xt_forth_wordlist:
                 stz 1,x
 
 z_forth_wordlist:
+                rts
+
+
+; ## FORTH ( -- ) "Replace first WID in search order with Forth-Wordlist"
+; ## "forth"  auto  ANS search ext
+        ; """https://forth-standard.org/standard/search/FORTH"""
+xt_forth:        
+                ldy #search_order_offset
+                lda #0          ; The WID for Forth is 0.
+                
+                sta (up),y
+z_forth:
                 rts
 
 
@@ -4530,7 +4553,7 @@ _nonempty:
                 ; Set up for traversing the wordlist search order.
                 stz tmp3                ; Start at the beginning
 _wordlist_loop: 
-                ldy #num_order_offset
+                ldy #num_order_offset   ; Compare to byte variable #ORDER
                 lda tmp3
                 cmp (up),y              ; Check to see if we are done
                 bne _have_string
@@ -4542,11 +4565,11 @@ _have_string:
                 ; set up first loop iteration
 
                 ; Get the current wordlist id
-                asl                     ; Turn offset into cells offset.
-                clc
+                clc             ; SEARCH-ORDER is array of bytes.
                 adc #search_order_offset
-                tay
-                lda (up),y              ; Only the lower byte is needed.
+                tay             
+                lda (up),y      ; Get the id byte, which is the offset
+                                ; into the cell array WORDLISTS
 
                 ; Get the DP for that wordlist.
                 asl                     ; Turn offset into cells offset.
@@ -4760,10 +4783,8 @@ xt_get_current:
                 dex
                 ldy #current_offset
                 lda (up),y
-                sta 0,x
-                iny
-                lda (up),y
-                sta 1,x
+                sta 0,x         ; CURRENT is a byte variable
+                stz 1,x         ; so the MSB is zero.
                 
 z_get_current:  rts
 .scend        
@@ -4776,14 +4797,12 @@ xt_get_order:
                 ; Get #ORDER - the number of wordlists in the search order.
                 ldy #num_order_offset
                 lda (up),y
-                asl             ; Multiply by 2 for cells
                 sta tmp1
                 beq _done       ; If zero, there are no wordlists.
 _loop:  
                 ; Count down towards the front of the list.
                 ; By decrementing first, we also turn the length into an offset.
-                dec tmp1
-                dec tmp1        ; Count down by cells.
+                dec tmp1        ; Count down by bytes.
 
                 ; Get a pointer to the current wordlist, working back to front.
                 lda #search_order_offset
@@ -4794,10 +4813,8 @@ _loop:
                 dex
                 dex
                 lda (up),y
-                sta 0,x
-                iny
-                lda (up),y
-                sta 1,x
+                sta 0,x         ; Search order array is bytes, so
+                stz 1,x         ; put a zero in the high byte.
                 ; See if that was the last one to process (first in the list).
                 lda #0
                 cmp tmp1
@@ -5678,13 +5695,13 @@ z_m_star:       rts
         ;       <Original CP LSB>
         ;       <Original DP MSB> ( for CURRENT wordlist )
         ;       <Original DP LSB>
-        ;       < USER variables from offset 4 to 47 >
+        ;       < USER variables from offset 4 to 39 >
         ;
         ;       The user variables include:
-        ;       CURRENT
-        ;       <All wordlists> (currently 11)
-        ;       <#ORDER>
-        ;       <All search order> (currently 8)
+        ;       CURRENT (byte variable)
+        ;       <All wordlists> (currently 12) (cell array)
+        ;       <#ORDER> (byte variable)
+        ;       <All search order> (currently 9) (byte array)
         ;
         ; This code uses tmp1 and tmp2
         ; """
@@ -5743,7 +5760,7 @@ _marker_loop:
                 jsr cmpl_a
                 iny
                 tya
-                cmp #48                 ; One past the end of the search order.
+                cmp #40                 ; One past the end of the search order.
                 bne _marker_loop
 
 z_marker:       rts
@@ -5794,7 +5811,7 @@ _marker_restore_loop:
                 sta (up), y
                 iny
                 tya
-                cmp #48                 ; One past the end of the search order.
+                cmp #40                 ; One past the end of the search order.
                 bne _marker_restore_loop
 
                 jsr dp_to_current       ; Move the CURRENT DP back.
@@ -6484,25 +6501,6 @@ z_number_sign_greater:
                 rts
 
 
-; ## NUMBER_SIGN_ORDER ( -- addr ) "User variable: number of wordlists in search order"
-; ## "#order"  auto  Tali search
-xt_number_sign_order:
-                ; #ORDER is at UP + num_order_offset 
-                dex
-                dex
-                clc
-                lda up
-                adc #num_order_offset   ; Add offset
-                sta 0,x
-                lda up+1
-                adc #0          ; Adding carry
-                sta 1,x
-
-z_number_sign_order:
-                rts
-
-
-        
 ; ## NUMBER_SIGN_S ( d -- addr u ) "Completely convert pictured output"
 ; ## "#s"  auto  ANS core
         ; """https://forth-standard.org/standard/core/numS
@@ -6579,6 +6577,24 @@ z_one_plus:     rts
 .scend
 
 
+; ## ONLY ( -- ) "Set earch order to minimum wordlist"
+; ## "only"  auto  ANS search ext
+        ; """https://forth-standard.org/standard/search/ONLY"""
+.scope
+xt_only:
+                ; Put -1 on data stack.
+                dex
+                dex
+                lda #$FF
+                sta 0,x
+                sta 1,x
+                ; Invoke set-order to set the minimum search order.
+                jsr xt_set_order
+
+z_only:         rts
+.scend        
+
+        
 ; ## OR ( m n -- n ) "Logically OR TOS and NOS"
 ; ## "or"  auto  ANS core
         ; """https://forth-standard.org/standard/core/OR"""
@@ -7133,6 +7149,20 @@ z_postpone:     rts
 .scend
 
 
+; ## PREVIOUS ( -- ) "Remove the first wordlist in the search order"
+; ## "previous"  auto  ANS search ext
+        ; """http://forth-standard.org/standard/search/PREVIOUS"""
+.scope        
+xt_previous:
+                jsr xt_get_order
+                jsr xt_nip
+                jsr xt_one_minus
+                jsr xt_set_order
+z_previous:     rts
+.scend
+
+
+        
 ; ## QUESTION ( addr -- ) "Print content of a variable"
 ; ## "?"  tested  ANS tools
         ; """https://forth-standard.org/standard/tools/q
@@ -7422,6 +7452,19 @@ xt_right_bracket:
 z_right_bracket:
                 rts
 
+
+; ## ROOT_WORDLIST ( -- u ) "WID for the Root (minimal) wordlist"
+; ## "root-wordlist"  tested  Tali Editor
+xt_root_wordlist:        
+                dex             ; The WID for the Root wordlist is 3.
+                dex
+                lda #3
+                sta 0,x
+                stz 1,x
+
+z_root_wordlist:
+                rts
+        
 
 ; ## ROT ( a b c -- b c a ) "Rotate first three stack entries downwards"
 ; ## "rot"  auto  ANS core
@@ -7753,11 +7796,8 @@ xt_set_current:
 *
                 ; Save the value from the data stack.
                 ldy #current_offset
-                lda 0,x
-                sta (up),y
-                iny
-                lda 1,x
-                sta (up),y
+                lda 0,x         ; CURRENT is byte variable
+                sta (up),y      ; so only the LSB is used.
                 ; Remove the TOS.
                 inx
                 inx
@@ -7782,8 +7822,9 @@ xt_set_order:
                 ; search order, which is just the FORTH-WORDLIST.
                 dex             ; Make room for the count.
                 dex
-                stz 3,x         ; FORTH-WORDLIST is 0
-                stz 2,x
+                stz 3,x         ; ROOT-WORDLIST is 3
+                lda #3
+                sta 2,x
                 stz 1,x         ; Count is 1.
                 lda #1
                 sta 0,x
@@ -7795,11 +7836,11 @@ _start:
                 ; Set #ORDER - the number of wordlists in the search order.
                 ldy #num_order_offset
                 lda 0,x
-                sta (up),y
+                sta (up),y      ; #ORDER is a byte variable.
                 sta tmp1        ; Save a copy for zero check and looping.
-                iny             ; Only the low byte is saved in tmp1 as
-                lda 1,x         ; only 8 wordlists are allowed.
-                sta (up),y      
+                                ; Only the low byte is saved in tmp1 as
+                                ; only 8 wordlists are allowed.
+                                
 
                 inx             ; Drop the count off the data stack.
                 inx
@@ -7812,11 +7853,8 @@ _start:
                 ldy #search_order_offset
 _loop:  
                 ; Move one wordlist id over into the search order.
-                lda 0,x
-                sta (up),y
-                iny
-                lda 1,x
-                sta (up),y
+                lda 0,x         ; The search order is a byte array
+                sta (up),y      ; so only save the LSB
                 iny
                 ; Remove it from the data stack.
                 inx
@@ -9614,6 +9652,25 @@ z_to_number:    rts
 .scend
 
 
+; ## TO_ORDER ( wid -- ) "Add wordlist at beginning of search order"
+; ## ">order"  tested  Gforth search
+        ; """https://www.complang.tuwien.ac.at/forth/gforth/Docs-html/Word-Lists.html"""
+.scope
+xt_to_order:
+                ; Put the wid on the return stack for now.
+                jsr xt_to_r
+                ; Get the current search order.
+                jsr xt_get_order
+                ; Get back the wid and add it to the list.
+                jsr xt_r_from
+                jsr xt_swap
+                jsr xt_one_plus
+                ; Set the search order with the new list.
+                jsr xt_set_order
+z_to_order:     rts
+.scend
+        
+        
 ; ## TO_R ( n -- )(R: -- n) "Push TOS to the Return Stack"
 ; ## ">r"  auto  ANS core
         ; """https://forth-standard.org/standard/core/toR
@@ -10629,9 +10686,10 @@ z_word:         rts
 xt_wordlist:
                 ; Get the current number of wordlists
                 ldy #num_wordlists_offset
-                lda (up),y
+                lda (up),y      ; This is a byte variable, so only
+                                ; the LSB needs to be checked.
                 ; See if we are already at the max.
-                cmp #11         ; 3 starting wordlists + 8 user wordlists
+                cmp #max_wordlists
                 bne _ok
         
                 ; Print an error message if all wordlists used.
@@ -10639,11 +10697,11 @@ xt_wordlist:
                 jmp error
 
 _ok:            inc             ; Increment the wordlist#
-                sta (up),y      ; Save it (only lower byte used)
+                sta (up),y      ; Save it into byte variable #wordlists
                 dex             ; and put it on the stack.
                 dex
                 sta 0,x
-                stz 1,x         ; 8 is the max, so upper byte is always zero.
+                stz 1,x         ; 12 is the max, so upper byte is always zero.
         
 z_wordlist:     rts
 .scend
@@ -10677,9 +10735,9 @@ xt_words:
                 stz tmp3                ; Start at the beginning of
                                         ; the search order.
 _wordlist_loop: 
-                ldy #num_order_offset
-                lda tmp3
-                cmp (up),y              ; Check to see if we are done
+                ldy #num_order_offset   ; Check against byte variable #ORDER.
+                lda tmp3                
+                cmp (up),y              ; See if we are done.
                 bne _have_wordlist
 
                 ; We ran out of wordlists to search.
@@ -10688,11 +10746,10 @@ _have_wordlist:
 
                 ; start with last word in Dictionary
                 ; Get the current wordlist id
-                asl                     ; Turn offset into cells offset.
-                clc
+                clc                     ; Index into byte array SEARCH-ORDER.
                 adc #search_order_offset
                 tay
-                lda (up),y              ; Only the lower byte is needed.
+                lda (up),y              ; Get the index into array WORDLISTS
 
                 ; Get the DP for that wordlist.
                 asl                     ; Turn offset into cells offset.
