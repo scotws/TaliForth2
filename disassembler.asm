@@ -1,11 +1,10 @@
 ; Disassembler for Tali Forth 2 
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 28. Apr 2018
-; This version: 16. May 2018
+; This version: 17. Dec 2018
 
-; This is the default disassembler for Tali Forth 2. To install your own,
-; replace it with code that has a label "disassembler" below and takes
-; the address and length of the block of memory to be disassembled as
+; This is the default disassembler for Tali Forth 2. Use by passing
+; the address and length of the block of memory to be disassembled:
 ;
 ;       disasm ( addr x -- ) 
 
@@ -18,12 +17,6 @@
 ; care that much about speed and put the emphasis at being small.
 .scope
 disassembler:
-                ; We arrive here with ( addr u ) on the stack. 
-                ; The output is in hex. Since we don't know what base
-                ; the user was using before, we save it
-                lda base
-                pha
-                jsr xt_hex
 _byte_loop:
                 ; Print address at start of the line
                 jsr xt_cr
@@ -152,8 +145,6 @@ _instruction_done:
                 jmp _byte_loop          ; out of range for BRA
 _done:
                 ; Clean up and leave
-                pla
-                sta base
                 jsr xt_cr
                 jmp xt_two_drop         ; JSR/RTS
 
