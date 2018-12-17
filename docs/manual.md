@@ -1,4 +1,6 @@
-# Manual for Tali Forth 2 for the 65c02 
+# Manual for Tali Forth 2 for the 65c02
+Sam Colwell 
+Scot W. Stevenson 
 
 Tali Forth 2 is a bare-metal ANS(ish) Forth for the 65c02 8-bit MPU. It aims to be, roughly in order of importance, easy to try out (just run the included binary), simple (subroutine threading model), specific (for the 65c02 only), and standardized (ANS Forth).
 
@@ -2443,6 +2445,8 @@ Thank you, everybody.
 \[PHS\] "The Daemon, the Gnu and the Penguin", Peter H. Saulus, 22. April 2005, <http://www.groklaw.net/article.php?story=20050422235450910>
 
 The Tali Forth 2 Manual was written with the [vim](https://www.vim.org/) editor in [AsciiDoc](https://asciidoctor.org/docs/what-is-asciidoc/) format, formatted to HTML with AsciiDoctor, and version controlled with [Git](https://git-scm.com/), all under [Ubuntu](https://www.ubuntu.com/) Linux 16.04 LTS.
+
+Authors' names are listed alphabetically based on last name.
 
 [1] Rumor has it that there was another MPU called "Z80",Z80 but it ended up being a mere footnote.
 
