@@ -1,7 +1,7 @@
 ; Dictionary Headers for Tali Forth 2
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 05. Dec 2016 (Liara Forth)
-; This version: 15. Dec 2018
+; This version: 17. Dec 2018
 
 ; Dictionary headers are kept separately from the code, which allows various
 ; tricks in the code. We roughly follow the Gforth terminology: The Execution
@@ -287,19 +287,9 @@ nt_compare:
         .word nt_search, xt_compare, z_compare
         .byte "compare"
 
-nt_code:
-        .byte 4, 0
-        .word nt_compare, xt_code, z_code
-        .byte "code"
-
-nt_end_code:
-        .byte 8, 0
-        .word nt_code, xt_end_code, z_end_code
-        .byte "end-code"
-
 nt_disasm:
         .byte 6, UF
-        .word nt_end_code, xt_disasm, z_disasm
+        .word nt_compare, xt_disasm, z_disasm
         .byte "disasm"
 
 nt_dot_s:

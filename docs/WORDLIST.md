@@ -56,7 +56,6 @@ RTS instruction at the end of each word.
 | CLEAVE | `cleave` | Tali Forth | 142 | **auto** |
 | CMOVE | `cmove` | ANS string | 62 | **auto** |
 | CMOVE_UP | `cmove>` | ANS string | 62 | **auto** |
-| CODE | `code` | ANS tools | 0 | *fragment* |
 | COLON | `:` | ANS core | 64 | **auto** |
 | COLON_NONAME | `:NONAME` | ANS core | 29 | **auto** |
 | COMMA | `,` | ANS core | 29 | **auto** |
@@ -91,7 +90,6 @@ RTS instruction at the end of each word.
 | EDITOR_WORDLIST | `editor-wordlist` | Tali Editor | 8 | tested |
 | EMIT | `emit` | ANS core | 14 | **auto** |
 | EMPTY_BUFFERS | `empty-buffers` | ANS block ext | 6 | tested |
-| END_CODE | `end-code` | Tali | 0 | *fragment* |
 | ENVIRONMENT_Q | `environment?` | ANS core | 128 | **auto** |
 | EQUAL | `=` | ANS core | 31 | **auto** |
 | BLANK | `blank` | ANS string | 86 | **auto** |
@@ -211,6 +209,7 @@ RTS instruction at the end of each word.
 | TO_BODY | `>body` | ANS core | 40 | **auto** |
 | TO_IN | `>in` | ANS core | 10 | **auto** |
 | TO_NUMBER | `>number` | ANS core | 163 | **auto** |
+| TO_ORDER | `>order` | Gforth search | 18 | tested |
 | TO_R | `>r` | ANS core | 23 | **auto** |
 | TRUE | `true` | ANS core ext | 8 | **auto** |
 | TUCK | `tuck` | ANS core ext | 29 | **auto** |
@@ -255,7 +254,7 @@ RTS instruction at the end of each word.
 | ZERO_UNEQUAL | `0<>` | ANS core ext | 21 | **auto** |
 | L | `l` | Tali Editor | 123 | tested |
 
-Found **247** native words in `native_words.asm`.
+Found **246** native words in `native_words.asm`.
 Of those, **208** were automatically tested and
-          **3** are not marked as tested at all.
+          **1** are not marked as tested at all.
 
