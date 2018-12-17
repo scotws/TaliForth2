@@ -4,9 +4,9 @@
 # This makefile is called from the main project Makefile.
 
 # Add any diagram images to this space separated list.
-DIAGRAM_SOURCES=blocks-*.png 
+DIAGRAM_IMAGES=blocks-block.png blocks-flush.png blocks-newblock.png blocks-update.png blocks-update3.png
 
-all:	$(DIAGRAM_SOURCES)
+all:	$(DIAGRAM_IMAGES)
 
 # Create a .png file for each .txt file in this directory.
 %.png:	%.txt
