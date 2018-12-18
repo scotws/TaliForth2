@@ -7812,7 +7812,21 @@ xt_see:
                 jsr xt_fetch            ; ( nt xt flags ) 
 
                 lda 0,x
-                jsr byte_to_ascii
+
+                ; This is crude, but for the moment it is good enough
+                ldy #6
+_flag_loop:
+                pha
+                and #%00000001
+                clc
+                adc #$30                ; ASCII "0"
+                jsr emit_a
+                jsr xt_space
+                pla
+                ror
+                dey
+                bne _flag_loop
+
                 jsr xt_cr
 
                 inx
@@ -7846,11 +7860,10 @@ z_see:          rts
 
 ; Strings for SEE. We keep these close to the main routine for easier editing.
 ; All are zero-terminated
-_see_flags:     .byte "flag byte: ", 0
+_see_flags:     .byte "flags (CO AN IM NN UF HC): ", 0
 _see_nt:        .byte "nt: ", 0
 _see_xt:        .byte "xt: ", 0
 _see_size:      .byte "size (decimal): ", 0
-
 .scend
         
 ; ## SET_CURRENT ( wid -- ) "Set the compilation wordlist"
