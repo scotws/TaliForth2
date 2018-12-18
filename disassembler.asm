@@ -222,7 +222,7 @@ oc_index_table:
         .word oc58, oc59, oc5a, oc__, oc__, oc__, oc5e, oc5f 
         
         ; Opcodes 60-6F
-        .word oc60, oc61, oc__, oc__, oc66, oc65, oc66, oc67
+        .word oc60, oc61, oc__, oc__, oc64, oc65, oc66, oc67
         .word oc68, oc69, oc6a, oc__, oc6c, oc6d, oc6e, oc6f 
 
         ; Opcodes 70-7F
