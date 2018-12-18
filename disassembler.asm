@@ -194,11 +194,16 @@ _print_mnemonic:
 _done:
                 ; Clean up and leave
                 jmp xt_two_drop         ; JSR/RTS
+.scend
 
+; =========================================================
 oc_index_table:
+        ; Lookup table for the instruction data (length of instruction in
+        ; bytes, length of mnemonic in bytes, mnemonic string). This is used by
+        ; the assembler as well.
 
         ; Opcodes 00-0F
-        .word oc00, oc01, oc__, oc__, oc__, oc05, oc06, oc__
+        .word oc00, oc01, oc__, oc__, oc04, oc05, oc06, oc__
         .word oc08, oc09, oc0a, oc__, oc0c, oc0d, oc0e, oc0f 
 
         ; Opcodes 10-1F
@@ -262,15 +267,14 @@ oc_index_table:
         .word ocf8, ocf9, ocfa, oc__, oc__, ocfd, ocfe, ocff
 
         
+; =========================================================
 oc_table:
-        ; Opcode data table for the disassember, which can also be used by the
-        ; assembler. Each entry Starts with a "lengths byte":
+        ; Opcode data table for the disassember, which is also be used by the
+        ; assembler. Each entry starts with a "lengths byte":
       
         ;       bit 7-6:  Length of instruction in bytes (1 to 3 for the 65c02)
         ;       bit 5-3:  unused
-        ;       bit 2-0:  Length of mnemonic in characters (3 to 7)
-
-        ; The length of the instruction can also be used by the assembler
+        ;       bit 2-0:  Length of mnemonic in chars (3 to 7)
 
         ; To convert a line in this table to a Forth string of the mnemonic,
         ; use the COUNT word on the address of the lengths byte to get 
@@ -285,7 +289,7 @@ oc_table:
 	oc01:	.byte 2*64+7, "ora.zxi"
 ;      (oc02)
 ;      (oc03)
-;      (oc04)
+        oc04:   .byte 2*64+5, "tsb.z"
 	oc05:	.byte 2*64+5, "ord.z"
 	oc06:	.byte 2*64+5, "asl.z"
 ;      (oc07)
@@ -556,7 +560,5 @@ oc_table:
         ; Common routine for opcodes that are not supported by the 65c02
 	oc__:	.byte 1, "?"
 
-.scend
-
-; used to figure out size of assembled disassembler code
+; used to calculate size of assembled disassembler code
 disassembler_end:
