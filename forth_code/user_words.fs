@@ -1,33 +1,14 @@
 \ List of optional Forth words for Tali Forth 2 for the 65c02
 \ Scot W. Stevenson <scot.stevenson@gmail.com>
-\ This version: 11. Dec 2018
+\ This version: 18. Dec 2018
 
 \ When changing these words, edit them here and then use the 
 \ forth_to_ophisbin.py tool to convert them to the required format
 \ for inclusion in Ophis. This is handled automatically by "make"
 \ when run from the top level. See forth_words/README.md for details
 
-\ Only uncomment the words you want to actually have included in Tali Forth 2.
-\ By default, that will be SEE.
-
 \ Note that these programs are not necessarily in the public domain,
 \ see the original sources for details
-
-\ -------------------------------------------------------
-\ SEE gives us information on a Forth word. At some point, this
-\ can be added to the native words to save on size
-        : see parse-name find-name dup 0= abort" No such name" 
-        base @ >r  hex  dup cr space ."  nt: " u.
-        dup 4 + @ space ." xt: " u.
-        dup 1+ c@  1 and if space ." CO " then
-        dup 1+ c@  2 and if space ." AN " then
-        dup 1+ c@  4 and if space ." IM " then
-        dup 1+ c@  8 and if space ." NN " then
-        dup 1+ c@ 16 and if space ." UF " then
-        dup 1+ c@ 32 and if space ." HC " then
-        dup cr space ." size (decimal): " decimal wordsize dup .
-        swap name>int swap hex cr space 
-        2dup dump cr disasm r> base ! ;
 
 \ -------------------------------------------------------
 \ WORDS&SIZES prints all known words and the sizes of their codes

@@ -1,5 +1,5 @@
 \ List of high-level Forth words for Tali Forth 2 for the 65c02
-\ This version: 11. Dec 2018
+\ This version: 18. Dec 2018
 
 \ Version date is not changed for simple update of date
 \ string in splash quotes at end of file
@@ -98,7 +98,7 @@
 \ generated at the end of the boot process and signal that the other
 \ high-level definitions worked (or at least didn't crash)
         cr .( Tali Forth 2 for the 65c02)
-        cr .( Version BETA 17. Dec 2018 )
+        cr .( Version BETA 18. Dec 2018 )
         cr .( Copyright 2014-2018 Scot W. Stevenson)
         cr .( Tali Forth 2 comes with absolutely NO WARRANTY)
         cr .( Type 'bye' to exit) cr

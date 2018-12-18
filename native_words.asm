@@ -7747,7 +7747,111 @@ _done_nodrop:
 z_search_wordlist:
                 rts
 .scend
-        
+
+; ## SEE ( "name" -- ) "Print information about a Forth word"
+; ## "see" tested  ANS tools
+        ; """https://forth-standard.org/standard/tools/SEE
+        ; SEE takes the name of a word and prints its name token (nt),
+        ; execution token (xt), size in bytes, flags used, and then dumps the
+        ; code and disassembles it.
+        ; """
+.scope
+xt_see:
+                jsr xt_parse_name       ; ( addr u )
+                jsr xt_find_name        ; ( nt | 0 )
+
+                ; If we got back a zero we don't know that word and so we quit
+                ; with an error
+                lda 0,x
+                ora 1,x
+                bne +
+
+                lda #err_noname
+                jmp error
+*
+                jsr xt_cr
+
+                ; We have a legal word, so let's get serious. Save the current
+                ; number base and use hexadecimal instead.
+                lda base
+                pha
+                jsr xt_hex
+
+                lda #<_see_nt
+                sta tmp3
+                lda #>_see_nt
+                sta tmp3+1
+                jsr print_common_no_lf
+
+                jsr xt_dup              ; ( nt nt ) 
+                jsr xt_u_dot
+                jsr xt_space            ; ( nt )
+
+                jsr xt_dup              ; ( nt nt )
+                jsr xt_name_to_int      ; ( nt xt ) 
+
+                lda #<_see_xt
+                sta tmp3
+                lda #>_see_xt
+                sta tmp3+1
+                jsr print_common_no_lf
+
+                jsr xt_dup              ; ( nt xt xt ) 
+                jsr xt_u_dot
+                jsr xt_cr               ; ( nt xt )
+
+                ; Print flags
+                lda #<_see_flags
+                sta tmp3
+                lda #>_see_flags
+                sta tmp3+1
+                jsr print_common_no_lf
+
+                jsr xt_over             ; ( nt xt nt )
+                jsr xt_one_plus         ; ( nt xt nt+1 )
+                jsr xt_fetch            ; ( nt xt flags ) 
+
+                lda 0,x
+                jsr byte_to_ascii
+                jsr xt_cr
+
+                inx
+                inx                     ; ( nt xt )
+
+                ; Figure out the size
+                lda #<_see_size
+                sta tmp3
+                lda #>_see_size
+                sta tmp3+1
+                jsr print_common_no_lf
+
+                jsr xt_swap             ; ( xt nt )
+                jsr xt_wordsize         ; ( xt u )
+                jsr xt_dup              ; ( xt u u ) for DUMP and DISASM
+                jsr xt_decimal
+                jsr xt_u_dot            ; ( xt u )
+                jsr xt_hex
+                jsr xt_cr
+
+                ; Dump hex and disassemble
+                jsr xt_two_dup          ; ( xt u xt u )
+                jsr xt_dump
+                jsr xt_cr
+                jsr xt_disasm
+
+                pla
+                sta base 
+
+z_see:          rts
+
+; Strings for SEE. We keep these close to the main routine for easier editing.
+; All are zero-terminated
+_see_flags:     .byte "flag byte: ", 0
+_see_nt:        .byte "nt: ", 0
+_see_xt:        .byte "xt: ", 0
+_see_size:      .byte "size (decimal): ", 0
+
+.scend
         
 ; ## SET_CURRENT ( wid -- ) "Set the compilation wordlist"
 ; ## "set-current" auto ANS search

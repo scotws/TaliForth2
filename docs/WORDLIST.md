@@ -179,6 +179,7 @@ RTS instruction at the end of each word.
 | RSHIFT | `rshift` | ANS core | 23 | **auto** |
 | S_BACKSLASH_QUOTE | `s\"` | ANS core | 9 | **auto** |
 | SEARCH_WORDLIST | `search_wordlist` | ANS search | 228 | **auto** |
+| SEE | `see` | ANS tools | 149 | tested |
 | SET_CURRENT | `set-current` | ANS search | 15 | **auto** |
 | SET_ORDER | `set-order` | ANS search | 51 | **auto** |
 | S_QUOTE | `s"` | ANS core | 348 | **auto** |
@@ -254,7 +255,7 @@ RTS instruction at the end of each word.
 | ZERO_UNEQUAL | `0<>` | ANS core ext | 21 | **auto** |
 | L | `l` | Tali Editor | 123 | tested |
 
-Found **246** native words in `native_words.asm`.
+Found **247** native words in `native_words.asm`.
 Of those, **208** were automatically tested and
           **1** are not marked as tested at all.
 
