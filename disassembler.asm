@@ -188,7 +188,9 @@ _print_mnemonic:
                 lda 0,x                 ; All done?
                 ora 1,x
                 beq _done
-                bmi _done               ; catch mid-instruction byte ranges
+
+                lda 1,x                 ; Catch mid-instruction ranges
+                bmi _done
 
                 jmp _byte_loop          ; out of range for BRA
 _done:
