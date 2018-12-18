@@ -1,30 +1,29 @@
 WARNING: This chapter is work in progress and currently more a collection of
 notes.
 
-// TODO move this to own intro in the Appendix and link GitHub page for SAN
-
 Tali Forth is shipped with a built-in assembler that uses the Simpler Assembler
-Format (SAN). 
+Format (SAN). See the Appendix for an introduction to SAN.
 
 NOTE: The code was originally part of a stand-alone 65c02 assembler in Forth
 named tasm65c02. See https://github.com/scotws/tasm65c02 for details. Tasm65c02
 is in the public domain.
 
-==== Simple ways of inserting assembler code
+==== Adding assembler code
 
 Because Tali Forth is a Subroutine Threaded (STC) Forth, inserting assembler
-instructions is spectacularly easy. In fact, the only real problem is accessing
-the assembler wordlist, which is normally not in the search tree because of its
-length. This, then, is one way to add assembler code:
+instructions is easy. In fact, the only real problem is accessing the assembler
+wordlist, which is normally not in the search tree because of its length. This,
+then, is one way to add assembler code:
 
 ----
-forth-wordlist assembler-wordlist 2 set-order
+assembler-wordlist >order
 here            \ Remember where we are
-1 lda.#         \ LDA #1
+1 lda.#         \ LDA #1 in Simpler Assembler Notation (SAN)
 push-a          \ Pseudo-instruction, pushes A on the Forth data stack
 rts             \ End subroutine. Don't use BRK!
 execute         \ Run our code using value from HERE
 .s              \ Will show 1 as TOS
+previous
 ----
 
 The first line is required to give the user access to the list of assembler
@@ -32,7 +31,7 @@ mnemonics. They are usually not in the current wordlist path because of their
 sheer number. Note we use `rts`, not `brk`, as the last instruction to return to
 the command line.
 
-NOTE: There is a separate tutorial planned for wordlists and their use.
+WARNTING: Never use `brk` inside Tali Forth assembler code
 
 Note you can freely intermingel Forth high-level words and
 assembler instructions. For example, this will work:
@@ -47,8 +46,8 @@ decimal
 Running the disassembler gives us (actual addresses may vary):
 
 ----
-12BF  lda.# 10
-12C1  ldx.# 0A
+12BF    10 lda.#
+12C1     A ldx.#
 ----
 
 This also allows the use various different formatting tricks like putting more
@@ -147,5 +146,4 @@ called instead.
 
 *`brk` is a two-byte instruction* because the assembler enforces the signature
 byte. You shouldn't use `brk` anyway.
-
 

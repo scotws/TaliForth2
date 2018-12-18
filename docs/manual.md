@@ -828,29 +828,28 @@ The "buffer" of `ed` is a simple linked list of nodes, consisting of a pointer t
 >
 > This chapter is work in progress and currently more a collection of notes.
 
-Tali Forth is shipped with a built-in assembler that uses the Simpler Assembler Format (SAN).
+Tali Forth is shipped with a built-in assembler that uses the Simpler Assembler Format (SAN). See the Appendix for an introduction to SAN.
 
 > **Note**
 >
 > The code was originally part of a stand-alone 65c02 assembler in Forth named tasm65c02. See <https://github.com/scotws/tasm65c02> for details. Tasm65c02 is in the public domain.
 
-#### Simple ways of inserting assembler code
+#### Adding assembler code
 
-Because Tali Forth is a Subroutine Threaded (STC) Forth, inserting assembler instructions is spectacularly easy. In fact, the only real problem is accessing the assembler wordlist, which is normally not in the search tree because of its length. This, then, is one way to add assembler code:
+Because Tali Forth is a Subroutine Threaded (STC) Forth, inserting assembler instructions is easy. In fact, the only real problem is accessing the assembler wordlist, which is normally not in the search tree because of its length. This, then, is one way to add assembler code:
 
-    forth-wordlist assembler-wordlist 2 set-order
+    assembler-wordlist >order
     here            \ Remember where we are
-    1 lda.#         \ LDA #1
+    1 lda.#         \ LDA #1 in Simpler Assembler Notation (SAN)
     push-a          \ Pseudo-instruction, pushes A on the Forth data stack
     rts             \ End subroutine. Don't use BRK!
     execute         \ Run our code using value from HERE
     .s              \ Will show 1 as TOS
+    previous
 
 The first line is required to give the user access to the list of assembler mnemonics. They are usually not in the current wordlist path because of their sheer number. Note we use `rts`, not `brk`, as the last instruction to return to the command line.
 
-> **Note**
->
-> There is a separate tutorial planned for wordlists and their use.
+WARNTING: Never use `brk` inside Tali Forth assembler code
 
 Note you can freely intermingel Forth high-level words and assembler instructions. For example, this will work:
 
@@ -861,8 +860,8 @@ Note you can freely intermingel Forth high-level words and assembler instruction
 
 Running the disassembler gives us (actual addresses may vary):
 
-    12BF  lda.# 10
-    12C1  ldx.# 0A
+    12BF    10 lda.#
+    12C1     A ldx.#
 
 This also allows the use various different formatting tricks like putting more than one assembler instruction in a line or including in-line comments:
 
@@ -936,25 +935,84 @@ Tali Forth is currently shipped with a very primitive disassembler, which is sta
 
 #### Format
 
-The output format is in Simpler Assembler Notation (SAN) which adds the mode of an instruction to the main mnemonic, simplifying parsing of code. For instance,
+The output format is in Simpler Assembler Notation (SAN). Briefly, the instruction’s mode is added to the mnemonic, leaving the operand a pure number. For use in a postfix environment like Tali Forth, the operand is listed *before* the mnemonic. This way, traditional assembly code such as
 
-    lda #1
-    sta $1000,x
-    sta $80
-    lda ($80)
+    LDA #1
+    DEC
+    STA $1000
+    STA $80
+    NOP
+    LDA ($80)
 
-becomes
+becomes (assuming `hex` for hexadecimal numbers):
 
-    lda.# 1
-    sta.x $1000
-    sta.z $80
-    lda.di $80
+            1 lda.#
+              dec.a
+         1000 sta
+           80 sta.z
+              nop
+           80 lda.zi
 
-A full discussion of SAN is beyond the scope of this document, see [this link](https://docs.google.com/document/d/16Sv3Y-3rHPXyxT1J3zLBVq4reSPYtY2G6OSojNTm4SQ/edit#heading=h.ik059qk0tz7r) for an overview of the format (currently still under a different name).
+See the Appendix for a more detailed discussion of the format.
 
-#### Replacing the Disassembler
+#### Output
 
-Tali was designed to make it easy for the user to swap in a different disassembler. The code is in a separate file, `disassembler.asm`. To replace this by your version, move the file to a different name, make sure that it accepts `( addr u )` on the Forth Data Stack as parameters, and start your code after the label `disassembler:`.
+The disassembler prints the address of the instruction, followed by any operand and the mnemonic. To get the code of `drop`, for instance, we can use `' drop 10 disasm`:
+
+    36204    119 cpx.#
+    36206      3 bmi
+    36208  56282 jmp
+    36211        inx
+    36212        inx
+    36213        rts
+
+The Forth word `see` calls the disassembler while using a hexadecimal number base. So `see drop` produces:
+
+     nt: CF04  xt: 8D6C  UF
+     size (decimal): 9
+
+    8D6C  E0 77 30 03 4C DA DB E8  E8  .w0.L... .
+
+    8D6C     77 cpx.#
+    8D6E      3 bmi
+    8D70   DBDA jmp
+    8D73        inx
+    8D74        inx
+
+Note that `see` does not print the final `rts` instruction.
+
+#### Gotchas and known issues
+
+Tali Forth enforces the **signature byte** of the `brk` assembler instruction. That is, it is treated like a two-byte instruction. Since you probably shouldn’t be using `brk` anyway, this behavior is usually only interesting when examing the code, where a block of zeros will produce something like the following with the disassembler:
+
+    124B      0 brk
+    124D      0 brk
+    124F      0 brk
+    1251      0 brk
+
+Because of the stack structure of Forth, the disassembler will not catch assembler instructions that were **assigned an operand by mistake**. Take this (broken) code:
+
+    nop
+    10 dex  
+    nop
+    rts
+
+-   Error: DEX does not take an operand!
+
+The disassembler will output this code (addresses might vary):
+
+    4661        nop
+    4662        dex  
+    4663        nop
+    4664        rts
+
+-   Incorrect operand for DEX was silently ignored
+
+The 10 we had passed as an operand are still on the stack, as `.s` will show. A `dump` of the code will show that the number was ignored, leading to code that will actually run correctly (again, addresses will vary):
+
+    1235  EA CA EA 60
+
+These mistakes can surface further downstream when the incorrect value on the Data Stack causes problems.
 
 # Developer Guide
 
@@ -2399,6 +2457,136 @@ When this word is compiled into another word, however, Tali will use native comp
 > **Note**
 >
 > During early development, testing was done by hand with a list of words that has since been placed in the `old` old folder. These tests might be still useful if you are in the very early stages of developing your own Forth.
+
+## The Simpler Assembler Notation (SAN) format
+
+> **Note**
+>
+> This is a condensed version of the main SAN Guide at <https://github.com/scotws/SAN> , see there for more detail.)
+
+### Background
+
+The Simpler Assembler Notation (SAN) for the 6502/65c02/65816 family of CPUs cleanly separates the opcode and the operand in an assembler instruction. For instance, the traditional notation
+
+    STA 1000,X
+
+adds the marker for the X-indexed mode to the operand. Though this is not hard to read or use for the programmer on the 65c02, it makes building asssemblers and disassemblers harder. SAN keeps the mnemonic’s "stem" - `STA` in this case - though it is converted to lower case. The mode is added as a "suffix" after a single dot:
+
+    sta.x 1000
+
+In a Forth environment, this lets us trivially switch the notation to postfix. The operand is pushed to the stack like any normal number, and the mnemonic is a simple Forth word that picks it up there.
+
+    1000 sta.x
+
+As part of SAN, Zero Page modes are explicitly indicated with a `z` in the suffix. This removes any confusion that can come from
+
+    STA 10          ; zero page addressing, two-byte instruction
+    STA 0010        ; absolut addressing, three-byte instruction
+    STA 010         ; really not sure what will happen
+
+by replacing the instruction with (prefix notation):
+
+    sta 10          ; absolute addressing, three-byte instruction
+    sta.z 10        ; zero page addressing, two-byte instruction
+
+SAN was originally invented to fix various issues with the traditional mnemonics for the 65816. The advantages for the 65c02 outside a specialized environment such as a small Forth assembler here are limited at best.
+
+### Complete list of 65c02 addressing modes
+
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Mode</th>
+<th>Traditional Notation</th>
+<th>SAN (Forth Postfix)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><p>Implied</p></td>
+<td><p><code>DEX</code></p></td>
+<td><p><code>dex</code></p></td>
+</tr>
+<tr class="even">
+<td><p>Absolute</p></td>
+<td><p><code>LDA $1000</code></p></td>
+<td><p><code>1000 lda</code></p></td>
+</tr>
+<tr class="odd">
+<td><p>Accumulator</p></td>
+<td><p><code>INC A</code></p></td>
+<td><p><code>inc.a</code></p></td>
+</tr>
+<tr class="even">
+<td><p>Immediate</p></td>
+<td><p><code>LDA #$00</code></p></td>
+<td><p><code>00 lda.#</code></p></td>
+</tr>
+<tr class="odd">
+<td><p>Absolute X indexed</p></td>
+<td><p><code>LDA $1000,X</code></p></td>
+<td><p><code>1000 lda.x</code></p></td>
+</tr>
+<tr class="even">
+<td><p>Absolute Y indexed</p></td>
+<td><p><code>LDA $1000,Y</code></p></td>
+<td><p><code>1000 lda.y</code></p></td>
+</tr>
+<tr class="odd">
+<td><p>Absolute indirect</p></td>
+<td><p><code>JMP ($1000)</code></p></td>
+<td><p><code>1000 jmp.i</code></p></td>
+</tr>
+<tr class="even">
+<td><p>Indexed indirect</p></td>
+<td><p><code>JMP ($1000,X)</code></p></td>
+<td><p><code>1000 jmp.xi</code></p></td>
+</tr>
+<tr class="odd">
+<td><p>Zero Page (DP)</p></td>
+<td><p><code>LDA $10</code></p></td>
+<td><p><code>10 lda.z</code></p></td>
+</tr>
+<tr class="even">
+<td><p>Zero Page X indexed</p></td>
+<td><p><code>LDA $10,X</code></p></td>
+<td><p><code>10 lda.zx</code></p></td>
+</tr>
+<tr class="odd">
+<td><p>Zero Page Y indexed</p></td>
+<td><p><code>LDX $10,Y</code></p></td>
+<td><p><code>10 ldx.zy`</code></p></td>
+</tr>
+<tr class="even">
+<td><p>Zero Page indirect</p></td>
+<td><p><code>LDA ($10)</code></p></td>
+<td><p><code>10 lda.zi</code></p></td>
+</tr>
+<tr class="odd">
+<td><p>ZP indirect X indexed</p></td>
+<td><p><code>LDA ($10,X)</code></p></td>
+<td><p><code>10 lda.zxi</code></p></td>
+</tr>
+<tr class="even">
+<td><p>ZP indirect Y indexed</p></td>
+<td><p><code>LDA ($10),Y</code></p></td>
+<td><p><code>10 lda.ziy</code></p></td>
+</tr>
+<tr class="odd">
+<td><p>Relative</p></td>
+<td><p><code>BRA &lt;LABEL&gt;</code></p></td>
+<td><p><code>&lt;LABEL&gt; bra</code></p></td>
+</tr>
+</tbody>
+</table>
+
+Note for indirect modes, the `i` in the suffix is at the same relative position to the index register X or Y as the closing bracket is in the traditional mode. This way, `LDA ($10,X)` turns into `lda.zxi 10` in postfix SAN, while `LDA
+($10),Y` will be `lda.ziy 10`.
 
 ## Thanks
 

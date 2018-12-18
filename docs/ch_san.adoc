@@ -1,0 +1,79 @@
+
+NOTE: This is a condensed version of the main SAN Guide at
+https://github.com/scotws/SAN , see there for more detail.)
+
+=== Background
+
+The Simpler Assembler Notation (SAN) for the 6502/65c02/65816 family of CPUs
+cleanly separates the opcode and the operand in an assembler instruction. For
+instance, the traditional notation 
+
+----
+STA 1000,X
+----
+
+adds the marker for the X-indexed mode to the operand. Though this is not hard
+to read or use for the programmer on the 65c02, it makes building asssemblers
+and disassemblers harder. SAN keeps the mnemonic's "stem" - `STA` in this case -
+though it is converted to lower case. The mode is added as a "suffix" after a
+single dot:
+
+----
+sta.x 1000
+----
+
+In a Forth environment, this lets us trivially switch the notation to
+postfix. The operand is pushed to the stack like any normal number, and the
+mnemonic is a simple Forth word that picks it up there.
+
+----
+1000 sta.x
+----
+
+As part of SAN, Zero Page modes are explicitly indicated with a `z` in the
+suffix. This removes any confusion that can come from
+
+----
+STA 10          ; zero page addressing, two-byte instruction
+STA 0010        ; absolut addressing, three-byte instruction
+STA 010         ; really not sure what will happen
+----
+
+by replacing the instruction with (prefix notation):
+
+----
+sta 10          ; absolute addressing, three-byte instruction
+sta.z 10        ; zero page addressing, two-byte instruction
+----
+
+SAN was originally invented to fix various issues with the traditional mnemonics
+for the 65816. The advantages for the 65c02 outside a specialized environment
+such as a small Forth assembler here are limited at best.
+
+=== Complete list of 65c02 addressing modes
+
+|===
+|Mode                      |  Traditional Notation |  SAN (Forth Postfix)
+
+|Implied                   |  `DEX`               |  `dex`
+|Absolute                  |  `LDA $1000`         |  `1000 lda`
+|Accumulator               |  `INC A`             |  `inc.a`
+|Immediate                 |  `LDA #$00`          |  `00 lda.#`
+|Absolute X indexed        |  `LDA $1000,X`       |  `1000 lda.x`
+|Absolute Y indexed        |  `LDA $1000,Y`       |  `1000 lda.y`
+|Absolute indirect         |  `JMP ($1000)`       |  `1000 jmp.i`
+|Indexed indirect          |  `JMP ($1000,X)`     |  `1000 jmp.xi`
+|Zero Page (DP)            |  `LDA $10`           |  `10 lda.z`
+|Zero Page X indexed       |  `LDA $10,X`         |  `10 lda.zx`
+|Zero Page Y indexed       |  `LDX $10,Y`         |  `10 ldx.zy``
+|Zero Page indirect        |  `LDA ($10)`         |  `10 lda.zi`
+|ZP indirect X indexed     |  `LDA ($10,X)`       |  `10 lda.zxi`
+|ZP indirect Y indexed     |  `LDA ($10),Y`       |  `10 lda.ziy`
+|Relative                  |  `BRA <LABEL>`       |  `<LABEL> bra`
+|===
+
+Note for indirect modes, the `i` in the suffix is at the same relative position
+to the index register X or Y as the closing bracket is in the traditional mode.
+This way, `LDA ($10,X)` turns into `lda.zxi 10` in postfix SAN, while `LDA
+($10),Y` will be `lda.ziy 10`.
+

@@ -28,7 +28,7 @@ becomes (assuming `hex` for hexadecimal numbers):
        80 lda.zi
 ----
 
-See the Appendix for a more detailed discussion of the the format. 
+See the Appendix for a more detailed discussion of the format. 
 
 
 ==== Output
@@ -80,8 +80,6 @@ disassembler:
 1251      0 brk
 ----
 
-Note the 0 that is treated as the signature byte.
-
 Because of the stack structure of Forth, the disassembler will not catch
 assembler instructions that were *assigned an operand by mistake*. Take this
 (broken) code:
@@ -92,9 +90,9 @@ nop
 nop
 rts
 ----
-<1> Error: DEX does not take an operand
+<1> Error: DEX does not take an operand!
 
-The disassembler will output this code (addresses will vary):
+The disassembler will output this code (addresses might vary):
 ----
 4661        nop
 4662        dex  <1>

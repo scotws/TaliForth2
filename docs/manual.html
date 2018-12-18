@@ -538,6 +538,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_old_tests">Old Tests</a></li>
 </ul>
 </li>
+<li><a href="#_the_simpler_assembler_notation_san_format">The Simpler Assembler Notation (SAN) format</a>
+<ul class="sectlevel2">
+<li><a href="#_background">Background</a></li>
+<li><a href="#_complete_list_of_65c02_addressing_modes">Complete list of 65c02 addressing modes</a></li>
+</ul>
+</li>
 <li><a href="#_thanks">Thanks</a></li>
 <li><a href="#_references_and_further_reading">References and Further Reading</a></li>
 <li><a href="#_colophon">Colophon</a></li>
@@ -2283,7 +2289,7 @@ notes.
 </div>
 <div class="paragraph">
 <p>Tali Forth is shipped with a built-in assembler that uses the Simpler Assembler
-Format (SAN).</p>
+Format (SAN). See the Appendix for an introduction to SAN.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -2300,22 +2306,23 @@ is in the public domain.
 </table>
 </div>
 <div class="sect3">
-<h4 id="_simple_ways_of_inserting_assembler_code">Simple ways of inserting assembler code</h4>
+<h4 id="_adding_assembler_code">Adding assembler code</h4>
 <div class="paragraph">
 <p>Because Tali Forth is a Subroutine Threaded (STC) Forth, inserting assembler
-instructions is spectacularly easy. In fact, the only real problem is accessing
-the assembler wordlist, which is normally not in the search tree because of its
-length. This, then, is one way to add assembler code:</p>
+instructions is easy. In fact, the only real problem is accessing the assembler
+wordlist, which is normally not in the search tree because of its length. This,
+then, is one way to add assembler code:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>forth-wordlist assembler-wordlist 2 set-order
+<pre>assembler-wordlist &gt;order
 here            \ Remember where we are
-1 lda.#         \ LDA #1
+1 lda.#         \ LDA #1 in Simpler Assembler Notation (SAN)
 push-a          \ Pseudo-instruction, pushes A on the Forth data stack
 rts             \ End subroutine. Don't use BRK!
 execute         \ Run our code using value from HERE
-.s              \ Will show 1 as TOS</pre>
+.s              \ Will show 1 as TOS
+previous</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2324,17 +2331,8 @@ mnemonics. They are usually not in the current wordlist path because of their
 sheer number. Note we use <code>rts</code>, not <code>brk</code>, as the last instruction to return to
 the command line.</p>
 </div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-There is a separate tutorial planned for wordlists and their use.
-</td>
-</tr>
-</table>
+<div class="paragraph">
+<p>WARNTING: Never use <code>brk</code> inside Tali Forth assembler code</p>
 </div>
 <div class="paragraph">
 <p>Note you can freely intermingel Forth high-level words and
@@ -2353,8 +2351,8 @@ decimal
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>12BF  lda.# 10
-12C1  ldx.# 0A</pre>
+<pre>12BF    10 lda.#
+12C1     A ldx.#</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2502,42 +2500,147 @@ started with <code>disasm ( addr u&#8201;&#8212;&#8201;)</code>.</p>
 <div class="sect3">
 <h4 id="_format">Format</h4>
 <div class="paragraph">
-<p>The output format is in Simpler Assembler Notation (SAN) which adds the mode of
-an instruction to the main mnemonic, simplifying parsing of code. For instance,</p>
+<p>The output format is in Simpler Assembler Notation (SAN). Briefly, the
+instruction&#8217;s mode is added to the mnemonic, leaving the operand a pure number.
+For use in a postfix environment like Tali Forth, the operand is listed <em>before</em>
+the mnemonic. This way, traditional assembly code such as</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>lda #1
-sta $1000,x
-sta $80
-lda ($80)</pre>
+<pre>LDA #1
+DEC
+STA $1000
+STA $80
+NOP
+LDA ($80)</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>becomes</p>
+<p>becomes (assuming <code>hex</code> for hexadecimal numbers):</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>lda.# 1
-sta.x $1000
-sta.z $80
-lda.di $80</pre>
+<pre>        1 lda.#
+          dec.a
+     1000 sta
+       80 sta.z
+          nop
+       80 lda.zi</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>A full discussion of SAN is beyond the scope of this document, see
-<a href="https://docs.google.com/document/d/16Sv3Y-3rHPXyxT1J3zLBVq4reSPYtY2G6OSojNTm4SQ/edit#heading=h.ik059qk0tz7r">this
-link</a> for an overview of the format (currently still under a different name).</p>
+<p>See the Appendix for a more detailed discussion of the format.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_replacing_the_disassembler">Replacing the Disassembler</h4>
+<h4 id="_output">Output</h4>
 <div class="paragraph">
-<p>Tali was designed to make it easy for the user to swap in a different
-disassembler. The code is in a separate file, <code>disassembler.asm</code>. To replace
-this by your version, move the file to a different name, make sure that it
-accepts <code>( addr u )</code> on the Forth Data Stack as parameters, and start your code
-after the label <code>disassembler:</code>.</p>
+<p>The disassembler prints the address of the instruction, followed by any operand
+and the mnemonic. To get the code of <code>drop</code>, for instance, we can use
+<code>' drop 10 disasm</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>36204    119 cpx.#
+36206      3 bmi
+36208  56282 jmp
+36211        inx
+36212        inx
+36213        rts</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The Forth word <code>see</code> calls the disassembler while using a hexadecimal number
+base. So <code>see drop</code> produces:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre> nt: CF04  xt: 8D6C  UF
+ size (decimal): 9
+
+8D6C  E0 77 30 03 4C DA DB E8  E8  .w0.L... .
+
+8D6C     77 cpx.#
+8D6E      3 bmi
+8D70   DBDA jmp
+8D73        inx
+8D74        inx</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note that <code>see</code> does not print the final <code>rts</code> instruction.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_gotchas_and_known_issues_2">Gotchas and known issues</h4>
+<div class="paragraph">
+<p>Tali Forth enforces the <strong>signature byte</strong> of the <code>brk</code> assembler instruction.
+That is, it is treated like a two-byte instruction. Since you probably shouldn&#8217;t be
+using <code>brk</code> anyway, this behavior is usually only interesting when examing the
+code, where a block of zeros will produce something like the following with the
+disassembler:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>124B      0 brk
+124D      0 brk
+124F      0 brk
+1251      0 brk</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Because of the stack structure of Forth, the disassembler will not catch
+assembler instructions that were <strong>assigned an operand by mistake</strong>. Take this
+(broken) code:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>nop
+10 dex  <i class="conum" data-value="1"></i><b>(1)</b>
+nop
+rts</pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Error: DEX does not take an operand!</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The disassembler will output this code (addresses might vary):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>4661        nop
+4662        dex  <i class="conum" data-value="1"></i><b>(1)</b>
+4663        nop
+4664        rts</pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Incorrect operand for DEX was silently ignored</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The 10 we had passed as an operand are still on the stack, as <code>.s</code> will show. A
+<code>dump</code> of the code will show that the number was ignored, leading to code that
+will actually run correctly (again, addresses will vary):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>1235  EA CA EA 60</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>These mistakes can surface further downstream when the incorrect value on the
+Data Stack causes problems.</p>
 </div>
 </div>
 </div>
@@ -5424,6 +5527,184 @@ are in the very early stages of developing your own Forth.
 </div>
 </div>
 <div class="sect1">
+<h2 id="_the_simpler_assembler_notation_san_format">The Simpler Assembler Notation (SAN) format</h2>
+<div class="sectionbody">
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+This is a condensed version of the main SAN Guide at
+<a href="https://github.com/scotws/SAN" class="bare">https://github.com/scotws/SAN</a> , see there for more detail.)
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_background">Background</h3>
+<div class="paragraph">
+<p>The Simpler Assembler Notation (SAN) for the 6502/65c02/65816 family of CPUs
+cleanly separates the opcode and the operand in an assembler instruction. For
+instance, the traditional notation</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>STA 1000,X</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>adds the marker for the X-indexed mode to the operand. Though this is not hard
+to read or use for the programmer on the 65c02, it makes building asssemblers
+and disassemblers harder. SAN keeps the mnemonic&#8217;s "stem" - <code>STA</code> in this case -
+though it is converted to lower case. The mode is added as a "suffix" after a
+single dot:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>sta.x 1000</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In a Forth environment, this lets us trivially switch the notation to
+postfix. The operand is pushed to the stack like any normal number, and the
+mnemonic is a simple Forth word that picks it up there.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>1000 sta.x</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As part of SAN, Zero Page modes are explicitly indicated with a <code>z</code> in the
+suffix. This removes any confusion that can come from</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>STA 10          ; zero page addressing, two-byte instruction
+STA 0010        ; absolut addressing, three-byte instruction
+STA 010         ; really not sure what will happen</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>by replacing the instruction with (prefix notation):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>sta 10          ; absolute addressing, three-byte instruction
+sta.z 10        ; zero page addressing, two-byte instruction</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>SAN was originally invented to fix various issues with the traditional mnemonics
+for the 65816. The advantages for the 65c02 outside a specialized environment
+such as a small Forth assembler here are limited at best.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_complete_list_of_65c02_addressing_modes">Complete list of 65c02 addressing modes</h3>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Mode</th>
+<th class="tableblock halign-left valign-top">Traditional Notation</th>
+<th class="tableblock halign-left valign-top">SAN (Forth Postfix)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Implied</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DEX</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>dex</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Absolute</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>LDA $1000</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1000 lda</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Accumulator</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>INC A</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>inc.a</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Immediate</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>LDA #$00</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>00 lda.#</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Absolute X indexed</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>LDA $1000,X</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1000 lda.x</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Absolute Y indexed</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>LDA $1000,Y</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1000 lda.y</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Absolute indirect</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>JMP ($1000)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1000 jmp.i</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Indexed indirect</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>JMP ($1000,X)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1000 jmp.xi</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Zero Page (DP)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>LDA $10</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>10 lda.z</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Zero Page X indexed</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>LDA $10,X</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>10 lda.zx</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Zero Page Y indexed</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>LDX $10,Y</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>10 ldx.zy`</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Zero Page indirect</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>LDA ($10)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>10 lda.zi</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ZP indirect X indexed</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>LDA ($10,X)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>10 lda.zxi</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ZP indirect Y indexed</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>LDA ($10),Y</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>10 lda.ziy</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Relative</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>BRA &lt;LABEL&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>&lt;LABEL&gt; bra</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Note for indirect modes, the <code>i</code> in the suffix is at the same relative position
+to the index register X or Y as the closing bracket is in the traditional mode.
+This way, <code>LDA ($10,X)</code> turns into <code>lda.zxi 10</code> in postfix SAN, while <code>LDA
+($10),Y</code> will be <code>lda.ziy 10</code>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_thanks">Thanks</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -5555,7 +5836,7 @@ under <a href="https://www.ubuntu.com/">Ubuntu</a> Linux 16.04 LTS.</p>
 <div id="footer">
 <div id="footer-text">
 Version BETA<br>
-Last updated 2018-12-17 17:20:56 CET
+Last updated 2018-12-18 12:10:08 CET
 </div>
 </div>
 </body>
