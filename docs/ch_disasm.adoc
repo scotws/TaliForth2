@@ -3,35 +3,114 @@ started with `disasm ( addr u -- )`.
 
 ==== Format
 
-The output format is in Simpler Assembler Notation (SAN) which adds the mode of
-an instruction to the main mnemonic, simplifying parsing of code. For instance,
+The output format is in Simpler Assembler Notation (SAN). Briefly, the
+instruction's mode is added to the mnemonic, leaving the operand a pure number.
+For use in a postfix environment like Tali Forth, the operand is listed _before_
+the mnemonic. This way, traditional assembly code such as
 
 ----
-lda #1
-sta $1000,x
-sta $80
-lda ($80)
+LDA #1
+DEC
+STA $1000
+STA $80
+NOP
+LDA ($80)
 ----
 
-becomes
+becomes (assuming `hex` for hexadecimal numbers):
 
 ----
-lda.# 1
-sta.x $1000
-sta.z $80
-lda.di $80
+        1 lda.#
+          dec.a
+     1000 sta
+       80 sta.z
+          nop
+       80 lda.zi
 ----
 
-A full discussion of SAN is beyond the scope of this document, see
-https://docs.google.com/document/d/16Sv3Y-3rHPXyxT1J3zLBVq4reSPYtY2G6OSojNTm4SQ/edit#heading=h.ik059qk0tz7r[this
-link] for an overview of the format (currently still under a different name).
+See the Appendix for a more detailed discussion of the the format. 
 
 
-==== Replacing the Disassembler
+==== Output
 
-Tali was designed to make it easy for the user to swap in a different
-disassembler. The code is in a separate file, `disassembler.asm`. To replace
-this by your version, move the file to a different name, make sure that it
-accepts `( addr u )` on the Forth Data Stack as parameters, and start your code
-after the label `disassembler:`.
+The disassembler prints the address of the instruction, followed by any operand
+and the mnemonic. To get the code of `drop`, for instance, we can use 
+`' drop 10 disasm`:
+
+----
+36204    119 cpx.#
+36206      3 bmi
+36208  56282 jmp
+36211        inx
+36212        inx
+36213        rts
+----
+
+The Forth word `see` calls the disassembler while using a hexadecimal number
+base. So `see drop` produces: 
+
+----
+ nt: CF04  xt: 8D6C  UF
+ size (decimal): 9
+
+8D6C  E0 77 30 03 4C DA DB E8  E8  .w0.L... .
+
+8D6C     77 cpx.#
+8D6E      3 bmi
+8D70   DBDA jmp
+8D73        inx
+8D74        inx
+----
+
+Note that `see` does not print the final `rts` instruction.
+
+
+==== Gotchas and known issues
+
+Tali Forth enforces the *signature byte* of the `brk` assembler instruction.
+That is, it is treated like a two-byte instruction. Since you probably shouldn't be 
+using `brk` anyway, this behavior is usually only interesting when examing the
+code, where a block of zeros will produce something like the following with the
+disassembler:
+
+----
+124B      0 brk
+124D      0 brk
+124F      0 brk
+1251      0 brk
+----
+
+Note the 0 that is treated as the signature byte.
+
+Because of the stack structure of Forth, the disassembler will not catch
+assembler instructions that were *assigned an operand by mistake*. Take this
+(broken) code:
+
+----
+nop
+10 dex  <1>
+nop
+rts
+----
+<1> Error: DEX does not take an operand
+
+The disassembler will output this code (addresses will vary):
+----
+4661        nop
+4662        dex  <1>
+4663        nop
+4664        rts
+----
+<1> Incorrect operand for DEX was silently ignored
+
+The 10 we had passed as an operand are still on the stack, as `.s` will show. A
+`dump` of the code will show that the number was ignored, leading to code that
+will actually run correctly (again, addresses will vary):
+
+----
+1235  EA CA EA 60
+----
+
+These mistakes can surface further downstream when the incorrect value on the
+Data Stack causes problems.
 

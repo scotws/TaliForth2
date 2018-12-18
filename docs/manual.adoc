@@ -96,6 +96,9 @@ include::ch_faq.adoc[]
 == Testing Tali Forth 2
 include::ch_tests.adoc[]
 
+== The Simpler Assembler Notation (SAN) format
+include::ch_san.adoc[]
+
 == Thanks
 include::ch_thanks.adoc[]
 
