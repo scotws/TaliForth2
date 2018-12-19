@@ -5281,7 +5281,7 @@ xt_list:
                 jsr xt_scr
                 jsr xt_store
                 ; Use L from the editor-wordlist to display the screen.
-                jsr xt_l
+                jsr xt_editor_l
 z_list:         rts
 .scend
         
@@ -11150,10 +11150,98 @@ z_zero_unequal: rts
 ; ==========================================================
 ; EDITOR words        
 
-; ## L ( -- ) "List the current screen"
+; This routine is used by both enter-screen and erase-screen
+; to get a buffer for the given screen number and set SCR to
+; the given screen number.  This word is not in the dictionary.
+.scope                
+xt_editor_screen_helper:
+                jsr xt_dup
+                jsr xt_scr
+                jsr xt_store
+                jsr xt_buffer
+z_editor_screen_helper:
+                rts
+.scend
+                
+                
+; ## EDITOR_ENTER_SCREEN ( scr# -- ) "Enter all lines for given screen"
+; ## "enter-screen"  auto  Tali Editor
+.scope
+xt_editor_enter_screen:
+                ; Set the variable SCR and get a buffer for the
+                ; given screen number.
+                jsr xt_editor_screen_helper
+                ; Drop the buffer address.
+                jsr xt_drop
+                ; Overwrite the lines one at a time.
+                stz editor1
+_prompt_loop:
+                ; Put the current line number on the stack.
+                dex
+                dex
+                lda editor1
+                sta 0,x
+                stz 1,x
+                ; Use the O word to prompt for overwrite.
+                jsr xt_editor_o
+                ; Move on to the next line.
+                inc editor1
+                lda #16
+                cmp editor1
+                bne _prompt_loop
+z_editor_enter_screen:
+                rts
+.scend                
+
+
+; ## EDITOR_ERASE_SCREEN ( scr# -- ) "Erase all lines for given screen"
+; ## "erase-screen"  tested  Tali Editor
+.scope
+xt_editor_erase_screen:
+                ; Set the variable SCR and get a buffer for the
+                ; given screen number.
+                jsr xt_editor_screen_helper
+                ; Put 1024 (chars/screen) on stack.
+                dex
+                dex
+                stz 0,x
+                lda #4          ; 4 in MSB makes 1024.
+                sta 1,x
+                ; Erase the entire block (fill with spaces).
+                jsr xt_blank
+                ; Mark buffer as updated.
+                jsr xt_update
+z_editor_erase_screen:
+                rts
+.scend                
+                
+                
+; ## EDITOR_EL ( line# -- ) "Erase the given line number"
+; ## "el"  tested  Tali Editor
+.scope
+xt_editor_el:
+                ; Turn the line number into buffer offset.
+                ; This also loads the block into the buffer if it's
+                ; not there for some reason.
+                jsr xt_editor_line
+                ; Put 64 (# of chars/line) on the stack.
+                dex
+                dex
+                lda #64
+                sta 0,x
+                stz 1,x
+                ; Fill with spaces.
+                jsr xt_blank
+                ; Mark buffer as updated.
+                jsr xt_update
+z_editor_el:    rts
+.scend
+
+
+; ## EDITOR_L ( -- ) "List the current screen"
 ; ## "l"  tested  Tali Editor
 .scope
-xt_l:
+xt_editor_l:
                 ; Load the current screen
                 dex             ; Put SCR on the stack.
                 dex
@@ -11240,9 +11328,65 @@ _line_loop:
                 inx
                 inx
                 
-z_l:            rts
+z_editor_l:            rts
 .scend
 
 
+; ## EDITOR_LINE ( line# -- c-addr ) "Turn a line number into address in current screen"
+; ## "line"  tested  Tali Editor
+.scope
+xt_editor_line:
+                ; Multiply the TOS by 64 (chars/line) to compute offset.
+                ldy #6          ; *64 is same as left shift 6 times.
+_shift_tos_left:        
+                asl 0,x         ; Shift TOS to the left
+                rol 1,x         ; ROL brings MSb from lower byte.
+                dey
+                bne _shift_tos_left
+                ; Load the current screen into a buffer
+                ; and get the buffer address
+                jsr xt_scr
+                jsr xt_fetch
+                jsr xt_block
 
+                ; Add the offset to the buffer base address.
+                jsr xt_plus
+                
+z_editor_line:  rts
+.scend                
+
+
+; ## EDITOR_O ( line# -- ) "Overwrite the given line"
+; ## "o"  tested  Tali Editor
+.scope
+xt_editor_o:
+                ; Erase the line
+                jsr xt_dup
+                jsr xt_editor_el
+                ; Print prompt
+                jsr xt_cr
+                jsr xt_dup
+                jsr xt_two
+                jsr xt_u_dot_r
+                jsr xt_space
+                lda #42         ; ASCII for *
+                jsr emit_a
+                jsr xt_space
+                ; Accept new input (directly into the buffer)
+                jsr xt_editor_line
+                dex
+                dex
+                lda #64         ; chars/line
+                sta 0,x
+                stz 1,x
+                jsr xt_accept
+                ; Drop result from accept.
+                inx
+                inx
+                ; Mark buffer as updated.
+                jsr xt_update
+                
+z_editor_o:     rts
+.scend                
+              
 ; END

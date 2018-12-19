@@ -2685,30 +2685,8 @@ T{ teststring 0 block swap move update flush -> }T  ok
 \ See if it's in the ramdrive.  ok
 T{ ramdrive teststringlength teststring compare -> 0 }T  ok
   ok
-\ We don't have an official editor yet, so bring in just  ok
-\ enough to create some basic screens.  ok
-decimal  ok
-( Editor )  ok
-( line provides the address, in the buffer, of the given line )  ok
-: line  ( line# - c-addr)  compiled
-    64 *        ( Convert line number to # characters offset )  compiled
-    scr @ block ( Get the buffer address for that block )  compiled
-    + ;         ( Add the offset )  ok
-  ok
-: E ( line# - ) ( Erase the given line number with spaces )  compiled
-    line 64 blank update ;  ok
-  ok
-: O     ( line# - ) ( Overwrite line with new text )  compiled
-    dup E                    ( Erase existing text on line )  compiled
-    cr dup 2 u.r ."  * " line 64 accept drop update ;  ok
-  ok
-( Editor, continued )  ok
-: enter-screen ( scr# - )  compiled
-  dup scr ! buffer drop  compiled
-  16 0 do i o loop ;  ok
-: erase-screen ( scr# - )  compiled
-  dup scr ! buffer 1024 blank update ;  ok
-  ok
+\ Bring in the editor wordlist.  ok
+editor-wordlist >order  ok
   ok
 T{ 0 erase-screen flush -> }T  ok
   ok
@@ -3087,7 +3065,7 @@ char w       ' digit?        cycle_test 2drop      CYCLES:     75 ok
 5 5          ' =             cycle_test drop       CYCLES:     53 ok
 here 5       ' erase         cycle_test            CYCLES:    310 ok
 here 5 5     ' fill          cycle_test            CYCLES:    298 ok
-s" 5"        ' evaluate      cycle_test drop       CYCLES:  16646 ok
+s" 5"        ' evaluate      cycle_test drop       CYCLES:  16643 ok
 5 ' drop     ' execute       cycle_test            CYCLES:     62 ok
 \ skipping     exit  ok
              ' false         cycle_test drop       CYCLES:     24 ok
@@ -3127,7 +3105,7 @@ s" aword"    ' find-name     cycle_test drop       CYCLES:    448 ok
 5 5          ' -             cycle_test drop       CYCLES:     47 ok
 s" txt   "   ' -trailing     cycle_test 2drop      CYCLES:    207 ok
 here s" a"   ' move          cycle_test            CYCLES:    137 ok
-' + int>name ' name>int      cycle_test drop       CYCLES:     60 ok
+' + int>name ' name>int      cycle_test drop       CYCLES:     61 ok
 ' + int>name ' name>string   cycle_test 2drop      CYCLES:     59 ok
              ' nc-limit      cycle_test drop       CYCLES:     28 ok
 5            ' negate        cycle_test drop       CYCLES:     39 ok
