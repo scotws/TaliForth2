@@ -141,7 +141,7 @@ Screen #   0
   ok
 ----
 
-Now we will entire screen 2 using `enter-screen`.  It will prompt line by line
+Now we will enter screen 2 using `enter-screen`.  It will prompt line by line
 for the text.  Pressing ENTER without typing any text will leave that line
 blank.
 
@@ -186,7 +186,7 @@ For reasons explained in the next chapter, the modified screen data is only
 saved back to the mass storage (in this case, our ramdrive) when the screen
 number is changed and accessed (typically with `list`).  To force Tali to save
 any changes to the mass storage, you can use the `flush` command.  It takes no
-arguments and simply saves any changed back to the mass storage.
+arguments and simply saves any changes back to the mass storage.
 
 ----
 flush
@@ -320,11 +320,12 @@ can use the command:
 `flush`
 
 If the buffer is in use and dirty, it will be written back to mass storage.
-Then the buffer will be marked empty.
+Then the buffer will be marked empty.  Flush should be called before
+shutting down (when using blocks) and before swapping storage media.
 
 If you want to write the changes but keep the block in the buffer, you can use
 the command `save-buffers` instead of flush.  That would be useful in a
-situation where you want to save the block changed right now, but also want to
+situation where you want to save the block changes right now, but also want to
 keep making changes in the buffer.
 
 If you want to abandon the changes in the buffer, you can use the command

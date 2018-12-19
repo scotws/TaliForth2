@@ -1,7 +1,7 @@
 ; Dictionary Headers for Tali Forth 2
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 05. Dec 2016 (Liara Forth)
-; This version: 18. Dec 2018
+; This version: 19. Dec 2018
 
 ; Dictionary headers are kept separately from the code, which allows various
 ; tricks in the code. We roughly follow the Gforth terminology: The Execution
@@ -401,9 +401,14 @@ nt_within:
         .word nt_to_in, xt_within, z_within
         .byte "within"
 
+nt_hexstore:
+        .byte 8, UF
+        .word nt_within, xt_hexstore, z_hexstore
+        .byte "hexstore"
+
 nt_cleave:
         .byte 6, UF
-        .word nt_within, xt_cleave, z_cleave
+        .word nt_hexstore, xt_cleave, z_cleave
         .byte "cleave"
 
 nt_pad:
@@ -1328,12 +1333,36 @@ nt_root_set_order:
 
 ; EDITOR-WORDLIST
 
-editor_dictionary_start:
-nt_line:
+nt_editor_enter_screen:
+        .byte 12, 0
+        .word 0000, xt_editor_enter_screen, z_editor_enter_screen
+        .byte "enter-screen"
+
+nt_editor_erase_screen:
+        .byte 12, 0
+        .word nt_editor_enter_screen, xt_editor_erase_screen, z_editor_erase_screen
+        .byte "erase-screen"
+
+nt_editor_el:
+        .byte 2, 0
+        .word nt_editor_erase_screen, xt_editor_el, z_editor_el
+        .byte "el"
+
+nt_editor_l:
         .byte 1, 0
-        .word 0000      ; End of the editor dictionary
-        .word xt_l, z_l
+        .word nt_editor_el, xt_editor_l, z_editor_l
         .byte "l"
+
+nt_editor_line:
+        .byte 4, 0
+        .word nt_editor_l, xt_editor_line, z_editor_line
+        .byte "line"
+
+editor_dictionary_start:
+nt_editor_o:
+        .byte 1, 0
+        .word nt_editor_line, xt_editor_o, z_editor_o
+        .byte "o"
         
 ; END of EDITOR-WORDLIST
 

@@ -53,7 +53,7 @@ RTS instruction at the end of each word.
 | CHAR | `char` | ANS core | 22 | **auto** |
 | CHAR_PLUS | `char+` | ANS core | 0 | **auto** |
 | CHARS | `chars` | ANS core | 7 | **auto** |
-| CLEAVE | `cleave` | Tali Forth | 142 | **auto** |
+| CLEAVE | `cleave` | Tali Forth | 163 | **auto** |
 | CMOVE | `cmove` | ANS string | 62 | **auto** |
 | CMOVE_UP | `cmove>` | ANS string | 62 | **auto** |
 | COLON | `:` | ANS core | 64 | **auto** |
@@ -111,6 +111,7 @@ RTS instruction at the end of each word.
 | GREATER_THAN | `>` | ANS core | 24 | **auto** |
 | HERE | `here` | ANS core | 10 | **auto** |
 | HEX | `hex` | ANS core ext | 6 | **auto** |
+| HEXSTORE | `hexstore` | Tali | 89 | **auto** |
 | HOLD | `hold` | ANS core | 21 | **auto** |
 | I | `i` | ANS core | 25 | **auto** |
 | IMMEDIATE | `immediate` | ANS core | 11 | **auto** |
@@ -253,9 +254,14 @@ RTS instruction at the end of each word.
 | ZERO_GREATER | `0>` | ANS core ext | 23 | **auto** |
 | ZERO_LESS | `0<` | ANS core | 19 | **auto** |
 | ZERO_UNEQUAL | `0<>` | ANS core ext | 21 | **auto** |
-| L | `l` | Tali Editor | 123 | tested |
+| EDITOR_ENTER_SCREEN | `enter-screen` | Tali Editor | 27 | **auto** |
+| EDITOR_ERASE_SCREEN | `erase-screen` | Tali Editor | 17 | tested |
+| EDITOR_EL | `el` | Tali Editor | 17 | tested |
+| EDITOR_L | `l` | Tali Editor | 123 | tested |
+| EDITOR_LINE | `line` | Tali Editor | 21 | tested |
+| EDITOR_O | `o` | Tali Editor | 48 | tested |
 
-Found **247** native words in `native_words.asm`.
-Of those, **208** were automatically tested and
+Found **253** native words in `native_words.asm`.
+Of those, **210** were automatically tested and
           **1** are not marked as tested at all.
 

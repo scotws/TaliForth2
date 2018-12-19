@@ -1334,6 +1334,15 @@ port
  ok</pre>
 </div>
 </div>
+<div class="paragraph">
+<p>If a space is provided as the delimiter as above with <code>bl</code>, <code>cleave</code> will split
+at any whitespace character such das tabs or line feeds.</p>
+</div>
+<div class="paragraph">
+<p><code>cleave</code> has <strong>known issues</strong> with multiple delimiters in sequence (e.g. two
+spaces between words instead of one) and if the string begins with a delimiter.
+See the source code for more detail.</p>
+</div>
 </td>
 </tr>
 <tr>
@@ -4571,7 +4580,7 @@ Screen #   0
 </div>
 </div>
 <div class="paragraph">
-<p>Now we will entire screen 2 using <code>enter-screen</code>.  It will prompt line by line
+<p>Now we will enter screen 2 using <code>enter-screen</code>.  It will prompt line by line
 for the text.  Pressing ENTER without typing any text will leave that line
 blank.</p>
 </div>
@@ -4625,7 +4634,7 @@ filled screens 1-3 with forth code and wanted to load all of it, you would run:<
 saved back to the mass storage (in this case, our ramdrive) when the screen
 number is changed and accessed (typically with <code>list</code>).  To force Tali to save
 any changes to the mass storage, you can use the <code>flush</code> command.  It takes no
-arguments and simply saves any changed back to the mass storage.</p>
+arguments and simply saves any changes back to the mass storage.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -4862,12 +4871,13 @@ can use the command:</p>
 </div>
 <div class="paragraph">
 <p>If the buffer is in use and dirty, it will be written back to mass storage.
-Then the buffer will be marked empty.</p>
+Then the buffer will be marked empty.  Flush should be called before
+shutting down (when using blocks) and before swapping storage media.</p>
 </div>
 <div class="paragraph">
 <p>If you want to write the changes but keep the block in the buffer, you can use
 the command <code>save-buffers</code> instead of flush.  That would be useful in a
-situation where you want to save the block changed right now, but also want to
+situation where you want to save the block changes right now, but also want to
 keep making changes in the buffer.</p>
 </div>
 <div class="paragraph">
@@ -5836,7 +5846,7 @@ under <a href="https://www.ubuntu.com/">Ubuntu</a> Linux 16.04 LTS.</p>
 <div id="footer">
 <div id="footer-text">
 Version BETA<br>
-Last updated 2018-12-18 12:10:08 CET
+Last updated 2018-12-18 12:53:06 CET
 </div>
 </div>
 </body>

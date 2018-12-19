@@ -364,7 +364,9 @@ In addition, there are words that are specific to Tali Forth.
 <pre><code>emergency
 induction
 port
- ok</code></pre></td>
+ ok</code></pre>
+<p>If a space is provided as the delimiter as above with <code>bl</code>, <code>cleave</code> will split at any whitespace character such das tabs or line feeds.</p>
+<p><code>cleave</code> has <strong>known issues</strong> with multiple delimiters in sequence (e.g. two spaces between words instead of one) and if the string begins with a delimiter. See the source code for more detail.</p></td>
 </tr>
 <tr class="odd">
 <td><p>compile-only</p></td>
@@ -2030,7 +2032,7 @@ Now if we list screen 0, we should see our message:
     15
       ok
 
-Now we will entire screen 2 using `enter-screen`. It will prompt line by line for the text. Pressing ENTER without typing any text will leave that line blank.
+Now we will enter screen 2 using `enter-screen`. It will prompt line by line for the text. Pressing ENTER without typing any text will leave that line blank.
 
     2 enter-screen
      0 * ( Make a smiley word and then run it!    SCC 2018-12 )
@@ -2060,7 +2062,7 @@ If your forth code doesn’t fit on one screen, you can spread it across contigu
 
     1 3 thru
 
-For reasons explained in the next chapter, the modified screen data is only saved back to the mass storage (in this case, our ramdrive) when the screen number is changed and accessed (typically with `list`). To force Tali to save any changes to the mass storage, you can use the `flush` command. It takes no arguments and simply saves any changed back to the mass storage.
+For reasons explained in the next chapter, the modified screen data is only saved back to the mass storage (in this case, our ramdrive) when the screen number is changed and accessed (typically with `list`). To force Tali to save any changes to the mass storage, you can use the `flush` command. It takes no arguments and simply saves any changes back to the mass storage.
 
     flush
 
@@ -2180,9 +2182,9 @@ To force the updated version of block 3 to be written back to mass storage, we c
 
 `flush`
 
-If the buffer is in use and dirty, it will be written back to mass storage. Then the buffer will be marked empty.
+If the buffer is in use and dirty, it will be written back to mass storage. Then the buffer will be marked empty. Flush should be called before shutting down (when using blocks) and before swapping storage media.
 
-If you want to write the changes but keep the block in the buffer, you can use the command `save-buffers` instead of flush. That would be useful in a situation where you want to save the block changed right now, but also want to keep making changes in the buffer.
+If you want to write the changes but keep the block in the buffer, you can use the command `save-buffers` instead of flush. That would be useful in a situation where you want to save the block changes right now, but also want to keep making changes in the buffer.
 
 If you want to abandon the changes in the buffer, you can use the command `empty-buffers`. This will not save even a dirty buffer, and marks the buffer as empty.
 
