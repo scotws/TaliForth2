@@ -20,6 +20,11 @@
 ; it hasn't been tested at all (bad). See the test suite for more details.
 
 
+; This table holds all of the initial values                 
+cold_zp_table:
+
+cold_user_table:        
+
 ; ## COLD ( -- ) "Reset the Forth system"
 ; ## "cold"  tested  Tali Forth
 ;       """Reset the Forth system. Does not restart the kernel,
