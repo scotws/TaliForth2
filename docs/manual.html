@@ -1334,6 +1334,15 @@ port
  ok</pre>
 </div>
 </div>
+<div class="paragraph">
+<p>If a space is provided as the delimiter as above with <code>bl</code>, <code>cleave</code> will split
+at any whitespace character such das tabs or line feeds.</p>
+</div>
+<div class="paragraph">
+<p><code>cleave</code> has <strong>known issues</strong> with multiple delimiters in sequence (e.g. two
+spaces between words instead of one) and if the string begins with a delimiter.
+See the source code for more detail.</p>
+</div>
 </td>
 </tr>
 <tr>
@@ -5837,7 +5846,7 @@ under <a href="https://www.ubuntu.com/">Ubuntu</a> Linux 16.04 LTS.</p>
 <div id="footer">
 <div id="footer-text">
 Version BETA<br>
-Last updated 2018-12-18 19:07:28 EST
+Last updated 2018-12-18 12:53:06 CET
 </div>
 </div>
 </body>

@@ -1695,6 +1695,10 @@ z_chars:        rts
         ; a lot, we want it to work in pure assembler and be as fast as we
         ; can make it.
         ; """
+
+        ; TODO KNOWN ISSUE: CLEAVE fails when given multiple delimiters (eg
+        ; "aaa  bbb" two spaces) or the string starts with a whitespace 
+        ; delimiter. This will be taken care of at a later date.
 .scope
 xt_cleave:
                 cpx #dsp0-5

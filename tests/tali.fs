@@ -29,7 +29,9 @@ T{ decimal -> }T
 \ ------------------------------------------------------------------------
 \ testing tali-only words: cleave hexstore
 
-\ Cleave: Normal cases
+\ Cleave: Normal cases. KNOWN issue: CLEAVE fails if we have multiple
+\ delimiters, for example "aaa  bbb" with two strings. This is also true if we
+\ start the string with a delimiter
 
 T{ : s1 s" " ; -> }T \ case 1: empty string
 T{ s1 bl cleave  s" " compare  -rot  s" " compare -> 0 0 }T
@@ -37,8 +39,23 @@ T{ s1 bl cleave  s" " compare  -rot  s" " compare -> 0 0 }T
 T{ : s1 s" aaa" ; -> }T  \ case 2: one word
 T{ s1 bl cleave  s" aaa" compare  -rot  s" " compare -> 0 0 }T
 
-T{ : s1 s" aaa bbb ccc" ; -> }T  \ case 3: lots of words
+T{ : s1 s" aaa bbb ccc" ; -> }T  \ case 3: lots of words, single space delimiter
 T{ s1 bl cleave  s" aaa" compare  -rot  s" bbb ccc" compare -> 0 0 }T
+
+\ TODO fix this
+\ T{ : s1 s" aaa  bbb  ccc" ; -> }T  \ case 3a: lots of words, multiple space delimiter
+\ T{ s1 bl cleave  s" aaa" compare  -rot  s" bbb  ccc" compare -> 0 0 }T
+
+T{ : s1 s\" aaa\tbbb\tccc" ; -> }T  \ case 3b: lots of words, tab delimter
+T{ s1 bl cleave  s" aaa" compare  -rot  s\" bbb\tccc" compare -> 0 0 }T
+
+T{ : s1 s\" aaa\nbbb\nccc" ; -> }T  \ case 3c: lots of words, EOL delimiter
+T{ s1 bl cleave  s" aaa" compare  -rot  s\" bbb\nccc" compare -> 0 0 }T
+
+\ TODO fix this
+\ T{ : s1 s"  aaa bbb ccc" ; -> }T  \ case 3d: lots of words, start with space delimiter
+\ T{ s1 bl cleave  s" aaa" compare  -rot  s" bbb ccc" compare -> 0 0 }T
+
 
 \ Cleave: Pathological cases
 

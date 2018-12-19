@@ -145,6 +145,13 @@ induction
 port
  ok
 ----
++
+If a space is provided as the delimiter as above with `bl`, `cleave` will split
+at any whitespace character such das tabs or line feeds.
++
+`cleave` has *known issues* with multiple delimiters in sequence (e.g. two
+spaces between words instead of one) and if the string begins with a delimiter.
+See the source code for more detail.
 compile-only:: Mark last word in dictionary as compile-only.
 digit?:: `( char -- u f | char f )` If character is a digit, convert and set flag to
 `true`, otherwise return the offending character and a `false` flag.
