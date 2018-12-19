@@ -6778,6 +6778,28 @@ xt_page:
 z_page:         rts
 
 
+; ## PAREN ( -- ) "Discard input up to close paren ( comment )"
+; ## "paren"  auto  ANS core
+        ; """http://forth-standard.org/standard/core/p"""
+.scope
+xt_paren:       
+                ; Put a right paren on the stack.
+                dex
+                dex
+                lda #41     ; Right parenthesis
+                sta 0,x
+                stz 1,x
+                ; Call parse.
+                jsr xt_parse
+                ; Throw away the result.
+                inx
+                inx
+                inx
+                inx
+z_paren:        rts
+.scend
+
+
 ; ## PARSE_NAME ( "name" -- addr u ) "Parse the input"
 ; ## "parse-name"  auto  ANS core ext
         ; """https://forth-standard.org/standard/core/PARSE-NAME
