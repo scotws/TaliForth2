@@ -32,18 +32,8 @@
 .alias base      user0+24  ; number radix, default 10
 .alias nc_limit  user0+26  ; limit for Native Compile size
 .alias uf_strip  user0+28  ; flag to strip underflow detection code
-.alias tmpbranch user0+30  ; temp storage for 0BRANCH, BRANCH only
-.alias tmp1      user0+32  ; temporary storage
-.alias tmp2      user0+34  ; temporary storage
-.alias tmp3      user0+36  ; temporary storage (especially for print)
-.alias tmpdsp    user0+38  ; temporary DSP (X) storage (two bytes)
-.alias tmptos    user0+40  ; temporary TOS storage
-.alias editor1   user0+42  ; temporary for editors
-.alias editor2   user0+44  ; temporary for editors
-.alias editor3   user0+46  ; temporary for editors
-.alias tohold    user0+48  ; pointer for formatted output 
-.alias scratch   user0+50  ; 8 byte scratchpad (see UM/MOD)
-.alias status    user0+58  ; internal status information
+.alias up        user0+30  ; User Pointer (Address of user variables)
+.alias status    user0+32  ; internal status information
                            ; (used by : :NONAME ; ACCEPT)
                            ; Bit 6 = 1 for normal ":" definitions
                            ;         WORKWORD contains nt of word being compiled
@@ -57,8 +47,18 @@
                            ; Bit 1 = Current history buffer (0-7, wraps)
                            ; Bit 0 = Current history buffer lsb
                            ; status+1 is used by ACCEPT to hold history lengths.
+.alias tmpbranch user0+34  ; temp storage for 0BRANCH, BRANCH only
+.alias tmp1      user0+36  ; temporary storage
+.alias tmp2      user0+38  ; temporary storage
+.alias tmp3      user0+40  ; temporary storage (especially for print)
+.alias tmpdsp    user0+42  ; temporary DSP (X) storage (two bytes)
+.alias tmptos    user0+44  ; temporary TOS storage
+.alias editor1   user0+46  ; temporary for editors
+.alias editor2   user0+48  ; temporary for editors
+.alias editor3   user0+50  ; temporary for editors
+.alias tohold    user0+52  ; pointer for formatted output 
+.alias scratch   user0+54  ; 8 byte scratchpad (see UM/MOD)
         
-.alias up        user0+60  ; User Pointer (Address of user variables)
 
 ; Zero Page:                
 ; Bytes used for variables: 62 ($0000-$003D) 
