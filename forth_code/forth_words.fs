@@ -1,5 +1,5 @@
 \ List of high-level Forth words for Tali Forth 2 for the 65c02
-\ This version: 18. Dec 2018
+\ This version: 19. Dec 2018
 
 \ Version date is not changed for simple update of date
 \ string in splash quotes at end of file
@@ -47,33 +47,6 @@
 \ Temporary high-level words. TODO convert these to assembler
         : 2constant ( d -- ) create swap , , does> dup @ swap cell+ @ ;
         : 2literal ( d -- ) swap postpone literal postpone literal ; immediate
-        : hexstore ( addr1 u1 addr2 -- u2 )
-				\ Save copy of original address to calculate u2
-				dup 2>r              ( addr1 u1 ) ( R: addr2 addr2 )
-				begin                ( addr1 u1 ) ( R: addr2 addr2 )
-            dup 0<> while
-					bl cleave        ( addr1 u1 addr3 u3 ) ( R: addr2 addr2 )
-					\ Prepare conversion: double 0 for number
-					2>r 0. 2r>       ( addr1 u1 0 0 addr3 u3 ) ( R: addr2 addr2 )
-					>number          ( addr1 u1 n n addr4 u4 ) ( R: addr2 addr2 )
-					\ If u4 is not zero, we have leftover chars and have to do
-               \ things differently
-               dup 0= if
-                   \ -- normal case
-                   2drop            ( addr1 u1 n n ) ( R: addr2 addr2 )
-                   d>s              ( addr1 u1 n ) ( R: addr2 addr2 )
-                   \ Store our value
-                   r@               ( addr1 u1 n addr2 ) ( R: addr2 addr2 )
-                   c!               ( addr1 u1 ) ( R: addr2 addr2 )
-                   \ Increase counter
-                   r> 1+ >r         ( addr1 u1 ) ( R: addr2+1 addr2 )
-               else         
-                   \ -- pathological case
-                   2drop 2drop 
-               then 
-				repeat
-				2drop 2r>            ( addr2+n addr2 )
-				swap - ;
 
 \ ===============================================================
 
@@ -98,7 +71,7 @@
 \ generated at the end of the boot process and signal that the other
 \ high-level definitions worked (or at least didn't crash)
         cr .( Tali Forth 2 for the 65c02)
-        cr .( Version BETA 18. Dec 2018 )
+        cr .( Version BETA 19. Dec 2018 )
         cr .( Copyright 2014-2018 Scot W. Stevenson)
         cr .( Tali Forth 2 comes with absolutely NO WARRANTY)
         cr .( Type 'bye' to exit) cr

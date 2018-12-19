@@ -111,6 +111,7 @@ RTS instruction at the end of each word.
 | GREATER_THAN | `>` | ANS core | 24 | **auto** |
 | HERE | `here` | ANS core | 10 | **auto** |
 | HEX | `hex` | ANS core ext | 6 | **auto** |
+| HEXSTORE | `hexstore` | Tali | 82 | **auto** |
 | HOLD | `hold` | ANS core | 21 | **auto** |
 | I | `i` | ANS core | 25 | **auto** |
 | IMMEDIATE | `immediate` | ANS core | 11 | **auto** |
@@ -260,7 +261,7 @@ RTS instruction at the end of each word.
 | EDITOR_LINE | `line` | Tali Editor | 21 | tested |
 | EDITOR_O | `o` | Tali Editor | 48 | tested |
 
-Found **252** native words in `native_words.asm`.
-Of those, **209** were automatically tested and
+Found **253** native words in `native_words.asm`.
+Of those, **210** were automatically tested and
           **1** are not marked as tested at all.
 
