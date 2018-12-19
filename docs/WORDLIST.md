@@ -258,7 +258,7 @@ RTS instruction at the end of each word.
 | EDITOR_ERASE_SCREEN | `erase-screen` | Tali Editor | 17 | tested |
 | EDITOR_EL | `el` | Tali Editor | 17 | tested |
 | EDITOR_L | `l` | Tali Editor | 123 | tested |
-| EDITOR_LINE | `line` | Tali Editor | 21 | tested |
+| EDITOR_LINE | `line` | Tali Editor | 28 | tested |
 | EDITOR_O | `o` | Tali Editor | 48 | tested |
 
 Found **253** native words in `native_words.asm`.

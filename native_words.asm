@@ -11368,6 +11368,10 @@ z_editor_l:            rts
 ; ## "line"  tested  Tali Editor
 .scope
 xt_editor_line:
+                cpx #dsp0-1
+                bmi +
+                jmp underflow
+*
                 ; Multiply the TOS by 64 (chars/line) to compute offset.
                 ldy #6          ; *64 is same as left shift 6 times.
 _shift_tos_left:        
