@@ -20,11 +20,32 @@
 ; it hasn't been tested at all (bad). See the test suite for more details.
 
 
-; This table holds all of the initial values                 
+; This table holds all of the initial values for the variables in zero page.                
 cold_zp_table:
+.word cp0 + 256 + 1024  ; cp moved to make room for user vars and block buffer.
+.word dictionary_start  ; dp
+.word 0                 ; workword
+.word 0                 ; insrc (SOURCE-ID is 0 for keyboard)
+.word buffer0           ; cib
+.word 0                 ; ciblen
+.word 0                 ; toin
+.word 0                 ; ip
+.word kernel_putc       ; output
+.word kernel_getc       ; input
+.word 0                 ; havekey
+.word 0                 ; state (0 = interpret)
+.word 10                ; base
+.word 20                ; nc-limit
+.word 0                 ; uf_strip (off by default)
+; No further ZP variables are initialized.
+; status will select a random history buffer to start on,
+; but will go round-robin from there, so no init needed.                
+cold_zp_table_end:
 
+; This table holds the inital values for the user variables.                
 cold_user_table:        
-
+cold_user_table_end:
+                
 ; ## COLD ( -- ) "Reset the Forth system"
 ; ## "cold"  tested  Tali Forth
 ;       """Reset the Forth system. Does not restart the kernel,
