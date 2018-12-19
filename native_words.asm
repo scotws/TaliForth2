@@ -37,7 +37,7 @@ xt_cold:
                 sta output+1
 
                 ; Load all of the important zero page variables from ROM
-                ldx #cold_zp_table_end-cold_zp_table
+                ldx #cold_zp_table_end-cold_zp_table-1
 
 _load_zp_loop:  
                 ; This loop loads them back to front.
@@ -47,6 +47,9 @@ _load_zp_loop:
                 sta 0,x
                 dex
                 bne _load_zp_loop
+                ; Copy the 0th element.
+                lda cold_zp_table
+                sta 0
                 
                 ; initialize 65c02 stack (Return Stack)
                 ldx #rsp0
@@ -57,7 +60,7 @@ _load_zp_loop:
                 ldx #dsp0
 
                 ; Initialize the user variables.
-                ldy #cold_user_table_end-cold_user_table
+                ldy #cold_user_table_end-cold_user_table-1
                 lda #0
 _load_user_vars_loop:
                 ; Like the zero page variables, these are initialized
@@ -66,6 +69,10 @@ _load_user_vars_loop:
                 sta (up),y
                 dey
                 bne _load_user_vars_loop
+                ; Copy the 0th element.
+                lda cold_user_table
+                sta (up)
+                
         
                 jsr xt_cr
 
@@ -231,7 +238,7 @@ z_quit:         ; no RTS required
 ; This table holds all of the initial values for the variables in zero page.
 ; This table is used by COLD.
 cold_zp_table:
-.word cp0+$501          ; cp moved to make room for user vars and block buffer.
+.word cp0+$500          ; cp moved to make room for user vars and block buffer.
 .word dictionary_start  ; dp
 .word 0                 ; workword
 .word 0                 ; insrc (SOURCE-ID is 0 for keyboard)
