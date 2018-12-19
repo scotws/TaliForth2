@@ -56,99 +56,16 @@ _load_zp_loop:
                 ; can load high-level words with EVALUATE
                 ldx #dsp0
 
-                ; Zero out the user variables.
-                ldy #0
+                ; Initialize the user variables.
+                ldy #cold_user_table_end-cold_user_table
                 lda #0
-_zero_user_vars_loop:
+_load_user_vars_loop:
+                ; Like the zero page variables, these are initialized
+                ; back to front.
+                lda cold_user_table,y
                 sta (up),y
-                iny
-                bne _zero_user_vars_loop
-
-                ; Set up the initial dictionary.
-                ; TODO: Load this from a table in ROM
-                ; Wordlists:
-                ldy #current_offset     ; Byte variable CURRENT
-                lda #0
-                sta (up),y      ; Set CURRENT to 0 (FORTH-WORDLIST).
-                iny
-
-                ; Y is already at #WORDLISTS
-                ; ldy #num_wordlists_offset   ; Byte variable #WORDLISTS
-                lda #4          ; 4 wordlists to start:
-                sta (up),y      ; FORTH, EDITOR, and ASSEMBLER, ROOT
-                iny
-
-                ; Y is already at WORDLISTS
-                ; ldy #wordlists_offset
-                lda #<dictionary_start
-                sta (up),y      ; FORTH-WORDLIST
-                iny
-                lda #>dictionary_start
-                sta (up),y
-
-                iny
-                lda #<editor_dictionary_start
-                sta (up),y      ; EDITOR-WORDLIST
-                iny
-                lda #>editor_dictionary_start
-                sta (up),y
-
-                iny
-                lda #<assembler_dictionary_start
-                sta (up),y      ; ASSEMBLER-WORDLIST
-                iny
-                lda #>assembler_dictionary_start
-                sta (up),y
-
-                iny
-                lda #<root_dictionary_start
-                sta (up),y      ; ROOT-WORDLIST
-                iny
-                lda #>root_dictionary_start
-                sta (up),y
-
-                ; Initialize search order list.
-                ldy #num_order_offset   ; Byte variable #ORDER
-                lda #1
-                sta (up),y      ; Initialize #ORDER to 1
-
-                ; USER memory is already initialized to zero.
-                ; ldy #search_order_offset
-                ; lda #0
-                ; sta (up),y      ; Only the FORTH-WORDLIST in the
-                                  ; initial search order.
-
-                ; Initialize the block I/O words.
-                ; Initialize block read vector.
-                ldy #blockread_offset
-                lda #<xt_block_word_error
-                sta (up),y
-                iny
-                lda #>xt_block_word_error
-                sta (up),y
-                ; Initialize write vector too.
-                iny
-                lda #<xt_block_word_error
-                sta (up),y
-                iny
-                lda #>xt_block_word_error
-                sta (up),y
-                
-
-                ; Initialize Block buffer
-                ; Use HERE as the buffer address.
-                ldy #blkbuffer_offset
-                lda cp
-                sta (up),y
-                iny
-                lda cp+1
-                sta (up),y
-                ; Reserve 1024 bytes
-                lda #4
-                clc
-                adc cp+1
-                sta cp+1
-                ; END OF USER VAR INITIALIZATION
+                dey
+                bne _load_user_vars_loop
         
                 jsr xt_cr
 
@@ -314,7 +231,7 @@ z_quit:         ; no RTS required
 ; This table holds all of the initial values for the variables in zero page.
 ; This table is used by COLD.
 cold_zp_table:
-.word cp0 + 256 + 1024  ; cp moved to make room for user vars and block buffer.
+.word cp0+$501          ; cp moved to make room for user vars and block buffer.
 .word dictionary_start  ; dp
 .word 0                 ; workword
 .word 0                 ; insrc (SOURCE-ID is 0 for keyboard)
@@ -349,7 +266,7 @@ cold_user_table:
 .word 0,0,0,0,0,0,0,0           ; User wordlists
 .byte 1         ; #ORDER
 .byte 0,0,0,0,0,0,0,0,0         ; search-order
-.word cp0+256   ; Address of buffer (right after USER vars)
+.word cp0+$100  ; Address of buffer (right after USER vars)
 .word 0         ; block in buffer                
 .word 0         ; buffer status (not in use)
 .word xt_block_word_error       ; block-read vector
