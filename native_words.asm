@@ -1701,9 +1701,21 @@ xt_cleave:
                 bmi +
                 jmp underflow
 *
-                ; We arrive here with ( addr u c ) Move the delimiter c out
-                ; of the way
-                ldy 0,x
+                ; We arrive here with ( addr u c ). If we were given a space as
+                ; the delimiter, we split on all whitespace just like
+                ; PARSE-NAME so we can work with blocks and the ed line editor.
+                ; To signal this downstream, we convert any whitespace to
+                ; a space.
+                lda 0,x
+                jsr is_whitespace       ; does not change A
+                bcc _not_whitespace
+                
+                ; We have whitespace of some sort, so we make the delimiter
+                ; a space
+                lda #AscSP 
+                
+_not_whitespace:                
+                tay
 
                 ; DROP 2DUP but in assembler because we want to be fast, fast,
                 ; so we'll just overwrite c
@@ -1728,9 +1740,26 @@ xt_cleave:
 _loop:
                 ; We have at least one character
                 tya                     ; Y is our delimiter storage
+
+                ; Handle whitespace of all sorts. We used a space as the flag
+                ; for all whitespace
+                cmp #AscSP              
+                bne _compare_non_whitespace
+
+                ; It's a space, so we use all sorts of whitespace as
+                ; a delimiter. We have to this check every time because we
+                ; might be dealing with various forms of whitespace - tabs,
+                ; spaces, end of lines etc
+                lda (2,x)
+                jsr is_whitespace       ; does not change Y
+                bcs _found_delimiter
+                bra _other_char
+
+_compare_non_whitespace:
                 cmp (2,x) 
                 beq _found_delimiter
 
+                ; fall through to _other_char
 _other_char:
                 ; Decrease length ...
                 lda 0,x
@@ -4860,6 +4889,10 @@ z_hex:          rts
         ; """
 .scope 
 xt_hexstore:         
+                cpx #dsp0-5
+                bmi +
+                jmp underflow
+*
                 jsr xt_dup              ; Save copy of original address
                 jsr xt_two_to_r         ; ( addr1 u1 ) ( R: addr2 addr2 )
 

@@ -53,7 +53,7 @@ RTS instruction at the end of each word.
 | CHAR | `char` | ANS core | 22 | **auto** |
 | CHAR_PLUS | `char+` | ANS core | 0 | **auto** |
 | CHARS | `chars` | ANS core | 7 | **auto** |
-| CLEAVE | `cleave` | Tali Forth | 142 | **auto** |
+| CLEAVE | `cleave` | Tali Forth | 163 | **auto** |
 | CMOVE | `cmove` | ANS string | 62 | **auto** |
 | CMOVE_UP | `cmove>` | ANS string | 62 | **auto** |
 | COLON | `:` | ANS core | 64 | **auto** |
@@ -111,7 +111,7 @@ RTS instruction at the end of each word.
 | GREATER_THAN | `>` | ANS core | 24 | **auto** |
 | HERE | `here` | ANS core | 10 | **auto** |
 | HEX | `hex` | ANS core ext | 6 | **auto** |
-| HEXSTORE | `hexstore` | Tali | 82 | **auto** |
+| HEXSTORE | `hexstore` | Tali | 89 | **auto** |
 | HOLD | `hold` | ANS core | 21 | **auto** |
 | I | `i` | ANS core | 25 | **auto** |
 | IMMEDIATE | `immediate` | ANS core | 11 | **auto** |

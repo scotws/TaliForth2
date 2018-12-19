@@ -1,7 +1,7 @@
 ; Tali Forth 2 for the 65c02
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 19. Jan 2014 (Tali Forth)
-; This version: 13. Dec 2018
+; This version: 18. Dec 2018
 
 ; This is the main file for Tali Forth 2
 
@@ -463,7 +463,7 @@ is_whitespace:
         ; 32 is SPACE). Returns the result in the Carry Flag: 
         ; 0 (clear) is no, it isn't whitespace, while 1 (set) means
         ; that it is whitespace. See PARSE and PARSE-NAME for
-        ; a discussion of the uses
+        ; a discussion of the uses. Does not change A or Y.
                 cmp #00                 ; explicit comparison
                 bcc _done
                 cmp #AscSP + 1
