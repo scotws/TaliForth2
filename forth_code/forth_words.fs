@@ -12,7 +12,7 @@
 \ Output and comment. Because it still blows my mind that we can
 \ define this stuff this simply 
 \        : ( [char] ) parse 2drop ; immediate
-        : .( [char] ) parse type ; immediate
+\        : .( [char] ) parse type ; immediate
 
 \ Flow control. Some of these could be realized with CS-ROLL and
 \ CS-PICK instead, which seems to be all the rage these days.

@@ -3487,8 +3487,27 @@ z_dot:          rts
 .scend
 
 
+; ## DOT_PAREN ( -- ) "Print input up to close paren .( comment )"
+; ## ".("  auto  ANS core
+        ; """http://forth-standard.org/standard/core/Dotp"""
+.scope
+xt_dot_paren:
+                ; Put a right paren on the stack.
+                dex
+                dex
+                lda #41     ; Right parenthesis
+                sta 0,x
+                stz 1,x
+                ; Call parse.
+                jsr xt_parse
+                ; Print the contents
+                jsr xt_type
+z_dot_paren:    rts
+.scend
+
+
 ; ## DOT_QUOTE ( "string" -- ) "Print string from compiled word"
-; ## ".""  auto  ANS core
+; ## ".""  auto  ANS core ext
         ; """https://forth-standard.org/standard/core/Dotq
         ; Compile string that is printed during run time. ANS Forth wants
         ; this to be compile-only, even though everybody and their friend
@@ -6779,7 +6798,7 @@ z_page:         rts
 
 
 ; ## PAREN ( -- ) "Discard input up to close paren ( comment )"
-; ## "paren"  auto  ANS core
+; ## "("  auto  ANS core
         ; """http://forth-standard.org/standard/core/p"""
 .scope
 xt_paren:       
