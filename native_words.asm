@@ -36,12 +36,18 @@ xt_cold:
                 lda #>kernel_putc
                 sta output+1
 
-                ; set the INPUT vector to the default kernel_getc
-                lda #<kernel_getc
-                sta input
-                lda #>kernel_getc
-                sta input+1
-                 
+                ; Load all of the important zero page variables from ROM
+                ldx #cold_zp_table_end-cold_zp_table
+
+_load_zp_loop:  
+                ; This loop loads them back to front.
+                ; We can use X here because Tali hasn't started
+                ; using the stack yet.
+                lda cold_zp_table,x
+                sta 0,x
+                dex
+                bne _load_zp_loop
+                
                 ; initialize 65c02 stack (Return Stack)
                 ldx #rsp0
                 txs
@@ -49,39 +55,6 @@ xt_cold:
                 ; Clear Data Stack. This is repeated in ABORT, but this way we
                 ; can load high-level words with EVALUATE
                 ldx #dsp0
-
-                ; Start out with radix 10
-                lda #10
-                sta base
-                stz base+1
-
-                ; We start out with smaller words with less than 20 bytes being
-                ; natively compiled. This number should at least cover DROP
-                ; with 11 bytes and DUP with 19 bytes
-                lda #20
-                sta nc_limit
-                stz nc_limit+1
- 
-                ; Default is not to strip underflow detection code out of
-                ; natively compiled words
-                stz uf_strip
-                stz uf_strip+1
-     
-                ; The compiler pointer (CP) points to the first free byte
-                ; in the Dictionary
-                lda #<cp0
-                sta cp
-                lda #>cp0
-                sta cp+1
-
-                ; Put the user variables right at the beginning of the
-                ; dictionary.
-                lda cp
-                sta up
-                lda cp+1
-                sta up+1
-                ; Reserve 256 bytes for user variables.
-                inc cp+1
 
                 ; Zero out the user variables.
                 ldy #0
@@ -177,29 +150,6 @@ _zero_user_vars_loop:
                 sta cp+1
                 ; END OF USER VAR INITIALIZATION
         
-                lda #<buffer0   ; input buffer
-                sta cib
-                lda #>buffer0
-                sta cib+1 
-
-                stz ciblen      ; input buffer starts empty
-                stz ciblen+1
-
-                stz insrc       ; SOURCE-ID is zero (keyboard)
-                stz insrc+1
-
-                stz state       ; STATE is zero (interpret mode)
-                stz state+1
-     
-                ; The name token (nt) of DROP is always the first one in the
-                ; new Dictionary, so we start off the Dictionary Pointer (DP)
-                ; there. Anything that comes after that (with WORDS, before
-                ; that) is high-level from Forth
-                lda #<dictionary_start
-                sta dp
-                lda #>dictionary_start
-                sta dp+1
-
                 jsr xt_cr
 
                 ; Define high-level words in forth_words.asm via EVALUATE
@@ -379,14 +329,31 @@ cold_zp_table:
 .word 10                ; base
 .word 20                ; nc-limit
 .word 0                 ; uf_strip (off by default)
+.word cp0               ; up (user vars put right at beginning of available RAM)
+.word 0                 ; status                
 ; No further ZP variables are initialized.
-; status will select a random history buffer to start on,
-; but will go round-robin from there, so no init needed.
+; The variables past this point are all temporaries.
 cold_zp_table_end:
 
 ; This table holds the inital values for the user variables.
 ; This table is used by COLD.
 cold_user_table:
+.word 0         ; BLK
+.word 0         ; SCR
+.byte 0         ; CURRENT = FORTH-WORDLIST
+.byte 4         ; #WORDLISTS (FORTH EDITOR ASSEMBLER ROOT)
+.word dictionary_start          ; FORTH-WORDLIST
+.word editor_dictionary_start   ; EDITOR-WORDLIST
+.word assembler_dictionary_start ; ASSEMBLER-WORDLIST
+.word root_dictionary_start     ; ROOT-WORDLIST
+.word 0,0,0,0,0,0,0,0           ; User wordlists
+.byte 1         ; #ORDER
+.byte 0,0,0,0,0,0,0,0,0         ; search-order
+.word cp0+256   ; Address of buffer (right after USER vars)
+.word 0         ; block in buffer                
+.word 0         ; buffer status (not in use)
+.word xt_block_word_error       ; block-read vector
+.word xt_block_word_error       ; block-write vector
 cold_user_table_end:
 
 
