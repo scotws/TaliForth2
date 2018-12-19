@@ -253,9 +253,14 @@ RTS instruction at the end of each word.
 | ZERO_GREATER | `0>` | ANS core ext | 23 | **auto** |
 | ZERO_LESS | `0<` | ANS core | 19 | **auto** |
 | ZERO_UNEQUAL | `0<>` | ANS core ext | 21 | **auto** |
-| L | `l` | Tali Editor | 123 | tested |
+| EDITOR_ENTER_SCREEN | `enter-screen` | Tali Editor | 27 | **auto** |
+| EDITOR_ERASE_SCREEN | `erase-screen` | Tali Editor | 17 | tested |
+| EDITOR_EL | `el` | Tali Editor | 17 | tested |
+| EDITOR_L | `l` | Tali Editor | 123 | tested |
+| EDITOR_LINE | `line` | Tali Editor | 21 | tested |
+| EDITOR_O | `o` | Tali Editor | 48 | tested |
 
-Found **247** native words in `native_words.asm`.
-Of those, **208** were automatically tested and
+Found **252** native words in `native_words.asm`.
+Of those, **209** were automatically tested and
           **1** are not marked as tested at all.
 

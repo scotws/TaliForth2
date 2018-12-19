@@ -14,30 +14,8 @@ T{ teststring 0 block swap move update flush -> }T
 \ See if it's in the ramdrive.
 T{ ramdrive teststringlength teststring compare -> 0 }T
 
-\ We don't have an official editor yet, so bring in just
-\ enough to create some basic screens.
-decimal
-( Editor )
-( line provides the address, in the buffer, of the given line )
-: line  ( line# - c-addr)
-    64 *        ( Convert line number to # characters offset )
-    scr @ block ( Get the buffer address for that block )
-    + ;         ( Add the offset )
-
-: E ( line# - ) ( Erase the given line number with spaces )
-    line 64 blank update ;
-
-: O     ( line# - ) ( Overwrite line with new text )
-    dup E                    ( Erase existing text on line )
-    cr dup 2 u.r ."  * " line 64 accept drop update ;
-
-( Editor, continued )
-: enter-screen ( scr# - )
-  dup scr ! buffer drop
-  16 0 do i o loop ;
-: erase-screen ( scr# - )
-  dup scr ! buffer 1024 blank update ;
-
+\ Bring in the editor wordlist.
+editor-wordlist >order
 
 T{ 0 erase-screen flush -> }T
 
