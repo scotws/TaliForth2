@@ -3789,6 +3789,30 @@ z_editor_wordlist:
                 rts
 
 
+; ## ELSE (C: orig -- orig) ( -- ) "Conditional flow control"
+; ## "else"  auto  ANS core
+        ; """http://forth-standard.org/standard/core/ELSE"""
+.scope
+xt_else:
+                ; Put an unconditional branch.
+                jsr xt_branch
+                ; Put the address of the branch address on the stack.
+                jsr xt_here
+                ; Use zero for the branch address for now.
+                ; THEN will fill it in later.
+                jsr xt_zero
+                jsr xt_comma
+                ; Get the address to jump to (just after the
+                ; unconditional branch) for the IF to jump to
+                ; when false.
+                jsr xt_here
+                jsr xt_rot
+                ; Update the original if 0branch address.
+                jsr xt_store
+z_else:         rts
+.scend
+
+
 ; ## EMIT ( char -- ) "Print character to current output"
 ; ## "emit"  auto  ANS core
         ; """https://forth-standard.org/standard/core/EMIT
@@ -7570,6 +7594,22 @@ _src_not_string:
 
 _done:
 z_refill:       rts
+.scend
+
+
+; ## REPEAT (C: orig dest -- ) ( -- ) "Loop flow control"
+; ## "repeat"  auto  ANS core
+        ; """http://forth-standard.org/standard/core/REPEAT"""
+.scope
+xt_repeat:
+                ; Run again first
+                jsr xt_again
+                ; Stuff HERE in for the branch address
+                ; to get out of the loop
+                jsr xt_here
+                jsr xt_swap
+                jsr xt_store
+z_repeat:       rts
 .scend
 
 
