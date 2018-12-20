@@ -10799,6 +10799,21 @@ z_unloop:       rts
 .scend
 
 
+; ## UNTIL (C: dest -- ) ( -- ) "Loop flow control"
+; ## "until"  auto  ANS core
+        ; """http://forth-standard.org/standard/core/UNTIL"""
+.scope
+xt_until:
+                ; Compile a 0branch
+                jsr xt_zero_branch
+                ; The address to loop back to is on the stack.
+                ; Just compile it as the destination for the
+                ; 0branch.
+                jsr xt_comma
+z_until:        rts
+.scend
+
+
 ; ## UNUSED ( -- u ) "Return size of space available to Dictionary"
 ; ## "unused"  auto  ANS core ext
         ; """https://forth-standard.org/standard/core/UNUSED

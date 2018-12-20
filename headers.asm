@@ -266,9 +266,14 @@ nt_useraddr:
         .word nt_buffer_colon, xt_useraddr, z_useraddr
         .byte "useraddr"
 
+nt_until:
+        .byte 5, IM+CO+NN
+        .word nt_useraddr, xt_until, z_until
+        .byte "until"
+
 nt_repeat:
         .byte 6, IM+CO+NN
-        .word nt_useraddr, xt_repeat, z_repeat
+        .word nt_until, xt_repeat, z_repeat
         .byte "repeat"
 
 nt_else:
