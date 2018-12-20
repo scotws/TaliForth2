@@ -89,9 +89,13 @@ RTS instruction at the end of each word.
 | DOT_QUOTE | `."` | ANS core ext | 10 | **auto** |
 | DOT_R | `.r` | ANS core ext | 49 | tested |
 | DOT_S | `.s` | ANS tools | 67 | tested |
+<<<<<<< HEAD
 | D_DOT | `d.` | ANS double | 34 | tested |
 | D_DOT_R | `d.r` | ANS double | 46 | tested |
 | DROP | `drop` | ANS core | 9 | **auto** |
+=======
+| DROP | `drop` | ANS core | 7 | **auto** |
+>>>>>>> Underflow check proof of concept
 | DUMP | `dump` | ANS tools | 106 | tested |
 | DUP | `dup` | ANS core | 17 | **auto** |
 | ED | `ed` | Tali Forth | 3 | *fragment* |

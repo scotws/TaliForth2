@@ -1,7 +1,7 @@
 ; Tali Forth 2 for the 65c02
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 19. Jan 2014 (Tali Forth)
-; This version: 18. Dec 2018
+; This version: 20. Dec 2018
 
 ; This is the main file for Tali Forth 2
 
@@ -477,12 +477,41 @@ _done:
 .scend
 
 
-underflow:
-        ; """Landing area for data stack underflow"""
+underflow_test:
+        ; """Test for underflow. We arrive here with the number of cells (not:
+        ; bytes) on Data Stack required in A. If we have fewer entries than
+        ; required, abort proccessing with an error. The subroutine jump to
+        ; this code eats a lot of cycles, but saves storage space. Remember you
+        ; can strip out underflow checks when defining new words, see the
+        ; manual for details.
+        ; """
+
+                ; To calculate the number of bytes to subtract from DSP0,
+                ; multiply the number of cells needed by two (shift left once)
+                ; and subtract one. This gives us dsp0-1 for one entry, dsp0-3
+                ; for two entries, dsp0-5 for three entries, etc
+                asl
+                dec
+
+                ; This number needs to be compared with X. This is not really
+                ; what tmpdsp is usually used for, but we don't want to touch
+                ; tmp1 or such unless we have to
+                sta tmpdsp              
+                lda #dsp0
+                sec
+                sbc tmpdsp
+                sta tmpdsp
+
+                cpx tmpdsp
+                bpl +
+                rts                     ; all is well 
+*
+                ; We are in underflow. Load the approriate error code and drop
+                ; through to the main error routine
+
+underflow:      ; TODO legacy label, remove once we have converted all routines
+
                 lda #err_underflow
-
-                ; fall through to error
-
 error: 
         ; """Given the error number in A, print the associated error string and 
         ; call ABORT. Uses tmp3.

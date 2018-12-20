@@ -3679,10 +3679,9 @@ z_d_dot_r:      rts
 ; ## "drop"  auto  ANS core
         ; """https://forth-standard.org/standard/core/DROP"""
 xt_drop:        
-                cpx #dsp0-1
-                bmi +
-                jmp underflow
-*
+                lda #1
+                jsr underflow_test
+
                 inx
                 inx
 z_drop:         rts
