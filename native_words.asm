@@ -5044,6 +5044,27 @@ z_i:            rts
 .scend
 
 
+; ## IF (C: -- orig) (flag -- ) "Conditional flow control"
+; ## "if"  auto  ANS core
+        ; """http://forth-standard.org/standard/core/IF"""
+.scope
+xt_if:
+                ; Compile a 0branch
+                jsr xt_zero_branch
+                ; Put the origination address on the stack for else/then
+                jsr xt_here
+                ; Stuff zero in for the branch address right now.
+                ; THEN or ELSE will fix it later.
+                dex
+                dex
+                stz 0,x
+                stz 1,x
+                jsr xt_comma
+z_if:           rts
+.scend
+
+
+
 ; ## IMMEDIATE ( -- ) "Mark most recent word as IMMEDIATE"
 ; ## "immediate"  auto  ANS core
         ; """https://forth-standard.org/standard/core/IMMEDIATE

@@ -266,9 +266,14 @@ nt_useraddr:
         .word nt_buffer_colon, xt_useraddr, z_useraddr
         .byte "useraddr"
 
+nt_if:
+        .byte 2, IM+CO+NN
+        .word nt_useraddr, xt_if, z_if
+        .byte "if"
+
 nt_dot_paren:
         .byte 2, IM
-        .word nt_useraddr, xt_dot_paren, z_dot_paren
+        .word nt_if, xt_dot_paren, z_dot_paren
         .byte ".("
 
 nt_paren:

@@ -16,7 +16,7 @@
 
 \ Flow control. Some of these could be realized with CS-ROLL and
 \ CS-PICK instead, which seems to be all the rage these days.
-        : if postpone 0branch here 0 , ; immediate compile-only
+\        : if postpone 0branch here 0 , ; immediate compile-only
         : then here swap ! ; immediate compile-only
         : else postpone branch here 0 , here rot ! ; immediate compile-only
         : repeat postpone again here swap ! ; immediate compile-only
