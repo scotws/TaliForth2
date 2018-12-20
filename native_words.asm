@@ -5061,7 +5061,6 @@ z_if:           rts
 .scend
 
 
-
 ; ## IMMEDIATE ( -- ) "Mark most recent word as IMMEDIATE"
 ; ## "immediate"  auto  ANS core
         ; """https://forth-standard.org/standard/core/IMMEDIATE
@@ -9424,6 +9423,21 @@ xt_swap:
                 sty 1,x
 
 z_swap:         rts
+.scend
+
+
+; ## THEN (C: orig -- ) ( -- ) "Conditional flow control"
+; ## "then"  auto  ANS core
+        ; """http://forth-standard.org/standard/core/THEN"""
+.scope
+xt_then:
+                ; Get the address to jump to.
+                jsr xt_here
+                ; Stuff HERE in for the branch address back
+                ; at the IF or ELSE (origination address is on stack).
+                jsr xt_swap
+                jsr xt_store
+z_then:         rts
 .scend
 
 
