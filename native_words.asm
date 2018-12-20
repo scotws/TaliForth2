@@ -5055,10 +5055,7 @@ xt_if:
                 jsr xt_here
                 ; Stuff zero in for the branch address right now.
                 ; THEN or ELSE will fix it later.
-                dex
-                dex
-                stz 0,x
-                stz 1,x
+                jsr xt_zero
                 jsr xt_comma
 z_if:           rts
 .scend
