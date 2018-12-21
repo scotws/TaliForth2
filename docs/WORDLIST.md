@@ -7,7 +7,7 @@ RTS instruction at the end of each word.
 
 | NAME | FORTH WORD | SOURCE | BYTES | STATUS |
 | :--- | :--------- | :---   | ----: | :----  |
-| COLD | `cold` | Tali Forth | 340 | tested |
+| COLD | `cold` | Tali Forth | 197 | tested |
 | ABORT | `abort` | ANS core | 68 | tested |
 | QUIT | `quit` | ANS core | 66 | tested |
 | ABORT_QUOTE | `abort"` | ANS core | 10 | tested |
@@ -281,7 +281,7 @@ RTS instruction at the end of each word.
 | EDITOR_ERASE_SCREEN | `erase-screen` | Tali Editor | 17 | tested |
 | EDITOR_EL | `el` | Tali Editor | 17 | tested |
 | EDITOR_L | `l` | Tali Editor | 123 | tested |
-| EDITOR_LINE | `line` | Tali Editor | 21 | tested |
+| EDITOR_LINE | `line` | Tali Editor | 28 | tested |
 | EDITOR_O | `o` | Tali Editor | 48 | tested |
 
 Found **276** native words in `native_words.asm`.

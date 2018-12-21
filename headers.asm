@@ -1469,7 +1469,7 @@ nt_editor_l:
         .byte "l"
 
 nt_editor_line:
-        .byte 4, 0
+        .byte 4, UF
         .word nt_editor_l, xt_editor_line, z_editor_line
         .byte "line"
 
