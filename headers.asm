@@ -266,9 +266,14 @@ nt_useraddr:
         .word nt_buffer_colon, xt_useraddr, z_useraddr
         .byte "useraddr"
 
+nt_is:
+        .byte 2, IM
+        .word nt_useraddr, xt_is, z_is
+        .byte "is"
+
 nt_defer_store:
         .byte 6, 0
-        .word nt_useraddr, xt_defer_store, z_defer_store
+        .word nt_is, xt_defer_store, z_defer_store
         .byte "defer!"
 
 nt_defer_fetch:

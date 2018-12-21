@@ -5329,6 +5329,34 @@ xt_invert:
 z_invert:       rts
 
 
+; ## IS ( xt "name" -- ) "Set named word to execute xt"
+; ## "is"  auto  ANS core ext
+        ; """http://forth-standard.org/standard/core/IS"""
+.scope
+xt_is:
+                ; This is a state aware word with differet behavior
+                ; when used while compiling vs interpreting.
+                ; Check STATE
+                lda state
+                ora state+1
+                beq _interpreting
+_compiling:
+                ; Run ['] to compile the xt of the next word
+                ; as a literal.
+                jsr xt_bracket_tick
+                ; Postpone DEFER! by compiling a JSR to it.
+                ldy #>xt_defer_store
+                lda #<xt_defer_store
+                jsr cmpl_subroutine
+                bra _done
+_interpreting:
+                jsr xt_tick
+                jsr xt_defer_store
+_done:          
+z_is:           rts
+.scend
+
+
 ; ## J ( -- n ) (R: n -- n ) "Copy second loop counter to stack"
 ; ## "j"  auto  ANS core
         ; """https://forth-standard.org/standard/core/J
