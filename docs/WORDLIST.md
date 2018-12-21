@@ -49,11 +49,11 @@ RTS instruction at the end of each word.
 | C_COMMA | `c,` | ANS core | 14 | **auto** |
 | C_FETCH | `c@` | ANS core | 13 | **auto** |
 | C_STORE | `c!` | ANS core | 15 | **auto** |
-| CASE | `case` | ANS core ext | 3 | **auto** |
+| CASE | `case` | ANS core ext | 6 | **auto** |
 | CELL_PLUS | `cell+` | ANS core | 19 | **auto** |
 | CELLS | `cells` | ANS core | 11 | **auto** |
 | CHAR | `char` | ANS core | 22 | **auto** |
-| CHAR_PLUS | `char+` | ANS core | 0 | **auto** |
+| CHAR_PLUS | `char+` | ANS core | 13 | **auto** |
 | CHARS | `chars` | ANS core | 7 | **auto** |
 | CLEAVE | `cleave` | Tali Forth | 163 | **auto** |
 | CMOVE | `cmove` | ANS string | 62 | **auto** |
@@ -100,23 +100,23 @@ RTS instruction at the end of each word.
 | EMIT | `emit` | ANS core | 14 | **auto** |
 | EMPTY_BUFFERS | `empty-buffers` | ANS block ext | 6 | tested |
 | ENDCASE | `endcase` | ANS core ext | 20 | **auto** |
-| ENDOF | `endof` | ANS core ext | 3 | **auto** |
+| ENDOF | `endof` | ANS core ext | 21 | **auto** |
 | ENVIRONMENT_Q | `environment?` | ANS core | 128 | **auto** |
 | EQUAL | `=` | ANS core | 31 | **auto** |
 | BLANK | `blank` | ANS string | 86 | **auto** |
 | ERASE | `erase` | ANS core ext | 76 | **auto** |
 | FILL | `fill` | ANS core | 70 | **auto** |
-| FLUSH | `flush` | ANS block | 9 | **auto** |
-| FORTH_WORDLIST | `forth-wordlist` | ANS search | 6 | **auto** |
-| FORTH | `forth` | ANS search ext | 6 | **auto** |
-| EVALUATE | `evaluate` | ANS core | 129 | **auto** |
 | EXECUTE | `execute` | ANS core | 10 | **auto** |
 | EXIT | `exit` | ANS core | 1 | **auto** |
 | FALSE | `false` | ANS core ext | 6 | **auto** |
 | FETCH | `@` | ANS core | 22 | **auto** |
 | FIND | `find` | ANS core | 75 | **auto** |
 | FIND_NAME | `find-name` | Gforth | 175 | **auto** |
+| FLUSH | `flush` | ANS block | 9 | **auto** |
 | FM_SLASH_MOD | `fm/mod` | ANS core | 58 | **auto** |
+| FORTH | `forth` | ANS search ext | 6 | **auto** |
+| EVALUATE | `evaluate` | ANS core | 129 | **auto** |
+| FORTH_WORDLIST | `forth-wordlist` | ANS search | 6 | **auto** |
 | GET_CURRENT | `get-current` | ANS search | 10 | **auto** |
 | GET_ORDER | `get-order` | ANS search | 40 | **auto** |
 | GREATER_THAN | `>` | ANS core | 24 | **auto** |

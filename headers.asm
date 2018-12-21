@@ -1,7 +1,7 @@
 ; Dictionary Headers for Tali Forth 2
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 05. Dec 2016 (Liara Forth)
-; This version: 19. Dec 2018
+; This version: 21. Dec 2018
 
 ; Dictionary headers are kept separately from the code, which allows various
 ; tricks in the code. We roughly follow the Gforth terminology: The Execution
@@ -111,7 +111,7 @@ nt_forth_wordlist:
         .word nt_only, xt_forth_wordlist, z_forth_wordlist
         .byte "forth-wordlist"
                 
-nt_editor_wordlist:
+nt_editor_wordlist:     ; shares code with ONE
         .byte 15, 0
         .word nt_forth_wordlist, xt_editor_wordlist, z_editor_wordlist
         .byte "editor-wordlist"
@@ -293,7 +293,7 @@ nt_endcase:
 
 nt_endof:
         .byte 5, IM+CO+NN
-        .word nt_endcase, xt_endof, z_endof
+        .word nt_endcase, xt_endof, z_endof ; shares code with ELSE
         .byte "endof"
 
 nt_of:
@@ -303,7 +303,7 @@ nt_of:
 
 nt_case:
         .byte 4, IM+CO+NN
-        .word nt_of, xt_case, z_case
+        .word nt_of, xt_case, z_case    ; shares code with ZERO
         .byte "case"
 
 nt_while:
@@ -1417,7 +1417,6 @@ nt_drop:
 
 
 ; ROOT-WORDLIST
-        
         ; This is a short wordlist that has just the words needed to
         ; set the wordlists.  These words are also included in the
         ; FORTH-WORDLIST as well.
@@ -1427,7 +1426,7 @@ nt_root_words:
         .word 0000, xt_words, z_words
         .byte "words"
 
-nt_root_forth_wordlist:
+nt_root_forth_wordlist: ; shares code with ZERO
         .byte 14, 0
         .word nt_root_words, xt_forth_wordlist, z_forth_wordlist
         .byte "forth-wordlist"
