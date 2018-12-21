@@ -1594,6 +1594,17 @@ xt_c_store:
 z_c_store:      rts
 
 
+; ## CASE (C: -- 0) ( -- ) "Conditional flow control"
+; ## "case"  auto  ANS core ext
+        ; """http://forth-standard.org/standard/core/CASE"""
+.scope
+xt_case:
+                ; Put a zero on the stack.
+                jsr xt_zero
+z_case:         rts
+.scend
+
+
 ; ## CELL_PLUS ( u -- u ) "Add cell size in bytes"
 ; ## "cell+"  auto  ANS core
         ; """https://forth-standard.org/standard/core/CELLPlus
@@ -10903,7 +10914,7 @@ z_variable:     rts
 
 
 ; ## WHILE ( C: dest -- orig dest ) ( x -- ) "Loop flow control"
-; ## "while"  auto  ANS core ext
+; ## "while"  auto  ANS core
         ; """http://forth-standard.org/standard/core/WHILE"""
 .scope
 xt_while:
