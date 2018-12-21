@@ -3865,6 +3865,36 @@ z_empty_buffers:
                 rts
         
 
+; ## ENDCASE (C: case-sys -- ) ( x -- ) "Conditional flow control" 
+; ## "endcase"  auto  ANS core ext
+        ; """http://forth-standard.org/standard/core/ENDCASE"""
+.scope
+xt_endcase:
+                ; Postpone DROP to remove the item
+                ; being checked.
+                ldy #>xt_drop
+                lda #<xt_drop
+                jsr cmpl_subroutine
+                ; There are a number of address (of branches
+                ; that need their jump addressed filled in with
+                ; the address of right here).  Keep calling
+                ; THEN to deal with them until we reach the
+                ; 0 that CASE put on the stack at the beginning.
+_endcase_loop:  
+                ; Check for 0 on the stack.
+                lda 0,x
+                ora 1,x
+                beq _done
+                jsr xt_then
+                bra _endcase_loop
+_done:
+                ; Remove the 0 from the stack.
+                inx
+                inx
+z_endcase:      rts
+.scend
+
+
 ; ## ENDOF (C: case-sys1 of-sys1-- case-sys2) ( -- ) "Conditional flow control" 
 ; ## "endof"  auto  ANS core ext
         ; """http://forth-standard.org/standard/core/ENDOF"""
