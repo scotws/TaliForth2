@@ -266,9 +266,19 @@ nt_useraddr:
         .word nt_buffer_colon, xt_useraddr, z_useraddr
         .byte "useraddr"
 
+nt_defer_store:
+        .byte 6, 0
+        .word nt_useraddr, xt_defer_store, z_defer_store
+        .byte "defer!"
+
+nt_defer_fetch:
+        .byte 6, 0
+        .word nt_defer_store, xt_defer_fetch, z_defer_fetch
+        .byte "defer@"
+
 nt_endcase:
         .byte 7, IM+CO+NN
-        .word nt_useraddr, xt_endcase, z_endcase
+        .word nt_defer_fetch, xt_endcase, z_endcase
         .byte "endcase"
 
 nt_endof:

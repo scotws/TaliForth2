@@ -3057,6 +3057,36 @@ z_defer:        rts
 .scend
 
         
+; ## DEFER_FETCH ( xt1 -- xt2 ) "Get the current XT for a deferred word"
+; ## "defer@"  auto  ANS core ext
+        ; """http://forth-standard.org/standard/core/DEFERFetch"""
+.scope
+xt_defer_fetch:
+                cpx #dsp0-1
+                bmi +
+                jmp underflow
+*
+                jsr xt_to_body
+                jsr xt_fetch
+z_defer_fetch:  rts
+.scend
+                
+
+; ## DEFER_STORE ( xt2 x1 -- ) "Set xt1 to execute xt2"
+; ## "defer!"  auto  ANS core ext
+        ; """http://forth-standard.org/standard/core/DEFERStore"""
+.scope
+xt_defer_store:
+                cpx #dsp0-3
+                bmi +
+                jmp underflow
+*
+                jsr xt_to_body
+                jsr xt_store
+z_defer_store:  rts
+.scend
+
+
 ; ## DEFINITIONS ( -- ) "Make first wordlist in search order the current wordlist"
 ; ## "definitions" auto ANS search
 xt_definitions:
