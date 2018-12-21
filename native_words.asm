@@ -3593,6 +3593,37 @@ z_dot_quote:    rts
 .scend
 
 
+; ## DOT_R ( n u -- ) "Print NOS as unsigned number with TOS with"
+; ## ".r"  auto  ANS core ext
+        ; """https://forth-standard.org/standard/core/DotR"""
+
+.scope
+xt_dot_r:         
+                cpx #dsp0-3
+                bmi +
+                jmp underflow
+*
+                ; From the forth code:
+; : .r >r dup abs 0 <# #s rot sign #> r> over - spaces type ;
+                jsr xt_to_r
+                jsr xt_dup
+                jsr xt_abs
+                jsr xt_zero
+                jsr xt_less_number_sign
+                jsr xt_number_sign_s
+                jsr xt_rot
+                jsr xt_sign
+                jsr xt_number_sign_greater
+                jsr xt_r_from
+                jsr xt_over
+                jsr xt_minus
+                jsr xt_spaces
+                jsr xt_type
+
+z_dot_r:      rts 
+.scend
+        
+        
 ; ## DOT_S ( -- ) "Print content of Data Stack"
 ; ## ".s"  tested  ANS tools 
         ; """https://forth-standard.org/standard/tools/DotS
