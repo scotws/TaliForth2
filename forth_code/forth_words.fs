@@ -32,7 +32,7 @@
 \        : defer! >body ! ;
 \        : defer@ >body @ ;
 \        : is state @ if postpone ['] postpone defer! else ' defer! then ; immediate
-        : action-of state @ if postpone ['] postpone defer@ else ' defer@ then ; immediate
+\        : action-of state @ if postpone ['] postpone defer@ else ' defer@ then ; immediate
 
 \ Output definitions. Since these usually involve the user, and humans
 \ are slow, these can stay high-level for the moment. However, in this

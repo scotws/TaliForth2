@@ -751,6 +751,34 @@ z_accept:       rts
 .scend
 
 
+; ## ACTION_OF ( "name" -- xt ) "Get named deferred word's xt"
+; ## "action-of"  auto  ANS core ext
+        ; """http://forth-standard.org/standard/core/ACTION-OF"""
+.scope
+xt_action_of:
+                ; This is a state aware word with differet behavior
+                ; when used while compiling vs interpreting.
+                ; Check STATE
+                lda state
+                ora state+1
+                beq _interpreting
+_compiling:
+                ; Run ['] to compile the xt of the next word
+                ; as a literal.
+                jsr xt_bracket_tick
+                ; Postpone DEFER@ by compiling a JSR to it.
+                ldy #>xt_defer_fetch
+                lda #<xt_defer_fetch
+                jsr cmpl_subroutine
+                bra _done
+_interpreting:
+                jsr xt_tick
+                jsr xt_defer_fetch
+_done:          
+z_action_of:           rts
+.scend
+
+
 ; ## AGAIN ( addr -- ) "Code backwards branch to address left by BEGIN"
 ; ## "again"  tested  ANS core ext
         ; """https://forth-standard.org/standard/core/AGAIN"""
