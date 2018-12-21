@@ -6676,6 +6676,30 @@ z_number_sign_s:
 .scend
 
 
+; ## OF (C: -- of-sys) (x1 x2 -- |x1) "Conditional flow control" 
+; ## "of"  auto  ANS core ext
+        ; """http://forth-standard.org/standard/core/OF"""
+.scope
+xt_of:
+                ; Check if value is equal to this case.
+                ; Postpone over (eg. compile a jsr to it)
+                ldy #>xt_over
+                lda #<xt_over
+                jsr cmpl_subroutine
+                ; Pospone = (eg. compile a jsr to it)
+                ldy #>xt_equal
+                lda #<xt_equal
+                jsr cmpl_subroutine
+                jsr xt_if
+                ; If it's true, consume the original value.
+                ; Postpone DROP (eg. compile a jsr to it)
+                ldy #>xt_drop
+                lda #<xt_drop
+                jsr cmpl_subroutine
+z_of:           rts
+.scend
+
+
 ; ## ONE ( -- n ) "Push the number 1 to the Data Stack"
 ; ## "1"  auto  Tali Forth
 xt_one:         
