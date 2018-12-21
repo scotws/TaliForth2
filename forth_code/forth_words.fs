@@ -21,7 +21,7 @@
 \        : else postpone branch here 0 , here rot ! ; immediate compile-only
 \        : repeat postpone again here swap ! ; immediate compile-only
 \        : until postpone 0branch , ; immediate compile-only
-        : while postpone 0branch here 0 , swap ; immediate compile-only
+\        : while postpone 0branch here 0 , swap ; immediate compile-only
         : case 0 ; immediate compile-only 
         : of postpone over postpone = postpone if postpone drop ; immediate compile-only 
         : endof postpone else ; immediate compile-only 

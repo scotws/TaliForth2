@@ -10902,6 +10902,25 @@ xt_variable:
 z_variable:     rts
 
 
+; ## WHILE ( C: dest -- orig dest ) ( x -- ) "Loop flow control"
+; ## "while"  auto  ANS core ext
+        ; """http://forth-standard.org/standard/core/WHILE"""
+.scope
+xt_while:
+                ; Compile a 0branch
+                jsr xt_zero_branch
+                ; Put the address (here) where the destination
+                ; address needs to go so it can be put there later.
+                jsr xt_here
+                ; Fill in the destination address with 0 for now.
+                jsr xt_zero
+                jsr xt_comma
+                ; Swap the two addresses on the stack.
+                jsr xt_swap
+z_while:        rts
+.scend
+
+
 ; ## WITHIN ( n1 n2 n3 -- ) "See if within a range"
 ; ## "within"  auto  ANS core ext
         ; """https://forth-standard.org/standard/core/WITHIN
