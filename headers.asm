@@ -1021,9 +1021,19 @@ nt_two_r_fetch:
         .word nt_two_r_from, xt_two_r_fetch, z_two_r_fetch
         .byte "2r@"
 
+nt_two_literal:
+        .byte 8, UF+IM
+        .word nt_two_r_fetch, xt_two_literal, z_two_literal
+        .byte "2literal"
+
+nt_two_constant:
+        .byte 9, UF
+        .word nt_two_literal, xt_two_constant, z_two_constant
+        .byte "2constant"
+
 nt_two_variable:
         .byte 9, 0
-        .word nt_two_r_fetch, xt_two_variable, z_two_variable
+        .word nt_two_constant, xt_two_variable, z_two_variable
         .byte "2variable"
 
 nt_two_fetch:

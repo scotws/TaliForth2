@@ -45,8 +45,8 @@
 \        : d.r >r tuck dabs <# #s rot sign #> r> over - spaces type ;
 
 \ Temporary high-level words. TODO convert these to assembler
-        : 2constant ( d -- ) create swap , , does> dup @ swap cell+ @ ;
-        : 2literal ( d -- ) swap postpone literal postpone literal ; immediate
+\        : 2constant ( d -- ) create swap , , does> dup @ swap cell+ @ ;
+\        : 2literal ( d -- ) swap postpone literal postpone literal ; immediate
 
 \ ===============================================================
 

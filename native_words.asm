@@ -10678,6 +10678,52 @@ z_two_to_r:     rts
 .scend
 
 
+; ## TWO_CONSTANT (C: d "name" -- ) ( -- d) "Create a constant for a double word"
+; ## "2constant"  auto  ANS double
+        ; """https://forth-standard.org/standard/double/TwoCONSTANT"""
+.scope
+xt_two_constant:
+                cpx #dsp0-3
+                bmi +
+                jmp underflow
+*
+; : 2constant ( d -- ) create swap , , does> dup @ swap cell+ @ ;
+                jsr xt_create
+                jsr xt_swap
+                jsr xt_comma
+                jsr xt_comma
+                
+                jsr does_runtime    ; does> turns into these two routines.
+                jsr dodoes
+                
+                jsr xt_dup
+                jsr xt_fetch
+                jsr xt_swap
+                jsr xt_cell_plus
+                jsr xt_fetch
+                
+z_two_constant: rts
+.scend
+
+
+; ## TWO_LITERAL (C: d -- ) ( -- d) "Compile a literal double word"
+; ## "2literal"  auto  ANS double
+        ; """https://forth-standard.org/standard/double/TwoLITERAL"""
+.scope
+xt_two_literal:
+                cpx #dsp0-3
+                bmi +
+                jmp underflow
+*
+; : 2literal ( d -- ) swap postpone literal postpone literal ; immediate
+                jsr xt_swap
+                jsr xt_literal
+                jsr xt_literal
+                
+z_two_literal:  rts
+.scend
+
+
 ; ## TWO_VARIABLE ( "name" -- ) "Create a variable for a double word"
 ; ## "2variable"  auto  ANS double
         ; """https://forth-standard.org/standard/double/TwoVARIABLE
