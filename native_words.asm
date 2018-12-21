@@ -3515,7 +3515,7 @@ z_dot_quote:    rts
 
 
 ; ## DOT_R ( n u -- ) "Print NOS as unsigned number with TOS with"
-; ## ".r"  auto  ANS core ext
+; ## ".r"  tested  ANS core ext
         ; """https://forth-standard.org/standard/core/DotR"""
 .scope
 xt_dot_r:         
@@ -3623,7 +3623,7 @@ z_dot_s:        rts
 
 
 ; ## D_DOT ( d -- ) "Print double"
-; ## "d."  auto  ANS double
+; ## "d."  tested  ANS double
         ; """http://forth-standard.org/standard/double/Dd"""
 .scope
 xt_d_dot:         
@@ -3648,7 +3648,7 @@ z_d_dot:        rts
         
         
 ; ## D_DOT_R ( d u -- ) "Print double right-justified u wide"
-; ## "d.r"  auto  ANS double
+; ## "d.r"  tested  ANS double
         ; """http://forth-standard.org/standard/double/DDotR"""
 .scope
 xt_d_dot_r:         
@@ -10720,7 +10720,7 @@ z_type:         rts
 
 
 ; ## U_DOT ( u -- ) "Print TOS as unsigned number"
-; ## "u."  auto  ANS core
+; ## "u."  tested  ANS core
         ; """https://forth-standard.org/standard/core/Ud
         ; This is : U. 0 <# #S #> TYPE SPACE ; in Forth
         ; We use the internal assembler function print_u followed
@@ -10741,7 +10741,7 @@ z_u_dot:        rts
 
 
 ; ## U_DOT_R ( u u -- ) "Print NOS as unsigned number with TOS with"
-; ## "u.r"  auto  ANS core ext
+; ## "u.r"  tested  ANS core ext
         ; """https://forth-standard.org/standard/core/UDotR"""
 
 .scope

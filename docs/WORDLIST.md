@@ -87,10 +87,10 @@ RTS instruction at the end of each word.
 | DOT | `.` | ANS core | 37 | **auto** |
 | DOT_PAREN | `.(` | ANS core | 14 | **auto** |
 | DOT_QUOTE | `."` | ANS core ext | 10 | **auto** |
-| DOT_R | `.r` | ANS core ext | 49 | **auto** |
+| DOT_R | `.r` | ANS core ext | 49 | tested |
 | DOT_S | `.s` | ANS tools | 67 | tested |
-| D_DOT | `d.` | ANS double | 34 | **auto** |
-| D_DOT_R | `d.r` | ANS double | 46 | **auto** |
+| D_DOT | `d.` | ANS double | 34 | tested |
+| D_DOT_R | `d.r` | ANS double | 46 | tested |
 | DROP | `drop` | ANS core | 9 | **auto** |
 | DUMP | `dump` | ANS tools | 106 | tested |
 | DUP | `dup` | ANS core | 17 | **auto** |
@@ -248,8 +248,8 @@ RTS instruction at the end of each word.
 | TWO_LITERAL | `2literal` | ANS double | 16 | **auto** |
 | TWO_VARIABLE | `2variable` | ANS double | 14 | **auto** |
 | TYPE | `type` | ANS core | 46 | **auto** |
-| U_DOT | `u.` | ANS core | 15 | **auto** |
-| U_DOT_R | `u.r` | ANS core ext | 37 | **auto** |
+| U_DOT | `u.` | ANS core | 15 | tested |
+| U_DOT_R | `u.r` | ANS core ext | 37 | tested |
 | U_GREATER_THAN | `u>` | ANS core ext | 25 | **auto** |
 | U_LESS_THAN | `u<` | ANS core | 25 | **auto** |
 | UD_DOT | `ud.` | Tali double | 22 | **auto** |
@@ -285,6 +285,6 @@ RTS instruction at the end of each word.
 | EDITOR_O | `o` | Tali Editor | 48 | tested |
 
 Found **276** native words in `native_words.asm`.
-Of those, **233** were automatically tested and
+Of those, **228** were automatically tested and
           **1** are not marked as tested at all.
 
