@@ -29,8 +29,8 @@
 
 \ DEFER and friends. Code taken from ANS Forth specification. Some of
 \ these will be moved to assembler code in due course
-        : defer! >body ! ;
-        : defer@ >body @ ;
+\        : defer! >body ! ;
+\        : defer@ >body @ ;
         : is state @ if postpone ['] postpone defer! else ' defer! then ; immediate
         : action-of state @ if postpone ['] postpone defer@ else ' defer@ then ; immediate
 

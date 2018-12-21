@@ -3062,10 +3062,7 @@ z_defer:        rts
         ; """http://forth-standard.org/standard/core/DEFERFetch"""
 .scope
 xt_defer_fetch:
-                cpx #dsp0-1
-                bmi +
-                jmp underflow
-*
+                ; No underflow checking as >BODY does it.
                 jsr xt_to_body
                 jsr xt_fetch
 z_defer_fetch:  rts
@@ -3077,10 +3074,7 @@ z_defer_fetch:  rts
         ; """http://forth-standard.org/standard/core/DEFERStore"""
 .scope
 xt_defer_store:
-                cpx #dsp0-3
-                bmi +
-                jmp underflow
-*
+                ; No underflow checking as >BODY and ! do it.
                 jsr xt_to_body
                 jsr xt_store
 z_defer_store:  rts
