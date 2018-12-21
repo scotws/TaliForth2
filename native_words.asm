@@ -3726,6 +3726,35 @@ z_d_dot:        rts
 .scend
         
         
+; ## D_DOT_R ( d u -- ) "Print double right-justified u wide"
+; ## "d.r"  auto  ANS double
+        ; """http://forth-standard.org/standard/double/DDotR"""
+.scope
+xt_d_dot_r:         
+                cpx #dsp0-5
+                bmi +
+                jmp underflow
+*
+                ; From the forth code:
+; : d.r >r tuck dabs <# #s rot sign #> r> over - spaces type ;
+                jsr xt_to_r
+                jsr xt_tuck
+                jsr xt_dabs
+                jsr xt_less_number_sign
+                jsr xt_number_sign_s
+                jsr xt_rot
+                jsr xt_sign
+                jsr xt_number_sign_greater
+                jsr xt_r_from
+                jsr xt_over
+                jsr xt_minus
+                jsr xt_spaces
+                jsr xt_type
+
+z_d_dot_r:      rts 
+.scend
+        
+        
 ; ## DROP ( u -- ) "Pop top entry on Data Stack"
 ; ## "drop"  auto  ANS core
         ; """https://forth-standard.org/standard/core/DROP"""

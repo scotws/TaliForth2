@@ -42,7 +42,7 @@
         : ud. <# #s #> type space ;
         : ud.r >r <# #s #> r> over - spaces type ;
 \        : d. tuck dabs <# #s rot sign #> type space ;
-        : d.r >r tuck dabs <# #s rot sign #> r> over - spaces type ;
+\        : d.r >r tuck dabs <# #s rot sign #> r> over - spaces type ;
 
 \ Temporary high-level words. TODO convert these to assembler
         : 2constant ( d -- ) create swap , , does> dup @ swap cell+ @ ;
