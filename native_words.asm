@@ -2378,7 +2378,7 @@ _underflow_strip:
                 
                 ; The user can choose to remove the unterflow testing in those
                 ; words that have the UF flag. This shortens the word by
-                ; 7 bytes if there is no underflow.
+                ; 5 bytes if there is no underflow.
                 
                 ; See if the user wants underflow stripping turned on
                 lda uf_strip
@@ -2390,14 +2390,14 @@ _underflow_strip:
                 and #UF
                 beq _specials_done
 
-                ; If we arrived here, underflow has to go. It's always 7 bytes
+                ; If we arrived here, underflow has to go. It's always 5 bytes
                 ; long (except for PICK, which has a special case that can't
                 ; be stripped)
  
                 ; Adjust xt: Start later
                 clc
                 lda 4,x
-                adc #7
+                adc #5
                 sta 4,x
                 bcc +
                 inc 5,x                  ; we just care about the carry
@@ -2406,7 +2406,7 @@ _underflow_strip:
                 ; Adjust u: End earlier
                 sec
                 lda 0,x
-                sbc #7
+                sbc #5
                 sta 0,x
                 bcs +
                 dec 1,x                  ; we just care about the borrow
@@ -3855,7 +3855,7 @@ z_endof:
 xt_emit:
                 lda #1
                 jsr underflow_test
-; TODO HIER HIER 
+
                 lda 0,x
                 inx
                 inx
@@ -3956,10 +3956,9 @@ z_endcase:      rts
         ; """
 .scope
 xt_environment_q:
-                cpx #dsp0-3
-                bmi +
-                jmp underflow
-*        
+                lda #1
+                jsr underflow_test
+
                 ; This code is table-driven: We walk through the list of
                 ; strings until we find one that matches, and then we take
                 ; the equivalent data from the results table. This is made
@@ -4153,10 +4152,9 @@ _env_results_double:
         ; """https://forth-standard.org/standard/core/Equal"""
 .scope
 xt_equal:       
-                cpx #dsp0-3
-                bmi +
-                jmp underflow
-*               
+                lda #2
+                jsr underflow_test
+
                 lda 0,x                 ; LSB
                 cmp 2,x
                 bne _false
@@ -4221,10 +4219,9 @@ xt_erase:
         ; happens when we reach the end of the address space
         ; """
 xt_fill:        
-                cpx #dsp0-5
-                bmi +
-                jmp underflow
-*
+                lda #3
+                jsr underflow_test
+
                 ; We use tmp1 to hold the address
                 lda 4,x         ; LSB
                 sta tmp1
@@ -4295,10 +4292,9 @@ z_fill:         rts
 ; ## "execute"  auto  ANS core
         ; """https://forth-standard.org/standard/core/EXECUTE"""
 xt_execute:     
-                cpx #dsp0-1
-                bmi +
-                jmp underflow
-*
+                lda #1
+                jsr underflow_test
+
                 jsr doexecute   ; do not combine to JMP (native coding)
 z_execute:      rts
 
@@ -4347,10 +4343,9 @@ z_false:        rts
 ; ## "@"  auto  ANS core
         ; """https://forth-standard.org/standard/core/Fetch"""
 xt_fetch:       
-                cpx #dsp0-1
-                bmi +
-                jmp underflow
-*
+                lda #1
+                jsr underflow_test
+
                 lda (0,x)               ; LSB
                 tay
                 inc 0,x
@@ -4378,10 +4373,9 @@ z_fetch:        rts
         ; """
 .scope
 xt_find:
-                cpx #dsp0-1
-                bmi +
-                jmp underflow
-*
+                lda #1
+                jsr underflow_test
+
                 ; Save address in case conversion fails. We use the
                 ; Return Stack instead of temporary variables like TMP1
                 ; because this is shorter and anybody still using FIND
@@ -4461,10 +4455,9 @@ xt_find_name:
         ; https://www.complang.tuwien.ac.at/forth/gforth/Docs-html/Name-token.html 
         ; FIND calls this word
         ; """
-                cpx #dsp0-3
-                bmi +
-                jmp underflow
-*
+                lda #2
+                jsr underflow_test
+
                 ; check for special case of an empty string (length zero)
                 lda 0,x
                 ora 1,x
@@ -4662,10 +4655,9 @@ z_flush:
         ; """
 .scope
 xt_fm_slash_mod:
-                cpx #dsp0-5
-                bmi +
-                jmp underflow
-*
+                lda #3
+                jsr underflow_test
+
                 ; if sign of n1 is negative, negate both n1 and d
                 stz tmp2        ; default: n is positive
                 lda 1,x         ; MSB of n1
@@ -4740,10 +4732,8 @@ load_evaluate:
         ; """
 .scope
 xt_evaluate:
-                cpx #dsp0-3
-                bmi +
-                jmp underflow
-*
+                lda #2
+                jsr underflow_test
 
                 ; Clear the flag to zero BLK.  Only LOAD will set the flag,
                 ; and will set the block number.
@@ -4939,10 +4929,9 @@ z_get_order:    rts
         ; """https://forth-standard.org/standard/core/more"""
 .scope
 xt_greater_than:
-                cpx #dsp0-3
-                bmi +
-                jmp underflow
-*               
+                lda #2
+                jsr underflow_test
+
                 ldy #0          ; default false
                 jsr compare_16bit
 
@@ -4998,10 +4987,9 @@ z_hex:          rts
         ; """
 .scope 
 xt_hexstore:         
-                cpx #dsp0-5
-                bmi +
-                jmp underflow
-*
+                lda #3
+                jsr underflow_test
+
                 jsr xt_dup              ; Save copy of original address
                 jsr xt_two_to_r         ; ( addr1 u1 ) ( R: addr2 addr2 )
 
@@ -5077,10 +5065,9 @@ z_hexstore:     rts
         ; variable tohold instead of HLD.
         ; """
 xt_hold:        
-                cpx #dsp0-1
-                bmi +
-                jmp underflow
-*
+                lda #1
+                jsr underflow_test
+
                 lda tohold
                 bne +
                 dec tohold+1
@@ -5188,10 +5175,9 @@ z_input:        rts
         ; """
 .scope
 xt_int_to_name: 
-                cpx #dsp0-1
-                bmi +
-                jmp underflow
-*
+                lda #1
+                jsr underflow_test
+
                 ; Unfortunately, to find the header, we have to walk through
                 ; all of the wordlists.
 
@@ -5301,10 +5287,9 @@ z_int_to_name:  rts
 ; ## "invert"  auto  ANS core
         ; """https://forth-standard.org/standard/core/INVERT"""
 xt_invert:
-                cpx #dsp0-1
-                bmi +
-                jmp underflow
-*
+                lda #1
+                jsr underflow_test
+
                 lda #$FF
                 eor 0,x         ; LSB
                 sta 0,x
@@ -5505,10 +5490,9 @@ z_less_number_sign:
         ; """https://forth-standard.org/standard/core/less"""
 .scope
 xt_less_than:
-                cpx #dsp0-3
-                bmi +
-                jmp underflow
-*
+                lda #2
+                jsr underflow_test
+
                 ldy #0          ; default false
                 jsr compare_16bit
 
@@ -5535,10 +5519,9 @@ z_less_than:    rts
         ; """https://forth-standard.org/standard/block/LIST"""
 .scope
 xt_list:
-                cpx #dsp0-1
-                bmi +
-                jmp underflow
-*
+                lda #1
+                jsr underflow_test
+
                 ; Save the screen number in SCR
                 jsr xt_scr
                 jsr xt_store
@@ -5557,10 +5540,9 @@ z_list:         rts
         ; Note the cmpl_ routines use TMPTOS
         ; """
 xt_literal:     
-                cpx #dsp0-1
-                bmi +
-                jmp underflow
-*
+                lda #1
+                jsr underflow_test
+
                 ldy #>literal_runtime
                 lda #<literal_runtime
                 jsr cmpl_subroutine
@@ -5620,10 +5602,9 @@ literal_runtime:
         ; """
 .scope        
 xt_load:
-                cpx #dsp0-1
-                bmi +
-                jmp underflow
-*
+                lda #1
+                jsr underflow_test
+
                 ; Save the current value of BLK on the return stack.
                 ldy #blk_offset+1
                 lda (up),y
@@ -5844,10 +5825,9 @@ plus_loop_runtime_end:
         ; """https://forth-standard.org/standard/core/LSHIFT"""
 .scope
 xt_lshift:
-                cpx #dsp0-3
-                bmi +
-                jmp underflow
-*
+                lda #2
+                jsr underflow_test
+
                 ; max shift 16 times
                 lda 0,x
                 and #%00001111
@@ -5877,10 +5857,9 @@ z_lshift:       rts
         ; """
 .scope
 xt_m_star:
-                cpx #dsp0-3
-                bmi +
-                jmp underflow
-*
+                lda #2
+                jsr underflow_test
+
                 ; figure out the sign
                 lda 1,x         ; MSB of n1
                 eor 3,x         ; MSB of n2
@@ -6057,10 +6036,9 @@ _marker_restore_loop:
         ; """
 .scope
 xt_max:         
-                cpx #dsp0-3
-                bmi +
-                jmp underflow
-*
+                lda #2
+                jsr underflow_test
+
                 ; Compare LSB. We do this first to set the carry flag
                 lda 0,x         ; LSB of TOS
                 cmp 2,x         ; LSB of NOS, this sets the carry
@@ -6097,10 +6075,9 @@ z_max:          rts
         ; """
 .scope
 xt_min:         
-                cpx #dsp0-3
-                bmi +
-                jmp underflow
-*
+                lda #2
+                jsr underflow_test
+
                 ; compare LSB. We do this first to set the carry flag
                 lda 0,x         ; LSB of TOS
                 cmp 2,x         ; LSB of NOS, this sets carry
@@ -6132,10 +6109,9 @@ z_min:          rts
 ; ## "-"  auto  ANS core
         ; """https://forth-standard.org/standard/core/Minus"""
 xt_minus:       
-                cpx #dsp0-3
-                bmi +
-                jmp underflow
-*
+                lda #2
+                jsr underflow_test
+
                 sec
                 lda 2,x         ; LSB
                 sbc 0,x
@@ -6158,10 +6134,9 @@ z_minus:        rts
         ; """
 .scope
 xt_minus_trailing:
-                cpx #dsp0-3
-                bmi +
-                jmp underflow
-*
+                lda #2
+                jsr underflow_test
+
                 ; if length entry is zero, return a zero and leave the 
                 ; address part untouched
                 lda 0,x         ; LSB of n
@@ -6225,10 +6200,9 @@ z_minus_trailing:
         ; so we just jump to xt_slash_mod and dump the actual result.
         ; """
 xt_mod:
-                cpx #dsp0-1
-                bmi +
-                jmp underflow
-*
+                lda #2
+                jsr underflow_test
+
                 jsr xt_slash_mod
 
                 inx             ; DROP
@@ -6287,10 +6261,9 @@ z_move:         rts
         ; """ 
 .scope
 xt_name_to_int: 
-                cpx #dsp0-1
-                bmi +
-                jmp underflow
-*
+                lda #1
+                jsr underflow_test
+
                 ; The xt starts four bytes down from the nt
                 lda 0,x
                 clc
@@ -6319,10 +6292,9 @@ z_name_to_int:  rts
         ; """http://www.complang.tuwien.ac.at/forth/gforth/Docs-html/Name-token.html"""
 .scope
 xt_name_to_string:
-                cpx #dsp0-1
-                bmi +
-                jmp underflow
-*
+                lda #1
+                jsr underflow_test
+
                 dex
                 dex
 
@@ -6365,10 +6337,9 @@ z_nc_limit:     rts
 ; ## "negate"  auto  ANS core
         ; """https://forth-standard.org/standard/core/NEGATE"""
 xt_negate:      
-                cpx #dsp0-1
-                bmi +
-                jmp underflow
-*
+                lda #1
+                jsr underflow_test
+
         	lda #0
                 sec
                 sbc 0,x         ; LSB
@@ -6398,10 +6369,9 @@ z_never_native:
 ; ## "nip"  auto  ANS core ext
         ; """https://forth-standard.org/standard/core/NIP"""
 xt_nip:         
-                cpx #dsp0-3
-                bmi +
-                jmp underflow
-* 
+                lda #2
+                jsr underflow_test
+
                 lda 0,x         ; LSB
                 sta 2,x
                 lda 1,x         ; MSB
@@ -6420,10 +6390,9 @@ z_nip:          rts
         ; """
 .scope
 xt_not_equals:
-                cpx #dsp0-3
-                bmi +
-                jmp underflow
-*               
+                lda #2
+                jsr underflow_test
+
                 ldy #0                  ; default is true
 
                 lda 0,x                 ; LSB
@@ -6456,10 +6425,9 @@ z_not_equals:   rts
         ; """http://www.complang.tuwien.ac.at/forth/gforth/Docs-html/Data-stack.html"""
 .scope
 xt_not_rote:    
-                cpx #dsp0-5
-                bmi +
-                jmp underflow
-*
+                lda #3
+                jsr underflow_test
+
                 ldy 1,x         ; MSB first
                 lda 3,x
                 sta 1,x
@@ -6497,10 +6465,9 @@ z_not_rote:     rts
         ;"""
 .scope
 xt_number:      
-                cpx #dsp0-3
-                bmi +
-                jmp underflow
-*
+                lda #2
+                jsr underflow_test
+
                 ; we keep the flags for sign and double in tmpdsp because
                 ; we've run out of temporary variables
                 stz tmpdsp      ; flag for double
@@ -6646,10 +6613,9 @@ z_number:       rts
         ; TODO convert more parts to assembler
         
 xt_number_sign:        
-                cpx #dsp0-3
-                bmi +
-                jmp underflow
-*
+                lda #2
+                jsr underflow_test
+
                 jsr xt_base
                 jsr xt_fetch            ; ( ud1 base )
 
@@ -6696,10 +6662,9 @@ z_number_sign:
         ; """
 xt_number_sign_greater:
                 
-                cpx #dsp0-3
-                bmi +
-                jmp underflow
-*
+                lda #2
+                jsr underflow_test
+
                 ; The start address lives in tohold
                 lda tohold
                 sta 0,x         ; LSB of tohold
@@ -6736,10 +6701,8 @@ z_number_sign_greater:
         ; """
 .scope
 xt_number_sign_s:
-                cpx #dsp0-3
-                bmi +
-                jmp underflow
-*
+                lda #2
+                jsr underflow_test
 _loop:
                 ; convert a single number ("#")
                 jsr xt_number_sign
@@ -6803,10 +6766,9 @@ z_one:
         ; """https://forth-standard.org/standard/core/OneMinus"""
 .scope
 xt_one_minus:   
-                cpx #dsp0-1
-                bmi +
-                jmp underflow
-*
+                lda #1
+                jsr underflow_test
+
                 lda 0,x
                 bne +
                 dec 1,x
@@ -6824,10 +6786,9 @@ z_one_minus:    rts
 .scope
 xt_char_plus:
 xt_one_plus:    
-                cpx #dsp0-1
-                bmi +
-                jmp underflow
-*
+                lda #1
+                jsr underflow_test
+
                 inc 0,x
                 bne _done
                 inc 1,x
@@ -6859,10 +6820,9 @@ z_only:         rts
 ; ## "or"  auto  ANS core
         ; """https://forth-standard.org/standard/core/OR"""
 xt_or:          
-                cpx #dsp0-3
-                bmi +
-                jmp underflow
-*
+                lda #2
+                jsr underflow_test
+
                 lda 0,x
                 ora 2,x
                 sta 2,x
@@ -6899,10 +6859,9 @@ z_output:       rts
 ; ## "over"  auto  ANS core
         ; """https://forth-standard.org/standard/core/OVER"""
 xt_over:        
-                cpx #dsp0-3
-                bmi +
-                jmp underflow
-*
+                lda #2
+                jsr underflow_test
+
                 dex
                 dex
 
@@ -7116,10 +7075,9 @@ _char_found:
         ; """
 .scope
 xt_parse:
-                cpx #dsp0-1
-                bmi +
-                jmp underflow
-*
+                lda #1
+                jsr underflow_test
+
                 ; If the input buffer is empty, we just return
                 lda ciblen
                 ora ciblen+1
@@ -7304,10 +7262,9 @@ z_pick:         rts
 ; ## "+"  auto  ANS core
         ; """https://forth-standard.org/standard/core/Plus"""
 xt_plus:        
-                cpx #dsp0-3
-                bmi +
-                jmp underflow
-*
+                lda #2
+                jsr underflow_test
+
                 clc
                 lda 0,x         ; LSB
                 adc 2,x
@@ -7330,10 +7287,9 @@ z_plus:         rts
         ; We use the HERE address temporarily because tmp1 interferes with
         ; too much stuff, expecially TYPE.
 xt_plus_store:
-                cpx #dsp0-3
-                bmi +
-                jmp underflow
-*
+                lda #2
+                jsr underflow_test
+
                 ; move address to tmp1 so we can work with it
                 lda 0,x
                 sta tmp1
@@ -7464,10 +7420,9 @@ z_question:     rts
         ; """https://forth-standard.org/standard/core/qDUP"""
 .scope
 xt_question_dup:
-                cpx #dsp0-1
-                bmi +
-                jmp underflow
-*
+                lda #1
+                jsr underflow_test
+
                 ; Check if TOS is zero
                 lda 0,x
                 ora 1,x
@@ -7774,10 +7729,9 @@ z_root_wordlist:
         ; """
 .scope
 xt_rot:         
-                cpx #dsp0-5
-                bmi +
-                jmp underflow 
-*
+                lda #3
+                jsr underflow_test
+
                 ldy 5,x         ; MSB first
                 lda 3,x
                 sta 5,x
@@ -7800,10 +7754,9 @@ z_rot:          rts
 ; ## "rshift"  auto  ANS core
         ; """https://forth-standard.org/standard/core/RSHIFT"""
 xt_rshift:      
-                cpx #dsp0-3
-                bmi +
-                jmp underflow
-*
+                lda #2
+                jsr underflow_test
+
                 ; We shift maximal by 16 bits, mask everything else
                 lda 0,x
                 and #%00001111
@@ -7873,10 +7826,8 @@ _Digit:
         ; """https://forth-standard.org/standard/search/SEARCH_WORDLIST"""
 .scope
 xt_search_wordlist:
-                cpx #dsp0-5
-                bmi +
-                jmp underflow
-*
+                lda #3
+                jsr underflow_test
 
                 ; Set up tmp1 with the wordlist indicated by wid
                 ; on the stack.  Start by putting the base address
@@ -8202,15 +8153,15 @@ _see_xt:        .byte "xt: ", 0
 _see_size:      .byte "size (decimal): ", 0
 .scend
         
+
 ; ## SET_CURRENT ( wid -- ) "Set the compilation wordlist"
 ; ## "set-current" auto ANS search
         ; """https://forth-standard.org/standard/search/SET-CURRENT"""
 .scope
 xt_set_current:
-                cpx #dsp0-1
-                bmi +
-                jmp underflow
-*
+                lda #1
+                jsr underflow_test
+
                 ; Save the value from the data stack.
                 ldy #current_offset
                 lda 0,x         ; CURRENT is byte variable
@@ -8638,10 +8589,9 @@ z_s_quote:      rts
         ; """https://forth-standard.org/standard/core/StoD"""
 .scope
 xt_s_to_d:
-                cpx #dsp0-1
-                bmi +
-                jmp underflow
-*
+                lda #1
+                jsr underflow_test
+
                 dex
                 dex
                 stz 0,x
@@ -8714,11 +8664,9 @@ z_scr:          rts
 
 .scope
 xt_search:
-                ; Make sure there are enough items on the stack.
-                cpx #dsp0-7
-                bne +
-                jmp underflow
-*
+                lda #4
+                jsr underflow_test
+
                 ; ANS says if the second string is a zero-length string it
                 ; automatically matches.
                 lda 0,x
@@ -9007,10 +8955,9 @@ z_semicolon:    rts
         ; """
 .scope
 xt_sign:        
-                cpx #dsp0-1
-                bmi +
-                jmp underflow
-*
+                lda #1
+                jsr underflow_test
+
                 lda 1,x         ; check MSB of TOS
                 bmi _minus
 
@@ -9091,10 +9038,9 @@ z_slash:        rts
         ; """
 .scope
 xt_slash_string:
-                cpx #dsp0-5
-                bmi +
-                jmp underflow
-*
+                lda #3
+                jsr underflow_test
+
                 clc             ; 3OS+TOS
                 lda 0,x
                 adc 4,x
@@ -9126,10 +9072,9 @@ z_slash_string: rts
         ; """
 .scope
 xt_sliteral:
-                cpx #dsp0-3
-                bmi +
-                jmp underflow
-*
+                lda #2
+                jsr underflow_test
+
                 ; We can't assume that ( addr u ) of the current
                 ; string is in a stable area (eg. already in the
                 ; dictionary.)  Copy the string data into the
@@ -9300,10 +9245,9 @@ sliteral_runtime:
         ; """
 .scope
 xt_sm_slash_rem:
-                cpx #dsp0-5
-                bmi +
-                jmp underflow
-*
+                lda #3
+                jsr underflow_test
+
                 ; push MSB of high cell of d to Data Stack so we can check
                 ; its sign later
                 lda 3,x
@@ -9405,10 +9349,9 @@ z_space:        rts
         ; """https://forth-standard.org/standard/core/SPACES"""
 .scope
 xt_spaces:      
-                cpx #dsp0-1
-                bmi +
-                jmp underflow
-*
+                lda #1
+                jsr underflow_test
+
                 ; catch any zero in TOS fast
                 lda 0,x
                 ora 1,x
@@ -9470,10 +9413,9 @@ z_spaces:       rts
         ; """
 .scope
 xt_star:
-                cpx #dsp0-3
-                bmi +
-                jmp underflow
-*
+                lda #2
+                jsr underflow_test
+
                 jsr xt_um_star
                 inx
                 inx
@@ -9509,10 +9451,9 @@ z_star_slash:
         ; : */MOD  >R M* >R SM/REM ;  Note that */ accesses this routine.
         ; """
 xt_star_slash_mod:
-                cpx #dsp0-3
-                bmi +
-                jmp underflow
-*       
+                lda #3
+                jsr underflow_test
+
                 jsr xt_to_r
                 jsr xt_m_star
                 jsr xt_r_from
@@ -9546,10 +9487,9 @@ z_state:        rts
         ; """https://forth-standard.org/standard/core/Store"""
 .scope
 xt_store:
-                cpx #dsp0-3
-                bmi +
-                jmp underflow
-*
+                lda #2
+                jsr underflow_test
+
                 lda 2,x         ; LSB
                 sta (0,x)
 
@@ -9576,7 +9516,7 @@ xt_swap:
 .scope
                 lda #2
                 jsr underflow_test
-*
+
                 lda 0,x         ; LSB
                 ldy 2,x
                 sta 2,x
@@ -9613,10 +9553,9 @@ z_then:         rts
         ; """https://forth-standard.org/standard/block/THRU"""
 .scope
 xt_thru:
-                cpx #dsp0-3
-                bmi +
-                jmp underflow
-*
+                lda #2
+                jsr underflow_test
+
                 ; We need to loop here, and can't use the data stack
                 ; because the LOADed screens might use it.  We'll
                 ; need to use the same trick that DO loops use, holding
@@ -9815,10 +9754,9 @@ _interpret:
                 ; on the stack. This is an annoying place to put
                 ; the underflow check because we can't
                 ; automatically strip it out
-                cpx #dsp0-1
-                bmi +
-                jmp underflow
-* 
+                lda #1
+                jsr underflow_test
+
                 ; We skip over the jump to DOCONST and store the number
                 ; in the Program Field Area (PDF, in this case more a 
                 ; Data Field Area
@@ -9849,10 +9787,9 @@ z_to:           rts
         ; """
 .scope
 xt_to_body:
-                cpx #dsp0-1
-                bmi +
-                jmp underflow
-*
+                lda #1
+                jsr underflow_test
+
                 ; Ideally, xt already points to the CFA. We just need to check
                 ; the HC flag for special cases
                 jsr xt_dup              ; ( xt xt )
@@ -9934,10 +9871,9 @@ z_to_in:        rts
 
 .scope
 xt_to_number:
-                cpx #dsp0-7
-                bmi +
-                jmp underflow
-*
+                lda #4
+                jsr underflow_test
+
                 ; Fill the scratchpad. We arrive with ( ud-lo ud-hi addr u ).
                 ; After this step, the original ud-lo and ud-hi will still be on
                 ; the Data Stack, but will be ignored and later overwritten
@@ -10122,10 +10058,9 @@ xt_to_r:
 
                 ; We check for underflow in the second step, so we can
                 ; strip off the stack thrashing for native compiling first
-                cpx #dsp0-1
-                bmi +
-                jmp underflow
-*
+                lda #1
+                jsr underflow_test
+
                 ; now we can do the actual work
                 lda 1,x         ; MSB
                 pha
@@ -10161,10 +10096,9 @@ z_true:         rts
 ; ## "tuck"  auto  ANS core ext
         ; """https://forth-standard.org/standard/core/TUCK"""
 xt_tuck:        
-                cpx #dsp0-3
-                bmi +
-                jmp underflow
-*
+                lda #2
+                jsr underflow_test
+
                 dex
                 dex
 
@@ -10200,10 +10134,9 @@ z_two:          rts
         ; """https://forth-standard.org/standard/core/TwoDROP"""
 .scope
 xt_two_drop:    
-                cpx #dsp0-3
-                bmi +
-                jmp underflow
-*
+                lda #2
+                jsr underflow_test
+
                 inx
                 inx
                 inx
@@ -10218,11 +10151,10 @@ z_two_drop:     rts
         ; """https://forth-standard.org/standard/core/TwoDUP"""
 .scope
 xt_two_dup:
-                cpx #dsp0-3
-                bmi +
-                jmp underflow
+                lda #2
+                jsr underflow_test
 
-*               dex
+                dex
                 dex
                 dex
                 dex
@@ -10249,10 +10181,9 @@ z_two_dup:      rts
         ; """ 
 .scope
 xt_two_fetch:
-                cpx #dsp0-1
-                bmi +
-                jmp underflow
-*
+                lda #1
+                jsr underflow_test
+
                 lda 0,x
                 sta tmp1
                 ldy 1,x
@@ -10281,10 +10212,9 @@ z_two_fetch:    rts
         ; """https://forth-standard.org/standard/core/TwoOVER"""
 .scope
 xt_two_over:
-                cpx #dsp0-7
-                bmi +
-                jmp underflow
-*
+                lda #4
+                jsr underflow_test
+
                 dex
                 dex
                 dex
@@ -10406,11 +10336,9 @@ z_two_r_from:   rts
 ; ## "2/"  auto  ANS core
         ; """https://forth-standard.org/standard/core/TwoDiv"""
 xt_two_slash:
-                cpx #dsp0-1
-                bmi +
-                jmp underflow
+                lda #1
+                jsr underflow_test
 
-*
                 ; We can't just LSR the LSB and ROR the MSB because that
                 ; would do bad things to the sign
                 lda 1,x
@@ -10428,10 +10356,9 @@ z_two_slash:    rts
         ; """
 xt_two_star:
 xt_cells:
-                cpx #dsp0-1
-                bmi +
-                jmp underflow
-*
+                lda #1
+                jsr underflow_test
+
                 asl 0,x
                 rol 1,x
 z_cells:
@@ -10446,10 +10373,9 @@ z_two_star:     rts
         ; """
         
 xt_two_store:
-                cpx #dsp0-5
-                bmi +
-                jmp underflow
-*
+                lda #3
+                jsr underflow_test
+
                 lda 0,x
                 sta tmp1
                 ldy 1,x
@@ -10483,10 +10409,9 @@ z_two_store:    rts
         ; """https://forth-standard.org/standard/core/TwoSWAP"""
 .scope
 xt_two_swap:
-                cpx #dsp0-7
-                bmi +
-                jmp underflow
-*
+                lda #4
+                jsr underflow_test
+
                 ; 0 <-> 4
                 lda 0,x
                 ldy 4,x
@@ -10532,11 +10457,9 @@ xt_two_to_r:
                 sta tmp1+1      
 
                 ; --- CUT HERE FOR NATIVE CODING ---
+                lda #2
+                jsr underflow_test
 
-                cpx #dsp0-3
-                bmi +
-                jmp underflow
-*
                 ; now we can move the data 
                 lda 3,x         ; MSB
                 pha
@@ -10574,10 +10497,9 @@ z_two_to_r:     rts
         ; """
 .scope
 xt_two_constant:
-                cpx #dsp0-3
-                bmi +
-                jmp underflow
-*
+                lda #2
+                jsr underflow_test
+
                 jsr xt_create
                 jsr xt_swap
                 jsr xt_comma
@@ -10604,10 +10526,9 @@ z_two_constant: rts
         ; """
 .scope
 xt_two_literal:
-                cpx #dsp0-3
-                bmi +
-                jmp underflow
-*
+                lda #2
+                jsr underflow_test
+
                 jsr xt_swap
                 jsr xt_literal
                 jsr xt_literal
@@ -10648,10 +10569,9 @@ z_two_variable: rts
         ; """
 .scope
 xt_type:        
-                cpx #dsp0-3
-                bmi +
-                jmp underflow
-*
+                lda #2
+                jsr underflow_test
+
                 ; Save the starting address into tmp1
                 lda 2,x
                 sta tmp1
@@ -10699,10 +10619,9 @@ z_type:         rts
         ; """
 .scope
 xt_u_dot:         
-                cpx #dsp0-1
-                bmi +
-                jmp underflow
-*
+                lda #1
+                jsr underflow_test
+
                 jsr print_u
                 lda #AscSP
                 jsr emit_a
@@ -10717,10 +10636,9 @@ z_u_dot:        rts
 
 .scope
 xt_u_dot_r:         
-                cpx #dsp0-3
-                bmi +
-                jmp underflow
-*
+                lda #2
+                jsr underflow_test
+
                 jsr xt_to_r
                 jsr xt_zero
                 jsr xt_less_number_sign
@@ -10741,10 +10659,9 @@ z_u_dot_r:      rts
         ; """https://forth-standard.org/standard/core/Umore"""
 .scope
 xt_u_greater_than:
-                cpx #dsp0-3
-                bmi +
-                jmp underflow
-*
+                lda #2
+                jsr underflow_test
+
                 lda 0,x
                 cmp 2,x
                 lda 1,x
@@ -10765,10 +10682,9 @@ z_u_greater_than:    rts
         ; """https://forth-standard.org/standard/core/Uless"""
 .scope
 xt_u_less_than:
-                cpx #dsp0-3
-                bmi +
-                jmp underflow
-*
+                lda #2
+                jsr underflow_test
+
                 lda 2,x
                 cmp 0,x
                 lda 3,x
@@ -10791,10 +10707,9 @@ z_u_less_than:    rts
         ; """
 .scope
 xt_ud_dot:         
-                cpx #dsp0-3
-                bmi +
-                jmp underflow
-*
+                lda #2
+                jsr underflow_test
+
                 jsr xt_less_number_sign
                 jsr xt_number_sign_s
                 jsr xt_number_sign_greater
@@ -10811,10 +10726,9 @@ z_ud_dot:        rts
         ; """
 .scope
 xt_ud_dot_r:         
-                cpx #dsp0-5
-                bmi +
-                jmp underflow
-*
+                lda #3
+                jsr underflow_test
+
                 jsr xt_to_r
                 jsr xt_less_number_sign
                 jsr xt_number_sign_s
@@ -10859,10 +10773,9 @@ z_uf_strip:     rts
         ; """
 .scope
 xt_um_slash_mod:
-                cpx #dsp0-5
-                bmi +
-                jmp underflow
-*
+                lda #3
+                jsr underflow_test
+
                 ; catch division by zero
                 lda 0,x
                 ora 1,x
@@ -10940,10 +10853,9 @@ z_um_slash_mod: rts
         ; """
 .scope
 xt_um_star:     
-                cpx #dsp0-3
-                bmi +
-                jmp underflow
-*
+                lda #2
+                jsr underflow_test
+
                 ; to eliminate clc inside the loop, the value at 
                 ; tmp1 is reduced by 1 in advance
                 clc     
@@ -11157,10 +11069,9 @@ z_while:        rts
         ; ROT TUCK > -ROT > INVERT AND
         ; """"
 xt_within:
-                cpx #dsp0-5
-                bmi +
-                jmp underflow
-*
+                lda #3
+                jsr underflow_test
+
                 jsr xt_over
                 jsr xt_minus
                 jsr xt_to_r
@@ -11186,10 +11097,9 @@ z_within:       rts
         ; """
 .scope
 xt_word:
-                cpx #dsp0-1
-                bmi +
-                jmp underflow
-*
+                lda #1
+                jsr underflow_test
+
                 ; Skip over leading delimiters - this is like PARSE-NAME,
                 ; but unlike PARSE
                 ldy toin                ; >IN
@@ -11381,10 +11291,9 @@ z_words:        rts
         ; count the final RTS.  """
 .scope
 xt_wordsize:    
-                cpx #dsp0-1
-                bmi +
-                jmp underflow
-*
+                lda #1
+                jsr underflow_test
+
                 ; We get the start address of the word from its header entry
                 ; for the start of the actual code (execution token, xt)
                 ; which is four bytes down, and the pointer to the end of the
@@ -11420,10 +11329,9 @@ z_wordsize:     rts
         ; """https://forth-standard.org/standard/core/XOR"""
 .scope
 xt_xor:         
-                cpx #dsp0-3
-                bmi +
-                jmp underflow
-*
+                lda #2
+                jsr underflow_test
+
                 lda 0,x
                 eor 2,x
                 sta 2,x
@@ -11542,10 +11450,9 @@ _done:
 ; TODO Rewrite to the form of 0<>
 .scope
 xt_zero_equal:  
-                cpx #dsp0-1
-                bmi +
-                jmp underflow
-*
+                lda #1
+                jsr underflow_test
+
                 lda 0,x
                 ora 1,x
                 beq _zero
@@ -11569,10 +11476,9 @@ z_zero_equal:   rts
         ; """https://forth-standard.org/standard/core/Zeromore"""
 .scope
 xt_zero_greater:
-                cpx #dsp0-1
-                bmi +
-                jmp underflow
-*
+                lda #1
+                jsr underflow_test
+
                 ldy #0          ; Default is FALSE (TOS is negative)
 
                 lda 1,x         ; MSB
@@ -11595,10 +11501,9 @@ z_zero_greater: rts
         ; """https://forth-standard.org/standard/core/Zeroless"""
 .scope
 xt_zero_less:
-                cpx #dsp0-1
-                bmi +
-                jmp underflow
-*
+                lda #1
+                jsr underflow_test
+
                 ldy #0          ; Default is FALSE (TOS positive)
 
                 lda 1,x         ; MSB
@@ -11619,10 +11524,9 @@ z_zero_less:    rts
         ; """https://forth-standard.org/standard/core/Zerone"""
 .scope
 xt_zero_unequal:
-                cpx #dsp0-1
-                bmi +
-                jmp underflow
-*
+                lda #1
+                jsr underflow_test
+
                 ldy #0          ; default false
 
                 lda 0,x
@@ -11828,10 +11732,9 @@ z_editor_l:            rts
 ; ## "line"  tested  Tali Editor
 .scope
 xt_editor_line:
-                cpx #dsp0-1
-                bmi +
-                jmp underflow
-*
+                lda #1
+                jsr underflow_test
+
                 ; Multiply the TOS by 64 (chars/line) to compute offset.
                 ldy #6          ; *64 is same as left shift 6 times.
 _shift_tos_left:        

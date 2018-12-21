@@ -51,9 +51,9 @@ RTS instruction at the end of each word.
 | C_STORE | `c!` | ANS core | 13 | **auto** |
 | CASE | `case` | ANS core ext | 6 | **auto** |
 | CELL_PLUS | `cell+` | ANS core | 17 | **auto** |
-| CELLS | `cells` | ANS core | 11 | **auto** |
+| CELLS | `cells` | ANS core | 9 | **auto** |
 | CHAR | `char` | ANS core | 22 | **auto** |
-| CHAR_PLUS | `char+` | ANS core | 13 | **auto** |
+| CHAR_PLUS | `char+` | ANS core | 11 | **auto** |
 | CHARS | `chars` | ANS core | 5 | **auto** |
 | CLEAVE | `cleave` | Tali Forth | 161 | **auto** |
 | CMOVE | `cmove` | ANS string | 60 | **auto** |
@@ -101,35 +101,35 @@ RTS instruction at the end of each word.
 | EMPTY_BUFFERS | `empty-buffers` | ANS block ext | 6 | tested |
 | ENDCASE | `endcase` | ANS core ext | 20 | **auto** |
 | ENDOF | `endof` | ANS core ext | 21 | **auto** |
-| ENVIRONMENT_Q | `environment?` | ANS core | 128 | **auto** |
-| EQUAL | `=` | ANS core | 31 | **auto** |
-| BLANK | `blank` | ANS string | 86 | **auto** |
-| ERASE | `erase` | ANS core ext | 76 | **auto** |
-| FILL | `fill` | ANS core | 70 | **auto** |
-| EXECUTE | `execute` | ANS core | 10 | **auto** |
+| ENVIRONMENT_Q | `environment?` | ANS core | 126 | **auto** |
+| EQUAL | `=` | ANS core | 29 | **auto** |
+| BLANK | `blank` | ANS string | 84 | **auto** |
+| ERASE | `erase` | ANS core ext | 74 | **auto** |
+| FILL | `fill` | ANS core | 68 | **auto** |
+| EXECUTE | `execute` | ANS core | 8 | **auto** |
 | EXIT | `exit` | ANS core | 1 | **auto** |
 | FALSE | `false` | ANS core ext | 6 | **auto** |
-| FETCH | `@` | ANS core | 22 | **auto** |
-| FIND | `find` | ANS core | 75 | **auto** |
-| FIND_NAME | `find-name` | Gforth | 175 | **auto** |
+| FETCH | `@` | ANS core | 20 | **auto** |
+| FIND | `find` | ANS core | 73 | **auto** |
+| FIND_NAME | `find-name` | Gforth | 173 | **auto** |
 | FLUSH | `flush` | ANS block | 9 | **auto** |
-| FM_SLASH_MOD | `fm/mod` | ANS core | 58 | **auto** |
+| FM_SLASH_MOD | `fm/mod` | ANS core | 56 | **auto** |
 | FORTH | `forth` | ANS search ext | 6 | **auto** |
-| EVALUATE | `evaluate` | ANS core | 129 | **auto** |
+| EVALUATE | `evaluate` | ANS core | 127 | **auto** |
 | FORTH_WORDLIST | `forth-wordlist` | ANS search | 6 | **auto** |
 | GET_CURRENT | `get-current` | ANS search | 10 | **auto** |
 | GET_ORDER | `get-order` | ANS search | 40 | **auto** |
-| GREATER_THAN | `>` | ANS core | 24 | **auto** |
+| GREATER_THAN | `>` | ANS core | 22 | **auto** |
 | HERE | `here` | ANS core | 10 | **auto** |
 | HEX | `hex` | ANS core ext | 6 | **auto** |
-| HEXSTORE | `hexstore` | Tali | 89 | **auto** |
-| HOLD | `hold` | ANS core | 21 | **auto** |
+| HEXSTORE | `hexstore` | Tali | 87 | **auto** |
+| HOLD | `hold` | ANS core | 19 | **auto** |
 | I | `i` | ANS core | 25 | **auto** |
 | IF | `if` | ANS core | 12 | **auto** |
 | IMMEDIATE | `immediate` | ANS core | 11 | **auto** |
 | INPUT | `input` | Tali Forth | 10 | tested |
-| INT_TO_NAME | `int>name` | Tali Forth | 118 | **auto** |
-| INVERT | `invert` | ANS core | 19 | **auto** |
+| INT_TO_NAME | `int>name` | Tali Forth | 116 | **auto** |
+| INVERT | `invert` | ANS core | 17 | **auto** |
 | IS | `is` | ANS core ext | 24 | **auto** |
 | J | `j` | ANS core | 25 | **auto** |
 | KEY | `key` | ANS core | 9 | tested |
@@ -138,53 +138,53 @@ RTS instruction at the end of each word.
 | LEAVE | `leave` | ANS core | 5 | **auto** |
 | LEFT_BRACKET | `[` | ANS core | 4 | **auto** |
 | LESS_NUMBER_SIGN | `<#` | ANS core | 13 | **auto** |
-| LESS_THAN | `<` | ANS core | 24 | **auto** |
-| LIST | `list` | ANS block ext | 16 | tested |
-| LITERAL | `literal` | ANS core | 17 | **auto** |
-| LOAD | `load` | ANS block | 71 | **auto** |
+| LESS_THAN | `<` | ANS core | 22 | **auto** |
+| LIST | `list` | ANS block ext | 14 | tested |
+| LITERAL | `literal` | ANS core | 15 | **auto** |
+| LOAD | `load` | ANS block | 69 | **auto** |
 | LOOP | `loop` | ANS core | 109 | **auto** |
 | PLUS_LOOP | `+loop` | ANS core | 102 | **auto** |
-| LSHIFT | `lshift` | ANS core | 23 | **auto** |
-| M_STAR | `m*` | ANS core | 30 | **auto** |
+| LSHIFT | `lshift` | ANS core | 21 | **auto** |
+| M_STAR | `m*` | ANS core | 28 | **auto** |
 | MARKER | `marker` | ANS core ext | 61 | **auto** |
-| MAX | `max` | ANS core | 31 | **auto** |
-| MIN | `min` | ANS core | 31 | **auto** |
-| MINUS | `-` | ANS core | 22 | **auto** |
-| MINUS_TRAILING | `-trailing` | ANS string | 64 | **auto** |
-| MOD | `mod` | ANS core | 12 | **auto** |
+| MAX | `max` | ANS core | 29 | **auto** |
+| MIN | `min` | ANS core | 29 | **auto** |
+| MINUS | `-` | ANS core | 20 | **auto** |
+| MINUS_TRAILING | `-trailing` | ANS string | 62 | **auto** |
+| MOD | `mod` | ANS core | 10 | **auto** |
 | MOVE | `move` | ANS core | 30 | **auto** |
-| NAME_TO_INT | `name>int` | Gforth | 32 | tested |
-| NAME_TO_STRING | `name>string` | Gforth | 29 | tested |
+| NAME_TO_INT | `name>int` | Gforth | 30 | tested |
+| NAME_TO_STRING | `name>string` | Gforth | 27 | tested |
 | NC_LIMIT | `nc-limit` | Tali Forth | 10 | tested |
-| NEGATE | `negate` | ANS core | 20 | **auto** |
+| NEGATE | `negate` | ANS core | 18 | **auto** |
 | NEVER_NATIVE | `never-native` | Tali Forth | 13 | **auto** |
-| NIP | `nip` | ANS core ext | 17 | **auto** |
-| NOT_EQUALS | `<>` | ANS core ext | 33 | **auto** |
-| NOT_ROTE | `-rot` | Gforth | 31 | **auto** |
-| NUMBER | `number` | Tali Forth | 150 | **auto** |
-| NUMBER_SIGN | `#` | ANS core | 56 | **auto** |
-| NUMBER_SIGN_GREATER | `#>` | ANS core | 37 | **auto** |
-| NUMBER_SIGN_S | `#s` | ANS core | 20 | **auto** |
+| NIP | `nip` | ANS core ext | 15 | **auto** |
+| NOT_EQUALS | `<>` | ANS core ext | 31 | **auto** |
+| NOT_ROTE | `-rot` | Gforth | 29 | **auto** |
+| NUMBER | `number` | Tali Forth | 148 | **auto** |
+| NUMBER_SIGN | `#` | ANS core | 54 | **auto** |
+| NUMBER_SIGN_GREATER | `#>` | ANS core | 35 | **auto** |
+| NUMBER_SIGN_S | `#s` | ANS core | 18 | **auto** |
 | OF | `of` | ANS core ext | 24 | **auto** |
 | ONE | `1` | Tali Forth | 8 | **auto** |
-| ONE_MINUS | `1-` | ANS core | 15 | **auto** |
-| ONE_PLUS | `1+` | ANS core | 13 | **auto** |
+| ONE_MINUS | `1-` | ANS core | 13 | **auto** |
+| ONE_PLUS | `1+` | ANS core | 11 | **auto** |
 | ONLY | `only` | ANS search ext | 11 | **auto** |
-| OR | `or` | ANS core | 21 | **auto** |
+| OR | `or` | ANS core | 19 | **auto** |
 | OUTPUT | `output` | Tali Forth | 10 | tested |
-| OVER | `over` | ANS core | 17 | **auto** |
+| OVER | `over` | ANS core | 15 | **auto** |
 | PAD | `pad` | ANS core ext | 15 | **auto** |
 | PAGE | `page` | ANS facility | 29 | tested |
 | PAREN | `(` | ANS core | 15 | **auto** |
-| PARSE_NAME | `parse-name` | ANS core ext | 246 | **auto** |
-| PARSE | `parse` | ANS core ext | 155 | tested |
+| PARSE_NAME | `parse-name` | ANS core ext | 244 | **auto** |
+| PARSE | `parse` | ANS core ext | 153 | tested |
 | PICK | `pick` | ANS core ext | 16 | **auto** |
-| PLUS | `+` | ANS core | 22 | **auto** |
-| PLUS_STORE | `+!` | ANS core | 35 | **auto** |
+| PLUS | `+` | ANS core | 20 | **auto** |
+| PLUS_STORE | `+!` | ANS core | 33 | **auto** |
 | POSTPONE | `postpone` | ANS core | 62 | **auto** |
 | PREVIOUS | `previous` | ANS search ext | 12 | **auto** |
 | QUESTION | `?` | ANS tools | 6 | tested |
-| QUESTION_DUP | `?dup` | ANS core | 23 | **auto** |
+| QUESTION_DUP | `?dup` | ANS core | 21 | **auto** |
 | R_FETCH | `r@` | ANS core | 20 | **auto** |
 | R_FROM | `r>` | ANS core | 16 | **auto** |
 | RECURSE | `recurse` | ANS core | 60 | **auto** |
@@ -192,71 +192,71 @@ RTS instruction at the end of each word.
 | REPEAT | `repeat` | ANS core | 12 | **auto** |
 | RIGHT_BRACKET | `]` | ANS core | 6 | **auto** |
 | ROOT_WORDLIST | `root-wordlist` | Tali Editor | 8 | tested |
-| ROT | `rot` | ANS core | 31 | **auto** |
-| RSHIFT | `rshift` | ANS core | 23 | **auto** |
+| ROT | `rot` | ANS core | 29 | **auto** |
+| RSHIFT | `rshift` | ANS core | 21 | **auto** |
 | S_BACKSLASH_QUOTE | `s\"` | ANS core | 9 | **auto** |
-| SEARCH_WORDLIST | `search_wordlist` | ANS search | 228 | **auto** |
+| SEARCH_WORDLIST | `search_wordlist` | ANS search | 226 | **auto** |
 | SEE | `see` | ANS tools | 165 | tested |
-| SET_CURRENT | `set-current` | ANS search | 15 | **auto** |
+| SET_CURRENT | `set-current` | ANS search | 13 | **auto** |
 | SET_ORDER | `set-order` | ANS search | 51 | **auto** |
 | S_QUOTE | `s"` | ANS core | 348 | **auto** |
-| S_TO_D | `s>d` | ANS core | 21 | **auto** |
+| S_TO_D | `s>d` | ANS core | 19 | **auto** |
 | SAVE_BUFFERS | `save-buffers` | ANS block | 26 | tested |
 | SCR | `scr` | ANS block ext | 15 | **auto** |
-| SEARCH | `search` | ANS string | 162 | **auto** |
+| SEARCH | `search` | ANS string | 160 | **auto** |
 | SEMICOLON | `;` | ANS core | 134 | **auto** |
-| SIGN | `sign` | ANS core | 24 | **auto** |
+| SIGN | `sign` | ANS core | 22 | **auto** |
 | SLASH | `/` | ANS core | 28 | **auto** |
 | SLASH_MOD | `/mod` | ANS core | 23 | **auto** |
-| SLASH_STRING | `/string` | ANS string | 35 | **auto** |
-| SLITERAL | `sliteral` | ANS string | 115 | **auto** |
-| SM_SLASH_REM | `sm/rem` | ANS core | 44 | **auto** |
+| SLASH_STRING | `/string` | ANS string | 33 | **auto** |
+| SLITERAL | `sliteral` | ANS string | 113 | **auto** |
+| SM_SLASH_REM | `sm/rem` | ANS core | 42 | **auto** |
 | SOURCE | `source` | ANS core | 20 | **auto** |
 | SOURCE_ID | `source-id` | ANS core ext | 10 | tested |
 | SPACE | `space` | ANS core | 5 | **auto** |
-| SPACES | `spaces` | ANS core | 53 | **auto** |
-| STAR | `*` | ANS core | 12 | **auto** |
+| SPACES | `spaces` | ANS core | 51 | **auto** |
+| STAR | `*` | ANS core | 10 | **auto** |
 | STAR_SLASH | `*/` | ANS core | 8 | **auto** |
-| STAR_SLASH_MOD | `*/mod` | ANS core | 19 | **auto** |
+| STAR_SLASH_MOD | `*/mod` | ANS core | 17 | **auto** |
 | STATE | `state` | ANS core | 10 | **auto** |
-| STORE | `!` | ANS core | 25 | **auto** |
+| STORE | `!` | ANS core | 23 | **auto** |
 | SWAP | `swap` | ANS core | 21 | **auto** |
 | THEN | `then` | ANS core | 9 | **auto** |
-| THRU | `list` | ANS block ext | 72 | tested |
+| THRU | `list` | ANS block ext | 70 | tested |
 | TICK | `'` | ANS core | 31 | **auto** |
-| TO | `to` | ANS core ext | 95 | **auto** |
-| TO_BODY | `>body` | ANS core | 40 | **auto** |
+| TO | `to` | ANS core ext | 93 | **auto** |
+| TO_BODY | `>body` | ANS core | 38 | **auto** |
 | TO_IN | `>in` | ANS core | 10 | **auto** |
-| TO_NUMBER | `>number` | ANS core | 163 | **auto** |
+| TO_NUMBER | `>number` | ANS core | 161 | **auto** |
 | TO_ORDER | `>order` | Gforth search | 18 | tested |
-| TO_R | `>r` | ANS core | 23 | **auto** |
+| TO_R | `>r` | ANS core | 21 | **auto** |
 | TRUE | `true` | ANS core ext | 8 | **auto** |
-| TUCK | `tuck` | ANS core ext | 29 | **auto** |
+| TUCK | `tuck` | ANS core ext | 27 | **auto** |
 | TWO | `2` | Tali Forth | 8 | **auto** |
-| TWO_DROP | `2drop` | ANS core | 11 | **auto** |
-| TWO_DUP | `2dup` | ANS core | 27 | **auto** |
-| TWO_FETCH | `2@` | ANS core | 37 | **auto** |
-| TWO_OVER | `2over` | ANS core | 27 | **auto** |
+| TWO_DROP | `2drop` | ANS core | 9 | **auto** |
+| TWO_DUP | `2dup` | ANS core | 25 | **auto** |
+| TWO_FETCH | `2@` | ANS core | 35 | **auto** |
+| TWO_OVER | `2over` | ANS core | 25 | **auto** |
 | TWO_R_FETCH | `2r@` | ANS core ext | 29 | **auto** |
 | TWO_R_FROM | `2r>` | ANS core ext | 28 | **auto** |
-| TWO_SLASH | `2/` | ANS core | 14 | **auto** |
-| TWO_STAR | `2*` | ANS core | 11 | **auto** |
-| TWO_STORE | `2!` | ANS core | 41 | **auto** |
-| TWO_SWAP | `2swap` | ANS core | 39 | **auto** |
-| TWO_TO_R | `2>r` | ANS core ext | 35 | **auto** |
-| TWO_CONSTANT | `2constant` | ANS double | 40 | **auto** |
-| TWO_LITERAL | `2literal` | ANS double | 16 | **auto** |
+| TWO_SLASH | `2/` | ANS core | 12 | **auto** |
+| TWO_STAR | `2*` | ANS core | 9 | **auto** |
+| TWO_STORE | `2!` | ANS core | 39 | **auto** |
+| TWO_SWAP | `2swap` | ANS core | 37 | **auto** |
+| TWO_TO_R | `2>r` | ANS core ext | 33 | **auto** |
+| TWO_CONSTANT | `2constant` | ANS double | 38 | **auto** |
+| TWO_LITERAL | `2literal` | ANS double | 14 | **auto** |
 | TWO_VARIABLE | `2variable` | ANS double | 14 | **auto** |
-| TYPE | `type` | ANS core | 46 | **auto** |
-| U_DOT | `u.` | ANS core | 15 | tested |
-| U_DOT_R | `u.r` | ANS core ext | 37 | tested |
-| U_GREATER_THAN | `u>` | ANS core ext | 25 | **auto** |
-| U_LESS_THAN | `u<` | ANS core | 25 | **auto** |
-| UD_DOT | `ud.` | Tali double | 22 | **auto** |
-| UD_DOT_R | `ud.r` | Tali double | 34 | **auto** |
+| TYPE | `type` | ANS core | 44 | **auto** |
+| U_DOT | `u.` | ANS core | 13 | tested |
+| U_DOT_R | `u.r` | ANS core ext | 35 | tested |
+| U_GREATER_THAN | `u>` | ANS core ext | 23 | **auto** |
+| U_LESS_THAN | `u<` | ANS core | 23 | **auto** |
+| UD_DOT | `ud.` | Tali double | 20 | **auto** |
+| UD_DOT_R | `ud.r` | Tali double | 32 | **auto** |
 | UF_STRIP | `uf-strip` | Tali Forth | 10 | tested |
-| UM_SLASH_MOD | `um/mod` | ANS core | 69 | **auto** |
-| UM_STAR | `um*` | ANS core | 73 | **auto** |
+| UM_SLASH_MOD | `um/mod` | ANS core | 67 | **auto** |
+| UM_STAR | `um*` | ANS core | 71 | **auto** |
 | UNLOOP | `unloop` | ANS core | 6 | **auto** |
 | UNTIL | `until` | ANS core | 6 | **auto** |
 | UNUSED | `unused` | ANS core ext | 15 | **auto** |
@@ -265,23 +265,23 @@ RTS instruction at the end of each word.
 | VALUE | `value` | ANS core | 63 | **auto** |
 | VARIABLE | `variable` | ANS core | 24 | **auto** |
 | WHILE | `while` | ANS core | 15 | **auto** |
-| WITHIN | `within` | ANS core ext | 25 | **auto** |
-| WORD | `word` | ANS core | 73 | **auto** |
+| WITHIN | `within` | ANS core ext | 23 | **auto** |
+| WORD | `word` | ANS core | 71 | **auto** |
 | WORDLIST | `wordlist` | ANS search | 22 | **auto** |
 | WORDS | `words` | ANS tools | 91 | tested |
-| WORDSIZE | `wordsize` | Tali Forth | 36 | **auto** |
-| XOR | `xor` | ANS core | 21 | **auto** |
+| WORDSIZE | `wordsize` | Tali Forth | 34 | **auto** |
+| XOR | `xor` | ANS core | 19 | **auto** |
 | ZERO | `0` | Tali Forth | 6 | **auto** |
 | ZERO_BRANCH | `0branch` | Tali Forth | 7 | tested |
-| ZERO_EQUAL | `0=` | ANS core | 23 | **auto** |
-| ZERO_GREATER | `0>` | ANS core ext | 23 | **auto** |
-| ZERO_LESS | `0<` | ANS core | 19 | **auto** |
-| ZERO_UNEQUAL | `0<>` | ANS core ext | 21 | **auto** |
+| ZERO_EQUAL | `0=` | ANS core | 21 | **auto** |
+| ZERO_GREATER | `0>` | ANS core ext | 21 | **auto** |
+| ZERO_LESS | `0<` | ANS core | 17 | **auto** |
+| ZERO_UNEQUAL | `0<>` | ANS core ext | 19 | **auto** |
 | EDITOR_ENTER_SCREEN | `enter-screen` | Tali Editor | 27 | **auto** |
 | EDITOR_ERASE_SCREEN | `erase-screen` | Tali Editor | 17 | tested |
 | EDITOR_EL | `el` | Tali Editor | 17 | tested |
 | EDITOR_L | `l` | Tali Editor | 123 | tested |
-| EDITOR_LINE | `line` | Tali Editor | 28 | tested |
+| EDITOR_LINE | `line` | Tali Editor | 26 | tested |
 | EDITOR_O | `o` | Tali Editor | 48 | tested |
 
 Found **276** native words in `native_words.asm`.
