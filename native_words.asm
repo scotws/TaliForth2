@@ -3865,6 +3865,16 @@ z_empty_buffers:
                 rts
         
 
+; ## ENDOF (C: case-sys1 of-sys1-- case-sys2) ( -- ) "Conditional flow control" 
+; ## "endof"  auto  ANS core ext
+        ; """http://forth-standard.org/standard/core/ENDOF"""
+.scope
+xt_endof:
+                jsr xt_else
+z_endof:        rts
+.scend
+
+
 ; ## ENVIRONMENT_Q  ( addr u -- 0 | i*x true )  "Return system information"
 ; ## "environment?"  auto  ANS core
         ; """https://forth-standard.org/standard/core/ENVIRONMENTq
