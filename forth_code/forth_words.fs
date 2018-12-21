@@ -38,10 +38,10 @@
 \ are slow, these can stay high-level for the moment. However, in this
 \ state they don't check for underflow. Based on
 \ https://github.com/philburk/pforth/blob/master/fth/numberio.fth
-        : .r >r dup abs 0 <# #s rot sign #> r> over - spaces type ;
+\        : .r >r dup abs 0 <# #s rot sign #> r> over - spaces type ;
         : ud. <# #s #> type space ;
         : ud.r >r <# #s #> r> over - spaces type ;
-        : d. tuck dabs <# #s rot sign #> type space ;
+\        : d. tuck dabs <# #s rot sign #> type space ;
         : d.r >r tuck dabs <# #s rot sign #> r> over - spaces type ;
 
 \ Temporary high-level words. TODO convert these to assembler
