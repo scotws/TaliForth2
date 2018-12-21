@@ -1261,9 +1261,19 @@ nt_question:
         .word nt_false, xt_question, z_question
         .byte "?"
 
+nt_ud_dot_r:     
+        .byte 4, UF
+        .word nt_question, xt_ud_dot_r, z_ud_dot_r
+        .byte "ud.r"
+        
+nt_ud_dot:     
+        .byte 3, UF
+        .word nt_ud_dot_r, xt_ud_dot, z_ud_dot
+        .byte "ud."
+        
 nt_d_dot_r:     
         .byte 3, UF
-        .word nt_question, xt_d_dot_r, z_d_dot_r
+        .word nt_ud_dot, xt_d_dot_r, z_d_dot_r
         .byte "d.r"
         
 nt_d_dot:     

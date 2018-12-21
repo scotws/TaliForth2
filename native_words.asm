@@ -10847,6 +10847,50 @@ z_u_less_than:    rts
 .scend
 
 
+; ## UD_DOT ( d -- ) "Print double as unsigned"
+; ## "ud."  auto  Tali double
+.scope
+xt_ud_dot:         
+                cpx #dsp0-3
+                bmi +
+                jmp underflow
+*
+                ; From the forth code:
+; : ud. <# #s #> type space ;
+                jsr xt_less_number_sign
+                jsr xt_number_sign_s
+                jsr xt_number_sign_greater
+                jsr xt_type
+                jsr xt_space
+
+z_ud_dot:        rts 
+.scend
+        
+        
+; ## UD_DOT_R ( d u -- ) "Print unsigned double right-justified u wide"
+; ## "ud.r"  auto  Tali double
+.scope
+xt_ud_dot_r:         
+                cpx #dsp0-5
+                bmi +
+                jmp underflow
+*
+                ; From the forth code:
+; : ud.r >r <# #s #> r> over - spaces type ;
+                jsr xt_to_r
+                jsr xt_less_number_sign
+                jsr xt_number_sign_s
+                jsr xt_number_sign_greater
+                jsr xt_r_from
+                jsr xt_over
+                jsr xt_minus
+                jsr xt_spaces
+                jsr xt_type
+
+z_ud_dot_r:      rts 
+.scend
+        
+        
 ; ## UF_STRIP ( -- addr ) "Return address where UF-STRIP value is kept"
 ; ## "uf-strip"  tested  Tali Forth
         ; """UF-STRIP is a flag that determines if underflow checking should
