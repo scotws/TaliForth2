@@ -1,7 +1,7 @@
 ; Tali Forth 2 for the 65c02
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 19. Jan 2014 (Tali Forth)
-; This version: 21. Dec 2018
+; This version: 22. Dec 2018
 
 ; This is the main file for Tali Forth 2
 
@@ -477,48 +477,35 @@ _done:
 .scend
 
 
-underflow_test:
-        ; """Test for underflow. We arrive here with the number of cells (not:
-        ; bytes) on Data Stack required in A. If we have fewer entries than
-        ; required, abort proccessing with an error. The subroutine jump to
-        ; this code eats a lot of cycles, but saves storage space. Remember you
-        ; can strip out underflow checks when defining new words, see the
-        ; manual for details.
-        ; """
-                ; To calculate the number of bytes to subtract from DSP0,
-                ; multiply the number of cells needed by two (shift left once)
-                ; and subtract one. This gives us dsp0-1 for one entry, dsp0-3
-                ; for two entries, dsp0-5 for three entries, etc. In
-                ; pseudocode:  IF X > DSP0-(A*2-1) THEN underflow
-                asl
-                dec
+; Underflow test. We jump to the label with the number of cells (not: bytes)
+; required for the word. 
+underflow_1:
+        ; """Make sure we have at least one cell on the Data Stack"""
+                cpx #dsp0-1
+                bpl underflow_error
+                rts
+underflow_2:
+        ; """Make sure we have at least two cells on the Data Stack"""
+                cpx #dsp0-3
+                bpl underflow_error
+                rts
+underflow_3:
+        ; """Make sure we have at least three cells on the Data Stack"""
+                cpx #dsp0-5
+                bpl underflow_error
+                rts
+underflow_4:
+        ; """Make sure we have at least four cells on the Data Stack"""
+                cpx #dsp0-7
+                bpl underflow_error
+                rts
 
-                ; Instead of subtracting with SBC, we add the two's complement
-                ; so we don't have to use temporary storage
-                eor #$ff
-                inc
-
-                clc
-                adc #dsp0
-
-                ; Underflow is checked in so many places that it is pretty much
-                ; impossible to find a temporary variable we can use without
-                ; things blowing up in our face.
-                sta $5000
-
-                cpx $5000
-                bpl underflow
-                rts                     ; all is well
-
-                ; We are in underflow. load the approriate error code and drop
-                ; through to the main error routine
-
-underflow:      
+underflow_error:      
                 ; Entry for COLD/ABORT/QUIT
+                lda #err_underflow      ; fall through to error
 
-                lda #err_underflow
 error: 
-        ; """given the error number in a, print the associated error string and 
+        ; """Given the error number in a, print the associated error string and 
         ; call abort. uses tmp3.
         ; """
                 asl

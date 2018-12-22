@@ -986,8 +986,7 @@ asm_common:
                 beq _done
 
                 ; We have an operand which must be TOS
-                lda #1
-                jsr underflow_test
+                jsr underflow_1
 
                 ; We compile the LSB of TOS as the operand we definitely have
                 ; before we even test if this is a two- or three-byte
