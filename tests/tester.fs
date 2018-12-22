@@ -20,16 +20,7 @@ hex
 variable verbose  false verbose !
 
 variable actual-depth   \ stack record
-
-create actual-results  
-
-.( >>> ) .s cr 
-20
-.( >>> ) .s cr 
-cells 
-.( >>> ) .s cr 
-allot
-.( >>> ) .s cr 
+create actual-results  20 cells allot
 
 
 \ Empty stack: handles underflowed stack too

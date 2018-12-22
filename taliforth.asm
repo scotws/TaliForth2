@@ -485,7 +485,6 @@ underflow_test:
         ; can strip out underflow checks when defining new words, see the
         ; manual for details.
         ; """
-
                 ; To calculate the number of bytes to subtract from DSP0,
                 ; multiply the number of cells needed by two (shift left once)
                 ; and subtract one. This gives us dsp0-1 for one entry, dsp0-3
@@ -501,12 +500,16 @@ underflow_test:
 
                 clc
                 adc #dsp0
-                sta tmpdsp
 
-                cpx tmpdsp
-                bpl +
+                ; Underflow is checked in so many places that it is pretty much
+                ; impossible to find a temporary variable we can use without
+                ; things blowing up in our face.
+                sta $5000
+
+                cpx $5000
+                bpl underflow
                 rts                     ; all is well
-*
+
                 ; We are in underflow. load the approriate error code and drop
                 ; through to the main error routine
 
