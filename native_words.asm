@@ -1995,6 +1995,11 @@ xt_colon:
                 lda dp
                 pha
 
+                ; Tell create not to print warning for duplicate name.
+                lda #$80
+                ora status
+                sta status
+
                 jsr xt_create
 
                 ; Get the nt (not the xt!) of the new word as described above.
@@ -2653,9 +2658,53 @@ _got_name:
                 ; TODO fix this
                 stz 1,x
 
+                ; Check to see if this name already exists.
+                jsr xt_two_dup          ; ( addr u addr u )
+                jsr xt_find_name        ; ( addr u flag ) (non-zero nt as flag)
+                lda 0,x
+                ora 1,x
+                beq _new_name           ; We haven't seen this one before.
+
+                ; This name already exists.  See if we are supposed to print
+                ; the message for it.
+                inx                     ; Drop flag (nt) from find-name.
+                inx
+                ; Check bit 7
+                bit status
+                bpl _redefined_name     ; Bit 7 is zero, so print the message.
+
+                ; We aren't supposed to print the redefined message ourselves,
+                ; but we should indicate that it is redefined (for ; to print
+                ; later).
+                lda #$80                ; Set bit 7 to indicate dup
+                ora status
+                sta status
+                bra _process_name
+
+_redefined_name:
+                ; Print the message that the name is redefined.
+                lda #<s_redefined       ; address of string "redefined"
+                sta tmp3
+                lda #>s_redefined
+                sta tmp3+1
+
+                jsr print_common_no_lf
+                jsr xt_two_dup           ; ( addr u addr u )
+                jsr xt_type
+                jsr xt_space
+
+                bra _process_name
+                
+_new_name:
+                inx                     ; Drop flag (0) from find-name.
+                inx
+                lda #$7F                ; Clear bit 0 of status to indicate new word.
+                and status
+                sta status
+_process_name:
                 lda 0,x
                 sta tmp2                ; store length of string in tmp2
-                
+
                 ; remember the first free byte of memory as the start of
                 ; the new word
                 lda cp
@@ -5987,7 +6036,6 @@ xt_marker:
                 lda cp+1
                 pha
 
-                ; This is a defining word
                 jsr xt_create
 
                 ; By default, CREATE installs a subroutine jump to DOVAR, which
@@ -8945,7 +8993,15 @@ _colonword:
 
                 ; Before we formally add the word to the Dictionary, we
                 ; check to see if it is already present, and if yes, we
-                ; warn the user. We start by putting the string of the
+                ; warn the user.
+
+                ; See if word already in Dictionary.
+                ; (STATUS bit 7 will be high as CREATE already
+                ;  checked for us.)
+                bit status
+                bpl _new_word   ; Bit 7 is clear = new word
+
+                ; We start by putting the string of the
                 ; word we're defining on the stack
                 dex
                 dex
@@ -8970,17 +9026,8 @@ _colonword:
                 adc #0                  ; only want carry
                 sta 3,x
 
-                ; See if word already in Dictionary
-                jsr xt_find_name        ; ( addr u -- 0 | nt )
-
-                ; Check for FALSE flag
-                lda 0,x
-                ora 1,x
-                beq _new_word 
-
                 ; This word is already in the Dictionary, so we print a
-                ; warning to the user. Luckily for us, the nt of the word
-                ; is already on the stack from FIND-NAME. 
+                ; warning to the user. 
                 lda #<s_redefined       ; address of string "redefined"
                 sta tmp3
                 lda #>s_redefined
@@ -8988,37 +9035,19 @@ _colonword:
 
                 jsr print_common_no_lf
 
-                ; Now we print the offending word. This is just
-                ; DUP the faster way, because this is all slow enough
-                ; already
-                dex
-                dex
-                lda 2,x
-                sta 0,x
-                lda 3,x
-                sta 1,x
-
-                lda (0,x)               ; get length of word's name string
-                sta 0,x
-                stz 1,x
-
-                ; Address of string is eight bytes down
-                lda 2,x
-                clc
-                adc #8
-                sta 2,x
-                lda 3,x
-                adc #0                  ; only care about carry
-                sta 3,x
-
+                ; Now we print the offending word.
                 jsr xt_type
                 jsr xt_space
-                bra _common
+
+                ; Clear bit 7 of status (so future words will print message
+                ; by defaut)
+                lda #$7F
+                and status
+                sta status
+
+                ; Continue processing word.
 _new_word:
-                ; Drop FALSE FIND-NAME flag from the stack
-                inx
-                inx
-_common:
+
                 ; Let's get this over with. Save beginning of our word 
                 ; as new last word in the Dictionary
                 lda workword
