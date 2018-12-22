@@ -34,8 +34,7 @@
 .alias uf_strip  user0+28  ; flag to strip underflow detection code
 .alias up        user0+30  ; User Pointer (Address of user variables)
 .alias status    user0+32  ; internal status information
-                           ; (used by : :NONAME ; ACCEPT CONSTANT 2CONSTANT
-                           ;  VARIABLE 2VARIABLE DEFER MARKER)
+                           ; (used by : :NONAME ; ACCEPT)
                            ; Bit 7 = Redefined word message postpone
                            ;         When set before calling CREATE, it will
                            ;         not print the "redefined xxxx" message if
