@@ -1052,49 +1052,11 @@ Because of this stack design, the second entry ("next on stack", NOS) starts at 
 
 #### Underflow Detection
 
-Most native words come with built-in underflow detection. This works by comparing the Data Stack Pointer (X) to values that it must be smaller than (because the stack grows towards 0000). For instance, to make sure we have one element on the stack, we write
+Most native words come with built-in underflow detection. This is realized with a subroutine jump to specialized routines for the number of cells (not: bytes) that are expected on the Data Stack. For example, a word such as `drop` starts with the test:
 
-                    cpx #dsp0-1
-                    bmi _ok
-                    jmp underflow
-    _ok:
-                    (...)
+                    jsr underflow_1
 
-For the most common cases, this gives us:
-
-<table>
-<caption>DSP values for underflow testing</caption>
-<colgroup>
-<col width="50%" />
-<col width="50%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Test for</th>
-<th>Pointer offset</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><p>one element</p></td>
-<td><p><code>dsp0-1</code></p></td>
-</tr>
-<tr class="even">
-<td><p>two elements</p></td>
-<td><p><code>dsp0-3</code></p></td>
-</tr>
-<tr class="odd">
-<td><p>three elements</p></td>
-<td><p><code>dsp0-5</code></p></td>
-</tr>
-<tr class="even">
-<td><p>four elements</p></td>
-<td><p><code>dsp0-7</code></p></td>
-</tr>
-</tbody>
-</table>
-
-Underflow detection adds seven bytes to the words that have it. However, it increases the stability of the program. There is an option for stripping it out during for user-defined words (see below).
+Underflow detection adds three bytes and 16 cycles to the words that have it. However, it increases the stability of the program. There is an option for stripping it out during for user-defined words (see below).
 
 #### Double Cell Values
 
@@ -1595,39 +1557,51 @@ for two bytes and four cycles. If we jump to this word as is assumed with pure s
 
 (In practice, it’s even worse, because `drop` checks for underflow. The actual assembler code is
 
-                    cpx #dsp0-1
-                    bmi +
-                    jmp underflow
-    *
+                    jsr underflow_1
+
                     inx
                     inx
 
-for eleven bytes. We’ll discuss the underflow checks further below.)
+for five bytes and 20 cycles. We’ll discuss the underflow checks further below.)
 
 To get rid of this problem, Tali Forth supports **native compiling** (also known as inlining). The system variable `nc-limit` sets the threshold up to which a word will be included not as a subroutine jump, but in machine language. Let’s start with an example where `nc-limit` is set to zero, that is, all words are compiled as subroutine jumps. Take a simple word such as
 
     : aaa 0 drop ;
 
-and check the actual code with `see`
+when compiled with an `nc-limit` of 0 and check the actual code with `see`
 
-    see aaa
-      nt: 7CD  xt: 7D8
-     size (decimal): 6
+    nt: 9AE  xt: 9B9
+    flags (CO AN IM NN UF HC): 0 0 0 1 0 1
+    size (decimal): 6
 
-    07D8  20 52 99 20 6B 88  ok
+    09B9  20 1C A7 20 80 8D   .. ..
 
-(The actual addresses might be different, this is from the ALPHA release). Our word `aaa` consists of two subroutine jumps, one to zero and one to `drop`. Now, if we increase the threshold to 20, we get different code, as this console session shows:
+    9B9   A71C jsr
+    9BC   8D80 jsr
 
-    20 nc-limit !  ok
-    : bbb 0 drop ;  ok
+(The actual addresses might vary). Our word `aaa` consists of two subroutine jumps, one to zero and one to `drop`. Now, if we increase the threshold to 20 and define a new word with the same instructions with
+
+    20 nc-limit !
+    : bbb 0 drop ;
+
+we get different code:
+
     see bbb
-      nt: 7DF  xt: 7EA
-     size (decimal): 17
+    nt: 9C0  xt: 9CB
+    flags (CO AN IM NN UF HC): 0 0 0 1 0 1
+    size (decimal): 11
 
-    07EA  CA CA 74 00 74 01 E0 77  30 05 A9 0B 4C C7 AC E8
-    07FA  E8  ok
+    09CB  CA CA 74 00 74 01 20 3D  D6 E8 E8  ..t.t. = ...
 
-Even though the definition of `bbb` is the same as `aaa`, we have totally different code: The number 0001 is pushed to the Data Stack (the first six bytes), then we check for underflow (the next nine bytes), and finally we `drop` by moving X register, the Data Stack Pointer. Our word is definitely longer, but have just saved 12 cycles.
+    9CB        dex
+    9CC        dex
+    9CD      0 stz.zx
+    9CF      1 stz.zx
+    9D1   D63D jsr
+    9D4        inx
+    9D5        inx
+
+Even though the definition of `bbb` is the same as `aaa`, we have totally different code: The number 0001 is pushed to the Data Stack (the first six bytes), then we check for underflow (the next three), and finally we `drop` by moving X register, the Data Stack Pointer. Our word is definitely longer, but have just saved 12 cycles.
 
 To experiment with various parameters for native compiling, the Forth word `words&sizes` is included in `user_words.fs` (but commented out by default). The Forth is:
 
@@ -1691,10 +1665,8 @@ It is possible, of course, to have lice and fleas at the same time. For instance
 
                     ; --- CUT HERE FOR NATIVE CODING ---
 
-                    cpx #dsp0-1
-                    bmi +
-                    jmp underflow
-    *
+                    jsr underflow_1
+
                     lda 1,x
                     pha
                     lda 0,x

@@ -2752,58 +2752,20 @@ basic structure is the same for both stacks.</p>
 <div class="sect3">
 <h4 id="_underflow_detection_2">Underflow Detection</h4>
 <div class="paragraph">
-<p>Most native words come with built-in underflow detection. This works by
-comparing the Data Stack Pointer (X) to values that it must be smaller than
-(because the stack grows towards 0000). For instance, to make sure we have one
-element on the stack, we write</p>
+<p>Most native words come with built-in underflow detection. This is realized with
+a subroutine jump to specialized routines for the number of cells (not: bytes)
+that are expected on the Data Stack. For example, a word such as <code>drop</code> starts
+with the test:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>                cpx #dsp0-1
-                bmi _ok
-                jmp underflow
-_ok:
-                (...)</pre>
+<pre>                jsr underflow_1</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>For the most common cases, this gives us:</p>
-</div>
-<table class="tableblock frame-all grid-all">
-<caption class="title">Table 2. DSP values for underflow testing</caption>
-<colgroup>
-<col>
-<col>
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-center valign-top">Test for</th>
-<th class="tableblock halign-center valign-top">Pointer offset</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock">one element</p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><code>dsp0-1</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock">two elements</p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><code>dsp0-3</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock">three elements</p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><code>dsp0-5</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock">four elements</p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><code>dsp0-7</code></p></td>
-</tr>
-</tbody>
-</table>
-<div class="paragraph">
-<p>Underflow detection adds seven bytes to the words that have it. However, it
-increases the stability of the program. There is an option for stripping it out
-during for user-defined words (see below).</p>
+<p>Underflow detection adds three bytes and 16 cycles to the words that have it.
+However, it increases the stability of the program. There is an option for
+stripping it out during for user-defined words (see below).</p>
 </div>
 </div>
 <div class="sect3">
@@ -2876,7 +2838,7 @@ is limited to 255 characters.</p>
 the flags defined in the file <code>definitions.asm</code>:</p>
 </div>
 <table class="tableblock frame-all grid-all">
-<caption class="title">Table 3. Header flags</caption>
+<caption class="title">Table 2. Header flags</caption>
 <colgroup>
 <col>
 <col>
@@ -3115,7 +3077,7 @@ of a mass storage block being used, or 0 for the one of the other input sources.
 In the second case, we use <code>source-id</code> to find out where input is coming from:</p>
 </div>
 <table class="tableblock frame-all grid-all">
-<caption class="title">Table 4. Non-block input sources</caption>
+<caption class="title">Table 3. Non-block input sources</caption>
 <colgroup>
 <col>
 <col>
@@ -3735,16 +3697,14 @@ assembler code is</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>                cpx #dsp0-1
-                bmi +
-                jmp underflow
-*
+<pre>                jsr underflow_1
+
                 inx
                 inx</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>for eleven bytes. We&#8217;ll discuss the underflow checks further below.)</p>
+<p>for five bytes and 20 cycles. We&#8217;ll discuss the underflow checks further below.)</p>
 </div>
 <div class="paragraph">
 <p>To get rid of this problem, Tali Forth supports <strong>native compiling</strong> (also known
@@ -3759,39 +3719,56 @@ compiled as subroutine jumps. Take a simple word such as</p>
 </div>
 </div>
 <div class="paragraph">
-<p>and check the actual code with <code>see</code></p>
+<p>when compiled with an <code>nc-limit</code> of 0 and check the actual code with <code>see</code></p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>see aaa
-  nt: 7CD  xt: 7D8
- size (decimal): 6
+<pre>nt: 9AE  xt: 9B9
+flags (CO AN IM NN UF HC): 0 0 0 1 0 1
+size (decimal): 6
 
-07D8  20 52 99 20 6B 88  ok</pre>
+09B9  20 1C A7 20 80 8D   .. ..
+
+9B9   A71C jsr
+9BC   8D80 jsr</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>(The actual addresses might be different, this is from the ALPHA release). Our
-word <code>aaa</code> consists of two subroutine jumps, one to zero and one to <code>drop</code>.
-Now, if we increase the threshold to 20, we get different code, as this
-console session shows:</p>
+<p>(The actual addresses might vary). Our word <code>aaa</code> consists of two subroutine
+jumps, one to zero and one to <code>drop</code>. Now, if we increase the threshold to 20
+and define a new word with the same instructions with</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>20 nc-limit !  ok
-: bbb 0 drop ;  ok
-see bbb
-  nt: 7DF  xt: 7EA
- size (decimal): 17
+<pre>20 nc-limit !
+: bbb 0 drop ;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>we get different code:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>see bbb
+nt: 9C0  xt: 9CB
+flags (CO AN IM NN UF HC): 0 0 0 1 0 1
+size (decimal): 11
 
-07EA  CA CA 74 00 74 01 E0 77  30 05 A9 0B 4C C7 AC E8
-07FA  E8  ok</pre>
+09CB  CA CA 74 00 74 01 20 3D  D6 E8 E8  ..t.t. = ...
+
+9CB        dex
+9CC        dex
+9CD      0 stz.zx
+9CF      1 stz.zx
+9D1   D63D jsr
+9D4        inx
+9D5        inx</pre>
 </div>
 </div>
 <div class="paragraph">
 <p>Even though the definition of <code>bbb</code> is the same as <code>aaa</code>, we have totally
 different code: The number 0001 is pushed to the Data Stack (the first six
-bytes), then we check for underflow (the next nine bytes), and finally we
+bytes), then we check for underflow (the next three), and finally we
 <code>drop</code> by moving X register, the Data Stack Pointer. Our word is definitely
 longer, but have just saved 12 cycles.</p>
 </div>
@@ -3820,22 +3797,21 @@ another, changing <code>nc-limit</code> should show differences in the Forth
 words.</p>
 </div>
 <div class="paragraph">
-<p>While a new word may have built-in words natively compiled into it,
-all new words are flagged Never-Native by default because a word needs
-to meet some special criteria to be safe to native compile.  In
-particular, the word cannot have any control structures (if, loop,
-begin, again, etc) and, if written in assembly, cannot have any JMP
-instructions in it (except for error handling, such as underflow
-detection).</p>
+<p>While a new word may have built-in words natively compiled into it, all new
+words are flagged Never-Native by default because a word needs to meet some
+special criteria to be safe to native compile.  In particular, the word cannot
+have any control structures (if, loop, begin, again, etc) and, if written in
+assembly, cannot have any JMP instructions in it (except for error handling,
+such as underflow detection).</p>
 </div>
 <div class="paragraph">
-<p>If you are certain your new word meets these criteria,
-then you can enable native compilation of this word into other words
-by invoking the word <code>allow-native</code> or the word <code>always-native</code>
-immediately after the definition of your new word.  The <code>allow-native</code>
-will use the <code>nc-limit</code> value to determine when to natively compiled just like
-it does for the built-in words, and <code>always-native</code> will always
-natively compile regardless of the setting of <code>nc-limit</code>.</p>
+<p>If you are certain your new word meets these criteria, then you can enable
+native compilation of this word into other words by invoking the word
+<code>allow-native</code> or the word <code>always-native</code> immediately after the definition of
+your new word.  The <code>allow-native</code> will use the <code>nc-limit</code> value to determine
+when to natively compiled just like it does for the built-in words, and
+<code>always-native</code> will always natively compile regardless of the setting of
+<code>nc-limit</code>.</p>
 </div>
 <div class="sect3">
 <h4 id="_return_stack_special_cases">Return Stack Special Cases</h4>
@@ -3904,10 +3880,8 @@ instance, this is the code for <code>&gt;r</code>:</p>
 
                 ; --- CUT HERE FOR NATIVE CODING ---
 
-                cpx #dsp0-1
-                bmi +
-                jmp underflow
-*
+                jsr underflow_1
+
                 lda 1,x
                 pha
                 lda 0,x
