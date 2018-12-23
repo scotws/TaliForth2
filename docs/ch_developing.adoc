@@ -381,10 +381,8 @@ The assembly code for `2CONSTANT` (taken from native_words.asm) looks like:
         ; """
 .scope
 xt_two_constant:
-                cpx #dsp0-3
-                bmi +
-                jmp underflow
-*
+                jsr underflow_2
+
                 jsr xt_create
                 jsr xt_swap
                 jsr xt_comma
@@ -406,16 +404,13 @@ z_two_constant: rts
 This word takes an argument, so underflow checking is added right at the top
 (and the UF flag is added in headers.asm).  Underflow checking is optional, but
 recommended for words that take arguments on the stack.  To add underflow
-checking to your word, copy the first 4 lines of assembly above (down to and
-including the *) as the very first 4 lines of your new word and change the 3
-based on the number of cells (minimum) that should be on the stack.
+checking to your word, just call the appropriate underflow checking helper
+(underflow_1 to underflow_4) based on how many cells you are expecting (minimum)
+on the stack.  If there aren't that many cells on the stack when the word is
+run, an error message will be printed and the rest of the word will not be run.
 
-This word takes a double-cell value on the stack, which will take 4 bytes (2
-cells * 2 bytes/cell) total, so x (used as the stack pointer in Tali) is
-compared to the empty stack location `dsp0` - 3 bytes.  Replace the 3 with one
-less than the number of bytes you are expecting on the stack.  Because the data
-stack operates on cells (2-byte values in Tali), this will always be an odd
-number.
+This word takes a double-cell value on the stack, so underflow_2 was used.  The
+underflow check must be the first line in your word.
 
 All of the other words other than `does>` in this definition are regular words,
 so they just turn into JSRs.  The word `does>` turns into a `jsr does_runtime`
