@@ -135,6 +135,9 @@ special handling required for the word `does>`.  These are all covered below,
 with examples.  Take each word in the definition, determine which type of word
 it is, and then follow the steps outlined below for that word type.
 
+Once the word has been converted, a dictionary header needs to be added for it
+in headers.asm.  This process is covered in detail at the end of this section.
+
 ==== Processing Regular (Non-Immediate) Words
 
 If the definition word you are processing is not immediate (you can check this
