@@ -11,7 +11,7 @@ use.
 
 To add words to the permanent set, it is best to start a pull request on the
 GitHub page of Tali Forth. How to setup and use `git` and GitHub is beyond the
-scope of this document -- we'll just point out it they are not as complicated as
+scope of this document -- we'll just point out that they are not as complicated as
 they look, and they make experimenting a lot easier.
 
 During development, Tali Forth tends to follow a sequence of steps for new words:
@@ -24,17 +24,21 @@ During development, Tali Forth tends to follow a sequence of steps for new words
   allowed, given different licenses), but studying the code provides hints for
   a Tali Forth version.
 
-* Write the word in Forth in the interpreter. After it has been tested tested
+* Write the word in Forth in the interpreter. After it has been tested
   interactively, add a high-level version to the file `forth_code/forth_words.fs`.
 
 * Add automatic tests for the new word to the test suite. Ideally, there will
   be test code included in the ANS Forth specification. If not, document what
   the test does.
 
-* In a further step, if appropriate, convert the word to assembler. This
-  requires adding an entry to `headers.asm` and the code itself to `native_words.asm`.
-  In this first step, it will usually be a simple 1:1 sequence of `jsr` subroutine
-  jumps to the existing native Forth words.
+* In a further step, if appropriate, convert the word to
+  assembler. This requires adding an entry to `headers.asm` and the
+  code itself to `native_words.asm`.  In this first step, it will
+  usually be a simple 1:1 sequence of `jsr` subroutine jumps to the
+  existing native Forth words.  Some special consideration is needed
+  for immediate words, postponed words and the word `does>` (see the
+  section on Converting Forth to Assembly for help with these
+  situations).
 
 * If appropriate, rewrite all or some of the subroutine jumps in direct
   assembler. Because we have the automatic tests in place, we can be confident
@@ -120,7 +124,302 @@ This can be an annoying source of errors.
 * Comments are included like popcorn to help readers who are new both to Forth
   and 6502 assembler.
 
+=== Converting Forth to Assembly
 
+When converting a Forth word to assembly, you will need to take the Forth
+definition and process it word by word, in order, into assembly.  All of the
+words used in the definition need to already be in assembly.
+
+The processing is different for regular, immediate, and postponed words, with
+special handling required for the word `does>`.  These are all covered below,
+with examples.  Take each word in the definition, determine which type of word
+it is, and then follow the steps outlined below for that word type.
+
+==== Processing Regular (Non-Immediate) Words
+
+If the definition word you are processing is not immediate (you can check this
+with `see`, eg. `see dup` and make sure the IM flag is 0) then it just
+translates into a JSR to the xt (execution token) of that word.  The xt is just
+a label that begins with `xt_` followed by the name (spelled out, in the case of
+numbers and symbols) of the word.
+
+As an example, let's turn the following definition into assembly:
+
+---- 
+: getstate state @ ; 
+---- 
+Translates into: 
+---- 
+; ## GETSTATE ( -- n ) "Get the current state" 
+; ## "getstate" coded Custom 
+.scope 
+xt_getstate: 
+                jsr xt_state
+                jsr xt_fetch ; @ is pronounced "fetch" in Forth.
+z_getstate: 
+                rts 
+.scend 
+----
+
+The above code would be added to native_words.asm, probably right after
+get-order.  native_words.asm is roughly in alphabetical order with a few odd
+words that need to be close to each other.
+
+The header above the code is in a special format used to track where words come
+from and their current status.  It is parsed by a tool that helps to track
+information about the words, so the format (including the ##s) is important.
+The first line has the name (which is uppercase, but needs to match whatever
+comes after the xt_ and z_ in the labels below it), the input and output stack
+parameters in standard Forth format, and a string that has a short description
+of what the word does.  The second line has a string showing the name as it
+would be typed in Forth (useful for words with symbols in them), the current
+testing status (coded, tested, auto), and where the word comes from (ANS,
+Gforth, etc.)  See the top of native_words.asm for more information on the
+status field, but "coded" is likely to be the right choice until you've
+thoroughly tested your new word.
+
+The `.scope` and `.scend` are special directives to the Ophis assembler to
+create a scope for local labels.  Local labels begin with an underscore "_" and
+are only visible within the same scope.  This allows multiple words to all have
+a `_done:` label, for example, and each word will only branch to its own local
+version of `_done:` found within its scope.  Any branching within the word
+(eg. for ifs and loops) should be done with local labels.  Labels without an
+underscore at the beginning are globally available.
+
+The labels xt_xxxx and z_xxxx need to be the entry and exit point, respectively,
+of your word.  The xxxx portion should be your word spelled out (eg. numbers and
+symbols spelled out with underscores between them).  Although allowed in the
+Forth word, the dash "-" symbol is not allowed in the label (the assembler will
+try to do subtraction), so it is replaced with an underscore anywhere it is
+used.  The one and only RTS should be right after the z_xxxx label.  If you need
+to return early in your word, put a `_done:` label just before the z_xxxx label
+and branch to that.
+
+You can see that the body is just a sequence of JSRs calling each existing word
+in turn.  If you aren't sure of the xt_xxxx name of a forth word, you can search
+native_words.asm for the Forth word (in lowercase) in double quotes and you will
+find it in the header for that word.  `xt_fetch`, above, could be found by
+searching for "@" (including the quotes) if you didn't know its name.
+
+==== Processing Immediate Words
+
+To determine if a word is immediate, use the word `see` on it (eg. `see [char]`
+for the example below).  Processing an immediate word takes a little more
+detective work.  You'll need to determine what these words do to the word being
+compiled and then do it yourself in assembly, so that only what is actually
+compiled into the word (in forth) shows up in your assembly.  Some immediate
+words, such as `.(` don't have any affect on the word being compiled and will
+not have any assembly generated.
+
+Let's start with the simple example:
+----
+: star [char] * emit ;
+----
+
+The fact that [char] is a square-bracketed word is a strong hint that it's an
+immediate word, but you can verify this by looking at the IM flag using `see
+[char]`.  This word takes the next character (after a single space) and compiles
+instructions to put it on the stack.  It also uses up the * in the input.  It
+will need to be replaced with the final result, which is code to put a * on the
+stack.  Checking emit shows that it's a normal (non-immediate) word and will be
+translated into assembly as a JSR.
+
+When we go to add our word to native_words.asm, we discover that the name
+xt_star is already in use (for the multiplication word `*`), so this will show how
+to deal with that complication as well.  
+
+---- 
+; ## STAR_WORD ( -- ) "Print a * on the screen" 
+; ## "star" coded Custom 
+.scope 
+xt_star_word: 
+                ; Put a * character on the stack.  
+                dex             ; Make room on the data stack.  
+                dex 
+                lda #42         ; * is ASCII character 42.
+                sta 0,x         ; Store in low byte of stack cell.
+                stz 1,x         ; high byte is zeroed for characters.
+                jsr xt_emit     ; Print the character to the screen.
+z_star_word: 
+                rts 
+.scend 
+----
+
+We chose the labels xt_star_word and z_star_word for this word, but it will be
+named "star" in the dictionary and Tali won't confuse it with `\*` for
+multiplication.  The `[char] *` portion of the definition has the behavior of
+compiling the instructions to put the character "*" on the stack.  We translate
+that into the assembly that does that directly.  The word `emit` is a normal
+word, and is just translated into a JSR.
+
+==== Processing Postponed Words
+
+Postponed words in a definition are very easy to spot because they will have the
+word `POSTPONE` in front of them.  You will still need to determine if the word
+being postponed is immediate or not, as that will affect how you translate it
+into assembly.
+
+If the word being postponed is an immediate word, then it is very simple and
+translates to just a JSR to the word being postponed.  In this case, the word
+POSTPONE is being used to instruct Forth to compile the next word rather than
+running it (immediately) when it is seen in the forth definition.  Because your
+assembly is the "compiled" version, you just have to include a call to the word
+being postponed.
+
+If the word being postponed is a regular word, then you need to include assembly
+to cause that word to be compiled when your word is run.  There is a helper
+function `cmpl_subroutine` that takes the high byte of the address in Y and the
+low byte in A to help you out with this.
+
+We'll take a look at the Forth word `IS` (used with deferred words) because it
+has a mix of regular, postponed immediate, and postponed regular words without
+being too long.  The definition in Forth looks like:
+
+----
+: is state @ if postpone ['] postpone defer! else ' defer! then ; immediate
+----
+
+This has an `IF` in it, which we will need to translate into branches and will
+be a good demonstration of using local labels.  This word has stateful behavior
+(eg. it acts differently in INTERPRET mode than it does in COMPILE mode).  While
+we could translate the "state @" portion at the beginning into JSRs to xt_state
+and xt_fetch, it will be much faster to look in the state variable directly in
+assembly.  You can find all of the names of internal Tali variables in
+definitions.asm.
+
+The assembly version of this (which you can find in native_words.asm as this is
+the actual assembly definition of this word) is:
+
+----
+; ## IS ( xt "name" -- ) "Set named word to execute xt"
+; ## "is"  auto  ANS core ext
+        ; """http://forth-standard.org/standard/core/IS"""
+.scope
+xt_is:
+                ; This is a state aware word with different behavior
+                ; when used while compiling vs interpreting.
+                ; Check STATE
+                lda state
+                ora state+1
+                beq _interpreting
+_compiling:
+                ; Run ['] to compile the xt of the next word
+                ; as a literal.
+                jsr xt_bracket_tick
+
+                ; Postpone DEFER! by compiling a JSR to it.
+                ldy #>xt_defer_store
+                lda #<xt_defer_store
+                jsr cmpl_subroutine
+                bra _done
+_interpreting:
+                jsr xt_tick
+                jsr xt_defer_store
+_done:          
+z_is:           rts
+.scend
+----
+
+In the header, you can see this word is part of the ANS standard in the extended
+core word set.  The "auto" means that there are automated tests (in the tests
+subdirectory) that automatically test this word.  There is also a link in the
+comments (not technically part of the header) to the ANS standard for this word.
+
+The `STATE @ IF` portion of the definition is replaced by checking the state
+directly.  The state variable is 0 for interpreting and -1 ($FFFF) for
+compiling.  This assembly looks directly in the state variable (it's a 16-bit
+variable, so both halves are used to check for 0).  In order to keep the
+assembly in the same order as the Forth code, we branch on zero (the IF would
+have been compiled into a "0branch") to the ELSE section of the code.
+
+The true section of the IF has two postponed words.  Conveniently (for
+demonstration purposes), the first one is an immediate word and the second is
+not.  You can see that the first postponed word is translated into a JSR and the
+second is translated into a call to cmpl_subroutine with Y and A filled in with
+the address of the word being postponed.  Because the true section should not
+run the code for the ELSE section, we use a BRA to a _done label.
+
+The ELSE section of the IF just has two regular words, so they are just
+translated into JSRs.
+
+The `immediate` on the end is handled in the header in headers.asm by adding IM
+to the status flags.  See the top of headers.asm for a description of all of the
+header fields.
+
+==== Processing DOES>
+
+The word `does>` is an immediate word.  It is commonly used, along with `create`
+(which is not immediate and can be processed normally), in defining words.
+Defining words in Forth are words that can be used to declare new words.
+Because it is likely to be seen in Forth code, its particular assembly behavior
+is covered here.
+
+To see how `does>` is translated, we will consider the word `2CONSTANT`:
+
+----
+: 2constant ( d -- ) create swap , , does> dup @ swap cell+ @ ;
+----
+
+This word is from the ANS double set of words and it creates a new named
+constant that puts its value on the stack when it is run.  It's commonly used
+like this:
+
+----
+12345678. 2constant bignum
+bignum d.
+----
+
+The . at the end of the number makes it a double-cell (32-bit on Tali) number.
+
+The assembly code for `2CONSTANT` (taken from native_words.asm) looks like:
+----
+; ## TWO_CONSTANT (C: d "name" -- ) ( -- d) "Create a constant for a double word"
+; ## "2constant"  auto  ANS double
+        ; """https://forth-standard.org/standard/double/TwoCONSTANT
+        ; Based on the Forth code
+        ; : 2CONSTANT ( D -- )  CREATE SWAP , , DOES> DUP @ SWAP CELL+ @ ;
+        ; """
+.scope
+xt_two_constant:
+                cpx #dsp0-3
+                bmi +
+                jmp underflow
+*
+                jsr xt_create
+                jsr xt_swap
+                jsr xt_comma
+                jsr xt_comma
+                
+                jsr does_runtime    ; does> turns into these two routines.
+                jsr dodoes
+                
+                jsr xt_dup
+                jsr xt_fetch
+                jsr xt_swap
+                jsr xt_cell_plus
+                jsr xt_fetch
+                
+z_two_constant: rts
+.scend
+----
+
+This word takes an argument, so underflow checking is added right at the top
+(and the UF flag is added in headers.asm).  Underflow checking is optional, but
+recommended for words that take arguments on the stack.  To add underflow
+checking to your word, copy the first 4 lines of assembly above (down to and
+including the *) as the very first 4 lines of your new word and change the 3
+based on the number of cells (minimum) that should be on the stack.
+
+This word takes a double-cell value on the stack, which will take 4 bytes (2
+cells * 2 bytes/cell) total, so x (used as the stack pointer in Tali) is
+compared to the empty stack location `dsp0` - 3 bytes.  Replace the 3 with one
+less than the number of bytes you are expecting on the stack.  Because the data
+stack operates on cells (2-byte values in Tali), this will always be an odd
+number.
+
+All of the other words other than `does>` in this definition are regular words,
+so they just turn into JSRs.  The word `does>` turns into a `jsr does_runtime`
+followed by a `jsr dodoes`.
 
 === Code Cheat Sheets
 
