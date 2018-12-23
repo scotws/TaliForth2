@@ -13,16 +13,16 @@ all those things.
 It is a well-established fact that humanity reached the apex of processor design
 with the 6502(((6502))) in 1976. 
 
+[#img_65c02]
+.by Anthony King, public domain
+image::pics/W65c02.jpg[float="left"]
+
 Created by a team including Chuck Peddle((("Peddle, Chuck"))) and Bill
 Mensch((("Mensch, Bill"))), it was the engine that powered the 8-bit home
 computer revolution of the 1980s.footnote:[Rumor has it that there was another
 MPU called "Z80",(((Z80))) but it ended up being a mere footnote.] The
 VIC-20(((VIC-20))), Commodore PET(((Commodore PET))), Apple II(((Apple II))),
 and Atari 800(((Atari 800))) all used the 6502, among others.
-
-[#img_65c02]
-.The 65c02 MPU. Photo: Anthony King, released in the public domain
-image::pics/W65c02.jpg[]
 
 More than 40 years later, the processor is still in production by the
 http://www.westerndesigncenter.com/wdc/w65c02s-chip.cfm[Western Design

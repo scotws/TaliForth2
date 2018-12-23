@@ -488,6 +488,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel1">
 <li><a href="#_how_tali_forth_works">How Tali Forth Works</a>
 <ul class="sectlevel2">
+<li><a href="#_memory_map">Memory Map</a></li>
 <li><a href="#_the_data_stack">The Data Stack</a></li>
 <li><a href="#_dictionary">Dictionary</a></li>
 <li><a href="#_input">Input</a></li>
@@ -599,18 +600,18 @@ all those things.</p>
 <p>It is a well-established fact that humanity reached the apex of processor design
 with the 6502 in 1976.</p>
 </div>
+<div id="img_65c02" class="imageblock" style="float: left">
+<div class="content">
+<img src="pics/W65c02.jpg" alt="W65c02">
+</div>
+<div class="title">Figure 1. by Anthony King, public domain</div>
+</div>
 <div class="paragraph">
 <p>Created by a team including Chuck Peddle and Bill
 Mensch, it was the engine that powered the 8-bit home
 computer revolution of the 1980s.<sup class="footnote">[<a id="_footnoteref_1" class="footnote" href="#_footnote_1" title="View footnote.">1</a>]</sup> The
 VIC-20, Commodore PET, Apple II,
 and Atari 800 all used the 6502, among others.</p>
-</div>
-<div id="img_65c02" class="imageblock">
-<div class="content">
-<img src="pics/W65c02.jpg" alt="W65c02">
-</div>
-<div class="title">Figure 1. The 65c02 MPU. Photo: Anthony King, released in the public domain</div>
 </div>
 <div class="paragraph">
 <p>More than 40 years later, the processor is still in production by the
@@ -2792,6 +2793,23 @@ for ourselves, and our hope was that others liked it. <a href="#DMR">[DMR]</a>
 </div>
 </div>
 <div class="sect2">
+<h3 id="_memory_map">Memory Map</h3>
+<div class="paragraph">
+<p>Tali Forth can be configured to work with various memory layouts and amounts of
+RAM and ROM. Out of the box, the version that runs with the py65 emulator looks
+like this:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="pics/memory_map.png" alt="memory map">
+</div>
+</div>
+<div class="paragraph">
+<p>Note that some of these values are hard-coded into the test suite; see the file
+<code>definitions.txt</code> for details.</p>
+</div>
+</div>
+<div class="sect2">
 <h3 id="_the_data_stack">The Data Stack</h3>
 <div class="paragraph">
 <p>Tali Forth uses the lowest part of the top half of the Zero Page for the Data Stack (DS). This leaves the lower half of the Zero Page
@@ -2838,29 +2856,11 @@ with two <code>dex</code> instructions, and then the new value is placed on the 
 This means that the initial byte is garbage and can be considered part of the
 floodplain.</p>
 </div>
-<div class="literalblock">
-<div class="title">Snapshot of the Data Stack with one entry as TOS. The DSP has been increased by one and the value written.</div>
+<div class="imageblock">
 <div class="content">
-<pre>              +--------------+
-              |          ... |
-              +-            -+
-              |              |   ...
-              +-  (empty)   -+
-              |              |  FE,X
-              +-            -+
-        ...   |              |  FF,X
-              +==============+
-       $0076  |           LSB|  00,X   &lt;-- DSP (X Register)
-              +-    TOS     -+
-       $0077  |           MSB|  01,X
-              +==============+
-       $0078  |  (garbage)   |  02,X   &lt;-- DSP0
-              +--------------+
-       $0079  |              |  03,X
-              + (floodplain) +
-       $007A  |              |  04,X
-              +--------------+</pre>
+<img src="pics/stack_diagram.png" alt="stack diagram">
 </div>
+<div class="title">Figure 3. Snapshot of the Data Stack with one entry as TOS. The DSP has been increased by one and the value written.</div>
 </div>
 <div class="paragraph">
 <p>Note that the 65c02 system stack&#8201;&#8212;&#8201;used as the Return Stack (RS) by Tali&#8201;&#8212;&#8201;pushes the MSB on first and then the LSB (preserving little endian), so the
@@ -2889,31 +2889,24 @@ with the test:</p>
 However, it increases the stability of the program. There is an option for
 stripping it out during for user-defined words (see below).</p>
 </div>
+<div class="paragraph">
+<p>Tali Forth does not check for overflow, which in normal operation is too rare
+to justify the computing expense.</p>
+</div>
 </div>
 <div class="sect3">
 <h4 id="_double_cell_values">Double Cell Values</h4>
 <div class="paragraph">
-<p>The double cell is stored on top of the single cell. Note this places the sign
-bit at the beginning of the byte below the DSP.</p>
+<p>The double cell is stored on top of the single cell.</p>
 </div>
-<div class="literalblock">
+<div class="imageblock">
 <div class="content">
-<pre>              +---------------+
-              |               |
-              +===============+
-              |            LSB|  $0,x   &lt;-- DSP (X Register)
-              +-+  Top Cell  -+
-              |S|          MSB|  $1,x
-              +-+-------------+
-              |            LSB|  $2,x
-              +- Bottom Cell -+
-              |            MSB|  $3,x
-              +===============+</pre>
+<img src="pics/double_cell.png" alt="double cell">
 </div>
 </div>
 <div class="paragraph">
-<p>Tali Forth does not check for overflow, which in normal operation is too rare
-to justify the computing expense.</p>
+<p>Note this places the sign bit of the double cell number (<strong>S</strong>) at the beginning
+of the byte below the DSP.</p>
 </div>
 </div>
 </div>
@@ -2929,25 +2922,9 @@ to allow various tricks in the code.</p>
 <div class="paragraph">
 <p>Each header is at least eight bytes long:</p>
 </div>
-<div class="literalblock">
+<div class="imageblock">
 <div class="content">
-<pre>              8 bit     8 bit
-               LSB       MSB
-nt_word -&gt;  +--------+--------+
-         +0 | Length | Status |
-            +--------+--------+
-         +2 | Next Header     | next nt_word
-            +-----------------+
-         +4 | Start of Code   | xt_word
-            +-----------------+
-         +6 | End of Code     | z_word
-            +--------+--------+
-         +8 | Name   |        |
-            +--------+--------+
-            |        |        |
-            +--------+--------+
-            |        |  ...   |
-         +n +--------+--------+</pre>
+<img src="pics/header_diagram.png" alt="header diagram">
 </div>
 </div>
 <div class="paragraph">
@@ -2959,48 +2936,6 @@ is limited to 255 characters.</p>
 <p>The second byte in the header (index 1) is the status byte. It is created by
 the flags defined in the file <code>definitions.asm</code>:</p>
 </div>
-<table class="tableblock frame-all grid-all">
-<caption class="title">Table 2. Header flags</caption>
-<colgroup>
-<col>
-<col>
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Flag</th>
-<th class="tableblock halign-left valign-top">Function</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CO</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Compile Only</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>IM</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Immediate Word</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NN</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Never Native Compile</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AN</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Always Native Compile</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>UF</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Underflow detection</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>HC</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Has Code Field Area (CFA)</p></td>
-</tr>
-</tbody>
-</table>
-<div class="paragraph">
-<p>Note there are currently two bits unused.</p>
-</div>
 <div class="hdlist">
 <table>
 <tr>
@@ -3008,7 +2943,7 @@ the flags defined in the file <code>definitions.asm</code>:</p>
 CO
 </td>
 <td class="hdlist2">
-<p>This word may only be used inside definitions of new words.</p>
+<p><strong>Compile Only.</strong> This word may only be used inside definitions of new words.</p>
 </td>
 </tr>
 <tr>
@@ -3016,7 +2951,7 @@ CO
 IM
 </td>
 <td class="hdlist2">
-<p>Word is executed immediately during definitions of new words.</p>
+<p><strong>Immediate.</strong> This Word is executed immediately during definitions of new words.</p>
 </td>
 </tr>
 <tr>
@@ -3024,8 +2959,8 @@ IM
 NN
 </td>
 <td class="hdlist2">
-<p>Word is never inlined. Usually means that the return address from a
-subroutine jump is required for processing.</p>
+<p><strong>Never Native.</strong> This Word is never inlined. Usually means that the return address
+from a subroutine jump is required for processing.</p>
 </td>
 </tr>
 <tr>
@@ -3033,7 +2968,16 @@ subroutine jump is required for processing.</p>
 AN
 </td>
 <td class="hdlist2">
-<p>Word must always be inlined.</p>
+<p><strong>Always Native.</strong> This word must always be inlined.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+UF
+</td>
+<td class="hdlist2">
+<p><strong>Undeflow Detection.</strong> This word checks for Data Stack underflow before it is
+executed.</p>
 </td>
 </tr>
 <tr>
@@ -3041,12 +2985,15 @@ AN
 HC
 </td>
 <td class="hdlist2">
-<p>Consider first three bytes of the word&#8217;s code the Code Field Area (CFA)
-of the word. Used by words defined with <code>create</code> so <code>&gt;body</code> returns
+<p><strong>Has CFA.</strong> Consider first three bytes of the word&#8217;s code the Code Field
+Area (CFA) of the word. Used by words defined with <code>create</code> so <code>&gt;body</code> returns
 the correct value.</p>
 </td>
 </tr>
 </table>
+</div>
+<div class="paragraph">
+<p>Note there are currently two bits unused.</p>
 </div>
 <div class="paragraph">
 <p>The status byte is followed by the <strong>pointer to the next header</strong> in the linked
@@ -3109,66 +3056,6 @@ interactively like <code>words</code> always come later.</p>
 primitive form of a self-test: If you see the welcome message, compilation of
 the Forth words worked.</p>
 </div>
-<div class="literalblock">
-<div class="content">
-<pre>   $0000  +-------------------+  ram_start, zpage, user0
-          |  User variables  |
-          +-------------------+
-          |                   |
-          |  ^  Data Stack    |  &lt;-- dsp
-          |  |                |
-   $0078  +-------------------+  dsp0, stack
-          |                   |
-          |   (Reserved for   |
-          |      kernel)      |
-          |                   |
-   $0100  +===================+
-          |                   |
-          |  ^  Return Stack  |  &lt;-- rsp
-          |  |                |
-   $0200  +-------------------+  rsp0, buffer, buffer0
-          |  |                |
-          |  v  Input Buffer  |
-          |                   |
-   $0300  +-------------------+  cp0
-          |  |                |
-          |  v  Dictionary    |
-          |       (RAM)       |
-          |                   |
-          ~~~~~~~~~~~~~~~~~~~~~  &lt;-- cp
-          |                   |
-          |                   |
-          +-------------------+
-          |                   |
-          | ACCEPT history    |
-          |                   |
-   $7FFF  #####################  ram_end
-   $8000  |                   |  forth, code0
-          |                   |
-          |                   |
-          |    Tali Forth     |
-          |     (24 KiB)      |
-          |                   |
-          |                   |
-   $E000  +-------------------+
-          |                   |  kernel_putc, kernel_getc
-          |      Kernel       |
-          |                   |
-   $F000  +-------------------+
-          |   I/O addresses   |
-          +-------------------+
-          |                   |
-          |      Kernel       |
-          |                   |
-   $FFFA  +-------------------+
-          |  65c02 vectors    |
-   $FFFF  +-------------------+</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Note that some of these values are hard-coded into the test suite; see the file
-<code>definitions.txt</code> for details.</p>
-</div>
 </div>
 </div>
 <div class="sect2">
@@ -3199,7 +3086,7 @@ of a mass storage block being used, or 0 for the one of the other input sources.
 In the second case, we use <code>source-id</code> to find out where input is coming from:</p>
 </div>
 <table class="tableblock frame-all grid-all">
-<caption class="title">Table 3. Non-block input sources</caption>
+<caption class="title">Table 2. Non-block input sources</caption>
 <colgroup>
 <col>
 <col>
@@ -4875,27 +4762,9 @@ Programming computers can be crazy-making. <a href="#LB2">[LB2]</a>
 <div class="paragraph">
 <p>This is your friend and should probably go on your wall or something.</p>
 </div>
-<div class="literalblock">
+<div class="imageblock">
 <div class="content">
-<pre>                +--------------+
-                |          ... |
-                +-            -+
-                |              |   ...
-                +-  (empty)   -+
-                |              |  FE,X
-                +-            -+
-          ...   |              |  FF,X
-                +==============+
-         $0076  |           LSB|  00,X   &lt;-- DSP (X Register)
-                +-    TOS     -+
-         $0077  |           MSB|  01,X
-                +==============+
-         $0078  |  (garbage)   |  02,X   &lt;-- DSP0
-                +--------------+
-         $0079  |              |  03,X
-                + (floodplain) +
-         $007A  |              |  04,X
-                +--------------+</pre>
+<img src="pics/stack_diagram.png" alt="stack diagram">
 </div>
 </div>
 </div>
@@ -6049,7 +5918,7 @@ receive bug fixes. In fact, new bugs are not even documented.</p>
 <div class="content">
 <img src="pics/tali_forth_alpha003.png" alt="tali forth alpha003">
 </div>
-<div class="title">Figure 3. Screenshot of the Tali Forth 1 boot screen, version Alpha 3, April 2014</div>
+<div class="title">Figure 4. Screenshot of the Tali Forth 1 boot screen, version Alpha 3, April 2014</div>
 </div>
 <div class="dlist">
 <dl>

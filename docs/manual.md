@@ -22,9 +22,9 @@ This section provides background information on Forth, the 6502 processor, and w
 
 It is a well-established fact that humanity reached the apex of processor design with the 65026502 in 1976.
 
-Created by a team including Chuck PeddlePeddle, Chuck and Bill MenschMensch, Bill, it was the engine that powered the 8-bit home computer revolution of the 1980s.[1] The VIC-20VIC-20, Commodore PETCommodore PET, Apple IIApple II, and Atari 800Atari 800 all used the 6502, among others.
+![by Anthony King, public domain](pics/W65c02.jpg)
 
-![The 65c02 MPU. Photo: Anthony King, released in the public domain](pics/W65c02.jpg)
+Created by a team including Chuck PeddlePeddle, Chuck and Bill MenschMensch, Bill, it was the engine that powered the 8-bit home computer revolution of the 1980s.[1] The VIC-20VIC-20, Commodore PETCommodore PET, Apple IIApple II, and Atari 800Atari 800 all used the 6502, among others.
 
 More than 40 years later, the processor is still in production by the [Western Design Center](http://www.westerndesigncenter.com/wdc/w65c02s-chip.cfm)WDC. Apart from commercial uses, there is an active hobbyist scene centered on the website [6502.org](http://6502.org/).6502.org A number of people have built their own 8-bit computers based on this chip and the instructions there, including a [primer](http://wilsonminesco.com/6502primer/) by Garth WilsonWilson, Garth. It is for these systems that Tali Forth 2 was created.
 
@@ -1094,6 +1094,14 @@ These mistakes can surface further downstream when the incorrect value on the Da
 >
 > —  Dennis M. Ritchie Reflections on Software Research
 
+### Memory Map
+
+Tali Forth can be configured to work with various memory layouts and amounts of RAM and ROM. Out of the box, the version that runs with the py65 emulator looks like this:
+
+![memory map](pics/memory_map.png)
+
+Note that some of these values are hard-coded into the test suite; see the file `definitions.txt` for details.
+
 ### The Data Stack
 
 Tali Forth uses the lowest part of the top half of the Zero PageZero Page for the Data Stack (DS). This leaves the lower half of the Zero Page for any kernel stuff the user might require. The DS grows towards the initial user variables. See the file `definitions.asm` for details. Because of the danger of underflow,underflow it is recommended that the user kernel’s variables are kept closer to $0100 than to $007F.
@@ -1112,9 +1120,7 @@ Since the cell size is 16 bits, each stack entry consists of two bytes. They are
 
 Because the DSP points to the current top of the stack, the byte it points to after boot — `dsp0` — will never be accessed: The DSP is decremented first with two `dex` instructions, and then the new value is placed on the stack. This means that the initial byte is garbage and can be considered part of the floodplain.
 
-**Snapshot of the Data Stack with one entry as TOS. The DSP has been increased by one and the value written..**
-
-+--------------+ | ... | +- -+ | | ... +- (empty) -+ | | FE,X +- -+ ... | | FF,X +==============+ $0076 | LSB| 00,X &lt;-- DSP (X Register) +- TOS -+ $0077 | MSB| 01,X +==============+ $0078 | (garbage) | 02,X &lt;-- DSP0 +--------------+ $0079 | | 03,X + (floodplain) + $007A | | 04,X +--------------+
+![Snapshot of the Data Stack with one entry as TOS. The DSP has been increased by one and the value written.](pics/stack_diagram.png)
 
 Note that the 65c02 system stack — used as the Return Stack (RS) by Tali — pushes the MSB on first and then the LSB (preserving little endian), so the basic structure is the same for both stacks.
 
@@ -1128,23 +1134,15 @@ Most native words come with built-in underflow detection. This is realized with 
 
 Underflow detection adds three bytes and 16 cycles to the words that have it. However, it increases the stability of the program. There is an option for stripping it out during for user-defined words (see below).
 
+Tali Forth does not check for overflow, which in normal operation is too rare to justify the computing expense.
+
 #### Double Cell Values
 
-The double cell is stored on top of the single cell. Note this places the sign bit at the beginning of the byte below the DSP.
+The double cell is stored on top of the single cell.
 
-                  +---------------+
-                  |               |
-                  +===============+
-                  |            LSB|  $0,x   <-- DSP (X Register)
-                  +-+  Top Cell  -+
-                  |S|          MSB|  $1,x
-                  +-+-------------+
-                  |            LSB|  $2,x
-                  +- Bottom Cell -+
-                  |            MSB|  $3,x
-                  +===============+
+![double cell](pics/double_cell.png)
 
-Tali Forth does not check for overflow, which in normal operation is too rare to justify the computing expense.
+Note this places the sign bit of the double cell number (**S**) at the beginning of the byte below the DSP.
 
 ### Dictionary
 
@@ -1154,69 +1152,11 @@ Tali Forth follows the traditional model of a Forth dictionary — a linked 
 
 Each header is at least eight bytes long:
 
-                  8 bit     8 bit
-                   LSB       MSB
-    nt_word ->  +--------+--------+
-             +0 | Length | Status |
-                +--------+--------+
-             +2 | Next Header     | next nt_word
-                +-----------------+
-             +4 | Start of Code   | xt_word
-                +-----------------+
-             +6 | End of Code     | z_word
-                +--------+--------+
-             +8 | Name   |        |
-                +--------+--------+
-                |        |        |
-                +--------+--------+
-                |        |  ...   |
-             +n +--------+--------+
+![header diagram](pics/header_diagram.png)
 
 Each word has a `name token` (nt, `nt_word` in the code) that points to the first byte of the header. This is the length of the word’s name string, which is limited to 255 characters.
 
 The second byte in the header (index 1) is the status byte. It is created by the flags defined in the file `definitions.asm`:
-
-<table>
-<caption>Header flags</caption>
-<colgroup>
-<col width="50%" />
-<col width="50%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Flag</th>
-<th>Function</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><p><code>CO</code></p></td>
-<td><p>Compile Only</p></td>
-</tr>
-<tr class="even">
-<td><p><code>IM</code></p></td>
-<td><p>Immediate Word</p></td>
-</tr>
-<tr class="odd">
-<td><p><code>NN</code></p></td>
-<td><p>Never Native Compile</p></td>
-</tr>
-<tr class="even">
-<td><p><code>AN</code></p></td>
-<td><p>Always Native Compile</p></td>
-</tr>
-<tr class="odd">
-<td><p><code>UF</code></p></td>
-<td><p>Underflow detection</p></td>
-</tr>
-<tr class="even">
-<td><p><code>HC</code></p></td>
-<td><p>Has Code Field Area (CFA)</p></td>
-</tr>
-</tbody>
-</table>
-
-Note there are currently two bits unused.
 
 <table>
 <colgroup>
@@ -1226,26 +1166,32 @@ Note there are currently two bits unused.
 <tbody>
 <tr class="odd">
 <td><p>CO</p></td>
-<td><p>This word may only be used inside definitions of new words.</p></td>
+<td><p><strong>Compile Only.</strong> This word may only be used inside definitions of new words.</p></td>
 </tr>
 <tr class="even">
 <td><p>IM</p></td>
-<td><p>Word is executed immediately during definitions of new words.</p></td>
+<td><p><strong>Immediate.</strong> This Word is executed immediately during definitions of new words.</p></td>
 </tr>
 <tr class="odd">
 <td><p>NN</p></td>
-<td><p>Word is never inlined. Usually means that the return address from a subroutine jump is required for processing.</p></td>
+<td><p><strong>Never Native.</strong> This Word is never inlined. Usually means that the return address from a subroutine jump is required for processing.</p></td>
 </tr>
 <tr class="even">
 <td><p>AN</p></td>
-<td><p>Word must always be inlined.</p></td>
+<td><p><strong>Always Native.</strong> This word must always be inlined.</p></td>
 </tr>
 <tr class="odd">
+<td><p>UF</p></td>
+<td><p><strong>Undeflow Detection.</strong> This word checks for Data Stack underflow before it is executed.</p></td>
+</tr>
+<tr class="even">
 <td><p>HC</p></td>
-<td><p>Consider first three bytes of the word’s code the Code Field Area (CFA) of the word. Used by words defined with <code>create</code> so <code>&gt;body</code> returns the correct value.</p></td>
+<td><p><strong>Has CFA.</strong> Consider first three bytes of the word’s code the Code Field Area (CFA) of the word. Used by words defined with <code>create</code> so <code>&gt;body</code> returns the correct value.</p></td>
 </tr>
 </tbody>
 </table>
+
+Note there are currently two bits unused.
 
 The status byte is followed by the **pointer to the next header** in the linked list, which makes it the name token of the next word. A 0000 in this position signals the end of the linked list, which by convention is the word `bye` for the native code words.
 
@@ -1266,61 +1212,6 @@ Tali Forth distinguishes between three different word sources: The **native word
 Tali has an unusually high number of native words in an attempt to make the Forth as fast as possible on the 65c02 and compensate for the disadvantages of the subroutine threading model (STC). The first word on that list — the one that is checked first — is always `drop`, the last one — the one checked for last — is always `bye`. The words which are (or are assumed to be) used more than others come first. Since humans are slow, words that are used more interactively like `words` always come later.
 
 The list of Forth words ends with the intro strings. This functions as a primitive form of a self-test: If you see the welcome message, compilation of the Forth words worked.
-
-       $0000  +-------------------+  ram_start, zpage, user0
-              |  User variables  |
-              +-------------------+
-              |                   |
-              |  ^  Data Stack    |  <-- dsp
-              |  |                |
-       $0078  +-------------------+  dsp0, stack
-              |                   |
-              |   (Reserved for   |
-              |      kernel)      |
-              |                   |
-       $0100  +===================+
-              |                   |
-              |  ^  Return Stack  |  <-- rsp
-              |  |                |
-       $0200  +-------------------+  rsp0, buffer, buffer0
-              |  |                |
-              |  v  Input Buffer  |
-              |                   |
-       $0300  +-------------------+  cp0
-              |  |                |
-              |  v  Dictionary    |
-              |       (RAM)       |
-              |                   |
-              ~~~~~~~~~~~~~~~~~~~~~  <-- cp
-              |                   |
-              |                   |
-              +-------------------+
-              |                   |
-              | ACCEPT history    |
-              |                   |
-       $7FFF  #####################  ram_end
-       $8000  |                   |  forth, code0
-              |                   |
-              |                   |
-              |    Tali Forth     |
-              |     (24 KiB)      |
-              |                   |
-              |                   |
-       $E000  +-------------------+
-              |                   |  kernel_putc, kernel_getc
-              |      Kernel       |
-              |                   |
-       $F000  +-------------------+
-              |   I/O addresses   |
-              +-------------------+
-              |                   |
-              |      Kernel       |
-              |                   |
-       $FFFA  +-------------------+
-              |  65c02 vectors    |
-       $FFFF  +-------------------+
-
-Note that some of these values are hard-coded into the test suite; see the file `definitions.txt` for details.
 
 ### Input
 
@@ -2142,25 +2033,7 @@ The second thing to note is the status byte of each word. If the word doesn’t 
 
 This is your friend and should probably go on your wall or something.
 
-                    +--------------+
-                    |          ... |
-                    +-            -+
-                    |              |   ...
-                    +-  (empty)   -+
-                    |              |  FE,X
-                    +-            -+
-              ...   |              |  FF,X
-                    +==============+
-             $0076  |           LSB|  00,X   <-- DSP (X Register)
-                    +-    TOS     -+
-             $0077  |           MSB|  01,X
-                    +==============+
-             $0078  |  (garbage)   |  02,X   <-- DSP0
-                    +--------------+
-             $0079  |              |  03,X
-                    + (floodplain) +
-             $007A  |              |  04,X
-                    +--------------+
+![stack diagram](pics/stack_diagram.png)
 
 #### Coding Idioms
 

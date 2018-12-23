@@ -2,6 +2,18 @@
 Our intent was to create a pleasant computing environment
 for ourselves, and our hope was that others liked it. <<DMR>>
 
+=== Memory Map
+
+Tali Forth can be configured to work with various memory layouts and amounts of
+RAM and ROM. Out of the box, the version that runs with the py65 emulator looks
+like this:
+
+image::pics/memory_map.png[]
+
+Note that some of these values are hard-coded into the test suite; see the file
+`definitions.txt` for details.
+
+
 === The Data Stack
 
 Tali Forth uses the lowest part of the top half of the Zero Page((("Zero
@@ -39,7 +51,6 @@ floodplain.
 .Snapshot of the Data Stack with one entry as TOS. The DSP has been increased by one and the value written.
 image::pics/stack_diagram.png[]
 
-
 Note that the 65c02 system stack -- used as the Return Stack (RS) by Tali --
 pushes the MSB on first and then the LSB (preserving little endian), so the
 basic structure is the same for both stacks. 
@@ -62,16 +73,18 @@ Underflow detection adds three bytes and 16 cycles to the words that have it.
 However, it increases the stability of the program. There is an option for
 stripping it out during for user-defined words (see below).
 
-==== Double Cell Values
-
-The double cell is stored on top of the single cell. Note this places the sign
-bit at the beginning of the byte below the DSP.
-
-image::pics/double_cell.png[]
-
 Tali Forth does not check for overflow, which in normal operation is too rare
 to justify the computing expense. 
 
+
+==== Double Cell Values
+
+The double cell is stored on top of the single cell. 
+
+image::pics/double_cell.png[]
+
+Note this places the sign bit of the double cell number (*S*) at the beginning
+of the byte below the DSP.
 
 === Dictionary
 
@@ -93,34 +106,25 @@ is limited to 255 characters.
 The second byte in the header (index 1) is the status byte. It is created by
 the flags defined in the file `definitions.asm`: 
 
-.Header flags
-[%autowidth]
-|===
-| Flag | Function 
-
-| `CO` | Compile Only
-| `IM` | Immediate Word
-| `NN` | Never Native Compile
-| `AN` | Always Native Compile
-| `UF` | Underflow detection
-| `HC` | Has Code Field Area (CFA)
-
-|===
+[horizontal]
+CO:: 
+  *Compile Only.* This word may only be used inside definitions of new words.
+IM:: 
+  *Immediate.* This Word is executed immediately during definitions of new words.
+NN:: 
+  *Never Native.* This Word is never inlined. Usually means that the return address
+  from a subroutine jump is required for processing.
+AN:: 
+  *Always Native.* This word must always be inlined.
+UF:: 
+  *Undeflow Detection.* This word checks for Data Stack underflow before it is
+  executed. 
+HC::
+  *Has CFA.* Consider first three bytes of the word's code the Code Field 
+  Area (CFA) of the word. Used by words defined with `create` so `>body` returns
+  the correct value.
 
 Note there are currently two bits unused. 
-
-[horizontal]
-CO:: This word may only be used inside definitions of new words.
-IM:: Word is executed immediately during definitions of new words.
-NN:: 
-  Word is never inlined. Usually means that the return address from a
-  subroutine jump is required for processing.
-AN::
-  Word must always be inlined.
-HC::
-  Consider first three bytes of the word's code the Code Field Area (CFA)
-  of the word. Used by words defined with `create` so `>body` returns
-  the correct value.
 
 The status byte is followed by the **pointer to the next header** in the linked
 list, which makes it the name token of the next word. A 0000 in this position
@@ -166,10 +170,6 @@ The list of Forth words ends with the intro strings. This functions as a
 primitive form of a self-test: If you see the welcome message, compilation of
 the Forth words worked.
 
-image::pics/memory_map.png[]
-
-Note that some of these values are hard-coded into the test suite; see the file
-`definitions.txt` for details.
 
 === Input 
 
