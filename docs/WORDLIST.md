@@ -220,6 +220,7 @@ RTS instruction at the end of each word.
 | STAR_SLASH_MOD | `*/mod` | ANS core | 15 | **auto** |
 | STATE | `state` | ANS core | 10 | **auto** |
 | STORE | `!` | ANS core | 21 | **auto** |
+| STRIP_UNDERFLOW | `strip-underflow` | Tali Forth | 10 | tested |
 | SWAP | `swap` | ANS core | 19 | **auto** |
 | THEN | `then` | ANS core | 9 | **auto** |
 | THRU | `list` | ANS block ext | 68 | tested |
@@ -254,7 +255,6 @@ RTS instruction at the end of each word.
 | U_LESS_THAN | `u<` | ANS core | 21 | **auto** |
 | UD_DOT | `ud.` | Tali double | 18 | **auto** |
 | UD_DOT_R | `ud.r` | Tali double | 30 | **auto** |
-| UF_STRIP | `uf-strip` | Tali Forth | 10 | tested |
 | UM_SLASH_MOD | `um/mod` | ANS core | 65 | **auto** |
 | UM_STAR | `um*` | ANS core | 69 | **auto** |
 | UNLOOP | `unloop` | ANS core | 6 | **auto** |

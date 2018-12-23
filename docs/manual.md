@@ -243,7 +243,7 @@ When you port Tali Forth to your own hardware, you’ll have to include your own
 Tali Forth itself boots next, and after setting up various internal things, compiles the high level words. This causes a slight delay, depending on the number and length of these words. As the last step, Forth should spit out a boot string like
 
     Tali Forth 2 for the 65c02
-    Version ALPHA 02. July 2018
+    Version ALPHA 24. December 2018
     Copyright 2014-2018 Scot W. Stevenson
     Tali Forth 2 comes with absolutely NO WARRANTY
     Type 'bye' to exit
@@ -260,22 +260,23 @@ Tali Forth comes with the following Forth words out of the box:
 
     see block-ramdrive-init list l evaluate thru load flush empty-buffers buffer
     update block save-buffers block-words-deferred block-write block-read scr blk
-    buffstatus buffblocknum blkbuffer buffer: 2literal 2constant d.r d. ud.r ud. .r u.r
-    action-of is defer@ defer! endcase endof of case while until repeat else then if .( (
-    drop dup swap ! @ over >r r> r@ nip rot -rot tuck , c@ c! +! execute emit type .
-    u. ? false true space 0 1 2 2dup ?dup + - abs dabs and or xor rshift lshift pick
-    char [char] char+ chars cells cell+ here 1- 1+ 2* 2/ = <> < u< u> > 0= 0<> 0> 0<
-    min max 2drop 2swap 2over 2! 2@ 2variable 2r@ 2r> 2>r invert negate dnegate c,
-    bounds spaces bl -trailing /string refill accept unused depth key allot create does>
-    variable constant value to s>d d>s d- d+ erase blank fill find-name ' ['] name>int
-    int>name name>string >body defer latestxt latestnt parse-name parse source source-id :
-    ; :noname compile, [ ] 0branch branch literal sliteral ." s" postpone immediate
-    compile-only never-native always-native allow-native nc-limit uf-strip abort abort" do ?do
-    i j loop +loop exit unloop leave recurse quit begin again state evaluate base
-    digit? number >number hex decimal count m* um* * um/mod sm/rem fm/mod / /mod mod
+    buffstatus buffblocknum blkbuffer buffer: 2literal 2constant d.r d. ud.r ud. .r
+    u.r action-of is defer@ defer! endcase endof of case while until repeat else
+    then if .( ( drop dup swap ! @ over >r r> r@ nip rot -rot tuck , c@ c! +!
+    execute emit type .  u. ? false true space 0 1 2 2dup ?dup + - abs dabs and or
+    xor rshift lshift pick char [char] char+ chars cells cell+ here 1- 1+ 2* 2/ = <>
+    < u< u> > 0= 0<> 0> 0< min max 2drop 2swap 2over 2! 2@ 2variable 2r@ 2r> 2>r
+    invert negate dnegate c, bounds spaces bl -trailing /string refill accept unused
+    depth key allot create does> variable constant value to s>d d>s d- d+ erase
+    blank fill find-name ' ['] name>int int>name name>string >body defer latestxt
+    latestnt parse-name parse source source-id : ; :noname compile, [ ] 0branch
+    branch literal sliteral ." s" postpone immediate compile-only never-native
+    always-native allow-native nc-limit strip-underflow abort abort" do ?do i j loop
+    +loop exit unloop leave recurse quit begin again state evaluate base digit?
+    number >number hex decimal count m* um* * um/mod sm/rem fm/mod / /mod mod
     */mod */ \ move cmove> cmove pad cleave within >in <# # #s #> hold sign output
-    input cr page at-xy marker words wordsize aligned align bell dump .s disasm compare
-    search environment? find word ed cold bye
+    input cr page at-xy marker words wordsize aligned align bell dump .s disasm
+    compare search environment? find word ed cold bye
 
 > **Note**
 >
@@ -416,8 +417,8 @@ port
 <td><p><code>( — addr )</code> Return the address where the vector for the output routine is stored (not the vector itself). Used for output redirection for <code>emit</code> and others.</p></td>
 </tr>
 <tr class="even">
-<td><p>uf-strip</p></td>
-<td><p><code>( — addr )</code> Return the address where the flag is kept that decides if the underflow checks are removed during native compiling. To check the value of this flag, use <code>uf-strip ?</code>.</p></td>
+<td><p>strip-underflow</p></td>
+<td><p><code>( — addr )</code> Return the address where the flag is kept that decides if the underflow checks are removed during native compiling. To check the value of this flag, use <code>strip-underflow ?</code>.</p></td>
 </tr>
 <tr class="odd">
 <td><p>useraddr</p></td>
@@ -475,7 +476,7 @@ To completely turn off native compiling, set this value to zero.
 
 When a word tries to access more words on the stack than it is holding, an "underflow" error occurs. Whereas Tali Forth 1 didn’t check for these errors, this version does.
 
-However, this slows the program down. Because of this, the user can turn off underflow detection for words that are natively compiled into new words. To do this, set the system variable `uf-strip` to `true`. Note this does not turn off underflow detection in the built-in words. Also, words with underflow detection that are not included in new words through native compiling will also retain their tests.
+However, this slows the program down. Because of this, the user can turn off underflow detection for words that are natively compiled into new words. To do this, set the system variable `strip-underflow` to `true`. Note this does not turn off underflow detection in the built-in words. Also, words with underflow detection that are not included in new words through native compiling will also retain their tests.
 
 ### Restarting
 
@@ -1615,7 +1616,7 @@ The first three and last three instructions are purely for housekeeping with sub
 
 #### Underflow Stripping
 
-As described above, every underflow check adds seven bytes to the word being coded. Stripping this check by setting the `uf-strip` system variable to `true` simply removes these seven bytes from new natively compiled words.
+As described above, every underflow check adds three bytes to the word being coded. Stripping this check by setting the `strip-underflow` system variable (named `uf-strip` in the source code) to `true` simply removes these three bytes from new natively compiled words.
 
 It is possible, of course, to have lice and fleas at the same time. For instance, this is the code for `>r`:
 

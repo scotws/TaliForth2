@@ -1,7 +1,7 @@
 ; Dictionary Headers for Tali Forth 2
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 05. Dec 2016 (Liara Forth)
-; This version: 21. Dec 2018
+; This version: 24. Dec 2018
 
 ; Dictionary headers are kept separately from the code, which allows various
 ; tricks in the code. We roughly follow the Gforth terminology: The Execution
@@ -691,14 +691,14 @@ nt_abort:
         .word nt_abort_quote, xt_abort, z_abort
         .byte "abort"
 
-nt_uf_strip:
-        .byte 8, 0
-        .word nt_abort, xt_uf_strip, z_uf_strip
-        .byte "uf-strip"
+nt_strip_underflow:
+        .byte 15, 0
+        .word nt_abort, xt_strip_underflow, z_strip_underflow
+        .byte "strip-underflow"
 
 nt_nc_limit:
         .byte 8, 0
-        .word nt_uf_strip, xt_nc_limit, z_nc_limit
+        .word nt_strip_underflow, xt_nc_limit, z_nc_limit
         .byte "nc-limit"
 
 nt_allow_native:

@@ -752,9 +752,10 @@ be compiled into the new word.
 
 ==== Underflow Stripping
 
-As described above, every underflow check adds seven bytes to the word being
-coded. Stripping this check by setting the `uf-strip` system variable to `true`
-simply removes these seven bytes from new natively compiled words.
+As described above, every underflow check adds three bytes to the word being
+coded. Stripping this check by setting the `strip-underflow` system variable
+(named `uf-strip` in the source code) to `true` simply removes these three bytes
+from new natively compiled words.
 
 It is possible, of course, to have lice and fleas at the same time. For
 instance, this is the code for `>r`:

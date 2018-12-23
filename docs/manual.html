@@ -1094,7 +1094,7 @@ boot string like</p>
 <div class="listingblock">
 <div class="content">
 <pre>Tali Forth 2 for the 65c02
-Version ALPHA 02. July 2018
+Version ALPHA 24. December 2018
 Copyright 2014-2018 Scot W. Stevenson
 Tali Forth 2 comes with absolutely NO WARRANTY
 Type 'bye' to exit</pre>
@@ -1127,22 +1127,23 @@ box:</p>
 <div class="content">
 <pre>see block-ramdrive-init list l evaluate thru load flush empty-buffers buffer
 update block save-buffers block-words-deferred block-write block-read scr blk
-buffstatus buffblocknum blkbuffer buffer: 2literal 2constant d.r d. ud.r ud. .r u.r
-action-of is defer@ defer! endcase endof of case while until repeat else then if .( (
-drop dup swap ! @ over &gt;r r&gt; r@ nip rot -rot tuck , c@ c! +! execute emit type .
-u. ? false true space 0 1 2 2dup ?dup + - abs dabs and or xor rshift lshift pick
-char [char] char+ chars cells cell+ here 1- 1+ 2* 2/ = &lt;&gt; &lt; u&lt; u&gt; &gt; 0= 0&lt;&gt; 0&gt; 0&lt;
-min max 2drop 2swap 2over 2! 2@ 2variable 2r@ 2r&gt; 2&gt;r invert negate dnegate c,
-bounds spaces bl -trailing /string refill accept unused depth key allot create does&gt;
-variable constant value to s&gt;d d&gt;s d- d+ erase blank fill find-name ' ['] name&gt;int
-int&gt;name name&gt;string &gt;body defer latestxt latestnt parse-name parse source source-id :
-; :noname compile, [ ] 0branch branch literal sliteral ." s" postpone immediate
-compile-only never-native always-native allow-native nc-limit uf-strip abort abort" do ?do
-i j loop +loop exit unloop leave recurse quit begin again state evaluate base
-digit? number &gt;number hex decimal count m* um* * um/mod sm/rem fm/mod / /mod mod
+buffstatus buffblocknum blkbuffer buffer: 2literal 2constant d.r d. ud.r ud. .r
+u.r action-of is defer@ defer! endcase endof of case while until repeat else
+then if .( ( drop dup swap ! @ over &gt;r r&gt; r@ nip rot -rot tuck , c@ c! +!
+execute emit type .  u. ? false true space 0 1 2 2dup ?dup + - abs dabs and or
+xor rshift lshift pick char [char] char+ chars cells cell+ here 1- 1+ 2* 2/ = &lt;&gt;
+&lt; u&lt; u&gt; &gt; 0= 0&lt;&gt; 0&gt; 0&lt; min max 2drop 2swap 2over 2! 2@ 2variable 2r@ 2r&gt; 2&gt;r
+invert negate dnegate c, bounds spaces bl -trailing /string refill accept unused
+depth key allot create does&gt; variable constant value to s&gt;d d&gt;s d- d+ erase
+blank fill find-name ' ['] name&gt;int int&gt;name name&gt;string &gt;body defer latestxt
+latestnt parse-name parse source source-id : ; :noname compile, [ ] 0branch
+branch literal sliteral ." s" postpone immediate compile-only never-native
+always-native allow-native nc-limit strip-underflow abort abort" do ?do i j loop
++loop exit unloop leave recurse quit begin again state evaluate base digit?
+number &gt;number hex decimal count m* um* * um/mod sm/rem fm/mod / /mod mod
 */mod */ \ move cmove&gt; cmove pad cleave within &gt;in &lt;# # #s #&gt; hold sign output
-input cr page at-xy marker words wordsize aligned align bell dump .s disasm compare
-search environment? find word ed cold bye</pre>
+input cr page at-xy marker words wordsize aligned align bell dump .s disasm
+compare search environment? find word ed cold bye</pre>
 </div>
 </div>
 <div class="admonitionblock note">
@@ -1462,12 +1463,12 @@ others.</p>
 </tr>
 <tr>
 <td class="hdlist1">
-uf-strip
+strip-underflow
 </td>
 <td class="hdlist2">
 <p><code>(&#8201;&#8212;&#8201;addr )</code> Return the address where the flag is kept that decides
 if the underflow checks are removed during native compiling. To check the value
-of this flag, use <code>uf-strip ?</code>.</p>
+of this flag, use <code>strip-underflow ?</code>.</p>
 </td>
 </tr>
 <tr>
@@ -1590,10 +1591,10 @@ for these errors, this version does.</p>
 <div class="paragraph">
 <p>However, this slows the program down. Because of this, the user can turn off
 underflow detection for words that are natively compiled into new words. To do
-this, set the system variable <code>uf-strip</code> to <code>true</code>. Note this does not turn off
-underflow detection in the built-in words. Also, words with underflow detection
-that are not included in new words through native compiling will also retain
-their tests.</p>
+this, set the system variable <code>strip-underflow</code> to <code>true</code>. Note this does not
+turn off underflow detection in the built-in words. Also, words with underflow
+detection that are not included in new words through native compiling will also
+retain their tests.</p>
 </div>
 </div>
 <div class="sect2">
@@ -3872,9 +3873,10 @@ be compiled into the new word.</p>
 <div class="sect3">
 <h4 id="_underflow_stripping">Underflow Stripping</h4>
 <div class="paragraph">
-<p>As described above, every underflow check adds seven bytes to the word being
-coded. Stripping this check by setting the <code>uf-strip</code> system variable to <code>true</code>
-simply removes these seven bytes from new natively compiled words.</p>
+<p>As described above, every underflow check adds three bytes to the word being
+coded. Stripping this check by setting the <code>strip-underflow</code> system variable
+(named <code>uf-strip</code> in the source code) to <code>true</code> simply removes these three bytes
+from new natively compiled words.</p>
 </div>
 <div class="paragraph">
 <p>It is possible, of course, to have lice and fleas at the same time. For
