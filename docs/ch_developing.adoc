@@ -426,27 +426,7 @@ Programming computers can be crazy-making. <<LB2>>
 
 This is your friend and should probably go on your wall or something.
 
-....
-                +--------------+
-                |          ... |
-                +-            -+
-                |              |   ...
-                +-  (empty)   -+
-                |              |  FE,X
-                +-            -+
-          ...   |              |  FF,X
-                +==============+
-         $0076  |           LSB|  00,X   <-- DSP (X Register)
-                +-    TOS     -+
-         $0077  |           MSB|  01,X
-                +==============+
-         $0078  |  (garbage)   |  02,X   <-- DSP0
-                +--------------+
-         $0079  |              |  03,X
-                + (floodplain) +
-         $007A  |              |  04,X
-                +--------------+
-....
+image::pics/stack_diagram.png[]
 
 ==== Coding Idioms
 

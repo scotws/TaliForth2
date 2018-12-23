@@ -4,7 +4,10 @@
 # This makefile is called from the main project Makefile.
 
 # Add any diagram images to this space separated list.
-DIAGRAM_IMAGES=blocks-block.png blocks-flush.png blocks-newblock.png blocks-update.png blocks-update3.png
+DIAGRAM_IMAGES=blocks-block.png blocks-flush.png blocks-newblock.png \
+               blocks-update.png blocks-update3.png \
+               stack_diagram.png double_cell.png header_diagram.png \
+               memory_map.png
 
 all:	$(DIAGRAM_IMAGES)
 
