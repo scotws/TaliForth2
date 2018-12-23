@@ -3,7 +3,7 @@ Sam Colwell; Scot W. Stevenson
 :doctype: book
 :keywords: forth, 6502, assembler, programming, 8-bit, vintage, retro
 :revnumber: BETA
-:revdate: 17. Dez 2018
+:revdate: 22. Dec 2018
 :showtitle:
 :icons: font
 :toc: left
@@ -49,10 +49,10 @@ include::ch_editor_block.adoc[]
 === The Line-Based Editor `ed`
 include::ch_editor_ed.adoc[]
 
-=== Assembler
+=== The Assembler
 include::ch_assembler.adoc[]
 
-=== Disassembler
+=== The Disassembler
 include::ch_disasm.adoc[]
 
 

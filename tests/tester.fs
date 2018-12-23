@@ -22,6 +22,7 @@ variable verbose  false verbose !
 variable actual-depth   \ stack record
 create actual-results  20 cells allot
 
+
 \ Empty stack: handles underflowed stack too
 : empty-stack ( ... -- ) 
    depth ?dup if 

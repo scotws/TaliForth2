@@ -824,7 +824,7 @@ Currently, `ed` returns the data stack just the way it found it. This means that
 
 The "buffer" of `ed` is a simple linked list of nodes, consisting of a pointer to the next entry, a pointer to the string address, and the length of that string. Each entry is two byte, making six bytes in total for each node. A value of 0000 in the pointer to the next address signals the end of the list. The buffer starts at the point of the `cp` (accessed with the Forth word `here`) and is only saved to the given location when the `w` command is given.
 
-### Assembler
+### The Assembler
 
 > **Warning**
 >
@@ -840,47 +840,123 @@ Tali Forth is shipped with a built-in assembler that uses the Simpler Assembler 
 
 Because Tali Forth is a Subroutine Threaded (STC) Forth, inserting assembler instructions is easy. In fact, the only real problem is accessing the assembler wordlist, which is normally not in the search tree because of its length. This, then, is one way to add assembler code:
 
-    assembler-wordlist >order
-    here            \ Remember where we are
-    1 lda.#         \ LDA #1 in Simpler Assembler Notation (SAN)
-    push-a          \ Pseudo-instruction, pushes A on the Forth data stack
-    rts             \ End subroutine. Don't use BRK!
-    execute         \ Run our code using value from HERE
-    .s              \ Will show 1 as TOS
-    previous
+            assembler-wordlist >order
+            here            \ Remember where we are
+            1 lda.#         \ LDA #1 in Simpler Assembler Notation (SAN)
+            push-a          \ Pseudo-instruction, pushes A on the Forth data stack
+            rts             \ End subroutine. Don't use BRK!
+            execute         \ Run our code using value from HERE
+            .s              \ Will show 1 as TOS
+            previous
 
-The first line is required to give the user access to the list of assembler mnemonics. They are usually not in the current wordlist path because of their sheer number. Note we use `rts`, not `brk`, as the last instruction to return to the command line.
+The first line is required to give the user access to the list of assembler mnemonics. They are not in the default wordlist path because of their sheer number:
 
-WARNTING: Never use `brk` inside Tali Forth assembler code
+            push-a tya txs txa tsx tsb.z tsb trb.z trb tay tax stz.zx stz.z stz.x
+            stz sty.zx sty.z sty stx.zy stx.z stx sta.zxi sta.zx sta.ziy sta.zi
+            sta.z sta.y sta.x sta sei sed sec sbc.zxi sbc.zx sbc.ziy sbc.zi sbc.z
+            sbc.y sbc.x sbc.# sbc rts rti ror.zx ror.z ror.x ror.a ror rol.zx rol.z
+            rol.x rol.a rol ply plx plp pla phy phx php pha ora.zxi ora.zx ora.ziy
+            ora.zi ora.z ora.y ora.x ora.# ora nop lsr.zx lsr.z lsr.x lsr.a lsr
+            ldy.zx ldy.z ldy.x ldy.# ldy ldx.zy ldx.z ldx.y ldx.# ldx lda.zxi lda.zx
+            lda.ziy lda.zi lda.z lda.y lda.x lda.# lda jsr jmp.xi jmp.i jmp iny inx
+            inc.zx inc.z inc.x inc.a inc eor.zxi eor.zx eor.ziy eor.zi eor.z eor.y
+            eor.x eor.# eor dey dex dec.zx dec.z dec.x dec.a dec cpy.z cpy.# cpy
+            cpx.z cpx.# cpx cmp.zxi cmp.zx cmp.ziy cmp.zi cmp.z cmp.y cmp.x cmp.#
+            cmp clv cli cld clc bvs bvc brk bra bpl bne bmi bit.zx bit.z bit.x bit.#
+            bit beq bcs bcc asl.zx asl.z asl.x asl.a asl and.zxi and.zx and.ziy
+            and.zi and.z and.y and.x and.# and adc.zxi adc.zx adc.ziy adc.zi adc.z
+            adc.y adc.x adc.#
 
-Note you can freely intermingel Forth high-level words and assembler instructions. For example, this will work:
+The last line, `previous`, removes the assembler wordlist again.
 
-    hex
-    10 lda.#        \ LDA #$10
-    decimal
-    10 ldx.#        \ LDA #10
+In the example above, it is important to use `rts` and not `brk` as the last instruction to return to the command line.
+
+> **Warning**
+>
+> Seriously. Never use `brk` inside Tali Forth assembler code!
+
+Note you can freely mix Forth high-level words and assembler instructions. For example, this will work:
+
+            hex
+            10 lda.#        \ LDA #$10
+            decimal
+            10 ldx.#        \ LDA #10
 
 Running the disassembler gives us (actual addresses may vary):
 
-    12BF    10 lda.#
-    12C1     A ldx.#
+            12BF    10 lda.#
+            12C1     A ldx.#
 
 This also allows the use various different formatting tricks like putting more than one assembler instruction in a line or including in-line comments:
 
-    dec.a dec.a     \ DEC twice
-    nop ( just chilling ) nop ( still don't want to work )
-    nop ( not going to happen ) nop ( just go away already! )
+            dec.a dec.a     \ DEC twice
+            nop ( just chilling ) nop ( still don't want to work )
+            nop ( not going to happen ) nop ( just go away already! )
 
-#### Accessing Forth words from inside the assembler
+#### Adding assembler code to words
+
+The assembler words are immediate, that is, they are executed even during compilation. Simply adding them to a word doesn’t work. For example, if we want a word that pushes 1 on the Forth data stack, we might be tempted to do this (assuming `assembler-wordlist >order`):
+
+            : one-to-tos  compiled
+            1 lda.#                 \ fails with "Stack underflow"
+
+The problem is that the number `1` is compiled, and then the immediate word `lda.#` is executed, but it can’t find its operand on the stack. To avoid this problem, we can use the `[` and `]` words:
+
+            : one-to-tos  compiled
+            [ 1 lda.# ]  compiled
+            [ push-a ]  compiled
+            u. ;  ok
+
+> **Note**
+>
+> We do not need to add an explicit `rts` instruction when compiling new words with assembler because the `;` does it automatically. This is because Tali Forth uses Subroutine Threaded Code (STC)
+
+Running `one-to-tos` prints the number `1`. We can use a slightly simpler variant:
+
+            : one-to-tos  compiled
+            [ 1 lda.#  ok
+            push-a ]  compiled
+            u. ;  ok
+
+This time, we’ve only used one left square bracket to start the assembler code and one right bracket to end it. Because of this, we get an `ok` instead of a `compiled` because we are technically not in compile-mode anymore. `1 lda.#` can write the machine code right away.
+
+Looking at our new word with `see` gives us (addresses may vary):
+
+            nt: A2A  xt: A3C
+            flags (CO AN IM NN UF HC): 0 0 0 1 0 1
+            size (decimal): 19
+
+            0A3C  A9 01 CA CA 95 00 74 01  20 3D D6 20 89 D6 A9 20  ......t.  =. ...
+            0A4C  20 30 8E   0.
+
+            A3C      1 lda.#   
+            A3E        dex     
+            A3F        dex
+            A40      0 sta.zx
+            A42      1 stz.zx
+            A44   D63D jsr     
+            A47   D689 jsr
+            A4A     20 lda.#
+            A4C   8E30 jsr
+
+-   is the `1 lda.#` as a single line;
+
+-   starts four lines of code for `push-a`;
+
+-   starts four lines from `u.`
+
+Some Forths add the words `code` and `end-code` to mark the beginning and end of an assembler blocks. In our case, these would just be simple synonyms for `[` and `]`
+
+#### Accessing Forth words from assembler
 
 To execute Forth words when then assembler code is run, we need to store a subroutine jump to the word’s execution token (xt). This we can get with `'` (the "tick"). For instance, to print the byte in the accumulator:
 
-    here
-    10 lda.#
-    push-a          
-    ' u. jsr        
-    rts
-    execute
+            here
+            10 lda.#
+            push-a          
+            ' u. jsr        
+            rts
+            execute
 
 -   Push the value from A to TOS
 
@@ -892,20 +968,14 @@ This will print `10`.
 
 Probably the very simplest way is to add the opcodes and operands directly with the `c,` instruction. Tali Forth also provides a special word called `hexstore` to add strings of numbers.
 
-#### Directives
-
-> **Warning**
->
-> This early version of the assembler has no directives. They will be adapted from tasm65c02 in time.
-
 #### Pseudo-instructions and macros
 
 **push-a** takes the byte in the Accumulator A and pushes it to the top of the Forth Data Stack. This is a convenience macro for
 
-    dex
-    dex
-    sta.zx 0        ; STA 0,X
-    stz.zx 1        ; STZ 1,X
+            dex
+            dex
+            sta.zx 0        ; STA 0,X
+            stz.zx 1        ; STZ 1,X
 
 #### Under the hood
 
@@ -913,7 +983,7 @@ The assembler instructions are in fact just normal, very simple Forth words that
 
 The assembler instructions will trigger an underflow error if there is no operand on the stack when required.
 
-    lda.#   \ requires operand first on the stack -> triggers error
+            lda.#   \ requires operand first on the stack -> triggers error
 
 #### Gotchas and known issues
 
@@ -921,17 +991,17 @@ Working with assembler requires an intimate knowledge of Tali Forth’s internal
 
 **Using the X register.** Tali Forth uses X to hold the Data Stack pointer. Manipulating it risks crashing the whole system beyond any hope of recovery. If for some reason you feel you must use X, be careful to save and restore the original value, such as:
 
-    phx
-    ( do something with X )
-    plx
+            phx
+            ( do something with X )
+            plx
 
-**Branch instruction operands** currently have to be calculated by hand. This will change in a future version.
+**Branch instruction operands** currently have to be calculated by hand. This might change in a future version through some form of labels.
 
 **The Forth word `and`** cannot be used when the assembler wordlist is first in the search order because the assembler instruction of the same name will be called instead.
 
 **`brk` is a two-byte instruction** because the assembler enforces the signature byte. You shouldn’t use `brk` anyway.
 
-### Disassembler
+### The Disassembler
 
 Tali Forth is currently shipped with a very primitive disassembler, which is started with `disasm ( addr u — )`.
 
@@ -1052,49 +1122,11 @@ Because of this stack design, the second entry ("next on stack", NOS) starts at 
 
 #### Underflow Detection
 
-Most native words come with built-in underflow detection. This works by comparing the Data Stack Pointer (X) to values that it must be smaller than (because the stack grows towards 0000). For instance, to make sure we have one element on the stack, we write
+Most native words come with built-in underflow detection. This is realized with a subroutine jump to specialized routines for the number of cells (not: bytes) that are expected on the Data Stack. For example, a word such as `drop` starts with the test:
 
-                    cpx #dsp0-1
-                    bmi _ok
-                    jmp underflow
-    _ok:
-                    (...)
+                    jsr underflow_1
 
-For the most common cases, this gives us:
-
-<table>
-<caption>DSP values for underflow testing</caption>
-<colgroup>
-<col width="50%" />
-<col width="50%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Test for</th>
-<th>Pointer offset</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><p>one element</p></td>
-<td><p><code>dsp0-1</code></p></td>
-</tr>
-<tr class="even">
-<td><p>two elements</p></td>
-<td><p><code>dsp0-3</code></p></td>
-</tr>
-<tr class="odd">
-<td><p>three elements</p></td>
-<td><p><code>dsp0-5</code></p></td>
-</tr>
-<tr class="even">
-<td><p>four elements</p></td>
-<td><p><code>dsp0-7</code></p></td>
-</tr>
-</tbody>
-</table>
-
-Underflow detection adds seven bytes to the words that have it. However, it increases the stability of the program. There is an option for stripping it out during for user-defined words (see below).
+Underflow detection adds three bytes and 16 cycles to the words that have it. However, it increases the stability of the program. There is an option for stripping it out during for user-defined words (see below).
 
 #### Double Cell Values
 
@@ -1595,39 +1627,51 @@ for two bytes and four cycles. If we jump to this word as is assumed with pure s
 
 (In practice, it’s even worse, because `drop` checks for underflow. The actual assembler code is
 
-                    cpx #dsp0-1
-                    bmi +
-                    jmp underflow
-    *
+                    jsr underflow_1
+
                     inx
                     inx
 
-for eleven bytes. We’ll discuss the underflow checks further below.)
+for five bytes and 20 cycles. We’ll discuss the underflow checks further below.)
 
 To get rid of this problem, Tali Forth supports **native compiling** (also known as inlining). The system variable `nc-limit` sets the threshold up to which a word will be included not as a subroutine jump, but in machine language. Let’s start with an example where `nc-limit` is set to zero, that is, all words are compiled as subroutine jumps. Take a simple word such as
 
     : aaa 0 drop ;
 
-and check the actual code with `see`
+when compiled with an `nc-limit` of 0 and check the actual code with `see`
 
-    see aaa
-      nt: 7CD  xt: 7D8
-     size (decimal): 6
+    nt: 9AE  xt: 9B9
+    flags (CO AN IM NN UF HC): 0 0 0 1 0 1
+    size (decimal): 6
 
-    07D8  20 52 99 20 6B 88  ok
+    09B9  20 1C A7 20 80 8D   .. ..
 
-(The actual addresses might be different, this is from the ALPHA release). Our word `aaa` consists of two subroutine jumps, one to zero and one to `drop`. Now, if we increase the threshold to 20, we get different code, as this console session shows:
+    9B9   A71C jsr
+    9BC   8D80 jsr
 
-    20 nc-limit !  ok
-    : bbb 0 drop ;  ok
+(The actual addresses might vary). Our word `aaa` consists of two subroutine jumps, one to zero and one to `drop`. Now, if we increase the threshold to 20 and define a new word with the same instructions with
+
+    20 nc-limit !
+    : bbb 0 drop ;
+
+we get different code:
+
     see bbb
-      nt: 7DF  xt: 7EA
-     size (decimal): 17
+    nt: 9C0  xt: 9CB
+    flags (CO AN IM NN UF HC): 0 0 0 1 0 1
+    size (decimal): 11
 
-    07EA  CA CA 74 00 74 01 E0 77  30 05 A9 0B 4C C7 AC E8
-    07FA  E8  ok
+    09CB  CA CA 74 00 74 01 20 3D  D6 E8 E8  ..t.t. = ...
 
-Even though the definition of `bbb` is the same as `aaa`, we have totally different code: The number 0001 is pushed to the Data Stack (the first six bytes), then we check for underflow (the next nine bytes), and finally we `drop` by moving X register, the Data Stack Pointer. Our word is definitely longer, but have just saved 12 cycles.
+    9CB        dex
+    9CC        dex
+    9CD      0 stz.zx
+    9CF      1 stz.zx
+    9D1   D63D jsr
+    9D4        inx
+    9D5        inx
+
+Even though the definition of `bbb` is the same as `aaa`, we have totally different code: The number 0001 is pushed to the Data Stack (the first six bytes), then we check for underflow (the next three), and finally we `drop` by moving X register, the Data Stack Pointer. Our word is definitely longer, but have just saved 12 cycles.
 
 To experiment with various parameters for native compiling, the Forth word `words&sizes` is included in `user_words.fs` (but commented out by default). The Forth is:
 
@@ -1691,10 +1735,8 @@ It is possible, of course, to have lice and fleas at the same time. For instance
 
                     ; --- CUT HERE FOR NATIVE CODING ---
 
-                    cpx #dsp0-1
-                    bmi +
-                    jmp underflow
-    *
+                    jsr underflow_1
+
                     lda 1,x
                     pha
                     lda 0,x

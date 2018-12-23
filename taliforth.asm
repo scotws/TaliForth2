@@ -1,7 +1,7 @@
 ; Tali Forth 2 for the 65c02
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 19. Jan 2014 (Tali Forth)
-; This version: 18. Dec 2018
+; This version: 22. Dec 2018
 
 ; This is the main file for Tali Forth 2
 
@@ -477,67 +477,88 @@ _done:
 .scend
 
 
-underflow:
-        ; """Landing area for data stack underflow"""
-                lda #err_underflow
+; Underflow test. We jump to the label with the number of cells (not: bytes)
+; required for the word. 
+underflow_1:
+        ; """Make sure we have at least one cell on the Data Stack"""
+                cpx #dsp0-1
+                bpl underflow_error
+                rts
+underflow_2:
+        ; """Make sure we have at least two cells on the Data Stack"""
+                cpx #dsp0-3
+                bpl underflow_error
+                rts
+underflow_3:
+        ; """Make sure we have at least three cells on the Data Stack"""
+                cpx #dsp0-5
+                bpl underflow_error
+                rts
+underflow_4:
+        ; """Make sure we have at least four cells on the Data Stack"""
+                cpx #dsp0-7
+                bpl underflow_error
+                rts
 
-                ; fall through to error
+underflow_error:      
+                ; Entry for COLD/ABORT/QUIT
+                lda #err_underflow      ; fall through to error
 
 error: 
-        ; """Given the error number in A, print the associated error string and 
-        ; call ABORT. Uses tmp3.
+        ; """Given the error number in a, print the associated error string and 
+        ; call abort. uses tmp3.
         ; """
                 asl
                 tay
                 lda error_table,y
-                sta tmp3                ; LSB
+                sta tmp3                ; lsb
                 iny
                 lda error_table,y
-                sta tmp3+1              ; MSB
+                sta tmp3+1              ; msb
 
                 jsr print_common
-        	jmp xt_abort            ; no JSR, as we clobber Return Stack
+        	jmp xt_abort            ; no jsr, as we clobber return stack
 
 
 print_string: 
-        ; """Print a zero-terminated string to the console/screen, adding a
-        ; LF. We are given the string number, which functions as an index to
-        ; the string table. We do not check to see if the index is out of
-        ; range. Uses tmp3.
+        ; """print a zero-terminated string to the console/screen, adding a
+        ; lf. we are given the string number, which functions as an index to
+        ; the string table. we do not check to see if the index is out of
+        ; range. uses tmp3.
         ; """
                 asl
                 tay
                 lda string_table,y
-                sta tmp3                ; LSB
+                sta tmp3                ; lsb
                 iny
                 lda string_table,y
-                sta tmp3+1              ; MSB
+                sta tmp3+1              ; msb
 
                 ; falls through to print_common
 
 print_common:
-        ; """Common print loop for print_string and print_error. Assumes
+        ; """common print loop for print_string and print_error. assumes
         ; zero-terminated address of string to be printed is in tmp3. 
-        ; Adds LF
+        ; adds lf
         ; """
                 jsr print_common_no_lf
 
-                lda #AscLF
+                lda #asclf
                 jsr emit_a
 
         	rts
 
 print_common_no_lf:
-        ; """Common print loop with no line feed at the end. Assumes
+        ; """common print loop with no line feed at the end. assumes
         ; address of zero-terminated string to be printed is in tmp3.
-        ; Used by print_common
+        ; used by print_common
         ; """
 .scope
                 ldy #0
 _loop:
                 lda (tmp3),y
                 beq _done               ; strings are zero-terminated
-                jsr emit_a              ; allows vectoring via OUTPUT
+                jsr emit_a              ; allows vectoring via output
                 iny
                 bra _loop
 _done:
@@ -546,9 +567,9 @@ _done:
 
 
 print_u:
-        ; """Basic printing routine used by higher-level constructs,
-        ; the equivalent of the Forth word  0 <# #S #> TYPE  which is
-        ; basically U. without the SPACE at the end. Used for various
+        ; """basic printing routine used by higher-level constructs,
+        ; the equivalent of the forth word  0 <# #s #> type  which is
+        ; basically u. without the space at the end. used for various
         ; outputs
         ; """
 .scope
@@ -558,28 +579,28 @@ print_u:
                 stz 1,x
 
                 jsr xt_less_number_sign         ; <#
-                jsr xt_number_sign_s            ; #S
+                jsr xt_number_sign_s            ; #s
                 jsr xt_number_sign_greater      ; #>
-                jsr xt_type                     ; TYPE
+                jsr xt_type                     ; type
         
                 rts
 .scend
 
 current_to_dp:
-        ; """Look up the CURRENT (compilation) dictionary pointer
-        ; in the wordlist set and put it into the DP zero-page
-        ; variable.  Uses A and Y.
+        ; """look up the current (compilation) dictionary pointer
+        ; in the wordlist set and put it into the dp zero-page
+        ; variable.  uses a and y.
         ; """
-                ; Determine which wordlist is CURRENT
+                ; determine which wordlist is current
                 ldy #current_offset
-                lda (up),y      ; CURRENT is a byte variable
-                asl             ; Turn it into an offset (in cells)
+                lda (up),y      ; current is a byte variable
+                asl             ; turn it into an offset (in cells)
 
-                ; Get the dictionary pointer for that wordlist.
+                ; get the dictionary pointer for that wordlist.
                 clc
-                adc #wordlists_offset   ; Add offset to Wordlists base.
+                adc #wordlists_offset   ; add offset to wordlists base.
                 tay
-                lda (up),y              ; Get the dp for that wordlist.
+                lda (up),y              ; get the dp for that wordlist.
                 sta dp
                 iny
                 lda (up),y
@@ -587,20 +608,20 @@ current_to_dp:
                 rts
 
 dp_to_current:
-        ; """Look up which wordlist is CURRENT and update its pointer
-        ; with the value in dp.  Uses A and Y.
+        ; """look up which wordlist is current and update its pointer
+        ; with the value in dp.  uses a and y.
         ; """
-                ; Determine which wordlist is CURRENT
+                ; determine which wordlist is current
                 ldy #current_offset
-                lda (up),y      ; CURRENT is a byte variable
-                asl             ; Turn it into an offset (in cells)
+                lda (up),y      ; current is a byte variable
+                asl             ; turn it into an offset (in cells)
 
-                ; Get the dictionary pointer for that wordlist.
+                ; get the dictionary pointer for that wordlist.
                 clc
-                adc #wordlists_offset   ; Add offset to Wordlists base.
+                adc #wordlists_offset   ; add offset to wordlists base.
                 tay
                 lda dp
-                sta (up),y              ; Get the dp for that wordlist.
+                sta (up),y              ; get the dp for that wordlist.
                 iny
                 lda dp+1
                 sta (up),y
