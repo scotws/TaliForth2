@@ -1,0 +1,55 @@
+                   RAM
+   $0000  +-------------------+ ram_start, zpage, user0
+          |  User variables   |
+          +-------------------+
+          |                   |
+          |  ^  Data Stack    |  <-- dsp
+          |  |                |
+   $0078  +-------------------+  dsp0, stack
+          |                   |
+          |   (Reserved for   |
+          |      kernel)      |
+          |              cYEL |
+   $0100  +-------------------+
+          |                   |
+          |  ^  Return Stack  |  <-- rsp
+          |  |                |
+   $0200  +-------------------+ rsp0, buffer, buffer0
+          |  |                |
+          |  v  Input Buffer  |
+          |                   |
+   $0300  +-------------------+   cp0
+          |  |                |
+          |  v  Dictionary    |
+          |       (RAM)       |
+          |                   |
+          |===================|  <-- cp
+          |                   |
+          |                   |
+          +-------------------+
+          |                   |
+          | ACCEPT history    |
+          |                   |
+   $7FFF  +-------------------+  ram_end
+                   ROM
+   $8000  +-------------------+ forth, code0
+          |                   |  
+          |                   |
+          |                   |
+          |    Tali Forth     |
+          |     (24 KiB)      |
+          |                   |
+          |                   |
+   $E000  +-------------------+
+          |                   | kernel_putc, kernel_getc   
+          |      Kernel       |
+          |               cYEL|
+   $F000  +-------------------+
+          |   I/O addresses   |
+          +-------------------+
+          |                   |
+          |      Kernel       |
+          |               cYEL|
+   $FFFA  +-------------------+     
+          |  65c02 vectors    |
+   $FFFF  +-------------------+
