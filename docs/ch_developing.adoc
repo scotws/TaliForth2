@@ -426,7 +426,7 @@ comment block over it and the xt_xxxx and z_xxxx labels for the entry and exit
 points, it is time to add the dictionary header for your word to link it into
 one of the existing wordlists.  The words here are not in alphabetical order and
 are loosely grouped by function.  If you aren't sure where to put your word, then
-put it near the top of the file just under the header for "cold".
+put it near the top of the file just under the header for `cold`.
 
 Each header is simply a declaration of bytes and words that provides some basic
 information that Tali needs to use the word, as well as the addresses of the
@@ -434,13 +434,13 @@ beginning and ending (not including the rts at the end) of your word.  That's
 why you need the xt_xxxx and z_xxxx labels in your word (where xxxx is the
 spelled-out version of your word's name).
 
-Before we dicuss adding a word, let's go over the form a dictionary
-header.  The fields we will be filling in are described right at the top of
-headers.asm for reference.  We'll look at an easy to locate word, `cold`, which
-is used to perform a cold reset of Tali.  It's right near the top of the list.
-We'll also show the word `ed`, which is currently below `cold`, because you will
-need to modify it (or whatever word is currently just below `cold`) when you put
-your word under `cold`.  The headers for these two words currently look like:
+Before we dicuss adding a word, let's go over the form a dictionary header.  The
+fields we will be filling in are described right at the top of headers.asm for
+reference. We'll look at an easy to locate word, `cold`, which is used to
+perform a cold reset of Tali. It's right near the top of the list.  We'll also
+show the word `ed`, which is currently below `cold`, because you will need to
+modify it (or whatever word is currently just below `cold`) when you put your
+word under `cold`.  The headers for these two words currently look like:
 
 ----
 nt_cold:
@@ -460,10 +460,10 @@ should match whatever you used in your xt_xxxx and z_xxxx labels.
 
 The next two fields are byte fields, so we create them with the Ophis assembler
 `.byte` directive.  The first field is the length of the name, in characters, as
-it will be typed in Tali.  The second field is the status of the word, where each
-bit has a special meaning.  If there is nothing special about your word, you
-will just put 0 here.  If your word needs some of the status flags, you add them
-together (with +) here to form the status byte.  The table below gives the
+it will be typed in Tali.  The second field is the status of the word, where
+each bit has a special meaning.  If there is nothing special about your word,
+you will just put 0 here.  If your word needs some of the status flags, you add
+them together (with +) here to form the status byte.  The table below gives the
 constants you will use and a brief description of when to use them.
 
 [horizontal]

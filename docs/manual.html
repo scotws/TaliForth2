@@ -4327,6 +4327,10 @@ special handling required for the word <code>does&gt;</code>.  These are all cov
 with examples.  Take each word in the definition, determine which type of word
 it is, and then follow the steps outlined below for that word type.</p>
 </div>
+<div class="paragraph">
+<p>Once the word has been converted, a dictionary header needs to be added for it
+in headers.asm.  This process is covered in detail at the end of this section.</p>
+</div>
 <div class="sect3">
 <h4 id="_processing_regular_non_immediate_words">Processing Regular (Non-Immediate) Words</h4>
 <div class="paragraph">
@@ -4655,6 +4659,203 @@ underflow check must be the first line in your word.</p>
 <p>All of the other words other than <code>does&gt;</code> in this definition are regular words,
 so they just turn into JSRs.  The word <code>does&gt;</code> turns into a <code>jsr does_runtime</code>
 followed by a <code>jsr dodoes</code>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_adding_the_header_in_headers_asm">Adding the Header in headers.asm</h4>
+<div class="paragraph">
+<p>Once your word has been entered into native_words.asm with the appropriate
+comment block over it and the xt_xxxx and z_xxxx labels for the entry and exit
+points, it is time to add the dictionary header for your word to link it into
+one of the existing wordlists.  The words here are not in alphabetical order and
+are loosely grouped by function.  If you aren&#8217;t sure where to put your word, then
+put it near the top of the file just under the header for <code>cold</code>.</p>
+</div>
+<div class="paragraph">
+<p>Each header is simply a declaration of bytes and words that provides some basic
+information that Tali needs to use the word, as well as the addresses of the
+beginning and ending (not including the rts at the end) of your word.  That&#8217;s
+why you need the xt_xxxx and z_xxxx labels in your word (where xxxx is the
+spelled-out version of your word&#8217;s name).</p>
+</div>
+<div class="paragraph">
+<p>Before we dicuss adding a word, let&#8217;s go over the form a dictionary header.  The
+fields we will be filling in are described right at the top of headers.asm for
+reference. We&#8217;ll look at an easy to locate word, <code>cold</code>, which is used to
+perform a cold reset of Tali. It&#8217;s right near the top of the list.  We&#8217;ll also
+show the word <code>ed</code>, which is currently below <code>cold</code>, because you will need to
+modify it (or whatever word is currently just below <code>cold</code>) when you put your
+word under <code>cold</code>.  The headers for these two words currently look like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>nt_cold:
+        .byte 4, 0
+        .word nt_bye, xt_cold, z_cold
+        .byte "cold"
+
+nt_ed:                  ; ed6502
+        .byte 2, NN
+        .word nt_cold, xt_ed, z_ed
+        .byte "ed"</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The first component of a dictionary header is the label, which comes in the form
+nt_xxxx where xxxx is the spelled out version of your word&#8217;s name.  The xxxx
+should match whatever you used in your xt_xxxx and z_xxxx labels.</p>
+</div>
+<div class="paragraph">
+<p>The next two fields are byte fields, so we create them with the Ophis assembler
+<code>.byte</code> directive.  The first field is the length of the name, in characters, as
+it will be typed in Tali.  The second field is the status of the word, where
+each bit has a special meaning.  If there is nothing special about your word,
+you will just put 0 here.  If your word needs some of the status flags, you add
+them together (with +) here to form the status byte.  The table below gives the
+constants you will use and a brief description of when to use them.</p>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+CO
+</td>
+<td class="hdlist2">
+<p>Compile Only.  Add this if your word should only be allowed when compiling
+other words.  Tali will print an error message if the user tries to run this
+word in interpreted mode.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+IM
+</td>
+<td class="hdlist2">
+<p>Immediate Word.  Add this when a word should always be run rather than
+compiled (even when in compiling mode).</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+NN
+</td>
+<td class="hdlist2">
+<p>Never Native Compile (must always be called by JSR when compiled).  Add
+this when your word contains a JMP instruction, or if it plays with the return
+address it is called from.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+AN
+</td>
+<td class="hdlist2">
+<p>Always Native Compile (will be native compiled when compiled).
+The opcodes for this word will be copied (native compiling)
+into a new word when this word is used in the definition.  For short simple words that
+are just a sequence of JSRs, you can safely set this bit.  This bit should not
+be set if the assembly has a JMP instruction in it (see NN above).
+Note: If neither NN or AN is set, then the word might be native compiled based
+on its size and the value in the Forth variable <code>nc-limit</code>.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+UF
+</td>
+<td class="hdlist2">
+<p>Contains underflow check.  If you added a JSR to one of the underflow
+checking helper functions, you should set this bit.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+HC
+</td>
+<td class="hdlist2">
+<p>Has CFA (words created by CREATE and DOES&gt; only).  You will probably never
+need this bit for words that you write in assembly.</p>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>If you created a short word made out of just JSRs with underflow checking at the top, and
+you wanted it to be an immediate word, you might put <code>IM+UF</code> for this field.</p>
+</div>
+<div class="paragraph">
+<p>The next line contains three addresses, so the Ophis <code>.word</code> directive is used
+here.  The first address is the nt_xxxx of the next word in the word list.  The
+words are actually listed from bottom to top in this file, so this will be the
+nt_xxxx label of the word just above this one in the file.  The second address
+is the xt (execution token), or entry point, of your new word.  This will be
+your xt_xxxx label for your word.  The third address is the end of your routine,
+just before the RTS instruction.  You will use your z_xxxx label here.  The
+xt_xxxx and z_xxxx are used as the bounds of your word if it ends up being
+natively compiled.</p>
+</div>
+<div class="paragraph">
+<p>In the sample headers above, you can see that <code>ed</code> links to <code>cold</code> as the next
+word, and <code>cold</code> links to <code>bye</code> (not shown) as the next word.  When you go to
+add your own word, you will need to adjust these linkages.</p>
+</div>
+<div class="paragraph">
+<p>The last line is the actual name of the word, as it will be typed in forth, in
+lowercase.  It uses the Ophis <code>.byte</code> directive and Ophis allows literal
+strings, so you can just put the name of your word in double-quotes.  If your
+word has a double-quote in it, look up <code>nt_s_quote</code> in the headers to see how
+this is handled.</p>
+</div>
+<div class="paragraph">
+<p>Although Tali is not case-sensitive, all words in the dictionary headers must be
+in lowercase or Tali will not be able to find them.  The length of this string
+also needs to match the length given as the first byte, or Tali will not be able
+to find this word.</p>
+</div>
+<div class="paragraph">
+<p>As an example, we&#8217;ll add the words <code>star</code> and <code>is</code> from the previous examples.
+Technically, <code>is</code> is already in the dictionary, but this example will show
+you how to create the header for a regular word (<code>star</code>) and for one that
+requires one of the status flags (<code>is</code>).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>nt_cold:
+        .byte 4, 0
+        .word nt_bye, xt_cold, z_cold
+        .byte "cold"
+
+nt_star:
+        .byte 4, 0
+        .word nt_cold, xt_star_word, z_star_word
+        .byte "star"
+
+nt_is:
+        .byte 2, IM
+        .word nt_star, xt_is, z_is
+        .byte "is"
+
+nt_ed:                  ; ed6502
+        .byte 2, NN
+        .word nt_is, xt_ed, z_ed
+        .byte "ed"</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The first thing to note is the updated linked list of words.  In order to put
+the new words between <code>ed</code> and <code>cold</code>, we make <code>ed</code> link to <code>is</code>, which then
+links to <code>star</code>, and that links back to <code>cold</code>.  Because this file links the
+headers from the bottom to the top of the file, this actually places the new
+words near the end of the dictionary.  If you use the <code>words</code> command, you will
+find the new words near the end of the list.</p>
+</div>
+<div class="paragraph">
+<p>The second thing to note is the status byte of each word.  If the word doesn&#8217;t
+need any special status, then just use 0.  Neither of our added words contain
+the JMP instruction (branches are OK, but JMP is not), so neither is required to
+carry the NN (Never Native) flag.  The word <code>is</code>, in it&#8217;s original Forth form,
+was marked as an immediate word, and we do that by putting the IM flag on it
+here in the dictionary header.</p>
 </div>
 </div>
 </div>

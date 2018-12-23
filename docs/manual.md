@@ -1875,6 +1875,8 @@ When converting a Forth word to assembly, you will need to take the Forth defini
 
 The processing is different for regular, immediate, and postponed words, with special handling required for the word `does>`. These are all covered below, with examples. Take each word in the definition, determine which type of word it is, and then follow the steps outlined below for that word type.
 
+Once the word has been converted, a dictionary header needs to be added for it in headers.asm. This process is covered in detail at the end of this section.
+
 #### Processing Regular (Non-Immediate) Words
 
 If the definition word you are processing is not immediate (you can check this with `see`, eg. `see dup` and make sure the IM flag is 0) then it just translates into a JSR to the xt (execution token) of that word. The xt is just a label that begins with `xt_` followed by the name (spelled out, in the case of numbers and symbols) of the word.
@@ -2038,6 +2040,97 @@ This word takes an argument, so underflow checking is added right at the top (an
 This word takes a double-cell value on the stack, so underflow\_2 was used. The underflow check must be the first line in your word.
 
 All of the other words other than `does>` in this definition are regular words, so they just turn into JSRs. The word `does>` turns into a `jsr does_runtime` followed by a `jsr dodoes`.
+
+#### Adding the Header in headers.asm
+
+Once your word has been entered into native\_words.asm with the appropriate comment block over it and the xt\_xxxx and z\_xxxx labels for the entry and exit points, it is time to add the dictionary header for your word to link it into one of the existing wordlists. The words here are not in alphabetical order and are loosely grouped by function. If you aren’t sure where to put your word, then put it near the top of the file just under the header for `cold`.
+
+Each header is simply a declaration of bytes and words that provides some basic information that Tali needs to use the word, as well as the addresses of the beginning and ending (not including the rts at the end) of your word. That’s why you need the xt\_xxxx and z\_xxxx labels in your word (where xxxx is the spelled-out version of your word’s name).
+
+Before we dicuss adding a word, let’s go over the form a dictionary header. The fields we will be filling in are described right at the top of headers.asm for reference. We’ll look at an easy to locate word, `cold`, which is used to perform a cold reset of Tali. It’s right near the top of the list. We’ll also show the word `ed`, which is currently below `cold`, because you will need to modify it (or whatever word is currently just below `cold`) when you put your word under `cold`. The headers for these two words currently look like:
+
+    nt_cold:
+            .byte 4, 0
+            .word nt_bye, xt_cold, z_cold
+            .byte "cold"
+
+    nt_ed:                  ; ed6502
+            .byte 2, NN
+            .word nt_cold, xt_ed, z_ed
+            .byte "ed"
+
+The first component of a dictionary header is the label, which comes in the form nt\_xxxx where xxxx is the spelled out version of your word’s name. The xxxx should match whatever you used in your xt\_xxxx and z\_xxxx labels.
+
+The next two fields are byte fields, so we create them with the Ophis assembler `.byte` directive. The first field is the length of the name, in characters, as it will be typed in Tali. The second field is the status of the word, where each bit has a special meaning. If there is nothing special about your word, you will just put 0 here. If your word needs some of the status flags, you add them together (with +) here to form the status byte. The table below gives the constants you will use and a brief description of when to use them.
+
+<table>
+<colgroup>
+<col width="15%" />
+<col width="85%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><p>CO</p></td>
+<td><p>Compile Only. Add this if your word should only be allowed when compiling other words. Tali will print an error message if the user tries to run this word in interpreted mode.</p></td>
+</tr>
+<tr class="even">
+<td><p>IM</p></td>
+<td><p>Immediate Word. Add this when a word should always be run rather than compiled (even when in compiling mode).</p></td>
+</tr>
+<tr class="odd">
+<td><p>NN</p></td>
+<td><p>Never Native Compile (must always be called by JSR when compiled). Add this when your word contains a JMP instruction, or if it plays with the return address it is called from.</p></td>
+</tr>
+<tr class="even">
+<td><p>AN</p></td>
+<td><p>Always Native Compile (will be native compiled when compiled). The opcodes for this word will be copied (native compiling) into a new word when this word is used in the definition. For short simple words that are just a sequence of JSRs, you can safely set this bit. This bit should not be set if the assembly has a JMP instruction in it (see NN above). Note: If neither NN or AN is set, then the word might be native compiled based on its size and the value in the Forth variable <code>nc-limit</code>.</p></td>
+</tr>
+<tr class="odd">
+<td><p>UF</p></td>
+<td><p>Contains underflow check. If you added a JSR to one of the underflow checking helper functions, you should set this bit.</p></td>
+</tr>
+<tr class="even">
+<td><p>HC</p></td>
+<td><p>Has CFA (words created by CREATE and DOES&gt; only). You will probably never need this bit for words that you write in assembly.</p></td>
+</tr>
+</tbody>
+</table>
+
+If you created a short word made out of just JSRs with underflow checking at the top, and you wanted it to be an immediate word, you might put `IM+UF` for this field.
+
+The next line contains three addresses, so the Ophis `.word` directive is used here. The first address is the nt\_xxxx of the next word in the word list. The words are actually listed from bottom to top in this file, so this will be the nt\_xxxx label of the word just above this one in the file. The second address is the xt (execution token), or entry point, of your new word. This will be your xt\_xxxx label for your word. The third address is the end of your routine, just before the RTS instruction. You will use your z\_xxxx label here. The xt\_xxxx and z\_xxxx are used as the bounds of your word if it ends up being natively compiled.
+
+In the sample headers above, you can see that `ed` links to `cold` as the next word, and `cold` links to `bye` (not shown) as the next word. When you go to add your own word, you will need to adjust these linkages.
+
+The last line is the actual name of the word, as it will be typed in forth, in lowercase. It uses the Ophis `.byte` directive and Ophis allows literal strings, so you can just put the name of your word in double-quotes. If your word has a double-quote in it, look up `nt_s_quote` in the headers to see how this is handled.
+
+Although Tali is not case-sensitive, all words in the dictionary headers must be in lowercase or Tali will not be able to find them. The length of this string also needs to match the length given as the first byte, or Tali will not be able to find this word.
+
+As an example, we’ll add the words `star` and `is` from the previous examples. Technically, `is` is already in the dictionary, but this example will show you how to create the header for a regular word (`star`) and for one that requires one of the status flags (`is`).
+
+    nt_cold:
+            .byte 4, 0
+            .word nt_bye, xt_cold, z_cold
+            .byte "cold"
+
+    nt_star:
+            .byte 4, 0
+            .word nt_cold, xt_star_word, z_star_word
+            .byte "star"
+
+    nt_is:
+            .byte 2, IM
+            .word nt_star, xt_is, z_is
+            .byte "is"
+
+    nt_ed:                  ; ed6502
+            .byte 2, NN
+            .word nt_is, xt_ed, z_ed
+            .byte "ed"
+
+The first thing to note is the updated linked list of words. In order to put the new words between `ed` and `cold`, we make `ed` link to `is`, which then links to `star`, and that links back to `cold`. Because this file links the headers from the bottom to the top of the file, this actually places the new words near the end of the dictionary. If you use the `words` command, you will find the new words near the end of the list.
+
+The second thing to note is the status byte of each word. If the word doesn’t need any special status, then just use 0. Neither of our added words contain the JMP instruction (branches are OK, but JMP is not), so neither is required to carry the NN (Never Native) flag. The word `is`, in it’s original Forth form, was marked as an immediate word, and we do that by putting the IM flag on it here in the dictionary header.
 
 ### Code Cheat Sheets
 
