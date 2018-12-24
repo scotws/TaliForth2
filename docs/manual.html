@@ -2472,24 +2472,63 @@ the same assembler code.</p>
 </tr>
 </table>
 </div>
-<div class="admonitionblock note">
+<div class="paragraph">
+<p>Branches work similar. Instead of <code>&lt;j</code> as a "back jump", we use <code>&lt;b</code> as a "back
+branch". For example, this word takes a number of "a" to print (in slightly
+different notation):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>        : .na ( n -- )
+        [
+              0 lda.zx  <i class="conum" data-value="1"></i><b>(1)</b>
+                tay
+        -&gt;
+             97 lda.#
+                push-a
+                phy
+        ]
+        emit
+        [
+                ply
+                dey
+             &lt;b bne
+                inx  <i class="conum" data-value="2"></i><b>(2)</b>
+                inx
+        ]
+        ;</pre>
+</div>
+</div>
+<div class="colist arabic">
 <table>
 <tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-Other label words will be added in future.
-</td>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td><code>LDA 0,X</code> in traditional notation</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Assembler version of <code>drop</code></td>
 </tr>
 </table>
+</div>
+<div class="paragraph">
+<p>Looking at the assembler code with <code>see</code>, we can see that the branch instruction
+takes $F2 as an operand.</p>
+</div>
+<div class="paragraph">
+<p>Currently, there is no mechanism that checks to see if the operand is in the
+correct range for a branch. It is assumed that the assembler will be used only
+for small code snippets where this will not be a problem.</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_even_simpler_ways_to_insert_assembler_code">Even simpler ways to insert assembler code</h4>
 <div class="paragraph">
 <p>Probably the very simplest way is to add the opcodes and operands directly with
-the <code>c,</code> instruction. Tali Forth also provides a special word called <code>hexstore</code>
+the <code>c,</code> instruction.</p>
+</div>
+<div class="paragraph">
+<p>Tali Forth also provides a special word called <code>hexstore</code>
 to add strings of numbers.</p>
 </div>
 </div>
@@ -2546,13 +2585,14 @@ original value, such as:</p>
 </div>
 </div>
 <div class="paragraph">
-<p><strong>Branch instruction operands</strong> currently have to be calculated by hand. This
-might change in a future version through some form of labels.</p>
+<p><strong>There are currently no forward branches.</strong> The words <code>b&gt;</code> and <code>j&gt;</code> will be used
+once they are added. Forward branches are more complex because they require
+backtracking to fill in the address that is not known when the jump or branch
+instruction is coded.</p>
 </div>
 <div class="paragraph">
-<p><strong>The Forth word <code>and</code></strong> cannot be used when the assembler wordlist is first in
-the search order because the assembler instruction of the same name will be
-called instead.</p>
+<p><strong>The assembler instruction <code>and</code></strong> receives a dot for absolute addressing to avoid
+conflict with the Forth word of the same name: <code>and. 1000</code> is the correct form.</p>
 </div>
 <div class="paragraph">
 <p><strong><code>brk</code> is a two-byte instruction</strong> because the assembler enforces the signature

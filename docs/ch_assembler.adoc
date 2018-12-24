@@ -216,15 +216,51 @@ Disassembling `.nums` shows how this code works (addresses may vary):
 <1> Address specified by label `+->+` is `$099F`
 <2> Address was picked up by `jmp` instruction
 
-NOTE: Other label words will be added in future.
+Branches work similar. Instead of `<j` as a "back jump", we use `<b` as a "back
+branch". For example, this word takes a number of "a" to print (in slightly
+different notation):
+
+----
+        : .na ( n -- )
+        [ 
+              0 lda.zx  <1>
+                tay 
+        -> 
+             97 lda.#  
+                push-a 
+                phy 
+        ]
+        emit
+        [ 
+                ply 
+                dey  
+             <b bne
+                inx  <2>
+                inx 
+        ]
+        ; 
+----
+<1> `LDA 0,X` in traditional notation
+<2> Assembler version of `drop`
+
+Looking at the assembler code with `see`, we can see that the branch instruction
+takes $F2 as an operand. 
+
+Currently, there is no mechanism that checks to see if the operand is in the
+correct range for a branch. It is assumed that the assembler will be used only
+for small code snippets where this will not be a problem.
+
 
 ==== Even simpler ways to insert assembler code
 
 Probably the very simplest way is to add the opcodes and operands directly with
-the `c,` instruction. Tali Forth also provides a special word called `hexstore`
-to add strings of numbers.
+the `c,` instruction. 
 
 // TODO examples for `c,`
+
+Tali Forth also provides a special word called `hexstore`
+to add strings of numbers.
+
 // TODO explain HEXSTORE
 
 
@@ -270,10 +306,12 @@ original value, such as:
         plx
 ----
 
-*Branch instruction operands* currently have to be calculated by hand. This
-might change in a future version through some form of labels.
+*There are currently no forward branches.* The words `b>` and `j>` will be used
+once they are added. Forward branches are more complex because they require
+backtracking to fill in the address that is not known when the jump or branch
+instruction is coded.
 
-*The assembler instruction `and` receives a dot for absolute addressing to avoid
+*The assembler instruction `and`* receives a dot for absolute addressing to avoid
 conflict with the Forth word of the same name: `and. 1000` is the correct form.
 
 *`brk` is a two-byte instruction* because the assembler enforces the signature

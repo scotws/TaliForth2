@@ -1055,6 +1055,15 @@ z_asm_back_jump:
 ; address (via HERE) to calculate a backward branch offset. This is then stored
 ; by a following branch instruction. 
 xt_asm_back_branch:
+                ; We arrive here with ( addr-l ) of the label on the stack and
+                ; then subtract the current address
+                jsr xt_here             ; ( addr-l addr-h )
+                jsr xt_minus            ; ( offset )
+
+                ; We subtract two more because of the branch instruction itself
+                dec
+                dec
+
 z_asm_back_branch:
                 rts
 

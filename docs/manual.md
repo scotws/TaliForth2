@@ -908,9 +908,76 @@ To execute Forth words when then assembler code is run, we need to store a subro
 
 This will print `10`.
 
+#### Labels, jumps, and branches
+
+The support for labels is currently very limited. An anonymous label can be marked with `->` (the "arrow") as a target for a backwards jump with `<j` (the "back jump". Note we are talking about the jump assembler instructions such as `JMP`, not the branch instructions such as `bra`. As a primitive example (that produces an endless loop):
+
+            : .nums
+            [ 0 lda.#
+            ->                      ; anonymous label
+            inc.a push-a pha ]      ; PHA required because u. will overwrite A
+            u.
+            [ pla <j jmp ]          ; endless loop
+            ;
+
+Executing the word `.nums` will print numbers starting with 1 till 255 and then wrap.
+
+The directive `<j` is actually a dummy, or to put a bit more politely, syntactic sugar: The `jmp` instruction itself takes the value from the stack. `->` itself is nothing more than an immediate version of `here` and in fact shares the same assembler code.
+
+Disassembling `.nums` shows how this code works (addresses may vary):
+
+            99D      0 lda.#
+            99F        inc.a   
+            9A0        dex
+            9A1        dex
+            9A2      0 sta.zx
+            9A4      1 stz.zx
+            9A6        pha
+            9A7   D676 jsr
+            9AA   D6C2 jsr
+            9AD     20 lda.#
+            9AF   8E18 jsr
+            9B2        pla
+            9B3    99F jmp     
+
+-   Address specified by label `->` is `$099F`
+
+-   Address was picked up by `jmp` instruction
+
+Branches work similar. Instead of `<j` as a "back jump", we use `<b` as a "back branch". For example, this word takes a number of "a" to print (in slightly different notation):
+
+            : .na ( n -- )
+            [
+                  0 lda.zx  
+                    tay
+            ->
+                 97 lda.#
+                    push-a
+                    phy
+            ]
+            emit
+            [
+                    ply
+                    dey
+                 <b bne
+                    inx  
+                    inx
+            ]
+            ;
+
+-   `LDA 0,X` in traditional notation
+
+-   Assembler version of `drop`
+
+Looking at the assembler code with `see`, we can see that the branch instruction takes $F2 as an operand.
+
+Currently, there is no mechanism that checks to see if the operand is in the correct range for a branch. It is assumed that the assembler will be used only for small code snippets where this will not be a problem.
+
 #### Even simpler ways to insert assembler code
 
-Probably the very simplest way is to add the opcodes and operands directly with the `c,` instruction. Tali Forth also provides a special word called `hexstore` to add strings of numbers.
+Probably the very simplest way is to add the opcodes and operands directly with the `c,` instruction.
+
+Tali Forth also provides a special word called `hexstore` to add strings of numbers.
 
 #### Pseudo-instructions and macros
 
@@ -939,9 +1006,9 @@ Working with assembler requires an intimate knowledge of Tali Forth’s internal
             ( do something with X )
             plx
 
-**Branch instruction operands** currently have to be calculated by hand. This might change in a future version through some form of labels.
+**There are currently no forward branches.** The words `b>` and `j>` will be used once they are added. Forward branches are more complex because they require backtracking to fill in the address that is not known when the jump or branch instruction is coded.
 
-**The Forth word `and`** cannot be used when the assembler wordlist is first in the search order because the assembler instruction of the same name will be called instead.
+**The assembler instruction `and`** receives a dot for absolute addressing to avoid conflict with the Forth word of the same name: `and. 1000` is the correct form.
 
 **`brk` is a two-byte instruction** because the assembler enforces the signature byte. You shouldn’t use `brk` anyway.
 
