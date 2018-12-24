@@ -81,7 +81,7 @@ xt_asm_adc_zxi: ; adc.zxi \ ADC (nn,X)
                 jmp asm_common
 z_asm_adc_zxi:
 
-xt_asm_and:     ; and \ AND nnnn
+xt_asm_and:     ; and. \ AND nnnn
                 lda #$2D
                 jmp asm_common
 z_asm_and:
@@ -1050,6 +1050,14 @@ xt_asm_back_jump:
 z_asm_back_jump:
                 rts
       
+; The "<B" directive (back branch) takes an address that was placed on the Data
+; Stack by the anonymous label directive "->" (the "arrow") and the current
+; address (via HERE) to calculate a backward branch offset. This is then stored
+; by a following branch instruction. 
+xt_asm_back_branch:
+z_asm_back_branch:
+                rts
+
 assembler_end:
 
 ; END

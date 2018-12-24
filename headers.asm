@@ -1,7 +1,7 @@
 ; Dictionary Headers for Tali Forth 2
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 05. Dec 2016 (Liara Forth)
-; This version: 24. Dec 2018
+; This version: 25. Dec 2018 
 
 ; Dictionary headers are kept separately from the code, which allows various
 ; tricks in the code. We roughly follow the Gforth terminology: The Execution
@@ -1545,11 +1545,11 @@ nt_asm_adc_zxi:
 		.word xt_asm_adc_zxi, z_asm_adc_zxi
 		.byte "adc.zxi"
 
-nt_asm_and:
-		.byte 3, IM
+nt_asm_and:     ; not "and" because of conflicts with Forth word
+		.byte 4, IM
 		.word nt_asm_adc_zxi
 		.word xt_asm_and, z_asm_and
-		.byte "and"
+		.byte "and."
 
 nt_asm_and_h:
 		.byte 5, IM
@@ -2567,9 +2567,15 @@ nt_asm_back_jump:       ; syntactic sugar, does nothing
                 .word xt_asm_back_jump, z_asm_back_jump
                 .byte "<j"
 
-nt_asm_arrow:   ; uses same code as HERE, but immediate
+nt_asm_back_branch: 
                 .byte 2, IM
                 .word nt_asm_back_jump
+                .word xt_asm_back_branch, z_asm_back_branch
+                .byte "<b"
+
+nt_asm_arrow:   ; uses same code as HERE, but immediate
+                .byte 2, IM
+                .word nt_asm_back_branch
                 .word xt_asm_arrow, z_asm_arrow   
                 .byte "->"
 

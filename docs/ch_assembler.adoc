@@ -273,9 +273,8 @@ original value, such as:
 *Branch instruction operands* currently have to be calculated by hand. This
 might change in a future version through some form of labels.
 
-*The Forth word `and`* cannot be used when the assembler wordlist is first in
-the search order because the assembler instruction of the same name will be
-called instead.
+*The assembler instruction `and` receives a dot for absolute addressing to avoid
+conflict with the Forth word of the same name: `and. 1000` is the correct form.
 
 *`brk` is a two-byte instruction* because the assembler enforces the signature
 byte. You shouldn't use `brk` anyway.
