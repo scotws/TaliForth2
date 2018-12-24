@@ -951,9 +951,19 @@ nt_unused:
         .word nt_depth, xt_unused, z_unused
         .byte "unused"
 
+nt_r_to_input:
+        .byte 7, NN
+        .word nt_unused, xt_r_to_input, z_r_to_input
+        .byte "r>input"
+
+nt_input_to_r:
+        .byte 7, NN
+        .word nt_r_to_input, xt_input_to_r, z_input_to_r
+        .byte "input>r"
+
 nt_accept:
         .byte 6, UF+NN
-        .word nt_unused, xt_accept, z_accept
+        .word nt_input_to_r, xt_accept, z_accept
         .byte "accept"
 
 nt_refill:

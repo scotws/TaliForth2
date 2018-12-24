@@ -1,7 +1,7 @@
 ; Tali Forth 2 for the 65c02
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 19. Jan 2014 (Tali Forth)
-; This version: 22. Dec 2018
+; This version: 24. Dec 2018
 
 ; This is the main file for Tali Forth 2
 
@@ -286,7 +286,48 @@ _done:
                 rts
 .scend
 
+current_to_dp:
+        ; """:ook up the current (compilation) dictionary pointer
+        ; in the wordlist set and put it into the dp zero-page
+        ; variable. Uses A and Y.
+        ; """
+                ; determine which wordlist is current
+                ldy #current_offset
+                lda (up),y      ; current is a byte variable
+                asl             ; turn it into an offset (in cells)
 
+                ; get the dictionary pointer for that wordlist.
+                clc
+                adc #wordlists_offset   ; add offset to wordlists base.
+                tay
+                lda (up),y              ; get the dp for that wordlist.
+                sta dp
+                iny
+                lda (up),y
+                sta dp+1
+                rts
+
+
+dp_to_current:
+        ; """Look up which wordlist is current and update its pointer
+        ; with the value in dp. Uses A and Y.
+        ; """
+                ; determine which wordlist is current
+                ldy #current_offset
+                lda (up),y      ; current is a byte variable
+                asl             ; turn it into an offset (in cells)
+
+                ; get the dictionary pointer for that wordlist.
+                clc
+                adc #wordlists_offset   ; add offset to wordlists base.
+                tay
+                lda dp
+                sta (up),y              ; get the dp for that wordlist.
+                iny
+                lda dp+1
+                sta (up),y
+                rts
+ 
 interpret:
 .scope
         ; """Core routine for the interpreter called by EVALUATE and QUIT.
@@ -435,6 +476,7 @@ _line_done:
                 rts
 .scend
 
+
 is_printable:
 .scope
         ; """Given a character in A, check if it is a printable ASCII
@@ -477,8 +519,9 @@ _done:
 .scend
 
 
-; Underflow test. We jump to the label with the number of cells (not: bytes)
-; required for the word. 
+; Underflow tests. We jump to the label with the number of cells (not: bytes)
+; required for the word. This routine flows into the generic error handling
+; code
 underflow_1:
         ; """Make sure we have at least one cell on the Data Stack"""
                 cpx #dsp0-1
@@ -585,47 +628,6 @@ print_u:
         
                 rts
 .scend
-
-current_to_dp:
-        ; """look up the current (compilation) dictionary pointer
-        ; in the wordlist set and put it into the dp zero-page
-        ; variable.  uses a and y.
-        ; """
-                ; determine which wordlist is current
-                ldy #current_offset
-                lda (up),y      ; current is a byte variable
-                asl             ; turn it into an offset (in cells)
-
-                ; get the dictionary pointer for that wordlist.
-                clc
-                adc #wordlists_offset   ; add offset to wordlists base.
-                tay
-                lda (up),y              ; get the dp for that wordlist.
-                sta dp
-                iny
-                lda (up),y
-                sta dp+1
-                rts
-
-dp_to_current:
-        ; """look up which wordlist is current and update its pointer
-        ; with the value in dp.  uses a and y.
-        ; """
-                ; determine which wordlist is current
-                ldy #current_offset
-                lda (up),y      ; current is a byte variable
-                asl             ; turn it into an offset (in cells)
-
-                ; get the dictionary pointer for that wordlist.
-                clc
-                adc #wordlists_offset   ; add offset to wordlists base.
-                tay
-                lda dp
-                sta (up),y              ; get the dp for that wordlist.
-                iny
-                lda dp+1
-                sta (up),y
-                rts
-                
+               
         
 ; END

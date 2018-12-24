@@ -128,6 +128,7 @@ RTS instruction at the end of each word.
 | IF | `if` | ANS core | 12 | **auto** |
 | IMMEDIATE | `immediate` | ANS core | 11 | **auto** |
 | INPUT | `input` | Tali Forth | 10 | tested |
+| INPUT_TO_R | `input>r` | Tali Forth | 21 | tested |
 | INT_TO_NAME | `int>name` | Tali Forth | 114 | **auto** |
 | INVERT | `invert` | ANS core | 15 | **auto** |
 | IS | `is` | ANS core ext | 24 | **auto** |
@@ -187,6 +188,7 @@ RTS instruction at the end of each word.
 | QUESTION_DUP | `?dup` | ANS core | 19 | **auto** |
 | R_FETCH | `r@` | ANS core | 20 | **auto** |
 | R_FROM | `r>` | ANS core | 16 | **auto** |
+| R_TO_INPUT | `r>input` | Tali Forth | 23 | tested |
 | RECURSE | `recurse` | ANS core | 60 | **auto** |
 | REFILL | `refill` | ANS core ext | 65 | tested |
 | REPEAT | `repeat` | ANS core | 12 | **auto** |
@@ -284,7 +286,7 @@ RTS instruction at the end of each word.
 | EDITOR_LINE | `line` | Tali Editor | 24 | tested |
 | EDITOR_O | `o` | Tali Editor | 48 | tested |
 
-Found **276** native words in `native_words.asm`.
+Found **278** native words in `native_words.asm`.
 Of those, **228** were automatically tested and
           **1** are not marked as tested at all.
 

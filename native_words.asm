@@ -5167,6 +5167,53 @@ z_input:        rts
 .scend
 
 
+; ## INPUT_TO_R ( -- ) ( R: -- n n n n ) "Save input state to the Return Stack"
+; ## "input>r"  tested  Tali Forth
+   	; """Save the current input state as defined by insrc, cib, ciblen, and
+        ; toin to the Return Stack. Used by EVALUTE. The naive way of doing
+        ; this is to push each two-byte variable to the stack in the form of
+
+        ;       lda insrc
+        ;       pha
+        ;       lda insrc+1
+        ;       pha
+
+        ; for a total of 24 byte of instruction in one direction and later
+        ; a further 24 bytes to reverse the process. We shorten this at the
+        ; cost of some speed by assuming the four variables are grouped
+        ; together on the Zero Page and start with insrc (see definitions.asm
+        ; for details). The reverse operation is r_to_input. These words must 
+	; be flagged as Never Native. Uses tmp1
+        ; """ 
+.scope
+xt_input_to_r: 
+                ; We arrive here with the return address on the top of the
+                ; 65c02's stack. We need to move it out of the way first
+                pla
+                sta tmp1
+                pla
+                sta tmp1+1
+
+                ; This assumes that insrc is the first of eight bytes and
+                ; toin+1 the last in the sequence we want to save from the Zero
+                ; Page. 
+                ldy #7
+_loop:
+                lda insrc,y     ; insrc+7 is toin+1
+                pha
+                dey
+                bpl _loop
+
+                ; Restore address for return jump
+                lda tmp1+1
+                pha
+                lda tmp1
+                pha
+
+z_input_to_r: 	rts
+.scend
+ 
+
 ; ## INT_TO_NAME ( xt -- nt ) "Get name token from execution token"
 ; ## "int>name"  auto  Tali Forth
         ; """www.complang.tuwien.ac.at/forth/gforth/Docs-html/Name-token.html
@@ -7486,6 +7533,44 @@ xt_r_from:
 
 z_r_from:       rts
 
+
+; ## R_TO_INPUT ( -- ) ( R: n n n n -- ) "Restore input state from Return Stack"
+; ## "r>input"  tested  Tali Forth
+        ; """Restore the current input state as defined by insrc, cib, ciblen,
+        ; and toin from the Return Stack. See INPUT_TO_R for a discussion of
+        ; this word. Uses tmp1
+        ; """ 
+.scope
+xt_r_to_input: 
+
+                ; We arrive here with the return address on the top of the
+                ; 65c02's stack. We need to move it out of the way first
+                pla
+                sta tmp1
+                pla
+                sta tmp1+1
+
+                ; This assumes that insrc is the first of eight bytes and
+                ; toin+1 the last in the sequence we want to save from the Zero
+                ; Page. Since we went in reverse order, insrc is now on the top
+                ; of the Return Stack.
+                ldy #0
+_loop:
+                pla
+                sta insrc,y
+                iny
+                cpy #8
+                bne _loop
+
+                ; Restore address for return jump
+                lda tmp1+1
+                pha
+                lda tmp1
+                pha
+
+z_r_to_input: 	rts
+.scend
+ 
 
 ; ## RECURSE ( -- ) "Copy recursive call to word being defined"
 ; ## "recurse"  auto  ANS core

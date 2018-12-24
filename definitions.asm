@@ -1,7 +1,7 @@
 ; Definitions for Tali Forth 2
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 01. Apr 2016 (Liara Forth)
-; This version: 11. Dec 2018
+; This version: 24. Dec 2018
 
 ; This file is included by taliforth.asm. These are the general
 ; definitions; platform-specific definitions such as the
@@ -16,12 +16,15 @@
 ; giving the system a chance to recover. In other words, they are part of the
 ; floodplain.
 
-.alias cp        user0+0  ; Compiler Pointer
-.alias dp        user0+2  ; Dictionary Pointer
-.alias workword  user0+4  ; nt (not xt!) of word being compiled, except in
-                          ; a :NONAME declared word (see status)
-.alias insrc     user0+6  ; input Source for SOURCE-ID
-.alias cib       user0+8  ; address of current input buffer
+; The four variables insrc, cib, ciblen, and toin must stay together in this
+; sequence for the words INPUT>R and R>INPUT to work correctly. 
+
+.alias cp        user0+0   ; Compiler Pointer
+.alias dp        user0+2   ; Dictionary Pointer
+.alias workword  user0+4   ; nt (not xt!) of word being compiled, except in
+                           ; a :NONAME declared word (see status)
+.alias insrc     user0+6   ; input Source for SOURCE-ID
+.alias cib       user0+8   ; address of current input buffer
 .alias ciblen    user0+10  ; length of current input buffer
 .alias toin      user0+12  ; pointer to CIB (>IN in Forth)
 .alias ip        user0+14  ; Instruction Pointer (current xt)
