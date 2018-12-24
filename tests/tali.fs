@@ -34,42 +34,40 @@ T{ decimal -> }T
 \ start the string with a delimiter
 
 T{ : s1 s" " ; -> }T \ case 1: empty string
-T{ s1 bl cleave  s" " compare  -rot  s" " compare -> 0 0 }T
+T{ s1 cleave  s" " compare  -rot  s" " compare -> 0 0 }T
 
 T{ : s1 s" aaa" ; -> }T  \ case 2: one word
-T{ s1 bl cleave  s" aaa" compare  -rot  s" " compare -> 0 0 }T
+T{ s1 cleave  s" aaa" compare  -rot  s" " compare -> 0 0 }T
 
 T{ : s1 s" aaa bbb ccc" ; -> }T  \ case 3: lots of words, single space delimiter
-T{ s1 bl cleave  s" aaa" compare  -rot  s" bbb ccc" compare -> 0 0 }T
+T{ s1 cleave  s" aaa" compare  -rot  s" bbb ccc" compare -> 0 0 }T
 
-\ TODO fix this
-\ T{ : s1 s" aaa  bbb  ccc" ; -> }T  \ case 3a: lots of words, multiple space delimiter
-\ T{ s1 bl cleave  s" aaa" compare  -rot  s" bbb  ccc" compare -> 0 0 }T
+T{ : s1 s" bbb  ccc  ddd" ; -> }T  \ case 3a: lots of words, multiple space delimiter
+T{ s1 cleave  s" bbb" compare  -rot  s" ccc  ddd" compare -> 0 0 }T
 
-T{ : s1 s\" aaa\tbbb\tccc" ; -> }T  \ case 3b: lots of words, tab delimter
-T{ s1 bl cleave  s" aaa" compare  -rot  s\" bbb\tccc" compare -> 0 0 }T
+T{ : s1 s\" eee\tfff\tggg" ; -> }T  \ case 3b: lots of words, tab delimter
+T{ s1 cleave  s" eee" compare  -rot  s\" fff\tggg" compare -> 0 0 }T
 
-T{ : s1 s\" aaa\nbbb\nccc" ; -> }T  \ case 3c: lots of words, EOL delimiter
-T{ s1 bl cleave  s" aaa" compare  -rot  s\" bbb\nccc" compare -> 0 0 }T
+T{ : s1 s\" aaa\nAAA\nqqq" ; -> }T  \ case 3c: lots of words, EOL delimiter
+T{ s1 cleave  s" aaa" compare  -rot  s\" AAA\nqqq" compare -> 0 0 }T
 
-\ TODO fix this
-\ T{ : s1 s"  aaa bbb ccc" ; -> }T  \ case 3d: lots of words, start with space delimiter
-\ T{ s1 bl cleave  s" aaa" compare  -rot  s" bbb ccc" compare -> 0 0 }T
+T{ : s1 s"  xxx yyy zzz" ; -> }T  \ case 3d: lots of words, start with space delimiter
+T{ s1 cleave  s" xxx" compare  -rot  s" yyy zzz" compare -> 0 0 }T
 
 
 \ Cleave: Pathological cases
 
 T{ : s1 s"  aaa bbb ccc" ; -> }T \ case 4: Leading space is cleaved
-T{ s1 bl cleave  s" " compare  -rot  s" aaa bbb ccc" compare -> 0 0 }T
+T{ s1 cleave  s" " compare  -rot  s" aaa bbb ccc" compare -> 0 0 }T
 
 T{ : s1 s" aaa bbb ccc " ; -> }T \ case 5: Trailing space is left
-T{ s1 bl cleave  s" aaa" compare  -rot  s" bbb ccc " compare -> 0 0 }T
+T{ s1 cleave  s" aaa" compare  -rot  s" bbb ccc " compare -> 0 0 }T
 
 T{ : s1 s" aaa " ; -> }T  \ case 6: Trailing space on single word is empty
-T{ s1 bl cleave  s" aaa" compare  -rot  s" " compare -> 0 0 }T
+T{ s1 cleave  s" aaa" compare  -rot  s" " compare -> 0 0 }T
 
 T{ : s1 s"  " ; -> }T  \ case 7: Single space as word is two empty words
-T{ s1 bl cleave  s" " compare  -rot  s" " compare -> 0 0 }T
+T{ s1 cleave  s" " compare  -rot  s" " compare -> 0 0 }T
 
 
 \ Hexstore: Normal cases

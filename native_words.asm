@@ -1622,6 +1622,7 @@ z_chars:        rts
         ; following it. Example: 
 
         ; s" w1 w2 w3" cleave  \ produces "w2 w3" "w1"
+        ; s" w1" cleave        \ produces "" "w1"
 
         ; Since it will be used in loops a lot, we want it to work in pure
         ; assembler and be as fast as we can make it. Calls PARSE-NAME so we
@@ -1659,7 +1660,7 @@ xt_cleave:
                 ; any loop
                 lda 0,x
                 ora 1,x
-                beq _all_done
+                beq _done
 
                 ; Now we have to adjust the original string
                 lda 4,x         ; LSB of original u
@@ -1686,47 +1687,33 @@ xt_cleave:
                 ; if we are just splitting off words once, we don't want that.
                 ; So we walk through second string by hand to remove any
                 ; leading whitespace
-
-                ; TODO See if "strip leading whitespace" might be worth an
-                ; internal function because PARSE-NAME uses it as well
-
-                jsr xt_two_swap         ; ( addr-s u-s addr u )
 _loop:
-                jsr xt_over             ; ( addr-s u-s addr u addr )
-                jsr xt_c_fetch          ; ( addr-s u-s addr u c )
-                
+                ; If the original string has been all used up this is all
+                ; bonkers and we can just quit
+                lda 4,x
+                ora 5,x
+                beq _done
+
+                ; If the original string doesn't start with whitespace this is
+                ; all bonkers as well and we can just quit
+                lda (6,x)
                 jsr is_whitespace
-                inx                     ; INX does not affect Carry Flag
-                inx                     ; ( addr-s u-s addr u )
-                bcc _done               ; no whitespace, we're done
+                bcc _done
 
-                ; We have whitespace. Move to next char
-                jsr xt_one_minus        ; ( addr-s u-s addr u-1 )
-                inc 2,x
+                ; The address of the original string is pointing to whitespace,
+                ; so we have to move along.
+                lda 4,x
                 bne +
-                inc 3,x                 ; ( addr-s u-s addr+1 u-1 )
+                dec 5,x
 *
-                ; Did that eat the whole string? Worse yet, did we drop into
-                ; negative territory (pananoid)?
-                lda 1,x                 ; Get sign bit
-                bpl _check_for_zero
+                dec 4,x         ; ( addr u-1 addr-s u-s )
 
-                ; We're negativ, for whatever reason. Make length of rest
-                ; string zero
-                stz 4,x
-                stz 5,x
-                bra _done
-
-_check_for_zero:
-                ; We're not negative, but we might be zero
-                ora 0,x 
-                bne _loop               ; No, check if more whitespace
-
-                ; Fall through to _done
+                inc 6,x
+                bne +
+                inc 7,x
+*
+                bra _loop
 _done:
-                jsr xt_two_swap 
-
-_all_done:
                 ; Restore input
                 jsr xt_r_to_input
 
@@ -4887,7 +4874,6 @@ _loop:
                 ora 1,x
                 beq _done
 					
-                jsr xt_bl
                 jsr xt_cleave           ; ( addr1 u1 addr3 u3 ) ( R: addr2 addr2 )
 
                 ; Prepare the conversion of the number. 
