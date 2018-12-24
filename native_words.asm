@@ -1333,43 +1333,6 @@ xt_bracket_tick:
 z_bracket_tick: rts
 
 
-; ## BRANCH ( -- ) "Always branch"
-; ## "branch"  tested  Tali Forth
-        ; """Expects offset in next two bytes. This cannot be natively
-        ; compiled because we need the return address provided on the
-        ; 65c02 stack by JSR. 
-        ; """
-.scope
-xt_branch:
-                ; encode subroutine branch to runtime component
-                ldy #>branch_runtime
-                lda #<branch_runtime
-                jsr cmpl_subroutine
-                
-z_branch:       rts
-.scend
-
-branch_runtime:
-.scope
-                ; The address on the Return Stack points to the last byte
-                ; of the JSR address, one byte below the branch literal
-                pla
-                sta tmpbranch
-                pla
-                sta tmpbranch+1
-
-                ; Keep in mind: the address we just popped points one byte
-                ; lower than the branch literal we want to grab
-                ldy #1
-                lda (tmpbranch),y  ; LSB
-                sta tmp1
-                iny
-                lda (tmpbranch),y  ; MSB
-                sta tmp1+1
-
-                jmp (tmp1)
-.scend
-
 
 ; ## BUFFBLOCKNUM ( -- addr ) "Push address of variable holding block in buffer"
 ; ## "buffblocknum"  auto  Tali block
@@ -3725,8 +3688,10 @@ z_ed:       rts
 xt_else:
 xt_endof:
                 ; Put an unconditional branch.
-                jsr xt_branch
+                ldy #>branch_runtime
+                lda #<branch_runtime
 
+                jsr cmpl_subroutine
                 ; Put the address of the branch address on the stack.
                 jsr xt_here
 
@@ -3746,6 +3711,31 @@ xt_endof:
 z_else:         
 z_endof:
                 rts
+.scend
+
+
+branch_runtime:
+        ; """Runtime component for a branch. Used by ELSE and ENDOF. This was
+        ; formally part of a separate word BRANCH which was later removed.
+        ; """
+.scope
+                ; The address on the Return Stack points to the last byte
+                ; of the JSR address, one byte below the branch literal
+                pla
+                sta tmpbranch
+                pla
+                sta tmpbranch+1
+
+                ; Keep in mind: the address we just popped points one byte
+                ; lower than the branch literal we want to grab
+                ldy #1
+                lda (tmpbranch),y  ; LSB
+                sta tmp1
+                iny
+                lda (tmpbranch),y  ; MSB
+                sta tmp1+1
+
+                jmp (tmp1)
 .scend
 
 

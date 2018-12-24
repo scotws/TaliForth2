@@ -40,7 +40,6 @@ RTS instruction at the end of each word.
 | BOUNDS | `bounds` | Gforth | 24 | **auto** |
 | BRACKET_CHAR | `[char]` | ANS core | 6 | **auto** |
 | BRACKET_TICK | `[']` | ANS core | 6 | **auto** |
-| BRANCH | `branch` | Tali Forth | 7 | tested |
 | BUFFBLOCKNUM | `buffblocknum` | Tali block | 15 | **auto** |
 | BUFFER | `buffer` | ANS block | 48 | **auto** |
 | BUFFER_COLON | `buffer:` | ANS core ext | 6 | **auto** |
@@ -96,11 +95,11 @@ RTS instruction at the end of each word.
 | DUP | `dup` | ANS core | 13 | **auto** |
 | ED | `ed` | Tali Forth | 3 | *fragment* |
 | EDITOR_WORDLIST | `editor-wordlist` | Tali Editor | 8 | tested |
-| ELSE | `else` | ANS core | 21 | **auto** |
+| ELSE | `else` | ANS core | 25 | **auto** |
 | EMIT | `emit` | ANS core | 10 | **auto** |
 | EMPTY_BUFFERS | `empty-buffers` | ANS block ext | 6 | tested |
 | ENDCASE | `endcase` | ANS core ext | 20 | **auto** |
-| ENDOF | `endof` | ANS core ext | 21 | **auto** |
+| ENDOF | `endof` | ANS core ext | 25 | **auto** |
 | ENVIRONMENT_Q | `environment?` | ANS core | 124 | **auto** |
 | EQUAL | `=` | ANS core | 27 | **auto** |
 | BLANK | `blank` | ANS string | 82 | **auto** |
@@ -287,7 +286,7 @@ RTS instruction at the end of each word.
 | EDITOR_LINE | `line` | Tali Editor | 24 | tested |
 | EDITOR_O | `o` | Tali Editor | 48 | tested |
 
-Found **279** native words in `native_words.asm`.
+Found **278** native words in `native_words.asm`.
 Of those, **229** were automatically tested and
           **1** are not marked as tested at all.
 
