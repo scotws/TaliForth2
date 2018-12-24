@@ -1614,197 +1614,123 @@ xt_chars:
 z_chars:        rts
 .scend
 
-; ## CLEAVE ( addr u c -- addr2 u2 addr1 u1 ) "Split off word from string"
+; ## CLEAVE ( addr u -- addr2 u2 addr1 u1 ) "Split off word from string"
 ; ## "cleave"  auto  Tali Forth
-        ; """Given a range of memory and a delimiter, return the first word
-        ; in the block up to that delimiter TOS and the range of the rest
-        ; of the block NOS: "w1 w2 w3" -> "w2 w3" "w1" This word is used
-        ; to parse string imput if given a space as the delemeter, for
-        ; instance  S" w1 w2 w3" BL CLEAVE . It is used internally for
-        ; PARSE (and therefore PARSE-NAME). Since it will be used in loops
-        ; a lot, we want it to work in pure assembler and be as fast as we
-        ; can make it.
+
+        ; """Given a range of memory with words delimited by whitespace,return
+        ; the first word at the top of the stack and the rest of the word
+        ; following it. Example: 
+
+        ; s" w1 w2 w3" cleave  \ produces "w2 w3" "w1"
+
+        ; Since it will be used in loops a lot, we want it to work in pure
+        ; assembler and be as fast as we can make it. Calls PARSE-NAME so we
+        ; strip leading delimiters.
         ; """
 
-        ; TODO KNOWN ISSUE: CLEAVE fails when given multiple delimiters (eg
-        ; "aaa  bbb" two spaces) or the string starts with a whitespace 
-        ; delimiter. This will be taken care of at a later date.
 .scope
 xt_cleave:
-                jsr underflow_3
+                jsr underflow_2
 
-                ; We arrive here with ( addr u c ). If we were given a space as
-                ; the delimiter, we split on all whitespace just like
-                ; PARSE-NAME so we can work with blocks and the ed line editor.
-                ; To signal this downstream, we convert any whitespace to
-                ; a space.
-                lda 0,x
-                jsr is_whitespace       ; does not change A
-                bcc _not_whitespace
-                
-                ; We have whitespace of some sort, so we make the delimiter
-                ; a space
-                lda #AscSP 
-                
-_not_whitespace:                
-                tay
+                ; We arrive here with ( addr u ). Our job is basically like
+                ; PARSE, except that we have a string as ( addr u ) and not in
+                ; the input buffer. We get around this by cheating: We place
+                ; ( addr u ) in the input buffer and then call PARSE.
+                jsr xt_input_to_r 
 
-                ; DROP 2DUP but in assembler because we want to be fast, fast,
-                ; so we'll just overwrite c
-                dex
-                dex                     ; ( addr u c ? )
-
-                lda 4,x                 ; u -> TOS
-                sta 0,x
-                lda 5,x
-                sta 1,x
-
-                lda 6,x                 ; addr -> NOS
-                sta 2,x
-                lda 7,x
-                sta 3,x                 ; ( addr u addr u ) 
-           
-                ; if we were given an empty string quit immediately. This saves
-                ; a lot of time, and this is all about time
-                lda 0,x
-                ora 1,x
-                beq _done
-_loop:
-                ; We have at least one character
-                tya                     ; Y is our delimiter storage
-
-                ; Handle whitespace of all sorts. We used a space as the flag
-                ; for all whitespace
-                cmp #AscSP              
-                bne _compare_non_whitespace
-
-                ; It's a space, so we use all sorts of whitespace as
-                ; a delimiter. We have to this check every time because we
-                ; might be dealing with various forms of whitespace - tabs,
-                ; spaces, end of lines etc
-                lda (2,x)
-                jsr is_whitespace       ; does not change Y
-                bcs _found_delimiter
-                bra _other_char
-
-_compare_non_whitespace:
-                cmp (2,x) 
-                beq _found_delimiter
-
-                ; fall through to _other_char
-_other_char:
-                ; Decrease length ...
-                lda 0,x
-                bne +
-                dec 1,x
-*
-                dec 0,x         ; ( addr u addr u-1 )
-
-                ; Are we done?
-                lda 0,x
-                ora 1,x
-                beq _end_of_line
-
-                ; No, so increase length as well
-                inc 2,x
-                bne +
-                inc 3,x
-*
-                bra _loop 
-
-_end_of_line:
-                ; We've hit the end of the line. This means that we don't have
-                ; a delimiter in the string. The fastest way to get out of here
-                ; is to just copy the original ( addr u ) to TOS and set the 
-                ; value of 3OS to zero
-                lda 4,x
-                sta 0,x
-                lda 5,x
-                sta 1,x         ; TOS
-
-                lda 6,x
-                sta 2,x
-                lda 7,x
-                sta 3,x         ; ( addr u addr u )
-
-                stz 4,x
-                stz 5,x         ; ( addr 0 addr u )
-
-                bra _done
-
-_found_delimiter: 
-                ; So have a delimiter and have to do this the hard way.
-                ; We arrive here with ( addr u addrw uw) where addrw
-                ; is pointing to the delimiter after the first word, uw is
-                ; the remaining length of the original string, and the 
-                ; original addr u of the whole string
-                ;
-                ;       <------- u ----------->
-                ;      addr 
-                ;       v
-                ;       word1 word2 word3 word4
-                ;            ^
-                ;          addrw
-                ;            <---- uw ------->
-                ;
-                ; We'll return ( addrw+1 uw-1 addr u-uw ). Remember
-                ; these can all be 16-bit values because we're not limiting
-                ; strings to 255 chars
-                
-                ; Get addr out of the way for now. We could use a tmp, which
-                ; would be faster, but we don't know what combinations this
-                ; word is going to be used in
-                lda 6,x         ; LSB first
-                pha
-                lda 7,x
-                pha             ; ( addr u addrw uw )
-
-                ; Move addrw in its place and increase by one
-                lda 2,x
-                sta 6,x
-                lda 3,x
-                sta 7,x
-
-                inc 6,x
-                bne +
-                inc 7,x         ; ( addrw+1 u addrw uw )
-*
-                ; Put addr where it belongs
-                pla             ; MSB first
-                sta 3,x
-                pla
-                sta 2,x         ; ( addrw+1 u addr uw )
-                
-                ; Save u on the stack
-                lda 5,x         ; MSB first
-                pha
-                lda 4,x
-                pha
-
-                ; Move uw over in its place
-                lda 0,x
-                sta 4,x
+                lda 0,x         ; u is new ciblen
+                sta ciblen
                 lda 1,x
-                sta 5,x         ; ( addrw+1 uw addr uw )
+                sta ciblen+1
 
-                ; Now we can use the two copies of uw to set u-uw
-                pla             ; LSB first
+                lda 2,x         ; addr is new cib
+                sta cib
+                lda 3,x
+                sta cib+1
+
+                stz toin        ; >IN pointer is zero
+                stz toin+1
+
+                ; PARSE-NAME gives us back the substring of the first word 
+                jsr xt_parse_name       ; ( addr u addr-s u-s )        
+
+                ; If we were given an empty string, then we're done. It's the
+                ; resposibility of the user to catch this as a sign to end the
+                ; any loop
+                lda 0,x
+                ora 1,x
+                beq _all_done
+
+                ; Now we have to adjust the original string
+                lda 4,x         ; LSB of original u
                 sec
                 sbc 0,x
-                sta 0,x
-                pla
+                sta 4,x
+
+                lda 5,x         ; MSB of original u
                 sbc 1,x
-                sta 1,x         ; ( addrw-1 uw addr u-uw )
+                sta 5,x
+
+                lda 6,x         ; LSB of original addr
+                clc
+                adc 0,x
+                sta 6,x
+
+                lda 7,x         ; MSB of original addr
+                adc 1,x
+                sta 7,x 
+
+                ; There is one small problem: PARSE-NAME will probably have
+                ; left the string with the rest of the words with leading
+                ; delimiters. This is not really a problem inside a loop, but
+                ; if we are just splitting off words once, we don't want that.
+                ; So we walk through second string by hand to remove any
+                ; leading whitespace
+
+                ; TODO See if "strip leading whitespace" might be worth an
+                ; internal function because PARSE-NAME uses it as well
+
+                jsr xt_two_swap         ; ( addr-s u-s addr u )
+_loop:
+                jsr xt_over             ; ( addr-s u-s addr u addr )
+                jsr xt_c_fetch          ; ( addr-s u-s addr u c )
                 
-                ; Finally, decrease uw
-                lda 4,x
+                jsr is_whitespace
+                inx                     ; INX does not affect Carry Flag
+                inx                     ; ( addr-s u-s addr u )
+                bcc _done               ; no whitespace, we're done
+
+                ; We have whitespace. Move to next char
+                jsr xt_one_minus        ; ( addr-s u-s addr u-1 )
+                inc 2,x
                 bne +
-                dec 5,x
+                inc 3,x                 ; ( addr-s u-s addr+1 u-1 )
 *
-                dec 4,x         ; ( addrw-1 uw-1 addr u-uw )
+                ; Did that eat the whole string? Worse yet, did we drop into
+                ; negative territory (pananoid)?
+                lda 1,x                 ; Get sign bit
+                bpl _check_for_zero
+
+                ; We're negativ, for whatever reason. Make length of rest
+                ; string zero
+                stz 4,x
+                stz 5,x
+                bra _done
+
+_check_for_zero:
+                ; We're not negative, but we might be zero
+                ora 0,x 
+                bne _loop               ; No, check if more whitespace
+
+                ; Fall through to _done
 _done:
-                rts
-z_cleave:
+                jsr xt_two_swap 
+
+_all_done:
+                ; Restore input
+                jsr xt_r_to_input
+
+z_cleave:       rts
 .scend
 
 
