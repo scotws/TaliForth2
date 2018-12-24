@@ -1240,18 +1240,18 @@ hardware is powered down or the simulator is stopped.</p>
 <p><strong>branch ( -- )</strong> - Always branch. See <code>0branch</code>.</p>
 </div>
 <div class="paragraph">
-<p><strong>cleave ( addr u c -- addr2 u2 addr1 u1 )</strong> - Given a block of character memory and
-a delimiter character, split off the first sub-block and put it in TOS and NOS.
-Leave the rest lower down on the stack. This allows breaking off single words (or
-zero-terminated strings in memory, with a different delimiter) for further
-processing. Use with loops:</p>
+<p><strong>cleave ( addr u -- addr2 u2 addr1 u1 )</strong> - Given a block of character memory
+with words separated by whitespace, split off the first sub-block and put it in
+TOS and NOS.  Leave the rest lower down on the stack. This allows breaking off
+single words (or zero-terminated strings in memory, with a different delimiter)
+for further processing. Use with loops:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre>        : tokenloop ( addr u -- addr u addr u)
-            cr begin
-                bl cleave
-                type cr  \ &lt;-- processing of single word ( addr u ) here
+            begin
+                cleave
+                cr type  \ &lt;-- processing of single word ( addr u ) here
             dup 0= until
             2drop ;</pre>
 </div>
@@ -1266,15 +1266,6 @@ processing. Use with loops:</p>
         port
          ok</pre>
 </div>
-</div>
-<div class="paragraph">
-<p>If a space is provided as the delimiter as above with <code>bl</code>, <code>cleave</code> will split
-at any whitespace character such das tabs or line feeds.</p>
-</div>
-<div class="paragraph">
-<p><code>cleave</code> has <strong>known issues</strong> with multiple delimiters in sequence (e.g. two
-spaces between words instead of one) and if the string begins with a delimiter.
-See the source code for more detail.</p>
 </div>
 <div class="paragraph">
 <p><strong>compile-only ( -- )</strong> - Mark last word in dictionary as compile-only.</p>
@@ -1360,6 +1351,10 @@ user variables.</p>
 its size in bytes. Used to help tune native compiling. Note that <code>wordsize</code>
 expects the name token (<code>nt</code>) of a word, not the execution token (<code>xt</code>). This
 might be changed in future versions.</p>
+</div>
+<div class="paragraph">
+<p><strong>-leading ( addr u -- addr1 u1 )</strong> - Strip any leading whitespace. This is the
+other side of the ANS Forth string word <code>-trailing</code>.</p>
 </div>
 </div>
 </div>

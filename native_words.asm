@@ -1621,23 +1621,29 @@ z_chars:        rts
         ; the first word at the top of the stack and the rest of the word
         ; following it. Example: 
 
-        ; s" w1 w2 w3" cleave  \ produces "w2 w3" "w1"
-        ; s" w1" cleave        \ produces "" "w1"
+        ; s" w1 w2 w3" cleave  -> "w2 w3" "w1"
+        ; s" w1" cleave        -> "" "w1"
 
         ; Since it will be used in loops a lot, we want it to work in pure
         ; assembler and be as fast as we can make it. Calls PARSE-NAME so we
         ; strip leading delimiters.
         ; """
-
 .scope
 xt_cleave:
                 jsr underflow_2
 
-                ; We arrive here with ( addr u ). Our job is basically like
-                ; PARSE, except that we have a string as ( addr u ) and not in
-                ; the input buffer. We get around this by cheating: We place
-                ; ( addr u ) in the input buffer and then call PARSE.
-                jsr xt_input_to_r 
+                ; We arrive here with ( addr u ). We need to strip any leading
+                ; spaces by hand: PARSE-NAME does do that, but it doesn't
+                ; remember how many spaces were stripped. This means we can't
+                ; calculate the length of the remainder. Fortunately, Tali
+                ; Forth has just the word we need for this:
+                jsr xt_minus_leading    ; ( addr u )
+                
+                ; The main part we can turn over to PARSE-NAME, except that we
+                ; have a string ( addr u ) and not stuff in the input buffer.
+                ; We get around this by cheating: We place ( addr u ) in the
+                ; input buffer and then call PARSE-NAME.
+                jsr xt_input_to_r       ; save old imput state
 
                 lda 0,x         ; u is new ciblen
                 sta ciblen
@@ -1683,36 +1689,10 @@ xt_cleave:
 
                 ; There is one small problem: PARSE-NAME will probably have
                 ; left the string with the rest of the words with leading
-                ; delimiters. This is not really a problem inside a loop, but
-                ; if we are just splitting off words once, we don't want that.
-                ; So we walk through second string by hand to remove any
-                ; leading whitespace
-_loop:
-                ; If the original string has been all used up this is all
-                ; bonkers and we can just quit
-                lda 4,x
-                ora 5,x
-                beq _done
-
-                ; If the original string doesn't start with whitespace this is
-                ; all bonkers as well and we can just quit
-                lda (6,x)
-                jsr is_whitespace
-                bcc _done
-
-                ; The address of the original string is pointing to whitespace,
-                ; so we have to move along.
-                lda 4,x
-                bne +
-                dec 5,x
-*
-                dec 4,x         ; ( addr u-1 addr-s u-s )
-
-                inc 6,x
-                bne +
-                inc 7,x
-*
-                bra _loop
+                ; delimiters. We use our magic -LEADING again
+                jsr xt_two_swap         ; ( addr-s u-s addr u )
+                jsr xt_minus_leading 
+                jsr xt_two_swap         ; ( addr u addr-s u-s )
 _done:
                 ; Restore input
                 jsr xt_r_to_input
@@ -6041,6 +6021,7 @@ z_minus:        rts
         ; """
 .scope
 xt_minus_leading:
+                jsr underflow_2
 _loop:
                 ; Quit if we were given an empty string. This also terminates
                 ; the main loop

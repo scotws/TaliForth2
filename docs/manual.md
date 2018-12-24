@@ -320,12 +320,12 @@ In addition, there are words that are specific to Tali Forth.
 
 **branch ( -- )** - Always branch. See `0branch`.
 
-**cleave ( addr u c -- addr2 u2 addr1 u1 )** - Given a block of character memory and a delimiter character, split off the first sub-block and put it in TOS and NOS. Leave the rest lower down on the stack. This allows breaking off single words (or zero-terminated strings in memory, with a different delimiter) for further processing. Use with loops:
+**cleave ( addr u -- addr2 u2 addr1 u1 )** - Given a block of character memory with words separated by whitespace, split off the first sub-block and put it in TOS and NOS. Leave the rest lower down on the stack. This allows breaking off single words (or zero-terminated strings in memory, with a different delimiter) for further processing. Use with loops:
 
             : tokenloop ( addr u -- addr u addr u)
-                cr begin
-                    bl cleave
-                    type cr  \ <-- processing of single word ( addr u ) here
+                begin
+                    cleave
+                    cr type  \ <-- processing of single word ( addr u ) here
                 dup 0= until
                 2drop ;
 
@@ -335,10 +335,6 @@ For a string such as `s" emergency induction port"`, this gives us:
             induction
             port
              ok
-
-If a space is provided as the delimiter as above with `bl`, `cleave` will split at any whitespace character such das tabs or line feeds.
-
-`cleave` has **known issues** with multiple delimiters in sequence (e.g. two spaces between words instead of one) and if the string begins with a delimiter. See the source code for more detail.
 
 **compile-only ( -- )** - Mark last word in dictionary as compile-only.
 
@@ -376,6 +372,8 @@ With this behavior, `hexstore` functions as a reverse `dump`. The names "store" 
 **useraddr ( -- addr )** - Return the base address of the block of memory holding the user variables.
 
 **wordsize ( nt -- u )** - Given the name token (`nt`) of a Forth word, return its size in bytes. Used to help tune native compiling. Note that `wordsize` expects the name token (`nt`) of a word, not the execution token (`xt`). This might be changed in future versions.
+
+**-leading ( addr u -- addr1 u1 )** - Strip any leading whitespace. This is the other side of the ANS Forth string word `-trailing`.
 
 ### Wordlists and Search Order
 
