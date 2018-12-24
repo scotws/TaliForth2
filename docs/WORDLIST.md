@@ -151,6 +151,7 @@ RTS instruction at the end of each word.
 | MAX | `max` | ANS core | 27 | **auto** |
 | MIN | `min` | ANS core | 27 | **auto** |
 | MINUS | `-` | ANS core | 18 | **auto** |
+| MINUS_LEADING | `-leading` | Tali String | 21 | **auto** |
 | MINUS_TRAILING | `-trailing` | ANS string | 60 | **auto** |
 | MOD | `mod` | ANS core | 8 | **auto** |
 | MOVE | `move` | ANS core | 30 | **auto** |
@@ -286,7 +287,7 @@ RTS instruction at the end of each word.
 | EDITOR_LINE | `line` | Tali Editor | 24 | tested |
 | EDITOR_O | `o` | Tali Editor | 48 | tested |
 
-Found **278** native words in `native_words.asm`.
-Of those, **228** were automatically tested and
+Found **279** native words in `native_words.asm`.
+Of those, **229** were automatically tested and
           **1** are not marked as tested at all.
 

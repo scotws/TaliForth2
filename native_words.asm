@@ -6035,6 +6035,34 @@ xt_minus:
 z_minus:        rts
 
 
+; ## MINUS_LEADING ( addr1 u1 -- addr2 u2 ) "Remove leading spaces"
+; ## "-leading"  auto  Tali String
+        ; """Remove leading whitespace. This is the reverse of -TRAILING
+        ; """
+.scope
+xt_minus_leading:
+_loop:
+                ; Quit if we were given an empty string. This also terminates
+                ; the main loop
+                lda 0,x
+                ora 1,x
+                beq _done
+
+                lda (2,x)               ; get first character
+                jsr is_whitespace
+                bcc _done
+
+                ; It's whitespace, move one down
+                jsr xt_one              ; ( addr u 1 )
+                jsr xt_slash_string     ; ( addr+ u-1 )
+        
+                bra _loop
+_done:
+z_minus_leading:
+                rts
+.scend
+ 
+
 ; ## MINUS_TRAILING ( addr u1 -- addr u2 ) "Remove trailing spaces"
 ; ## "-trailing"  auto  ANS string
         ; """https://forth-standard.org/standard/string/MinusTRAILING

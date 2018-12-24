@@ -976,9 +976,14 @@ nt_slash_string:
         .word nt_refill, xt_slash_string, z_slash_string
         .byte "/string"
 
+nt_minus_leading:
+        .byte 8, UF
+        .word nt_slash_string, xt_minus_leading, z_minus_leading
+        .byte "-leading"
+
 nt_minus_trailing:
         .byte 9, UF
-        .word nt_slash_string, xt_minus_trailing, z_minus_trailing
+        .word nt_minus_leading, xt_minus_trailing, z_minus_trailing
         .byte "-trailing"
 
 nt_bl:
