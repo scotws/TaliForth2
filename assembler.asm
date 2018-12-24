@@ -1043,10 +1043,12 @@ _data:
 ; ==========================================================
 ; DIRECTIVES
 
-        ; TODO there are currently no directives available. See 
-        ; https://github.com/scotws/tasm65c02 for possible future directives
-
-
+; The "<J" directive (back jump) is a dummy instruction (syntactic sugar) to
+; make clear that the JMP or JSR instructions are using the address that had
+; been placed on the stack by "->" (the "arrow" directive).
+xt_asm_back_jump:
+z_asm_back_jump:
+                rts
       
 assembler_end:
 

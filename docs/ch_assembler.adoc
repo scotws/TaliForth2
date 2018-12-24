@@ -170,6 +170,54 @@ subroutine jump to the word's execution token (xt). This we can get with `'`
 
 This will print `10`.
 
+==== Labels, jumps, and branches
+
+The support for labels is currently very limited. An anonymous label can be
+marked with `+->+` (the "arrow") as a target for a backwards jump with `<j` (the
+"back jump". Note we are talking about the jump assembler instructions such as
+`JMP`, not the branch instructions such as `bra`. As a primitive example (that
+produces an endless loop):
+
+----
+        : .nums
+        [ 0 lda.#
+        ->                      ; anonymous label
+        inc.a push-a pha ]      ; PHA required because u. will overwrite A
+        u.
+        [ pla <j jmp ]          ; endless loop
+        ; 
+----
+
+Executing the word `.nums` will print numbers starting with 1 till 255 and then
+wrap.
+
+The directive `<j` is actually a dummy, or to put a bit more politely, syntactic
+sugar: The `jmp` instruction itself takes the value from the stack. `+->+`
+itself is nothing more than an immediate version of `here` and in fact shares
+the same assembler code.
+
+Disassembling `.nums` shows how this code works (addresses may vary):
+
+----
+        99D      0 lda.#
+        99F        inc.a   <1>
+        9A0        dex
+        9A1        dex
+        9A2      0 sta.zx
+        9A4      1 stz.zx
+        9A6        pha
+        9A7   D676 jsr
+        9AA   D6C2 jsr
+        9AD     20 lda.#
+        9AF   8E18 jsr
+        9B2        pla
+        9B3    99F jmp     <2>
+----
+<1> Address specified by label `+->+` is `$099F`
+<2> Address was picked up by `jmp` instruction
+
+NOTE: Other label words will be added in future.
+
 ==== Even simpler ways to insert assembler code
 
 Probably the very simplest way is to add the opcodes and operands directly with

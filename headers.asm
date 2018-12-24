@@ -2559,14 +2559,26 @@ nt_asm_tya:
 		.word xt_asm_tya, z_asm_tya
 		.byte "tya"
 
-; Assembler pseudo-instructions and macros
+; Assembler pseudo-instructions, directives and macros
+;
+nt_asm_back_jump:       ; syntactic sugar, does nothing
+                .byte 2, IM
+                .word nt_asm_tya
+                .word xt_asm_back_jump, z_asm_back_jump
+                .byte "<j"
+
+nt_asm_arrow:   ; uses same code as HERE, but immediate
+                .byte 2, IM
+                .word nt_asm_back_jump
+                .word xt_asm_arrow, z_asm_arrow   
+                .byte "->"
 
 assembler_dictionary_start:
 nt_asm_push_a:
-        .byte 6, IM
-        .word nt_asm_tya
-        .word xt_asm_push_a, z_asm_push_a
-        .byte "push-a"
+                .byte 6, IM
+                .word nt_asm_arrow
+                .word xt_asm_push_a, z_asm_push_a
+                .byte "push-a"
 
 ; END of ASSEMBLER-WORDLIST        
 

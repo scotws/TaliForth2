@@ -1892,7 +1892,7 @@ z_colon_noname:        rts
 ; ## ","  auto  ANS core
         ; """https://forth-standard.org/standard/core/Comma
         ; Store TOS at current place in memory. Since this an eight-bit
-        ; machine, we can ignore all alignment issures
+        ; machine, we can ignore all alignment issures.
         ; """
 .scope
 xt_comma:
@@ -1914,7 +1914,7 @@ xt_comma:
 _done:
                 inx
                 inx
-       
+
 z_comma:        rts
 .scend
 
@@ -4801,8 +4801,11 @@ z_greater_than: rts
 
 ; ## HERE ( -- addr ) "Put Compiler Pointer on Data Stack"
 ; ## "here"  auto  ANS core
-        ; """https://forth-standard.org/standard/core/HERE"""
+        ; """https://forth-standard.org/standard/core/HERE
+        ; This code is also used by the assembler directive ARROW
+        ; ("->") though as immediate"""
 xt_here:        
+xt_asm_arrow:
                 dex
                 dex
                 lda cp
@@ -4810,6 +4813,7 @@ xt_here:
                 lda cp+1
                 sta 1,x
 
+z_asm_arrow:
 z_here:         rts
 
 
