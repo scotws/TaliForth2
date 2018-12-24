@@ -294,142 +294,88 @@ Tali Forth is orientated on ANS Forth, the standard defined by the American Nati
 
 In addition, there are words that are specific to Tali Forth.
 
-<table>
-<colgroup>
-<col width="15%" />
-<col width="85%" />
-</colgroup>
-<tbody>
-<tr class="odd">
-<td><p>0branch</p></td>
-<td><p><code>( f — )</code> Branch if zero. Used internally for branching commands such as <code>if</code>. In modern Forths, this is usually replaced by <code>cs-pick</code> and <code>cs-roll</code>; Tali Forth might switch to these words in the future.</p></td>
-</tr>
-<tr class="even">
-<td><p>0</p></td>
-<td><p><code>( — 0 )</code> Push the number 0 on the Data Stack.</p></td>
-</tr>
-<tr class="odd">
-<td><p>1</p></td>
-<td><p><code>( — 0 )</code> Push the number 1 on the Data Stack.</p></td>
-</tr>
-<tr class="even">
-<td><p>2</p></td>
-<td><p><code>( — 0 )</code> Push the number 2 on the Data Stack.</p></td>
-</tr>
-<tr class="odd">
-<td><p>allow-native</p></td>
-<td><p>Mark last word in dictionary to that it can be natively compiled if it is less than or equal to nc-limit in size.</p></td>
-</tr>
-<tr class="even">
-<td><p>always-native</p></td>
-<td><p>Mark last word in dictionary so that it is always natively compiled.</p></td>
-</tr>
-<tr class="odd">
-<td><p>bell</p></td>
-<td><p>Ring the terminal bell (ASCII 07).</p></td>
-</tr>
-<tr class="even">
-<td><p>block-read</p></td>
-<td><p><code>( addr blk# — )</code> This is a vectored word the user can change to point to their own routine for reading 1K blocks into memory from storage.</p></td>
-</tr>
-<tr class="odd">
-<td><p>block-read-vector</p></td>
-<td><p><code>( — addr )</code> This is the address of the vector for block-read. Save the xt of your word here.</p></td>
-</tr>
-<tr class="even">
-<td><p>block-write</p></td>
-<td><p><code>( addr blk# — )</code> This is a vectored word the user can change to point to their own routine for writing 1K blocks from memory to storage.</p></td>
-</tr>
-<tr class="odd">
-<td><p>block-write-vector</p></td>
-<td><p><code>( — addr )</code> This is the address of the vector for block-write. Save the xt of your word here.</p></td>
-</tr>
-<tr class="even">
-<td><p>block-ramdrive-init</p></td>
-<td><p><code>( u — )</code> Create a ram drive with the given number of blocks (numbered 0 to (u-1)) to allow use of the block words with no additional hardware. Because the blocks are only held in ram, they will be lost when the hardware is powered down or the simulator is stopped.</p></td>
-</tr>
-<tr class="odd">
-<td><p>branch</p></td>
-<td><p>Always take branch. See <code>0branch</code>.</p></td>
-</tr>
-<tr class="even">
-<td><p>cleave</p></td>
-<td><p><code>( addr u c — addr2 u2 addr1 u1 )</code> Given a block of character memory and a delimiter character, split off the first sub-block and put it in TOS and NOS. Leave the rest lower down on the stack. This allows breaking off single words (or zero-terminated strings in memory, with a different delimiter) for further processing. Use with loops:</p>
-<pre><code>: tokenloop ( addr u -- addr u addr u)
-    cr begin
-        bl cleave
-        type cr  \ &lt;-- processing of single word ( addr u ) here
-    dup 0= until
-    2drop ;</code></pre>
-<p>For a string such as <code>s&quot; emergency induction port&quot;</code>, this gives us:</p>
-<pre><code>emergency
-induction
-port
- ok</code></pre>
-<p>If a space is provided as the delimiter as above with <code>bl</code>, <code>cleave</code> will split at any whitespace character such das tabs or line feeds.</p>
-<p><code>cleave</code> has <strong>known issues</strong> with multiple delimiters in sequence (e.g. two spaces between words instead of one) and if the string begins with a delimiter. See the source code for more detail.</p></td>
-</tr>
-<tr class="odd">
-<td><p>compile-only</p></td>
-<td><p>Mark last word in dictionary as compile-only.</p></td>
-</tr>
-<tr class="even">
-<td><p>digit?</p></td>
-<td><p><code>( char — u f | char f )</code> If character is a digit, convert and set flag to <code>true</code>, otherwise return the offending character and a <code>false</code> flag.</p></td>
-</tr>
-<tr class="odd">
-<td><p>ed</p></td>
-<td><p>Start the command-line editor. There is a whole chapter on this father down.</p></td>
-</tr>
-<tr class="even">
-<td><p>hexstore</p></td>
-<td><p><code>( addr u addr1 — u2 )</code> Given a string with numbers of the current base seperated by spaces, store the numbers at the address <code>addr1</code>, returning the number of elements. Non-number elements are skipped, an zero-length string produces a zero output. Use as a poor man’s assembler:</p>
-<pre><code>        hex  s&quot; ca ca 95 00 74 01&quot; myprog hexstore
-        myprog swap execute</code></pre>
-<p>With this behavior, <code>hexstore</code> functions as a reverse <code>dump</code>. The names &quot;store&quot; or &quot;numberstore&quot; might have been more appropriate, but &quot;hexstore&quot; as the association of the Unix command <code>hexdump</code> and should be easier to understand.</p></td>
-</tr>
-<tr class="odd">
-<td><p>input</p></td>
-<td><p>Return the address where the vector for the input routine is stored (not the vector itself). Used for input redirection for <code>emit</code> and others.</p></td>
-</tr>
-<tr class="even">
-<td><p>int&gt;name</p></td>
-<td><p><code>( xt — nt )</code> Given the execution execution token (xt), return the name token (nt).</p></td>
-</tr>
-<tr class="odd">
-<td><p>latestnt</p></td>
-<td><p><code>( — nt )</code> Return the last used name token. The Gforth version of this word is called <code>latest</code>.</p></td>
-</tr>
-<tr class="even">
-<td><p>nc-limit</p></td>
-<td><p><code>( — addr )</code> Return the address where the threshold value for native compiling native compiling is kept. To check the value of this parameter, use <code>nc-limit ?</code>. The default value is 20.</p></td>
-</tr>
-<tr class="odd">
-<td><p>never-native</p></td>
-<td><p>Mark most recent word so it is never natively compiled.</p></td>
-</tr>
-<tr class="even">
-<td><p>number</p></td>
-<td><p><code>( addr u — u | d )</code> Convert a string to a number. Gforth uses <code>s&gt;number?</code> and returns a success flag as well.</p></td>
-</tr>
-<tr class="odd">
-<td><p>output</p></td>
-<td><p><code>( — addr )</code> Return the address where the vector for the output routine is stored (not the vector itself). Used for output redirection for <code>emit</code> and others.</p></td>
-</tr>
-<tr class="even">
-<td><p>strip-underflow</p></td>
-<td><p><code>( — addr )</code> Return the address where the flag is kept that decides if the underflow checks are removed during native compiling. To check the value of this flag, use <code>strip-underflow ?</code>.</p></td>
-</tr>
-<tr class="odd">
-<td><p>useraddr</p></td>
-<td><p><code>( — addr )</code> Return the base address of the block of memory holding the user variables.</p></td>
-</tr>
-<tr class="even">
-<td><p>wordsize</p></td>
-<td><p><code>( nt — u )</code> Given the name token (nt) of a Forth word, return its size in bytes. Used to help tune native compiling.</p></td>
-</tr>
-</tbody>
-</table>
+**0branch ( f -- )** - Branch if zero. Used internally for branching commands such as `if`. In modern Forths, this is usually replaced by `cs-pick` and `cs-roll`; Tali Forth might switch to these words in the future; also, this word might be removed from the Dictionary.
+
+**0 ( -- 0 )** - Push the number 0 on the Data Stack.
+
+**1 ( -- 0 )** - Push the number 1 on the Data Stack.
+
+**2 ( -- 0 )** - Push the number 2 on the Data Stack.
+
+**allow-native ( -- )** - Mark last word in dictionary to that it can be natively compiled if it is less than or equal to nc-limit in size.
+
+**always-native ( -- )** - Mark last word in dictionary so that it is always natively compiled.
+
+**bell ( -- )** - Ring the terminal bell (ASCII 07).
+
+**block-read ( addr blk\# -- )** - This is a vectored word the user can change to point to their own routine for reading 1K blocks into memory from storage.
+
+**block-read-vector ( -- addr )** - This is the address of the vector for block-read. Save the xt of your word here.
+
+**block-write ( addr blk\# -- )** - This is a vectored word the user can change to point to their own routine for writing 1K blocks from memory to storage.
+
+**block-write-vector ( -- addr )** - This is the address of the vector for block-write. Save the xt of your word here.
+
+**block-ramdrive-init ( u -- )** - Create a RAM drive with the given number of blocks (numbered 0 to (u-1)) to allow use of the block words with no additional hardware. Because the blocks are only held in RAM, they will be lost when the hardware is powered down or the simulator is stopped.
+
+**branch ( -- )** - Always branch. See `0branch`.
+
+**cleave ( addr u c -- addr2 u2 addr1 u1 )** - Given a block of character memory and a delimiter character, split off the first sub-block and put it in TOS and NOS. Leave the rest lower down on the stack. This allows breaking off single words (or zero-terminated strings in memory, with a different delimiter) for further processing. Use with loops:
+
+            : tokenloop ( addr u -- addr u addr u)
+                cr begin
+                    bl cleave
+                    type cr  \ <-- processing of single word ( addr u ) here
+                dup 0= until
+                2drop ;
+
+For a string such as `s" emergency induction port"`, this gives us:
+
+            emergency
+            induction
+            port
+             ok
+
+If a space is provided as the delimiter as above with `bl`, `cleave` will split at any whitespace character such das tabs or line feeds.
+
+`cleave` has **known issues** with multiple delimiters in sequence (e.g. two spaces between words instead of one) and if the string begins with a delimiter. See the source code for more detail.
+
+**compile-only ( -- )** - Mark last word in dictionary as compile-only.
+
+**digit? ( char -- u f | char f )** - If character is a digit, convert and set flag to `true`, otherwise return the offending character and a `false` flag.
+
+**ed ( -- )** - Start the command-line editor. There is a whole chapter on this father down.
+
+**hexstore ( addr u addr1 -- u2 )** - Store string of numbers in memory. Given a string with numbers of the current base seperated by spaces, store the numbers at the address `addr1`, returning the number of elements. Non-number elements are skipped, an zero-length string produces a zero output. Use as a poor man’s assembler:
+
+            hex  s" ca ca 95 00 74 01" myprog hexstore
+            myprog swap execute
+
+With this behavior, `hexstore` functions as a reverse `dump`. The names "store" or "numberstore" might have been more appropriate, but "hexstore" as the association of the Unix command `hexdump` and should be easier to understand.
+
+**input ( -- )** - Return the address where the vector for the input routine is stored (not the vector itself). Used for input redirection for `emit` and others.
+
+**input&gt;r ( -- ) ( R: -- n n n n )** - Saves the current input state to the Return Stack. This is used for `evaluate`. ANS Forth does provide the word `save-input` (see <https://forth-standard.org/standard/core/SAVE-INPUT>), but it pushes the state to the Data Stack, not the Return Stack. The reverse operation is `r>input`.
+
+**int&gt;name ( xt -- nt )** - Given the execution execution token (xt)\* -, return the name token (nt)\* -.
+
+**latestnt ( -- nt )** - Return the last used name token. The Gforth version of this word is called `latest`.
+
+**nc-limit ( -- addr )** - Return the address where the threshold value for native compiling native compiling is kept. To check the value of this parameter, use `nc-limit ?`. The default value is 20.
+
+**never-native ( -- )** - Mark most recent word so it is never natively compiled.
+
+**number ( addr u -- u | d )** - Convert a string to a number. Gforth uses `s>number?` and returns a success flag as well.
+
+**output ( -- addr )** - Return the address where the vector for the output routine is stored (not the vector itself)\* -. Used for output redirection for `emit` and others.
+
+**r&gt;input ( --) ( R: n n n n -- )** - Restore input state from Return Stack. See `input>r` for details.
+
+**strip-underflow ( -- addr )** - Return the address where the flag is kept that decides if the underflow checks are removed during native compiling. To check the value of this flag, use `strip-underflow ?`.
+
+**useraddr ( -- addr )** - Return the base address of the block of memory holding the user variables.
+
+**wordsize ( nt -- u )** - Given the name token (`nt`) of a Forth word, return its size in bytes. Used to help tune native compiling. Note that `wordsize` expects the name token (`nt`) of a word, not the execution token (`xt`). This might be changed in future versions.
 
 ### Wordlists and Search Order
 

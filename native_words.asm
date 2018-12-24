@@ -4776,30 +4776,9 @@ _got_work:
                 iny
                 sta (up),y
 _nozero:        
-        
-        
-                ; We follow pforth's example of pushing SOURCE, SOURCE-ID,
-                ; and >IN to the Return Stack. All go MSB first
-                lda toin+1      ; >IN
-                pha
-                lda toin
-                pha
-
-                lda insrc+1     ; input source (SOURCE-ID)
-                pha
-                lda insrc
-                pha
-
-                lda cib+1       ; Current Input Buffer
-                pha
-                lda cib
-                pha
-
-                lda ciblen+1    ; Length of CIB
-                pha
-                lda ciblen
-                pha
-
+                ; Save the input state to the Return Stack
+                jsr xt_input_to_r
+                
                 ; set SOURCE-ID to -1
                 lda #$ff
                 sta insrc
@@ -4825,28 +4804,10 @@ _nozero:
                 inx
                 inx
 
-                jsr interpret  ; ( -- ) 
+                jsr interpret   ; ( -- ) 
 
                 ; restore variables
-                pla
-                sta ciblen
-                pla
-                sta ciblen+1
-
-                pla
-                sta cib
-                pla
-                sta cib+1
-
-                pla
-                sta insrc
-                pla
-                sta insrc+1
-
-                pla
-                sta toin
-                pla
-                sta toin+1
+                jsr xt_r_to_input
 
                 ; Restore BLK from the return stack.
                 ldy #blk_offset

@@ -1189,141 +1189,71 @@ reason not to.</p>
 <div class="paragraph">
 <p>In addition, there are words that are specific to Tali Forth.</p>
 </div>
-<div class="hdlist">
-<table>
-<tr>
-<td class="hdlist1">
-0branch
-</td>
-<td class="hdlist2">
-<p><code>( f&#8201;&#8212;&#8201;)</code> Branch if zero. Used internally for branching commands such as <code>if</code>.
-In modern Forths, this is usually replaced by <code>cs-pick</code> and <code>cs-roll</code>; Tali Forth
-might switch to these words in the future.</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-0
-</td>
-<td class="hdlist2">
-<p><code>(&#8201;&#8212;&#8201;0 )</code> Push the number 0 on the Data Stack.</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-1
-</td>
-<td class="hdlist2">
-<p><code>(&#8201;&#8212;&#8201;0 )</code> Push the number 1 on the Data Stack.</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-2
-</td>
-<td class="hdlist2">
-<p><code>(&#8201;&#8212;&#8201;0 )</code> Push the number 2 on the Data Stack.</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-allow-native
-</td>
-<td class="hdlist2">
-<p>Mark last word in dictionary to that it can be natively
+<div class="paragraph">
+<p><strong>0branch ( f -- )</strong> - Branch if zero. Used internally for branching commands
+such as <code>if</code>.  In modern Forths, this is usually replaced by <code>cs-pick</code> and
+<code>cs-roll</code>; Tali Forth might switch to these words in the future; also, this word
+might be removed from the Dictionary.</p>
+</div>
+<div class="paragraph">
+<p><strong>0 ( -- 0 )</strong> - Push the number 0 on the Data Stack.</p>
+</div>
+<div class="paragraph">
+<p><strong>1 ( -- 0 )</strong> - Push the number 1 on the Data Stack.</p>
+</div>
+<div class="paragraph">
+<p><strong>2 ( -- 0 )</strong> - Push the number 2 on the Data Stack.</p>
+</div>
+<div class="paragraph">
+<p><strong>allow-native ( -- )</strong> - Mark last word in dictionary to that it can be natively
 compiled if it is less than or equal to nc-limit in size.</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-always-native
-</td>
-<td class="hdlist2">
-<p>Mark last word in dictionary so that it is always natively compiled.</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-bell
-</td>
-<td class="hdlist2">
-<p>Ring the terminal bell (ASCII 07).</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-block-read
-</td>
-<td class="hdlist2">
-<p><code>( addr blk#&#8201;&#8212;&#8201;)</code> This is a vectored word the user can change to point
+</div>
+<div class="paragraph">
+<p><strong>always-native ( -- )</strong> - Mark last word in dictionary so that it is always natively compiled.</p>
+</div>
+<div class="paragraph">
+<p><strong>bell ( -- )</strong> - Ring the terminal bell (ASCII 07).</p>
+</div>
+<div class="paragraph">
+<p><strong>block-read ( addr blk# -- )</strong> - This is a vectored word the user can change to point
 to their own routine for reading 1K blocks into memory from storage.</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-block-read-vector
-</td>
-<td class="hdlist2">
-<p><code>(&#8201;&#8212;&#8201;addr )</code> This is the address of the vector
+</div>
+<div class="paragraph">
+<p><strong>block-read-vector ( -- addr )</strong> - This is the address of the vector
 for block-read.  Save the xt of your word here.</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-block-write
-</td>
-<td class="hdlist2">
-<p><code>( addr blk#&#8201;&#8212;&#8201;)</code> This is a vectored word the user can change to point
+</div>
+<div class="paragraph">
+<p><strong>block-write ( addr blk# -- )</strong> - This is a vectored word the user can change to point
 to their own routine for writing 1K blocks from memory to storage.</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-block-write-vector
-</td>
-<td class="hdlist2">
-<p><code>(&#8201;&#8212;&#8201;addr )</code> This is the address of the vector
+</div>
+<div class="paragraph">
+<p><strong>block-write-vector ( -- addr )</strong> - This is the address of the vector
 for block-write.  Save the xt of your word here.</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-block-ramdrive-init
-</td>
-<td class="hdlist2">
-<p><code>( u&#8201;&#8212;&#8201;)</code> Create a ram drive with the given number of blocks
-(numbered 0 to (u-1)) to
-allow use of the block words with no additional hardware.  Because the blocks are
-only held in ram, they will be lost when the hardware is powered down or the simulator
-is stopped.</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-branch
-</td>
-<td class="hdlist2">
-<p>Always take branch. See <code>0branch</code>.</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-cleave
-</td>
-<td class="hdlist2">
-<p><code>( addr u c&#8201;&#8212;&#8201;addr2 u2 addr1 u1 )</code> Given a block of character memory and
+</div>
+<div class="paragraph">
+<p><strong>block-ramdrive-init ( u -- )</strong> - Create a RAM drive with the given number of
+blocks (numbered 0 to (u-1)) to allow use of the block words with no additional
+hardware.  Because the blocks are only held in RAM, they will be lost when the
+hardware is powered down or the simulator is stopped.</p>
+</div>
+<div class="paragraph">
+<p><strong>branch ( -- )</strong> - Always branch. See <code>0branch</code>.</p>
+</div>
+<div class="paragraph">
+<p><strong>cleave ( addr u c -- addr2 u2 addr1 u1 )</strong> - Given a block of character memory and
 a delimiter character, split off the first sub-block and put it in TOS and NOS.
 Leave the rest lower down on the stack. This allows breaking off single words (or
 zero-terminated strings in memory, with a different delimiter) for further
 processing. Use with loops:</p>
+</div>
 <div class="listingblock">
 <div class="content">
-<pre>: tokenloop ( addr u -- addr u addr u)
-    cr begin
-        bl cleave
-        type cr  \ &lt;-- processing of single word ( addr u ) here
-    dup 0= until
-    2drop ;</pre>
+<pre>        : tokenloop ( addr u -- addr u addr u)
+            cr begin
+                bl cleave
+                type cr  \ &lt;-- processing of single word ( addr u ) here
+            dup 0= until
+            2drop ;</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1331,10 +1261,10 @@ processing. Use with loops:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>emergency
-induction
-port
- ok</pre>
+<pre>        emergency
+        induction
+        port
+         ok</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1346,43 +1276,24 @@ at any whitespace character such das tabs or line feeds.</p>
 spaces between words instead of one) and if the string begins with a delimiter.
 See the source code for more detail.</p>
 </div>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-compile-only
-</td>
-<td class="hdlist2">
-<p>Mark last word in dictionary as compile-only.</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-digit?
-</td>
-<td class="hdlist2">
-<p><code>( char&#8201;&#8212;&#8201;u f | char f )</code> If character is a digit, convert and set flag to
+<div class="paragraph">
+<p><strong>compile-only ( -- )</strong> - Mark last word in dictionary as compile-only.</p>
+</div>
+<div class="paragraph">
+<p><strong>digit? ( char -- u f | char f )</strong> - If character is a digit, convert and set flag to
 <code>true</code>, otherwise return the offending character and a <code>false</code> flag.</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-ed
-</td>
-<td class="hdlist2">
-<p>Start the command-line editor. There is a whole chapter on this father
+</div>
+<div class="paragraph">
+<p><strong>ed ( -- )</strong> - Start the command-line editor. There is a whole chapter on this father
 down.</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-hexstore
-</td>
-<td class="hdlist2">
-<p><code>( addr u addr1&#8201;&#8212;&#8201;u2 )</code> Given a string with numbers of the current
-base seperated by spaces, store the numbers at the address <code>addr1</code>, returning
-the number of elements. Non-number elements are skipped, an zero-length string
-produces a zero output. Use as a poor man&#8217;s assembler:</p>
+</div>
+<div class="paragraph">
+<p><strong>hexstore ( addr u addr1 -- u2 )</strong> - Store string of numbers in memory. Given a
+string with numbers of the current base seperated by spaces, store the numbers
+at the address <code>addr1</code>, returning the number of elements. Non-number elements
+are skipped, an zero-length string produces a zero output. Use as a poor man&#8217;s
+assembler:</p>
+</div>
 <div class="listingblock">
 <div class="content">
 <pre>        hex  s" ca ca 95 00 74 01" myprog hexstore
@@ -1394,102 +1305,61 @@ produces a zero output. Use as a poor man&#8217;s assembler:</p>
 or "numberstore" might have been more appropriate, but "hexstore" as the
 association of the Unix command <code>hexdump</code> and should be easier to understand.</p>
 </div>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-input
-</td>
-<td class="hdlist2">
-<p>Return the address where the vector for the input routine is
+<div class="paragraph">
+<p><strong>input ( -- )</strong> - Return the address where the vector for the input routine is
 stored (not the vector itself). Used for input redirection for
 <code>emit</code> and others.</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-int&gt;name
-</td>
-<td class="hdlist2">
-<p><code>( xt&#8201;&#8212;&#8201;nt )</code> Given the execution execution token (xt), return the
-name token (nt).</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-latestnt
-</td>
-<td class="hdlist2">
-<p><code>(&#8201;&#8212;&#8201;nt )</code> Return the last used name token. The Gforth version of this
-word is called <code>latest</code>.</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-nc-limit
-</td>
-<td class="hdlist2">
-<p><code>(&#8201;&#8212;&#8201;addr )</code> Return the address where the threshold value for native
+</div>
+<div class="paragraph">
+<p><strong>input&gt;r ( -- ) ( R: -- n n n n )</strong> - Saves the current input state to the
+Return Stack. This is used for <code>evaluate</code>. ANS Forth does provide the word
+<code>save-input</code> (see <a href="https://forth-standard.org/standard/core/SAVE-INPUT" class="bare">https://forth-standard.org/standard/core/SAVE-INPUT</a>), but it
+pushes the state to the Data Stack, not the Return Stack. The reverse operation
+is <code>r&gt;input</code>.</p>
+</div>
+<div class="paragraph">
+<p><strong>int&gt;name ( xt -- nt )</strong> - Given the execution execution token (xt)* -, return the
+name token (nt)* -.</p>
+</div>
+<div class="paragraph">
+<p><strong>latestnt ( -- nt )</strong> - Return the last used name token. The Gforth version of this
+ word is called <code>latest</code>.</p>
+</div>
+<div class="paragraph">
+<p><strong>nc-limit ( -- addr )</strong> - Return the address where the threshold value for native
 compiling native compiling is kept. To check the value of this parameter, use <code>nc-limit ?</code>.
 The default value is 20.</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-never-native
-</td>
-<td class="hdlist2">
-<p>Mark most recent word so it is never natively compiled.</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-number
-</td>
-<td class="hdlist2">
-<p><code>( addr u&#8201;&#8212;&#8201;u | d )</code> Convert a string to a number.  Gforth uses
+</div>
+<div class="paragraph">
+<p><strong>never-native ( -- )</strong> - Mark most recent word so it is never natively compiled.</p>
+</div>
+<div class="paragraph">
+<p><strong>number ( addr u -- u | d )</strong> - Convert a string to a number.  Gforth uses
 <code>s&gt;number?</code> and returns a success flag as well.</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-output
-</td>
-<td class="hdlist2">
-<p><code>(&#8201;&#8212;&#8201;addr )</code> Return the address where the vector for the output routine is
-stored (not the vector itself). Used for output redirection for <code>emit</code> and
+</div>
+<div class="paragraph">
+<p><strong>output ( -- addr )</strong> - Return the address where the vector for the output routine is
+stored (not the vector itself)* -. Used for output redirection for <code>emit</code> and
 others.</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-strip-underflow
-</td>
-<td class="hdlist2">
-<p><code>(&#8201;&#8212;&#8201;addr )</code> Return the address where the flag is kept that decides
+</div>
+<div class="paragraph">
+<p><strong>r&gt;input ( --) ( R: n n n n -- )</strong> - Restore input state from Return Stack.
+See <code>input&gt;r</code> for details.</p>
+</div>
+<div class="paragraph">
+<p><strong>strip-underflow ( -- addr )</strong> - Return the address where the flag is kept that decides
 if the underflow checks are removed during native compiling. To check the value
 of this flag, use <code>strip-underflow ?</code>.</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-useraddr
-</td>
-<td class="hdlist2">
-<p><code>(&#8201;&#8212;&#8201;addr )</code> Return the base address of the block of memory holding the
+</div>
+<div class="paragraph">
+<p><strong>useraddr ( -- addr )</strong> - Return the base address of the block of memory holding the
 user variables.</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-wordsize
-</td>
-<td class="hdlist2">
-<p><code>( nt&#8201;&#8212;&#8201;u )</code> Given the name token (nt) of a Forth word, return its
-size in bytes. Used to help tune native compiling.</p>
-</td>
-</tr>
-</table>
+</div>
+<div class="paragraph">
+<p><strong>wordsize ( nt -- u )</strong> - Given the name token (<code>nt</code>) of a Forth word, return
+its size in bytes. Used to help tune native compiling. Note that <code>wordsize</code>
+expects the name token (<code>nt</code>) of a word, not the execution token (<code>xt</code>). This
+might be changed in future versions.</p>
 </div>
 </div>
 </div>

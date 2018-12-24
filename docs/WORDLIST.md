@@ -115,7 +115,7 @@ RTS instruction at the end of each word.
 | FLUSH | `flush` | ANS block | 9 | **auto** |
 | FM_SLASH_MOD | `fm/mod` | ANS core | 54 | **auto** |
 | FORTH | `forth` | ANS search ext | 6 | **auto** |
-| EVALUATE | `evaluate` | ANS core | 125 | **auto** |
+| EVALUATE | `evaluate` | ANS core | 83 | **auto** |
 | FORTH_WORDLIST | `forth-wordlist` | ANS search | 6 | **auto** |
 | GET_CURRENT | `get-current` | ANS search | 10 | **auto** |
 | GET_ORDER | `get-order` | ANS search | 40 | **auto** |
