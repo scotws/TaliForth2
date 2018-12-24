@@ -332,17 +332,18 @@ The `STATE @ IF` portion of the definition is replaced by checking the state
 directly.  The state variable is 0 for interpreting and -1 ($FFFF) for
 compiling.  This assembly looks directly in the state variable (it's a 16-bit
 variable, so both halves are used to check for 0).  In order to keep the
-assembly in the same order as the Forth code, we branch on zero (the IF would
-have been compiled into a "0branch") to the ELSE section of the code.
+assembly in the same order as the Forth code, we branch on zero (the `if` would
+have been compiled into the runtime code for this branch) to the `else` section
+of the code.
 
-The true section of the IF has two postponed words.  Conveniently (for
+The true section of the `if` has two postponed words.  Conveniently (for
 demonstration purposes), the first one is an immediate word and the second is
 not.  You can see that the first postponed word is translated into a JSR and the
 second is translated into a call to cmpl_subroutine with Y and A filled in with
 the address of the word being postponed.  Because the true section should not
-run the code for the ELSE section, we use a BRA to a _done label.
+run the code for the `else` section, we use a BRA to a _done label.
 
-The ELSE section of the IF just has two regular words, so they are just
+The `else` section of the `if` just has two regular words, so they are just
 translated into JSRs.
 
 The `immediate` on the end is handled in the header in headers.asm by adding IM

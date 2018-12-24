@@ -258,25 +258,28 @@ Tali’s command line includes a simple, eight-element history function. To acce
 
 Tali Forth comes with the following Forth words out of the box:
 
-    see block-ramdrive-init list l evaluate thru load flush empty-buffers buffer
-    update block save-buffers block-words-deferred block-write block-read scr blk
-    buffstatus buffblocknum blkbuffer buffer: 2literal 2constant d.r d. ud.r ud. .r
-    u.r action-of is defer@ defer! endcase endof of case while until repeat else
-    then if .( ( drop dup swap ! @ over >r r> r@ nip rot -rot tuck , c@ c! +!
-    execute emit type .  u. ? false true space 0 1 2 2dup ?dup + - abs dabs and or
-    xor rshift lshift pick char [char] char+ chars cells cell+ here 1- 1+ 2* 2/ = <>
-    < u< u> > 0= 0<> 0> 0< min max 2drop 2swap 2over 2! 2@ 2variable 2r@ 2r> 2>r
-    invert negate dnegate c, bounds spaces bl -trailing /string refill accept unused
-    depth key allot create does> variable constant value to s>d d>s d- d+ erase
-    blank fill find-name ' ['] name>int int>name name>string >body defer latestxt
-    latestnt parse-name parse source source-id : ; :noname compile, [ ] 0branch
-    branch literal sliteral ." s" postpone immediate compile-only never-native
-    always-native allow-native nc-limit strip-underflow abort abort" do ?do i j loop
-    +loop exit unloop leave recurse quit begin again state evaluate base digit?
-    number >number hex decimal count m* um* * um/mod sm/rem fm/mod / /mod mod
-    */mod */ \ move cmove> cmove pad cleave within >in <# # #s #> hold sign output
-    input cr page at-xy marker words wordsize aligned align bell dump .s disasm
-    compare search environment? find word ed cold bye
+    order .wid drop dup swap ! @ over >r r> r@ nip rot -rot tuck , c@ c! +! execute
+    emit type . u. u.r .r d. d.r ud. ud.r ? false true space 0 1 2 2dup ?dup + - abs
+    dabs and or xor rshift lshift pick char [char] char+ chars cells cell+ here 1-
+    1+ 2* 2/ = <> < u< u> > 0= 0<> 0> 0< min max 2drop 2swap 2over 2! 2@ 2variable
+    2constant 2literal 2r@ 2r> 2>r invert negate dnegate c, bounds spaces bl
+    -trailing -leading /string refill accept input>r r>input unused depth key allot
+    create does> variable constant value to s>d d>s d- d+ erase blank fill find-name
+    ' ['] name>int int>name name>string >body defer latestxt latestnt parse-name
+    parse source source-id : ; :noname compile, [ ] literal sliteral ." s" s\"
+    postpone immediate compile-only never-native always-native allow-native nc-limit
+    strip-underflow abort abort" do ?do i j loop +loop exit unloop leave recurse
+    quit begin again state evaluate base digit? number >number hex decimal count m*
+    um* * um/mod sm/rem fm/mod / /mod mod */mod */ \ move cmove> cmove pad cleave
+    hexstore within >in <# # #s #> hold sign output input cr page at-xy marker words
+    wordsize aligned align bell dump .s disasm compare search environment? find word
+    ( .( if then else repeat until while case of endof endcase defer@ defer! is
+    action-of useraddr buffer: buffstatus buffblocknum blkbuffer scr blk block-write
+    block-write-vector block-read block-read-vector save-buffers block update buffer
+    empty-buffers flush load thru list block-ramdrive-init definitions wordlist
+    search-wordlist set-current get-current set-order get-order root-wordlist
+    assembler-wordlist editor-wordlist forth-wordlist only also previous >order
+    forth see ed cold bye
 
 > **Note**
 >
@@ -294,9 +297,7 @@ Tali Forth is orientated on ANS Forth, the standard defined by the American Nati
 
 In addition, there are words that are specific to Tali Forth.
 
-**0branch ( f -- )** - Branch if zero. Used internally for branching commands such as `if`. In modern Forths, this is usually replaced by `cs-pick` and `cs-roll`; Tali Forth might switch to these words in the future; also, this word might be removed from the Dictionary.
-
-**0 ( -- 0 )** - Push the number 0 on the Data Stack.
+**0 ( -- 0 )** - Push the number 0 on the Data Stack. Having this as an actual word speeds up processing because the interpreter doesn’t have to convert the character "0" into the number `0`.
 
 **1 ( -- 0 )** - Push the number 1 on the Data Stack.
 
@@ -317,8 +318,6 @@ In addition, there are words that are specific to Tali Forth.
 **block-write-vector ( -- addr )** - This is the address of the vector for block-write. Save the xt of your word here.
 
 **block-ramdrive-init ( u -- )** - Create a RAM drive with the given number of blocks (numbered 0 to (u-1)) to allow use of the block words with no additional hardware. Because the blocks are only held in RAM, they will be lost when the hardware is powered down or the simulator is stopped.
-
-**branch ( -- )** - Always branch. See `0branch`.
 
 **cleave ( addr u -- addr2 u2 addr1 u1 )** - Given a block of character memory with words separated by whitespace, split off the first sub-block and put it in TOS and NOS. Leave the rest lower down on the stack. This allows breaking off single words (or zero-terminated strings in memory, with a different delimiter) for further processing. Use with loops:
 
@@ -1371,11 +1370,11 @@ Note that with most words in Tali Forth, as any STC Forth, the distinction betwe
 
 #### Branches
 
-For `if` and `then`, we need to compile something called a "conditional forward branch", traditionally called `0branch`.
+For `if` and `then`, we need to compile something called a "conditional forward branch", traditionally called `0branch`. In Tali Forth, this is not visible to the user as an actual, separate word anymore, but we can explain things better if we assume it is still around.
 
 > **Note**
 >
-> Many Forths now use the words `cs-pick` and `cs-roll` instead of the `branch` variants, see [http://lars.nocrew.org/forth2012/rationale.html\\\#rat:tools:CS-PICK](http://lars.nocrew.org/forth2012/rationale.html\#rat:tools:CS-PICK) Tali Forth will probably switch to this variant in the future.
+> Many Forths now use the words `cs-pick` and `cs-roll` instead of the `branch` variants, see [http://lars.nocrew.org/forth2012/rationale.html\\\#rat:tools:CS-PICK](http://lars.nocrew.org/forth2012/rationale.html\#rat:tools:CS-PICK) Tali Forth might switch to this variant in the future.
 
 At run-time, if the value on the Data Stack is false (flag is zero), the branch is taken ("branch on zero", therefore the name). Except that we don’t have the target of that branch yet — it will later be added by `then`. For this to work, we remember the address after the `0branch` instruction during the compilation of `if`. This is put on the Data Stack, so that `then` knows where to compile it’s address in the second step. Until then, a dummy value is compiled after `0branch` to reserve the space we need.
 
@@ -1819,11 +1818,11 @@ The assembly version of this (which you can find in native\_words.asm as this is
 
 In the header, you can see this word is part of the ANS standard in the extended core word set. The "auto" means that there are automated tests (in the tests subdirectory) that automatically test this word. There is also a link in the comments (not technically part of the header) to the ANS standard for this word.
 
-The `STATE @ IF` portion of the definition is replaced by checking the state directly. The state variable is 0 for interpreting and -1 ($FFFF) for compiling. This assembly looks directly in the state variable (it’s a 16-bit variable, so both halves are used to check for 0). In order to keep the assembly in the same order as the Forth code, we branch on zero (the IF would have been compiled into a "0branch") to the ELSE section of the code.
+The `STATE @ IF` portion of the definition is replaced by checking the state directly. The state variable is 0 for interpreting and -1 ($FFFF) for compiling. This assembly looks directly in the state variable (it’s a 16-bit variable, so both halves are used to check for 0). In order to keep the assembly in the same order as the Forth code, we branch on zero (the `if` would have been compiled into the runtime code for this branch) to the `else` section of the code.
 
-The true section of the IF has two postponed words. Conveniently (for demonstration purposes), the first one is an immediate word and the second is not. You can see that the first postponed word is translated into a JSR and the second is translated into a call to cmpl\_subroutine with Y and A filled in with the address of the word being postponed. Because the true section should not run the code for the ELSE section, we use a BRA to a \_done label.
+The true section of the `if` has two postponed words. Conveniently (for demonstration purposes), the first one is an immediate word and the second is not. You can see that the first postponed word is translated into a JSR and the second is translated into a call to cmpl\_subroutine with Y and A filled in with the address of the word being postponed. Because the true section should not run the code for the `else` section, we use a BRA to a \_done label.
 
-The ELSE section of the IF just has two regular words, so they are just translated into JSRs.
+The `else` section of the `if` just has two regular words, so they are just translated into JSRs.
 
 The `immediate` on the end is handled in the header in headers.asm by adding IM to the status flags. See the top of headers.asm for a description of all of the header fields.
 

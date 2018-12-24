@@ -1125,25 +1125,28 @@ box:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>see block-ramdrive-init list l evaluate thru load flush empty-buffers buffer
-update block save-buffers block-words-deferred block-write block-read scr blk
-buffstatus buffblocknum blkbuffer buffer: 2literal 2constant d.r d. ud.r ud. .r
-u.r action-of is defer@ defer! endcase endof of case while until repeat else
-then if .( ( drop dup swap ! @ over &gt;r r&gt; r@ nip rot -rot tuck , c@ c! +!
-execute emit type .  u. ? false true space 0 1 2 2dup ?dup + - abs dabs and or
-xor rshift lshift pick char [char] char+ chars cells cell+ here 1- 1+ 2* 2/ = &lt;&gt;
-&lt; u&lt; u&gt; &gt; 0= 0&lt;&gt; 0&gt; 0&lt; min max 2drop 2swap 2over 2! 2@ 2variable 2r@ 2r&gt; 2&gt;r
-invert negate dnegate c, bounds spaces bl -trailing /string refill accept unused
-depth key allot create does&gt; variable constant value to s&gt;d d&gt;s d- d+ erase
-blank fill find-name ' ['] name&gt;int int&gt;name name&gt;string &gt;body defer latestxt
-latestnt parse-name parse source source-id : ; :noname compile, [ ] 0branch
-branch literal sliteral ." s" postpone immediate compile-only never-native
-always-native allow-native nc-limit strip-underflow abort abort" do ?do i j loop
-+loop exit unloop leave recurse quit begin again state evaluate base digit?
-number &gt;number hex decimal count m* um* * um/mod sm/rem fm/mod / /mod mod
-*/mod */ \ move cmove&gt; cmove pad cleave within &gt;in &lt;# # #s #&gt; hold sign output
-input cr page at-xy marker words wordsize aligned align bell dump .s disasm
-compare search environment? find word ed cold bye</pre>
+<pre>order .wid drop dup swap ! @ over &gt;r r&gt; r@ nip rot -rot tuck , c@ c! +! execute
+emit type . u. u.r .r d. d.r ud. ud.r ? false true space 0 1 2 2dup ?dup + - abs
+dabs and or xor rshift lshift pick char [char] char+ chars cells cell+ here 1-
+1+ 2* 2/ = &lt;&gt; &lt; u&lt; u&gt; &gt; 0= 0&lt;&gt; 0&gt; 0&lt; min max 2drop 2swap 2over 2! 2@ 2variable
+2constant 2literal 2r@ 2r&gt; 2&gt;r invert negate dnegate c, bounds spaces bl
+-trailing -leading /string refill accept input&gt;r r&gt;input unused depth key allot
+create does&gt; variable constant value to s&gt;d d&gt;s d- d+ erase blank fill find-name
+' ['] name&gt;int int&gt;name name&gt;string &gt;body defer latestxt latestnt parse-name
+parse source source-id : ; :noname compile, [ ] literal sliteral ." s" s\"
+postpone immediate compile-only never-native always-native allow-native nc-limit
+strip-underflow abort abort" do ?do i j loop +loop exit unloop leave recurse
+quit begin again state evaluate base digit? number &gt;number hex decimal count m*
+um* * um/mod sm/rem fm/mod / /mod mod */mod */ \ move cmove&gt; cmove pad cleave
+hexstore within &gt;in &lt;# # #s #&gt; hold sign output input cr page at-xy marker words
+wordsize aligned align bell dump .s disasm compare search environment? find word
+( .( if then else repeat until while case of endof endcase defer@ defer! is
+action-of useraddr buffer: buffstatus buffblocknum blkbuffer scr blk block-write
+block-write-vector block-read block-read-vector save-buffers block update buffer
+empty-buffers flush load thru list block-ramdrive-init definitions wordlist
+search-wordlist set-current get-current set-order get-order root-wordlist
+assembler-wordlist editor-wordlist forth-wordlist only also previous &gt;order
+forth see ed cold bye</pre>
 </div>
 </div>
 <div class="admonitionblock note">
@@ -1190,13 +1193,9 @@ reason not to.</p>
 <p>In addition, there are words that are specific to Tali Forth.</p>
 </div>
 <div class="paragraph">
-<p><strong>0branch ( f -- )</strong> - Branch if zero. Used internally for branching commands
-such as <code>if</code>.  In modern Forths, this is usually replaced by <code>cs-pick</code> and
-<code>cs-roll</code>; Tali Forth might switch to these words in the future; also, this word
-might be removed from the Dictionary.</p>
-</div>
-<div class="paragraph">
-<p><strong>0 ( -- 0 )</strong> - Push the number 0 on the Data Stack.</p>
+<p><strong>0 ( -- 0 )</strong> - Push the number 0 on the Data Stack. Having this as an actual
+word speeds up processing because the interpreter doesn&#8217;t have to convert the
+character "0" into the number <code>0</code>.</p>
 </div>
 <div class="paragraph">
 <p><strong>1 ( -- 0 )</strong> - Push the number 1 on the Data Stack.</p>
@@ -1235,9 +1234,6 @@ for block-write.  Save the xt of your word here.</p>
 blocks (numbered 0 to (u-1)) to allow use of the block words with no additional
 hardware.  Because the blocks are only held in RAM, they will be lost when the
 hardware is powered down or the simulator is stopped.</p>
-</div>
-<div class="paragraph">
-<p><strong>branch ( -- )</strong> - Always branch. See <code>0branch</code>.</p>
 </div>
 <div class="paragraph">
 <p><strong>cleave ( addr u -- addr2 u2 addr1 u1 )</strong> - Given a block of character memory
@@ -3349,7 +3345,9 @@ really makes sense.</p>
 <h4 id="_branches">Branches</h4>
 <div class="paragraph">
 <p>For <code>if</code> and <code>then</code>, we need to compile something called a "conditional forward
-branch", traditionally called <code>0branch</code>.</p>
+branch", traditionally called <code>0branch</code>. In Tali Forth, this is not visible to
+the user as an actual, separate word anymore, but we can explain things better
+if we assume it is still around.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -3361,7 +3359,7 @@ branch", traditionally called <code>0branch</code>.</p>
 Many Forths now use the words <code>cs-pick</code> and <code>cs-roll</code> instead of the
 <code>branch</code> variants, see
 <a href="http://lars.nocrew.org/forth2012/rationale.html\#rat:tools:CS-PICK" class="bare">http://lars.nocrew.org/forth2012/rationale.html\#rat:tools:CS-PICK</a> Tali Forth
-will probably switch to this variant in the future.
+might switch to this variant in the future.
 </td>
 </tr>
 </table>
@@ -4311,19 +4309,20 @@ comments (not technically part of the header) to the ANS standard for this word.
 directly.  The state variable is 0 for interpreting and -1 ($FFFF) for
 compiling.  This assembly looks directly in the state variable (it&#8217;s a 16-bit
 variable, so both halves are used to check for 0).  In order to keep the
-assembly in the same order as the Forth code, we branch on zero (the IF would
-have been compiled into a "0branch") to the ELSE section of the code.</p>
+assembly in the same order as the Forth code, we branch on zero (the <code>if</code> would
+have been compiled into the runtime code for this branch) to the <code>else</code> section
+of the code.</p>
 </div>
 <div class="paragraph">
-<p>The true section of the IF has two postponed words.  Conveniently (for
+<p>The true section of the <code>if</code> has two postponed words.  Conveniently (for
 demonstration purposes), the first one is an immediate word and the second is
 not.  You can see that the first postponed word is translated into a JSR and the
 second is translated into a call to cmpl_subroutine with Y and A filled in with
 the address of the word being postponed.  Because the true section should not
-run the code for the ELSE section, we use a BRA to a _done label.</p>
+run the code for the <code>else</code> section, we use a BRA to a _done label.</p>
 </div>
 <div class="paragraph">
-<p>The ELSE section of the IF just has two regular words, so they are just
+<p>The <code>else</code> section of the <code>if</code> just has two regular words, so they are just
 translated into JSRs.</p>
 </div>
 <div class="paragraph">

@@ -46,25 +46,28 @@ Tali Forth comes with the following Forth words out of the
 box:
 
 ----
-see block-ramdrive-init list l evaluate thru load flush empty-buffers buffer
-update block save-buffers block-words-deferred block-write block-read scr blk
-buffstatus buffblocknum blkbuffer buffer: 2literal 2constant d.r d. ud.r ud. .r
-u.r action-of is defer@ defer! endcase endof of case while until repeat else
-then if .( ( drop dup swap ! @ over >r r> r@ nip rot -rot tuck , c@ c! +!
-execute emit type .  u. ? false true space 0 1 2 2dup ?dup + - abs dabs and or
-xor rshift lshift pick char [char] char+ chars cells cell+ here 1- 1+ 2* 2/ = <>
-< u< u> > 0= 0<> 0> 0< min max 2drop 2swap 2over 2! 2@ 2variable 2r@ 2r> 2>r
-invert negate dnegate c, bounds spaces bl -trailing /string refill accept unused
-depth key allot create does> variable constant value to s>d d>s d- d+ erase
-blank fill find-name ' ['] name>int int>name name>string >body defer latestxt
-latestnt parse-name parse source source-id : ; :noname compile, [ ] 0branch
-branch literal sliteral ." s" postpone immediate compile-only never-native
-always-native allow-native nc-limit strip-underflow abort abort" do ?do i j loop
-+loop exit unloop leave recurse quit begin again state evaluate base digit?
-number >number hex decimal count m* um* * um/mod sm/rem fm/mod / /mod mod 
-*/mod */ \ move cmove> cmove pad cleave within >in <# # #s #> hold sign output 
-input cr page at-xy marker words wordsize aligned align bell dump .s disasm
-compare search environment? find word ed cold bye 
+order .wid drop dup swap ! @ over >r r> r@ nip rot -rot tuck , c@ c! +! execute
+emit type . u. u.r .r d. d.r ud. ud.r ? false true space 0 1 2 2dup ?dup + - abs
+dabs and or xor rshift lshift pick char [char] char+ chars cells cell+ here 1-
+1+ 2* 2/ = <> < u< u> > 0= 0<> 0> 0< min max 2drop 2swap 2over 2! 2@ 2variable
+2constant 2literal 2r@ 2r> 2>r invert negate dnegate c, bounds spaces bl
+-trailing -leading /string refill accept input>r r>input unused depth key allot
+create does> variable constant value to s>d d>s d- d+ erase blank fill find-name
+' ['] name>int int>name name>string >body defer latestxt latestnt parse-name
+parse source source-id : ; :noname compile, [ ] literal sliteral ." s" s\"
+postpone immediate compile-only never-native always-native allow-native nc-limit
+strip-underflow abort abort" do ?do i j loop +loop exit unloop leave recurse
+quit begin again state evaluate base digit? number >number hex decimal count m*
+um* * um/mod sm/rem fm/mod / /mod mod */mod */ \ move cmove> cmove pad cleave
+hexstore within >in <# # #s #> hold sign output input cr page at-xy marker words
+wordsize aligned align bell dump .s disasm compare search environment? find word
+( .( if then else repeat until while case of endof endcase defer@ defer! is
+action-of useraddr buffer: buffstatus buffblocknum blkbuffer scr blk block-write
+block-write-vector block-read block-read-vector save-buffers block update buffer
+empty-buffers flush load thru list block-ramdrive-init definitions wordlist
+search-wordlist set-current get-current set-order get-order root-wordlist
+assembler-wordlist editor-wordlist forth-wordlist only also previous >order
+forth see ed cold bye
 ----
 
 NOTE: This list might be outdated. To get the current list, run `words` from
@@ -98,12 +101,9 @@ reason not to.
                                                
 In addition, there are words that are specific to Tali Forth.  
 
-*0branch ( f +--+ )* - Branch if zero. Used internally for branching commands
-such as `if`.  In modern Forths, this is usually replaced by `cs-pick` and
-`cs-roll`; Tali Forth might switch to these words in the future; also, this word
-might be removed from the Dictionary.
-
-*0 ( +--+ 0 )* - Push the number 0 on the Data Stack.
+*0 ( +--+ 0 )* - Push the number 0 on the Data Stack. Having this as an actual
+word speeds up processing because the interpreter doesn't have to convert the
+character "0" into the number `0`.
 
 *1 ( +--+ 0 )* - Push the number 1 on the Data Stack.
 
@@ -132,8 +132,6 @@ for block-write.  Save the xt of your word here.
 blocks (numbered 0 to (u-1)) to allow use of the block words with no additional
 hardware.  Because the blocks are only held in RAM, they will be lost when the
 hardware is powered down or the simulator is stopped.
-
-*branch ( +--+ )* - Always branch. See `0branch`.
 
 *cleave ( addr u +--+ addr2 u2 addr1 u1 )* - Given a block of character memory
 with words separated by whitespace, split off the first sub-block and put it in
