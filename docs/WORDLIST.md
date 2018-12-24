@@ -124,7 +124,7 @@ RTS instruction at the end of each word.
 | HEXSTORE | `hexstore` | Tali | 82 | **auto** |
 | HOLD | `hold` | ANS core | 17 | **auto** |
 | I | `i` | ANS core | 25 | **auto** |
-| IF | `if` | ANS core | 12 | **auto** |
+| IF | `if` | ANS core | 16 | **auto** |
 | IMMEDIATE | `immediate` | ANS core | 11 | **auto** |
 | INPUT | `input` | Tali Forth | 10 | tested |
 | INPUT_TO_R | `input>r` | Tali Forth | 21 | tested |
@@ -260,13 +260,13 @@ RTS instruction at the end of each word.
 | UM_SLASH_MOD | `um/mod` | ANS core | 65 | **auto** |
 | UM_STAR | `um*` | ANS core | 69 | **auto** |
 | UNLOOP | `unloop` | ANS core | 6 | **auto** |
-| UNTIL | `until` | ANS core | 6 | **auto** |
+| UNTIL | `until` | ANS core | 10 | **auto** |
 | UNUSED | `unused` | ANS core ext | 15 | **auto** |
 | UPDATE | `update` | ANS block | 8 | **auto** |
 | USERADDR | `useraddr` | Tali Forth | 10 | tested |
 | VALUE | `value` | ANS core | 61 | **auto** |
 | VARIABLE | `variable` | ANS core | 24 | **auto** |
-| WHILE | `while` | ANS core | 15 | **auto** |
+| WHILE | `while` | ANS core | 19 | **auto** |
 | WITHIN | `within` | ANS core ext | 21 | **auto** |
 | WORD | `word` | ANS core | 69 | **auto** |
 | WORDLIST | `wordlist` | ANS search | 22 | **auto** |
@@ -274,7 +274,6 @@ RTS instruction at the end of each word.
 | WORDSIZE | `wordsize` | Tali Forth | 32 | **auto** |
 | XOR | `xor` | ANS core | 17 | **auto** |
 | ZERO | `0` | Tali Forth | 6 | **auto** |
-| ZERO_BRANCH | `0branch` | Tali Forth | 7 | tested |
 | ZERO_EQUAL | `0=` | ANS core | 19 | **auto** |
 | ZERO_GREATER | `0>` | ANS core ext | 19 | **auto** |
 | ZERO_LESS | `0<` | ANS core | 15 | **auto** |
@@ -286,7 +285,7 @@ RTS instruction at the end of each word.
 | EDITOR_LINE | `line` | Tali Editor | 24 | tested |
 | EDITOR_O | `o` | Tali Editor | 48 | tested |
 
-Found **278** native words in `native_words.asm`.
+Found **277** native words in `native_words.asm`.
 Of those, **229** were automatically tested and
           **1** are not marked as tested at all.
 

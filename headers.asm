@@ -756,14 +756,9 @@ nt_literal:
         .word nt_sliteral, xt_literal, z_literal
         .byte "literal"
 
-nt_zero_branch:                 ; do not check for underflow
-        .byte 7, CO+IM+NN
-        .word nt_literal, xt_zero_branch, z_zero_branch
-        .byte "0branch"
-
 nt_right_bracket:
         .byte 1, IM
-        .word nt_zero_branch, xt_right_bracket, z_right_bracket
+        .word nt_literal, xt_right_bracket, z_right_bracket
         .byte "]"
 
 nt_left_bracket:

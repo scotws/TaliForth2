@@ -4965,15 +4965,81 @@ z_i:            rts
         ; """http://forth-standard.org/standard/core/IF"""
 .scope
 xt_if:
-                ; Compile a 0branch
-                jsr xt_zero_branch
+                ; Compile a 0BRANCH
+                ldy #>zero_branch_runtime
+                lda #<zero_branch_runtime
+                jsr cmpl_subroutine
+
                 ; Put the origination address on the stack for else/then
                 jsr xt_here
+
                 ; Stuff zero in for the branch address right now.
                 ; THEN or ELSE will fix it later.
                 jsr xt_zero
                 jsr xt_comma
 z_if:           rts
+.scend
+
+zero_branch_runtime:
+        ; """In some Forths, this is called (0BRANCH). Tali Forth originally
+        ; included 0BRANCH as a high-level word that inserted this code at
+        ; runtime.
+        ; """
+.scope
+                ; We use the return value on the 65c02 stack to determine
+                ; where we want to return to.
+                pla
+                sta tmpbranch
+                pla
+                sta tmpbranch+1
+
+                ; See if the flag is zero, which is the whole purpose of
+                ; this all
+                lda 0,x
+                ora 1,x
+                beq _zero
+
+                ; Flag is TRUE, so we skip over the next two bytes. This is
+                ; the part between IF and THEN
+                lda tmpbranch   ; LSB
+                clc
+                adc #2
+                sta tmp1
+                lda tmpbranch+1 ; MSB
+                adc #0          ; For carry
+                sta tmp1+1
+
+                bra _done
+_zero:
+                ; flag is FALSE (0) so we take the jump to the address given in the next
+                ; two bytes.  However, the address points to the last byte of the JSR
+                ; instruction, not to the next byte afterwards
+                ldy #1
+                lda (tmpbranch),y
+                sta tmp1
+                iny
+                lda (tmpbranch),y
+                sta tmp1+1
+                
+                ; Now we have to subtract one byte from the address
+                ; given because of the way the 6502 calculates RTS
+                lda tmp1
+                bne +
+                dec tmp1+1
+*               dec tmp1
+_done:
+                ; However we got here, tmp1 has the value we push to jump
+                ; to
+                lda tmp1+1
+                pha             ; MSB first
+                lda tmp1
+                pha
+
+                ; clean up the stack and jump
+                inx
+                inx
+
+                rts
 .scend
 
 
@@ -10805,8 +10871,10 @@ z_unloop:       rts
         ; """http://forth-standard.org/standard/core/UNTIL"""
 .scope
 xt_until:
-                ; Compile a 0branch
-                jsr xt_zero_branch
+                ; Compile a 0BRANCH
+                ldy #>zero_branch_runtime
+                lda #<zero_branch_runtime
+                jsr cmpl_subroutine
 
                 ; The address to loop back to is on the stack.
                 ; Just compile it as the destination for the
@@ -10911,7 +10979,9 @@ z_variable:     rts
 .scope
 xt_while:
                 ; Compile a 0branch
-                jsr xt_zero_branch
+                ldy #>zero_branch_runtime
+                lda #<zero_branch_runtime
+                jsr cmpl_subroutine
 
                 ; Put the address (here) where the destination
                 ; address needs to go so it can be put there later.
@@ -11228,85 +11298,6 @@ z_case:
 z_forth_wordlist:
 z_zero:         
                 rts
-
-
-; ## ZERO_BRANCH ( f -- ) "Branch if TOS is zero"
-; ## "0branch"  tested  Tali Forth
-        ; """This exects the next two bytes to be the address of where to
-        ; branch to if the test fails. The code may not be natively compiled
-        ; because we need the return address provided by JSR's push to the
-        ; Return Stack This routine uses tmpbranch. Do not check for underflow.
-        ; """
-.scope
-xt_zero_branch:
-                ; The actual word is short: Just compile the runtime
-                ; behavior
-                ldy #>zero_branch_runtime
-                lda #<zero_branch_runtime
-                jsr cmpl_subroutine
-                
-z_zero_branch:  rts
-.scend
-
-zero_branch_runtime:
-        ; """In some Forths, this is called (0BRANCH)"""
-.scope
-                ; we use the return value on the 65c02 stack to determine
-                ; where we want to return to.
-                pla
-                sta tmpbranch
-                pla
-                sta tmpbranch+1
-
-                ; See if the flag is zero, which is the whole purpose of
-                ; this all
-                lda 0,x
-                ora 1,x
-                beq _zero
-
-                ; Flag is TRUE, so we skip over the next two bytes. This is
-                ; the part between IF and THEN
-                lda tmpbranch   ; LSB
-                clc
-                adc #2
-                sta tmp1
-                lda tmpbranch+1 ; MSB
-                adc #0          ; For carry
-                sta tmp1+1
-
-                bra _done
-_zero:
-                ; flag is FALSE (0) so we take the jump to the address given in the next
-                ; two bytes.  However, the address points to the last byte of the JSR
-                ; instruction, not to the next byte afterwards
-                ldy #1
-                lda (tmpbranch),y
-                sta tmp1
-                iny
-                lda (tmpbranch),y
-                sta tmp1+1
-                
-                ; Now we have to subtract one byte from the address
-                ; given because of the way the 6502 calculates RTS
-                lda tmp1
-                bne +
-                dec tmp1+1
-*               dec tmp1
-_done:
-                ; However we got here, tmp1 has the value we push to jump
-                ; to
-                lda tmp1+1
-                pha             ; MSB first
-                lda tmp1
-                pha
-
-                ; clean up the stack and jump
-                inx
-                inx
-
-                rts
-.scend
-
 
 ; ## ZERO_EQUAL ( n -- f ) "Check if TOS is zero"
 ; ## "0="  auto  ANS core
