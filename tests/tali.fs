@@ -27,7 +27,18 @@ T{ ffff 2 bounds -> 0001 ffff }T  \ BOUNDS wraps on Tali with 16 bit address spa
 T{ decimal -> }T
 
 \ ------------------------------------------------------------------------
-\ testing tali-only words: cleave hexstore
+\ testing tali-only words: -leading cleave hexstore
+
+\ -leading: Trip leading whitespace
+T{ s" aaa" -leading  s" aaa" compare -> 0 }T   \ No leading spaces
+T{ s"  bbb" -leading  s" bbb" compare -> 0 }T  \ one leading space
+T{ s"   ccc" -leading  s" ccc" compare -> 0 }T   \ two leading spaces
+
+T{ s\" \tddd" -leading  s" ddd" compare -> 0 }T   \ one leading tab
+T{ s\" \t\teee" -leading  s" eee" compare -> 0 }T   \ two leading tabs
+
+T{ s\" \nddd" -leading  s" ddd" compare -> 0 }T   \ one leading LF
+T{ s\" \n\neee" -leading  s" eee" compare -> 0 }T   \ two leading LF
 
 \ Cleave: Normal cases. KNOWN issue: CLEAVE fails if we have multiple
 \ delimiters, for example "aaa  bbb" with two strings. This is also true if we
