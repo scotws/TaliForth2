@@ -780,7 +780,7 @@ Tali Forth is shipped with a built-in assembler that uses the Simpler Assembler 
 >
 > The code was originally part of a stand-alone 65c02 assembler in Forth named tasm65c02. See <https://github.com/scotws/tasm65c02> for details. Tasm65c02 is in the public domain.
 
-#### Adding assembler code
+#### Adding assembler code at the command line
 
 Because Tali Forth is a Subroutine Threaded (STC) Forth, inserting assembler instructions is easy. In fact, the only real problem is accessing the assembler wordlist, which is normally not in the search tree because of its length. This, then, is one way to add assembler code:
 
@@ -795,23 +795,23 @@ Because Tali Forth is a Subroutine Threaded (STC) Forth, inserting assembler ins
 
 The first line is required to give the user access to the list of assembler mnemonics. They are not in the default wordlist path because of their sheer number:
 
-            push-a tya txs txa tsx tsb.z tsb trb.z trb tay tax stz.zx stz.z stz.x
-            stz sty.zx sty.z sty stx.zy stx.z stx sta.zxi sta.zx sta.ziy sta.zi
-            sta.z sta.y sta.x sta sei sed sec sbc.zxi sbc.zx sbc.ziy sbc.zi sbc.z
-            sbc.y sbc.x sbc.# sbc rts rti ror.zx ror.z ror.x ror.a ror rol.zx rol.z
-            rol.x rol.a rol ply plx plp pla phy phx php pha ora.zxi ora.zx ora.ziy
-            ora.zi ora.z ora.y ora.x ora.# ora nop lsr.zx lsr.z lsr.x lsr.a lsr
-            ldy.zx ldy.z ldy.x ldy.# ldy ldx.zy ldx.z ldx.y ldx.# ldx lda.zxi lda.zx
-            lda.ziy lda.zi lda.z lda.y lda.x lda.# lda jsr jmp.xi jmp.i jmp iny inx
-            inc.zx inc.z inc.x inc.a inc eor.zxi eor.zx eor.ziy eor.zi eor.z eor.y
-            eor.x eor.# eor dey dex dec.zx dec.z dec.x dec.a dec cpy.z cpy.# cpy
-            cpx.z cpx.# cpx cmp.zxi cmp.zx cmp.ziy cmp.zi cmp.z cmp.y cmp.x cmp.#
-            cmp clv cli cld clc bvs bvc brk bra bpl bne bmi bit.zx bit.z bit.x bit.#
-            bit beq bcs bcc asl.zx asl.z asl.x asl.a asl and.zxi and.zx and.ziy
-            and.zi and.z and.y and.x and.# and adc.zxi adc.zx adc.ziy adc.zi adc.z
-            adc.y adc.x adc.#
+            push-a -> <b <j tya txs txa tsx tsb.z tsb trb.z trb tay tax stz.zx stz.z
+            stz.x stz sty.zx sty.z sty stx.zy stx.z stx sta.zxi sta.zx sta.ziy
+            sta.zi sta.z sta.y sta.x sta sei sed sec sbc.zxi sbc.zx sbc.ziy sbc.zi
+            sbc.z sbc.y sbc.x sbc.# sbc rts rti ror.zx ror.z ror.x ror.a ror rol.zx
+            rol.z rol.x rol.a rol ply plx plp pla phy phx php pha ora.zxi ora.zx
+            ora.ziy ora.zi ora.z ora.y ora.x ora.# ora nop lsr.zx lsr.z lsr.x lsr.a
+            lsr ldy.zx ldy.z ldy.x ldy.# ldy ldx.zy ldx.z ldx.y ldx.# ldx lda.zxi
+            lda.zx lda.ziy lda.zi lda.z lda.y lda.x lda.# lda jsr jmp.xi jmp.i jmp
+            iny inx inc.zx inc.z inc.x inc.a inc eor.zxi eor.zx eor.ziy eor.zi eor.z
+            eor.y eor.x eor.# eor dey dex dec.zx dec.z dec.x dec.a dec cpy.z cpy.#
+            cpy cpx.z cpx.# cpx cmp.zxi cmp.zx cmp.ziy cmp.zi cmp.z cmp.y cmp.x
+            cmp.# cmp clv cli cld clc bvs bvc brk bra bpl bne bmi bit.zx bit.z bit.x
+            bit.# bit beq bcs bcc asl.zx asl.z asl.x asl.a asl and.zxi and.zx
+            and.ziy and.zi and.z and.y and.x and.# and. adc.zxi adc.zx adc.ziy
+            adc.zi adc.z adc.y adc.x adc.#
 
-The last line, `previous`, removes the assembler wordlist again.
+The last line in our code, `previous`, removes the assembler wordlist again.
 
 In the example above, it is important to use `rts` and not `brk` as the last instruction to return to the command line.
 
@@ -837,9 +837,9 @@ This also allows the use various different formatting tricks like putting more t
             nop ( just chilling ) nop ( still don't want to work )
             nop ( not going to happen ) nop ( just go away already! )
 
-#### Adding assembler code to words
+#### Adding assembler code to new words
 
-The assembler words are immediate, that is, they are executed even during compilation. Simply adding them to a word doesn’t work. For example, if we want a word that pushes 1 on the Forth data stack, we might be tempted to do this (assuming `assembler-wordlist >order`):
+The assembler words are immediate, that is, they are executed even during compilation. Simply adding them to a word doesn’t work. For example, if we want a word that pushes 1 on the Forth data stack, we might be tempted to do this (assuming `assembler-wordlist >order` first):
 
             : one-to-tos  compiled
             1 lda.#                 \ fails with "Stack underflow"
@@ -853,7 +853,7 @@ The problem is that the number `1` is compiled, and then the immediate word `lda
 
 > **Note**
 >
-> We do not need to add an explicit `rts` instruction when compiling new words with assembler because the `;` does it automatically. This is because Tali Forth uses Subroutine Threaded Code (STC)
+> We do not need to add an explicit `rts` instruction when compiling new words with assembler because the `;` does it automatically. This is because Tali Forth uses Subroutine Threaded Code (STC).
 
 Running `one-to-tos` prints the number `1`. We can use a slightly simpler variant:
 
@@ -862,7 +862,7 @@ Running `one-to-tos` prints the number `1`. We can use a slightly simpler varian
             push-a ]  compiled
             u. ;  ok
 
-This time, we’ve only used one left square bracket to start the assembler code and one right bracket to end it. Because of this, we get an `ok` instead of a `compiled` because we are technically not in compile-mode anymore. `1 lda.#` can write the machine code right away.
+This time, we’ve only used one left square bracket to start the assembler code and one right bracket to end it. Because of this, we get `ok` instead of `compiled` because we are technically not in compile-mode anymore. `1 lda.#` can write the machine code right away.
 
 Looking at our new word with `see` gives us (addresses may vary):
 
@@ -883,17 +883,17 @@ Looking at our new word with `see` gives us (addresses may vary):
             A4A     20 lda.#
             A4C   8E30 jsr
 
--   is the `1 lda.#` as a single line;
+-   The `1 lda.#` as a single line;
 
--   starts four lines of code for `push-a`;
+-   Four lines of code for `push-a`;
 
--   starts four lines from `u.`
+-   Four lines from `u.`
 
-Some Forths add the words `code` and `end-code` to mark the beginning and end of an assembler blocks. In our case, these would just be simple synonyms for `[` and `]`
+Some Forths add the words `code` and `end-code` to mark the beginning and end of an assembler blocks. In our case, these would just be simple synonyms for `[` and `]`, so we don’t bother.
 
 #### Accessing Forth words from assembler
 
-To execute Forth words when then assembler code is run, we need to store a subroutine jump to the word’s execution token (xt). This we can get with `'` (the "tick"). For instance, to print the byte in the accumulator:
+To execute Forth words when then assembler code is run, we need to store a subroutine jump to the word’s execution token (xt). This we can get with `'` ("tick"). For instance, to print the byte in the accumulator:
 
             here
             10 lda.#
@@ -973,12 +973,6 @@ Looking at the assembler code with `see`, we can see that the branch instruction
 
 Currently, there is no mechanism that checks to see if the operand is in the correct range for a branch. It is assumed that the assembler will be used only for small code snippets where this will not be a problem.
 
-#### Even simpler ways to insert assembler code
-
-Probably the very simplest way is to add the opcodes and operands directly with the `c,` instruction.
-
-Tali Forth also provides a special word called `hexstore` to add strings of numbers.
-
 #### Pseudo-instructions and macros
 
 **push-a** takes the byte in the Accumulator A and pushes it to the top of the Forth Data Stack. This is a convenience macro for
@@ -1011,6 +1005,67 @@ Working with assembler requires an intimate knowledge of Tali Forth’s internal
 **The assembler instruction `and`** receives a dot for absolute addressing to avoid conflict with the Forth word of the same name: `and. 1000` is the correct form.
 
 **`brk` is a two-byte instruction** because the assembler enforces the signature byte. You shouldn’t use `brk` anyway.
+
+#### Other ways to insert assembler code
+
+Sometimes the assembler can be overkill, or we are given a dump of hex values from a different assembler to store. Probably the very simplest way is to add the opcodes and operands directly with the `c,` instruction to store the machine code byte by byte. Our very first example of pushing the number 1 to the Data Stack in assembler becomes:
+
+            hex  here a9 c, 01 c, ca c, ca c, 95 c, 00 c, 74 c, 01 c, 60 c,
+
+This leaves the address of this routine on the stack through the `here`. We run this fragment with `execute` and find the number 1 on the stack.
+
+This, however, is error-prone to type. Tali Forth provides a special word called `hexstore ( addr u addr1 — u )` for those occasions. It stores the string provided by `( addr u )` at the location `addr1` and returns the number of bytes stored.
+
+           hex
+           s" a9 01 ca ca 95 00 74 01 60" 6000 hexstore
+           drop     
+           6000 execute
+
+-   Get rid of return value bytes stored
+
+This word can be tricky to use with `here` because the string storage command `s"` uses memory. The current address must be chosen *before* the string is stored:
+
+            hex
+            here dup  s" a9 01 ca ca 95 00 74 01 60" rot hexstore
+            drop execute
+
+Instead of `drop execute` in the last line, a `dump` will show that the correct bytes were stored (address may vary):
+
+            0990  A9 01 CA CA 95 00 74 01  60  ......t. `
+
+Disassembly gives us the fragment we were expecting:
+
+            9AD      1 lda.#
+            9AF        dex
+            9B0        dex
+            9B1      0 sta.zx
+            9B3      1 stz.zx
+            9B5        rts
+
+Note here again the `rts` as last instruction.
+
+We can also use the line-editor `ed` to add hex values for `hexstore`, which makes it easier to correct typing errors. Adding our code:
+
+            ed
+            a
+            a9 01 ca ca 95 00 74 01 60
+            .
+            5000w  
+            27     
+            q
+
+-   Save string at address 5000
+
+-   Shows us length of number string saved
+
+Unless we ran `hex` before adding the word, the string is no stored at the decimal addresss 5000. However, we’ve added the words as hexadecimal code. To call `hexstore`, we must switch at the right time:
+
+            5000 27 6000 hex hexstore  ok
+            drop
+            decimal
+            6000 execute
+
+You can get around this by either using all-hex numbers or enter the number string in decimal.
 
 ### The Disassembler
 

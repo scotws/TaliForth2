@@ -2179,7 +2179,7 @@ is in the public domain.
 </table>
 </div>
 <div class="sect3">
-<h4 id="_adding_assembler_code">Adding assembler code</h4>
+<h4 id="_adding_assembler_code_at_the_command_line">Adding assembler code at the command line</h4>
 <div class="paragraph">
 <p>Because Tali Forth is a Subroutine Threaded (STC) Forth, inserting assembler
 instructions is easy. In fact, the only real problem is accessing the assembler
@@ -2205,25 +2205,25 @@ number:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>        push-a tya txs txa tsx tsb.z tsb trb.z trb tay tax stz.zx stz.z stz.x
-        stz sty.zx sty.z sty stx.zy stx.z stx sta.zxi sta.zx sta.ziy sta.zi
-        sta.z sta.y sta.x sta sei sed sec sbc.zxi sbc.zx sbc.ziy sbc.zi sbc.z
-        sbc.y sbc.x sbc.# sbc rts rti ror.zx ror.z ror.x ror.a ror rol.zx rol.z
-        rol.x rol.a rol ply plx plp pla phy phx php pha ora.zxi ora.zx ora.ziy
-        ora.zi ora.z ora.y ora.x ora.# ora nop lsr.zx lsr.z lsr.x lsr.a lsr
-        ldy.zx ldy.z ldy.x ldy.# ldy ldx.zy ldx.z ldx.y ldx.# ldx lda.zxi lda.zx
-        lda.ziy lda.zi lda.z lda.y lda.x lda.# lda jsr jmp.xi jmp.i jmp iny inx
-        inc.zx inc.z inc.x inc.a inc eor.zxi eor.zx eor.ziy eor.zi eor.z eor.y
-        eor.x eor.# eor dey dex dec.zx dec.z dec.x dec.a dec cpy.z cpy.# cpy
-        cpx.z cpx.# cpx cmp.zxi cmp.zx cmp.ziy cmp.zi cmp.z cmp.y cmp.x cmp.#
-        cmp clv cli cld clc bvs bvc brk bra bpl bne bmi bit.zx bit.z bit.x bit.#
-        bit beq bcs bcc asl.zx asl.z asl.x asl.a asl and.zxi and.zx and.ziy
-        and.zi and.z and.y and.x and.# and adc.zxi adc.zx adc.ziy adc.zi adc.z
-        adc.y adc.x adc.#</pre>
+<pre>        push-a -&gt; &lt;b &lt;j tya txs txa tsx tsb.z tsb trb.z trb tay tax stz.zx stz.z
+        stz.x stz sty.zx sty.z sty stx.zy stx.z stx sta.zxi sta.zx sta.ziy
+        sta.zi sta.z sta.y sta.x sta sei sed sec sbc.zxi sbc.zx sbc.ziy sbc.zi
+        sbc.z sbc.y sbc.x sbc.# sbc rts rti ror.zx ror.z ror.x ror.a ror rol.zx
+        rol.z rol.x rol.a rol ply plx plp pla phy phx php pha ora.zxi ora.zx
+        ora.ziy ora.zi ora.z ora.y ora.x ora.# ora nop lsr.zx lsr.z lsr.x lsr.a
+        lsr ldy.zx ldy.z ldy.x ldy.# ldy ldx.zy ldx.z ldx.y ldx.# ldx lda.zxi
+        lda.zx lda.ziy lda.zi lda.z lda.y lda.x lda.# lda jsr jmp.xi jmp.i jmp
+        iny inx inc.zx inc.z inc.x inc.a inc eor.zxi eor.zx eor.ziy eor.zi eor.z
+        eor.y eor.x eor.# eor dey dex dec.zx dec.z dec.x dec.a dec cpy.z cpy.#
+        cpy cpx.z cpx.# cpx cmp.zxi cmp.zx cmp.ziy cmp.zi cmp.z cmp.y cmp.x
+        cmp.# cmp clv cli cld clc bvs bvc brk bra bpl bne bmi bit.zx bit.z bit.x
+        bit.# bit beq bcs bcc asl.zx asl.z asl.x asl.a asl and.zxi and.zx
+        and.ziy and.zi and.z and.y and.x and.# and. adc.zxi adc.zx adc.ziy
+        adc.zi adc.z adc.y adc.x adc.#</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The last line, <code>previous</code>, removes the assembler wordlist again.</p>
+<p>The last line in our code, <code>previous</code>, removes the assembler wordlist again.</p>
 </div>
 <div class="paragraph">
 <p>In the example above, it is important to use <code>rts</code> and not <code>brk</code> as the last
@@ -2275,12 +2275,12 @@ than one assembler instruction in a line or including in-line comments:</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_adding_assembler_code_to_words">Adding assembler code to words</h4>
+<h4 id="_adding_assembler_code_to_new_words">Adding assembler code to new words</h4>
 <div class="paragraph">
 <p>The assembler words are immediate, that is, they are executed even during
 compilation. Simply adding them to a word doesn&#8217;t work. For example, if we want
 a word that pushes 1 on the Forth data stack, we might be tempted to do this
-(assuming <code>assembler-wordlist &gt;order</code>):</p>
+(assuming <code>assembler-wordlist &gt;order</code> first):</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2310,7 +2310,7 @@ problem, we can use the <code>[</code> and <code>]</code> words:</p>
 <td class="content">
 We do not need to add an explicit <code>rts</code> instruction when compiling new
 words with assembler because the <code>;</code> does it automatically. This is because Tali
-Forth uses Subroutine Threaded Code (STC)
+Forth uses Subroutine Threaded Code (STC).
 </td>
 </tr>
 </table>
@@ -2328,13 +2328,12 @@ Forth uses Subroutine Threaded Code (STC)
 </div>
 <div class="paragraph">
 <p>This time, we&#8217;ve only used one left square bracket to start the assembler code
-and one right bracket to end it. Because of this, we get an <code>ok</code> instead of a
+and one right bracket to end it. Because of this, we get <code>ok</code> instead of
 <code>compiled</code> because we are technically not in compile-mode anymore. <code>1 lda.#</code> can
 write the machine code right away.</p>
 </div>
 <div class="paragraph">
-<p>Looking at our new word with <code>see</code> gives us (addresses
-may vary):</p>
+<p>Looking at our new word with <code>see</code> gives us (addresses may vary):</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2360,21 +2359,22 @@ may vary):</p>
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>is the <code>1 lda.#</code> as a single line;</td>
+<td>The <code>1 lda.#</code> as a single line;</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>starts four lines of code for <code>push-a</code>;</td>
+<td>Four lines of code for <code>push-a</code>;</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>starts four lines from <code>u.</code></td>
+<td>Four lines from <code>u.</code></td>
 </tr>
 </table>
 </div>
 <div class="paragraph">
 <p>Some Forths add the words <code>code</code> and <code>end-code</code> to mark the beginning and end of
-an assembler blocks. In our case, these would just be simple synonyms for <code>[</code> and <code>]</code></p>
+an assembler blocks. In our case, these would just be simple synonyms for <code>[</code>
+and <code>]</code>, so we don&#8217;t bother.</p>
 </div>
 </div>
 <div class="sect3">
@@ -2382,7 +2382,7 @@ an assembler blocks. In our case, these would just be simple synonyms for <code>
 <div class="paragraph">
 <p>To execute Forth words when then assembler code is run, we need to store a
 subroutine jump to the word&#8217;s execution token (xt). This we can get with <code>'</code>
-(the "tick"). For instance, to print the byte in the accumulator:</p>
+("tick"). For instance, to print the byte in the accumulator:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2522,17 +2522,6 @@ for small code snippets where this will not be a problem.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_even_simpler_ways_to_insert_assembler_code">Even simpler ways to insert assembler code</h4>
-<div class="paragraph">
-<p>Probably the very simplest way is to add the opcodes and operands directly with
-the <code>c,</code> instruction.</p>
-</div>
-<div class="paragraph">
-<p>Tali Forth also provides a special word called <code>hexstore</code>
-to add strings of numbers.</p>
-</div>
-</div>
-<div class="sect3">
 <h4 id="_pseudo_instructions_and_macros">Pseudo-instructions and macros</h4>
 <div class="paragraph">
 <p><strong>push-a</strong> takes the byte in the Accumulator A and pushes it to the top of the
@@ -2597,6 +2586,128 @@ conflict with the Forth word of the same name: <code>and. 1000</code> is the cor
 <div class="paragraph">
 <p><strong><code>brk</code> is a two-byte instruction</strong> because the assembler enforces the signature
 byte. You shouldn&#8217;t use <code>brk</code> anyway.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_other_ways_to_insert_assembler_code">Other ways to insert assembler code</h4>
+<div class="paragraph">
+<p>Sometimes the assembler can be overkill, or we are given a dump of hex values
+from a different assembler to store. Probably the very simplest way is to add
+the opcodes and operands directly with the <code>c,</code> instruction to store the machine
+code byte by byte. Our very first example of pushing the number 1 to the Data
+Stack in assembler  becomes:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>        hex  here a9 c, 01 c, ca c, ca c, 95 c, 00 c, 74 c, 01 c, 60 c,</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This leaves the address of this routine on the stack through the <code>here</code>. We run
+this fragment with <code>execute</code> and find the number 1 on the stack.</p>
+</div>
+<div class="paragraph">
+<p>This, however, is error-prone to type. Tali Forth provides a special word
+called <code>hexstore ( addr u addr1&#8201;&#8212;&#8201;u )</code> for those occasions. It stores the
+string provided by <code>( addr u )</code> at the location <code>addr1</code> and returns the number of
+bytes stored.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>       hex
+       s" a9 01 ca ca 95 00 74 01 60" 6000 hexstore
+       drop     <i class="conum" data-value="1"></i><b>(1)</b>
+       6000 execute</pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Get rid of return value bytes stored</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>This word can be tricky to use with <code>here</code> because the string storage command
+<code>s"</code> uses memory. The current address must be chosen <em>before</em> the string is
+stored:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>        hex
+        here dup  s" a9 01 ca ca 95 00 74 01 60" rot hexstore
+        drop execute</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Instead of <code>drop execute</code> in the last line, a <code>dump</code> will show that the correct
+bytes were stored (address may vary):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>        0990  A9 01 CA CA 95 00 74 01  60  ......t. `</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Disassembly gives us the fragment we were expecting:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>        9AD      1 lda.#
+        9AF        dex
+        9B0        dex
+        9B1      0 sta.zx
+        9B3      1 stz.zx
+        9B5        rts</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note here again the <code>rts</code> as last instruction.</p>
+</div>
+<div class="paragraph">
+<p>We can also use the line-editor <code>ed</code> to add hex values for <code>hexstore</code>, which
+makes it easier to correct typing errors. Adding our code:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>        ed
+        a
+        a9 01 ca ca 95 00 74 01 60
+        .
+        5000w  <i class="conum" data-value="1"></i><b>(1)</b>
+        27     <i class="conum" data-value="2"></i><b>(2)</b>
+        q</pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Save string at address 5000</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Shows us length of number string saved</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Unless we ran <code>hex</code> before adding the word, the string is no stored at the
+decimal addresss 5000. However, we&#8217;ve added the words as hexadecimal code. To
+call <code>hexstore</code>, we must switch at the right time:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>        5000 27 6000 hex hexstore  ok
+        drop
+        decimal
+        6000 execute</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can get around this by either using all-hex numbers or enter the number
+string in decimal.</p>
 </div>
 </div>
 </div>
