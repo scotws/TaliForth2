@@ -5982,14 +5982,14 @@ there are other sources:</p>
 <div class="sectionbody">
 <div class="paragraph">
 <p>A wordlist is, quite simply, a list of words that the user can run directly or
-can compile into other word definitions.  Wordlists are commonly use to separate
+can compile into other word definitions.  Wordlists are commonly used to separate
 words into different categories, often by function or application.  One of the
 wordlists, called the "current" wordlist, is the list that new words will be
-added to when they are created.  Out of the box, Tali comes with four wordlists:
+added to when they are created. Out of the box, Tali comes with four wordlists:
 FORTH, EDITOR, ASSEMBLER, and ROOT.</p>
 </div>
 <div class="paragraph">
-<p>Each wordlist has a unique wordlist identifier, or wid.  To get the wid of the
+<p>Each wordlist has a unique wordlist identifier, or wid. To get the wid of the
 built-in wordlists, you can use the words <code>forth-wordlist</code>, <code>editor-wordlist</code>,
 <code>assembler-wordlist</code>, or <code>root-wordlist</code>.  The wid is just a simple number that
 is used to reference its particular wordlist, and each of these words just
@@ -6111,7 +6111,7 @@ wordlist on the left and the last wordlist on the right, and the current
 <div class="listingblock">
 <div class="content">
 <pre>order
-FORTH   FORTH  ok</pre>
+Forth   Forth  ok</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -6142,12 +6142,7 @@ forth-wordlist editor-wordlist assembler-wordlist 3 set-order</pre>
 </div>
 <div class="paragraph">
 <p>Both of these lines have the same effect.  They put the ASSEMBLER wordlist
-first, the EDITOR wordlist next, and the FORTH wordlist last.  One important
-note about the ASSEMBLER wordlist is that it contains the assembly instruction
-<code>and</code>, which will effectively hide the Forth word <code>and</code> with the wordlists in
-this order.  By carefully using the second form above with <code>set-order</code>, the user
-can (and will have to) determine which <code>and</code> is used in any given situation by
-changing the order they list the <code>assembler-wordlist</code> and <code>forth-wordlist</code> in.</p>
+first, the EDITOR wordlist next, and the FORTH wordlist last.</p>
 </div>
 <div class="paragraph">
 <p>To check the results from above, you might use the <code>order</code> command again:</p>
@@ -6155,7 +6150,7 @@ changing the order they list the <code>assembler-wordlist</code> and <code>forth
 <div class="listingblock">
 <div class="content">
 <pre>order
-ASSEMBLER EDITOR FORTH   FORTH  ok</pre>
+Assembler Editor Forth   Forth  ok</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -6180,7 +6175,7 @@ to the EDITOR wordlist, for example, one might say:</p>
 <div class="listingblock">
 <div class="content">
 <pre>order
-ASSEMBLER EDITOR FORTH   EDITOR  ok</pre>
+Assembler Editor Forth   Editor  ok</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -6227,7 +6222,7 @@ the current wordlist, the results of running <code>order</code> afterwards will 
 <div class="listingblock">
 <div class="content">
 <pre>order
-5 FORTH   5  ok</pre>
+5 Forth   5  ok</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -6839,7 +6834,7 @@ under <a href="https://www.ubuntu.com/">Ubuntu</a> Linux 16.04 LTS.</p>
 <div id="footer">
 <div id="footer-text">
 Version BETA<br>
-Last updated 2018-12-27 18:06:35 EST
+Last updated 2018-12-28 16:21:47 CET
 </div>
 </div>
 </body>

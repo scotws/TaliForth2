@@ -1,11 +1,11 @@
 A wordlist is, quite simply, a list of words that the user can run directly or
-can compile into other word definitions.  Wordlists are commonly use to separate
+can compile into other word definitions.  Wordlists are commonly used to separate
 words into different categories, often by function or application.  One of the
 wordlists, called the "current" wordlist, is the list that new words will be
-added to when they are created.  Out of the box, Tali comes with four wordlists:
+added to when they are created. Out of the box, Tali comes with four wordlists:
 FORTH, EDITOR, ASSEMBLER, and ROOT.
 
-Each wordlist has a unique wordlist identifier, or wid.  To get the wid of the
+Each wordlist has a unique wordlist identifier, or wid. To get the wid of the
 built-in wordlists, you can use the words `forth-wordlist`, `editor-wordlist`,
 `assembler-wordlist`, or `root-wordlist`.  The wid is just a simple number that
 is used to reference its particular wordlist, and each of these words just
@@ -63,7 +63,7 @@ wordlist on the left and the last wordlist on the right, and the current
 
 ----
 order 
-FORTH   FORTH  ok
+Forth   Forth  ok
 ----
 
 Here you can see that the FORTH wordlist is the only wordlist in the search
@@ -89,18 +89,13 @@ forth-wordlist editor-wordlist assembler-wordlist 3 set-order
 ----
 
 Both of these lines have the same effect.  They put the ASSEMBLER wordlist
-first, the EDITOR wordlist next, and the FORTH wordlist last.  One important
-note about the ASSEMBLER wordlist is that it contains the assembly instruction
-`and`, which will effectively hide the Forth word `and` with the wordlists in
-this order.  By carefully using the second form above with `set-order`, the user
-can (and will have to) determine which `and` is used in any given situation by
-changing the order they list the `assembler-wordlist` and `forth-wordlist` in.
+first, the EDITOR wordlist next, and the FORTH wordlist last.  
 
 To check the results from above, you might use the `order` command again:
 
 ----
 order 
-ASSEMBLER EDITOR FORTH   FORTH  ok
+Assembler Editor Forth   Forth  ok
 ----
 
 Here you can see that the ASSEMBLER wordlist will be searched first, with the
@@ -120,7 +115,7 @@ Checking the results with `order` shows:
 
 ----
 order 
-ASSEMBLER EDITOR FORTH   EDITOR  ok
+Assembler Editor Forth   Editor  ok
 ----
 
 Any new words created after this point will be added to the EDITOR wordlist.  To
@@ -160,7 +155,7 @@ the current wordlist, the results of running `order` afterwards will look like:
 
 ----
 order 
-5 FORTH   5  ok
+5 Forth   5  ok
 ----
 
 Because Tali's `order` command doesn't know the name given to the new wordlist,
