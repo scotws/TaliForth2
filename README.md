@@ -4,8 +4,8 @@ First version: 19. Jan 2014 (original Tali Forth)
 This version: 28. Dec 2018
 
 **This is a LATE BETA version of Tali Forth. This means that everything here
-works pretty much as it should, though there are probably some sneaky bugs still
-hidden and the documentation is not quite complete.**
+works pretty much as it should, but there are probably some sneaky hidden bugs
+and the documentation is not complete yet.**
 
 ## Dude, I am the very model of a Salarian scientist, just let me start!
 
