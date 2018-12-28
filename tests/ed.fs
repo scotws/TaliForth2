@@ -108,27 +108,26 @@ T{ 10000 5  s\" aaaa\n" compare -> 10000 5 0 }T
 
 \ Simple adding of text; want qqqq rrrr
 ed
-a
+i
 qqqq
 rrrr
 .
 10000w
 q
-
 T{ 10000 10  s\" qqqq\nrrrr\n" compare -> 10000 10 0 }T
 
-\ Add text to end of existing text; want dddd aaaa tttt
+\ Add text to start of existing text; want tttt dddd aaaa
 ed
 a
 dddd
 aaaa
 .
-a
+1i
 tttt
 .
 10000w
 q
-T{ 10000 15  s\" dddd\naaaa\ntttt\n" compare -> 10000 15 0 }T
+T{ 10000 15  s\" tttt\ndddd\naaaa\n" compare -> 10000 15 0 }T
 
 
 \ Add a line between two lines of existing text
@@ -138,7 +137,7 @@ a
 mmmm
 gggg
 .
-1a
+2i
 oooo
 .
 10000w
@@ -152,7 +151,7 @@ a
 tttt
 ssss
 .
-1a
+2i
 cccc
 dddd
 .
@@ -165,7 +164,7 @@ ed
 a
 zzzz
 .
-0a
+0i
 uuuu
 .
 10000w
