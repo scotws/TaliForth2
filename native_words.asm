@@ -7920,7 +7920,7 @@ _Digit:
 
 
 ; ## SEARCH_WORDLIST ( caddr u wid -- 0 | xt 1 | xt -1) "Search for a word in a wordlist"
-; ## "search_wordlist" auto ANS search
+; ## "search-wordlist" auto ANS search
         ; """https://forth-standard.org/standard/search/SEARCH_WORDLIST"""
 .scope
 xt_search_wordlist:
