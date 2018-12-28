@@ -1022,7 +1022,25 @@ _cmd_equ:
         ; the last line is ("$=")
                 plx
 
-                jsr _have_text
+                ; If we don't have a text, we follow Unix ed's example and
+                ; print a zero
+                lda ed_head
+                ora ed_head+1
+                bne _cmd_equ_have_text
+
+                ; Fake it: load 0 as para2 and then print. The 0 goes in a new
+                ; line just like with Unix ed
+                jsr xt_cr
+
+                dex
+                dex
+                stz 0,x
+                stz 1,x                 ; ( addr-t u-t para1 para2 0 )
+                bra _cmd_equ_done
+
+_cmd_equ_have_text:
+                ; We have taken care of the case where we don't have a text. If
+                ; we have a line zero, it is explicit, and we don't do that
                 jsr _no_line_zero
 
                 ; If we have no parameters, just print the current line number
