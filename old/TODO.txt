@@ -1,9 +1,12 @@
 TODO/CHANGES for Tali Forth 2 
 Scot W. Stevenson <scot.stevenson@gmail.com>
 First version: 19. Jan 2014
-This version: 26. Oct 2018
+This version: 28. Dec 2018
 
-(Note: The list of issues on the GitHub has priority)
+THIS DOCUMENT HAS BEEN REPLACED BY THE ISSUE SYSTEM OF GITHUB. IT IS INCLUDED
+HERE FOR HISTORICAL REASONS
+
+
 
 --> Milestone BETA
 
