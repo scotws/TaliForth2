@@ -54,6 +54,8 @@ parser.add_argument('-m', '--mute', action='store_true',
                     help='Only print errors and summary', default=False)
 parser.add_argument('-o', '--output', dest='output',
                     help=OUTPUT_HELP, default=RESULTS)
+parser.add_argument('-s', '--suppress_tester', action='store_true',
+                    help='Suppress the output while the tester is loading', default=False)
 parser.add_argument('-t', '--tests', nargs='+', type=str, default=['all'],
                     help=TESTS_HELP)
 args = parser.parse_args()
@@ -74,6 +76,7 @@ test_index = -1
 # Load the tester first.
 with open(TESTER, 'r') as tester:
     test_string = tester.read()
+    end_of_tester = len(test_string)
 
 # Load all of the tests selected from the command line.
 for test in args.tests:
@@ -140,12 +143,16 @@ with open(args.output, 'wb') as fout:
                 global fout
                 # Save results to file.
                 if value != 0:
-                    fout.write(chr(value).encode())
+                    if not args.suppress_tester or \
+                       test_index > end_of_tester:
+                        fout.write(chr(value).encode())
 
                 # Print to the screen if we are not muted.
                 if not args.mute:
-                    sys.stdout.write(chr(value))
-                    sys.stdout.flush()
+                    if not args.suppress_tester or \
+                       test_index > end_of_tester:
+                        sys.stdout.write(chr(value))
+                        sys.stdout.flush()
 
             def update_cycle_start(_):
                 """Parameter (originally "address") required by py65mon

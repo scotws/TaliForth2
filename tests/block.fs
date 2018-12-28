@@ -2,7 +2,7 @@
 testing block words: BLK SCR LOAD THRU BUFFER BLOCK UPDATE FLUSH
 
 marker block_tests
-
+decimal
 \ Bring in a 4-block ram drive
 T{ 4 block-ramdrive-init -> }T
 
