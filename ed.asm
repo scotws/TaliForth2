@@ -690,7 +690,6 @@ _next_command_empty:
                 jmp _input_loop
                 
 _all_done:
-
                 ; That's enough for ed today. We have to clear out the input
                 ; buffer or else the Forth main main loop will react to the
                 ; last input command
@@ -707,8 +706,8 @@ _all_done:
 
 ; We enter all command subroutines with ( addr-t u-t para1 para2 ) and the DSP
 ; still on the Return Stack. This means that the first oder of business is to
-; restore the DSP. At this point, we don't need the offset in Y anymore so we
-; are free to use that register as we please.
+; restore the DSP with PLX. At this point, we don't need the offset in
+; Y anymore so we are free to use that register as we please.
 
 ; There is potential to rewrite many of the command routines with an abstract
 ; construct in the form of (pseudocode):
@@ -727,9 +726,8 @@ _cmd_a:
         ; the current line. We accept the number '0' and then start adding at
         ; the very beginning. The second parameter is always ignored. This
         ; routine is used by i as well.
-
                 plx
-_entry_cmd_i:
+
                 ; We don't care about para2, because a just adds stuff starting
                 ; the line we were given.
                 inx
@@ -746,6 +744,11 @@ _entry_cmd_i:
                 lda ed_cur+1
                 sta 1,x                 ;  ( addr-t u-t cur ) drop through
 
+_entry_cmd_i:
+                ; This is where i enters with a parameter that is calculated to
+                ; be one before the current line, or given line, or so that we
+                ; accept 0. We are ( addr-t u-t num )
+                
 _cmd_a_have_para:
                 jsr _num_to_addr        ;  ( addr-t u-t addr1 ) 
                 jsr xt_cr
@@ -1105,26 +1108,39 @@ _cmd_f_done:
 
 ; -------------------------
 _cmd_i:
-        ; i --- Add text before current line. This is currently
-        ; based on 'a'. We allow '0i'.
+        ; i --- Add text before current line. We allow '0i' and 'i' just like
+        ; the real ed. Note that this routine just prepares the line numbers so
+        ; we can reuse most of the code from a.
                 plx
 
-                ; Make the previous line the new current line, so we can
-                ; use the routine for a for i
-                jsr xt_swap             ; ( addr-t u-t para2 para1 )
+                ; We don't care about para2, because i just adds stuff before
+                ; the line we were given.
+                inx
+                inx                     ;  DROP ( addr-t u-t para1 )
 
-                ; While we're here, make sure para1 is a valid line
-                jsr _is_valid_line
-                bcs +
+                ; If we weren't given a parameter, make the current line the
+                ; parameter
+                bit ed_flags
+                bmi _cmd_i_have_para
 
-                ; Oops, not valid. Error and out
-                jmp _error_2drop
-*
-                jsr xt_one_minus        ; ( addr-t u-t para2 para1-1 )
-                jsr xt_zero             ; ( addr-t u-t para2 para1-1 0 )
-                jsr xt_max              ; ( addr-t u-t para2 para1-1 | 0 )
-                jsr xt_swap             ; ( addr-t u-t para1 para2 )
-                
+                ; No parameter, take current line
+                lda ed_cur
+                sta 0,x
+                lda ed_cur+1
+                sta 1,x                 ;  ( addr-t u-t cur ) drop through
+
+_cmd_i_have_para:
+                ; If the parameter is zero, we skip the next part and behave
+                ; completely like a
+                lda 0,x
+                ora 1,x
+                beq _cmd_i_done
+
+                ; We have some other line number, so we start one above it
+                jsr xt_one_minus        ; ( addr-t u-t para1-1 )
+                jsr xt_zero             ; ( addr-t u-t para1-1 0 )
+                jsr xt_max              ; ( addr-t u-t para1-1 | 0 )
+_cmd_i_done:
                 jmp _entry_cmd_i
 
 
