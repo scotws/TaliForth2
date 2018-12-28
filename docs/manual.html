@@ -2205,7 +2205,7 @@ number:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>        push-a -&gt; &lt;b &lt;j tya txs txa tsx tsb.z tsb trb.z trb tay tax stz.zx stz.z
+<pre>        push-a --&gt; &lt;b &lt;j tya txs txa tsx tsb.z tsb trb.z trb tay tax stz.zx stz.z
         stz.x stz sty.zx sty.z sty stx.zy stx.z stx sta.zxi sta.zx sta.ziy
         sta.zi sta.z sta.y sta.x sta sei sed sec sbc.zxi sbc.zx sbc.ziy sbc.zi
         sbc.z sbc.y sbc.x sbc.# sbc rts rti ror.zx ror.z ror.x ror.a ror rol.zx
@@ -2414,16 +2414,14 @@ subroutine jump to the word&#8217;s execution token (xt). This we can get with <
 <h4 id="_labels_jumps_and_branches">Labels, jumps, and branches</h4>
 <div class="paragraph">
 <p>The support for labels is currently very limited. An anonymous label can be
-marked with <code>-&gt;</code> (the "arrow") as a target for a backwards jump with <code>&lt;j</code> (the
-"back jump". Note we are talking about the jump assembler instructions such as
-<code>JMP</code>, not the branch instructions such as <code>bra</code>. As a primitive example (that
-produces an endless loop):</p>
+marked with <code>--&gt;</code> (the "arrow") as a target for a backwards jump with <code>&lt;j</code>
+(the "back jump". A primitive example (that produces an endless loop):</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre>        : .nums
         [ 0 lda.#
-        -&gt;                      ; anonymous label
+        --&gt;                     ; anonymous label
         inc.a push-a pha ]      ; PHA required because u. will overwrite A
         u.
         [ pla &lt;j jmp ]          ; endless loop
@@ -2436,7 +2434,7 @@ wrap.</p>
 </div>
 <div class="paragraph">
 <p>The directive <code>&lt;j</code> is actually a dummy, or to put a bit more politely, syntactic
-sugar: The <code>jmp</code> instruction itself takes the value from the stack. <code>-&gt;</code>
+sugar: The <code>jmp</code> instruction itself takes the value from the stack. <code>--&gt;</code>
 itself is nothing more than an immediate version of <code>here</code> and in fact shares
 the same assembler code.</p>
 </div>
@@ -2483,7 +2481,7 @@ different notation):</p>
         [
               0 lda.zx  <i class="conum" data-value="1"></i><b>(1)</b>
                 tay
-        -&gt;
+        --&gt;
              97 lda.#
                 push-a
                 phy

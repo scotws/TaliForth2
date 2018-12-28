@@ -2,7 +2,7 @@ Tali Forth 2 default kernel for py65mon (18. Feb 2018)
 
 
 Tali Forth 2 for the 65c02
-Version BETA 24. Dec 2018 
+Version BETA 28. Dec 2018 
 Copyright 2014-2018 Scot W. Stevenson
 Tali Forth 2 comes with absolutely NO WARRANTY
 Type 'bye' to exit
@@ -854,11 +854,11 @@ create result  ok
 92 c, ( \\ )  ok
   ok
 T{ result here result - 2dup dump ( Make a string out of result ) 
-13D1  07 08 1B 0C 0A 0D 0A 0A  22 0D 09 0B 00 22 41 5C  ........ "...."A\
-13E1   ok
+1240  07 08 1B 0C 0A 0D 0A 0A  22 0D 09 0B 00 22 41 5C  ........ "...."A\
+1250   ok
    s\" \a\b\e\f\l\m\n\q\r\t\v\z\"\x41\\" 2dup dump compare -> 0 }T 
-13E4  07 08 1B 0C 0A 0D 0A 0A  22 0D 09 0B 00 22 41 5C  ........ "...."A\
-13F4   ok
+1253  07 08 1B 0C 0A 0D 0A 0A  22 0D 09 0B 00 22 41 5C  ........ "...."A\
+1263   ok
 hex  ok
   ok
 \ ------------------------------------------------------------------------  ok
@@ -2012,12 +2012,9 @@ ed-tests  ok
 testing assembler words  ok
   ok
 marker asm-tests   ok
-hex  ok
-  ok
-\ Add assembler wordlist.  ok
-forth-wordlist assembler-wordlist 2 set-order  ok
-\ Compile the following test words into the assember-wordlist.  ok
+assembler-wordlist >order  ok
 assembler-wordlist set-current  ok
+hex  ok
   ok
 \ Test code length and correct operand insertion  ok
 : opcode-test ( opc len addr u -- f )  compiled
@@ -2066,7 +2063,7 @@ assembler-wordlist set-current  ok
 : 12 12 ;  ok
 : 1122 1122 ;  ok
 : 3 3 ;  ok
-: true true ; redefined true  ok
+  ok
 \ --------------------------------------------------------------------------  ok
   ok
 \ Testing pseudo-instructions  ok
@@ -2087,7 +2084,7 @@ T{ 072 2 s" 12 adc.zi" opcode-test -> true true }T  ok
 T{ 071 2 s" 12 adc.ziy" opcode-test -> true true }T  ok
 T{ 075 2 s" 12 adc.zx" opcode-test -> true true }T  ok
 T{ 061 2 s" 12 adc.zxi" opcode-test -> true true }T  ok
-T{ 02D 3 s" 1122 and" opcode-test -> true true }T  ok
+T{ 02D 3 s" 1122 and." opcode-test -> true true }T  ok
 T{ 029 2 s" 12 and.#" opcode-test -> true true }T  ok
 T{ 03D 3 s" 1122 and.x" opcode-test -> true true }T  ok
 T{ 039 3 s" 1122 and.y" opcode-test -> true true }T  ok
@@ -2258,10 +2255,11 @@ T{ 09A 1 s" txs" opcode-test -> true true }T  ok
 T{ 098 1 s" tya" opcode-test -> true true }T  ok
   ok
 \ Testing directives  ok
-\ TODO currently no directives available  ok
   ok
 \ Return to original state  ok
-decimal ( only forth definitions ) asm-tests  ok
+previous  ok
+decimal ( only forth definitions )   ok
+asm-tests  ok
   ok
  ( Running test 'stringlong' from file 'stringlong.fs' )  ok
 \ ------------------------------------------------------------------------  ok
@@ -3050,12 +3048,12 @@ here 5       ' blank         cycle_test            CYCLES:    325 ok
 5            ' chars         cycle_test drop       CYCLES:     28 ok
 pad here 5   ' cmove         cycle_test            CYCLES:    188 ok
 pad here 5   ' cmove>        cycle_test            CYCLES:    183 ok
-             ' :             cycle_test wrd ;      CYCLES:  15170 ok
+             ' :             cycle_test wrd ;      CYCLES:  15128 ok
              ' :noname       cycle_test ; drop     CYCLES:     51 ok
 5            ' ,             cycle_test            CYCLES:     66 ok
 ' aword      ' compile,      cycle_test            CYCLES:    788 ok
 : bword ;    ' compile-only  cycle_test            CYCLES:     75 ok
-5            ' constant      cycle_test mycnst     CYCLES:  15659 ok
+5            ' constant      cycle_test mycnst     CYCLES:  15616 ok
 here         ' count         cycle_test 2drop      CYCLES:     59 ok
 \ skipping     cr  ok
 \ skipping     create  ok
@@ -3074,7 +3072,7 @@ char w       ' digit?        cycle_test 2drop      CYCLES:     86 ok
 \ skipping     does  ok
 \ skipping     .  ok
 \ skipping     ."  ok
-             ' s"            cycle_test " 2drop    CYCLES:    252 ok
+             ' s"            cycle_test " 2drop    CYCLES:    253 ok
 5            ' drop          cycle_test            CYCLES:     32 ok
 \ skipping     dump  ok
 5            ' dup           cycle_test 2drop      CYCLES:     48 ok
@@ -3082,7 +3080,7 @@ char w       ' digit?        cycle_test 2drop      CYCLES:     86 ok
 5 5          ' =             cycle_test drop       CYCLES:     64 ok
 here 5       ' erase         cycle_test            CYCLES:    321 ok
 here 5 5     ' fill          cycle_test            CYCLES:    309 ok
-s" 5"        ' evaluate      cycle_test drop       CYCLES:  16405 ok
+s" 5"        ' evaluate      cycle_test drop       CYCLES:  16355 ok
 5 ' drop     ' execute       cycle_test            CYCLES:     84 ok
 \ skipping     exit  ok
              ' false         cycle_test drop       CYCLES:     24 ok
@@ -3100,7 +3098,7 @@ s" aword"    ' find-name     cycle_test drop       CYCLES:    453 ok
 \ skipping     i  ok
 : cword ;    ' immediate     cycle_test            CYCLES:     75 ok
              ' input         cycle_test drop       CYCLES:     28 ok
-' dup        ' int>name      cycle_test drop       CYCLES:   1813 ok
+' dup        ' int>name      cycle_test drop       CYCLES:   1679 ok
 5            ' invert        cycle_test drop       CYCLES:     48 ok
 \ skipping     j  ok
              ' key           cycle_test drop       CYCLES:     48 ok
@@ -3115,13 +3113,13 @@ s" aword"    ' find-name     cycle_test drop       CYCLES:    453 ok
 \ skipping     +loop  ok
 5 5          ' lshift        cycle_test drop       CYCLES:    126 ok
 5 5          ' m*            cycle_test 2drop      CYCLES:    650 ok
-             ' marker        cycle_test marka      CYCLES:  17352 ok
-             ' marka         cycle_test            CYCLES:    849 ok
+             ' marker        cycle_test marka      CYCLES:  17311 ok
+             ' marka         cycle_test            CYCLES:    884 ok
 5 5          ' max           cycle_test drop       CYCLES:     69 ok
 5 5          ' min           cycle_test drop       CYCLES:     54 ok
 5 5          ' -             cycle_test drop       CYCLES:     58 ok
 s" txt   "   ' -trailing     cycle_test 2drop      CYCLES:    218 ok
-here s" a"   ' move          cycle_test            CYCLES:    148 ok
+here s" a"   ' move          cycle_test            CYCLES:    137 ok
 ' + int>name ' name>int      cycle_test drop       CYCLES:     71 ok
 ' + int>name ' name>string   cycle_test 2drop      CYCLES:     70 ok
              ' nc-limit      cycle_test drop       CYCLES:     28 ok
@@ -3157,7 +3155,7 @@ drop \ refill  ok
 \ skipping     ]  ok
 5 5 5        ' rot           cycle_test 2drop drop CYCLES:     76 ok
 5 5          ' rshift        cycle_test drop       CYCLES:    126 ok
-             ' s"            cycle_test " 2drop    CYCLES:    252 ok
+             ' s"            cycle_test " 2drop    CYCLES:    253 ok
 5            ' s>d           cycle_test 2drop      CYCLES:     47 ok
 \ skipping     ;  ok
 \ skipping     sign  ok
@@ -3192,10 +3190,10 @@ here         ' 2@            cycle_test 2drop      CYCLES:     88 ok
 5. here      ' 2!            cycle_test            CYCLES:     99 ok
 5 5 5 5      ' 2swap         cycle_test 4drop      CYCLES:     92 ok
 \ skipping     2>r  ok
-             ' 2variable     cycle_test eword      CYCLES:  15935 ok
+             ' 2variable     cycle_test eword      CYCLES:  15894 ok
              ' eword         cycle_test drop       CYCLES:     45 ok
 s" *"        ' type          cycle_test           *CYCLES:    121 ok
-5            ' u.            cycle_test          5 CYCLES:   3614 ok
+5            ' u.            cycle_test          5 CYCLES:   3617 ok
 5 5          ' u>            cycle_test drop       CYCLES:     60 ok
 5 5          ' u<            cycle_test drop       CYCLES:     60 ok
              ' strip-underflow   cycle_test drop       CYCLES:     28 ok
@@ -3203,10 +3201,10 @@ s" *"        ' type          cycle_test           *CYCLES:    121 ok
 5 5          ' um*           cycle_test 2drop      CYCLES:    474 ok
 \ skipping     unloop  ok
              ' unused        cycle_test drop       CYCLES:     36 ok
-5            ' value         cycle_test fword      CYCLES:  16156 ok
+5            ' value         cycle_test fword      CYCLES:  16115 ok
              ' fword         cycle_test drop       CYCLES:     58 ok
-5            ' to            cycle_test fword      CYCLES:   1140 ok
-             ' variable      cycle_test gword      CYCLES:  15936 ok
+5            ' to            cycle_test fword      CYCLES:   1139 ok
+             ' variable      cycle_test gword      CYCLES:  15895 ok
              ' gword         cycle_test drop       CYCLES:     45 ok
 char "       ' word          cycle_test "txt" drop CYCLES:    676 ok
 \ skipping     words  ok

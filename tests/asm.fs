@@ -2,12 +2,9 @@
 testing assembler words
 
 marker asm-tests 
-hex
-
-\ Add assembler wordlist.
-forth-wordlist assembler-wordlist 2 set-order
-\ Compile the following test words into the assember-wordlist.
+assembler-wordlist >order
 assembler-wordlist set-current
+hex
 
 \ Test code length and correct operand insertion
 : opcode-test ( opc len addr u -- f )
@@ -56,7 +53,7 @@ assembler-wordlist set-current
 : 12 12 ;
 : 1122 1122 ;
 : 3 3 ;
-: true true ;
+
 \ --------------------------------------------------------------------------
 
 \ Testing pseudo-instructions
@@ -77,7 +74,7 @@ T{ 072 2 s" 12 adc.zi" opcode-test -> true true }T
 T{ 071 2 s" 12 adc.ziy" opcode-test -> true true }T
 T{ 075 2 s" 12 adc.zx" opcode-test -> true true }T
 T{ 061 2 s" 12 adc.zxi" opcode-test -> true true }T
-T{ 02D 3 s" 1122 and" opcode-test -> true true }T
+T{ 02D 3 s" 1122 and." opcode-test -> true true }T
 T{ 029 2 s" 12 and.#" opcode-test -> true true }T
 T{ 03D 3 s" 1122 and.x" opcode-test -> true true }T
 T{ 039 3 s" 1122 and.y" opcode-test -> true true }T
@@ -248,7 +245,8 @@ T{ 09A 1 s" txs" opcode-test -> true true }T
 T{ 098 1 s" tya" opcode-test -> true true }T
 
 \ Testing directives
-\ TODO currently no directives available
 
 \ Return to original state
-decimal ( only forth definitions ) asm-tests
+previous
+decimal ( only forth definitions ) 
+asm-tests

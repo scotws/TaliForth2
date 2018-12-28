@@ -1,7 +1,7 @@
 ; Dictionary Headers for Tali Forth 2
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 05. Dec 2016 (Liara Forth)
-; This version: 25. Dec 2018 
+; This version: 28. Dec 2018 
 
 ; Dictionary headers are kept separately from the code, which allows various
 ; tricks in the code. We roughly follow the Gforth terminology: The Execution
@@ -86,9 +86,14 @@ nt_forth:
         .word nt_see, xt_forth, z_forth
         .byte "forth"
 
+nt_order:
+        .byte 5, 0
+        .word nt_forth, xt_order, z_order
+        .byte "order"
+
 nt_to_order:
         .byte 6, 0
-        .word nt_forth, xt_to_order, z_to_order
+        .word nt_order, xt_to_order, z_to_order
         .byte ">order"
 
 nt_previous:
@@ -2574,10 +2579,10 @@ nt_asm_back_branch:
                 .byte "<b"
 
 nt_asm_arrow:   ; uses same code as HERE, but immediate
-                .byte 2, IM
+                .byte 3, IM
                 .word nt_asm_back_branch
                 .word xt_asm_arrow, z_asm_arrow   
-                .byte "->"
+                .byte "-->"
 
 assembler_dictionary_start:
 nt_asm_push_a:

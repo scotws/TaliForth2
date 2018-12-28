@@ -1,7 +1,7 @@
 ; Tali Forth 2 for the 65c02
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 19. Jan 2014 (Tali Forth)
-; This version: 24. Dec 2018
+; This version: 28. Dec 2018
 
 ; This is the main file for Tali Forth 2
 
@@ -80,7 +80,7 @@ cmpl_a:
                 bne _done
                 inc cp+1
 _done:
-		rts
+                rts
 .scend
 
 ; =====================================================================
@@ -124,7 +124,7 @@ dodefer:
                 ; return address, which is what is on top of the Return
                 ; Stack. So all we have to do is replace our return jump
                 ; with what we find there
-		pla             ; LSB
+                pla             ; LSB
                 sta tmp1
                 pla             ; MSB
                 sta tmp1+1
@@ -150,7 +150,7 @@ dodoes:
         ; docs/create-does.txt for details and
         ; http://www.bradrodriguez.com/papers/moving3.htm
         ; """
-  		; Assumes the address of the CFA of the original defining word
+                ; Assumes the address of the CFA of the original defining word
                 ; (say, CONSTANT) is on the top of the Return Stack. Save it
                 ; for a later jump, adding one byte because of the way the
                 ; 6502 works
@@ -242,7 +242,7 @@ _nibble_to_ascii:
 
 *               jmp emit_a
 
-        	rts
+                rts
 .scend
 
 compare_16bit:
@@ -560,41 +560,43 @@ error:
                 sta tmp3+1              ; msb
 
                 jsr print_common
-        	jmp xt_abort            ; no jsr, as we clobber return stack
+                jsr xt_cr
+                jmp xt_abort            ; no jsr, as we clobber return stack
 
+; =====================================================================
+; PRINTING ROUTINES
 
-print_string: 
-        ; """print a zero-terminated string to the console/screen, adding a
-        ; lf. we are given the string number, which functions as an index to
-        ; the string table. we do not check to see if the index is out of
-        ; range. uses tmp3.
+; We distinguish two types of print calls, both of which take the string number
+; (see strings.asm) in A: 
+
+;       print_string       - with a line feed
+;       print_string_no_lf - without a line feed 
+
+; In addition, print_common provides a lower-level alternative for error
+; handling and anything else that provides the address of the
+; zero-terminated string directly in tmp3. All of those routines assume that
+; printing should be more concerned with size than speed, because anything to
+; do with humans reading text is going to be slow.
+
+print_string_no_lf:
+        ; """Given the number of a zero-terminated string in A, print it to the
+        ; current output without adding a LF. Uses Y and tmp3 by falling
+        ; through to print_common
         ; """
+                ; Get the entry from the string table
                 asl
                 tay
                 lda string_table,y
-                sta tmp3                ; lsb
+                sta tmp3                ; LSB
                 iny
                 lda string_table,y
-                sta tmp3+1              ; msb
+                sta tmp3+1              ; MSB
 
-                ; falls through to print_common
-
+                ; fall through to print_common
 print_common:
-        ; """common print loop for print_string and print_error. assumes
-        ; zero-terminated address of string to be printed is in tmp3. 
-        ; adds lf
-        ; """
-                jsr print_common_no_lf
-
-                lda #asclf
-                jsr emit_a
-
-        	rts
-
-print_common_no_lf:
-        ; """common print loop with no line feed at the end. assumes
-        ; address of zero-terminated string to be printed is in tmp3.
-        ; used by print_common
+        ; """Common print routine used by both the print functions and
+        ; the error printing routine. Assumes string address is in tmp3. Uses
+        ; Y.
         ; """
 .scope
                 ldy #0
@@ -605,9 +607,16 @@ _loop:
                 iny
                 bra _loop
 _done:
-        	rts
+                rts
 .scend
 
+print_string: 
+        ; """Print a zero-terminated string to the console/screen, adding a LF.
+        ; We do not check to see if the index is out of range. Uses tmp3.
+        ; """
+                jsr print_string_no_lf
+                jmp xt_cr               ; JSR/RTS because never compiled
+                
 
 print_u:
         ; """basic printing routine used by higher-level constructs,
@@ -615,19 +624,10 @@ print_u:
         ; basically u. without the space at the end. used for various
         ; outputs
         ; """
-.scope
-                dex                     ; 0
-                dex
-                stz 0,x
-                stz 1,x
-
+                jsr xt_zero                     ; 0
                 jsr xt_less_number_sign         ; <#
-                jsr xt_number_sign_s            ; #s
+                jsr xt_number_sign_s            ; #S
                 jsr xt_number_sign_greater      ; #>
-                jsr xt_type                     ; type
-        
-                rts
-.scend
-               
+                jmp xt_type                     ; JSR/RTS because never compiled
         
 ; END

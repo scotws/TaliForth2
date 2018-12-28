@@ -795,7 +795,7 @@ Because Tali Forth is a Subroutine Threaded (STC) Forth, inserting assembler ins
 
 The first line is required to give the user access to the list of assembler mnemonics. They are not in the default wordlist path because of their sheer number:
 
-            push-a -> <b <j tya txs txa tsx tsb.z tsb trb.z trb tay tax stz.zx stz.z
+            push-a --> <b <j tya txs txa tsx tsb.z tsb trb.z trb tay tax stz.zx stz.z
             stz.x stz sty.zx sty.z sty stx.zy stx.z stx sta.zxi sta.zx sta.ziy
             sta.zi sta.z sta.y sta.x sta sei sed sec sbc.zxi sbc.zx sbc.ziy sbc.zi
             sbc.z sbc.y sbc.x sbc.# sbc rts rti ror.zx ror.z ror.x ror.a ror rol.zx
@@ -910,11 +910,11 @@ This will print `10`.
 
 #### Labels, jumps, and branches
 
-The support for labels is currently very limited. An anonymous label can be marked with `->` (the "arrow") as a target for a backwards jump with `<j` (the "back jump". Note we are talking about the jump assembler instructions such as `JMP`, not the branch instructions such as `bra`. As a primitive example (that produces an endless loop):
+The support for labels is currently very limited. An anonymous label can be marked with `-->` (the "arrow") as a target for a backwards jump with `<j` (the "back jump". A primitive example (that produces an endless loop):
 
             : .nums
             [ 0 lda.#
-            ->                      ; anonymous label
+            -->                     ; anonymous label
             inc.a push-a pha ]      ; PHA required because u. will overwrite A
             u.
             [ pla <j jmp ]          ; endless loop
@@ -922,7 +922,7 @@ The support for labels is currently very limited. An anonymous label can be mark
 
 Executing the word `.nums` will print numbers starting with 1 till 255 and then wrap.
 
-The directive `<j` is actually a dummy, or to put a bit more politely, syntactic sugar: The `jmp` instruction itself takes the value from the stack. `->` itself is nothing more than an immediate version of `here` and in fact shares the same assembler code.
+The directive `<j` is actually a dummy, or to put a bit more politely, syntactic sugar: The `jmp` instruction itself takes the value from the stack. `-->` itself is nothing more than an immediate version of `here` and in fact shares the same assembler code.
 
 Disassembling `.nums` shows how this code works (addresses may vary):
 
@@ -950,7 +950,7 @@ Branches work similar. Instead of `<j` as a "back jump", we use `<b` as a "back 
             [
                   0 lda.zx  
                     tay
-            ->
+            -->
                  97 lda.#
                     push-a
                     phy

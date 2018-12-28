@@ -66,7 +66,7 @@ RTS instruction at the end of each word.
 | CONSTANT | `constant` | ANS core | 61 | **auto** |
 | COUNT | `count` | ANS core | 19 | **auto** |
 | CR | `cr` | ANS core | 5 | **auto** |
-| CREATE | `create` | ANS core | 218 | **auto** |
+| CREATE | `create` | ANS core | 212 | **auto** |
 | D_MINUS | `d-` | ANS double | 32 | **auto** |
 | D_PLUS | `d+` | ANS double | 32 | **auto** |
 | D_TO_S | `d>s` | ANS double | 5 | **auto** |
@@ -172,6 +172,7 @@ RTS instruction at the end of each word.
 | ONE_PLUS | `1+` | ANS core | 9 | **auto** |
 | ONLY | `only` | ANS search ext | 11 | **auto** |
 | OR | `or` | ANS core | 17 | **auto** |
+| ORDER | `order` | ANS core | 42 | **auto** |
 | OUTPUT | `output` | Tali Forth | 10 | tested |
 | OVER | `over` | ANS core | 13 | **auto** |
 | PAD | `pad` | ANS core ext | 15 | **auto** |
@@ -198,7 +199,7 @@ RTS instruction at the end of each word.
 | RSHIFT | `rshift` | ANS core | 19 | **auto** |
 | S_BACKSLASH_QUOTE | `s\"` | ANS core | 9 | **auto** |
 | SEARCH_WORDLIST | `search_wordlist` | ANS search | 224 | **auto** |
-| SEE | `see` | ANS tools | 165 | tested |
+| SEE | `see` | ANS tools | 141 | tested |
 | SET_CURRENT | `set-current` | ANS search | 11 | **auto** |
 | SET_ORDER | `set-order` | ANS search | 51 | **auto** |
 | S_QUOTE | `s"` | ANS core | 348 | **auto** |
@@ -206,7 +207,7 @@ RTS instruction at the end of each word.
 | SAVE_BUFFERS | `save-buffers` | ANS block | 26 | tested |
 | SCR | `scr` | ANS block ext | 15 | **auto** |
 | SEARCH | `search` | ANS string | 158 | **auto** |
-| SEMICOLON | `;` | ANS core | 102 | **auto** |
+| SEMICOLON | `;` | ANS core | 96 | **auto** |
 | SIGN | `sign` | ANS core | 20 | **auto** |
 | SLASH | `/` | ANS core | 28 | **auto** |
 | SLASH_MOD | `/mod` | ANS core | 23 | **auto** |
@@ -285,7 +286,7 @@ RTS instruction at the end of each word.
 | EDITOR_LINE | `line` | Tali Editor | 24 | tested |
 | EDITOR_O | `o` | Tali Editor | 48 | tested |
 
-Found **277** native words in `native_words.asm`.
-Of those, **229** were automatically tested and
+Found **278** native words in `native_words.asm`.
+Of those, **230** were automatically tested and
           **1** are not marked as tested at all.
 
