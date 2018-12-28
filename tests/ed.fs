@@ -172,6 +172,56 @@ q
 T{ 10000 10  s\" uuuu\nzzzz\n" compare -> 10000 10 0 }T
 
 
+\ === OUTPUT TESTS ===
+
+\ These involve redirecting input and output and have the potential to crash the
+\ system. They also assume that the assembler is working as well as the wordlist
+\ functions. Based on code by Sam Colwell, see
+\ https://github.com/scotws/TaliForth2/issues/159 for a discussion of how this
+\ works
+
+assembler-wordlist >order
+assembler-wordlist set-current
+
+variable 'oldoutput
+variable #saved-output
+create 'saved-output  1000 allot
+
+\ Retrieves the output string we saved after redirection
+: saved-string ( -- addr u )  'saved-output #saved-output @ ;
+
+\ We write our own output routine to replace the built-in one. Uses the
+\ assembler macro push-a
+: save-output ( c -- ) 
+   [ push-a ]  \ "dex dex  sta 0,x  stz 1,x" - push A to TOS
+   saved-string + c!
+
+   \ Can't use +! as it uses tmp1 and so does TYPE
+   #saved-output @  1+  #saved-output ! ;
+
+: redirect-output ( -- )
+   output @  'oldoutput !     \ save the original vector
+   ['] save-output  output ! \ replace vector with our routine
+   0 #saved-output ! ;        \ empty the string to start
+
+: restore-output ( -- )  'oldoutput @  output ! ; 
+
+
+\ ---- Internal test routine for redirection (tests within tests!) ----
+
+: internal-output-test  ( -- )
+   redirect-output ." Redirection works, let's do this!" restore-output ; 
+
+internal-output-test
+cr .( >>>> )  saved-string type  .( <<<< ) cr
+
+
+\ ---- Finally the actual redirection tests ----
+
+
+previous
+forth-wordlist set-current
+
 \ === END OF ED TESTS ===
 
 \ Free memory used for these tests
