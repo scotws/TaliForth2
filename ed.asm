@@ -1,7 +1,7 @@
 ; ed6502 - Ed-like line-based editor for Tali Forth 2 
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 13. Okt 2018
-; This version: 23. Nov 2018
+; This version: 28. Dec 2018
 
 ; Ed is a line-orientated editor for Tali Forth 2 based on the classic Unix
 ; editor of the same name. It is included because a) I like line editors and
@@ -632,51 +632,6 @@ _check_command:
                 ; the format ( addr-t u-t para1 para2 ). Also, any offset to CIB
                 ; is going to be in Y. Bit 7 in ed_flags signals if we have
                 ; a parameter or not
-
-                ; TODO TEST ---------------------------------
-                ; TEST : Print parameters
-
-                ; Skip over this for the moment
-                bra +
-
-                phy                     ; save the offset
-
-                lda #$28
-                jsr emit_a
-
-                jsr xt_swap             ; ( addr-t u-t para2 para1 )
-                jsr xt_dup
-                jsr xt_u_dot
-
-                jsr xt_swap             ; ( addr-t u-t para1 para2 )
-                jsr xt_dup
-                jsr xt_u_dot
-
-                ; Print Y as offset to CIB
-                lda #'y
-                jsr emit_a
-
-                pla                     ; pull the offset
-                pha                     ; save offset again
-
-                jsr byte_to_ascii
-                jsr xt_space
-
-                ; Print current line
-                lda #'c
-                jsr emit_a
-
-                lda ed_cur              ; don't need MSB for testing
-                jsr byte_to_ascii
-
-                lda #$29 
-                jsr emit_a
-
-                ply                     ; Restore the offset
-
-*
-
-                ; TODO TEST ---------------------------------
 
                 ; Command character checking works by comparing the char we
                 ; have at CIB+Y with a list of legal characters. The index in
