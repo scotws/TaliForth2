@@ -1,0 +1,256 @@
+A wordlist is, quite simply, a list of words that the user can run directly or
+can compile into other word definitions.  Wordlists are commonly used to separate
+words into different categories, often by function or application.  One of the
+wordlists, called the "current" wordlist, is the list that new words will be
+added to when they are created. Out of the box, Tali comes with four wordlists:
+FORTH, EDITOR, ASSEMBLER, and ROOT.
+
+Each wordlist has a unique wordlist identifier, or wid. To get the wid of the
+built-in wordlists, you can use the words `forth-wordlist`, `editor-wordlist`,
+`assembler-wordlist`, or `root-wordlist`.  The wid is just a simple number that
+is used to reference its particular wordlist, and each of these words just
+places their unique number on the stack.
+
+When Tali performs a cold start, the search order is set to just the FORTH
+wordlist and the current wordlist is also set to the FORTH wordlist.  Any new
+words created by the the user at this stage will be added to the beginning of
+the FORTH wordlist.
+
+The user is also allowed to create their own wordlist with the command
+`wordlist`.  This word leaves the next available wid on the stack, but it is up
+to the user to remember this wid and to provide a name for this new wordlist.
+This is often done by turning the new wid into a constant, as shown in the
+example below.
+
+It is often desirable to use multiple wordlists at the same time.  The "search
+order" is used to determine which wordlists are in use at any given time, as well
+as determining the order they are searched in.  When a word is used, each
+wordlist in the search order is searched for that word.  In the case where a
+word appears in multiple wordlists, the first wordlist in the search order that
+contains a word of that name will be the version of the word that is used.
+
+The data structures for the wordlists and the search order are not directly
+accessable to the user, but rather are manipulated with the following set of
+words:
+
+[horizontal]
+order:: ( -- ) Display the current search order and current wordlist.  The search order
+is printed with the first wordlist on the left and the last wordlist on the
+right.  After the search order, the current (compilation) wordlist is printed.
+get-order:: ( -- widn ... wid1 n ) Get the current search order.  This has the
+number of wordlists in the search order on the top of the stack, with the
+wids for the wordlists, in order, under that.  Wid1 is the wordlist that will be
+searched first and widn is the wordlist that will be searched last.
+set-order:: ( widn ... wid1 n -- ) Set the current search order.  This takes the
+wids and the number of wordlists in the search order on the stack.
+>order:: ( wid -- ) Add the given wordlist to the beginning of the search order.
+get-current:: ( -- wid ) Get the wid for the current wordlist.  This is the
+wordlist that new words will be compiled to.
+set-current:: ( wid -- ) Set the current wordlist.  New words created after this
+point will go into the wordlist indicated here.
+wordlist:: ( -- wid ) Create a new wordlist and return the wid for this new
+wordlist.  Up to eight user-defined wordlists may be created this way.
+search-wordlist:: ( addr u wid -- 0 | xt 1 | xt -1) Search for a word in a specific wordlist.
+The return results are identical to those returned by `find`.
+
+=== Using the built-in wordlists
+
+To see the search order and the current wordlist, you can use the command
+`order`.  This will print the names for the built-in wordlists and the wid
+number for all other wordlists.  The search order is printed with the first
+wordlist on the left and the last wordlist on the right, and the current
+(compilation) wordlist is given at the far right.
+
+----
+order 
+Forth   Forth  ok
+----
+
+Here you can see that the FORTH wordlist is the only wordlist in the search
+order, and it's also set as the current wordlist (where new words will go).
+Typically, you will want to leave the FORTH wordlist in your search order.  This
+contains all of the normal Forth words, as well as all of the words used to
+modify the search order.  Most of the time you will simply want to add a
+wordlist to the search order and the word `>order` is very handy for doing
+this.  To add the block editor words, you might say:
+
+----
+editor-wordlist >order
+----
+
+If you are working with assembly code in blocks, you may want both the block
+editor words and the assembler words available at the same time.  In that event,
+you would say:
+
+----
+editor-wordlist >order assembler-wordlist >order
+( or you could say... )
+forth-wordlist editor-wordlist assembler-wordlist 3 set-order
+----
+
+Both of these lines have the same effect.  They put the ASSEMBLER wordlist
+first, the EDITOR wordlist next, and the FORTH wordlist last.  
+
+To check the results from above, you might use the `order` command again:
+
+----
+order 
+Assembler Editor Forth   Forth  ok
+----
+
+Here you can see that the ASSEMBLER wordlist will be searched first, with the
+EDITOR wordlist searched next, and the FORTH wordlist searched last.  You can
+also see that the FORTH wordlist is still the current (compilation) wordlist.
+
+The wordlist that new words go into is controlled separately with
+`set-current`.  It is possible, and sometimes even desirable, to set the
+compilation wordlist to one that is not in the search order.  To add some words
+to the EDITOR wordlist, for example, one might say:
+
+----
+editor-wordlist set-current
+----
+
+Checking the results with `order` shows:
+
+----
+order 
+Assembler Editor Forth   Editor  ok
+----
+
+Any new words created after this point will be added to the EDITOR wordlist.  To
+switch back to using the default FORTH wordlist for new words, you would say:
+
+----
+forth-wordlist set-current
+----
+
+=== Making New Wordlists
+
+Using the `wordlist` command, a new empty wordlist can be created.  This command
+leaves the wid on the stack, and it's the only time you will be given this wid,
+so it's a good idea to give it a name for later use.  An example of that might
+look like:
+
+----
+\ Create a new wordlist for lighting up LEDs.
+wordlist constant led-wordlist
+
+\ Add the new wordlist to the search order.
+led-wordlist >order
+
+\ Set the new wordlist as the current wordlist.
+led-wordlist set-current
+
+\ Put a word in the new wordlist.
+: led-on ( commands to turn LED on ) ;
+----
+
+In the example above, the new led-wordlist was added to the search order.  The
+FORTH wordlist is still in the search order, so the user is allowed to use any
+existing Forth words as well as any of the new words placed into the
+led-wordlist, such as the `led-on` word above.  If the above code is run from a
+cold start, which starts with just the FORTH wordlist in the search order and as
+the current wordlist, the results of running `order` afterwards will look like:
+
+----
+order 
+5 Forth   5  ok
+----
+
+Because Tali's `order` command doesn't know the name given to the new wordlist,
+it simply prints the wid number.  In this case, the led-wordlist has the wid 5.
+You can also see that the new wordlist is the current wordlist, so all new words
+(such as `led-on` above) will be placed in that wordlist.
+
+Wordlists can be used to hide a group of words when they are not needed (the
+EDITOR and ASSEMBLER wordlists do this).  This has the benefits of keeping the
+list of words given by the `words` command down to a more reasonable level as
+well as making lookups of words faster.  If the ASSEMBLER wordlist is not in the
+search order, for example, Tali will not spend any time searching though that
+list for a word being interpreted or compiled.
+
+If a large number of helper words are needed to create an application, it might
+make sense to place all of the helper words in their own wordlist so that they
+can be hidden at a later point in time by removing that wordlist from the search
+order.  Any words that were created using those helper words can still be run, as
+long as they are in a wordlist that is still in the search order.
+
+In some applications, it might make sense to use the search order to hide all of
+the FORTH words.  This may be useful if your program is going to use the Forth
+interpreter to process the input for your program.  You can create your own
+wordlist, put all of the commands the user should be able to run into it, and
+then set that as the only wordlist in the search order.  Please note that if you
+don't provide a way to restore the FORTH wordlist back into the search order,
+you will need to reset the system to get back into Forth.
+
+----
+\ Create a wordlist for the application.
+wordlist constant myapp-wordlist
+myapp-wordlist set-current
+
+\ Add some words for the user to run.
+\ ...
+
+\ Add a way to get back to Forth.
+: exit forth-wordlist 1 set-order forth-wordlist set-current ;
+
+\ Switch over to only the application commands.
+myapp-wordlist 1 set-order
+----
+
+=== Older Vocabulatory Words 
+
+The ANS search-order set of words includes some older words that were originally
+used with "vocabularies", which the wordlists replace.  Some of these words
+appear to have odd behavior at first glance, however they allow some older
+programs to run by manipulating the wordlists to provide the expected behavior.
+Tali supports the following words with a few caveats:
+
+ALSO:: ( -- ) Duplicate the first wordlist at the beginning of the search order.
+DEFINITIONS:: ( -- ) Set the current wordlist to be whatever wordlist is first
+in the search order.
+FORTH:: ( -- ) Replace the first wordlist in the search order with the FORTH
+wordlist.  This word is commonly used immediately after `only`.
+ONLY:: ( -- ) Set the search order to the minimum wordlist, which is the ROOT
+wordlist on Tali.  This word is commonly followed by the word `forth`, which
+replaced the ROOT wordlist with the FORTH wordlist.
+PREVIOUS:: ( -- ) Remove the first wordlist from the search order.
+
+The older vocabulary words were commonly used like so:
+
+----
+\ Use the FORTH and ASSEMBLER vocabularies.
+\ Put new words in the ASSEMBLER vocabulary.
+ONLY FORTH ALSO ASSEMBLER DEFINITIONS
+
+\ Do some assembly stuff here.
+
+\ Remove the ASSEMBLER and load the EDITOR vocabulary.
+PREVIOUS ALSO EDITOR
+
+\ Do some editing here.  If any new words are created,
+\ they still go into the ASSEMBLER vocabulary.
+
+\ Go back to just FORTH and put new words there.
+PREVIOUS DEFINITIONS
+----
+
+Tali currently performs the desired "vocabulary" operations by manipulating the
+wordlists and search order.  This works correctly for `ONLY FORTH` (which almost
+always appears with those two words used together and in that order),
+`DEFINITIONS`, and `PREVIOUS`.  The `ALSO ASSEMBLER` and `ALSO EDITOR` portions
+will not work correctly as Tali does not have a word `ASSEMBLER` or a word
+`EDITOR`.  If code contains these types of vocabulary words, you will need to
+replace them with something like `assembler-wordlist >order`.  If you are trying
+to run older code that needs an editor or assembler, you will likely need to
+rewrite that code anyway in order to use Tali's editor commands and assembler
+syntax.
+
+The only words from this list that are recommended for use are `ONLY FORTH` as a
+shortcut for `forth-wordlist 1 set-order`, `DEFINITIONS` as a shortcut after
+you've just used `>order` to add a wordlist to the search order and you want to
+set the current (compilations) wordlist to be that same wordlist, and finally
+`PREVIOUS`, which removes the first wordlist from the search order.  Take care
+with `PREVIOUS` as it will happily leave you with no wordlists in the search
+order if you run it too many times.

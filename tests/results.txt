@@ -1914,8 +1914,6 @@ testing facility words: at-xy page   ok
 \ ------------------------------------------------------------------------  ok
 testing editor words: ed  ok
   ok
-\ TODO Rewrite compare strings once s\" is online (check for linefeed character)  ok
-  ok
 decimal  ok
 marker ed-tests   ok
   ok
@@ -2025,6 +2023,131 @@ bbbb
 5 
 q  ok
 T{ 10000 5  s\" aaaa\n" compare -> 10000 5 0 }T  ok
+  ok
+\ --- i command ---  ok
+  ok
+\ Simple adding of text; want qqqq rrrr  ok
+ed 
+i 
+qqqq 
+rrrr 
+. 
+10000w 
+10 
+q  ok
+T{ 10000 10  s\" qqqq\nrrrr\n" compare -> 10000 10 0 }T  ok
+  ok
+\ Add text to start of existing text; want tttt dddd aaaa  ok
+ed 
+a 
+dddd 
+aaaa 
+. 
+1i 
+tttt 
+. 
+10000w 
+15 
+q  ok
+T{ 10000 15  s\" tttt\ndddd\naaaa\n" compare -> 10000 15 0 }T  ok
+  ok
+  ok
+\ Add a line between two lines of existing text  ok
+\ Want mmmm oooo gggg  ok
+ed 
+a 
+mmmm 
+gggg 
+. 
+2i 
+oooo 
+. 
+10000w 
+15 
+q  ok
+T{ 10000 15  s\" mmmm\noooo\ngggg\n" compare -> 10000 15 0 }T  ok
+  ok
+\ Add two lines between two existing lines of existing text  ok
+\ Want: tttt cccc dddd ssss  ok
+ed 
+a 
+tttt 
+ssss 
+. 
+2i 
+cccc 
+dddd 
+. 
+10000w 
+20 
+q  ok
+T{ 10000 20  s\" tttt\ncccc\ndddd\nssss\n" compare -> 10000 20 0 }T  ok
+  ok
+\ Add a line above existing text; want uuuu zzzz   ok
+ed 
+a 
+zzzz 
+. 
+0i 
+uuuu 
+. 
+10000w 
+10 
+q  ok
+T{ 10000 10  s\" uuuu\nzzzz\n" compare -> 10000 10 0 }T  ok
+  ok
+  ok
+\ === OUTPUT TESTS ===  ok
+  ok
+\ These involve redirecting input and output and have the potential to crash the  ok
+\ system. They also assume that the assembler is working as well as the wordlist  ok
+\ functions. Based on code by Sam Colwell, see  ok
+\ https://github.com/scotws/TaliForth2/issues/159 for a discussion of how this  ok
+\ works  ok
+  ok
+assembler-wordlist >order  ok
+assembler-wordlist set-current  ok
+  ok
+variable 'oldoutput  ok
+variable #saved-output  ok
+create 'saved-output  1000 allot  ok
+  ok
+\ Retrieves the output string we saved after redirection  ok
+: saved-string ( -- addr u )  'saved-output #saved-output @ ;  ok
+  ok
+\ We write our own output routine to replace the built-in one. Uses the  ok
+\ assembler macro push-a  ok
+: save-output ( c -- )   compiled
+   [ push-a ]  \ "dex dex  sta 0,x  stz 1,x" - push A to TOS  compiled
+   saved-string + c!  compiled
+  compiled
+   \ Can't use +! as it uses tmp1 and so does TYPE  compiled
+   #saved-output @  1+  #saved-output ! ;  ok
+  ok
+: redirect-output ( -- )  compiled
+   output @  'oldoutput !     \ save the original vector  compiled
+   ['] save-output  output ! \ replace vector with our routine  compiled
+   0 #saved-output ! ;        \ empty the string to start  ok
+  ok
+: restore-output ( -- )  'oldoutput @  output ! ;   ok
+  ok
+  ok
+\ ---- Internal test routine for redirection (tests within tests!) ----  ok
+  ok
+: internal-output-test  ( -- )  compiled
+   redirect-output ." Redirection works, let's do this!" restore-output ;   ok
+  ok
+internal-output-test  ok
+cr .( >>>> )  saved-string type  .( <<<< ) cr 
+>>>> Redirection works, let's do this!<<<< 
+ ok
+  ok
+  ok
+\ ---- Finally the actual redirection tests ----  ok
+  ok
+  ok
+previous  ok
+forth-wordlist set-current  ok
   ok
 \ === END OF ED TESTS ===  ok
   ok
@@ -3072,12 +3195,12 @@ here 5       ' blank         cycle_test            CYCLES:    325 ok
 5            ' chars         cycle_test drop       CYCLES:     28 ok
 pad here 5   ' cmove         cycle_test            CYCLES:    188 ok
 pad here 5   ' cmove>        cycle_test            CYCLES:    183 ok
-             ' :             cycle_test wrd ;      CYCLES:  15128 ok
+             ' :             cycle_test wrd ;      CYCLES:  15127 ok
              ' :noname       cycle_test ; drop     CYCLES:     51 ok
 5            ' ,             cycle_test            CYCLES:     66 ok
 ' aword      ' compile,      cycle_test            CYCLES:    788 ok
 : bword ;    ' compile-only  cycle_test            CYCLES:     75 ok
-5            ' constant      cycle_test mycnst     CYCLES:  15616 ok
+5            ' constant      cycle_test mycnst     CYCLES:  15618 ok
 here         ' count         cycle_test 2drop      CYCLES:     59 ok
 \ skipping     cr  ok
 \ skipping     create  ok
@@ -3104,7 +3227,7 @@ char w       ' digit?        cycle_test 2drop      CYCLES:     86 ok
 5 5          ' =             cycle_test drop       CYCLES:     64 ok
 here 5       ' erase         cycle_test            CYCLES:    321 ok
 here 5 5     ' fill          cycle_test            CYCLES:    309 ok
-s" 5"        ' evaluate      cycle_test drop       CYCLES:  16355 ok
+s" 5"        ' evaluate      cycle_test drop       CYCLES:  16351 ok
 5 ' drop     ' execute       cycle_test            CYCLES:     84 ok
 \ skipping     exit  ok
              ' false         cycle_test drop       CYCLES:     24 ok
@@ -3137,7 +3260,7 @@ s" aword"    ' find-name     cycle_test drop       CYCLES:    453 ok
 \ skipping     +loop  ok
 5 5          ' lshift        cycle_test drop       CYCLES:    126 ok
 5 5          ' m*            cycle_test 2drop      CYCLES:    650 ok
-             ' marker        cycle_test marka      CYCLES:  17311 ok
+             ' marker        cycle_test marka      CYCLES:  17309 ok
              ' marka         cycle_test            CYCLES:    884 ok
 5 5          ' max           cycle_test drop       CYCLES:     69 ok
 5 5          ' min           cycle_test drop       CYCLES:     54 ok
@@ -3214,7 +3337,7 @@ here         ' 2@            cycle_test 2drop      CYCLES:     88 ok
 5. here      ' 2!            cycle_test            CYCLES:     99 ok
 5 5 5 5      ' 2swap         cycle_test 4drop      CYCLES:     92 ok
 \ skipping     2>r  ok
-             ' 2variable     cycle_test eword      CYCLES:  15894 ok
+             ' 2variable     cycle_test eword      CYCLES:  15892 ok
              ' eword         cycle_test drop       CYCLES:     45 ok
 s" *"        ' type          cycle_test           *CYCLES:    121 ok
 5            ' u.            cycle_test          5 CYCLES:   3617 ok
@@ -3225,10 +3348,10 @@ s" *"        ' type          cycle_test           *CYCLES:    121 ok
 5 5          ' um*           cycle_test 2drop      CYCLES:    474 ok
 \ skipping     unloop  ok
              ' unused        cycle_test drop       CYCLES:     36 ok
-5            ' value         cycle_test fword      CYCLES:  16115 ok
+5            ' value         cycle_test fword      CYCLES:  16113 ok
              ' fword         cycle_test drop       CYCLES:     58 ok
 5            ' to            cycle_test fword      CYCLES:   1139 ok
-             ' variable      cycle_test gword      CYCLES:  15895 ok
+             ' variable      cycle_test gword      CYCLES:  15893 ok
              ' gword         cycle_test drop       CYCLES:     45 ok
 char "       ' word          cycle_test "txt" drop CYCLES:    676 ok
 \ skipping     words  ok

@@ -79,6 +79,9 @@ include::ch_tutorial_blocks.adoc[]
 == The `ed` Line-Based Editor[[ed-tutorial]]
 include::ch_tutorial_ed.adoc[]
 
+== Wordlists and the Search Order
+include::ch_tutorial_wordlists.adoc[]
+
 
 // --------------------------------------------------------
 = Appendix

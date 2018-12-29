@@ -527,6 +527,13 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_further_information">Further Information</a></li>
 </ul>
 </li>
+<li><a href="#_wordlists_and_the_search_order">Wordlists and the Search Order</a>
+<ul class="sectlevel2">
+<li><a href="#_using_the_built_in_wordlists">Using the built-in wordlists</a></li>
+<li><a href="#_making_new_wordlists">Making New Wordlists</a></li>
+<li><a href="#_older_vocabulatory_words">Older Vocabulatory Words</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#_appendix">Appendix</a>
@@ -5970,6 +5977,383 @@ there are other sources:</p>
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="_wordlists_and_the_search_order">Wordlists and the Search Order</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A wordlist is, quite simply, a list of words that the user can run directly or
+can compile into other word definitions.  Wordlists are commonly used to separate
+words into different categories, often by function or application.  One of the
+wordlists, called the "current" wordlist, is the list that new words will be
+added to when they are created. Out of the box, Tali comes with four wordlists:
+FORTH, EDITOR, ASSEMBLER, and ROOT.</p>
+</div>
+<div class="paragraph">
+<p>Each wordlist has a unique wordlist identifier, or wid. To get the wid of the
+built-in wordlists, you can use the words <code>forth-wordlist</code>, <code>editor-wordlist</code>,
+<code>assembler-wordlist</code>, or <code>root-wordlist</code>.  The wid is just a simple number that
+is used to reference its particular wordlist, and each of these words just
+places their unique number on the stack.</p>
+</div>
+<div class="paragraph">
+<p>When Tali performs a cold start, the search order is set to just the FORTH
+wordlist and the current wordlist is also set to the FORTH wordlist.  Any new
+words created by the the user at this stage will be added to the beginning of
+the FORTH wordlist.</p>
+</div>
+<div class="paragraph">
+<p>The user is also allowed to create their own wordlist with the command
+<code>wordlist</code>.  This word leaves the next available wid on the stack, but it is up
+to the user to remember this wid and to provide a name for this new wordlist.
+This is often done by turning the new wid into a constant, as shown in the
+example below.</p>
+</div>
+<div class="paragraph">
+<p>It is often desirable to use multiple wordlists at the same time.  The "search
+order" is used to determine which wordlists are in use at any given time, as well
+as determining the order they are searched in.  When a word is used, each
+wordlist in the search order is searched for that word.  In the case where a
+word appears in multiple wordlists, the first wordlist in the search order that
+contains a word of that name will be the version of the word that is used.</p>
+</div>
+<div class="paragraph">
+<p>The data structures for the wordlists and the search order are not directly
+accessable to the user, but rather are manipulated with the following set of
+words:</p>
+</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+order
+</td>
+<td class="hdlist2">
+<p>(&#8201;&#8212;&#8201;) Display the current search order and current wordlist.  The search order
+is printed with the first wordlist on the left and the last wordlist on the
+right.  After the search order, the current (compilation) wordlist is printed.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+get-order
+</td>
+<td class="hdlist2">
+<p>(&#8201;&#8212;&#8201;widn &#8230;&#8203; wid1 n ) Get the current search order.  This has the
+number of wordlists in the search order on the top of the stack, with the
+wids for the wordlists, in order, under that.  Wid1 is the wordlist that will be
+searched first and widn is the wordlist that will be searched last.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+set-order
+</td>
+<td class="hdlist2">
+<p>( widn &#8230;&#8203; wid1 n&#8201;&#8212;&#8201;) Set the current search order.  This takes the
+wids and the number of wordlists in the search order on the stack.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+&gt;order
+</td>
+<td class="hdlist2">
+<p>( wid&#8201;&#8212;&#8201;) Add the given wordlist to the beginning of the search order.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+get-current
+</td>
+<td class="hdlist2">
+<p>(&#8201;&#8212;&#8201;wid ) Get the wid for the current wordlist.  This is the
+wordlist that new words will be compiled to.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+set-current
+</td>
+<td class="hdlist2">
+<p>( wid&#8201;&#8212;&#8201;) Set the current wordlist.  New words created after this
+point will go into the wordlist indicated here.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+wordlist
+</td>
+<td class="hdlist2">
+<p>(&#8201;&#8212;&#8201;wid ) Create a new wordlist and return the wid for this new
+wordlist.  Up to eight user-defined wordlists may be created this way.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+search-wordlist
+</td>
+<td class="hdlist2">
+<p>( addr u wid&#8201;&#8212;&#8201;0 | xt 1 | xt -1) Search for a word in a specific wordlist.
+The return results are identical to those returned by <code>find</code>.</p>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_using_the_built_in_wordlists">Using the built-in wordlists</h3>
+<div class="paragraph">
+<p>To see the search order and the current wordlist, you can use the command
+<code>order</code>.  This will print the names for the built-in wordlists and the wid
+number for all other wordlists.  The search order is printed with the first
+wordlist on the left and the last wordlist on the right, and the current
+(compilation) wordlist is given at the far right.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>order
+Forth   Forth  ok</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here you can see that the FORTH wordlist is the only wordlist in the search
+order, and it&#8217;s also set as the current wordlist (where new words will go).
+Typically, you will want to leave the FORTH wordlist in your search order.  This
+contains all of the normal Forth words, as well as all of the words used to
+modify the search order.  Most of the time you will simply want to add a
+wordlist to the search order and the word <code>&gt;order</code> is very handy for doing
+this.  To add the block editor words, you might say:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>editor-wordlist &gt;order</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you are working with assembly code in blocks, you may want both the block
+editor words and the assembler words available at the same time.  In that event,
+you would say:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>editor-wordlist &gt;order assembler-wordlist &gt;order
+( or you could say... )
+forth-wordlist editor-wordlist assembler-wordlist 3 set-order</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Both of these lines have the same effect.  They put the ASSEMBLER wordlist
+first, the EDITOR wordlist next, and the FORTH wordlist last.</p>
+</div>
+<div class="paragraph">
+<p>To check the results from above, you might use the <code>order</code> command again:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>order
+Assembler Editor Forth   Forth  ok</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here you can see that the ASSEMBLER wordlist will be searched first, with the
+EDITOR wordlist searched next, and the FORTH wordlist searched last.  You can
+also see that the FORTH wordlist is still the current (compilation) wordlist.</p>
+</div>
+<div class="paragraph">
+<p>The wordlist that new words go into is controlled separately with
+<code>set-current</code>.  It is possible, and sometimes even desirable, to set the
+compilation wordlist to one that is not in the search order.  To add some words
+to the EDITOR wordlist, for example, one might say:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>editor-wordlist set-current</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Checking the results with <code>order</code> shows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>order
+Assembler Editor Forth   Editor  ok</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Any new words created after this point will be added to the EDITOR wordlist.  To
+switch back to using the default FORTH wordlist for new words, you would say:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>forth-wordlist set-current</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_making_new_wordlists">Making New Wordlists</h3>
+<div class="paragraph">
+<p>Using the <code>wordlist</code> command, a new empty wordlist can be created.  This command
+leaves the wid on the stack, and it&#8217;s the only time you will be given this wid,
+so it&#8217;s a good idea to give it a name for later use.  An example of that might
+look like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>\ Create a new wordlist for lighting up LEDs.
+wordlist constant led-wordlist
+
+\ Add the new wordlist to the search order.
+led-wordlist &gt;order
+
+\ Set the new wordlist as the current wordlist.
+led-wordlist set-current
+
+\ Put a word in the new wordlist.
+: led-on ( commands to turn LED on ) ;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In the example above, the new led-wordlist was added to the search order.  The
+FORTH wordlist is still in the search order, so the user is allowed to use any
+existing Forth words as well as any of the new words placed into the
+led-wordlist, such as the <code>led-on</code> word above.  If the above code is run from a
+cold start, which starts with just the FORTH wordlist in the search order and as
+the current wordlist, the results of running <code>order</code> afterwards will look like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>order
+5 Forth   5  ok</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Because Tali&#8217;s <code>order</code> command doesn&#8217;t know the name given to the new wordlist,
+it simply prints the wid number.  In this case, the led-wordlist has the wid 5.
+You can also see that the new wordlist is the current wordlist, so all new words
+(such as <code>led-on</code> above) will be placed in that wordlist.</p>
+</div>
+<div class="paragraph">
+<p>Wordlists can be used to hide a group of words when they are not needed (the
+EDITOR and ASSEMBLER wordlists do this).  This has the benefits of keeping the
+list of words given by the <code>words</code> command down to a more reasonable level as
+well as making lookups of words faster.  If the ASSEMBLER wordlist is not in the
+search order, for example, Tali will not spend any time searching though that
+list for a word being interpreted or compiled.</p>
+</div>
+<div class="paragraph">
+<p>If a large number of helper words are needed to create an application, it might
+make sense to place all of the helper words in their own wordlist so that they
+can be hidden at a later point in time by removing that wordlist from the search
+order.  Any words that were created using those helper words can still be run, as
+long as they are in a wordlist that is still in the search order.</p>
+</div>
+<div class="paragraph">
+<p>In some applications, it might make sense to use the search order to hide all of
+the FORTH words.  This may be useful if your program is going to use the Forth
+interpreter to process the input for your program.  You can create your own
+wordlist, put all of the commands the user should be able to run into it, and
+then set that as the only wordlist in the search order.  Please note that if you
+don&#8217;t provide a way to restore the FORTH wordlist back into the search order,
+you will need to reset the system to get back into Forth.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>\ Create a wordlist for the application.
+wordlist constant myapp-wordlist
+myapp-wordlist set-current
+
+\ Add some words for the user to run.
+\ ...
+
+\ Add a way to get back to Forth.
+: exit forth-wordlist 1 set-order forth-wordlist set-current ;
+
+\ Switch over to only the application commands.
+myapp-wordlist 1 set-order</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_older_vocabulatory_words">Older Vocabulatory Words</h3>
+<div class="paragraph">
+<p>The ANS search-order set of words includes some older words that were originally
+used with "vocabularies", which the wordlists replace.  Some of these words
+appear to have odd behavior at first glance, however they allow some older
+programs to run by manipulating the wordlists to provide the expected behavior.
+Tali supports the following words with a few caveats:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">ALSO</dt>
+<dd>
+<p>(&#8201;&#8212;&#8201;) Duplicate the first wordlist at the beginning of the search order.</p>
+</dd>
+<dt class="hdlist1">DEFINITIONS</dt>
+<dd>
+<p>(&#8201;&#8212;&#8201;) Set the current wordlist to be whatever wordlist is first
+in the search order.</p>
+</dd>
+<dt class="hdlist1">FORTH</dt>
+<dd>
+<p>(&#8201;&#8212;&#8201;) Replace the first wordlist in the search order with the FORTH
+wordlist.  This word is commonly used immediately after <code>only</code>.</p>
+</dd>
+<dt class="hdlist1">ONLY</dt>
+<dd>
+<p>(&#8201;&#8212;&#8201;) Set the search order to the minimum wordlist, which is the ROOT
+wordlist on Tali.  This word is commonly followed by the word <code>forth</code>, which
+replaced the ROOT wordlist with the FORTH wordlist.</p>
+</dd>
+<dt class="hdlist1">PREVIOUS</dt>
+<dd>
+<p>(&#8201;&#8212;&#8201;) Remove the first wordlist from the search order.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>The older vocabulary words were commonly used like so:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>\ Use the FORTH and ASSEMBLER vocabularies.
+\ Put new words in the ASSEMBLER vocabulary.
+ONLY FORTH ALSO ASSEMBLER DEFINITIONS
+
+\ Do some assembly stuff here.
+
+\ Remove the ASSEMBLER and load the EDITOR vocabulary.
+PREVIOUS ALSO EDITOR
+
+\ Do some editing here.  If any new words are created,
+\ they still go into the ASSEMBLER vocabulary.
+
+\ Go back to just FORTH and put new words there.
+PREVIOUS DEFINITIONS</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Tali currently performs the desired "vocabulary" operations by manipulating the
+wordlists and search order.  This works correctly for <code>ONLY FORTH</code> (which almost
+always appears with those two words used together and in that order),
+<code>DEFINITIONS</code>, and <code>PREVIOUS</code>.  The <code>ALSO ASSEMBLER</code> and <code>ALSO EDITOR</code> portions
+will not work correctly as Tali does not have a word <code>ASSEMBLER</code> or a word
+<code>EDITOR</code>.  If code contains these types of vocabulary words, you will need to
+replace them with something like <code>assembler-wordlist &gt;order</code>.  If you are trying
+to run older code that needs an editor or assembler, you will likely need to
+rewrite that code anyway in order to use Tali&#8217;s editor commands and assembler
+syntax.</p>
+</div>
+<div class="paragraph">
+<p>The only words from this list that are recommended for use are <code>ONLY FORTH</code> as a
+shortcut for <code>forth-wordlist 1 set-order</code>, <code>DEFINITIONS</code> as a shortcut after
+you&#8217;ve just used <code>&gt;order</code> to add a wordlist to the search order and you want to
+set the current (compilations) wordlist to be that same wordlist, and finally
+<code>PREVIOUS</code>, which removes the first wordlist from the search order.  Take care
+with <code>PREVIOUS</code> as it will happily leave you with no wordlists in the search
+order if you run it too many times.</p>
+</div>
+</div>
+</div>
+</div>
 <h1 id="_appendix" class="sect0">Appendix</h1>
 <div class="sect1">
 <h2 id="_reporting_problems">Reporting Problems</h2>
@@ -6450,7 +6834,7 @@ under <a href="https://www.ubuntu.com/">Ubuntu</a> Linux 16.04 LTS.</p>
 <div id="footer">
 <div id="footer-text">
 Version BETA<br>
-Last updated 2018-12-22 23:53:03 CET
+Last updated 2018-12-28 16:21:47 CET
 </div>
 </div>
 </body>

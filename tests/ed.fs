@@ -1,8 +1,6 @@
 \ ------------------------------------------------------------------------
 testing editor words: ed
 
-\ TODO Rewrite compare strings once s\" is online (check for linefeed character)
-
 decimal
 marker ed-tests 
 
@@ -105,6 +103,124 @@ bbbb
 10000w
 q
 T{ 10000 5  s\" aaaa\n" compare -> 10000 5 0 }T
+
+\ --- i command ---
+
+\ Simple adding of text; want qqqq rrrr
+ed
+i
+qqqq
+rrrr
+.
+10000w
+q
+T{ 10000 10  s\" qqqq\nrrrr\n" compare -> 10000 10 0 }T
+
+\ Add text to start of existing text; want tttt dddd aaaa
+ed
+a
+dddd
+aaaa
+.
+1i
+tttt
+.
+10000w
+q
+T{ 10000 15  s\" tttt\ndddd\naaaa\n" compare -> 10000 15 0 }T
+
+
+\ Add a line between two lines of existing text
+\ Want mmmm oooo gggg
+ed
+a
+mmmm
+gggg
+.
+2i
+oooo
+.
+10000w
+q
+T{ 10000 15  s\" mmmm\noooo\ngggg\n" compare -> 10000 15 0 }T
+
+\ Add two lines between two existing lines of existing text
+\ Want: tttt cccc dddd ssss
+ed
+a
+tttt
+ssss
+.
+2i
+cccc
+dddd
+.
+10000w
+q
+T{ 10000 20  s\" tttt\ncccc\ndddd\nssss\n" compare -> 10000 20 0 }T
+
+\ Add a line above existing text; want uuuu zzzz 
+ed
+a
+zzzz
+.
+0i
+uuuu
+.
+10000w
+q
+T{ 10000 10  s\" uuuu\nzzzz\n" compare -> 10000 10 0 }T
+
+
+\ === OUTPUT TESTS ===
+
+\ These involve redirecting input and output and have the potential to crash the
+\ system. They also assume that the assembler is working as well as the wordlist
+\ functions. Based on code by Sam Colwell, see
+\ https://github.com/scotws/TaliForth2/issues/159 for a discussion of how this
+\ works
+
+assembler-wordlist >order
+assembler-wordlist set-current
+
+variable 'oldoutput
+variable #saved-output
+create 'saved-output  1000 allot
+
+\ Retrieves the output string we saved after redirection
+: saved-string ( -- addr u )  'saved-output #saved-output @ ;
+
+\ We write our own output routine to replace the built-in one. Uses the
+\ assembler macro push-a
+: save-output ( c -- ) 
+   [ push-a ]  \ "dex dex  sta 0,x  stz 1,x" - push A to TOS
+   saved-string + c!
+
+   \ Can't use +! as it uses tmp1 and so does TYPE
+   #saved-output @  1+  #saved-output ! ;
+
+: redirect-output ( -- )
+   output @  'oldoutput !     \ save the original vector
+   ['] save-output  output ! \ replace vector with our routine
+   0 #saved-output ! ;        \ empty the string to start
+
+: restore-output ( -- )  'oldoutput @  output ! ; 
+
+
+\ ---- Internal test routine for redirection (tests within tests!) ----
+
+: internal-output-test  ( -- )
+   redirect-output ." Redirection works, let's do this!" restore-output ; 
+
+internal-output-test
+cr .( >>>> )  saved-string type  .( <<<< ) cr
+
+
+\ ---- Finally the actual redirection tests ----
+
+
+previous
+forth-wordlist set-current
 
 \ === END OF ED TESTS ===
 
