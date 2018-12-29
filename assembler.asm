@@ -1021,8 +1021,6 @@ xt_asm_push_a:
         ; data stack as the TOS. This is a convience routine that encodes the
         ; instructions  DEX  DEX  STA 0,X  STZ 1,X
         ; """
-        ; TODO if we have more than one pseudo-instruction like this, consider
-        ; using a common loop for the various byte sequences
 .scope
                 ldy #0
 _loop:

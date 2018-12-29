@@ -1502,11 +1502,6 @@ nt_editor_o:
 ; underscore replaces any dot present in the SAN mnemonic. The hash sign for
 ; immediate addressing is replaced by an "h" (for example, the label code for
 ; "lda.#" is "xt_adm_lda_h"). All opcodes are immediate. 
-
-; TODO The list is currently organized alphabetically be SAN mnemonic. For
-; speed reasons, it should be reordered with the most often used instructions
-; first at some point. 
-
 nt_asm_adc_h:
 		.byte 5, IM
 		.word 0000
