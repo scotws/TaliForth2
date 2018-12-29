@@ -111,7 +111,7 @@ nt_only:
         .word nt_also, xt_only, z_only
         .byte "only"
 
-nt_forth_wordlist:
+nt_forth_wordlist:      ; shares code with ZERO
         .byte 14, 0
         .word nt_only, xt_forth_wordlist, z_forth_wordlist
         .byte "forth-wordlist"
@@ -121,7 +121,7 @@ nt_editor_wordlist:     ; shares code with ONE
         .word nt_forth_wordlist, xt_editor_wordlist, z_editor_wordlist
         .byte "editor-wordlist"
                 
-nt_assembler_wordlist:
+nt_assembler_wordlist:  ; shares code with TWO
         .byte 18, 0
         .word nt_editor_wordlist, xt_assembler_wordlist, z_assembler_wordlist
         .byte "assembler-wordlist"

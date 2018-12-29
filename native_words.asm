@@ -936,16 +936,7 @@ z_and:          rts
 
 ; ## ASSEMBLER_WORDLIST ( -- u ) "WID for the Assembler wordlist"
 ; ## "assembler-wordlist"  tested  Tali Assembler
-xt_assembler_wordlist:        
-                dex             ; The WID for the Assembler is 2.
-                dex
-                lda #2
-                sta 0,x
-                stz 1,x
-
-z_assembler_wordlist:
-                rts
-
+        ; This is a dummy entry, the code is shared with TWO
         
 
 ; ## AT_XY ( n m -- ) "Move cursor to position given"
@@ -10211,6 +10202,8 @@ z_tuck:         rts
 
 ; ## TWO ( -- u ) "Push the number 2 to stack"
 ; ## "2"  auto  Tali Forth
+        ; This code is shared with ASSEMBLER-WORDLIST
+xt_assembler_wordlist:        
 xt_two:
                 dex
                 dex
@@ -10218,6 +10211,7 @@ xt_two:
                 sta 0,x
                 stz 1,x
 
+z_assembler_wordlist:        
 z_two:          rts
 
 
