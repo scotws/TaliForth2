@@ -1430,7 +1430,6 @@ z_bye:          rts             ; never reached
 
 ; ## C_COMMA ( c -- ) "Store one byte/char in the Dictionary"
 ; ## "c,"  auto  ANS core
-; TODO make sure we haven't allocated more than we have
         ; """https://forth-standard.org/standard/core/CComma"""
 .scope
 xt_c_comma:     
@@ -2457,7 +2456,6 @@ _got_name:
                 ; the length. There is a possible error here: If the string
                 ; is exactly 255 chars long, then a lot of the following
                 ; additions will fail because of wrapping
-                ; TODO fix this
                 stz 1,x
 
                 ; Check to see if this name already exists.
@@ -6255,7 +6253,6 @@ z_move:         rts
 
 ; ## NAME_TO_INT ( nt -- xt ) "Convert Name Token to Execute Token"
 ; ## "name>int"  tested  Gforth
-; TODO deal with compile-only words
         ; """See
         ; https://www.complang.tuwien.ac.at/forth/gforth/Docs-html/Name-token.html
         ; """ 
@@ -6480,9 +6477,6 @@ xt_number:
 *
                 dec 0,x         ; decrease string length by one
                 
-                ; TODO check to see what happens if we are given a single
-                ; minus as the string
-
 _check_dot:
                 ; If the last character is a dot, strip it off and set a
                 ; flag. We can use tmptos as a temporary variable
@@ -6603,8 +6597,6 @@ z_number:       rts
         ; on https://github.com/philburk/pforth/blob/master/fth/numberio.fth
         ; Forth code  BASE @ UD/MOD ROT 9 OVER < IF 7 + THEN [CHAR] 0 + HOLD ;
         ; """
-        ; TODO convert more parts to assembler
-        
 xt_number_sign:        
                 jsr underflow_2         ; double number
 
@@ -9076,7 +9068,6 @@ xt_slash_mod:
                 pha             ; falls through to _common
 
 _common:
-                ; TODO unroll this code for speed
                 jsr xt_to_r
                 jsr xt_s_to_d
                 jsr xt_r_from
@@ -9767,10 +9758,10 @@ z_tick:         rts
         ; """
 .scope
 xt_to:
-                ; One way or the other, we need the xt of the word
-                ; after this one. At this point, we don't know if we
-                ; are interpreted or compile, so we don't know if there
-                ; is a value n on the stack
+                ; One way or the other, we need the xt of the word after this
+                ; one. At this point, we don't know if we are interpreted or
+                ; compile, so we don't know if there is a value n on the stack,
+                ; so we can't do an underflow check yet
                 jsr xt_tick             ; ( [n] xt )
 
                 ; The PFA (DFA in this case) is three bytes down,
@@ -9804,7 +9795,6 @@ xt_to:
                 ;       inx                     - E8
                 ;
                 ; which at least is nice and short.
-                ; TODO Add underflow check
                 
                 ldy #$00                ; Code for LDA 0,X
                 lda #$B5
@@ -11416,7 +11406,6 @@ z_zero:
 ; ## ZERO_EQUAL ( n -- f ) "Check if TOS is zero"
 ; ## "0="  auto  ANS core
         ; """https://forth-standard.org/standard/core/ZeroEqual"""
-; TODO Rewrite to the form of 0<>
 .scope
 xt_zero_equal:  
                 jsr underflow_1
