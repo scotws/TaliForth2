@@ -2075,18 +2075,19 @@ T{ 10000 10  s\" uuuu\nzzzz\n" compare -> 10000 10 0 }T  ok
   ok
 \ === OUTPUT TESTS ===  ok
   ok
-\ These involve redirecting input and output and have the potential to crash the  ok
-\ system. They also assume that the assembler is working as well as the wordlist  ok
-\ functions. Based on code by Sam Colwell, see  ok
+\ These involve redirecting output and have the potential to crash the system.  ok
+\ They also assume that the assembler is working as well as the wordlist  ok
+\ functions. Note that the tests have to be defined as part of a word to work  ok
+\ correctly. Based on code by Sam Colwell, see  ok
 \ https://github.com/scotws/TaliForth2/issues/159 for a discussion of how this  ok
 \ works  ok
   ok
 assembler-wordlist >order  ok
 assembler-wordlist set-current  ok
   ok
-variable 'oldoutput  ok
+variable 'old-output  ok
 variable #saved-output  ok
-create 'saved-output  1000 allot  ok
+create 'saved-output  100 allot  ok
   ok
 \ Retrieves the output string we saved after redirection  ok
 : saved-string ( -- addr u )  'saved-output #saved-output @ ;  ok
@@ -2101,29 +2102,32 @@ create 'saved-output  1000 allot  ok
    #saved-output @  1+  #saved-output ! ;  ok
   ok
 : redirect-output ( -- )  compiled
-   output @  'oldoutput !     \ save the original vector  compiled
-   ['] save-output  output ! \ replace vector with our routine  compiled
-   0 #saved-output ! ;        \ empty the string to start  ok
+   output @  'old-output !     \ save the original vector  compiled
+   ['] save-output  output !   \ replace vector with our routine  compiled
+   0 #saved-output ! ;         \ empty the string to start  ok
   ok
-: restore-output ( -- )  'oldoutput @  output ! ;   ok
+: restore-output ( -- )  'old-output @  output ! ;   ok
   ok
   ok
-\ ---- Internal test routine for redirection (tests within tests!) ----  ok
+\ ---- Internal test for output redirection (tests within tests!) ----  ok
   ok
 : internal-output-test  ( -- )  compiled
-   redirect-output ." Redirection works, let's do this!" restore-output ;   ok
+   redirect-output ." Redirection works, let's do this! " restore-output ;   ok
   ok
 internal-output-test  ok
 cr .( >>>> )  saved-string type  .( <<<< ) cr 
->>>> Redirection works, let's do this!<<<< 
+>>>> Redirection works, let's do this! <<<< 
  ok
   ok
   ok
 \ ---- Finally the actual redirection tests ----  ok
   ok
+( TODO ADD TESTS)  ok
   ok
+\ ---- Cleanup from redirection tests ----  ok
 previous  ok
 forth-wordlist set-current  ok
+  ok
   ok
 \ === END OF ED TESTS ===  ok
   ok
@@ -2789,9 +2793,21 @@ T{ 5 DuP -> 5 5 }T  ok
 T{ 5 DUp -> 5 5 }T  ok
 T{ 5 DUP -> 5 5 }T  ok
   ok
+\ ------------------------------------------------------------------------  ok
+testing tali-only words: execute-parsing  ok
+  ok
+T{ s" 0" ' parse-name execute-parsing evaluate -> 0 }T    \ built-in word  ok
+T{ s" 10" ' parse-name execute-parsing evaluate -> 10 }T  \ number  ok
+  ok
+\ Test with delimiter other than a space  ok
+T{ char +  s" 0+" ' parse execute-parsing evaluate -> 0 }T  ok
+  ok
+\ We can use EXECUTE-PARSING to define variable names at runtime  ok
+T{ s" myvar" ' variable execute-parsing -> }T  ok
+T{ 2 myvar !  myvar @  -> 2 }T  ok
+  ok
 \ Free memory used for these tests  ok
 tali_tests  ok
-  ok
   ok
  ( Running test 'tools' from file 'tools.fs' )  ok
 \ ------------------------------------------------------------------------  ok
@@ -3171,12 +3187,12 @@ here 5       ' blank         cycle_test            CYCLES:    325 ok
 5            ' chars         cycle_test drop       CYCLES:     28 ok
 pad here 5   ' cmove         cycle_test            CYCLES:    188 ok
 pad here 5   ' cmove>        cycle_test            CYCLES:    183 ok
-             ' :             cycle_test wrd ;      CYCLES:  15127 ok
+             ' :             cycle_test wrd ;      CYCLES:  15169 ok
              ' :noname       cycle_test ; drop     CYCLES:     51 ok
 5            ' ,             cycle_test            CYCLES:     66 ok
 ' aword      ' compile,      cycle_test            CYCLES:    788 ok
 : bword ;    ' compile-only  cycle_test            CYCLES:     75 ok
-5            ' constant      cycle_test mycnst     CYCLES:  15618 ok
+5            ' constant      cycle_test mycnst     CYCLES:  15658 ok
 here         ' count         cycle_test 2drop      CYCLES:     59 ok
 \ skipping     cr  ok
 \ skipping     create  ok
@@ -3195,7 +3211,7 @@ char w       ' digit?        cycle_test 2drop      CYCLES:     86 ok
 \ skipping     does  ok
 \ skipping     .  ok
 \ skipping     ."  ok
-             ' s"            cycle_test " 2drop    CYCLES:    253 ok
+             ' s"            cycle_test " 2drop    CYCLES:    252 ok
 5            ' drop          cycle_test            CYCLES:     32 ok
 \ skipping     dump  ok
 5            ' dup           cycle_test 2drop      CYCLES:     48 ok
@@ -3203,7 +3219,7 @@ char w       ' digit?        cycle_test 2drop      CYCLES:     86 ok
 5 5          ' =             cycle_test drop       CYCLES:     64 ok
 here 5       ' erase         cycle_test            CYCLES:    321 ok
 here 5 5     ' fill          cycle_test            CYCLES:    309 ok
-s" 5"        ' evaluate      cycle_test drop       CYCLES:  16351 ok
+s" 5"        ' evaluate      cycle_test drop       CYCLES:  16396 ok
 5 ' drop     ' execute       cycle_test            CYCLES:     84 ok
 \ skipping     exit  ok
              ' false         cycle_test drop       CYCLES:     24 ok
@@ -3236,8 +3252,8 @@ s" aword"    ' find-name     cycle_test drop       CYCLES:    453 ok
 \ skipping     +loop  ok
 5 5          ' lshift        cycle_test drop       CYCLES:    126 ok
 5 5          ' m*            cycle_test 2drop      CYCLES:    650 ok
-             ' marker        cycle_test marka      CYCLES:  17309 ok
-             ' marka         cycle_test            CYCLES:    884 ok
+             ' marker        cycle_test marka      CYCLES:  17387 ok
+             ' marka         cycle_test            CYCLES:    849 ok
 5 5          ' max           cycle_test drop       CYCLES:     69 ok
 5 5          ' min           cycle_test drop       CYCLES:     54 ok
 5 5          ' -             cycle_test drop       CYCLES:     58 ok
@@ -3278,7 +3294,7 @@ drop \ refill  ok
 \ skipping     ]  ok
 5 5 5        ' rot           cycle_test 2drop drop CYCLES:     76 ok
 5 5          ' rshift        cycle_test drop       CYCLES:    126 ok
-             ' s"            cycle_test " 2drop    CYCLES:    253 ok
+             ' s"            cycle_test " 2drop    CYCLES:    252 ok
 5            ' s>d           cycle_test 2drop      CYCLES:     47 ok
 \ skipping     ;  ok
 \ skipping     sign  ok
@@ -3288,7 +3304,7 @@ s" abc" 1    ' /string       cycle_test 2drop      CYCLES:     84 ok
              ' source        cycle_test 2drop      CYCLES:     48 ok
              ' source-id     cycle_test drop       CYCLES:     30 ok
              ' space         cycle_test            CYCLES:     36 ok
-1            ' spaces        cycle_test            CYCLES:     81 ok
+1            ' spaces        cycle_test            CYCLES:     82 ok
 5 5          ' *             cycle_test drop       CYCLES:    506 ok
              ' state         cycle_test drop       CYCLES:     28 ok
 5 here       ' !             cycle_test            CYCLES:     65 ok
@@ -3313,7 +3329,7 @@ here         ' 2@            cycle_test 2drop      CYCLES:     88 ok
 5. here      ' 2!            cycle_test            CYCLES:     99 ok
 5 5 5 5      ' 2swap         cycle_test 4drop      CYCLES:     92 ok
 \ skipping     2>r  ok
-             ' 2variable     cycle_test eword      CYCLES:  15892 ok
+             ' 2variable     cycle_test eword      CYCLES:  15935 ok
              ' eword         cycle_test drop       CYCLES:     45 ok
 s" *"        ' type          cycle_test           *CYCLES:    121 ok
 5            ' u.            cycle_test          5 CYCLES:   3617 ok
@@ -3324,10 +3340,10 @@ s" *"        ' type          cycle_test           *CYCLES:    121 ok
 5 5          ' um*           cycle_test 2drop      CYCLES:    474 ok
 \ skipping     unloop  ok
              ' unused        cycle_test drop       CYCLES:     36 ok
-5            ' value         cycle_test fword      CYCLES:  16113 ok
+5            ' value         cycle_test fword      CYCLES:  16156 ok
              ' fword         cycle_test drop       CYCLES:     58 ok
-5            ' to            cycle_test fword      CYCLES:   1139 ok
-             ' variable      cycle_test gword      CYCLES:  15893 ok
+5            ' to            cycle_test fword      CYCLES:   1140 ok
+             ' variable      cycle_test gword      CYCLES:  15936 ok
              ' gword         cycle_test drop       CYCLES:     45 ok
 char "       ' word          cycle_test "txt" drop CYCLES:    676 ok
 \ skipping     words  ok

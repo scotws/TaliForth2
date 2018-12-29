@@ -1177,6 +1177,19 @@ with <code>drop</code> and end with <code>bye</code>. This is the last word that
 the dictionary. <sup class="footnote">[<a id="_footnoteref_2" class="footnote" href="#_footnote_2" title="View footnote.">2</a>]</sup> The words before <code>drop</code> are those that are defined in high-level
 Forth. For more information on individual the words, use the <code>see</code> command.</p>
 </div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+To find out if a given word is available, you can use the sequence
+<code>s" myword" find-name 0&lt;&gt;</code> which will return a <code>true</code> or <code>false</code> flag.
+</td>
+</tr>
+</table>
+</div>
 <div class="paragraph">
 <p>Note that the built-in words are lower case.  While Tali is not case sensitive&#8201;&#8212;&#8201;<code>KASUMI</code> is the same word as <code>Kasumi</code> &#8201;&#8212;&#8201;newly defined words will be
 lowercased as they are created and entered into the dictionary.  There is a
@@ -1188,10 +1201,19 @@ in lowercase.</p>
 <h4 id="_the_ans_standard">The ANS Standard</h4>
 <div class="paragraph">
 <p>Tali Forth is orientated on ANS Forth, the standard defined by the American
-National Standards Institute (ANSI). Tali also adopted some words from Gforth
-such as <code>bounds</code>. In practical terms, Tali aims to be a subset of Gforth: If a
-program runs on Tali, it should run on Gforth the same way or have a very good
-reason not to.</p>
+National Standards Institute (ANSI). See
+<a href="https://forth-standard.org/standard/alpha" class="bare">https://forth-standard.org/standard/alpha</a> for the complete list of ANS Forth
+words.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_gforth">Gforth</h4>
+<div class="paragraph">
+<p>Tali also adopted some words from Gforth such as <code>bounds</code> or <code>execute-parsing</code>.
+In practical terms, Tali aims to be a subset of Gforth: If a program runs on
+Tali, it should run on Gforth the same way or have a very good reason not to.
+See <a href="https://www.complang.tuwien.ac.at/forth/gforth/Docs-html/Word-Index.html" class="bare">https://www.complang.tuwien.ac.at/forth/gforth/Docs-html/Word-Index.html</a> for
+a complete list of Gforth words.</p>
 </div>
 </div>
 <div class="sect3">
@@ -1251,10 +1273,10 @@ for further processing. Use with loops:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>        : tokenloop ( addr u -- addr u addr u)
+<pre>        : tokenize ( addr u -- )
             begin
                 cleave
-                cr type  \ &lt;-- processing of single word ( addr u ) here
+                cr type  \ &lt;-- processing of single word
             dup 0= until
             2drop ;</pre>
 </div>
@@ -1266,8 +1288,38 @@ for further processing. Use with loops:</p>
 <div class="content">
 <pre>        emergency
         induction
-        port
-         ok</pre>
+        port</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The payload of such a loop can be modified to process any <code>( addr u )</code>. For
+example, using the <code>execute-parsing</code> word, we can define a series of variables
+at run time:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>        : make-variables ( addr u -- )
+            begin
+                cleave
+                ['] variable execute-parsing  \ &lt;-- new function
+            dup 0= until
+            2drop ;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Running <code>s" tali garrus joker shepard" make-variables</code> will define those four
+words as variables, as <code>words</code> will show. More generally, we can use <code>cleave</code> to
+create a version of the <code>map</code> higher-order function in Forth.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>        : map ( addr u xt -- )
+            &gt;r
+            begin
+                cleave
+                r@ execute  \ &lt;-- must consume ( addr u )
+            dup 0= until
+            2drop  r&gt; drop ;</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -6834,7 +6886,7 @@ under <a href="https://www.ubuntu.com/">Ubuntu</a> Linux 16.04 LTS.</p>
 <div id="footer">
 <div id="footer-text">
 Version BETA<br>
-Last updated 2018-12-28 16:21:47 CET
+Last updated 2018-12-28 20:24:59 CET
 </div>
 </div>
 </body>

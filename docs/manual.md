@@ -287,11 +287,19 @@ Tali Forth comes with the following Forth words out of the box:
 
 Though the list might look unsorted, it actually reflects the priority in the dictionarydictionary, that is, which words are found first. For instance, the native words native words — those coded in assembler — always start with `drop` and end with `bye`. This is the last word that Tali will find in the dictionary. [2] The words before `drop` are those that are defined in high-level Forth. For more information on individual the words, use the `see` command.
 
+> **Tip**
+>
+> To find out if a given word is available, you can use the sequence `s" myword" find-name 0<>` which will return a `true` or `false` flag.
+
 Note that the built-in words are lower case. While Tali is not case sensitive — `KASUMI` is the same word as `Kasumi` Kasumi — newly defined words will be lowercased as they are created and entered into the dictionary. There is a slight speed advantage during lookup to using lowercase words (because Tali doesn’t have to lowercase the entered text), so all of the tests for Tali are in lowercase.
 
 #### The ANS Standard
 
-Tali Forth is orientated on ANS Forth, the standard defined by the American National Standards Institute (ANSI). Tali also adopted some words from Gforth such as `bounds`. In practical terms, Tali aims to be a subset of Gforth: If a program runs on Tali, it should run on Gforth the same way or have a very good reason not to.
+Tali Forth is orientated on ANS Forth, the standard defined by the American National Standards Institute (ANSI). See <https://forth-standard.org/standard/alpha> for the complete list of ANS Forth words.
+
+#### Gforth
+
+Tali also adopted some words from Gforth such as `bounds` or `execute-parsing`. In practical terms, Tali aims to be a subset of Gforth: If a program runs on Tali, it should run on Gforth the same way or have a very good reason not to. See <https://www.complang.tuwien.ac.at/forth/gforth/Docs-html/Word-Index.html> for a complete list of Gforth words.
 
 #### Tali-Specific Words
 
@@ -321,10 +329,10 @@ In addition, there are words that are specific to Tali Forth.
 
 **cleave ( addr u -- addr2 u2 addr1 u1 )** - Given a block of character memory with words separated by whitespace, split off the first sub-block and put it in TOS and NOS. Leave the rest lower down on the stack. This allows breaking off single words (or zero-terminated strings in memory, with a different delimiter) for further processing. Use with loops:
 
-            : tokenloop ( addr u -- addr u addr u)
+            : tokenize ( addr u -- )
                 begin
                     cleave
-                    cr type  \ <-- processing of single word ( addr u ) here
+                    cr type  \ <-- processing of single word
                 dup 0= until
                 2drop ;
 
@@ -333,7 +341,25 @@ For a string such as `s" emergency induction port"`, this gives us:
             emergency
             induction
             port
-             ok
+
+The payload of such a loop can be modified to process any `( addr u )`. For example, using the `execute-parsing` word, we can define a series of variables at run time:
+
+            : make-variables ( addr u -- )
+                begin
+                    cleave
+                    ['] variable execute-parsing  \ <-- new function
+                dup 0= until
+                2drop ;
+
+Running `s" tali garrus joker shepard" make-variables` will define those four words as variables, as `words` will show. More generally, we can use `cleave` to create a version of the `map` higher-order function in Forth.
+
+            : map ( addr u xt -- )
+                >r
+                begin
+                    cleave
+                    r@ execute  \ <-- must consume ( addr u )
+                dup 0= until
+                2drop  r> drop ;
 
 **compile-only ( -- )** - Mark last word in dictionary as compile-only.
 

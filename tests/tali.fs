@@ -279,6 +279,18 @@ T{ 5 DuP -> 5 5 }T
 T{ 5 DUp -> 5 5 }T
 T{ 5 DUP -> 5 5 }T
 
+\ ------------------------------------------------------------------------
+testing tali-only words: execute-parsing
+
+T{ s" 0" ' parse-name execute-parsing evaluate -> 0 }T    \ built-in word
+T{ s" 10" ' parse-name execute-parsing evaluate -> 10 }T  \ number
+
+\ Test with delimiter other than a space
+T{ char +  s" 0+" ' parse execute-parsing evaluate -> 0 }T
+
+\ We can use EXECUTE-PARSING to define variable names at runtime
+T{ s" myvar" ' variable execute-parsing -> }T
+T{ 2 myvar !  myvar @  -> 2 }T
+
 \ Free memory used for these tests
 tali_tests
-

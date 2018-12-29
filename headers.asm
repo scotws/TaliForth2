@@ -1,7 +1,7 @@
 ; Dictionary Headers for Tali Forth 2
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 05. Dec 2016 (Liara Forth)
-; This version: 28. Dec 2018 
+; This version: 29. Dec 2018 
 
 ; Dictionary headers are kept separately from the code, which allows various
 ; tricks in the code. We roughly follow the Gforth terminology: The Execution
@@ -801,9 +801,14 @@ nt_source:
         .word nt_source_id, xt_source, z_source
         .byte "source"
 
+nt_execute_parsing:
+        .byte 15, UF
+        .word nt_source, xt_execute_parsing, z_execute_parsing
+        .byte "execute-parsing"
+
 nt_parse:
         .byte 5, UF
-        .word nt_source, xt_parse, z_parse
+        .word nt_execute_parsing, xt_parse, z_parse
         .byte "parse"
 
 nt_parse_name:
