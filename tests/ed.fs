@@ -174,18 +174,19 @@ T{ 10000 10  s\" uuuu\nzzzz\n" compare -> 10000 10 0 }T
 
 \ === OUTPUT TESTS ===
 
-\ These involve redirecting input and output and have the potential to crash the
-\ system. They also assume that the assembler is working as well as the wordlist
-\ functions. Based on code by Sam Colwell, see
+\ These involve redirecting output and have the potential to crash the system.
+\ They also assume that the assembler is working as well as the wordlist
+\ functions. Note that the tests have to be defined as part of a word to work
+\ correctly. Based on code by Sam Colwell, see
 \ https://github.com/scotws/TaliForth2/issues/159 for a discussion of how this
 \ works
 
 assembler-wordlist >order
 assembler-wordlist set-current
 
-variable 'oldoutput
+variable 'old-output
 variable #saved-output
-create 'saved-output  1000 allot
+create 'saved-output  100 allot
 
 \ Retrieves the output string we saved after redirection
 : saved-string ( -- addr u )  'saved-output #saved-output @ ;
@@ -200,17 +201,17 @@ create 'saved-output  1000 allot
    #saved-output @  1+  #saved-output ! ;
 
 : redirect-output ( -- )
-   output @  'oldoutput !     \ save the original vector
-   ['] save-output  output ! \ replace vector with our routine
-   0 #saved-output ! ;        \ empty the string to start
+   output @  'old-output !     \ save the original vector
+   ['] save-output  output !   \ replace vector with our routine
+   0 #saved-output ! ;         \ empty the string to start
 
-: restore-output ( -- )  'oldoutput @  output ! ; 
+: restore-output ( -- )  'old-output @  output ! ; 
 
 
-\ ---- Internal test routine for redirection (tests within tests!) ----
+\ ---- Internal test for output redirection (tests within tests!) ----
 
 : internal-output-test  ( -- )
-   redirect-output ." Redirection works, let's do this!" restore-output ; 
+   redirect-output ." Redirection works, let's do this! " restore-output ; 
 
 internal-output-test
 cr .( >>>> )  saved-string type  .( <<<< ) cr
@@ -218,9 +219,12 @@ cr .( >>>> )  saved-string type  .( <<<< ) cr
 
 \ ---- Finally the actual redirection tests ----
 
+( TODO ADD TESTS)
 
+\ ---- Cleanup from redirection tests ----
 previous
 forth-wordlist set-current
+
 
 \ === END OF ED TESTS ===
 

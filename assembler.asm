@@ -1,7 +1,7 @@
 ; Assembler for Tali Forth 2 
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 07. Nov 2014 (as tasm65c02)
-; This version: 18. Dez 2018
+; This version: 28. Dez 2018
 
 ; This is the built-in assembler for Tali Forth 2. Once the assembler wordlist
 ; is included with
@@ -982,7 +982,8 @@ asm_common:
                 and #%00000011
                 tay
 
-                cpy #1          ; One byte means no operand, we're done
+                ; One byte means no operand, we're done. Use DEY as CPY #1
+                dey             
                 beq _done
 
                 ; We have an operand which must be TOS
@@ -992,10 +993,12 @@ asm_common:
                 ; before we even test if this is a two- or three-byte
                 ; instruction. Little endian CPU means we store this byte first
                 lda 0,x
-                jsr cmpl_a
+                jsr cmpl_a      ; does not use Y
 
-                ; If this is a two-byte instruction, we're done
-                cpy #2
+                ; If this is a two-byte instruction, we're done. If we landed
+                ; here, we've already decremented Y by one, so this is
+                ; equivalent to CPY #2
+                dey
                 beq _done_drop
 
                 ; This must be a three-byte instruction, get the MSB. 
@@ -1018,8 +1021,6 @@ xt_asm_push_a:
         ; data stack as the TOS. This is a convience routine that encodes the
         ; instructions  DEX  DEX  STA 0,X  STZ 1,X
         ; """
-        ; TODO if we have more than one pseudo-instruction like this, consider
-        ; using a common loop for the various byte sequences
 .scope
                 ldy #0
 _loop:

@@ -106,6 +106,7 @@ RTS instruction at the end of each word.
 | ERASE | `erase` | ANS core ext | 72 | **auto** |
 | FILL | `fill` | ANS core | 66 | **auto** |
 | EXECUTE | `execute` | ANS core | 6 | **auto** |
+| EXECUTE_PARSING | `execute-parsing` | Gforth | 38 | **auto** |
 | EXIT | `exit` | ANS core | 1 | **auto** |
 | FALSE | `false` | ANS core ext | 6 | **auto** |
 | FETCH | `@` | ANS core | 18 | **auto** |
@@ -286,7 +287,7 @@ RTS instruction at the end of each word.
 | EDITOR_LINE | `line` | Tali Editor | 24 | tested |
 | EDITOR_O | `o` | Tali Editor | 48 | tested |
 
-Found **278** native words in `native_words.asm`.
-Of those, **230** were automatically tested and
+Found **279** native words in `native_words.asm`.
+Of those, **231** were automatically tested and
           **1** are not marked as tested at all.
 

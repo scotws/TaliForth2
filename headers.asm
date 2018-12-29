@@ -1,7 +1,7 @@
 ; Dictionary Headers for Tali Forth 2
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 05. Dec 2016 (Liara Forth)
-; This version: 28. Dec 2018 
+; This version: 29. Dec 2018 
 
 ; Dictionary headers are kept separately from the code, which allows various
 ; tricks in the code. We roughly follow the Gforth terminology: The Execution
@@ -111,7 +111,7 @@ nt_only:
         .word nt_also, xt_only, z_only
         .byte "only"
 
-nt_forth_wordlist:
+nt_forth_wordlist:      ; shares code with ZERO
         .byte 14, 0
         .word nt_only, xt_forth_wordlist, z_forth_wordlist
         .byte "forth-wordlist"
@@ -121,7 +121,7 @@ nt_editor_wordlist:     ; shares code with ONE
         .word nt_forth_wordlist, xt_editor_wordlist, z_editor_wordlist
         .byte "editor-wordlist"
                 
-nt_assembler_wordlist:
+nt_assembler_wordlist:  ; shares code with TWO
         .byte 18, 0
         .word nt_editor_wordlist, xt_assembler_wordlist, z_assembler_wordlist
         .byte "assembler-wordlist"
@@ -801,9 +801,14 @@ nt_source:
         .word nt_source_id, xt_source, z_source
         .byte "source"
 
+nt_execute_parsing:
+        .byte 15, UF
+        .word nt_source, xt_execute_parsing, z_execute_parsing
+        .byte "execute-parsing"
+
 nt_parse:
         .byte 5, UF
-        .word nt_source, xt_parse, z_parse
+        .word nt_execute_parsing, xt_parse, z_parse
         .byte "parse"
 
 nt_parse_name:
@@ -1497,11 +1502,6 @@ nt_editor_o:
 ; underscore replaces any dot present in the SAN mnemonic. The hash sign for
 ; immediate addressing is replaced by an "h" (for example, the label code for
 ; "lda.#" is "xt_adm_lda_h"). All opcodes are immediate. 
-
-; TODO The list is currently organized alphabetically be SAN mnemonic. For
-; speed reasons, it should be reordered with the most often used instructions
-; first at some point. 
-
 nt_asm_adc_h:
 		.byte 5, IM
 		.word 0000

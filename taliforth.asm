@@ -1,7 +1,7 @@
 ; Tali Forth 2 for the 65c02
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 19. Jan 2014 (Tali Forth)
-; This version: 28. Dec 2018
+; This version: 29. Dec 2018
 
 ; This is the main file for Tali Forth 2
 
@@ -437,7 +437,6 @@ _got_name_token:
                 and #CO                 ; mask everything but Compile Only bit
                 beq _interpret
 
-                ; TODO see if we can print offending word first
                 lda #err_compileonly
                 jmp error
 
