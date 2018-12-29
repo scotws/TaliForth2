@@ -9,9 +9,6 @@ Tali Forth 2 currently ships with a clone of the `ed` line-based editor of
 Unix fame. It is envoked with `ed` and does not change the data stack. The
 formal name is `ed6502`. 
 
-WARNING: `ed` is included in a very primitive form only and should be considered
-ALPHA. 
-
 ==== Supported Commands
 
 `ed` currently supports only a small number of the commands of the Unix version:
@@ -63,8 +60,8 @@ s:: Substitute one string on line with another
   Where Unix ed uses the format `w <FILENAME>`, ed6502 takes the address
   to write the text to as `7000w`.
 
-WARNING: At this point, it isn't totally clear what happens if the number base
-is set to hexadecimal via `hex`. Use at your own risk.
+WARNING: `ed` currently only works with decimal numbers. When in doubt, use
+`decimal` to make sure your using base ten.
 
 
 ==== Using `ed` for programming
@@ -123,14 +120,9 @@ zero length as TOS.
 
 ==== Developer Information
 
-`Ed` will be massively rewritten under the hood once the code has been
-stabilized, has all features, and a testing suite. Currently, it's somewhat of a
-mess and contains some testing routines that will be removed in the final
-version.
-
 The "buffer" of `ed` is a simple linked list of nodes, consisting of a pointer
 to the next entry, a pointer to the string address, and the length of that
-string. Each entry is two byte, making six bytes in total for each node. A value
-of 0000 in the pointer to the next address signals the end of the list. The
-buffer starts at the point of the `cp` (accessed with the Forth word `here`) and
-is only saved to the given location when the `w` command is given.
+string. Each entry is two bytes, making six bytes in total for each node. A
+value of 0000 in the pointer to the next address signals the end of the list.
+The buffer starts at the point of the `cp` (accessed with the Forth word `here`)
+and is only saved to the given location when the `w` command is given.

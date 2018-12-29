@@ -7,12 +7,11 @@ type common with Forth, and the line-based editor `ed`, formally known as
 `ed6502`. This second editor is included because I like line-based editors.
 More to the point, the saved text uses less space than the block editor, where
 every block, regardless of how much text is in it, uses 1024 bytes. In contrast,
-`ed` uses one byte per character plus one end-of-line character per line. We'll
-see an example of this later.
+`ed` uses one byte per character plus one end-of-line character per line. 
 
 The original `ed` was created by Ken Thompson and Dennis Ritchie along with the
-Unix operating system, sometime about 1971. It is terse, small, robust, and has
-a reputation for being completely unhelpful. An error is just signaled with a
+Unix operating system, sometime about 1971. It is terse, robust, and has a
+reputation for being completely unhelpful. Any error is just signaled with a
 question mark (`?`). There isn't even a prompt unless it is explicitly turned
 on.
 
@@ -31,13 +30,14 @@ lines one to four.
 Like its big brother `vi` (or its newer incarnation `vim`), `ed` has various
 modes, except that `ed` is so small it only has two. We start out in the
 _command mode_ in which we accept, well, commands. Using `a` or `i` switches to
-_input mode_ where all of the characters are added to the buffer. The first
-important thing is about how to get out of command mode: You type `.` (the
-period or dot) at the beginning of the line as the only character to return to
-command mode. A typical `ed` session will look something like this:footnote:[All
-quotes in the `ed` tutorial are taken from the _Mass Effect_ games by
-BioWare/EA. As stated already, they hold the rights to all characters and
-whatnot.]
+_input mode_ where all of the characters are added to the buffer. 
+
+The first important thing is about how to get out of command mode: You type `.`
+(the period or dot) at the beginning of the line as the only character to return
+to command mode. A typical `ed` session will look something like
+this:footnote:[All quotes in the `ed` tutorial are taken from the _Mass Effect_
+games by BioWare/EA. As stated already, they hold the rights to all characters
+and whatnot.]
 
 ----
         ed      <1>
@@ -56,12 +56,12 @@ mode.
 <4> The cursor moves down to the next line, without printing any confirmation.
 This is where you continue typing.
 
-When you first use `ed`, you'll spend lots of time print what you've written and
-trying to figure out what the line numbers are. The commands for this are `p`
-(print without line numbers) and `n` (print with line numbers). The first
-special character prefix we'll learn for this is `%` (the percent symbol,
-alternatively a comma) works as well. This makes the command that
-follows it apply to the whole text.
+When you first use `ed`, you'll spend lots of time printing what you've written
+and trying to figure out what the line numbers are. The commands for this are
+`p` (print without line numbers) and `n` (print with line numbers). The first
+special character prefix we'll use for this is `%` (the percent symbol,
+alternatively a comma) works as well. This makes the command that follows it
+apply to the whole text.
 
 ----
         %p      <1>
@@ -87,7 +87,7 @@ numbers:
 <1> This could also be `%n`
 
 Line numbers are indented automatically by one tab. Note we start counting with
-1, not 0, because this is an editor for real humans.
+1, not 0, because this is an editor for real humans, not computer science types.
 
 Just entering the command directly without a line number will print the
 _current line_, which `ed` adjusts depending on what you are doing. After `a` it
@@ -129,16 +129,16 @@ at the bottom and move upwards towards the beginning of the text.
 We can also use comma-separated numbers to indicate a range of lines (say,
 `1,2d`). As you probably will have guessed, or the `,` (or `%`) prefix can be
 used to delete the complete text. Be careful -- in the real version of `ed`, you
-can undo changes with the `u` command.  Tali's version currently doesn't support
-this option. If you delete it, it's gone. 
+can undo changes with the `u` command.  Tali doesn't support this option. If you
+delete something, it's gone. 
 
-Now, let's say we want to put back the second line. We can do this again with `a`, to
-add text _after_ the first line. Note there is currently no way to paste the
-line we have just deleted. If we can't remember it, we're in trouble.
+Now, let's say we want to put back the second line. We can do this again with
+`a`, to add text _after_ the first line. Note there is currently also no way to
+paste the line we have just deleted. If we can't remember it, we're in trouble.
 
 ----
         1a      <1>
-        And then, I, uh, did something
+        I, uh, did something
         .       <2>
                 <3>
 ----
@@ -151,7 +151,7 @@ Displaying our whole text with `%n` again, we get:
 ----
         %n
         1       After time adrift among open stars
-        2       And then, I, uh, did something
+        2       I, uh, did something
         3       And through shoals of dust
         4       I will return to where I began.
 ----
@@ -167,6 +167,7 @@ illegal. There is also the `$` prefix for the last line.
 TIP: The combination `$=` will print the number of the last line. Just `=` will
 print the current line.
 
+
 === Saving Your Text
 
 The only way to currently save text with `ed` on Tali is to write the buffer to
@@ -181,8 +182,7 @@ space.
 <2> `ed` returns the number of characters written, including the end-of-line
 characters. Yes, this is actually feedback of sorts. But don't get cocky!
 
-WARNING: Changing the number base hasn't been tested yet, so stick to decimal
-numbers for the time being when saving text.
+WARNING: `ed` currently only works with decimal numbers.
 
 The `w` command was originally created for files. Tali doesn't have files, just
 addresses. This means that you can write anything anywhere, at the risk of
@@ -196,13 +196,13 @@ Any unsaved (unwritten, rather) text will be lost. The lowercase `q` will refuse
 to quit if there is still unwritten text. When it doubt, use `q`. 
 
 To access your text from the Forth command line, you can use standard Forth
-words like `type` with the address chosen and the length of the text provided
-after the `w` command.
+words like `type`. Since `ed` leaves `( addr u )` on the stack when it quits,
+you can just use it directly. 
 
 ----
-        7000 128 cr type        <1>
+        cr type                 <1>
         After time adrift among open stars
-        And then I, uh, did something
+        I, uh, did something
         And through the shoals of dust
         I will return to where I began.
          ok                     <2>
@@ -211,14 +211,10 @@ after the `w` command.
 text being placed right after the Forth command.
 <2> We're back to the helpful Forth interpreter.
 
-NOTE: In future, `ed` might provide the address and length of the saved text on
-the data stack when quitting. The stack signature of `ed` would then change to
-`( -- addr u )`. This would make further processing of the text easier.
-
 You can also use `dump` to show how compact `ed` stores the text:
 
 ----
-7000 128 dump 
+dump 
 1B58  41 66 74 65 72 20 74 69  6D 65 20 61 64 72 69 66  After ti me adrif
 1B68  74 20 61 6D 6F 6E 67 20  6F 70 65 6E 20 73 74 61  t among  open sta
 1B78  72 73 0A 41 6E 64 20 74  68 65 6E 20 49 2C 20 75  rs.And t hen I, u <1>
@@ -255,7 +251,7 @@ You can use `ed` to write and save programs. Fire it up as usual:
 <1> Type normally as you would with any other editor.
 <2> Any indentation has to be provided by hand. There is no auto-indent.
 
-Running `7000 48 evaluate` will now print the numbers from 1 to 100.  
+Running `evaluate` will now print the numbers from 1 to 100.  
 
 
 === Further Information
@@ -268,5 +264,3 @@ there are other sources:
 * https://www.gnu.org/software/ed/manual/ed_manual.html The official GNU ed manual
 * https://sanctum.geek.nz/arabesque/actually-using-ed/ Small tutorial of Unix ed
 * http://www.psue.uni-hannover.de/wise2017_2018/material/ed.pdf A tutorial by B. W. Kernighan (yes, _that_ Kernighan).
-
-

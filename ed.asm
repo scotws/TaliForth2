@@ -158,7 +158,7 @@ _command_mode:
                 ;              para1 = 1
                 ;              para2 = last line
                 ;
-                ;        case char = ';': TODO
+                ;        case char = ';': 
                 ;              para1 = current line
                 ;              para2 = last line
                 ;       
@@ -353,8 +353,6 @@ _prefix_number:
                 ; arrive here with ( addr-t u-t 0 0 ), which doesn't help us at
                 ; all because the string we are looking at is in ( cib ciblen )
 
-                ; TODO figure out what happens if BASE is not 10
-
                 ; Set up >NUMBER using CIB and CIBLEN as the location of the
                 ; string to check. First, though, add the "accumulator" as
                 ; a double number
@@ -424,9 +422,6 @@ _have_unconverted_chars:
                 ; command character and need to skip the rest of the prefix
                 ; processing. In this case, the number of unconverted
                 ; characters is equal to the length of the string.
-
-                ; TODO Deal with '+' and '-' as instructions
- 
                 jsr xt_dup              ; ( addr-t u-t 0 0 ud addr2 u2 u2 )
                 
                 dex
@@ -913,8 +908,6 @@ _cmd_d:
                 jsr xt_over             ; ( addr-t u-t para1 0 para1 )
                 jsr _cmd_d_common       ; ( addr-t u-t para1 0 )
 
-                ; TODO deal with current line
-
                 bra _cmd_d_done
 *
                 ; We have been given a range. Make sure that the second
@@ -998,9 +991,6 @@ _cmd_e:
         ; Will destroy contents of current buffer if present. Use an address
         ; and length pair separated by a comma to load a block from memory,
         ; such as "5000,100e".
-        ; TODO consider a plain "e" will load from the ( addr u ) combination
-        ; that was at the top of the stack when ed was started
-        
                 plx
 
                 jsr _no_line_zero
