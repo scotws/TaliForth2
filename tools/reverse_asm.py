@@ -6,32 +6,48 @@
 # This is a one-shot program to reverse the order of entries for the assembler
 # wordlist in headers.asm. 
 
+import string
+
 SOURCE = 'asm_headers.asm' 
+previous_link = '0000' # Start with end of list
+
 src = []
 dest = []
 block = []
 
+def is_link(s):
+    """Takes a line from the listing and returns a bool depending on
+    if the line is a link or not.
+    """
+    r = True
+    ws = s.split()
+
+    if (len(ws) != 2) or (ws[0] != '.word'):
+        r = False
+
+    return r
+
+
 with open(SOURCE, 'r') as source_file:
     src = source_file.readlines()
 
-for l in src:
+last_line = len(src)-1
 
-    clean_l = l.rstrip()    # remove any trailing stuff while we're at it
+for l in range(last_line, -1, -1):
+    line = src[l]
 
-    # We have to move the list block by block, not line by line
-    if clean_l != '':
-        block.append(clean_l)
-    else:
-        dest = block+dest
-        dest.insert(0, '\n')        # Faster than adding the lists
-        block = []
+    if is_link(line):
+        link = line.split()[1]
+        line = " "*16 +".word "+previous_link
 
-# EOF leaves us with TYA hanging, just add it this way because this is
-# a one-shot
-dest = block+dest
-dest.insert(0, '\n')        # Faster than adding the lists
+    if line[0] == 'n':
+        previous_link = line.strip()[:-1]
+    
+    dest.insert(0, line) 
+
 
 for l in dest:
     print(l.rstrip())
+
 
 

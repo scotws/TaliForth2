@@ -31,21 +31,21 @@ mnemonics. They are not in the default wordlist path because of their sheer
 number: 
 
 ----
-        push-a --> <b <j tya txs txa tsx tsb.z tsb trb.z trb tay tax stz.zx stz.z
-        stz.x stz sty.zx sty.z sty stx.zy stx.z stx sta.zxi sta.zx sta.ziy
-        sta.zi sta.z sta.y sta.x sta sei sed sec sbc.zxi sbc.zx sbc.ziy sbc.zi
-        sbc.z sbc.y sbc.x sbc.# sbc rts rti ror.zx ror.z ror.x ror.a ror rol.zx
-        rol.z rol.x rol.a rol ply plx plp pla phy phx php pha ora.zxi ora.zx
-        ora.ziy ora.zi ora.z ora.y ora.x ora.# ora nop lsr.zx lsr.z lsr.x lsr.a
-        lsr ldy.zx ldy.z ldy.x ldy.# ldy ldx.zy ldx.z ldx.y ldx.# ldx lda.zxi
-        lda.zx lda.ziy lda.zi lda.z lda.y lda.x lda.# lda jsr jmp.xi jmp.i jmp
-        iny inx inc.zx inc.z inc.x inc.a inc eor.zxi eor.zx eor.ziy eor.zi eor.z
-        eor.y eor.x eor.# eor dey dex dec.zx dec.z dec.x dec.a dec cpy.z cpy.#
-        cpy cpx.z cpx.# cpx cmp.zxi cmp.zx cmp.ziy cmp.zi cmp.z cmp.y cmp.x
-        cmp.# cmp clv cli cld clc bvs bvc brk bra bpl bne bmi bit.zx bit.z bit.x
-        bit.# bit beq bcs bcc asl.zx asl.z asl.x asl.a asl and.zxi and.zx
-        and.ziy and.zi and.z and.y and.x and.# and. adc.zxi adc.zx adc.ziy
-        adc.zi adc.z adc.y adc.x adc.#
+        adc.# adc.x adc.y adc.z adc.zi adc.ziy adc.zx adc.zxi and. and.# and.x
+        and.y and.z and.zi and.ziy and.zx and.zxi asl asl.a asl.x asl.z asl.zx
+        bcc bcs beq bit bit.# bit.x bit.z bit.zx bmi bne bpl bra brk bvc bvs clc
+        cld cli clv cmp cmp.# cmp.x cmp.y cmp.z cmp.zi cmp.ziy cmp.zx cmp.zxi
+        cpx cpx.# cpx.z cpy cpy.# cpy.z dec dec.a dec.x dec.z dec.zx dex dey eor
+        eor.# eor.x eor.y eor.z eor.zi eor.ziy eor.zx eor.zxi inc inc.a inc.x
+        inc.z inc.zx inx iny jmp jmp.i jmp.xi jsr lda lda.# lda.x lda.y lda.z
+        lda.zi lda.ziy lda.zx lda.zxi ldx ldx.# ldx.y ldx.z ldx.zy ldy ldy.#
+        ldy.x ldy.z ldy.zx lsr lsr.a lsr.x lsr.z lsr.zx nop ora ora.# ora.x
+        ora.y ora.z ora.zi ora.ziy ora.zx ora.zxi pha php phx phy pla plp plx
+        ply rol rol.a rol.x rol.z rol.zx ror ror.a ror.x ror.z ror.zx rti rts
+        sbc sbc.# sbc.x sbc.y sbc.z sbc.zi sbc.ziy sbc.zx sbc.zxi sec sed sei
+        sta sta.x sta.y sta.z sta.zi sta.ziy sta.zx sta.zxi stx stx.z stx.zy sty
+        sty.z sty.zx stz stz.x stz.z stz.zx tax tay trb trb.z tsb tsb.z tsx txa
+        txs tya
 ----
 
 The last line in our code, `previous`, removes the assembler wordlist again.
