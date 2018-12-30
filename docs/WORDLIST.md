@@ -285,7 +285,7 @@ RTS instruction at the end of each word.
 | EDITOR_EL | `el` | Tali Editor | 17 | tested |
 | EDITOR_L | `l` | Tali Editor | 123 | tested |
 | EDITOR_LINE | `line` | Tali Editor | 24 | tested |
-| EDITOR_O | `o` | Tali Editor | 48 | tested |
+| EDITOR_O | `o` | Tali Editor | 69 | tested |
 
 Found **279** native words in `native_words.asm`.
 Of those, **231** were automatically tested and
