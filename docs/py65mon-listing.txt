@@ -166,9 +166,9 @@
  8190  F0 36     BEQ  $81C8
  8192  C9 0E     CMP  #$0E
  8194  F0 44     BEQ  $81DA
- 8196  20 09 8E  JSR  $8E09
- 8199  91 24     STA  ($24), Y
- 819B  C8        INY  
+ 8196  91 24     STA  ($24), Y
+ 8198  C8        INY  
+ 8199  20 09 8E  JSR  $8E09
  819C  C4 26     CPY  $26
  819E  D0 DB     BNE  $817B
  81A0  80 03     BRA  $81A5
