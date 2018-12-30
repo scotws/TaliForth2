@@ -2096,10 +2096,10 @@ create 'saved-output  1000 allot  ok
 \ assembler macro push-a  ok
 : save-output ( c -- )   compiled
    [ push-a ]  \ "dex dex  sta 0,x  stz 1,x" - push A to TOS  compiled
-   [ phy 36 lda.z pha 37 lda.z pha ] \ Save y and tmp1.  compiled
+   [ phy 36 lda.z pha  37 lda.z pha ] \ Save y and tmp1.  compiled
    saved-string + c!  \ Save the character.  compiled
    1 #saved-output +! \ Increment the string length.  compiled
-   [ pla 37 sta.z pla 36 sta.z ply ] \ Restore y and tmp1.  compiled
+   [ pla 37 sta.z pla  36 sta.z ply ] \ Restore y and tmp1.  compiled
 ;  ok
   ok
 : redirect-output ( -- )  compiled
@@ -2122,7 +2122,10 @@ cr .( >>>> )  saved-string type  .( <<<< ) cr
   ok
 \ ---- Finally the actual redirection tests ----  ok
   ok
-( TODO ADD TESTS)  ok
+\ Most simple test: Start and end  ok
+redirect-output  ok
+T{ saved-string s" ok" compare -> true }T  ok
+  ok
   ok
 \ ---- Cleanup from redirection tests ----  ok
 previous  ok
