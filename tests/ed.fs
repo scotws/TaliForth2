@@ -219,12 +219,14 @@ cr .( >>>> )  saved-string type  .( <<<< ) cr
 
 \ ---- Finally the actual redirection tests ----
 
+
 \ Most simple test: Start and end
 redirect-output
 ed
 q
-restore-output 2drop \ ed returns ( addr u ), we don't need that now
-T{ saved-string s" ok" compare -> true }T
+restore-output 
+2drop 
+T{ saved-string s\"  ok\ned \nq  ok\nrestore-output  " compare -> 0 }T
 
 
 \ ---- Cleanup from redirection tests ----
