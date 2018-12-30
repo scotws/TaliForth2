@@ -356,16 +356,17 @@ often be a mix of text and binary data blocks.  Because using some of the words
 designed for text blocks, such as `list`, on a binary block could emit
 characters that can mess up terminals, it is recommended to "reserve" binary
 blocks.  This is done by simply adding a note in block 0 with the block numbers
-being used to hold binary data, so that users of teh system will know to avoid
+being used to hold binary data, so that users of the system will know to avoid
 performing text operations on those blocks.  Block 0 is also a good place to
 inform the user if the routines for accessing the binary data are also stored
 (as Forth code) in block storage.
 
 In this example, we will create some words to make non-volatile arrays stored on
 a flash device.  While this example can be run with the block ramdrive, using 7
-blocks, it won't be non-volatile in that case.  To get started, we will add a
-note to block 0 indicating the blocks we are going to use.  The following shows
-an example Forth session adding this note.
+blocks, it won't be non-volatile in that case.  
+
+To get started, we will add a note to block 0 indicating the blocks we are going
+to use.  The following shows an example Forth session adding this note.
 
 ----
 0 list 
