@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 1.5.5">
+<meta name="generator" content="Asciidoctor 1.5.6.1">
 <meta name="keywords" content="forth, 6502, assembler, programming, 8-bit, vintage, retro">
 <meta name="author" content="Sam Colwell, Scot W. Stevenson">
 <title>Manual for Tali Forth 2 for the 65c02</title>
@@ -91,13 +91,12 @@ strong,b{font-weight:bold;line-height:inherit}
 small{font-size:60%;line-height:inherit}
 code{font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;font-weight:400;color:rgba(0,0,0,.9)}
 ul,ol,dl{font-size:1em;line-height:1.6;margin-bottom:1.25em;list-style-position:outside;font-family:inherit}
-ul,ol,ul.no-bullet,ol.no-bullet{margin-left:1.5em}
+ul,ol{margin-left:1.5em}
 ul li ul,ul li ol{margin-left:1.25em;margin-bottom:0;font-size:1em}
 ul.square li ul,ul.circle li ul,ul.disc li ul{list-style:inherit}
 ul.square{list-style-type:square}
 ul.circle{list-style-type:circle}
 ul.disc{list-style-type:disc}
-ul.no-bullet{list-style:none}
 ol li ul,ol li ol{margin-left:1.25em;margin-bottom:0}
 dl dt{margin-bottom:.3125em;font-weight:bold}
 dl dd{margin-bottom:1.25em}
@@ -133,7 +132,11 @@ strong strong{font-weight:400}
 kbd{font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;display:inline-block;color:rgba(0,0,0,.8);font-size:.65em;line-height:1.45;background-color:#f7f7f7;border:1px solid #ccc;-webkit-border-radius:3px;border-radius:3px;-webkit-box-shadow:0 1px 0 rgba(0,0,0,.2),0 0 0 .1em white inset;box-shadow:0 1px 0 rgba(0,0,0,.2),0 0 0 .1em #fff inset;margin:0 .15em;padding:.2em .5em;vertical-align:middle;position:relative;top:-.1em;white-space:nowrap}
 .keyseq kbd:first-child{margin-left:0}
 .keyseq kbd:last-child{margin-right:0}
-.menuseq,.menu{color:rgba(0,0,0,.8)}
+.menuseq,.menuref{color:#000}
+.menuseq b:not(.caret),.menuref{font-weight:inherit}
+.menuseq{word-spacing:-.02em}
+.menuseq b.caret{font-size:1.25em;line-height:.8}
+.menuseq i.caret{font-weight:bold;text-align:center;width:.45em}
 b.button:before,b.button:after{position:relative;top:-1px;font-weight:400}
 b.button:before{content:"[";padding:0 3px 0 2px}
 b.button:after{content:"]";padding:0 2px 0 3px}
@@ -200,7 +203,7 @@ table.tableblock>caption.title{white-space:nowrap;overflow:visible;max-width:0}
 table.tableblock #preamble>.sectionbody>.paragraph:first-of-type p{font-size:inherit}
 .admonitionblock>table{border-collapse:separate;border:0;background:none;width:100%}
 .admonitionblock>table td.icon{text-align:center;width:80px}
-.admonitionblock>table td.icon img{max-width:none}
+.admonitionblock>table td.icon img{max-width:initial}
 .admonitionblock>table td.icon .title{font-weight:bold;font-family:"Open Sans","DejaVu Sans",sans-serif;text-transform:uppercase}
 .admonitionblock>table td.content{padding-left:1.125em;padding-right:1.25em;border-left:1px solid #ddddd8;color:rgba(0,0,0,.6)}
 .admonitionblock>table td.content>:last-child>:last-child{margin-bottom:0}
@@ -256,13 +259,13 @@ table.pyhltable .linenodiv{background:none!important;padding-right:0!important}
 table.tableblock{max-width:100%;border-collapse:separate}
 table.tableblock td>.paragraph:last-child p>p:last-child,table.tableblock th>p:last-child,table.tableblock td>p:last-child{margin-bottom:0}
 table.tableblock,th.tableblock,td.tableblock{border:0 solid #dedede}
-table.grid-all th.tableblock,table.grid-all td.tableblock{border-width:0 1px 1px 0}
-table.grid-all tfoot>tr>th.tableblock,table.grid-all tfoot>tr>td.tableblock{border-width:1px 1px 0 0}
-table.grid-cols th.tableblock,table.grid-cols td.tableblock{border-width:0 1px 0 0}
-table.grid-all *>tr>.tableblock:last-child,table.grid-cols *>tr>.tableblock:last-child{border-right-width:0}
-table.grid-rows th.tableblock,table.grid-rows td.tableblock{border-width:0 0 1px 0}
-table.grid-all tbody>tr:last-child>th.tableblock,table.grid-all tbody>tr:last-child>td.tableblock,table.grid-all thead:last-child>tr>th.tableblock,table.grid-rows tbody>tr:last-child>th.tableblock,table.grid-rows tbody>tr:last-child>td.tableblock,table.grid-rows thead:last-child>tr>th.tableblock{border-bottom-width:0}
-table.grid-rows tfoot>tr>th.tableblock,table.grid-rows tfoot>tr>td.tableblock{border-width:1px 0 0 0}
+table.grid-all>thead>tr>.tableblock,table.grid-all>tbody>tr>.tableblock{border-width:0 1px 1px 0}
+table.grid-all>tfoot>tr>.tableblock{border-width:1px 1px 0 0}
+table.grid-cols>*>tr>.tableblock{border-width:0 1px 0 0}
+table.grid-rows>thead>tr>.tableblock,table.grid-rows>tbody>tr>.tableblock{border-width:0 0 1px 0}
+table.grid-rows>tfoot>tr>.tableblock{border-width:1px 0 0 0}
+table.grid-all>*>tr>.tableblock:last-child,table.grid-cols>*>tr>.tableblock:last-child{border-right-width:0}
+table.grid-all>tbody>tr:last-child>.tableblock,table.grid-all>thead:last-child>tr>.tableblock,table.grid-rows>tbody>tr:last-child>.tableblock,table.grid-rows>thead:last-child>tr>.tableblock{border-bottom-width:0}
 table.frame-all{border-width:1px}
 table.frame-sides{border-width:0 1px}
 table.frame-topbot{border-width:1px 0}
@@ -283,10 +286,12 @@ ul li ol{margin-left:1.5em}
 dl dd{margin-left:1.125em}
 dl dd:last-child,dl dd:last-child>:last-child{margin-bottom:0}
 ol>li p,ul>li p,ul dd,ol dd,.olist .olist,.ulist .ulist,.ulist .olist,.olist .ulist{margin-bottom:.625em}
-ul.unstyled,ol.unnumbered,ul.checklist,ul.none{list-style-type:none}
-ul.unstyled,ol.unnumbered,ul.checklist{margin-left:.625em}
-ul.checklist li>p:first-child>.fa-square-o:first-child,ul.checklist li>p:first-child>.fa-check-square-o:first-child{width:1em;font-size:.85em}
-ul.checklist li>p:first-child>input[type="checkbox"]:first-child{width:1em;position:relative;top:1px}
+ul.checklist,ul.none,ol.none,ul.no-bullet,ol.no-bullet,ol.unnumbered,ul.unstyled,ol.unstyled{list-style-type:none}
+ul.no-bullet,ol.no-bullet,ol.unnumbered{margin-left:.625em}
+ul.unstyled,ol.unstyled{margin-left:0}
+ul.checklist{margin-left:.625em}
+ul.checklist li>p:first-child>.fa-square-o:first-child,ul.checklist li>p:first-child>.fa-check-square-o:first-child{width:1.25em;font-size:.8em;position:relative;bottom:.125em}
+ul.checklist li>p:first-child>input[type="checkbox"]:first-child{margin-right:.25em}
 ul.inline{margin:0 auto .625em auto;margin-left:-1.375em;margin-right:0;padding:0;list-style:none;overflow:hidden}
 ul.inline>li{list-style:none;float:left;margin-left:1.375em;display:block}
 ul.inline>li>*{display:block}
@@ -303,7 +308,8 @@ ol.lowergreek{list-style-type:lower-greek}
 td.hdlist1,td.hdlist2{vertical-align:top;padding:0 .625em}
 td.hdlist1{font-weight:bold;padding-bottom:1.25em}
 .literalblock+.colist,.listingblock+.colist{margin-top:-.5em}
-.colist>table tr>td:first-of-type{padding:0 .75em;line-height:1}
+.colist>table tr>td:first-of-type{padding:.4em .75em 0 .75em;line-height:1;vertical-align:top}
+.colist>table tr>td:first-of-type img{max-width:initial}
 .colist>table tr>td:last-of-type{padding:.25em 0}
 .thumb,.th{line-height:0;display:inline-block;border:solid 4px #fff;-webkit-box-shadow:0 0 0 1px #ddd;box-shadow:0 0 0 1px #ddd}
 .imageblock.left,.imageblock[style*="float: left"]{margin:.25em .625em 1.25em 0}
@@ -366,6 +372,7 @@ div.unbreakable{page-break-inside:avoid}
 .yellow{color:#bfbf00}
 .yellow-background{background-color:#fafa00}
 span.icon>.fa{cursor:default}
+a span.icon>.fa{cursor:inherit}
 .admonitionblock td.icon [class^="fa icon-"]{font-size:2.5em;text-shadow:1px 1px 2px rgba(0,0,0,.5);cursor:default}
 .admonitionblock td.icon .icon-note:before{content:"\f05a";color:#19407c}
 .admonitionblock td.icon .icon-tip:before{content:"\f0eb";text-shadow:1px 1px 2px rgba(155,155,0,.8);color:#111}
@@ -495,7 +502,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_the_words_code_create_code_and_code_does_code">The Words <code>create</code> and <code>does&gt;</code></a></li>
 <li><a href="#_control_flow">Control Flow</a></li>
 <li><a href="#_native_compiling_2">Native Compiling</a></li>
-<li><a href="#__code_cmove_code_code_cmove_code_and_code_move_code"><code>cmove</code>, <code>cmove&gt;</code> and <code>move</code></a></li>
+<li><a href="#_code_cmove_code_code_cmove_code_and_code_move_code"><code>cmove</code>, <code>cmove&gt;</code> and <code>move</code></a></li>
 </ul>
 </li>
 <li><a href="#_developing">Developing</a>
@@ -516,6 +523,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_first_steps_with_blocks">First steps with blocks</a></li>
 <li><a href="#_editing_a_screen">Editing a screen</a></li>
 <li><a href="#_working_with_blocks_2">Working with blocks</a></li>
+<li><a href="#_storing_binary_data_in_blocks">Storing Binary Data in Blocks</a></li>
 </ul>
 </li>
 <li><a href="#_the_code_ed_code_line_based_editor_a_id_ed_tutorial_a">The <code>ed</code> Line-Based Editor<a id="ed-tutorial"></a></a>
@@ -1660,61 +1668,32 @@ noting that running <code>block-ramdrive-init</code> again will create another r
 the existing one will be inaccessible while still taking up space in
 RAM.</p>
 </div>
+<div class="paragraph">
+<p>See the tutorials on working with blocks for more information on how to use them.</p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_the_block_editor">The Block Editor</h3>
 <div class="paragraph">
-<p>If you are using blocks (see the block chapter), you can use the following code
-to create a very basic screen editor that allows you to replace a single line or
-an entire screen. Screens are 16 lines (numbered 0-15) of 64 characters each,
-for a total of 1K characters.  Because newlines are not stored in the blocks
-(the remainder of each line is filled with spaces,) you should leave a space in
-the very last character of each line to separate the words in that line from the
-words in the next line.</p>
+<p>If you are using blocks (see the block chapter), you can use the following words
+to enter text or Forth code.  The built-in editor allows you to replace a
+single line or an entire screen. Screens are 16 lines (numbered 0-15) of 64
+characters each, for a total of 1K characters.  Because newlines are not stored
+in the blocks (the remainder of each line is filled with spaces,) you should
+leave a space in the very last character of each line to separate the words in
+that line from the words in the next line.</p>
 </div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-This editor uses a word named <code>E</code> which may interfere with the use
-of hex. Once you have entered the editor words, you will need to use
-the hex value "0E" anywhere you want a single "E" value. This will not
-interfere with hex numbers that have additional digits.  Alternately,
-you can rename the <code>E</code> word and update the <code>O</code> word which uses it.
-</td>
-</tr>
-</table>
+<div class="paragraph">
+<p>To get started, the editor words need to be added to the search order.  To do
+that, you can just run:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>( Simple Editor for screens /blocks )
-decimal
-( line provides the address, in the buffer, of the given line )
-: line  ( line# - c-addr)
-    64 *        ( Convert line number to # characters offset )
-    scr @ block ( Get the buffer address for that block )
-    + ;         ( Add the offset )
-
-: E ( line# - ) ( Erase the given line number with spaces )
-    line 64 blank update ;
-
-: O     ( line# - ) ( Overwrite line with new text )
-    dup E                    ( Erase existing text on line )
-    cr dup 2 u.r ."  * " line 64 accept drop update ;
-
-( Editor, continued )
-: enter-screen ( scr# - )
-  dup scr ! buffer drop
-  16 0 do i o loop ;
-: erase-screen ( scr# - )
-  dup scr ! buffer 1024 blank update ;</pre>
+<pre>editor-wordlist &gt;order</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>To use this editor, first select a screen to work with by running list on it. If
+<p>To use the editor, first select a screen to work with by running <code>list</code> on it. If
 you are planning on using <code>load</code> to run some code later, it&#8217;s worth noting that
 only screens above 0 can be LOADed. Screen 0 is reserved for comments describing
 what is on the other screens.  It can be LISTed and edited, but cannot be
@@ -1808,6 +1787,10 @@ using the <code>thru</code> command like so:</p>
 <pre>1 3 thru</pre>
 </div>
 </div>
+<div class="paragraph">
+<p>For more examples of the block editor being used, see the tutorials on working
+with blocks.</p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_the_line_based_editor_code_ed_code">The Line-Based Editor <code>ed</code></h3>
@@ -1838,19 +1821,6 @@ sometimes a hangup for beginners.) <a href="#BWK">[BWK]</a>
 <p>Tali Forth 2 currently ships with a clone of the <code>ed</code> line-based editor of
 Unix fame. It is envoked with <code>ed</code> and does not change the data stack. The
 formal name is <code>ed6502</code>.</p>
-</div>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
-<code>ed</code> is included in a very primitive form only and should be considered
-ALPHA.
-</td>
-</tr>
-</table>
 </div>
 <div class="sect3">
 <h4 id="_supported_commands">Supported Commands</h4>
@@ -2089,8 +2059,8 @@ to write the text to as <code>7000w</code>.</p>
 <i class="fa icon-warning" title="Warning"></i>
 </td>
 <td class="content">
-At this point, it isn&#8217;t totally clear what happens if the number base
-is set to hexadecimal via <code>hex</code>. Use at your own risk.
+<code>ed</code> currently only works with decimal numbers. When in doubt, use
+<code>decimal</code> to make sure your using base ten.
 </td>
 </tr>
 </table>
@@ -2189,18 +2159,12 @@ zero length as TOS.</p>
 <div class="sect3">
 <h4 id="_developer_information">Developer Information</h4>
 <div class="paragraph">
-<p><code>Ed</code> will be massively rewritten under the hood once the code has been
-stabilized, has all features, and a testing suite. Currently, it&#8217;s somewhat of a
-mess and contains some testing routines that will be removed in the final
-version.</p>
-</div>
-<div class="paragraph">
 <p>The "buffer" of <code>ed</code> is a simple linked list of nodes, consisting of a pointer
 to the next entry, a pointer to the string address, and the length of that
-string. Each entry is two byte, making six bytes in total for each node. A value
-of 0000 in the pointer to the next address signals the end of the list. The
-buffer starts at the point of the <code>cp</code> (accessed with the Forth word <code>here</code>) and
-is only saved to the given location when the <code>w</code> command is given.</p>
+string. Each entry is two bytes, making six bytes in total for each node. A
+value of 0000 in the pointer to the next address signals the end of the list.
+The buffer starts at the point of the <code>cp</code> (accessed with the Forth word <code>here</code>)
+and is only saved to the given location when the <code>w</code> command is given.</p>
 </div>
 </div>
 </div>
@@ -3724,7 +3688,7 @@ a list of what we want to happen at compile time and what at run time. Let&#8217
 start with a simple <code>do</code>-<code>loop</code>.</p>
 </div>
 <div class="sect4">
-<h5 id="__code_do_code_at_compile_time"><code>do</code> at compile-time:</h5>
+<h5 id="_code_do_code_at_compile_time"><code>do</code> at compile-time:</h5>
 <div class="ulist">
 <ul>
 <li>
@@ -3745,7 +3709,7 @@ where the loop contents begin</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="__code_do_code_at_run_time"><code>do</code> at run-time:</h5>
+<h5 id="_code_do_code_at_run_time"><code>do</code> at run-time:</h5>
 <div class="ulist">
 <ul>
 <li>
@@ -3759,7 +3723,7 @@ away with considering them at the same time.</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="__code_loop_code_at_compile_time"><code>loop</code> at compile time:</h5>
+<h5 id="_code_loop_code_at_compile_time"><code>loop</code> at compile time:</h5>
 <div class="ulist">
 <ul>
 <li>
@@ -3785,7 +3749,7 @@ construct to the Return Stack at run-time</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="__code_loop_code_at_run_time_which_is_code_loop_code"><code>loop</code> at run-time (which is <code>(+loop)</code>)</h5>
+<h5 id="_code_loop_code_at_run_time_which_is_code_loop_code"><code>loop</code> at run-time (which is <code>(+loop)</code>)</h5>
 <div class="ulist">
 <ul>
 <li>
@@ -4117,7 +4081,7 @@ headers.asm file and should never have the AN (Always Native) flag set.
 </div>
 </div>
 <div class="sect2">
-<h3 id="__code_cmove_code_code_cmove_code_and_code_move_code"><code>cmove</code>, <code>cmove&gt;</code> and <code>move</code></h3>
+<h3 id="_code_cmove_code_code_cmove_code_and_code_move_code"><code>cmove</code>, <code>cmove&gt;</code> and <code>move</code></h3>
 <div class="paragraph">
 <p>The three moving words <code>cmove</code>, <code>cmove&gt;</code> and <code>move</code> show subtle differences
 that can trip up new users and are reflected by different code under the hood.
@@ -5048,7 +5012,8 @@ then request that the modified version be saved back to storage.</p>
 <div class="paragraph">
 <p>What the blocks hold is up to the user.  They can hold text, Forth code, or
 binary data.  Support for text and Forth code is provided by Tali, and the user
-can easily provide support for storing binary data in their programs.</p>
+can easily provide support for storing binary data in their programs, as
+demonstrated in this chapter.</p>
 </div>
 <div class="sect2">
 <h3 id="_first_steps_with_blocks">First steps with blocks</h3>
@@ -5135,7 +5100,9 @@ editor words, run:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>forth-wordlist editor-wordlist 2 set-order</pre>
+<pre>forth-wordlist editor-wordlist 2 set-order
+( or the shorter version... )
+editor-wordlist &gt;order</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -5552,6 +5519,215 @@ as empty.</p>
 </div>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_storing_binary_data_in_blocks">Storing Binary Data in Blocks</h3>
+<div class="paragraph">
+<p>While Tali comes built-in with support for text and Forth code in blocks,
+users may also want to use blocks to hold binary data.  A user might want to do
+this because the block memory space is much larger that the normal 65C02 memory
+space, so a much larger dataset can be stored here than the 65C02 would be able
+to support in RAM.  It may also be desirable for the data to be saved even in the
+absense of power, and when block storage is implemented on a non-volatile meory,
+such as EEPROM or FLASH, this is possible.</p>
+</div>
+<div class="paragraph">
+<p>Because the format of the binary data is up to the user, Forth doesn&#8217;t directly
+support the initializing, entering, retrieval, or display of binary data.
+Instead, the user is expected to use the provided block words to create the
+functionality needed for the application.</p>
+</div>
+<div class="paragraph">
+<p>Unless all of the blocks in the system are used with binary data, there will
+often be a mix of text and binary data blocks.  Because using some of the words
+designed for text blocks, such as <code>list</code>, on a binary block could emit
+characters that can mess up terminals, it is recommended to "reserve" binary
+blocks.  This is done by simply adding a note in block 0 with the block numbers
+being used to hold binary data, so that users of teh system will know to avoid
+performing text operations on those blocks.  Block 0 is also a good place to
+inform the user if the routines for accessing the binary data are also stored
+(as Forth code) in block storage.</p>
+</div>
+<div class="paragraph">
+<p>In this example, we will create some words to make non-volatile arrays stored on
+a flash device.  While this example can be run with the block ramdrive, using 7
+blocks, it won&#8217;t be non-volatile in that case.  To get started, we will add a
+note to block 0 indicating the blocks we are going to use.  The following shows
+an example Forth session adding this note.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>0 list
+Screen #   0
+ 0 ( Welcome to this EEPROM! )
+ 1
+ 2 ( There are 128 blocks on this EEPROM )
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+ ok
+editor-wordlist &gt;order  ok
+4 o
+ 4 * ( Blocks 3-7 contain binary data )  ok
+5 o
+ 5 * ( Blocks 1-2 contain the routines to access this data )  ok
+l
+Screen #   0
+ 0 ( Welcome to this EEPROM! )
+ 1
+ 2 ( There are 128 blocks on this EEPROM )
+ 3
+ 4 ( Blocks 3-7 contain binary data )
+ 5 ( Blocks 1-2 contain the routines to access this data )
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+ ok</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In this session, screen 0 is listed to locate a couple of empty lines for the
+message.  Then the editor-wordlist is added to the search order to get the word
+<code>o</code>, which is used to overwrite lines 4 and 5 on the current screen.  Finally,
+<code>l</code> (also from the editor-wordlist) is used to list the current screen again to
+see the changes.</p>
+</div>
+<div class="paragraph">
+<p>Now that the blocks have been reserved, we will put our code in blocks 1 and 2.
+It is recommended to put the access words for the binary data into the same
+block storage device so that the data can be recovered on a different system if
+needed.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>1 enter-screen
+ 0 * ( Block Binary Data Words  1/2                 SCC 2018-12 )
+ 1 * ( Make a defining word to create block arrays. )
+ 2 * : block-array: ( base_block# "name" -- ) ( index -- addr )
+ 3 *   create ,     ( save the base block# )
+ 4 *   does&gt; @ swap ( base_block# index )
+ 5 *     cells      ( Turn index into byte index )
+ 6 *     1024 /MOD  ( base_block# offset_into_block block# )
+ 7 *     rot +      ( offset_into_block real_block# )
+ 8 *     block      ( offset_into_block buffer_address )
+ 9 *     + ;
+10 * ( Create the array starting at block 3           )
+11 * ( With 4 blocks, max index is 2047 - not checked )
+12 * 3 block-array: myarray
+13 * ( Some helper words for accessing elements )
+14 * : myarray@ ( index -- n ) myarray @ ;
+15 * : myarray! ( n index -- ) myarray ! update ;  ok
+2 enter-screen
+ 0 * ( Block Binary Data Words cont. 2/2            SCC 2018-12 )
+ 1 * ( Note: For both words below, end-index is one past the )
+ 2 * ( last index you want to use.                           )
+ 3 *
+ 4 * ( A helper word to initialize values in block arrays to 0 )
+ 5 * : array-zero ( end_index start_index -- )
+ 6 *     ?do 0 i myarray! loop ;
+ 7 *
+ 8 * ( A helper word to view a block array )
+ 9 * : array-view ( end_index start_index -- )
+10 *     ( Print 10 values per line with 6 digit columns. )
+11 *     ?do i 10 mod 0= if cr then i myarray @ 6 .r loop ;
+12 *
+13 *
+14 *
+15 *   ok
+1 2 thru  ok</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>enter-screen</code> is used to enter screens 1 and 2 with the code for initializing
+(<code>array-zero</code>), accessing (<code>myarray</code>, <code>myarray@</code>, and <code>myarray!</code>), and viewing
+(<code>array-view</code>) the binary data.  Once the Forth code has been placed into blocks
+1 and 2, a <code>thru</code> command is used to load the code.</p>
+</div>
+<div class="paragraph">
+<p>The word <code>block-array:</code> is a defining word.  You place the starting block number
+(in our case, 3) on the stack before using the <code>block-array:</code> and give a new
+name after it.  Any time that new name (<code>myarray</code>, created on line 12 of screen
+1 in this case) is used, it expects an index (into an array of cells) on the
+stack.  It will load the correct block into a buffer and compute address in that
+buffer for the index given.  Because cells are 2 bytes on Tali, the total number
+of cells is 4096/2=2048.  The indices start at 0, so the index of the last valid
+cell is 2047.  Please note that the code given above does not range check the
+index, so it is up to the user to not exceed this value or to add range
+checking.</p>
+</div>
+<div class="paragraph">
+<p>The blocks 3-7 being used to store the array may be uninitialized or may have
+been initialized for text.  We&#8217;ll use the helper words to initialize all of the
+elements in the array, and then place some data into the array.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>2048 0 array-zero  ok
+50 0 array-view
+     0     0     0     0     0     0     0     0     0     0
+     0     0     0     0     0     0     0     0     0     0
+     0     0     0     0     0     0     0     0     0     0
+     0     0     0     0     0     0     0     0     0     0
+     0     0     0     0     0     0     0     0     0     0 ok
+12345 4 myarray!  ok
+6789 10 myarray!  ok
+4 myarray@ . 12345  ok
+50 0 array-view
+     0     0     0     0 12345     0     0     0     0     0
+  6789     0     0     0     0     0     0     0     0     0
+     0     0     0     0     0     0     0     0     0     0
+     0     0     0     0     0     0     0     0     0     0
+     0     0     0     0     0     0     0     0     0     0 ok
+flush  ok</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In the above session, all the values in the array are zeroed.  Next, the first
+50 values (indices 0-49) are viewed.  Some numbers are stored at indices 4 and
+10.  The value at index 4 is fetched and printed, and the first 50 values
+are displayed again.  Finally, all buffers are flushed to make sure any changes
+are permanent.</p>
+</div>
+<div class="paragraph">
+<p>If the system is powered down and back up at a later time, the data can be
+accessed by first loading the helper words in blocks 1-2.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>1 2 thru  ok
+50 0 array-view
+     0     0     0     0 12345     0     0     0     0     0
+  6789     0     0     0     0     0     0     0     0     0
+     0     0     0     0     0     0     0     0     0     0
+     0     0     0     0     0     0     0     0     0     0
+     0     0     0     0     0     0     0     0     0     0 ok</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The methods shown in this example require the user to run <code>flush</code> or
+<code>save-buffers</code> before powering down the system. If the user wants the new values
+written to block storage immediately after being modified, the word <code>myarray!</code>
+could be modified to run <code>save-buffers</code> after storing the new value.  As a side
+effect, however, an entire 1K block would be overwritten every time a single
+value was changed, making the routine much slower.</p>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -5573,13 +5749,12 @@ type common with Forth, and the line-based editor <code>ed</code>, formally know
 <code>ed6502</code>. This second editor is included because I like line-based editors.
 More to the point, the saved text uses less space than the block editor, where
 every block, regardless of how much text is in it, uses 1024 bytes. In contrast,
-<code>ed</code> uses one byte per character plus one end-of-line character per line. We&#8217;ll
-see an example of this later.</p>
+<code>ed</code> uses one byte per character plus one end-of-line character per line.</p>
 </div>
 <div class="paragraph">
 <p>The original <code>ed</code> was created by Ken Thompson and Dennis Ritchie along with the
-Unix operating system, sometime about 1971. It is terse, small, robust, and has
-a reputation for being completely unhelpful. An error is just signaled with a
+Unix operating system, sometime about 1971. It is terse, robust, and has a
+reputation for being completely unhelpful. Any error is just signaled with a
 question mark (<code>?</code>). There isn&#8217;t even a prompt unless it is explicitly turned
 on.</p>
 </div>
@@ -5609,10 +5784,13 @@ lines one to four.</p>
 <p>Like its big brother <code>vi</code> (or its newer incarnation <code>vim</code>), <code>ed</code> has various
 modes, except that <code>ed</code> is so small it only has two. We start out in the
 <em>command mode</em> in which we accept, well, commands. Using <code>a</code> or <code>i</code> switches to
-<em>input mode</em> where all of the characters are added to the buffer. The first
-important thing is about how to get out of command mode: You type <code>.</code> (the
-period or dot) at the beginning of the line as the only character to return to
-command mode. A typical <code>ed</code> session will look something like this:<sup class="footnote">[<a id="_footnoteref_4" class="footnote" href="#_footnote_4" title="View footnote.">4</a>]</sup></p>
+<em>input mode</em> where all of the characters are added to the buffer.</p>
+</div>
+<div class="paragraph">
+<p>The first important thing is about how to get out of command mode: You type <code>.</code>
+(the period or dot) at the beginning of the line as the only character to return
+to command mode. A typical <code>ed</code> session will look something like
+this:<sup class="footnote">[<a id="_footnoteref_4" class="footnote" href="#_footnote_4" title="View footnote.">4</a>]</sup></p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -5649,12 +5827,12 @@ This is where you continue typing.</td>
 </table>
 </div>
 <div class="paragraph">
-<p>When you first use <code>ed</code>, you&#8217;ll spend lots of time print what you&#8217;ve written and
-trying to figure out what the line numbers are. The commands for this are <code>p</code>
-(print without line numbers) and <code>n</code> (print with line numbers). The first
-special character prefix we&#8217;ll learn for this is <code>%</code> (the percent symbol,
-alternatively a comma) works as well. This makes the command that
-follows it apply to the whole text.</p>
+<p>When you first use <code>ed</code>, you&#8217;ll spend lots of time printing what you&#8217;ve written
+and trying to figure out what the line numbers are. The commands for this are
+<code>p</code> (print without line numbers) and <code>n</code> (print with line numbers). The first
+special character prefix we&#8217;ll use for this is <code>%</code> (the percent symbol,
+alternatively a comma) works as well. This makes the command that follows it
+apply to the whole text.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -5701,7 +5879,7 @@ numbers:</p>
 </div>
 <div class="paragraph">
 <p>Line numbers are indented automatically by one tab. Note we start counting with
-1, not 0, because this is an editor for real humans.</p>
+1, not 0, because this is an editor for real humans, not computer science types.</p>
 </div>
 <div class="paragraph">
 <p>Just entering the command directly without a line number will print the
@@ -5771,18 +5949,18 @@ at the bottom and move upwards towards the beginning of the text.
 <p>We can also use comma-separated numbers to indicate a range of lines (say,
 <code>1,2d</code>). As you probably will have guessed, or the <code>,</code> (or <code>%</code>) prefix can be
 used to delete the complete text. Be careful&#8201;&#8212;&#8201;in the real version of <code>ed</code>, you
-can undo changes with the <code>u</code> command.  Tali&#8217;s version currently doesn&#8217;t support
-this option. If you delete it, it&#8217;s gone.</p>
+can undo changes with the <code>u</code> command.  Tali doesn&#8217;t support this option. If you
+delete something, it&#8217;s gone.</p>
 </div>
 <div class="paragraph">
-<p>Now, let&#8217;s say we want to put back the second line. We can do this again with <code>a</code>, to
-add text <em>after</em> the first line. Note there is currently no way to paste the
-line we have just deleted. If we can&#8217;t remember it, we&#8217;re in trouble.</p>
+<p>Now, let&#8217;s say we want to put back the second line. We can do this again with
+<code>a</code>, to add text <em>after</em> the first line. Note there is currently also no way to
+paste the line we have just deleted. If we can&#8217;t remember it, we&#8217;re in trouble.</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre>        1a      <i class="conum" data-value="1"></i><b>(1)</b>
-        And then, I, uh, did something
+        I, uh, did something
         .       <i class="conum" data-value="2"></i><b>(2)</b>
                 <i class="conum" data-value="3"></i><b>(3)</b></pre>
 </div>
@@ -5810,7 +5988,7 @@ line we have just deleted. If we can&#8217;t remember it, we&#8217;re in trouble
 <div class="content">
 <pre>        %n
         1       After time adrift among open stars
-        2       And then, I, uh, did something
+        2       I, uh, did something
         3       And through shoals of dust
         4       I will return to where I began.</pre>
 </div>
@@ -5872,8 +6050,7 @@ characters. Yes, this is actually feedback of sorts. But don&#8217;t get cocky!<
 <i class="fa icon-warning" title="Warning"></i>
 </td>
 <td class="content">
-Changing the number base hasn&#8217;t been tested yet, so stick to decimal
-numbers for the time being when saving text.
+<code>ed</code> currently only works with decimal numbers.
 </td>
 </tr>
 </table>
@@ -5894,14 +6071,14 @@ to quit if there is still unwritten text. When it doubt, use <code>q</code>.</p>
 </div>
 <div class="paragraph">
 <p>To access your text from the Forth command line, you can use standard Forth
-words like <code>type</code> with the address chosen and the length of the text provided
-after the <code>w</code> command.</p>
+words like <code>type</code>. Since <code>ed</code> leaves <code>( addr u )</code> on the stack when it quits,
+you can just use it directly.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>        7000 128 cr type        <i class="conum" data-value="1"></i><b>(1)</b>
+<pre>        cr type                 <i class="conum" data-value="1"></i><b>(1)</b>
         After time adrift among open stars
-        And then I, uh, did something
+        I, uh, did something
         And through the shoals of dust
         I will return to where I began.
          ok                     <i class="conum" data-value="2"></i><b>(2)</b></pre>
@@ -5920,26 +6097,12 @@ text being placed right after the Forth command.</td>
 </tr>
 </table>
 </div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-In future, <code>ed</code> might provide the address and length of the saved text on
-the data stack when quitting. The stack signature of <code>ed</code> would then change to
-<code>(&#8201;&#8212;&#8201;addr u )</code>. This would make further processing of the text easier.
-</td>
-</tr>
-</table>
-</div>
 <div class="paragraph">
 <p>You can also use <code>dump</code> to show how compact <code>ed</code> stores the text:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>7000 128 dump
+<pre>dump
 1B58  41 66 74 65 72 20 74 69  6D 65 20 61 64 72 69 66  After ti me adrif
 1B68  74 20 61 6D 6F 6E 67 20  6F 70 65 6E 20 73 74 61  t among  open sta
 1B78  72 73 0A 41 6E 64 20 74  68 65 6E 20 49 2C 20 75  rs.And t hen I, u <i class="conum" data-value="1"></i><b>(1)</b>
@@ -5998,7 +6161,7 @@ character. This control character marks the end of the line.</td>
 </table>
 </div>
 <div class="paragraph">
-<p>Running <code>7000 48 evaluate</code> will now print the numbers from 1 to 100.</p>
+<p>Running <code>evaluate</code> will now print the numbers from 1 to 100.</p>
 </div>
 </div>
 <div class="sect2">
@@ -6782,70 +6945,70 @@ who contributed the invaluable test suite and a whole lot of code.</p>
 <h2 id="_references_and_further_reading">References and Further Reading</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><a id="FB"></a>[FB] <em>Masterminds of Programming</em>, Federico Biancuzzi,
+<p>[<a id="FB"></a>] <em>Masterminds of Programming</em>, Federico Biancuzzi,
 O&#8217;Reilly Media 1st edition, 2009.</p>
 </div>
 <div class="paragraph">
-<p><a id="CHM1"></a>[CHM1] "Charles H. Moore: Geek of the Week", redgate Hub 2009
+<p>[<a id="CHM1"></a>] "Charles H. Moore: Geek of the Week", redgate Hub 2009
 <a href="https://www.red-gate.com/simple-talk/opinion/geek-of-the-week/chuck-moore-geek" class="bare">https://www.red-gate.com/simple-talk/opinion/geek-of-the-week/chuck-moore-geek</a></p>
 </div>
 <div class="paragraph">
-<p><a id="CHM2"></a>[CHM2] "The Evolution of FORTH, an Unusual Language", Charles H. Moore,
+<p>[<a id="CHM2"></a>] "The Evolution of FORTH, an Unusual Language", Charles H. Moore,
 <em>Byte</em> 1980, <a href="https://wiki.forth-ev.de/doku.php/projects:the_evolution_of_forth" class="bare">https://wiki.forth-ev.de/doku.php/projects:the_evolution_of_forth</a></p>
 </div>
 <div class="paragraph">
-<p><a id="CnR"></a>[CnR] <em>Forth Programmer&#8217;s Handbook</em>, Edward K. Conklin and Elizabeth Rather,
+<p>[<a id="CnR"></a>] <em>Forth Programmer&#8217;s Handbook</em>, Edward K. Conklin and Elizabeth Rather,
 3rd edition 2010</p>
 </div>
 <div class="paragraph">
-<p><a id="DB"></a>[DB] <em>Forth Enzyclopedia</em>, Mitch Derick and Linda Baker,
+<p>[<a id="DB"></a>] <em>Forth Enzyclopedia</em>, Mitch Derick and Linda Baker,
 Mountain View Press 1982</p>
 </div>
 <div class="paragraph">
-<p><a id="DH"></a>[DH] "Some notes on Forth from a novice user", Douglas Hoffman, Feb 1988
+<p>[<a id="DH"></a>] "Some notes on Forth from a novice user", Douglas Hoffman, Feb 1988
 <a href="https://wiki.forth-ev.de/doku.php/projects:some_notes_on_forth_from_a_novice_user" class="bare">https://wiki.forth-ev.de/doku.php/projects:some_notes_on_forth_from_a_novice_user</a></p>
 </div>
 <div class="paragraph">
-<p><a id="DMR"></a>[DMR] "Reflections on Software Research", Dennis M. Ritchie, Turing Award
+<p>[<a id="DMR"></a>] "Reflections on Software Research", Dennis M. Ritchie, Turing Award
 Lecture in <em>Communications of the ACM</em> August 1984 Volume 27 Number 8
 <a href="http://www.valleytalk.org/wp-content/uploads/2011/10/p758-ritchie.pdf" class="bare">http://www.valleytalk.org/wp-content/uploads/2011/10/p758-ritchie.pdf</a></p>
 </div>
 <div class="paragraph">
-<p><a id="EnL"></a>[EnL] <em>Programming the 65816, including the 6502, 65C02 and 65802</em>,
+<p>[<a id="EnL"></a>] <em>Programming the 65816, including the 6502, 65C02 and 65802</em>,
 David Eyes and Ron Lichty
 (Currently not available from the WDC website)</p>
 </div>
 <div class="paragraph">
-<p><a id="EW"></a>[EW] "Forth: The Hacker&#8217;s Language", Elliot Williams,
+<p>[<a id="EW"></a>] "Forth: The Hacker&#8217;s Language", Elliot Williams,
 <a href="https://hackaday.com/2017/01/27/forth-the-hackers-language/" class="bare">https://hackaday.com/2017/01/27/forth-the-hackers-language/</a></p>
 </div>
 <div class="paragraph">
-<p><a id="GK"></a>[GK] "Forth System Comparisons", Guy Kelly, in <em>Forth Dimensions</em> V13N6,
+<p>[<a id="GK"></a>] "Forth System Comparisons", Guy Kelly, in <em>Forth Dimensions</em> V13N6,
 March/April 1992
 <a href="http://www.forth.org/fd/FD-V13N6.pdf}{http://www.forth.org/fd/FD-V13N6.pdf" class="bare">http://www.forth.org/fd/FD-V13N6.pdf}{http://www.forth.org/fd/FD-V13N6.pdf</a></p>
 </div>
 <div class="paragraph">
-<p><a id="JN"></a>[JN] <em>A Beginner&#8217;s Guide to Forth</em>, J.V. Nobel,
+<p>[<a id="JN"></a>] <em>A Beginner&#8217;s Guide to Forth</em>, J.V. Nobel,
 <a href="http://galileo.phys.virginia.edu/classes/551.jvn.fall01/primer.htm" class="bare">http://galileo.phys.virginia.edu/classes/551.jvn.fall01/primer.htm</a></p>
 </div>
 <div class="paragraph">
-<p><a id="BWK"></a>[BWK] <em>A Tutorial Introduction to the UNIX Text Editor</em>, B. W. Kernighan,
+<p>[<a id="BWK"></a>] <em>A Tutorial Introduction to the UNIX Text Editor</em>, B. W. Kernighan,
 <a href="http://www.psue.uni-hannover.de/wise2017_2018/material/ed.pdf" class="bare">http://www.psue.uni-hannover.de/wise2017_2018/material/ed.pdf</a></p>
 </div>
 <div class="paragraph">
-<p><a id="LB1"></a>[LB1] <em>Starting Forth</em>, Leo Brodie, new edition 2003,
+<p>[<a id="LB1"></a>] <em>Starting Forth</em>, Leo Brodie, new edition 2003,
 <a href="https://www.forth.com/starting-forth/}{https://www.forth.com/starting-forth/" class="bare">https://www.forth.com/starting-forth/}{https://www.forth.com/starting-forth/</a></p>
 </div>
 <div class="paragraph">
-<p><a id="LB2"></a>[LB2] <em>Thinking Forth</em>, Leo Brodie, 1984,
+<p>[<a id="LB2"></a>] <em>Thinking Forth</em>, Leo Brodie, 1984,
 <a href="http://thinking-forth.sourceforge.net/\#21CENTURY" class="bare">http://thinking-forth.sourceforge.net/\#21CENTURY</a></p>
 </div>
 <div class="paragraph">
-<p><a id="LL"></a>[LL] <em>6502 Assembly Language Programming</em>, Lance A. Leventhal,
+<p>[<a id="LL"></a>] <em>6502 Assembly Language Programming</em>, Lance A. Leventhal,
 OSBORNE/McGRAW-HILL 1979</p>
 </div>
 <div class="paragraph">
-<p><a id="PHS"></a>[PHS] "The Daemon, the Gnu and the Penguin", Peter H. Saulus,
+<p>[<a id="PHS"></a>] "The Daemon, the Gnu and the Penguin", Peter H. Saulus,
 22. April 2005, <a href="http://www.groklaw.net/article.php?story=20050422235450910" class="bare">http://www.groklaw.net/article.php?story=20050422235450910</a></p>
 </div>
 </div>
@@ -6886,7 +7049,7 @@ under <a href="https://www.ubuntu.com/">Ubuntu</a> Linux 16.04 LTS.</p>
 <div id="footer">
 <div id="footer-text">
 Version BETA<br>
-Last updated 2018-12-28 20:24:59 CET
+Last updated 2018-12-28 20:57:32 EST
 </div>
 </div>
 </body>

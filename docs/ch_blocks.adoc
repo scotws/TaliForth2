@@ -37,3 +37,5 @@ Be careful about creating too many blocks as they are 1K each.  It's also worth
 noting that running `block-ramdrive-init` again will create another ramdrive and
 the existing one will be inaccessible while still taking up space in
 RAM.
+
+See the tutorials on working with blocks for more information on how to use them.

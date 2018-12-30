@@ -1,42 +1,19 @@
-If you are using blocks (see the block chapter), you can use the following code
-to create a very basic screen editor that allows you to replace a single line or
-an entire screen. Screens are 16 lines (numbered 0-15) of 64 characters each,
-for a total of 1K characters.  Because newlines are not stored in the blocks
-(the remainder of each line is filled with spaces,) you should leave a space in
-the very last character of each line to separate the words in that line from the
-words in the next line.
+If you are using blocks (see the block chapter), you can use the following words
+to enter text or Forth code.  The built-in editor allows you to replace a
+single line or an entire screen. Screens are 16 lines (numbered 0-15) of 64
+characters each, for a total of 1K characters.  Because newlines are not stored
+in the blocks (the remainder of each line is filled with spaces,) you should
+leave a space in the very last character of each line to separate the words in
+that line from the words in the next line.
 
-NOTE: This editor uses a word named `E` which may interfere with the use
-of hex. Once you have entered the editor words, you will need to use
-the hex value "0E" anywhere you want a single "E" value. This will not
-interfere with hex numbers that have additional digits.  Alternately, 
-you can rename the `E` word and update the `O` word which uses it.
+To get started, the editor words need to be added to the search order.  To do
+that, you can just run:
 
 ----
-( Simple Editor for screens /blocks )
-decimal
-( line provides the address, in the buffer, of the given line )
-: line  ( line# - c-addr)
-    64 *        ( Convert line number to # characters offset )
-    scr @ block ( Get the buffer address for that block )
-    + ;         ( Add the offset )
-
-: E ( line# - ) ( Erase the given line number with spaces )
-    line 64 blank update ;
-
-: O     ( line# - ) ( Overwrite line with new text )
-    dup E                    ( Erase existing text on line )
-    cr dup 2 u.r ."  * " line 64 accept drop update ;
-
-( Editor, continued )
-: enter-screen ( scr# - )
-  dup scr ! buffer drop
-  16 0 do i o loop ;
-: erase-screen ( scr# - )
-  dup scr ! buffer 1024 blank update ;
+editor-wordlist >order
 ----
 
-To use this editor, first select a screen to work with by running list on it. If
+To use the editor, first select a screen to work with by running `list` on it. If
 you are planning on using `load` to run some code later, it's worth noting that
 only screens above 0 can be LOADed. Screen 0 is reserved for comments describing
 what is on the other screens.  It can be LISTed and edited, but cannot be
@@ -113,3 +90,6 @@ using the `thru` command like so:
 ----
 1 3 thru
 ----
+
+For more examples of the block editor being used, see the tutorials on working
+with blocks.
