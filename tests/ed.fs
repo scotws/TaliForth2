@@ -186,7 +186,7 @@ assembler-wordlist set-current
 
 variable 'old-output
 variable #saved-output
-create 'saved-output  100 allot
+create 'saved-output  1000 allot
 
 \ Retrieves the output string we saved after redirection
 : saved-string ( -- addr u )  'saved-output #saved-output @ ;
@@ -195,10 +195,11 @@ create 'saved-output  100 allot
 \ assembler macro push-a
 : save-output ( c -- ) 
    [ push-a ]  \ "dex dex  sta 0,x  stz 1,x" - push A to TOS
-   saved-string + c!
-
-   \ Can't use +! as it uses tmp1 and so does TYPE
-   #saved-output @  1+  #saved-output ! ;
+   [ phy 36 lda.z pha 37 lda.z pha ] \ Save y and tmp1.
+   saved-string + c!  \ Save the character.
+   1 #saved-output +! \ Increment the string length.
+   [ pla 37 sta.z pla 36 sta.z ply ] \ Restore y and tmp1.
+;
 
 : redirect-output ( -- )
    output @  'old-output !     \ save the original vector
@@ -206,7 +207,6 @@ create 'saved-output  100 allot
    0 #saved-output ! ;         \ empty the string to start
 
 : restore-output ( -- )  'old-output @  output ! ; 
-
 
 \ ---- Internal test for output redirection (tests within tests!) ----
 

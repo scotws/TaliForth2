@@ -434,12 +434,12 @@ _loop:
                 cmp #AscCN
                 beq _ctrl_n
 
-                ; That's enough for now, echo character. EMIT_A sidesteps
-                ; all the fooling around with the Data Stack
-                jsr emit_a
-
+                ; That's enough for now, save and echo character.
                 sta (tmp1),y
                 iny
+                ; EMIT_A sidesteps all the fooling around with the Data Stack
+                jsr emit_a
+
                 cpy tmp2        ; reached character limit?
                 bne _loop       ; fall thru if buffer limit reached
                 bra _buffer_full
