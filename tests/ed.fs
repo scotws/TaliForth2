@@ -219,14 +219,36 @@ cr .( >>>> )  saved-string type  .( <<<< ) cr
 
 \ ---- Finally the actual redirection tests ----
 
+\ Note that there is a space at the end of every line before the line feed. Saved
+\ string includes 'ok' and 'restore-output', see below for example of
+\ boilerplate
 
 \ Most simple test: Start and end
 redirect-output
 ed
 q
 restore-output 
-2drop 
+2drop  \ ed returns ( addr u ), don't need that at the moment
 T{ saved-string s\"  ok\ned \nq  ok\nrestore-output  " compare -> 0 }T
+\                   A--------A  A-------------------A  <-- This boilerplate          
+
+
+: test-ed ( -- addr u )
+   redirect-output ed restore-output
+   2drop  \ remove ed's output
+   saved-string 
+; 
+
+\ Test --- p --- print one line
+test-ed
+a
+That's a straw, Tali.
+.
+1p
+Q
+
+T{ saved-string s\"  ok\ned \na \nThat's a straw, Tali. \n. \n1p \nThat's a straw, Tali.\nQ  ok\nrestore-output  " compare -> 0 }T
+
 
 
 \ ---- Cleanup from redirection tests ----
