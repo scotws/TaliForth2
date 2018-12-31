@@ -428,7 +428,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <span id="author" class="author">Sam Colwell</span><br>
 <span id="author2" class="author">Scot W. Stevenson</span><br>
 <span id="revnumber">version BETA,</span>
-<span id="revdate">22. Dec 2018</span>
+<span id="revdate">31. Dec 2018</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -1787,18 +1787,6 @@ with blocks.</p>
 </div>
 <div class="sect2">
 <h3 id="_the_line_based_editor_code_ed_code">The Line-Based Editor <code>ed</code></h3>
-<div class="admonitionblock tip">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
-This manual includes <a href="#ed-tutorial">a tutorial</a> for <code>ed</code>
-</td>
-</tr>
-</table>
-</div>
 <div class="quoteblock">
 <blockquote>
 Ed makes no response to most commands – there is no prompting or typing of
@@ -1811,9 +1799,28 @@ sometimes a hangup for beginners.) <a href="#BWK">[BWK]</a>
 </div>
 </div>
 <div class="paragraph">
-<p>Tali Forth 2 currently ships with a clone of the <code>ed</code> line-based editor of
-Unix fame. It is envoked with <code>ed</code> and does not change the data stack. The
-formal name is <code>ed6502</code>.</p>
+<p>Tali Forth 2 currently ships with a clone of the <code>ed</code> line-based editor of Unix
+fame. It is envoked with <code>ed</code>, though the formal name is <code>ed6502</code>.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<code>ed</code> uses about 2 KB of ROM in the default setup. If you know for certain
+you are not going to be using it, you can reclaim that space by commenting out
+the line <code>.require "ed.asm"</code> in <code>taliforth.asm</code> and the subroutine jump
+<code>jsr ed6502</code> for the <code>ed</code> command in <code>native_words.asm</code>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>For those not familiar with <code>ed</code>, there is <a href="#ed-tutorial">a tutorial</a> included
+in this manual. This section is a brief overview of the currently available
+functions.</p>
 </div>
 <div class="sect3">
 <h4 id="_supported_commands">Supported Commands</h4>
@@ -1889,7 +1896,7 @@ w
 </table>
 </div>
 <div class="paragraph">
-<p>For the parameters, these are currently available:</p>
+<p>The following parameters are currently available:</p>
 </div>
 <div class="hdlist">
 <table>
@@ -1944,7 +1951,8 @@ the new current line.</p>
 <div class="sect3">
 <h4 id="_future_planned_commands">Future planned commands</h4>
 <div class="paragraph">
-<p>There is no time frame for these additions.</p>
+<p>These are subject to available memory. There is also no time frame for these
+additions.</p>
 </div>
 <div class="hdlist">
 <table>
@@ -2034,7 +2042,7 @@ s
 <div class="sect3">
 <h4 id="_differences_to_unix_ed">Differences to Unix ed</h4>
 <div class="paragraph">
-<p>(Apart from missing about 90 percent of the features, that is)</p>
+<p>Apart from missing about 90 percent of the features:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -2067,13 +2075,13 @@ instance, a session to add a small string could look something like this:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>ed
-a
-.( Shepard, is that ... You're alive?)
-.
-7000w <i class="conum" data-value="1"></i><b>(1)</b>
-22 <i class="conum" data-value="2"></i><b>(2)</b>
-q</pre>
+<pre>        ed
+        a
+        .( Shepard, is that ... You're alive?)
+        .
+        7000w <i class="conum" data-value="1"></i><b>(1)</b>
+        22    <i class="conum" data-value="2"></i><b>(2)</b>
+        q</pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -2094,7 +2102,7 @@ go immediately to saving the text. Then, we can run the program:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>7000 22 evaluate</pre>
+<pre>        evaluate</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2113,9 +2121,9 @@ using more memory, you probably will want to set a marker first.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>marker pre-edit <i class="conum" data-value="1"></i><b>(1)</b>
-ed <i class="conum" data-value="2"></i><b>(2)</b>
-pre-edit <i class="conum" data-value="3"></i><b>(3)</b></pre>
+<pre>        marker pre-edit <i class="conum" data-value="1"></i><b>(1)</b>
+        ed              <i class="conum" data-value="2"></i><b>(2)</b>
+        pre-edit        <i class="conum" data-value="3"></i><b>(3)</b></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -2141,20 +2149,25 @@ pre-edit <i class="conum" data-value="3"></i><b>(3)</b></pre>
 <div class="sect4">
 <h5 id="_address_of_saved_text">Address of Saved Text</h5>
 <div class="paragraph">
-<p>Currently, <code>ed</code> returns the data stack just the way it found it. This means
-that you have to remember where you saved the text to with <code>w</code> and how long it
-was. A different option would be to return <code>(&#8201;&#8212;&#8201;addr u )</code>, that is, the address
-and length of the text we saved. If nothing is saved, the program would return a
-zero length as TOS.</p>
+<p><code>Ed</code> returns the address of the saved text on the stack as <code>(&#8201;&#8212;&#8201;addr u )</code>.  If
+nothing is saved, the program would return a zero length as TOS.</p>
 </div>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_developer_information">Developer Information</h4>
 <div class="paragraph">
-<p>The "buffer" of <code>ed</code> is a simple linked list of nodes, consisting of a pointer
+<p>The "buffer" of <code>ed</code> is a simple single-linked list of nodes, consisting of a pointer
 to the next entry, a pointer to the string address, and the length of that
-string. Each entry is two bytes, making six bytes in total for each node. A
+string.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="pics/ed_node.png" alt="ed node">
+</div>
+</div>
+<div class="paragraph">
+<p>Each entry is two bytes, making six bytes in total for each node. A
 value of 0000 in the pointer to the next address signals the end of the list.
 The buffer starts at the point of the <code>cp</code> (accessed with the Forth word <code>here</code>)
 and is only saved to the given location when the <code>w</code> command is given.</p>
@@ -2163,19 +2176,6 @@ and is only saved to the given location when the <code>w</code> command is given
 </div>
 <div class="sect2">
 <h3 id="_the_assembler">The Assembler</h3>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
-This chapter is work in progress and currently more a collection of
-notes.
-</td>
-</tr>
-</table>
-</div>
 <div class="paragraph">
 <p>Tali Forth is shipped with a built-in assembler that uses the Simpler Assembler
 Format (SAN). See the Appendix for an introduction to SAN.</p>
@@ -7044,7 +7044,7 @@ under <a href="https://www.ubuntu.com/">Ubuntu</a> Linux 16.04 LTS.</p>
 <div id="footer">
 <div id="footer-text">
 Version BETA<br>
-Last updated 2018-12-28 20:24:59 CET
+Last updated 2018-12-31 02:49:13 CET
 </div>
 </div>
 </body>

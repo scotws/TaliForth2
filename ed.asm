@@ -1020,8 +1020,6 @@ _cmd_equ:
 
                 ; Fake it: load 0 as para2 and then print. The 0 goes in a new
                 ; line just like with Unix ed
-                jsr xt_cr
-
                 dex
                 dex
                 stz 0,x
@@ -1064,6 +1062,7 @@ _cmd_equ_two_paras:
                 jsr xt_dup              ; ( addr-t u-t para1 para2 para2) drop through
                 
 _cmd_equ_done:
+                jsr xt_cr               ; number goes on new line
                 jsr xt_u_dot            ; ( addr-t u-t para1 para2 )
                 jsr xt_cr
 

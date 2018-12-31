@@ -571,15 +571,17 @@ For more examples of the block editor being used, see the tutorials on working w
 
 ### The Line-Based Editor `ed`
 
-> **Tip**
->
-> This manual includes [a tutorial](#ed-tutorial) for `ed`
-
 > Ed makes no response to most commands – there is no prompting or typing of messages like "ready". (This silence is preferred by experienced users, but sometimes a hangup for beginners.) [\[BWK\]](#BWK)
 >
 > —  B. W. Kernighan A Tutorial Introduction to the UNIX Text Editor
 
-Tali Forth 2 currently ships with a clone of the `ed` line-based editor of Unix fame. It is envoked with `ed` and does not change the data stack. The formal name is `ed6502`.
+Tali Forth 2 currently ships with a clone of the `ed` line-based editor of Unix fame. It is envoked with `ed`, though the formal name is `ed6502`.
+
+> **Tip**
+>
+> `ed` uses about 2 KB of ROM in the default setup. If you know for certain you are not going to be using it, you can reclaim that space by commenting out the line `.require "ed.asm"` in `taliforth.asm` and the subroutine jump `jsr ed6502` for the `ed` command in `native_words.asm`.
+
+For those not familiar with `ed`, there is [a tutorial](#ed-tutorial) included in this manual. This section is a brief overview of the currently available functions.
 
 #### Supported Commands
 
@@ -626,7 +628,7 @@ Tali Forth 2 currently ships with a clone of the `ed` line-based editor of Unix 
 </tbody>
 </table>
 
-For the parameters, these are currently available:
+The following parameters are currently available:
 
 <table>
 <colgroup>
@@ -661,7 +663,7 @@ An empty line (pressing the ENTER key) will advance by one line and print it. A 
 
 #### Future planned commands
 
-There is no time frame for these additions.
+These are subject to available memory. There is also no time frame for these additions.
 
 <table>
 <colgroup>
@@ -714,7 +716,7 @@ There is no time frame for these additions.
 
 #### Differences to Unix ed
 
-(Apart from missing about 90 percent of the features, that is)
+Apart from missing about 90 percent of the features:
 
 -   The `w` (write) command takes its parameter before and not after the word. Where Unix ed uses the format `w <FILENAME>`, ed6502 takes the address to write the text to as `7000w`.
 
@@ -726,13 +728,13 @@ There is no time frame for these additions.
 
 `Ed` can be used to write programs and then execute them with `evaluate`. For instance, a session to add a small string could look something like this:
 
-    ed
-    a
-    .( Shepard, is that ... You're alive?)
-    .
-    7000w 
-    22 
-    q
+            ed
+            a
+            .( Shepard, is that ... You're alive?)
+            .
+            7000w 
+            22    
+            q
 
 -   Address we save the command to
 
@@ -740,7 +742,7 @@ There is no time frame for these additions.
 
 It is a common mistake to forget the `.` (dot) to end the input, and try to go immediately to saving the text. Then, we can run the program:
 
-    7000 22 evaluate
+            evaluate
 
 Ǹote that `evaluate` will handle line feeds, carriage returns and other white space apart from simple spaces without problems.
 
@@ -750,9 +752,9 @@ It is a common mistake to forget the `.` (dot) to end the input, and try to go i
 
 `Ed` currently uses memory without releasing it when done. For small, quick edits, this probably is not a problem. However, if you known you are going to be using more memory, you probably will want to set a marker first.
 
-    marker pre-edit 
-    ed 
-    pre-edit 
+            marker pre-edit 
+            ed              
+            pre-edit        
 
 -   Set marker at current value of `here`
 
@@ -764,17 +766,17 @@ This issue might be taken care of in a future release.
 
 ##### Address of Saved Text
 
-Currently, `ed` returns the data stack just the way it found it. This means that you have to remember where you saved the text to with `w` and how long it was. A different option would be to return `( — addr u )`, that is, the address and length of the text we saved. If nothing is saved, the program would return a zero length as TOS.
+`Ed` returns the address of the saved text on the stack as `( — addr u )`. If nothing is saved, the program would return a zero length as TOS.
 
 #### Developer Information
 
-The "buffer" of `ed` is a simple linked list of nodes, consisting of a pointer to the next entry, a pointer to the string address, and the length of that string. Each entry is two bytes, making six bytes in total for each node. A value of 0000 in the pointer to the next address signals the end of the list. The buffer starts at the point of the `cp` (accessed with the Forth word `here`) and is only saved to the given location when the `w` command is given.
+The "buffer" of `ed` is a simple single-linked list of nodes, consisting of a pointer to the next entry, a pointer to the string address, and the length of that string.
+
+![ed node](pics/ed_node.png)
+
+Each entry is two bytes, making six bytes in total for each node. A value of 0000 in the pointer to the next address signals the end of the list. The buffer starts at the point of the `cp` (accessed with the Forth word `here`) and is only saved to the given location when the `w` command is given.
 
 ### The Assembler
-
-> **Warning**
->
-> This chapter is work in progress and currently more a collection of notes.
 
 Tali Forth is shipped with a built-in assembler that uses the Simpler Assembler Format (SAN). See the Appendix for an introduction to SAN.
 

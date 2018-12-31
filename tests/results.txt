@@ -2,7 +2,7 @@ Tali Forth 2 default kernel for py65mon (18. Feb 2018)
 
 
 Tali Forth 2 for the 65c02
-Version BETA 28. Dec 2018 
+Version BETA 31. Dec 2018 
 Copyright 2014-2018 Scot W. Stevenson
 Tali Forth 2 comes with absolutely NO WARRANTY
 Type 'bye' to exit
@@ -2130,7 +2130,7 @@ cr .( >>>> )  saved-string type  .( <<<< ) cr
 redirect-output  ok
 2drop  \ ed returns ( addr u ), don't need that at the moment  ok
 T{ saved-string s\"  ok\ned \nq  ok\nrestore-output  " compare -> 0 }T  ok
-\                   A--------A  A-------------------A  <-- This boilerplate            ok
+\                   A--------A  A-------------------A  <-- This is boilerplate            ok
   ok
 \ Cut down on noise  ok
 : test-ed ( -- addr u )  compiled
@@ -2139,15 +2139,67 @@ T{ saved-string s\"  ok\ned \nq  ok\nrestore-output  " compare -> 0 }T  ok
    saved-string  ( addr u )   compiled
 ;   ok
   ok
+\ Test --- q --- Don't quit if we have unsaved changes  ok
+test-ed  ok
+saved-string dump 
+101C  0A 61 20 0A 7A 7A 7A 20  0A 2E 20 0A 71 20 0A 3F  .a .zzz  .. .q .?
+102C  0A 51 20  .Q  ok
+T{ s\" \na \nzzz \n. \nq \n?\nQ " compare -> 0 }T  ok
   ok
-\ Test --- p --- print one line  ok
+  ok
+\ Test --- p --- print one line, no line number  ok
 test-ed  ok
 T{ s\" \na \nThat's a straw, Tali. \n. \n1p \nThat's a straw, Tali.\nQ " compare -> 0 }T  ok
+  ok
+\ Test --- p --- print two lines, no line number  ok
+test-ed  ok
+T{ s\" \na \naaa \nbbb \n. \n1,2p \naaa\nbbb\nQ " compare -> 0 }T  ok
+  ok
+  ok
+\ Test --- p --- print last of three lines (tests $)  ok
+test-ed  ok
+T{ s\" \na \neee \nfff \nggg \n. \n$p \nggg\nQ " compare -> 0 }T  ok
+  ok
+  ok
+\ Test --- p --- print all lines (tests %)  ok
+test-ed  ok
+T{ s\" \na \nlll \nmmm \nnnn \n. \n%p \nlll\nmmm\nnnn\nQ " compare -> 0 }T  ok
+  ok
+  ok
+\ Test --- p --- print all lines (tests ,)  ok
+test-ed  ok
+T{ s\" \na \nooo \nppp \nqqq \n. \n,p \nooo\nppp\nqqq\nQ " compare -> 0 }T  ok
+  ok
+  ok
+\ Test --- p --- print last two lines (tests n,m)  ok
+test-ed  ok
+T{ s\" \na \nooo \nppp \nqqq \n. \n2,3p \nppp\nqqq\nQ " compare -> 0 }T  ok
+  ok
+  ok
+\ Test --- number --- print last two lines (tests number just printing line)  ok
+test-ed  ok
+T{ s\" \na \nooo \nppp \nqqq \n. \n2 \nppp\nQ " compare -> 0 }T  ok
   ok
   ok
 \ Test --- n --- print one line with a line number  ok
 test-ed  ok
 T{ s\" \na \nThat's a straw, Tali. \n. \n1n \n1 \tThat's a straw, Tali.\nQ " compare -> 0 }T  ok
+  ok
+  ok
+\ Test --- n --- print two lines with a line number  ok
+test-ed  ok
+T{ s\" \na \nccc \nddd \n. \n1,2n \n1 \tccc\n2 \tddd\nQ " compare -> 0 }T  ok
+  ok
+  ok
+\ Test --- = --- EQU must return 0 if no text  ok
+test-ed  ok
+T{ s\" \n= \n0 \nq " compare -> 0 }T  ok
+  ok
+  ok
+\ Test --- = --- EQU should print number of last line with $  ok
+test-ed  ok
+T{ s\" \na \nhhh \niii \njjj \n. \n$= \n3 \nQ " compare -> 0 }T  ok
+  ok
   ok
   ok
 \ ---- Cleanup from redirection tests ----  ok

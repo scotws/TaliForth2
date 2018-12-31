@@ -1,6 +1,3 @@
-WARNING: This chapter is work in progress and currently more a collection of
-notes.
-
 Tali Forth is shipped with a built-in assembler that uses the Simpler Assembler
 Format (SAN). See the Appendix for an introduction to SAN.
 

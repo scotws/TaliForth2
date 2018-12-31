@@ -1,13 +1,19 @@
-TIP: This manual includes <<ed-tutorial,a tutorial>> for `ed`
-
 [quote, B. W. Kernighan, A Tutorial Introduction to the UNIX Text Editor]
 Ed makes no response to most commands – there is no prompting or typing of
 messages like "ready". (This silence is preferred by experienced users, but
 sometimes a hangup for beginners.) <<BWK>>
 
-Tali Forth 2 currently ships with a clone of the `ed` line-based editor of
-Unix fame. It is envoked with `ed` and does not change the data stack. The
-formal name is `ed6502`. 
+Tali Forth 2 currently ships with a clone of the `ed` line-based editor of Unix
+fame. It is envoked with `ed`, though the formal name is `ed6502`. 
+
+TIP: `ed` uses about 2 KB of ROM in the default setup. If you know for certain
+you are not going to be using it, you can reclaim that space by commenting out
+the line `.require "ed.asm"` in `taliforth.asm` and the subroutine jump 
+`jsr ed6502` for the `ed` command in `native_words.asm`.
+
+For those not familiar with `ed`, there is <<ed-tutorial,a tutorial>> included
+in this manual. This section is a brief overview of the currently available
+functions.
 
 ==== Supported Commands
 
@@ -23,7 +29,7 @@ Q:: Unconditional quit, unsaved work is lost
 w:: Write text to given memory location (eg `7000w`)
 =:: Print value of given parameter (eg `$=` gives number of last line)
 
-For the parameters, these are currently available:
+The following parameters are currently available:
 
 [horizontal]
  .:: Current line number
@@ -38,7 +44,8 @@ the new current line.
 
 ==== Future planned commands
 
-There is no time frame for these additions. 
+These are subject to available memory. There is also no time frame for these
+additions. 
 
 [horizontal]
 +:: Advance by one line, print it and make it the new current line
@@ -54,7 +61,7 @@ s:: Substitute one string on line with another
 
 ==== Differences to Unix ed
 
-(Apart from missing about 90 percent of the features, that is)
+Apart from missing about 90 percent of the features:
 
 - The `w` (write) command takes its parameter before and not after the word.
   Where Unix ed uses the format `w <FILENAME>`, ed6502 takes the address
@@ -70,13 +77,13 @@ WARNING: `ed` currently only works with decimal numbers. When in doubt, use
 instance, a session to add a small string could look something like this:
 
 ----
-ed
-a
-.( Shepard, is that ... You're alive?)
-.
-7000w <1>
-22 <2>
-q
+        ed
+        a
+        .( Shepard, is that ... You're alive?)
+        .
+        7000w <1>
+        22    <2>
+        q
 ----
 <1> Address we save the command to
 <2> Number of characters saved including final line feed
@@ -85,7 +92,7 @@ It is a common mistake to forget the `.` (dot) to end the input, and try to
 go immediately to saving the text. Then, we can run the program:
 
 ----
-7000 22 evaluate
+        evaluate
 ----
 
 Ǹote that `evaluate` will handle line feeds, carriage returns and other white
@@ -100,9 +107,9 @@ edits, this probably is not a problem. However, if you known you are going to be
 using more memory, you probably will want to set a marker first.
 
 ----
-marker pre-edit <1>
-ed <2>
-pre-edit <3>
+        marker pre-edit <1>
+        ed              <2>
+        pre-edit        <3>
 ----
 <1> Set marker at current value of `here`
 <2> Edit normally
@@ -112,17 +119,18 @@ This issue might be taken care of in a future release.
 
 ===== Address of Saved Text
 
-Currently, `ed` returns the data stack just the way it found it. This means
-that you have to remember where you saved the text to with `w` and how long it
-was. A different option would be to return `( -- addr u )`, that is, the address
-and length of the text we saved. If nothing is saved, the program would return a
-zero length as TOS.
+`Ed` returns the address of the saved text on the stack as `( -- addr u )`.  If
+nothing is saved, the program would return a zero length as TOS.
 
 ==== Developer Information
 
-The "buffer" of `ed` is a simple linked list of nodes, consisting of a pointer
+The "buffer" of `ed` is a simple single-linked list of nodes, consisting of a pointer
 to the next entry, a pointer to the string address, and the length of that
-string. Each entry is two bytes, making six bytes in total for each node. A
+string. 
+
+image::pics/ed_node.png[]
+
+Each entry is two bytes, making six bytes in total for each node. A
 value of 0000 in the pointer to the next address signals the end of the list.
 The buffer starts at the point of the `cp` (accessed with the Forth word `here`)
 and is only saved to the given location when the `w` command is given.

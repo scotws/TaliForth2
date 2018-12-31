@@ -239,8 +239,18 @@ T{ saved-string s\"  ok\ned \nq  ok\nrestore-output  " compare -> 0 }T
    saved-string  ( addr u ) 
 ; 
 
+\ Test --- q --- Don't quit if we have unsaved changes
+test-ed
+a
+zzz
+.
+q
+Q
+saved-string dump
+T{ s\" \na \nzzz \n. \nq \n?\nQ " compare -> 0 }T
 
-\ Test --- p --- print one line
+
+\ Test --- p --- print one line, no line number
 test-ed
 a
 That's a straw, Tali.
@@ -248,6 +258,76 @@ That's a straw, Tali.
 1p
 Q
 T{ s\" \na \nThat's a straw, Tali. \n. \n1p \nThat's a straw, Tali.\nQ " compare -> 0 }T
+
+\ Test --- p --- print two lines, no line number
+test-ed
+a
+aaa
+bbb
+.
+1,2p
+Q
+T{ s\" \na \naaa \nbbb \n. \n1,2p \naaa\nbbb\nQ " compare -> 0 }T
+
+
+\ Test --- p --- print last of three lines (tests $)
+test-ed
+a
+eee
+fff
+ggg
+.
+$p
+Q
+T{ s\" \na \neee \nfff \nggg \n. \n$p \nggg\nQ " compare -> 0 }T
+
+
+\ Test --- p --- print all lines (tests %)
+test-ed
+a
+lll
+mmm
+nnn
+.
+%p
+Q
+T{ s\" \na \nlll \nmmm \nnnn \n. \n%p \nlll\nmmm\nnnn\nQ " compare -> 0 }T
+
+
+\ Test --- p --- print all lines (tests ,)
+test-ed
+a
+ooo
+ppp
+qqq
+.
+,p
+Q
+T{ s\" \na \nooo \nppp \nqqq \n. \n,p \nooo\nppp\nqqq\nQ " compare -> 0 }T
+
+
+\ Test --- p --- print last two lines (tests n,m)
+test-ed
+a
+ooo
+ppp
+qqq
+.
+2,3p
+Q
+T{ s\" \na \nooo \nppp \nqqq \n. \n2,3p \nppp\nqqq\nQ " compare -> 0 }T
+
+
+\ Test --- number --- print last two lines (tests number just printing line)
+test-ed
+a
+ooo
+ppp
+qqq
+.
+2
+Q
+T{ s\" \na \nooo \nppp \nqqq \n. \n2 \nppp\nQ " compare -> 0 }T
 
 
 \ Test --- n --- print one line with a line number
@@ -258,6 +338,37 @@ That's a straw, Tali.
 1n
 Q
 T{ s\" \na \nThat's a straw, Tali. \n. \n1n \n1 \tThat's a straw, Tali.\nQ " compare -> 0 }T
+
+
+\ Test --- n --- print two lines with a line number
+test-ed
+a
+ccc
+ddd
+.
+1,2n
+Q
+T{ s\" \na \nccc \nddd \n. \n1,2n \n1 \tccc\n2 \tddd\nQ " compare -> 0 }T
+
+
+\ Test --- = --- EQU must return 0 if no text
+test-ed
+=
+q
+T{ s\" \n= \n0 \nq " compare -> 0 }T
+
+
+\ Test --- = --- EQU should print number of last line with $
+test-ed
+a
+hhh
+iii
+jjj
+.
+$=
+Q
+T{ s\" \na \nhhh \niii \njjj \n. \n$= \n3 \nQ " compare -> 0 }T
+
 
 
 \ ---- Cleanup from redirection tests ----
