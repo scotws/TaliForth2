@@ -216,9 +216,9 @@ with open(args.output, 'wb') as fout:
     tali._run([0x00])
 
 # Walk through results and find stuff that went wrong
-print('\n')
+print()
 print('='*80)
-print('Summary:\n')
+print('Summary for: ' + ' '.join(args.tests))
 
 # Check to see if we crashed before reading all of the tests.
 if test_index < len(test_string) - 1:
@@ -267,9 +267,8 @@ if failed:
         print(line.strip())
 
 # Sum it all up.
-print()
 if (not undefined) and (not failed):
-    print('All available tests passed in: '+' '.join(args.tests))
+    print('All available tests passed')
 
 # If we got here, the program itself ran fine one way or another
 if args.beep:
