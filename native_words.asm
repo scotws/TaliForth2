@@ -434,12 +434,12 @@ _loop:
                 cmp #AscCN
                 beq _ctrl_n
 
-                ; That's enough for now, echo character. EMIT_A sidesteps
-                ; all the fooling around with the Data Stack
-                jsr emit_a
-
+                ; That's enough for now, save and echo character.
                 sta (tmp1),y
                 iny
+                ; EMIT_A sidesteps all the fooling around with the Data Stack
+                jsr emit_a
+
                 cpy tmp2        ; reached character limit?
                 bne _loop       ; fall thru if buffer limit reached
                 bra _buffer_full
@@ -11712,9 +11712,6 @@ z_editor_line:  rts
 ; ## "o"  tested  Tali Editor
 .scope
 xt_editor_o:
-                ; Erase the line
-                jsr xt_dup
-                jsr xt_editor_el
                 ; Print prompt
                 jsr xt_cr
                 jsr xt_dup
@@ -11726,15 +11723,26 @@ xt_editor_o:
                 jsr xt_space
                 ; Accept new input (directly into the buffer)
                 jsr xt_editor_line
+                jsr xt_dup      ; Save a copy of the line address for later.
                 dex
                 dex
                 lda #64         ; chars/line
                 sta 0,x
                 stz 1,x
                 jsr xt_accept
-                ; Drop result from accept.
-                inx
-                inx
+                ; Fill the rest with spaces.
+                ; Stack is currently ( line_address numchars_from_accept )
+                jsr xt_dup
+                jsr xt_not_rote ; -rot
+                jsr xt_plus
+                dex
+                dex
+                lda #64         ; chars/line
+                sta 0,x
+                stz 1,x
+                jsr xt_rot
+                jsr xt_minus
+                jsr xt_blank
                 ; Mark buffer as updated.
                 jsr xt_update
                 

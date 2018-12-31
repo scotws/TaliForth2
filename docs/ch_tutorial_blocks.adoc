@@ -13,7 +13,8 @@ then request that the modified version be saved back to storage.
 
 What the blocks hold is up to the user.  They can hold text, Forth code, or
 binary data.  Support for text and Forth code is provided by Tali, and the user
-can easily provide support for storing binary data in their programs.
+can easily provide support for storing binary data in their programs, as
+demonstrated in this chapter.
 
 === First steps with blocks
 
@@ -87,6 +88,8 @@ lives in the EDITOR-WORDLIST, which is not used when Tali starts.  To add the
 editor words, run:
 ----
 forth-wordlist editor-wordlist 2 set-order
+( or the shorter version... )
+editor-wordlist >order
 ----
 This tells Tali to use both the editor words and the forth words.
 
@@ -332,3 +335,196 @@ If you want to abandon the changes in the buffer, you can use the command
 `empty-buffers`.  This will not save even a dirty buffer, and marks the buffer
 as empty.
 --
+
+=== Storing Binary Data in Blocks
+
+While Tali comes built-in with support for text and Forth code in blocks,
+users may also want to use blocks to hold binary data.  A user might want to do
+this because the block memory space is much larger that the normal 65C02 memory
+space, so a much larger dataset can be stored here than the 65C02 would be able
+to support in RAM.  It may also be desirable for the data to be saved even in the
+absense of power, and when block storage is implemented on a non-volatile meory,
+such as EEPROM or FLASH, this is possible.
+
+Because the format of the binary data is up to the user, Forth doesn't directly
+support the initializing, entering, retrieval, or display of binary data.
+Instead, the user is expected to use the provided block words to create the
+functionality needed for the application.
+
+Unless all of the blocks in the system are used with binary data, there will
+often be a mix of text and binary data blocks.  Because using some of the words
+designed for text blocks, such as `list`, on a binary block could emit
+characters that can mess up terminals, it is recommended to "reserve" binary
+blocks.  This is done by simply adding a note in block 0 with the block numbers
+being used to hold binary data, so that users of the system will know to avoid
+performing text operations on those blocks.  Block 0 is also a good place to
+inform the user if the routines for accessing the binary data are also stored
+(as Forth code) in block storage.
+
+In this example, we will create some words to make non-volatile arrays stored on
+a flash device.  While this example can be run with the block ramdrive, using 7
+blocks, it won't be non-volatile in that case.  
+
+To get started, we will add a note to block 0 indicating the blocks we are going
+to use.  The following shows an example Forth session adding this note.
+
+----
+0 list 
+Screen #   0
+ 0 ( Welcome to this EEPROM! )                                     
+ 1                                                                 
+ 2 ( There are 128 blocks on this EEPROM )                         
+ 3                                                                 
+ 4                                                                 
+ 5                                                                 
+ 6                                                                 
+ 7                                                                 
+ 8                                                                 
+ 9                                                                 
+10                                                                 
+11                                                                 
+12                                                                 
+13                                                                 
+14                                                                 
+15                                                                 
+ ok
+editor-wordlist >order  ok
+4 o 
+ 4 * ( Blocks 3-7 contain binary data )  ok   
+5 o 
+ 5 * ( Blocks 1-2 contain the routines to access this data )  ok
+l 
+Screen #   0
+ 0 ( Welcome to this EEPROM! )                                     
+ 1                                                                 
+ 2 ( There are 128 blocks on this EEPROM )                         
+ 3                                                                 
+ 4 ( Blocks 3-7 contain binary data )                              
+ 5 ( Blocks 1-2 contain the routines to access this data )         
+ 6                                                                 
+ 7                                                                 
+ 8                                                                 
+ 9                                                                 
+10                                                                 
+11                                                                 
+12                                                                 
+13                                                                 
+14                                                                 
+15                                                                 
+ ok
+----
+
+In this session, screen 0 is listed to locate a couple of empty lines for the
+message.  Then the editor-wordlist is added to the search order to get the word
+`o`, which is used to overwrite lines 4 and 5 on the current screen.  Finally,
+`l` (also from the editor-wordlist) is used to list the current screen again to
+see the changes.
+
+Now that the blocks have been reserved, we will put our code in blocks 1 and 2.
+It is recommended to put the access words for the binary data into the same
+block storage device so that the data can be recovered on a different system if
+needed.
+
+----
+1 enter-screen 
+ 0 * ( Block Binary Data Words  1/2                 SCC 2018-12 ) 
+ 1 * ( Make a defining word to create block arrays. ) 
+ 2 * : block-array: ( base_block# "name" -- ) ( index -- addr ) 
+ 3 *   create ,     ( save the base block# ) 
+ 4 *   does> @ swap ( base_block# index ) 
+ 5 *     cells      ( Turn index into byte index ) 
+ 6 *     1024 /MOD  ( base_block# offset_into_block block# ) 
+ 7 *     rot +      ( offset_into_block real_block# ) 
+ 8 *     block      ( offset_into_block buffer_address ) 
+ 9 *     + ; 
+10 * ( Create the array starting at block 3           ) 
+11 * ( With 4 blocks, max index is 2047 - not checked ) 
+12 * 3 block-array: myarray 
+13 * ( Some helper words for accessing elements ) 
+14 * : myarray@ ( index -- n ) myarray @ ; 
+15 * : myarray! ( n index -- ) myarray ! update ;  ok
+2 enter-screen 
+ 0 * ( Block Binary Data Words cont. 2/2            SCC 2018-12 ) 
+ 1 * ( Note: For both words below, end-index is one past the ) 
+ 2 * ( last index you want to use.                           ) 
+ 3 *  
+ 4 * ( A helper word to initialize values in block arrays to 0 ) 
+ 5 * : array-zero ( end_index start_index -- ) 
+ 6 *     ?do 0 i myarray! loop ; 
+ 7 *  
+ 8 * ( A helper word to view a block array ) 
+ 9 * : array-view ( end_index start_index -- ) 
+10 *     ( Print 10 values per line with 6 digit columns. ) 
+11 *     ?do i 10 mod 0= if cr then i myarray @ 6 .r loop ; 
+12 *  
+13 *  
+14 *  
+15 *   ok
+1 2 thru  ok
+----
+
+`enter-screen` is used to enter screens 1 and 2 with the code for initializing
+(`array-zero`), accessing (`myarray`, `myarray@`, and `myarray!`), and viewing
+(`array-view`) the binary data.  Once the Forth code has been placed into blocks
+1 and 2, a `thru` command is used to load the code.
+
+The word `block-array:` is a defining word.  You place the starting block number
+(in our case, 3) on the stack before using the `block-array:` and give a new
+name after it.  Any time that new name (`myarray`, created on line 12 of screen
+1 in this case) is used, it expects an index (into an array of cells) on the
+stack.  It will load the correct block into a buffer and compute address in that
+buffer for the index given.  Because cells are 2 bytes on Tali, the total number
+of cells is 4096/2=2048.  The indices start at 0, so the index of the last valid
+cell is 2047.  Please note that the code given above does not range check the
+index, so it is up to the user to not exceed this value or to add range
+checking.
+
+The blocks 3-7 being used to store the array may be uninitialized or may have
+been initialized for text.  We'll use the helper words to initialize all of the
+elements in the array, and then place some data into the array.
+
+----
+2048 0 array-zero  ok
+50 0 array-view 
+     0     0     0     0     0     0     0     0     0     0
+     0     0     0     0     0     0     0     0     0     0
+     0     0     0     0     0     0     0     0     0     0
+     0     0     0     0     0     0     0     0     0     0
+     0     0     0     0     0     0     0     0     0     0 ok
+12345 4 myarray!  ok
+6789 10 myarray!  ok
+4 myarray@ . 12345  ok
+50 0 array-view 
+     0     0     0     0 12345     0     0     0     0     0
+  6789     0     0     0     0     0     0     0     0     0
+     0     0     0     0     0     0     0     0     0     0
+     0     0     0     0     0     0     0     0     0     0
+     0     0     0     0     0     0     0     0     0     0 ok
+flush  ok
+----
+
+In the above session, all the values in the array are zeroed.  Next, the first
+50 values (indices 0-49) are viewed.  Some numbers are stored at indices 4 and
+10.  The value at index 4 is fetched and printed, and the first 50 values
+are displayed again.  Finally, all buffers are flushed to make sure any changes
+are permanent.
+
+If the system is powered down and back up at a later time, the data can be
+accessed by first loading the helper words in blocks 1-2.
+
+----
+1 2 thru  ok
+50 0 array-view 
+     0     0     0     0 12345     0     0     0     0     0
+  6789     0     0     0     0     0     0     0     0     0
+     0     0     0     0     0     0     0     0     0     0
+     0     0     0     0     0     0     0     0     0     0
+     0     0     0     0     0     0     0     0     0     0 ok
+----
+
+The methods shown in this example require the user to run `flush` or
+`save-buffers` before powering down the system. If the user wants the new values
+written to block storage immediately after being modified, the word `myarray!`
+could be modified to run `save-buffers` after storing the new value.  As a side
+effect, however, an entire 1K block would be overwritten every time a single
+value was changed, making the routine much slower.

@@ -1,6 +1,6 @@
 # Manual for Tali Forth 2 for the 65c02
-Sam Colwell 
-Scot W. Stevenson 
+Sam Colwell
+Scot W. Stevenson
 
 Tali Forth 2 is a bare-metal ANS(ish) Forth for the 65c02 8-bit MPU. It aims to be, roughly in order of importance, easy to try out (just run the included binary), simple (subroutine threading model), specific (for the 65c02 only), and standardized (ANS Forth).
 
@@ -506,37 +506,17 @@ This reserves a chunk of ram with four blocks in it (numbered 0-3) which is enou
 
 Be careful about creating too many blocks as they are 1K each. It’s also worth noting that running `block-ramdrive-init` again will create another ramdrive and the existing one will be inaccessible while still taking up space in RAM.
 
+See the tutorials on working with blocks for more information on how to use them.
+
 ### The Block Editor
 
-If you are using blocks (see the block chapter), you can use the following code to create a very basic screen editor that allows you to replace a single line or an entire screen. Screens are 16 lines (numbered 0-15) of 64 characters each, for a total of 1K characters. Because newlines are not stored in the blocks (the remainder of each line is filled with spaces,) you should leave a space in the very last character of each line to separate the words in that line from the words in the next line.
+If you are using blocks (see the block chapter), you can use the following words to enter text or Forth code. The built-in editor allows you to replace a single line or an entire screen. Screens are 16 lines (numbered 0-15) of 64 characters each, for a total of 1K characters. Because newlines are not stored in the blocks (the remainder of each line is filled with spaces,) you should leave a space in the very last character of each line to separate the words in that line from the words in the next line.
 
-> **Note**
->
-> This editor uses a word named `E` which may interfere with the use of hex. Once you have entered the editor words, you will need to use the hex value "0E" anywhere you want a single "E" value. This will not interfere with hex numbers that have additional digits. Alternately, you can rename the `E` word and update the `O` word which uses it.
+To get started, the editor words need to be added to the search order. To do that, you can just run:
 
-    ( Simple Editor for screens /blocks )
-    decimal
-    ( line provides the address, in the buffer, of the given line )
-    : line  ( line# - c-addr)
-        64 *        ( Convert line number to # characters offset )
-        scr @ block ( Get the buffer address for that block )
-        + ;         ( Add the offset )
+    editor-wordlist >order
 
-    : E ( line# - ) ( Erase the given line number with spaces )
-        line 64 blank update ;
-
-    : O     ( line# - ) ( Overwrite line with new text )
-        dup E                    ( Erase existing text on line )
-        cr dup 2 u.r ."  * " line 64 accept drop update ;
-
-    ( Editor, continued )
-    : enter-screen ( scr# - )
-      dup scr ! buffer drop
-      16 0 do i o loop ;
-    : erase-screen ( scr# - )
-      dup scr ! buffer 1024 blank update ;
-
-To use this editor, first select a screen to work with by running list on it. If you are planning on using `load` to run some code later, it’s worth noting that only screens above 0 can be LOADed. Screen 0 is reserved for comments describing what is on the other screens. It can be LISTed and edited, but cannot be LOADed.
+To use the editor, first select a screen to work with by running `list` on it. If you are planning on using `load` to run some code later, it’s worth noting that only screens above 0 can be LOADed. Screen 0 is reserved for comments describing what is on the other screens. It can be LISTed and edited, but cannot be LOADed.
 
     1 list
 
@@ -587,6 +567,8 @@ Because a screen only holds 16 lines, you may need to split your code across mul
 
     1 3 thru
 
+For more examples of the block editor being used, see the tutorials on working with blocks.
+
 ### The Line-Based Editor `ed`
 
 > **Tip**
@@ -598,10 +580,6 @@ Because a screen only holds 16 lines, you may need to split your code across mul
 > —  B. W. Kernighan A Tutorial Introduction to the UNIX Text Editor
 
 Tali Forth 2 currently ships with a clone of the `ed` line-based editor of Unix fame. It is envoked with `ed` and does not change the data stack. The formal name is `ed6502`.
-
-> **Warning**
->
-> `ed` is included in a very primitive form only and should be considered ALPHA.
 
 #### Supported Commands
 
@@ -742,7 +720,7 @@ There is no time frame for these additions.
 
 > **Warning**
 >
-> At this point, it isn’t totally clear what happens if the number base is set to hexadecimal via `hex`. Use at your own risk.
+> `ed` currently only works with decimal numbers. When in doubt, use `decimal` to make sure your using base ten.
 
 #### Using `ed` for programming
 
@@ -790,9 +768,7 @@ Currently, `ed` returns the data stack just the way it found it. This means that
 
 #### Developer Information
 
-`Ed` will be massively rewritten under the hood once the code has been stabilized, has all features, and a testing suite. Currently, it’s somewhat of a mess and contains some testing routines that will be removed in the final version.
-
-The "buffer" of `ed` is a simple linked list of nodes, consisting of a pointer to the next entry, a pointer to the string address, and the length of that string. Each entry is two byte, making six bytes in total for each node. A value of 0000 in the pointer to the next address signals the end of the list. The buffer starts at the point of the `cp` (accessed with the Forth word `here`) and is only saved to the given location when the `w` command is given.
+The "buffer" of `ed` is a simple linked list of nodes, consisting of a pointer to the next entry, a pointer to the string address, and the length of that string. Each entry is two bytes, making six bytes in total for each node. A value of 0000 in the pointer to the next address signals the end of the list. The buffer starts at the point of the `cp` (accessed with the Forth word `here`) and is only saved to the given location when the `w` command is given.
 
 ### The Assembler
 
@@ -821,21 +797,21 @@ Because Tali Forth is a Subroutine Threaded (STC) Forth, inserting assembler ins
 
 The first line is required to give the user access to the list of assembler mnemonics. They are not in the default wordlist path because of their sheer number:
 
-            push-a --> <b <j tya txs txa tsx tsb.z tsb trb.z trb tay tax stz.zx stz.z
-            stz.x stz sty.zx sty.z sty stx.zy stx.z stx sta.zxi sta.zx sta.ziy
-            sta.zi sta.z sta.y sta.x sta sei sed sec sbc.zxi sbc.zx sbc.ziy sbc.zi
-            sbc.z sbc.y sbc.x sbc.# sbc rts rti ror.zx ror.z ror.x ror.a ror rol.zx
-            rol.z rol.x rol.a rol ply plx plp pla phy phx php pha ora.zxi ora.zx
-            ora.ziy ora.zi ora.z ora.y ora.x ora.# ora nop lsr.zx lsr.z lsr.x lsr.a
-            lsr ldy.zx ldy.z ldy.x ldy.# ldy ldx.zy ldx.z ldx.y ldx.# ldx lda.zxi
-            lda.zx lda.ziy lda.zi lda.z lda.y lda.x lda.# lda jsr jmp.xi jmp.i jmp
-            iny inx inc.zx inc.z inc.x inc.a inc eor.zxi eor.zx eor.ziy eor.zi eor.z
-            eor.y eor.x eor.# eor dey dex dec.zx dec.z dec.x dec.a dec cpy.z cpy.#
-            cpy cpx.z cpx.# cpx cmp.zxi cmp.zx cmp.ziy cmp.zi cmp.z cmp.y cmp.x
-            cmp.# cmp clv cli cld clc bvs bvc brk bra bpl bne bmi bit.zx bit.z bit.x
-            bit.# bit beq bcs bcc asl.zx asl.z asl.x asl.a asl and.zxi and.zx
-            and.ziy and.zi and.z and.y and.x and.# and. adc.zxi adc.zx adc.ziy
-            adc.zi adc.z adc.y adc.x adc.#
+            adc.# adc.x adc.y adc.z adc.zi adc.ziy adc.zx adc.zxi and. and.# and.x
+            and.y and.z and.zi and.ziy and.zx and.zxi asl asl.a asl.x asl.z asl.zx
+            bcc bcs beq bit bit.# bit.x bit.z bit.zx bmi bne bpl bra brk bvc bvs clc
+            cld cli clv cmp cmp.# cmp.x cmp.y cmp.z cmp.zi cmp.ziy cmp.zx cmp.zxi
+            cpx cpx.# cpx.z cpy cpy.# cpy.z dec dec.a dec.x dec.z dec.zx dex dey eor
+            eor.# eor.x eor.y eor.z eor.zi eor.ziy eor.zx eor.zxi inc inc.a inc.x
+            inc.z inc.zx inx iny jmp jmp.i jmp.xi jsr lda lda.# lda.x lda.y lda.z
+            lda.zi lda.ziy lda.zx lda.zxi ldx ldx.# ldx.y ldx.z ldx.zy ldy ldy.#
+            ldy.x ldy.z ldy.zx lsr lsr.a lsr.x lsr.z lsr.zx nop ora ora.# ora.x
+            ora.y ora.z ora.zi ora.ziy ora.zx ora.zxi pha php phx phy pla plp plx
+            ply rol rol.a rol.x rol.z rol.zx ror ror.a ror.x ror.z ror.zx rti rts
+            sbc sbc.# sbc.x sbc.y sbc.z sbc.zi sbc.ziy sbc.zx sbc.zxi sec sed sei
+            sta sta.x sta.y sta.z sta.zi sta.ziy sta.zx sta.zxi stx stx.z stx.zy sty
+            sty.z sty.zx stz stz.x stz.z stz.zx tax tay trb trb.z tsb tsb.z tsx txa
+            txs tya
 
 The last line in our code, `previous`, removes the assembler wordlist again.
 
@@ -2188,7 +2164,7 @@ Blocks are a simple system for dealing with non-volatile storage. Originally, th
 
 The block words do not use a file system and expect to access the storage memory directly. The storage space is divided into 1K chunks, or "blocks", and each is given a number. On Tali, this allows for 64K blocks, or up to 64MB of storage. The user can request that a block is brought into RAM, operate on the data, and then request that the modified version be saved back to storage.
 
-What the blocks hold is up to the user. They can hold text, Forth code, or binary data. Support for text and Forth code is provided by Tali, and the user can easily provide support for storing binary data in their programs.
+What the blocks hold is up to the user. They can hold text, Forth code, or binary data. Support for text and Forth code is provided by Tali, and the user can easily provide support for storing binary data in their programs, as demonstrated in this chapter.
 
 ### First steps with blocks
 
@@ -2235,6 +2211,8 @@ Block 0 is special in that it is the only block you cannot load Forth code from.
 In order to edit a block, we will need to bring in the screen editor. It lives in the EDITOR-WORDLIST, which is not used when Tali starts. To add the editor words, run:
 
     forth-wordlist editor-wordlist 2 set-order
+    ( or the shorter version... )
+    editor-wordlist >order
 
 This tells Tali to use both the editor words and the forth words.
 
@@ -2458,15 +2436,149 @@ If you want to write the changes but keep the block in the buffer, you can use t
 
 If you want to abandon the changes in the buffer, you can use the command `empty-buffers`. This will not save even a dirty buffer, and marks the buffer as empty.
 
+### Storing Binary Data in Blocks
+
+While Tali comes built-in with support for text and Forth code in blocks, users may also want to use blocks to hold binary data. A user might want to do this because the block memory space is much larger that the normal 65C02 memory space, so a much larger dataset can be stored here than the 65C02 would be able to support in RAM. It may also be desirable for the data to be saved even in the absense of power, and when block storage is implemented on a non-volatile meory, such as EEPROM or FLASH, this is possible.
+
+Because the format of the binary data is up to the user, Forth doesn’t directly support the initializing, entering, retrieval, or display of binary data. Instead, the user is expected to use the provided block words to create the functionality needed for the application.
+
+Unless all of the blocks in the system are used with binary data, there will often be a mix of text and binary data blocks. Because using some of the words designed for text blocks, such as `list`, on a binary block could emit characters that can mess up terminals, it is recommended to "reserve" binary blocks. This is done by simply adding a note in block 0 with the block numbers being used to hold binary data, so that users of the system will know to avoid performing text operations on those blocks. Block 0 is also a good place to inform the user if the routines for accessing the binary data are also stored (as Forth code) in block storage.
+
+In this example, we will create some words to make non-volatile arrays stored on a flash device. While this example can be run with the block ramdrive, using 7 blocks, it won’t be non-volatile in that case.
+
+To get started, we will add a note to block 0 indicating the blocks we are going to use. The following shows an example Forth session adding this note.
+
+    0 list
+    Screen #   0
+     0 ( Welcome to this EEPROM! )
+     1
+     2 ( There are 128 blocks on this EEPROM )
+     3
+     4
+     5
+     6
+     7
+     8
+     9
+    10
+    11
+    12
+    13
+    14
+    15
+     ok
+    editor-wordlist >order  ok
+    4 o
+     4 * ( Blocks 3-7 contain binary data )  ok
+    5 o
+     5 * ( Blocks 1-2 contain the routines to access this data )  ok
+    l
+    Screen #   0
+     0 ( Welcome to this EEPROM! )
+     1
+     2 ( There are 128 blocks on this EEPROM )
+     3
+     4 ( Blocks 3-7 contain binary data )
+     5 ( Blocks 1-2 contain the routines to access this data )
+     6
+     7
+     8
+     9
+    10
+    11
+    12
+    13
+    14
+    15
+     ok
+
+In this session, screen 0 is listed to locate a couple of empty lines for the message. Then the editor-wordlist is added to the search order to get the word `o`, which is used to overwrite lines 4 and 5 on the current screen. Finally, `l` (also from the editor-wordlist) is used to list the current screen again to see the changes.
+
+Now that the blocks have been reserved, we will put our code in blocks 1 and 2. It is recommended to put the access words for the binary data into the same block storage device so that the data can be recovered on a different system if needed.
+
+    1 enter-screen
+     0 * ( Block Binary Data Words  1/2                 SCC 2018-12 )
+     1 * ( Make a defining word to create block arrays. )
+     2 * : block-array: ( base_block# "name" -- ) ( index -- addr )
+     3 *   create ,     ( save the base block# )
+     4 *   does> @ swap ( base_block# index )
+     5 *     cells      ( Turn index into byte index )
+     6 *     1024 /MOD  ( base_block# offset_into_block block# )
+     7 *     rot +      ( offset_into_block real_block# )
+     8 *     block      ( offset_into_block buffer_address )
+     9 *     + ;
+    10 * ( Create the array starting at block 3           )
+    11 * ( With 4 blocks, max index is 2047 - not checked )
+    12 * 3 block-array: myarray
+    13 * ( Some helper words for accessing elements )
+    14 * : myarray@ ( index -- n ) myarray @ ;
+    15 * : myarray! ( n index -- ) myarray ! update ;  ok
+    2 enter-screen
+     0 * ( Block Binary Data Words cont. 2/2            SCC 2018-12 )
+     1 * ( Note: For both words below, end-index is one past the )
+     2 * ( last index you want to use.                           )
+     3 *
+     4 * ( A helper word to initialize values in block arrays to 0 )
+     5 * : array-zero ( end_index start_index -- )
+     6 *     ?do 0 i myarray! loop ;
+     7 *
+     8 * ( A helper word to view a block array )
+     9 * : array-view ( end_index start_index -- )
+    10 *     ( Print 10 values per line with 6 digit columns. )
+    11 *     ?do i 10 mod 0= if cr then i myarray @ 6 .r loop ;
+    12 *
+    13 *
+    14 *
+    15 *   ok
+    1 2 thru  ok
+
+`enter-screen` is used to enter screens 1 and 2 with the code for initializing (`array-zero`), accessing (`myarray`, `myarray@`, and `myarray!`), and viewing (`array-view`) the binary data. Once the Forth code has been placed into blocks 1 and 2, a `thru` command is used to load the code.
+
+The word `block-array:` is a defining word. You place the starting block number (in our case, 3) on the stack before using the `block-array:` and give a new name after it. Any time that new name (`myarray`, created on line 12 of screen 1 in this case) is used, it expects an index (into an array of cells) on the stack. It will load the correct block into a buffer and compute address in that buffer for the index given. Because cells are 2 bytes on Tali, the total number of cells is 4096/2=2048. The indices start at 0, so the index of the last valid cell is 2047. Please note that the code given above does not range check the index, so it is up to the user to not exceed this value or to add range checking.
+
+The blocks 3-7 being used to store the array may be uninitialized or may have been initialized for text. We’ll use the helper words to initialize all of the elements in the array, and then place some data into the array.
+
+    2048 0 array-zero  ok
+    50 0 array-view
+         0     0     0     0     0     0     0     0     0     0
+         0     0     0     0     0     0     0     0     0     0
+         0     0     0     0     0     0     0     0     0     0
+         0     0     0     0     0     0     0     0     0     0
+         0     0     0     0     0     0     0     0     0     0 ok
+    12345 4 myarray!  ok
+    6789 10 myarray!  ok
+    4 myarray@ . 12345  ok
+    50 0 array-view
+         0     0     0     0 12345     0     0     0     0     0
+      6789     0     0     0     0     0     0     0     0     0
+         0     0     0     0     0     0     0     0     0     0
+         0     0     0     0     0     0     0     0     0     0
+         0     0     0     0     0     0     0     0     0     0 ok
+    flush  ok
+
+In the above session, all the values in the array are zeroed. Next, the first 50 values (indices 0-49) are viewed. Some numbers are stored at indices 4 and 10. The value at index 4 is fetched and printed, and the first 50 values are displayed again. Finally, all buffers are flushed to make sure any changes are permanent.
+
+If the system is powered down and back up at a later time, the data can be accessed by first loading the helper words in blocks 1-2.
+
+    1 2 thru  ok
+    50 0 array-view
+         0     0     0     0 12345     0     0     0     0     0
+      6789     0     0     0     0     0     0     0     0     0
+         0     0     0     0     0     0     0     0     0     0
+         0     0     0     0     0     0     0     0     0     0
+         0     0     0     0     0     0     0     0     0     0 ok
+
+The methods shown in this example require the user to run `flush` or `save-buffers` before powering down the system. If the user wants the new values written to block storage immediately after being modified, the word `myarray!` could be modified to run `save-buffers` after storing the new value. As a side effect, however, an entire 1K block would be overwritten every time a single value was changed, making the routine much slower.
+
 ## The `ed` Line-Based Editor
 
 > While TECO was known for its complex syntax, ed must have been the most user-hostile editor ever created.[\[PHS\]](#PHS)
 >
 > —  Peter H. Saulus The Daemon, the Gnu and the Penguin
 
-Tali Forth 2 comes with two editors, a traditional block-based editor of the type common with Forth, and the line-based editor `ed`, formally known as `ed6502`. This second editor is included because I like line-based editors. More to the point, the saved text uses less space than the block editor, where every block, regardless of how much text is in it, uses 1024 bytes. In contrast, `ed` uses one byte per character plus one end-of-line character per line. We’ll see an example of this later.
+Tali Forth 2 comes with two editors, a traditional block-based editor of the type common with Forth, and the line-based editor `ed`, formally known as `ed6502`. This second editor is included because I like line-based editors. More to the point, the saved text uses less space than the block editor, where every block, regardless of how much text is in it, uses 1024 bytes. In contrast, `ed` uses one byte per character plus one end-of-line character per line.
 
-The original `ed` was created by Ken Thompson and Dennis Ritchie along with the Unix operating system, sometime about 1971. It is terse, small, robust, and has a reputation for being completely unhelpful. An error is just signaled with a question mark (`?`). There isn’t even a prompt unless it is explicitly turned on.
+The original `ed` was created by Ken Thompson and Dennis Ritchie along with the Unix operating system, sometime about 1971. It is terse, robust, and has a reputation for being completely unhelpful. Any error is just signaled with a question mark (`?`). There isn’t even a prompt unless it is explicitly turned on.
 
 > **Note**
 >
@@ -2476,7 +2588,9 @@ Commands in `ed` are single-letter commands like `a` or `p`. They can be prefixe
 
 ### First steps with `ed`
 
-Like its big brother `vi` (or its newer incarnation `vim`), `ed` has various modes, except that `ed` is so small it only has two. We start out in the *command mode* in which we accept, well, commands. Using `a` or `i` switches to *input mode* where all of the characters are added to the buffer. The first important thing is about how to get out of command mode: You type `.` (the period or dot) at the beginning of the line as the only character to return to command mode. A typical `ed` session will look something like this:[4]
+Like its big brother `vi` (or its newer incarnation `vim`), `ed` has various modes, except that `ed` is so small it only has two. We start out in the *command mode* in which we accept, well, commands. Using `a` or `i` switches to *input mode* where all of the characters are added to the buffer.
+
+The first important thing is about how to get out of command mode: You type `.` (the period or dot) at the beginning of the line as the only character to return to command mode. A typical `ed` session will look something like this:[4]
 
             ed      
             a       
@@ -2495,7 +2609,7 @@ Like its big brother `vi` (or its newer incarnation `vim`), `ed` has various mod
 
 -   The cursor moves down to the next line, without printing any confirmation. This is where you continue typing.
 
-When you first use `ed`, you’ll spend lots of time print what you’ve written and trying to figure out what the line numbers are. The commands for this are `p` (print without line numbers) and `n` (print with line numbers). The first special character prefix we’ll learn for this is `%` (the percent symbol, alternatively a comma) works as well. This makes the command that follows it apply to the whole text.
+When you first use `ed`, you’ll spend lots of time printing what you’ve written and trying to figure out what the line numbers are. The commands for this are `p` (print without line numbers) and `n` (print with line numbers). The first special character prefix we’ll use for this is `%` (the percent symbol, alternatively a comma) works as well. This makes the command that follows it apply to the whole text.
 
             %p      
             After time adrift among open stars
@@ -2518,7 +2632,7 @@ The `%n` (or `,n`) command is usually more helpful because it gives you line num
 
 -   This could also be `%n`
 
-Line numbers are indented automatically by one tab. Note we start counting with 1, not 0, because this is an editor for real humans.
+Line numbers are indented automatically by one tab. Note we start counting with 1, not 0, because this is an editor for real humans, not computer science types.
 
 Just entering the command directly without a line number will print the *current line*, which `ed` adjusts depending on what you are doing. After `a` it is the last line.
 
@@ -2548,12 +2662,12 @@ Note that lines three and four have moved up — they are now lines two and 
 >
 > To avoid confusion, when you have to delete a large number of lines, start at the bottom and move upwards towards the beginning of the text.
 
-We can also use comma-separated numbers to indicate a range of lines (say, `1,2d`). As you probably will have guessed, or the `,` (or `%`) prefix can be used to delete the complete text. Be careful — in the real version of `ed`, you can undo changes with the `u` command. Tali’s version currently doesn’t support this option. If you delete it, it’s gone.
+We can also use comma-separated numbers to indicate a range of lines (say, `1,2d`). As you probably will have guessed, or the `,` (or `%`) prefix can be used to delete the complete text. Be careful — in the real version of `ed`, you can undo changes with the `u` command. Tali doesn’t support this option. If you delete something, it’s gone.
 
-Now, let’s say we want to put back the second line. We can do this again with `a`, to add text *after* the first line. Note there is currently no way to paste the line we have just deleted. If we can’t remember it, we’re in trouble.
+Now, let’s say we want to put back the second line. We can do this again with `a`, to add text *after* the first line. Note there is currently also no way to paste the line we have just deleted. If we can’t remember it, we’re in trouble.
 
             1a      
-            And then, I, uh, did something
+            I, uh, did something
             .       
                     
 
@@ -2567,7 +2681,7 @@ Displaying our whole text with `%n` again, we get:
 
             %n
             1       After time adrift among open stars
-            2       And then, I, uh, did something
+            2       I, uh, did something
             3       And through shoals of dust
             4       I will return to where I began.
 
@@ -2592,7 +2706,7 @@ The only way to currently save text with `ed` on Tali is to write the buffer to 
 
 > **Warning**
 >
-> Changing the number base hasn’t been tested yet, so stick to decimal numbers for the time being when saving text.
+> `ed` currently only works with decimal numbers.
 
 The `w` command was originally created for files. Tali doesn’t have files, just addresses. This means that you can write anything anywhere, at the risk of completely destroying your system. Really, really don’t write anything to 0000, which will overwrite the zero page of the 65c02.
 
@@ -2600,11 +2714,11 @@ The `w` command was originally created for files. Tali doesn’t have files, jus
 
 We can leave `ed` at any time with `Q` - note this is the capital letter "q". Any unsaved (unwritten, rather) text will be lost. The lowercase `q` will refuse to quit if there is still unwritten text. When it doubt, use `q`.
 
-To access your text from the Forth command line, you can use standard Forth words like `type` with the address chosen and the length of the text provided after the `w` command.
+To access your text from the Forth command line, you can use standard Forth words like `type`. Since `ed` leaves `( addr u )` on the stack when it quits, you can just use it directly.
 
-            7000 128 cr type        
+            cr type                 
             After time adrift among open stars
-            And then I, uh, did something
+            I, uh, did something
             And through the shoals of dust
             I will return to where I began.
              ok                     
@@ -2613,13 +2727,9 @@ To access your text from the Forth command line, you can use standard Forth word
 
 -   We’re back to the helpful Forth interpreter.
 
-> **Note**
->
-> In future, `ed` might provide the address and length of the saved text on the data stack when quitting. The stack signature of `ed` would then change to `( — addr u )`. This would make further processing of the text easier.
-
 You can also use `dump` to show how compact `ed` stores the text:
 
-    7000 128 dump
+    dump
     1B58  41 66 74 65 72 20 74 69  6D 65 20 61 64 72 69 66  After ti me adrif
     1B68  74 20 61 6D 6F 6E 67 20  6F 70 65 6E 20 73 74 61  t among  open sta
     1B78  72 73 0A 41 6E 64 20 74  68 65 6E 20 49 2C 20 75  rs.And t hen I, u 
@@ -2653,7 +2763,7 @@ You can use `ed` to write and save programs. Fire it up as usual:
 
 -   Any indentation has to be provided by hand. There is no auto-indent.
 
-Running `7000 48 evaluate` will now print the numbers from 1 to 100.
+Running `evaluate` will now print the numbers from 1 to 100.
 
 ### Further Information
 

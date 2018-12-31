@@ -73,15 +73,17 @@
 
 ; Tali currently doesn't have separate user variables for multitasking. To
 ; prepare for this, though, we've already named the location of the user
-; variables user0. 
+; variables user0. Note cp0 starts one byte further down so that it currently
+; has the address $300 and not $2FF. This avoids crossing the page boundry when
+; accessing the user table, which would cost an extra cycle.
 
-.alias user0     zpage          ; user and system variables
-.alias rsp0      $ff            ; initial Return Stack Pointer (65c02 stack)
-.alias bsize     $ff            ; size of input/output buffers
-.alias buffer0   stack0+$100    ; input buffer ($0200-$027f)
-.alias cp0       buffer0+bsize  ; Dictionary starts after last buffer
-.alias cp_end    hist_buff      ; Last RAM byte available for code
-.alias padoffset $ff            ; offset from CP to PAD (holds number strings)
+.alias user0     zpage            ; user and system variables
+.alias rsp0      $ff              ; initial Return Stack Pointer (65c02 stack)
+.alias bsize     $ff              ; size of input/output buffers
+.alias buffer0   stack0+$100      ; input buffer ($0200-$027f)
+.alias cp0       buffer0+bsize+1  ; Dictionary starts after last buffer
+.alias cp_end    hist_buff        ; Last RAM byte available for code
+.alias padoffset $ff              ; offset from CP to PAD (holds number strings)
 
 
 .require "../taliforth.asm" ; zero page variables, definitions
