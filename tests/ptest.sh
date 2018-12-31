@@ -13,9 +13,9 @@ LEGAL_TESTS=( core_a core_b core_c string double facility ed asm
 for testname in ${LEGAL_TESTS[@]}; do
     # Keep the output when the tester loads for only the first test.
     if [ "$testname" == "${LEGAL_TESTS[0]}" ]; then
-        ./talitest.py -m -o "results_$testname.txt" -t $testname && echo "$testname" &
+        ./talitest.py -m -o "results_$testname.txt" -t $testname &
     else
-        ./talitest.py -m -o "results_$testname.txt" -s -t $testname && echo "$testname" &
+        ./talitest.py -m -o "results_$testname.txt" -s -t $testname &
     fi
 done
 

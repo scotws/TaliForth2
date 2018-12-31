@@ -224,7 +224,7 @@ print('Summary:\n')
 if test_index < len(test_string) - 1:
     print("Tali Forth 2 crashed before all tests completed\n")
 else:
-    print("Tali Forth 2 ran all tests requested\n")
+    print("Tali Forth 2 ran all tests requested")
 
 # First, stuff that failed due to undefined words
 undefined = []
@@ -269,7 +269,7 @@ if failed:
 # Sum it all up.
 print()
 if (not undefined) and (not failed):
-    print('All available tests passed.')
+    print('All available tests passed in: '+' '.join(args.tests))
 
 # If we got here, the program itself ran fine one way or another
 if args.beep:
