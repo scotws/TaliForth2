@@ -91,7 +91,7 @@ create actual-results  20 cells allot  ok
    else >in ! drop  compiled
    then ;  ok
   ok
- ( Running test 'core' from file 'core.fs' )  ok
+ ( Running test 'core_a' from file 'core_a.fs' )  ok
 \ From: John Hayes S1I  ok
 \ Subject: core.fr  ok
 \ Date: Mon, 27 Nov 95 13:10  ok
@@ -112,7 +112,7 @@ create actual-results  20 cells allot  ok
 testing core words  ok
 hex  ok
   ok
-marker core_tests  ok
+marker core_a_tests  ok
   ok
 \ ------------------------------------------------------------------------  ok
 testing basic assumptions  ok
@@ -727,9 +727,21 @@ T{ -7 2 -3 */mod -> -7 2 -3 t*/mod }T  ok
 T{ max-int 2 max-int */mod -> max-int 2 max-int t*/mod }T  ok
 T{ min-int 2 min-int */mod -> min-int 2 min-int t*/mod }T  ok
   ok
+core_a_tests  ok
+  ok
+ ( Running test 'core_b' from file 'core_b.fs' )  ok
+marker core_b_tests  ok
+\ Words from core_a.fs, needed by tests below.  ok
+0 constant 0s  ok
+0 invert constant 1s  ok
+0s constant <false>  ok
+1s constant <true>  ok
+1s 1 rshift invert constant msb  ok
+0 invert 1 rshift  constant mid-uint  ok
+0 invert 1 rshift invert  constant mid-uint+1  ok
+  ok
 \ ------------------------------------------------------------------------  ok
 testing here , @ ! cell+ cells c, c@ c! char+ chars 2@ 2! align aligned +! allot pad unused compile,  ok
-  ok
 decimal  ok
 here 1 allot  ok
 here  ok
@@ -854,11 +866,11 @@ create result  ok
 92 c, ( \\ )  ok
   ok
 T{ result here result - 2dup dump ( Make a string out of result ) 
-1241  07 08 1B 0C 0A 0D 0A 0A  22 0D 09 0B 00 22 41 5C  ........ "...."A\
-1251   ok
+103A  07 08 1B 0C 0A 0D 0A 0A  22 0D 09 0B 00 22 41 5C  ........ "...."A\
+104A   ok
    s\" \a\b\e\f\l\m\n\q\r\t\v\z\"\x41\\" 2dup dump compare -> 0 }T 
-1254  07 08 1B 0C 0A 0D 0A 0A  22 0D 09 0B 00 22 41 5C  ........ "...."A\
-1264   ok
+104D  07 08 1B 0C 0A 0D 0A 0A  22 0D 09 0B 00 22 41 5C  ........ "...."A\
+105D   ok
 hex  ok
   ok
 \ ------------------------------------------------------------------------  ok
@@ -1164,9 +1176,21 @@ T{ ge6 -> 123 }T  ok
 T{ : ge7 ge2 ge5 ; -> }T  ok
 T{ ge7 -> 124 }T  ok
   ok
+core_b_tests  ok
+  ok
+ ( Running test 'core_c' from file 'core_c.fs' )  ok
+marker core_c_tests  ok
+\ Words from core_a.fs, needed by tests below.  ok
+0 constant 0s  ok
+0 invert constant 1s  ok
+0s constant <false>  ok
+1s constant <true>  ok
+0 invert  constant max-uint  ok
+0 invert 1 rshift  constant max-int  ok
+0 invert 1 rshift invert  constant min-int  ok
 \ ------------------------------------------------------------------------  ok
 testing source >in word  ok
-  ok
+hex  ok
 : gs1 s" source" 2dup evaluate   compiled
        >r swap >r = r> r> = ;  ok
 T{ gs1 -> <true> <true> }T  ok
@@ -1622,7 +1646,7 @@ T{ gdx -> 123 234 }T  ok
   ok
 hex  ok
 \ Free memory used for these tests  ok
-core_tests  ok
+core_c_tests  ok
   ok
   ok
  ( Running test 'string' from file 'string.fs' )  ok
@@ -2905,7 +2929,7 @@ testing tools words: .s ? dump name>string see state words  ok
 testing block words: BLK SCR LOAD THRU BUFFER BLOCK UPDATE FLUSH  ok
   ok
 marker block_tests  ok
-  ok
+decimal  ok
 \ Bring in a 4-block ram drive  ok
 T{ 4 block-ramdrive-init -> }T  ok
   ok
@@ -3435,4 +3459,3 @@ char "       ' word          cycle_test "txt" drop CYCLES:    677 ok
 5            ' 0<>           cycle_test drop       CYCLES:     52 ok
   ok
   ok
-bye 

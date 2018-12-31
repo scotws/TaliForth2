@@ -33,11 +33,20 @@ docs/WORDLIST.md: taliforth-py65mon.bin
 
 
 # Some convenience targets to make running the tests and simulation easier.
+
+# Convenience target for regular tests.
 tests:	tests/results.txt
 
 tests/results.txt:	taliforth-py65mon.bin $(TEST_SOURCES)
 	cd tests; ./talitest.py
 
+# Convenience target for parallel tests
+ptests:	taliforth-py65mon.bin $(TEST_SOURCES)
+	cd tests; ./ptest.sh
+
+# Convenience target to run the py65mon simulator.
+# Because taliforth-py65mon.bin is listed as a dependency, it will be
+# reassembled first if any changes to its sources have been made.
 sim:	taliforth-py65mon.bin
 	py65mon -m 65c02 -r taliforth-py65mon.bin
 
