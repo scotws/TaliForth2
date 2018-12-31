@@ -1498,10 +1498,6 @@ Note that with most words in Tali Forth, as any STC Forth, the distinction betwe
 
 For `if` and `then`, we need to compile something called a "conditional forward branch", traditionally called `0branch`. In Tali Forth, this is not visible to the user as an actual, separate word anymore, but we can explain things better if we assume it is still around.
 
-> **Note**
->
-> Many Forths now use the words `cs-pick` and `cs-roll` instead of the `branch` variants, see [http://lars.nocrew.org/forth2012/rationale.html\\\#rat:tools:CS-PICK](http://lars.nocrew.org/forth2012/rationale.html\#rat:tools:CS-PICK) Tali Forth might switch to this variant in the future.
-
 At run-time, if the value on the Data Stack is false (flag is zero), the branch is taken ("branch on zero", therefore the name). Except that we don’t have the target of that branch yet — it will later be added by `then`. For this to work, we remember the address after the `0branch` instruction during the compilation of `if`. This is put on the Data Stack, so that `then` knows where to compile it’s address in the second step. Until then, a dummy value is compiled after `0branch` to reserve the space we need.
 
 > **Note**
