@@ -5158,7 +5158,7 @@ z_input:        rts
         ; cost of some speed by assuming the four variables are grouped
         ; together on the Zero Page and start with insrc (see definitions.asm
         ; for details). The reverse operation is r_to_input. These words must 
-	    ; be flagged as Never Native. Uses tmp1
+        ; be flagged as Never Native. Uses tmp1
         ; """ 
 .scope
 xt_input_to_r: 
