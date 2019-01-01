@@ -6897,7 +6897,7 @@ z_or:           rts
         ; 	           . ( just print the number )
         ; 	then then then then ;
         ;
-	    ; : ORDER ( -- )
+        ; : ORDER ( -- )
         ; 	cr get-order 0 ?do .wid loop
         ; 	space space get-current .wid ;
         ;
