@@ -5867,9 +5867,13 @@ z_m_star:       rts
 ; ## "marker"  auto  ANS core ext
         ; """https://forth-standard.org/standard/core/MARKER
         ; This word replaces FORGET in earlier Forths. Old entries are not
-        ; actually deleted, but merely overwritten by restoring CP and DP. To
-        ; do this, we want to end up with something that jumps to a run-time
-        ; component with a link to the original CP and DP values:
+        ; actually deleted, but merely overwritten by restoring CP and DP.
+        ; Run the named word at a later time to restore all of the wordlists
+        ; to their state when the word was created with marker.  Any words
+        ; created after the marker (including the marker) will be forgotten.
+
+        ; To do this, we want to end up with something that jumps to a
+        ; run-time component with a link to the original CP and DP values:
         ;
         ;       jsr marker_runtime
         ;       <Original CP MSB>
@@ -7144,6 +7148,7 @@ _char_found:
         ; skip leading delimiters -- this is the main difference to PARSE-NAME.
         ; PARSE and PARSE-NAME replace WORD in modern systems. ANS discussion
         ; http://www.forth200x.org/documents/html3/rationale.html#rat:core:PARSE 
+
         ;
         ;     cib  cib+toin   cib+ciblen
         ;      v      v            v
@@ -9744,7 +9749,9 @@ z_tick:         rts
 ; ## TO ( n "name" -- ) or ( "name") "Change a value"
 ; ## "to"  auto  ANS core ext
         ; """https://forth-standard.org/standard/core/TO
-        ; Gives a new value to a, uh, VALUE. One possible Forth
+        ; Gives a new value to a, uh, VALUE.
+
+        ; One possible Forth
         ; implementation is  ' >BODY !  but given the problems we have
         ; with >BODY on STC Forths, we do this the hard way. Since 
         ; Tali Forth uses the same code for CONSTANTs and VALUEs, you
@@ -10878,12 +10885,15 @@ z_um_slash_mod: rts
 ; ## "um*"  auto  ANS core
         ; """https://forth-standard.org/standard/core/UMTimes
         ; Multiply two unsigned 16 bit numbers, producing a 32 bit result.
+        ; Old Forth versions such as FIG Forth call this U*
+        
         ; This is based on modified FIG Forth code by Dr. Jefyll, see
         ; http://forum.6502.org/viewtopic.php?f=9&t=689 for a detailed
-        ; discussion. We don't use the system scratch pad (SYSPAD) for temp
+        ; discussion.
+        ;
+        ; We don't use the system scratch pad (SYSPAD) for temp
         ; storage because >NUMBER uses it as well, but instead tmp1 to
         ; tmp3 (tmp1 is N in the original code, tmp1+1 is N+1, etc).
-        ; Old Forth versions such as FIG Forth call this U* 
         ;
         ; Consider switching to a table-supported version based on
         ; http://codebase64.org/doku.php?id=base:seriously_fast_multiplication

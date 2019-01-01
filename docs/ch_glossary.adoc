@@ -983,25 +983,10 @@ with  : D+- O< IF DNEGATE THEN
 `marker`:: _ANS core ext_ ( "name" -- ) "Create a deletion boundry"
 https://forth-standard.org/standard/core/MARKER
 This word replaces FORGET in earlier Forths. Old entries are not
-actually deleted, but merely overwritten by restoring CP and DP. To
-do this, we want to end up with something that jumps to a run-time
-component with a link to the original CP and DP values:
-
-jsr marker_runtime
-<Original CP MSB>
-<Original CP LSB>
-<Original DP MSB> ( for CURRENT wordlist )
-<Original DP LSB>
-< USER variables from offset 4 to 39 >
-
-The user variables include:
-CURRENT (byte variable)
-<All wordlists> (currently 12) (cell array)
-<#ORDER> (byte variable)
-<All search order> (currently 9) (byte array)
-
-This code uses tmp1 and tmp2
-
+actually deleted, but merely overwritten by restoring CP and DP.
+Run the named word at a later time to restore all of the wordlists
+to their state when the word was created with marker.  Any words
+created after the marker (including the marker) will be forgotten.
 
 `max`:: _ANS core_ ( n n -- n ) "Keep larger of two numbers"
 https://forth-standard.org/standard/core/MAX
@@ -1103,22 +1088,6 @@ Find word in input string delimited by character given. Do not
 skip leading delimiters -- this is the main difference to PARSE-NAME.
 PARSE and PARSE-NAME replace WORD in modern systems. ANS discussion
 http://www.forth200x.org/documents/html3/rationale.html#rat:core:PARSE
-
-cib  cib+toin   cib+ciblen
-v      v            v
-|###################|
-
-|------>|  toin (>IN)
-|------------------->|  ciblen
-
-The input string is stored starting at the address in the Current
-Input Buffer (CIB), the length of which is in CIBLEN. While searching
-for the delimiter, TOIN (>IN) points to the where we currently are.
-Since PARSE does not skip leading delimiters, we assume we are on a
-useful string if there are any characters at all. As with
-PARSE-NAME, we must be able to handle strings with a length of
-16-bit for EVALUTE, which is a pain on an 8-bit machine.
-
 
 `parse-name`:: _ANS core ext_ ( "name" -- addr u ) "Parse the input"
 https://forth-standard.org/standard/core/PARSE-NAME
@@ -1329,19 +1298,7 @@ http://forth-standard.org/standard/core/THEN
 
 `to`:: _ANS core ext_ ( n "name" -- ) or ( "name") "Change a value"
 https://forth-standard.org/standard/core/TO
-Gives a new value to a, uh, VALUE. One possible Forth
-implementation is  ' >BODY !  but given the problems we have
-with >BODY on STC Forths, we do this the hard way. Since
-Tali Forth uses the same code for CONSTANTs and VALUEs, you
-could use this to redefine a CONSTANT, but that is a no-no.
-
-Note that the standard has different behaviors for TO depending
-on the state (https://forth-standard.org/standard/core/TO).
-This makes TO state-dependent (which is bad) and also rather
-complex (see the Gforth implementation for comparison). This
-word may not be natively compiled and must be immediate. Frankly,
-it would have made more sense to have two words for this.
-
+Gives a new value to a, uh, VALUE.
 
 `true`:: _ANS core ext_ ( -- f ) "Push TRUE flag to Data Stack"
 https://forth-standard.org/standard/core/TRUE
@@ -1382,19 +1339,7 @@ Based on the Forth code : UD.R  >R <# #S #> R> OVER - SPACES TYPE
 `um*`:: _ANS core_ ( u u -- ud ) "Multiply 16 x 16 -> 32"
 https://forth-standard.org/standard/core/UMTimes
 Multiply two unsigned 16 bit numbers, producing a 32 bit result.
-This is based on modified FIG Forth code by Dr. Jefyll, see
-http://forum.6502.org/viewtopic.php?f=9&t=689 for a detailed
-discussion. We don't use the system scratch pad (SYSPAD) for temp
-storage because >NUMBER uses it as well, but instead tmp1 to
-tmp3 (tmp1 is N in the original code, tmp1+1 is N+1, etc).
 Old Forth versions such as FIG Forth call this U*
-
-Consider switching to a table-supported version based on
-http://codebase64.org/doku.php?id=base:seriously_fast_multiplication
-http://codebase64.org/doku.php?id=magazines:chacking16#d_graphics_for_the_masseslib3d>
-http://forum.6502.org/viewtopic.php?p=205#p205
-http://forum.6502.org/viewtopic.php?f=9&t=689
-
 
 `um/mod`:: _ANS core_ ( ud u -- ur u ) "32/16 -> 16 division"
 https://forth-standard.org/standard/core/UMDivMOD

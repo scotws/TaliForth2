@@ -8638,35 +8638,17 @@ with  : D+- O&lt; IF DNEGATE THEN</p>
 <p><em>ANS core ext</em> ( "name"&#8201;&#8212;&#8201;) "Create a deletion boundry"
 <a href="https://forth-standard.org/standard/core/MARKER" class="bare">https://forth-standard.org/standard/core/MARKER</a>
 This word replaces FORGET in earlier Forths. Old entries are not
-actually deleted, but merely overwritten by restoring CP and DP. To
-do this, we want to end up with something that jumps to a run-time
-component with a link to the original CP and DP values:</p>
+actually deleted, but merely overwritten by restoring CP and DP.
+Run the named word at a later time to restore all of the wordlists
+to their state when the word was created with marker.  Any words
+created after the marker (including the marker) will be forgotten.</p>
 </td>
 </tr>
-</table>
-</div>
-<div class="paragraph">
-<p>jsr marker_runtime
-&lt;Original CP MSB&gt;
-&lt;Original CP LSB&gt;
-&lt;Original DP MSB&gt; ( for CURRENT wordlist )
-&lt;Original DP LSB&gt;
-&lt; USER variables from offset 4 to 39 &gt;</p>
-</div>
-<div class="paragraph">
-<p>The user variables include:
-CURRENT (byte variable)
-&lt;All wordlists&gt; (currently 12) (cell array)
-&lt;#ORDER&gt; (byte variable)
-&lt;All search order&gt; (currently 9) (byte array)</p>
-</div>
-<div class="paragraph">
-<p>This code uses tmp1 and tmp2</p>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1"><code>max</code></dt>
-<dd>
+<tr>
+<td class="hdlist1">
+<code>max</code>
+</td>
+<td class="hdlist2">
 <p><em>ANS core</em> ( n n&#8201;&#8212;&#8201;n ) "Keep larger of two numbers"
 <a href="https://forth-standard.org/standard/core/MAX" class="bare">https://forth-standard.org/standard/core/MAX</a>
 Compare TOS and NOS and keep which one is larger. Adapted from
@@ -8674,62 +8656,102 @@ Lance A. Leventhal "6502 Assembly Language Subroutines". Negative
 Flag indicates which number is larger. See also
 <a href="http://6502.org/tutorials/compare_instructions.html" class="bare">http://6502.org/tutorials/compare_instructions.html</a> and
 <a href="http://www.righto.com/2012/12/the-6502-overflow-flag-explained.html" class="bare">http://www.righto.com/2012/12/the-6502-overflow-flag-explained.html</a></p>
-</dd>
-<dt class="hdlist1"><code>min</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>min</code>
+</td>
+<td class="hdlist2">
 <p><em>ANS core</em> ( n n&#8201;&#8212;&#8201;n ) "Keep smaller of two numbers"
 <a href="https://forth-standard.org/standard/core/MIN" class="bare">https://forth-standard.org/standard/core/MIN</a>
 Adapted from Lance A. Leventhal "6502 Assembly Language
 Subroutines." Negative Flag indicateds which number is larger. See
 <a href="http://www.righto.com/2012/12/the-6502-overflow-flag-explained.html" class="bare">http://www.righto.com/2012/12/the-6502-overflow-flag-explained.html</a></p>
-</dd>
-<dt class="hdlist1"><code>mod</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>mod</code>
+</td>
+<td class="hdlist2">
 <p><em>ANS core</em> ( n1 n2&#8201;&#8212;&#8201;n ) "Divide NOS by TOS and return the remainder"
 <a href="https://forth-standard.org/standard/core/MOD" class="bare">https://forth-standard.org/standard/core/MOD</a>
 The Forth definition of this word is  : MOD /MOD DROP
 so we just jump to xt_slash_mod and dump the actual result.</p>
-</dd>
-<dt class="hdlist1"><code>move</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>move</code>
+</td>
+<td class="hdlist2">
 <p><em>ANS core</em> ( addr1 addr2 u&#8201;&#8212;&#8201;) "Copy bytes"
 <a href="https://forth-standard.org/standard/core/MOVE" class="bare">https://forth-standard.org/standard/core/MOVE</a>
 Copy u "address units" from addr1 to addr2. Since our address
 units are bytes, this is just a front-end for CMOVE and CMOVE&gt;. This
 is actually the only one of these three words that is in the CORE
 set. This word must not be natively compiled</p>
-</dd>
-<dt class="hdlist1"><code>name&gt;int</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>name&gt;int</code>
+</td>
+<td class="hdlist2">
 <p><em>Gforth</em> ( nt&#8201;&#8212;&#8201;xt ) "Convert Name Token to Execute Token"
 See
 <a href="https://www.complang.tuwien.ac.at/forth/gforth/Docs-html/Name-token.html" class="bare">https://www.complang.tuwien.ac.at/forth/gforth/Docs-html/Name-token.html</a></p>
-</dd>
-<dt class="hdlist1"><code>name&gt;string</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>name&gt;string</code>
+</td>
+<td class="hdlist2">
 <p><em>Gforth</em> ( nt&#8201;&#8212;&#8201;addr u ) "Given a name token, return string of word"
 <a href="http://www.complang.tuwien.ac.at/forth/gforth/Docs-html/Name-token.html" class="bare">http://www.complang.tuwien.ac.at/forth/gforth/Docs-html/Name-token.html</a></p>
-</dd>
-<dt class="hdlist1"><code>nc-limit</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>nc-limit</code>
+</td>
+<td class="hdlist2">
 <p><em>Tali Forth</em> (&#8201;&#8212;&#8201;addr ) "Return address where NC-LIMIT value is kept"</p>
-</dd>
-<dt class="hdlist1"><code>negate</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>negate</code>
+</td>
+<td class="hdlist2">
 <p><em>ANS core</em> ( n&#8201;&#8212;&#8201;n ) "Two&#8217;s complement"
 <a href="https://forth-standard.org/standard/core/NEGATE" class="bare">https://forth-standard.org/standard/core/NEGATE</a></p>
-</dd>
-<dt class="hdlist1"><code>never-native</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>never-native</code>
+</td>
+<td class="hdlist2">
 <p><em>Tali Forth</em> (&#8201;&#8212;&#8201;) "Flag last word as never natively compiled"</p>
-</dd>
-<dt class="hdlist1"><code>nip</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>nip</code>
+</td>
+<td class="hdlist2">
 <p><em>ANS core ext</em> ( b a&#8201;&#8212;&#8201;a ) "Delete NOS"
 <a href="https://forth-standard.org/standard/core/NIP" class="bare">https://forth-standard.org/standard/core/NIP</a></p>
-</dd>
-<dt class="hdlist1"><code>number</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>number</code>
+</td>
+<td class="hdlist2">
 <p><em>Tali Forth</em> ( addr u&#8201;&#8212;&#8201;u | d ) "Convert a number string"
 Convert a number string to a double or single cell number. This
 is a wrapper for &gt;NUMBER and follows the convention set out in the
@@ -8743,91 +8765,113 @@ dot to signal a double cell number is required to be the last
 character of the string. Number calls &gt;NUMBER which in turn calls UM*,
 which uses tmp1, tmp2, and tmp3, so we can&#8217;t use them here, which is
 a pain.</p>
-</dd>
-<dt class="hdlist1"><code>o</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>o</code>
+</td>
+<td class="hdlist2">
 <p><em>Tali Editor</em> ( line#&#8201;&#8212;&#8201;) "Overwrite the given line"</p>
-</dd>
-<dt class="hdlist1"><code>of</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>of</code>
+</td>
+<td class="hdlist2">
 <p><em>ANS core ext</em> (C:&#8201;&#8212;&#8201;of-sys) (x1 x2&#8201;&#8212;&#8201;|x1) "Conditional flow control"
 <a href="http://forth-standard.org/standard/core/OF" class="bare">http://forth-standard.org/standard/core/OF</a></p>
-</dd>
-<dt class="hdlist1"><code>only</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>only</code>
+</td>
+<td class="hdlist2">
 <p><em>ANS search ext</em> (&#8201;&#8212;&#8201;) "Set earch order to minimum wordlist"
 <a href="https://forth-standard.org/standard/search/ONLY" class="bare">https://forth-standard.org/standard/search/ONLY</a></p>
-</dd>
-<dt class="hdlist1"><code>or</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>or</code>
+</td>
+<td class="hdlist2">
 <p><em>ANS core</em> ( m n&#8201;&#8212;&#8201;n ) "Logically OR TOS and NOS"
 <a href="https://forth-standard.org/standard/core/OR" class="bare">https://forth-standard.org/standard/core/OR</a></p>
-</dd>
-<dt class="hdlist1"><code>order</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>order</code>
+</td>
+<td class="hdlist2">
 <p><em>ANS core</em> (&#8201;&#8212;&#8201;) "Print current word order list and current WID"
 <a href="https://forth-standard.org/standard/search/ORDER" class="bare">https://forth-standard.org/standard/search/ORDER</a>
 A Forth implementation of this word is:</p>
-</dd>
-<dt class="hdlist1"><code>output</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>output</code>
+</td>
+<td class="hdlist2">
 <p><em>Tali Forth</em> (&#8201;&#8212;&#8201;addr ) "Return the address of the EMIT vector address"</p>
-</dd>
-<dt class="hdlist1"><code>over</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>over</code>
+</td>
+<td class="hdlist2">
 <p><em>ANS core</em> ( b a&#8201;&#8212;&#8201;b a b ) "Copy NOS to TOS"
 <a href="https://forth-standard.org/standard/core/OVER" class="bare">https://forth-standard.org/standard/core/OVER</a></p>
-</dd>
-<dt class="hdlist1"><code>pad</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>pad</code>
+</td>
+<td class="hdlist2">
 <p><em>ANS core ext</em> (&#8201;&#8212;&#8201;addr ) "Return address of user scratchpad"
 <a href="https://forth-standard.org/standard/core/PAD" class="bare">https://forth-standard.org/standard/core/PAD</a>
 Return address to a temporary area in free memory for user. Must
 be at least 84 bytes in size (says ANS). It is located relative to
 the compile area pointer (CP) and therefore varies in position.
 This area is reserved for the user and not used by the system</p>
-</dd>
-<dt class="hdlist1"><code>page</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>page</code>
+</td>
+<td class="hdlist2">
 <p><em>ANS facility</em> (&#8201;&#8212;&#8201;) "Clear the screen"
 <a href="https://forth-standard.org/standard/facility/PAGE" class="bare">https://forth-standard.org/standard/facility/PAGE</a>
 Clears a page if supported by ANS terminal codes. This is
 Clear Screen ("ESC[2J") plus moving the cursor to the top
 left of the screen</p>
-</dd>
-<dt class="hdlist1"><code>parse</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>parse</code>
+</td>
+<td class="hdlist2">
 <p><em>ANS core ext</em> ( "name" c&#8201;&#8212;&#8201;addr u ) "Parse input with delimiter character"
 <a href="https://forth-standard.org/standard/core/PARSE" class="bare">https://forth-standard.org/standard/core/PARSE</a>
 Find word in input string delimited by character given. Do not
 skip leading delimiters&#8201;&#8212;&#8201;this is the main difference to PARSE-NAME.
 PARSE and PARSE-NAME replace WORD in modern systems. ANS discussion
 <a href="http://www.forth200x.org/documents/html3/rationale.html#rat:core:PARSE" class="bare">http://www.forth200x.org/documents/html3/rationale.html#rat:core:PARSE</a></p>
-</dd>
-</dl>
-</div>
-<div class="paragraph">
-<p>cib  cib+toin   cib+ciblen
-v      v            v
-|<mark><mark></mark><mark></mark></mark><mark><mark></mark></mark>###|</p>
-</div>
-<div class="paragraph">
-<p>|-----&#8594;|  toin (&gt;IN)
-|------------------&#8594;|  ciblen</p>
-</div>
-<div class="paragraph">
-<p>The input string is stored starting at the address in the Current
-Input Buffer (CIB), the length of which is in CIBLEN. While searching
-for the delimiter, TOIN (&gt;IN) points to the where we currently are.
-Since PARSE does not skip leading delimiters, we assume we are on a
-useful string if there are any characters at all. As with
-PARSE-NAME, we must be able to handle strings with a length of
-16-bit for EVALUTE, which is a pain on an 8-bit machine.</p>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1"><code>parse-name</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>parse-name</code>
+</td>
+<td class="hdlist2">
 <p><em>ANS core ext</em> ( "name"&#8201;&#8212;&#8201;addr u ) "Parse the input"
 <a href="https://forth-standard.org/standard/core/PARSE-NAME" class="bare">https://forth-standard.org/standard/core/PARSE-NAME</a>
 Find next word in input string, skipping leading whitespace. This is
@@ -8841,18 +8885,26 @@ though the ANS standard talks about skipping "spaces", whitespace
 is actually perfectly legal (see for example
 <a href="http://forth-standard.org/standard/usage#subsubsection.3.4.1.1" class="bare">http://forth-standard.org/standard/usage#subsubsection.3.4.1.1</a>).
 Otherwise, PARSE-NAME chokes on tabs.</p>
-</dd>
-<dt class="hdlist1"><code>pick</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>pick</code>
+</td>
+<td class="hdlist2">
 <p><em>ANS core ext</em> ( n n u&#8201;&#8212;&#8201;n n n ) "Move element u of the stack to TOS"
 <a href="https://forth-standard.org/standard/core/PICK" class="bare">https://forth-standard.org/standard/core/PICK</a>
 Take the u-th element out of the stack and put it on TOS,
 overwriting the original TOS. 0 PICK is equivalent to DUP, 1 PICK to
 OVER. Note that using PICK is considered poor coding form. Also note
 that FIG Forth has a different behavior for PICK than ANS Forth.</p>
-</dd>
-<dt class="hdlist1"><code>postpone</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>postpone</code>
+</td>
+<td class="hdlist2">
 <p><em>ANS core</em> (&#8201;&#8212;&#8201;) "Change IMMEDIATE status (it&#8217;s complicated)"
 <a href="https://forth-standard.org/standard/core/POSTPONE" class="bare">https://forth-standard.org/standard/core/POSTPONE</a>
 Add the compilation behavior of a word to a new word at
@@ -8862,51 +8914,79 @@ itself used for a new word. Tricky, but very useful. Because
 POSTPONE expects a word (not an xt) in the input stream (not
 on the Data Stack). This means we cannot build words with
 jsr xt_postpone, jsr &lt;word&gt;" directly.</p>
-</dd>
-<dt class="hdlist1"><code>previous</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>previous</code>
+</td>
+<td class="hdlist2">
 <p><em>ANS search ext</em> (&#8201;&#8212;&#8201;) "Remove the first wordlist in the search order"
 <a href="http://forth-standard.org/standard/search/PREVIOUS" class="bare">http://forth-standard.org/standard/search/PREVIOUS</a></p>
-</dd>
-<dt class="hdlist1"><code>quit</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>quit</code>
+</td>
+<td class="hdlist2">
 <p><em>ANS core</em> (&#8201;&#8212;&#8201;) "Reset the input and get new input"
 <a href="https://forth-standard.org/standard/core/QUIT" class="bare">https://forth-standard.org/standard/core/QUIT</a>
 Rest the input and start command loop</p>
-</dd>
-<dt class="hdlist1"><code>r&gt;</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>r&gt;</code>
+</td>
+<td class="hdlist2">
 <p><em>ANS core</em> (&#8201;&#8212;&#8201;n )(R: n --) "Move top of Return Stack to TOS"
 <a href="https://forth-standard.org/standard/core/Rfrom" class="bare">https://forth-standard.org/standard/core/Rfrom</a>
 Move Top of Return Stack to Top of Data Stack. We have to move
 the RTS address out of the way first. This word is handled
 differently for native and and subroutine compilation, see COMPILE,
 This is a compile-only word</p>
-</dd>
-<dt class="hdlist1"><code>r&gt;input</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>r&gt;input</code>
+</td>
+<td class="hdlist2">
 <p><em>Tali Forth</em> (&#8201;&#8212;&#8201;) ( R: n n n n&#8201;&#8212;&#8201;) "Restore input state from Return Stack"
 Restore the current input state as defined by insrc, cib, ciblen,
 and toin from the Return Stack. See INPUT_TO_R for a discussion of
 this word. Uses tmp1</p>
-</dd>
-<dt class="hdlist1"><code>r@</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>r@</code>
+</td>
+<td class="hdlist2">
 <p><em>ANS core</em> (&#8201;&#8212;&#8201;n ) "Get copy of top of Return Stack"
 <a href="https://forth-standard.org/standard/core/RFetch" class="bare">https://forth-standard.org/standard/core/RFetch</a>
 This word is Compile Only in Tali Forth, though Gforth has it
 work normally as well&#8201;&#8212;&#8201;An alternative way to write this word
 would be to access the elements on the stack directly like 2R@
 does, these versions should be compared at some point.</p>
-</dd>
-<dt class="hdlist1"><code>recurse</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>recurse</code>
+</td>
+<td class="hdlist2">
 <p><em>ANS core</em> (&#8201;&#8212;&#8201;) "Copy recursive call to word being defined"
 <a href="https://forth-standard.org/standard/core/RECURSE" class="bare">https://forth-standard.org/standard/core/RECURSE</a>
 This word may not be natively compiled</p>
-</dd>
-<dt class="hdlist1"><code>refill</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>refill</code>
+</td>
+<td class="hdlist2">
 <p><em>ANS core ext</em> (&#8201;&#8212;&#8201;f ) "Refill the input buffer"
 <a href="https://forth-standard.org/standard/core/REFILL" class="bare">https://forth-standard.org/standard/core/REFILL</a>
 Attempt to fill the input buffer from the input source, returning
@@ -8919,30 +8999,50 @@ source, return false. When the input source is a string from EVALUATE,
 return false and perform no other action." See
 <a href="https://www.complang.tuwien.ac.at/forth/gforth/Docs-html/The-Input-Stream.html" class="bare">https://www.complang.tuwien.ac.at/forth/gforth/Docs-html/The-Input-Stream.html</a>
 and Conklin &amp; Rather p. 156</p>
-</dd>
-<dt class="hdlist1"><code>repeat</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>repeat</code>
+</td>
+<td class="hdlist2">
 <p><em>ANS core</em> (C: orig dest&#8201;&#8212;&#8201;) (&#8201;&#8212;&#8201;) "Loop flow control"
 <a href="http://forth-standard.org/standard/core/REPEAT" class="bare">http://forth-standard.org/standard/core/REPEAT</a></p>
-</dd>
-<dt class="hdlist1"><code>root-wordlist</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>root-wordlist</code>
+</td>
+<td class="hdlist2">
 <p><em>Tali Editor</em> (&#8201;&#8212;&#8201;u ) "WID for the Root (minimal) wordlist"</p>
-</dd>
-<dt class="hdlist1"><code>rot</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>rot</code>
+</td>
+<td class="hdlist2">
 <p><em>ANS core</em> ( a b c&#8201;&#8212;&#8201;b c a ) "Rotate first three stack entries downwards"
 <a href="https://forth-standard.org/standard/core/ROT" class="bare">https://forth-standard.org/standard/core/ROT</a>
 Remember "R for 'Revolution'" - the bottom entry comes out
 on top!</p>
-</dd>
-<dt class="hdlist1"><code>rshift</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>rshift</code>
+</td>
+<td class="hdlist2">
 <p><em>ANS core</em> ( x u&#8201;&#8212;&#8201;x ) "Shift TOS to the right"
 <a href="https://forth-standard.org/standard/core/RSHIFT" class="bare">https://forth-standard.org/standard/core/RSHIFT</a></p>
-</dd>
-<dt class="hdlist1"><code>s"</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>s"</code>
+</td>
+<td class="hdlist2">
 <p><em>ANS core</em> ( "string"&#8201;&#8212;&#8201;)(&#8201;&#8212;&#8201;addr u ) "Store string in memory"
 <a href="https://forth-standard.org/standard/core/Sq" class="bare">https://forth-standard.org/standard/core/Sq</a>
 Store address and length of string given, returning ( addr u ).
@@ -8951,14 +9051,22 @@ to be interpreted, so it is a state-sensitive word, which in theory
 are evil. We follow general usage. Can also be realized as
 : S" [CHAR] " PARSE POSTPONE SLITERAL ; IMMEDIATE
 but it is used so much we want it in code.</p>
-</dd>
-<dt class="hdlist1"><code>s&gt;d</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>s&gt;d</code>
+</td>
+<td class="hdlist2">
 <p><em>ANS core</em> ( u&#8201;&#8212;&#8201;d ) "Convert single cell number to double cell"
 <a href="https://forth-standard.org/standard/core/StoD" class="bare">https://forth-standard.org/standard/core/StoD</a></p>
-</dd>
-<dt class="hdlist1"><code>s\"</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>s\"</code>
+</td>
+<td class="hdlist2">
 <p><em>ANS core</em> ( "string"&#8201;&#8212;&#8201;)(&#8201;&#8212;&#8201;addr u ) "Store string in memory"
 <a href="https://forth-standard.org/standard/core/Seq" class="bare">https://forth-standard.org/standard/core/Seq</a>
 Store address and length of string given, returning ( addr u ).
@@ -8966,19 +9074,31 @@ ANS core claims this is compile-only, but the file set expands it
 to be interpreted, so it is a state-sensitive word, which in theory
 are evil. We follow general usage.  This is just like S" except
 that it allows for some special escaped characters.</p>
-</dd>
-<dt class="hdlist1"><code>save-buffers</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>save-buffers</code>
+</td>
+<td class="hdlist2">
 <p><em>ANS block</em> (&#8201;&#8212;&#8201;) "Save all dirty buffers to storage"
 <a href="https://forth-standard.org/standard/block/SAVE-BUFFERS" class="bare">https://forth-standard.org/standard/block/SAVE-BUFFERS</a></p>
-</dd>
-<dt class="hdlist1"><code>scr</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>scr</code>
+</td>
+<td class="hdlist2">
 <p><em>ANS block ext</em> (&#8201;&#8212;&#8201;addr ) "Push address of variable holding last screen listed"
 <a href="https://forth-standard.org/standard/block/SCR" class="bare">https://forth-standard.org/standard/block/SCR</a></p>
-</dd>
-<dt class="hdlist1"><code>search</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>search</code>
+</td>
+<td class="hdlist2">
 <p><em>ANS string</em> ( addr1 u1 addr2 u2&#8201;&#8212;&#8201;addr3 u3 flag) "Search for a substring"
 <a href="https://forth-standard.org/standard/string/SEARCH" class="bare">https://forth-standard.org/standard/string/SEARCH</a>
 Search for string2 (denoted by addr2 u2) in string1 (denoted by
@@ -8987,200 +9107,276 @@ addr3 will have the address of the start of the match and u3 will have
 the number of characters remaining from the match point to the end
 of the original string1.  If a match is not found, the flag will be
 false and addr3 and u3 will be the original string1&#8217;s addr1 and u1.</p>
-</dd>
-<dt class="hdlist1"><code>search-wordlist</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>search-wordlist</code>
+</td>
+<td class="hdlist2">
 <p><em>ANS search</em> ( caddr u wid&#8201;&#8212;&#8201;0 | xt 1 | xt -1) "Search for a word in a wordlist"
 <a href="https://forth-standard.org/standard/search/SEARCH_WORDLIST" class="bare">https://forth-standard.org/standard/search/SEARCH_WORDLIST</a></p>
-</dd>
-<dt class="hdlist1"><code>see</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>see</code>
+</td>
+<td class="hdlist2">
 <p><em>ANS tools</em> ( "name"&#8201;&#8212;&#8201;) "Print information about a Forth word"
 <a href="https://forth-standard.org/standard/tools/SEE" class="bare">https://forth-standard.org/standard/tools/SEE</a>
 SEE takes the name of a word and prints its name token (nt),
 execution token (xt), size in bytes, flags used, and then dumps the
 code and disassembles it.</p>
-</dd>
-<dt class="hdlist1"><code>set-current</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>set-current</code>
+</td>
+<td class="hdlist2">
 <p><em>ANS search</em> ( wid&#8201;&#8212;&#8201;) "Set the compilation wordlist"
 <a href="https://forth-standard.org/standard/search/SET-CURRENT" class="bare">https://forth-standard.org/standard/search/SET-CURRENT</a></p>
-</dd>
-<dt class="hdlist1"><code>set-order</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>set-order</code>
+</td>
+<td class="hdlist2">
 <p><em>ANS search</em> ( wid_n .. wid_1 n&#8201;&#8212;&#8201;) "Set the current search order"
 <a href="https://forth-standard.org/standard/search/SET-ORDER" class="bare">https://forth-standard.org/standard/search/SET-ORDER</a></p>
-</dd>
-<dt class="hdlist1"><code>sign</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>sign</code>
+</td>
+<td class="hdlist2">
 <p><em>ANS core</em> ( n&#8201;&#8212;&#8201;) "Add minus to pictured output"
 <a href="https://forth-standard.org/standard/core/SIGN" class="bare">https://forth-standard.org/standard/core/SIGN</a>
 Code based on
 <a href="http://pforth.googlecode.com/svn/trunk/fth/numberio.fth" class="bare">http://pforth.googlecode.com/svn/trunk/fth/numberio.fth</a>
 Original Forth code is   0&lt; IF ASCII - HOLD THEN</p>
-</dd>
-<dt class="hdlist1"><code>sliteral</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>sliteral</code>
+</td>
+<td class="hdlist2">
 <p><em>ANS string</em> ( addr u&#8201;&#8212;&#8201;)(&#8201;&#8212;&#8201;addr u ) "Compile a string for runtime"
 <a href="https://forth-standard.org/standard/string/SLITERAL" class="bare">https://forth-standard.org/standard/string/SLITERAL</a>
 Add the runtime for an existing string.</p>
-</dd>
-<dt class="hdlist1"><code>sm/rem</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>sm/rem</code>
+</td>
+<td class="hdlist2">
 <p><em>ANS core</em> ( d n1&#8201;&#8212;&#8201;n2 n3 ) "Symmetic signed division"
 <a href="https://forth-standard.org/standard/core/SMDivREM" class="bare">https://forth-standard.org/standard/core/SMDivREM</a>
 Symmetic signed division. Compare FM/MOD. Based on F-PC 3.6
 by Ulrich Hoffmann. See <a href="http://www.xlerb.de/uho/ansi.seq" class="bare">http://www.xlerb.de/uho/ansi.seq</a> Forth:
 OVER &gt;R 2DUP XOR 0&lt; &gt;R ABS &gt;R DABS R&gt; UM/MOD R&gt; ?NEGATE SWAP
 R&gt; ?NEGATE SWAP</p>
-</dd>
-<dt class="hdlist1"><code>source</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>source</code>
+</td>
+<td class="hdlist2">
 <p><em>ANS core</em> (&#8201;&#8212;&#8201;addr u ) "Return location and size of input buffer""
 <a href="https://forth-standard.org/standard/core/SOURCE" class="bare">https://forth-standard.org/standard/core/SOURCE</a></p>
-</dd>
-<dt class="hdlist1"><code>source-id</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>source-id</code>
+</td>
+<td class="hdlist2">
 <p><em>ANS core ext</em> (&#8201;&#8212;&#8201;n ) "Return source identifier"
 <a href="https://forth-standard.org/standard/core/SOURCE-ID" class="bare">https://forth-standard.org/standard/core/SOURCE-ID</a>
 Identify the input source unless it is a block (s. Conklin &amp;
 Rather p. 156). Since we don&#8217;t have blocks (yet), this will give
 the input source: 0 is keyboard, -1 (0ffff) is character string,
 and a text file gives the fileid.</p>
-</dd>
-<dt class="hdlist1"><code>space</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>space</code>
+</td>
+<td class="hdlist2">
 <p><em>ANS core</em> (&#8201;&#8212;&#8201;) "Print a single space"
 <a href="https://forth-standard.org/standard/core/SPACE" class="bare">https://forth-standard.org/standard/core/SPACE</a></p>
-</dd>
-<dt class="hdlist1"><code>spaces</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>spaces</code>
+</td>
+<td class="hdlist2">
 <p><em>ANS core</em> ( u&#8201;&#8212;&#8201;) "Print a number of spaces"
 <a href="https://forth-standard.org/standard/core/SPACES" class="bare">https://forth-standard.org/standard/core/SPACES</a></p>
-</dd>
-<dt class="hdlist1"><code>state</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>state</code>
+</td>
+<td class="hdlist2">
 <p><em>ANS core</em> (&#8201;&#8212;&#8201;addr ) "Return the address of compilation state flag"
 <a href="https://forth-standard.org/standard/core/STATE" class="bare">https://forth-standard.org/standard/core/STATE</a>
 STATE is true when in compilation state, false otherwise. Note
 we do not return the state itself, but only the address where
 it lives. The state should not be changed directly by the user; see
 <a href="http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.2250" class="bare">http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.2250</a></p>
-</dd>
-<dt class="hdlist1"><code>strip-underflow</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>strip-underflow</code>
+</td>
+<td class="hdlist2">
 <p><em>Tali Forth</em> (&#8201;&#8212;&#8201;addr ) "Return address where underflow status is kept"
 STRIP_UNDERFLOW contains a flag that determines if underflow
 checking should be removed during the compilation of new words.
 Default is false.</p>
-</dd>
-<dt class="hdlist1"><code>swap</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>swap</code>
+</td>
+<td class="hdlist2">
 <p><em>ANS core</em> ( b a&#8201;&#8212;&#8201;a b ) "Exchange TOS and NOS"
 <a href="https://forth-standard.org/standard/core/SWAP" class="bare">https://forth-standard.org/standard/core/SWAP</a></p>
-</dd>
-<dt class="hdlist1"><code>then</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>then</code>
+</td>
+<td class="hdlist2">
 <p><em>ANS core</em> (C: orig&#8201;&#8212;&#8201;) (&#8201;&#8212;&#8201;) "Conditional flow control"
 <a href="http://forth-standard.org/standard/core/THEN" class="bare">http://forth-standard.org/standard/core/THEN</a></p>
-</dd>
-<dt class="hdlist1"><code>to</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>to</code>
+</td>
+<td class="hdlist2">
 <p><em>ANS core ext</em> ( n "name"&#8201;&#8212;&#8201;) or ( "name") "Change a value"
 <a href="https://forth-standard.org/standard/core/TO" class="bare">https://forth-standard.org/standard/core/TO</a>
-Gives a new value to a, uh, VALUE. One possible Forth
-implementation is  ' &gt;BODY !  but given the problems we have
-with &gt;BODY on STC Forths, we do this the hard way. Since
-Tali Forth uses the same code for CONSTANTs and VALUEs, you
-could use this to redefine a CONSTANT, but that is a no-no.</p>
-</dd>
-</dl>
-</div>
-<div class="paragraph">
-<p>Note that the standard has different behaviors for TO depending
-on the state (<a href="https://forth-standard.org/standard/core/TO" class="bare">https://forth-standard.org/standard/core/TO</a>).
-This makes TO state-dependent (which is bad) and also rather
-complex (see the Gforth implementation for comparison). This
-word may not be natively compiled and must be immediate. Frankly,
-it would have made more sense to have two words for this.</p>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1"><code>true</code></dt>
-<dd>
+Gives a new value to a, uh, VALUE.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>true</code>
+</td>
+<td class="hdlist2">
 <p><em>ANS core ext</em> (&#8201;&#8212;&#8201;f ) "Push TRUE flag to Data Stack"
 <a href="https://forth-standard.org/standard/core/TRUE" class="bare">https://forth-standard.org/standard/core/TRUE</a></p>
-</dd>
-<dt class="hdlist1"><code>tuck</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>tuck</code>
+</td>
+<td class="hdlist2">
 <p><em>ANS core ext</em> ( b a&#8201;&#8212;&#8201;a b a ) "Copy TOS below NOS"
 <a href="https://forth-standard.org/standard/core/TUCK" class="bare">https://forth-standard.org/standard/core/TUCK</a></p>
-</dd>
-<dt class="hdlist1"><code>type</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>type</code>
+</td>
+<td class="hdlist2">
 <p><em>ANS core</em> ( addr u&#8201;&#8212;&#8201;) "Print string"
 <a href="https://forth-standard.org/standard/core/TYPE" class="bare">https://forth-standard.org/standard/core/TYPE</a>
 Works through EMIT to allow OUTPUT revectoring. Currently, only
 strings of up to 255 characters are printed</p>
-</dd>
-<dt class="hdlist1"><code>u.</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>u.</code>
+</td>
+<td class="hdlist2">
 <p><em>ANS core</em> ( u&#8201;&#8212;&#8201;) "Print TOS as unsigned number"
 <a href="https://forth-standard.org/standard/core/Ud" class="bare">https://forth-standard.org/standard/core/Ud</a>
 This is : U. 0 &lt;# #S #&gt; TYPE SPACE ; in Forth
 We use the internal assembler function print_u followed
 by a single space</p>
-</dd>
-<dt class="hdlist1"><code>u.r</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>u.r</code>
+</td>
+<td class="hdlist2">
 <p><em>ANS core ext</em> ( u u&#8201;&#8212;&#8201;) "Print NOS as unsigned number with TOS with"
 <a href="https://forth-standard.org/standard/core/UDotR" class="bare">https://forth-standard.org/standard/core/UDotR</a></p>
-</dd>
-<dt class="hdlist1"><code>u&lt;</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>u&lt;</code>
+</td>
+<td class="hdlist2">
 <p><em>ANS core</em> ( n m&#8201;&#8212;&#8201;f ) "Return true if NOS &lt; TOS (unsigned)"
 <a href="https://forth-standard.org/standard/core/Uless" class="bare">https://forth-standard.org/standard/core/Uless</a></p>
-</dd>
-<dt class="hdlist1"><code>u&gt;</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>u&gt;</code>
+</td>
+<td class="hdlist2">
 <p><em>ANS core ext</em> ( n m&#8201;&#8212;&#8201;f ) "Return true if NOS &gt; TOS (unsigned)"
 <a href="https://forth-standard.org/standard/core/Umore" class="bare">https://forth-standard.org/standard/core/Umore</a></p>
-</dd>
-<dt class="hdlist1"><code>ud.</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>ud.</code>
+</td>
+<td class="hdlist2">
 <p><em>Tali double</em> ( d&#8201;&#8212;&#8201;) "Print double as unsigned"
 Based on the Forth code  : UD. &lt;# #S #&gt; TYPE SPACE</p>
-</dd>
-<dt class="hdlist1"><code>ud.r</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>ud.r</code>
+</td>
+<td class="hdlist2">
 <p><em>Tali double</em> ( d u&#8201;&#8212;&#8201;) "Print unsigned double right-justified u wide"
 Based on the Forth code : UD.R  &gt;R &lt;# #S #&gt; R&gt; OVER - SPACES TYPE</p>
-</dd>
-<dt class="hdlist1"><code>um*</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>um*</code>
+</td>
+<td class="hdlist2">
 <p><em>ANS core</em> ( u u&#8201;&#8212;&#8201;ud ) "Multiply 16 x 16 &#8594; 32"
 <a href="https://forth-standard.org/standard/core/UMTimes" class="bare">https://forth-standard.org/standard/core/UMTimes</a>
 Multiply two unsigned 16 bit numbers, producing a 32 bit result.
-This is based on modified FIG Forth code by Dr. Jefyll, see
-<a href="http://forum.6502.org/viewtopic.php?f=9&amp;t=689" class="bare">http://forum.6502.org/viewtopic.php?f=9&amp;t=689</a> for a detailed
-discussion. We don&#8217;t use the system scratch pad (SYSPAD) for temp
-storage because &gt;NUMBER uses it as well, but instead tmp1 to
-tmp3 (tmp1 is N in the original code, tmp1+1 is N+1, etc).
 Old Forth versions such as FIG Forth call this U*</p>
-</dd>
-</dl>
-</div>
-<div class="paragraph">
-<p>Consider switching to a table-supported version based on
-<a href="http://codebase64.org/doku.php?id=base:seriously_fast_multiplication" class="bare">http://codebase64.org/doku.php?id=base:seriously_fast_multiplication</a>
-<a href="http://codebase64.org/doku.php?id=magazines:chacking16#d_graphics_for_the_masseslib3d&gt" class="bare">http://codebase64.org/doku.php?id=magazines:chacking16#d_graphics_for_the_masseslib3d&gt</a>;
-<a href="http://forum.6502.org/viewtopic.php?p=205#p205" class="bare">http://forum.6502.org/viewtopic.php?p=205#p205</a>
-<a href="http://forum.6502.org/viewtopic.php?f=9&amp;t=689" class="bare">http://forum.6502.org/viewtopic.php?f=9&amp;t=689</a></p>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1"><code>um/mod</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>um/mod</code>
+</td>
+<td class="hdlist2">
 <p><em>ANS core</em> ( ud u&#8201;&#8212;&#8201;ur u ) "32/16 &#8594; 16 division"
 <a href="https://forth-standard.org/standard/core/UMDivMOD" class="bare">https://forth-standard.org/standard/core/UMDivMOD</a>
 Divide double cell number by single cell number, returning the
@@ -9189,66 +9385,106 @@ This is the basic division operation all others use. Based on FIG
 Forth code, modified by Garth Wilson, see
 <a href="http://6502.org/source/integers/ummodfix/ummodfix.htm" class="bare">http://6502.org/source/integers/ummodfix/ummodfix.htm</a>
 This uses tmp1, tmp1+1, and tmptos</p>
-</dd>
-<dt class="hdlist1"><code>unloop</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>unloop</code>
+</td>
+<td class="hdlist2">
 <p><em>ANS core</em> (&#8201;&#8212;&#8201;)(R: n1 n2 n3 ---) "Drop loop control from Return stack"
 <a href="https://forth-standard.org/standard/core/UNLOOP" class="bare">https://forth-standard.org/standard/core/UNLOOP</a>
 Note that 6xPLA uses just as many bytes as a loop would</p>
-</dd>
-<dt class="hdlist1"><code>until</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>until</code>
+</td>
+<td class="hdlist2">
 <p><em>ANS core</em> (C: dest&#8201;&#8212;&#8201;) (&#8201;&#8212;&#8201;) "Loop flow control"
 <a href="http://forth-standard.org/standard/core/UNTIL" class="bare">http://forth-standard.org/standard/core/UNTIL</a></p>
-</dd>
-<dt class="hdlist1"><code>unused</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>unused</code>
+</td>
+<td class="hdlist2">
 <p><em>ANS core ext</em> (&#8201;&#8212;&#8201;u ) "Return size of space available to Dictionary"
 <a href="https://forth-standard.org/standard/core/UNUSED" class="bare">https://forth-standard.org/standard/core/UNUSED</a>
 UNUSED does not include the ACCEPT history buffers. Total RAM
 should be HERE + UNUSED + &lt;history buffer size&gt;, the last of which
 defaults to $400</p>
-</dd>
-<dt class="hdlist1"><code>update</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>update</code>
+</td>
+<td class="hdlist2">
 <p><em>ANS block</em> (&#8201;&#8212;&#8201;) "Mark current block as dirty"
 <a href="https://forth-standard.org/standard/block/UPDATE" class="bare">https://forth-standard.org/standard/block/UPDATE</a></p>
-</dd>
-<dt class="hdlist1"><code>useraddr</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>useraddr</code>
+</td>
+<td class="hdlist2">
 <p><em>Tali Forth</em> (&#8201;&#8212;&#8201;addr ) "Push address of base address of user variables"</p>
-</dd>
-<dt class="hdlist1"><code>value</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>value</code>
+</td>
+<td class="hdlist2">
 <p><em>ANS core</em> ( n "name"&#8201;&#8212;&#8201;) "Define a value"
 <a href="https://forth-standard.org/standard/core/VALUE" class="bare">https://forth-standard.org/standard/core/VALUE</a>
 This is a dummy header for the WORDLIST. The actual code is
 identical to that of CONSTANT</p>
-</dd>
-<dt class="hdlist1"><code>variable</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>variable</code>
+</td>
+<td class="hdlist2">
 <p><em>ANS core</em> ( "name"&#8201;&#8212;&#8201;) "Define a variable"
 <a href="https://forth-standard.org/standard/core/VARIABLE" class="bare">https://forth-standard.org/standard/core/VARIABLE</a>
 There are various Forth definitions for this word, such as
 CREATE 1 CELLS ALLOT  or  CREATE 0 ,  We use a variant of the
 second one so the variable is initialized to zero</p>
-</dd>
-<dt class="hdlist1"><code>while</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>while</code>
+</td>
+<td class="hdlist2">
 <p><em>ANS core</em> ( C: dest&#8201;&#8212;&#8201;orig dest ) ( x&#8201;&#8212;&#8201;) "Loop flow control"
 <a href="http://forth-standard.org/standard/core/WHILE" class="bare">http://forth-standard.org/standard/core/WHILE</a></p>
-</dd>
-<dt class="hdlist1"><code>within</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>within</code>
+</td>
+<td class="hdlist2">
 <p><em>ANS core ext</em> ( n1 n2 n3&#8201;&#8212;&#8201;) "See if within a range"
 <a href="https://forth-standard.org/standard/core/WITHIN" class="bare">https://forth-standard.org/standard/core/WITHIN</a>
 This an assembler version of the ANS Forth implementation
 at <a href="https://forth-standard.org/standard/core/WITHIN" class="bare">https://forth-standard.org/standard/core/WITHIN</a> which is
 OVER - &gt;R - R&gt; U&lt;  note there is an alternative high-level version
 ROT TUCK &gt; -ROT &gt; INVERT AND</p>
-</dd>
-<dt class="hdlist1"><code>word</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>word</code>
+</td>
+<td class="hdlist2">
 <p><em>ANS core</em> ( char "name "&#8201;&#8212;&#8201;caddr ) "Parse input stream"
 <a href="https://forth-standard.org/standard/core/WORD" class="bare">https://forth-standard.org/standard/core/WORD</a>
 Obsolete parsing word included for backwards compatibility only.
@@ -9261,14 +9497,22 @@ Programmer&#8217;s Handbook" 3rd edition p. 159 and
 for discussions of why you shouldn&#8217;t be using WORD anymore. Forth
 would be   PARSE DUP BUFFER1 C! OUTPUT 1+ SWAP MOVE BUFFER1
 We only allow input of 255 chars. Seriously, use PARSE-NAME.</p>
-</dd>
-<dt class="hdlist1"><code>wordlist</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>wordlist</code>
+</td>
+<td class="hdlist2">
 <p><em>ANS search</em> (&#8201;&#8212;&#8201;wid ) "Create new wordlist (from pool of 8)"
 <a href="https://forth-standard.org/standard/search/WORDLIST" class="bare">https://forth-standard.org/standard/search/WORDLIST</a></p>
-</dd>
-<dt class="hdlist1"><code>words</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>words</code>
+</td>
+<td class="hdlist2">
 <p><em>ANS tools</em> (&#8201;&#8212;&#8201;) "Print known words from Dictionary"
 <a href="https://forth-standard.org/standard/tools/WORDS" class="bare">https://forth-standard.org/standard/tools/WORDS</a>
 This is pretty much only used at the command line so we can
@@ -9276,20 +9520,29 @@ be slow and try to save space. DROP must always be the first word in a
 clean system (without Forth words), BYE the last. There is no reason
 why we couldn&#8217;t define this as a high level word except that it is
 really useful for testing</p>
-</dd>
-<dt class="hdlist1"><code>wordsize</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>wordsize</code>
+</td>
+<td class="hdlist2">
 <p><em>Tali Forth</em> ( nt&#8201;&#8212;&#8201;u ) "Get size of word in bytes"
 Given an word&#8217;s name token (nt), return the size of the
 word&#8217;s payload size in bytes (CFA plus PFA) in bytes. Does not
 count the final RTS.</p>
-</dd>
-<dt class="hdlist1"><code>xor</code></dt>
-<dd>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>xor</code>
+</td>
+<td class="hdlist2">
 <p><em>ANS core</em> ( n n&#8201;&#8212;&#8201;n ) "Logically XOR TOS and NOS"
 <a href="https://forth-standard.org/standard/core/XOR" class="bare">https://forth-standard.org/standard/core/XOR</a></p>
-</dd>
-</dl>
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
