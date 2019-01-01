@@ -78,7 +78,8 @@ def main():
                 print("Error determining short description on line:")
                 print(line)
         elif current_state == State.COMMENT:
-            # Save the multi-line comments.
+            # Save the multi-line comments up until the first 
+            # non-comment line or blank (only ; on line) comment line.
             line = line.strip()
             if line.startswith(';'):
                 # It's a comment line.  Strip the semicolon and the
@@ -86,9 +87,17 @@ def main():
                 line = line.strip(';')
                 line = line.strip()
                 line = line.strip('"""')
-                # Add this to any existing long description content.
-                long_descr[word_name] = long_descr.get(word_name, '') \
-                                        + line + "\n"
+                # See if there is anything left!
+                if line != "":
+                    # Add this to any existing long description content.
+                    long_descr[word_name] = \
+                      long_descr.get(word_name, '') + line + "\n"
+                else:
+                    # It was a blank comment line.
+                    # Go back to the idle state to ignore the rest of
+                    # the comment block.
+                    current_state = State.IDLE
+
             else:
                 # Not a comment line - back to the idle state.
                 current_state = State.IDLE

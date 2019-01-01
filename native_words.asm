@@ -738,10 +738,13 @@ z_again:        rts
 ; ## ALIGN ( -- ) "Make sure CP is aligned on word size"
 ; ## "align"  auto  ANS core
         ; """https://forth-standard.org/standard/core/ALIGN
-        ; On a 8-bit machine, this does nothing. ALIGNED uses
-        ; this routine as well, and also does nothing
+        ; On a 8-bit machine, this does nothing.
+        ;
+        ; ALIGNED uses this routine as well, and also does nothing
+        
 ; ## ALIGNED ( addr -- addr ) "Return the first aligned address"
 ; ## "aligned"  auto  ANS core
+        ; """https://forth-standard.org/standard/core/ALIGNED"""
 .scope
 xt_align:
 xt_aligned:
@@ -943,7 +946,9 @@ z_and:          rts
 ; ## "at-xy"  tested  ANS facility
         ; """https://forth-standard.org/standard/facility/AT-XY
         ; On an ANS compatible terminal, place cursor at row n colum m. 
-        ; Code is ESC[<n>;<m>H Do not use U. to print the numbers because the 
+        ; Code is ESC[<n>;<m>H
+        ;
+        ; Do not use U. to print the numbers because the 
         ; trailing space will not work with xterm 
         ; """
 xt_at_xy:       
@@ -992,6 +997,7 @@ z_base:         rts
 ; ## BEGIN ( -- addr ) "Mark entry point for loop"
 ; ## "begin"  auto  ANS core
         ; """https://forth-standard.org/standard/core/BEGIN
+        ; 
         ; This is just an immediate version of here which could just
         ; as well be coded in Forth as
         ;       : BEGIN HERE ; IMMEDIATE COMPILE-ONLY
@@ -1147,7 +1153,7 @@ z_block:        rts
         ; """Create a RAM drive, with the given number of
         ; blocks, in the dictionary along with setting up the block words to
         ; use it.  The read/write routines do not provide bounds checking.
-        ; Expected use: 4 block-ramdrive-init ( to create blocks 0-3 )
+        ; Expected use: `4 block-ramdrive-init` ( to create blocks 0-3 )
         ; """
 .scope
 xt_block_ramdrive_init:
@@ -1279,7 +1285,7 @@ z_block_write_vector:
 ; ## "bounds"  auto  Gforth
         ; """http://www.complang.tuwien.ac.at/forth/gforth/Docs-html/Memory-Blocks.html
         ; Given a string, return the correct Data Stack parameters for
-        ; a DO/LOOP loop; over its characters. This is realized as
+        ; a DO/LOOP loop over its characters. This is realized as
         ; OVER + SWAP in Forth, but we do it a lot faster in assembler
         ; """
 xt_bounds:
@@ -1305,7 +1311,9 @@ z_bounds:       rts
 ; ## "[char]"  auto  ANS core
         ; """https://forth-standard.org/standard/core/BracketCHAR
         ; Compile the ASCII value of a character as a literal. This is an
-        ; immediate, compile-only word. A definition given in 
+        ; immediate, compile-only word.
+        ;
+        ; A definition given in 
         ; http://forth-standard.org/standard/implement is 
         ; : [CHAR]  CHAR POSTPONE LITERAL ; IMMEDIATE
         ; """
@@ -1479,6 +1487,7 @@ z_c_store:      rts
 ; ## CASE (C: -- 0) ( -- ) "Conditional flow control"
 ; ## "case"  auto  ANS core ext
         ; """http://forth-standard.org/standard/core/CASE
+        ;
         ; This is a dummy header, CASE shares the actual code with ZERO.
         ; """
 
@@ -1508,6 +1517,7 @@ z_cell_plus:    rts
 ; ## CELLS ( u -- u ) "Convert cells to size in bytes"
 ; ## "cells"  auto  ANS core
         ; """https://forth-standard.org/standard/core/CELLS
+        ;
         ; Dummy entry for the CELLS word, the code is the same as for 
         ; 2*, which is where the header directs us to
         ; """
@@ -1545,6 +1555,7 @@ z_char:         rts
 ; ## CHAR_PLUS ( addr -- addr+1 ) "Add the size of a character unit to address"
 ; ## "char+"  auto  ANS core
         ; """https://forth-standard.org/standard/core/CHARPlus
+        ;
         ; This is a dummy entry, the code is shared with ONE_PLUS
         ; """ 
 
@@ -1572,11 +1583,12 @@ z_chars:        rts
 
         ; """Given a range of memory with words delimited by whitespace,return
         ; the first word at the top of the stack and the rest of the word
-        ; following it. Example: 
-
+        ; following it.
+        ;
+        ; Example: 
         ; s" w1 w2 w3" cleave  -> "w2 w3" "w1"
         ; s" w1" cleave        -> "" "w1"
-
+        ;
         ; Since it will be used in loops a lot, we want it to work in pure
         ; assembler and be as fast as we can make it. Calls PARSE-NAME so we
         ; strip leading delimiters.
@@ -1660,7 +1672,9 @@ z_cleave:       rts
         ; Copy u bytes from addr1 to addr2, going low to high (addr2 is
         ; larger than addr1). Based on code in Leventhal, Lance A. 
         ; "6502 Assembly Language Routines", p. 201, where it is called 
-        ; "move left". There are no official tests for this word.
+        ; "move left".
+        ;
+        ; There are no official tests for this word.
         ; """
 .scope
 xt_cmove:
@@ -1716,8 +1730,9 @@ z_cmove:        rts
 ; ## "cmove>"  auto  ANS string
         ; """https://forth-standard.org/standard/string/CMOVEtop
         ; Based on code in Leventhal, Lance A. "6502 Assembly Language
-        ; Routines", p. 201, where it is called "move right". There are 
-        ; no official tests for this word.
+        ; Routines", p. 201, where it is called "move right".
+        ;
+        ; There are no official tests for this word.
         ; """
 .scope
 xt_cmove_up:
@@ -1773,6 +1788,7 @@ z_cmove_up:     rts
 ; ## COLON ( "name" -- ) "Start compilation of a new word"
 ; ## ":"  auto  ANS core
         ; """https://forth-standard.org/standard/core/Colon
+        ;
         ; Use the CREATE routine and fill in the rest by hand.
         ; """
 .scope
@@ -1881,8 +1897,9 @@ z_colon_noname:        rts
 ; ## COMMA ( n -- ) "Allot and store one cell in memory"
 ; ## ","  auto  ANS core
         ; """https://forth-standard.org/standard/core/Comma
-        ; Store TOS at current place in memory. Since this an eight-bit
-        ; machine, we can ignore all alignment issures.
+        ; Store TOS at current place in memory.
+        ;
+        ; Since this an eight-bit machine, we can ignore all alignment issues.
         ; """
 .scope
 xt_comma:
@@ -2314,7 +2331,9 @@ z_compile_comma:
 ; ## COMPILE_ONLY ( -- ) "Mark most recent word as COMPILE-ONLY"
 ; ## "compile-only"  tested  Tali Forth
         ; """Set the Compile Only flag (CO) of the most recently defined
-        ; word. The alternative way to do this is to define a word 
+        ; word.
+        ;
+        ; The alternative way to do this is to define a word 
         ; ?COMPILE that makes sure  we're in compile mode
         ; """
 .scope
@@ -2332,6 +2351,7 @@ z_compile_only: rts
 ; ## CONSTANT ( n "name" -- ) "Define a constant"
 ; ## "constant"  auto  ANS core
         ; """https://forth-standard.org/standard/core/CONSTANT
+        ;
         ; Forth equivalent is  CREATE , DOES> @  but we do
         ; more in assembler and let CREATE do the heavy lifting.
         ; See http://www.bradrodriguez.com/papers/moving3.htm for
@@ -2398,7 +2418,7 @@ z_constant:     rts
 ; ## "count"  auto  ANS core
         ; """https://forth-standard.org/standard/core/COUNT
         ; Convert old-style character string to address-length pair. Note
-        ; that the length of the string c-addr ist stored in character length
+        ; that the length of the string c-addr is stored in character length
         ; (8 bit), not cell length (16 bit). This is rarely used these days,
         ; though COUNT can also be used to step through a string character by
         ; character. 
@@ -2436,6 +2456,7 @@ z_cr:           rts
 ; ## CREATE ( "name" -- ) "Create Dictionary entry for 'name'"
 ; ## "create"  auto  ANS core
         ; """https://forth-standard.org/standard/core/CREATE
+        ;
         ; See the drawing in headers.asm for details on the header
         ; """
 .scope
@@ -2792,8 +2813,9 @@ z_decimal:      rts
 ; ## DEFER ( "name" -- ) "Create a placeholder for words by name"
 ; ## "defer"  auto  ANS core ext
         ; """https://forth-standard.org/standard/core/DEFER
-        ; Reserve an name that can be linked to various xt by IS. The
-        ; ANS reference implementation is 
+        ; Reserve an name that can be linked to various xt by IS.
+        ; 
+        ; The ANS reference implementation is 
         ;       CREATE ['] ABORT , DOES> @ EXECUTE ;
         ; But we use this routine as a low-level word so things go faster
 .scope
@@ -3021,6 +3043,7 @@ xt_question_do:
 ; ## DO ( limit start -- )(R: -- limit start)  "Start a loop"
 ; ## "do"  auto  ANS core
         ; """https://forth-standard.org/standard/core/DO
+        ; 
         ; Compile-time part of DO. Could be realized in Forth as
         ;       : DO POSTPONE (DO) HERE ; IMMEDIATE COMPILE-ONLY
         ; but we do it in assembler for speed. To work with LEAVE, we compile
@@ -3201,7 +3224,9 @@ question_do_runtime_end:
         ; Create the payload for defining new defining words. See
         ; http://www.bradrodriguez.com/papers/moving3.htm and 
         ; docs/create-does.txt for a discussion of
-        ; DOES>'s internal workings. This uses tmp1 and tmp2
+        ; DOES>'s internal workings.
+        ;
+        ; This uses tmp1 and tmp2
         ; """
 .scope
 xt_does:
@@ -3344,6 +3369,7 @@ z_dot_quote:    rts
 ; ## DOT_R ( n u -- ) "Print NOS as unsigned number with TOS with"
 ; ## ".r"  tested  ANS core ext
         ; """https://forth-standard.org/standard/core/DotR
+        ;
         ; Based on the Forth code
         ;  : .R  >R DUP ABS 0 <# #S ROT SIGN #> R> OVER - SPACES TYPE ;
         ; """
@@ -3373,10 +3399,11 @@ z_dot_r:      rts
 ; ## DOT_S ( -- ) "Print content of Data Stack"
 ; ## ".s"  tested  ANS tools 
         ; """https://forth-standard.org/standard/tools/DotS
-        ; Print content of Data Stack non-distructively. Since this is for
-        ; humans, we don't have to worry about speed. We follow the format
+        ; Print content of Data Stack non-distructively. We follow the format
         ; of Gforth and print the number of elements first in brackets,
         ; followed by the Data Stack content (if any).
+        ;
+        ; Since this is for humans, we don't have to worry about speed. 
         ; """
 .scope
 xt_dot_s:
@@ -3451,6 +3478,7 @@ z_dot_s:        rts
 ; ## D_DOT ( d -- ) "Print double"
 ; ## "d."  tested  ANS double
         ; """http://forth-standard.org/standard/double/Dd"""
+        ;
         ; From the Forth code:
         ; : D. TUCK DABS <# #S ROT SIGN #> TYPE SPACE ;
         ; """
@@ -3513,6 +3541,7 @@ z_drop:         rts
 ; ## DUMP ( addr u -- ) "Display a memory region"
 ; ## "dump"  tested  ANS tools
         ; """https://forth-standard.org/standard/tools/DUMP
+        ; 
         ; DUMP's exact output is defined as "implementation dependent".
         ; This is in assembler because it is 
         ; useful for testing and development, so we want to have it work
@@ -3652,7 +3681,7 @@ z_dup:          rts
 ; ## ED ( -- u ) "Line-based editor"
 ; ## "ed"  fragment  Tali Forth
         ; """Start the line-based editor ed6502. See separate file
-        ; for details.
+        ; ed.asm or the manual for details.
         ; """
 xt_ed:
                 jsr ed6502      ; kept in separate file
@@ -3662,12 +3691,14 @@ z_ed:       rts
 
 ; ## EDITOR_WORDLIST ( -- u ) "WID for the Editor wordlist"
 ; ## "editor-wordlist"  tested  Tali Editor
+        ;
         ; """This is a dummy entry, the code is shared with ONE"""
 
 
 ; ## ELSE (C: orig -- orig) ( -- ) "Conditional flow control"
 ; ## "else"  auto  ANS core
         ; """http://forth-standard.org/standard/core/ELSE
+        ;
         ; The code is shared with ENDOF
         ; """
 .scope
@@ -3731,7 +3762,7 @@ branch_runtime:
         ; Run-time default for EMIT. The user can revector this by changing
         ; the value of the OUTPUT variable. We ignore the MSB completely, and 
         ; do not check to see if we have been given a valid ASCII character. 
-        ; Don't make this native compile
+        ; Don't make this native compile.
         ; """
 .scope
 xt_emit:
@@ -3805,7 +3836,7 @@ z_endcase:      rts
 ; ## ENVIRONMENT_Q  ( addr u -- 0 | i*x true )  "Return system information"
 ; ## "environment?"  auto  ANS core
         ; """https://forth-standard.org/standard/core/ENVIRONMENTq
-
+        ;
         ; By ANS definition, we use upper-case strings here, see the
         ; string file for details. This can be realized as a high-level
         ; Forth word as
@@ -4196,7 +4227,9 @@ doexecute:
         ; """https://www.complang.tuwien.ac.at/forth/gforth/Docs-html/The-Input-Stream.html
         ; Execute the parsing word defined by the execution token (xt) on the
         ; string as if it were passed on the command line. See the file
-        ; tests/tali.fs for examples. Note that this word is coded completely
+        ; tests/tali.fs for examples.
+        ;
+        ; Note that this word is coded completely
         ; different in its Gforth version, see the file execute-parsing.fs
         ; (in /usr/share/gforth/0.7.3/compat/ on Ubuntu 18.04 LTS) for details.
         ; """
@@ -4233,7 +4266,7 @@ z_execute_parsing:
         ; """https://forth-standard.org/standard/core/EXIT
         ; If we're in a loop, we need to UNLOOP first and get everything
         ; we we might have put on the Return Stack off as well. This should
-        ; be natively compiled
+        ; be natively compiled.
         ; """
 .scope
 xt_exit:        
@@ -4557,13 +4590,14 @@ z_flush:
 ; ## FM_SLASH_MOD ( d n1  -- rem n2 ) "Floored signed division"
 ; ## "fm/mod"  auto  ANS core
         ; """https://forth-standard.org/standard/core/FMDivMOD
+        ; Note that by default, Tali Forth uses SM/REM for most things.
+        ; 
         ; There are various ways to realize this. We follow EForth with
         ;    DUP 0< DUP >R  IF NEGATE >R DNEGATE R> THEN >R DUP
         ;    0<  IF R@ + THEN  R> UM/MOD R> IF SWAP NEGATE SWAP THEN 
         ; See (http://www.forth.org/eforth.html). However you can also
         ; go FM/MOD via SM/REM (http://www.figuk.plus.com/build/arith.htm):
         ;     DUP >R  SM/REM DUP 0< IF SWAP R> + SWAP 1+ ELSE  R> DROP THEN 
-        ; Note that by default, Tali Forth uses SM/REM for most things.
         ; """
 .scope
 xt_fm_slash_mod:
@@ -4933,6 +4967,7 @@ z_hexstore:     rts
         ; Insert a character at the current position of a pictured numeric
         ; output string on 
         ; https://github.com/philburk/pforth/blob/master/fth/numberio.fth
+        ; 
         ; Forth code is : HOLD  -1 HLD +!  HLD @ C! ;  We use the the internal
         ; variable tohold instead of HLD.
         ; """
@@ -4957,8 +4992,9 @@ z_hold:         rts
 ; ## "i"  auto  ANS core
         ; """https://forth-standard.org/standard/core/I
         ; Note that this is not the same as R@ because we use a fudge
-        ; factor for loop control; see docs/loop.txt for details. We
-        ; should make this native compile for speed. 
+        ; factor for loop control; see docs/loop.txt for details.
+        ;
+        ; We should make this native compile for speed. 
         ; """
 .scope
 xt_i:           
@@ -5106,21 +5142,23 @@ z_input:        rts
 
 ; ## INPUT_TO_R ( -- ) ( R: -- n n n n ) "Save input state to the Return Stack"
 ; ## "input>r"  tested  Tali Forth
-   	; """Save the current input state as defined by insrc, cib, ciblen, and
-        ; toin to the Return Stack. Used by EVALUTE. The naive way of doing
+   	    ; """Save the current input state as defined by insrc, cib, ciblen, and
+        ; toin to the Return Stack. Used by EVALUTE.
+        ;
+        ; The naive way of doing
         ; this is to push each two-byte variable to the stack in the form of
-
+        ;
         ;       lda insrc
         ;       pha
         ;       lda insrc+1
         ;       pha
-
+        ;
         ; for a total of 24 byte of instruction in one direction and later
         ; a further 24 bytes to reverse the process. We shorten this at the
         ; cost of some speed by assuming the four variables are grouped
         ; together on the Zero Page and start with insrc (see definitions.asm
         ; for details). The reverse operation is r_to_input. These words must 
-	; be flagged as Never Native. Uses tmp1
+	    ; be flagged as Never Native. Uses tmp1
         ; """ 
 .scope
 xt_input_to_r: 
@@ -5409,6 +5447,7 @@ z_latestxt:     rts
         ; Note that this does not work with  anything but a DO/LOOP in
         ; contrast to other versions such as discussed at
         ; http://blogs.msdn.com/b/ashleyf/archive/2011/02/06/loopty-do-i-loop.aspx
+        ;
         ;       : LEAVE POSTPONE BRANCH HERE SWAP 0 , ; IMMEDIATE COMPILE-ONLY
         ; See docs/loops.txt on details of how this works. This must be native
         ; compile and not IMMEDIATE
@@ -5442,7 +5481,9 @@ z_left_bracket: rts
 ; ## LESS_NUMBER_SIGN ( -- ) "Start number conversion"
 ; ## "<#"  auto  ANS core
         ; """https://forth-standard.org/standard/core/num-start
-        ; Start the process to create pictured numeric output. The new
+        ; Start the process to create pictured numeric output.
+        ;
+        ; The new
         ; string is constructed from back to front, saving the new character
         ; at the beginning of the output string. Since we use PAD as a 
         ; starting address and work backward (!), the string is constructed
@@ -5517,6 +5558,7 @@ z_list:         rts
         ; Compile-only word to store TOS so that it is pushed on stack
         ; during runtime. This is a immediate, compile-only word. At runtime,
         ; it works by calling literal_runtime by compling JSR LITERAL_RT.
+        ; 
         ; Note the cmpl_ routines use TMPTOS
         ; """
 xt_literal:     
@@ -5574,8 +5616,9 @@ literal_runtime:
 ; ## LOAD ( scr# -- ) "Load the Forth code in a screen/block"
 ; ## "load"  auto  ANS block
         ; """https://forth-standard.org/standard/block/LOAD
+        ; 
         ; Note: LOAD current works because there is only one buffer.
-        ; if/when multiple buffers are supported, we'll have to deal
+        ; If/when multiple buffers are supported, we'll have to deal
         ; with the fact that it might re-load the old block into a
         ; different buffer.
         ; """
@@ -5647,7 +5690,9 @@ z_load:         rts
 ; ## "loop"  auto  ANS core
         ; """https://forth-standard.org/standard/core/LOOP
         ; Compile-time part of LOOP. This does nothing more but push 1 on
-        ; the stack and then call +LOOP. In Forth, this is 
+        ; the stack and then call +LOOP.
+        ;
+        ; In Forth, this is 
         ;       : LOOP  POSTPONE 1 POSTPONE (+LOOP) , POSTPONE UNLOOP ;
         ;       IMMEDIATE ; COMPILE-ONLY
         ; This drops through to +LOOP
@@ -5662,6 +5707,7 @@ xt_loop:
 ; ## PLUS_LOOP ( -- ) "Finish loop construct"
 ; ## "+loop"  auto  ANS core
         ; """https://forth-standard.org/standard/core/PlusLOOP
+        ;
         ; Compile-time part of +LOOP, also used for LOOP. Is usually
         ;       : +LOOP POSTPONE (+LOOP) , POSTPONE UNLOOP ; IMMEDIATE
         ;       COMPILE-ONLY 
@@ -5828,8 +5874,9 @@ z_lshift:       rts
 ; ## "m*"  auto  ANS core
         ; """https://forth-standard.org/standard/core/MTimes
         ; Multiply two 16 bit numbers, producing a 32 bit result. All
-        ; values are signed. Adapted from FIG Forth for Tali Forth. The
-        ; original Forth is : M* OVER OVER XOR >R ABS SWAP ABS UM* R> D+- ;
+        ; values are signed. Adapted from FIG Forth for Tali Forth.
+        ;
+        ; The original Forth is : M* OVER OVER XOR >R ABS SWAP ABS UM* R> D+- ;
         ; with  : D+- O< IF DNEGATE THEN ;
         ; """
 .scope
@@ -5871,7 +5918,7 @@ z_m_star:       rts
         ; Run the named word at a later time to restore all of the wordlists
         ; to their state when the word was created with marker.  Any words
         ; created after the marker (including the marker) will be forgotten.
-
+        ;
         ; To do this, we want to end up with something that jumps to a
         ; run-time component with a link to the original CP and DP values:
         ;
@@ -6200,6 +6247,7 @@ z_minus_trailing:
 ; ## MOD ( n1 n2 -- n ) "Divide NOS by TOS and return the remainder"
 ; ## "mod"  auto  ANS core
         ; """https://forth-standard.org/standard/core/MOD
+        ; 
         ; The Forth definition of this word is  : MOD /MOD DROP ;  
         ; so we just jump to xt_slash_mod and dump the actual result.
         ; """
@@ -6220,7 +6268,9 @@ z_mod:
         ; Copy u "address units" from addr1 to addr2. Since our address
         ; units are bytes, this is just a front-end for CMOVE and CMOVE>. This
         ; is actually the only one of these three words that is in the CORE
-        ; set. This word must not be natively compiled
+        ; set.
+        ;
+        ; This word must not be natively compiled.
         ; """
 .scope
 xt_move:
@@ -6383,6 +6433,7 @@ z_nip:          rts
 ; ## NOT_EQUALS ( n m -- f ) "Return a true flag if TOS != NOS"
 ; ## "<>"  auto  ANS core ext
         ; """https://forth-standard.org/standard/core/ne
+        ; 
         ; This is just a variant of EQUAL, we code it separately
         ; for speed.
         ; """
@@ -6455,7 +6506,9 @@ z_not_rote:     rts
         ; https://www.complang.tuwien.ac.at/forth/gforth/Docs-html/Number-Conversion.html
         ; Another difference to Gforth is that we follow ANS Forth that the
         ; dot to signal a double cell number is required to be the last
-        ; character of the string. Number calls >NUMBER which in turn calls UM*,
+        ; character of the string.
+        ;
+        ; Number calls >NUMBER which in turn calls UM*,
         ; which uses tmp1, tmp2, and tmp3, so we can't use them here, which is
         ; a pain. 
         ;"""
@@ -6598,8 +6651,10 @@ z_number:       rts
 ; ## NUMBER_SIGN ( ud -- ud ) "Add character to pictured output string"
 ; ## "#"  auto  ANS core
         ; """https://forth-standard.org/standard/core/num
-        ; Add one char to the beginning of the pictured output string. Based
-        ; on https://github.com/philburk/pforth/blob/master/fth/numberio.fth
+        ; Add one char to the beginning of the pictured output string.
+        ;
+        ; Based on
+        ; https://github.com/philburk/pforth/blob/master/fth/numberio.fth
         ; Forth code  BASE @ UD/MOD ROT 9 OVER < IF 7 + THEN [CHAR] 0 + HOLD ;
         ; """
 xt_number_sign:        
@@ -6645,7 +6700,9 @@ z_number_sign:
 ; ## "#>"  auto  ANS core
         ; """https://forth-standard.org/standard/core/num-end
         ; Finish conversion of pictured number string, putting address and
-        ; length on the Data Stack. Original Fort is  2DROP HLD @ PAD OVER -
+        ; length on the Data Stack.
+        ;
+        ; Original Fort is  2DROP HLD @ PAD OVER -
         ; Based on
         ; https://github.com/philburk/pforth/blob/master/fth/numberio.fth
         ; """
@@ -6683,7 +6740,9 @@ z_number_sign_greater:
 ; ## NUMBER_SIGN_S ( d -- addr u ) "Completely convert pictured output"
 ; ## "#s"  auto  ANS core
         ; """https://forth-standard.org/standard/core/numS
-        ; Completely convert number for pictured numerical output. Based on
+        ; Completely convert number for pictured numerical output.
+        ;
+        ; Based on
         ; https://github.com/philburk/pforth/blob/master/fth/system.fth
         ; Original Forth code  BEGIN # 2DUP OR 0= UNTIL
         ; """
@@ -6767,6 +6826,7 @@ z_one_minus:    rts
 ; ## ONE_PLUS ( u -- u+1 ) "Increase TOS by one"
 ; ## "1+"  auto  ANS core
         ; """https://forth-standard.org/standard/core/OnePlus
+        ;
         ; Code is shared with CHAR-PLUS
         ; """
 .scope
@@ -6823,8 +6883,12 @@ z_or:           rts
 ; ## ORDER ( -- ) "Print current word order list and current WID"
 ; ## "order"  auto  ANS core
         ; """https://forth-standard.org/standard/search/ORDER
+        ; Note the search order is displayed from first search to last
+        ; searched and is therefore exactly the reverse of the order in which
+        ; Forth stacks are displayed.
+        ;
         ; A Forth implementation of this word is:
-
+        ;
         ; 	: .wid ( wid -- )
         ; 	dup 0=  if ." FORTH "  drop    else
         ; 	dup 1 = if ." EDITOR " drop    else
@@ -6832,14 +6896,12 @@ z_or:           rts
         ; 	dup 3 = if ." ROOT " drop      else
         ; 	           . ( just print the number )
         ; 	then then then then ;
-
-	; 	: ORDER ( -- )
+        ;
+	    ; : ORDER ( -- )
         ; 	cr get-order 0 ?do .wid loop
         ; 	space space get-current .wid ;
-        
-        ; Note the search order is displayed from first search to last
-        ; searched and is therefore exactly the reverse of the order in which
-        ; Forth stacks are displayed. This is an interactive program, so speed
+        ;
+        ; This is an interactive program, so speed
         ; is not as important as size. We assume we do not have more than 255
         ; wordlists.
         ; """
@@ -7148,7 +7210,7 @@ _char_found:
         ; skip leading delimiters -- this is the main difference to PARSE-NAME.
         ; PARSE and PARSE-NAME replace WORD in modern systems. ANS discussion
         ; http://www.forth200x.org/documents/html3/rationale.html#rat:core:PARSE 
-
+        ;
         ;
         ;     cib  cib+toin   cib+ciblen
         ;      v      v            v
@@ -7408,8 +7470,9 @@ z_plus_store:   rts
         ; Add the compilation behavior of a word to a new word at
         ; compile time. If the word that follows it is immediate, include
         ; it so that it will be compiled when the word being defined is
-        ; itself used for a new word. Tricky, but very useful. Because
-        ; POSTPONE expects a word (not an xt) in the input stream (not
+        ; itself used for a new word. Tricky, but very useful.
+        ;
+        ; Because POSTPONE expects a word (not an xt) in the input stream (not
         ; on the Data Stack). This means we cannot build words with
         ; "jsr xt_postpone, jsr <word>" directly.
         ; """
@@ -7491,6 +7554,7 @@ z_previous:     rts
 ; ## QUESTION ( addr -- ) "Print content of a variable"
 ; ## "?"  tested  ANS tools
         ; """https://forth-standard.org/standard/tools/q
+        ;
         ; Only used interactively. Since humans are so slow, we
         ; save size and just go for the subroutine jumps
         ; """
@@ -7530,7 +7594,9 @@ z_question_dup: rts
 ; ## "r@"  auto  ANS core
         ; """https://forth-standard.org/standard/core/RFetch
         ; This word is Compile Only in Tali Forth, though Gforth has it
-        ; work normally as well -- An alternative way to write this word
+        ; work normally as well
+        ;
+        ; An alternative way to write this word
         ; would be to access the elements on the stack directly like 2R@
         ; does, these versions should be compared at some point.
         ; """
@@ -7569,7 +7635,9 @@ z_r_fetch:      rts
 ; ## R_FROM ( -- n )(R: n --) "Move top of Return Stack to TOS"
 ; ## "r>"  auto  ANS core
         ; """https://forth-standard.org/standard/core/Rfrom
-        ; Move Top of Return Stack to Top of Data Stack. We have to move
+        ; Move Top of Return Stack to Top of Data Stack.
+        ;
+        ; We have to move
         ; the RTS address out of the way first. This word is handled
         ; differently for native and and subroutine compilation, see COMPILE,
         ; This is a compile-only word
@@ -7608,8 +7676,9 @@ z_r_from:       rts
 ; ## R_TO_INPUT ( -- ) ( R: n n n n -- ) "Restore input state from Return Stack"
 ; ## "r>input"  tested  Tali Forth
         ; """Restore the current input state as defined by insrc, cib, ciblen,
-        ; and toin from the Return Stack. See INPUT_TO_R for a discussion of
-        ; this word. Uses tmp1
+        ; and toin from the Return Stack.
+        ;
+        ; See INPUT_TO_R for a discussion of this word. Uses tmp1
         ; """ 
 .scope
 xt_r_to_input: 
@@ -7646,6 +7715,7 @@ z_r_to_input: 	rts
 ; ## RECURSE ( -- ) "Copy recursive call to word being defined"
 ; ## "recurse"  auto  ANS core
         ; """https://forth-standard.org/standard/core/RECURSE
+        ; 
         ; This word may not be natively compiled
         ; """
 .scope
@@ -8342,7 +8412,9 @@ z_set_order:    rts
         ; Store address and length of string given, returning ( addr u ).
         ; ANS core claims this is compile-only, but the file set expands it
         ; to be interpreted, so it is a state-sensitive word, which in theory
-        ; are evil. We follow general usage. Can also be realized as 
+        ; are evil. We follow general usage.
+        ;
+        ; Can also be realized as 
         ;     : S" [CHAR] " PARSE POSTPONE SLITERAL ; IMMEDIATE
         ; but it is used so much we want it in code.
         ; """
@@ -8908,7 +8980,9 @@ z_search:       rts
 ; ## SEMICOLON ( -- ) "End compilation of new word"
 ; ## ";"  auto  ANS core
         ; """https://forth-standard.org/standard/core/Semi
-        ; End the compilation of a new word into the Dictionary. When we
+        ; End the compilation of a new word into the Dictionary.
+        ;
+        ; When we
         ; enter this, WORKWORD is pointing to the nt_ of this word in the
         ; Dictionary, DP to the previous word, and CP to the next free byte.
         ; A Forth definition would be (see "Starting Forth"):
@@ -9024,6 +9098,7 @@ z_semicolon:    rts
 ; ## SIGN ( n -- ) "Add minus to pictured output"
 ; ## "sign"  auto  ANS core
         ; """https://forth-standard.org/standard/core/SIGN
+        ; 
         ; Code based on 
         ; http://pforth.googlecode.com/svn/trunk/fth/numberio.fth
         ; Original Forth code is   0< IF ASCII - HOLD THEN 
@@ -9053,6 +9128,7 @@ z_sign:         rts
 ; ## SLASH ( n1 n2 -- n ) "Divide NOS by TOS"
 ; ## "/"  auto  ANS core
         ; """https://forth-standard.org/standard/core/Div
+        ;
         ; Forth code is either  >R S>D R> FM/MOD SWAP DROP 
         ; or >R S>D R> SM/REM SWAP DROP -- we use SM/REM in Tali Forth.
         ; This code is currently unoptimized. This code without the SLASH
@@ -9097,6 +9173,7 @@ z_slash:        rts
 ; ## SLASH_MOD ( n1 n2 -- n3 n4 ) "Divide NOS by TOS with a remainder"
 ; ## "/mod"  auto  ANS core
         ; """https://forth-standard.org/standard/core/DivMOD
+        ;
         ; This is a dummy entry, the actual code is shared with SLASH
         ; """
 
@@ -9104,6 +9181,7 @@ z_slash:        rts
 ; ## SLASH_STRING ( addr u n -- addr u ) "Shorten string by n"
 ; ## "/string"  auto  ANS string
         ; """https://forth-standard.org/standard/string/DivSTRING
+        ;
         ; Forth code is
         ; : /STRING ( ADDR U N -- ADDR U ) ROT OVER + ROT ROT - ; 
         ; Put differently, we need to add TOS and 3OS, and subtract
@@ -9310,7 +9388,9 @@ sliteral_runtime:
 ; ## "sm/rem"  auto  ANS core
         ; """https://forth-standard.org/standard/core/SMDivREM
         ; Symmetic signed division. Compare FM/MOD. Based on F-PC 3.6
-        ; by Ulrich Hoffmann. See http://www.xlerb.de/uho/ansi.seq Forth:
+        ; by Ulrich Hoffmann. See http://www.xlerb.de/uho/ansi.seq
+        ;
+        ; Forth:
         ; OVER >R 2DUP XOR 0< >R ABS >R DABS R> UM/MOD R> ?NEGATE SWAP
         ; R> ?NEGATE SWAP
         ; """
@@ -9478,6 +9558,7 @@ z_spaces:       rts
 ; ## "*"  auto  ANS core
         ; """https://forth-standard.org/standard/core/Times
         ; Multiply two signed 16 bit numbers, returning a 16 bit result.
+        ; 
         ; This is nothing  more than UM* DROP
         ; """
 .scope
@@ -9496,8 +9577,10 @@ z_star:         rts
 ; ## "*/"  auto  ANS core
         ; """https://forth-standard.org/standard/core/TimesDiv
         ; Multiply n1 by n2 and divide by n3, returning the result
-        ; without a remainder. This is */MOD without the mod, and 
-        ; can be defined in Fort as : */  */MOD SWAP DROP ; which is
+        ; without a remainder. This is */MOD without the mod.
+        ;
+        ; This word 
+        ; can be defined in Forth as : */  */MOD SWAP DROP ; which is
         ; pretty much what we do here
         ; """
 xt_star_slash:
@@ -9515,7 +9598,9 @@ z_star_slash:
         ; """https://forth-standard.org/standard/core/TimesDivMOD
         ; Multiply n1 by n2 producing the intermediate double-cell result
         ; d. Divide d by n3 producing the single-cell remainder n4 and the
-        ; single-cell quotient n5. In Forth, this is
+        ; single-cell quotient n5.
+        ;
+        ; In Forth, this is
         ; : */MOD  >R M* >R SM/REM ;  Note that */ accesses this routine.
         ; """
 xt_star_slash_mod:
@@ -9750,7 +9835,7 @@ z_tick:         rts
 ; ## "to"  auto  ANS core ext
         ; """https://forth-standard.org/standard/core/TO
         ; Gives a new value to a, uh, VALUE.
-
+        ;
         ; One possible Forth
         ; implementation is  ' >BODY !  but given the problems we have
         ; with >BODY on STC Forths, we do this the hard way. Since 
@@ -9864,7 +9949,9 @@ z_to:           rts
         ; """https://forth-standard.org/standard/core/toBODY
         ; Given a word's execution token (xt), return the address of the
         ; start of that word's parameter field (PFA). This is defined as the
-        ; address that HERE would return right after CREATE. This is a
+        ; address that HERE would return right after CREATE.
+        ;
+        ; This is a
         ; difficult word for STC Forths, because most words don't actually
         ; have a Code Field Area (CFA) to skip. We solve this by having CREATE
         ; add a flag, "has CFA" (HC), in the header so >BODY know to skip
@@ -9930,7 +10017,7 @@ z_to_in:        rts
         ; to deal with a dot as a last character that signalizes double -
         ; this should be a pure number string. This routine calles UM*, which
         ; uses tmp1, tmp2 and tmp3, so we cannot access any of those.
-        
+        ;
         ; For the math routine, we move the inputs to the scratchpad to
         ; avoid having to fool around with the Data Stack. 
         ;
@@ -9939,7 +10026,7 @@ z_to_in:        rts
         ;     |           |           |           |           |
         ;     |  S    S+1 | S+2   S+3 | S+4   S+5 | S+6   S+7 |
         ;     +-----+-----+-----+-----+-----+-----+-----+-----+
-
+        ;
         ; The math routine works by converting one character to its
         ; numerical value (N) via DIGIT? and storing it in S+4 for
         ; the moment. We then multiply the UD-HI value with the radix
@@ -10319,6 +10406,7 @@ z_two_over:     rts
 ; ## TWO_R_FETCH ( -- n n ) "Copy top two entries from Return Stack"
 ; ## "2r@"  auto  ANS core ext
         ; """https://forth-standard.org/standard/core/TwoRFetch
+        ;
         ; This is R> R> 2DUP >R >R SWAP but we can do it a lot faster in
         ; assembler. We use trickery to access the elements on the Return
         ; Stack instead of pulling the return address first and storing
@@ -10363,7 +10451,9 @@ z_two_r_fetch:  rts
 ; ## TWO_R_FROM ( -- n1 n2 ) (R: n1 n2 -- ) "Pull two cells from Return Stack"
 ; ## "2r>"  auto  ANS core ext
 	    ; """https://forth-standard.org/standard/core/TwoRfrom
-        ; Pull top two entries from Return Stack. Is the same as
+        ; Pull top two entries from Return Stack.
+        ;
+        ; Is the same as
         ; R> R> SWAP. As with R>, the problem with the is word is that
         ; the top value on the ReturnStack for a STC Forth is the
         ; return address, which we need to get out of the way first.
@@ -10519,7 +10609,9 @@ z_two_swap:     rts
 ; ## TWO_TO_R ( n1 n2 -- )(R: -- n1 n2 "Push top two entries to Return Stack"
 ; ## "2>r"  auto  ANS core ext
         ; """https://forth-standard.org/standard/core/TwotoR
-        ; Push top two entries to Return Stack. The same as SWAP >R >R
+        ; Push top two entries to Return Stack.
+        ;
+        ; The same as SWAP >R >R
         ; except that if we jumped here, the return address will be in the
         ; way. May not be natively compiled unless we're clever and use
         ; special routines.
@@ -10567,6 +10659,7 @@ z_two_to_r:     rts
 ; ## TWO_CONSTANT (C: d "name" -- ) ( -- d) "Create a constant for a double word"
 ; ## "2constant"  auto  ANS double
         ; """https://forth-standard.org/standard/double/TwoCONSTANT
+        ;
         ; Based on the Forth code
         ; : 2CONSTANT ( D -- )  CREATE SWAP , , DOES> DUP @ SWAP CELL+ @ ;
         ; """
@@ -10613,10 +10706,11 @@ z_two_literal:  rts
 ; ## TWO_VARIABLE ( "name" -- ) "Create a variable for a double word"
 ; ## "2variable"  auto  ANS double
         ; """https://forth-standard.org/standard/double/TwoVARIABLE
+        ; The variable is not initialized to zero.
+        ;
         ; This can be realized in Forth as either 
         ; CREATE 2 CELLS ALLOT  or just  CREATE 0 , 0 , 
-        ; Note that in this case, the variable is not initialized to
-        ; zero"""
+        ; """
 .scope
 xt_two_variable:
                 ; We just let CRATE and ALLOT do the heavy lifting
@@ -10637,8 +10731,7 @@ z_two_variable: rts
 ; ## TYPE ( addr u -- ) "Print string"
 ; ## "type"  auto  ANS core
         ; """https://forth-standard.org/standard/core/TYPE
-        ; Works through EMIT to allow OUTPUT revectoring. Currently, only
-        ; strings of up to 255 characters are printed
+        ; Works through EMIT to allow OUTPUT revectoring.
         ; """
 .scope
 xt_type:        
@@ -10685,6 +10778,7 @@ z_type:         rts
 ; ## U_DOT ( u -- ) "Print TOS as unsigned number"
 ; ## "u."  tested  ANS core
         ; """https://forth-standard.org/standard/core/Ud
+        ;
         ; This is : U. 0 <# #S #> TYPE SPACE ; in Forth
         ; We use the internal assembler function print_u followed
         ; by a single space
@@ -10816,7 +10910,8 @@ z_ud_dot_r:      rts
         ; quotient as TOS and any remainder as NOS. All numbers are unsigned.
         ; This is the basic division operation all others use. Based on FIG
         ; Forth code, modified by Garth Wilson, see
-        ; http://6502.org/source/integers/ummodfix/ummodfix.htm 
+        ; http://6502.org/source/integers/ummodfix/ummodfix.htm
+        ; 
         ; This uses tmp1, tmp1+1, and tmptos
         ; """
 .scope
@@ -10886,7 +10981,7 @@ z_um_slash_mod: rts
         ; """https://forth-standard.org/standard/core/UMTimes
         ; Multiply two unsigned 16 bit numbers, producing a 32 bit result.
         ; Old Forth versions such as FIG Forth call this U*
-        
+        ;
         ; This is based on modified FIG Forth code by Dr. Jefyll, see
         ; http://forum.6502.org/viewtopic.php?f=9&t=689 for a detailed
         ; discussion.
@@ -10961,6 +11056,7 @@ z_um_star:      rts
 ; ## UNLOOP ( -- )(R: n1 n2 n3 ---) "Drop loop control from Return stack"
 ; ## "unloop"  auto  ANS core
         ; """https://forth-standard.org/standard/core/UNLOOP
+        ;
         ; Note that 6xPLA uses just as many bytes as a loop would
         ; """
 .scope
@@ -11052,6 +11148,7 @@ z_useraddr:     rts
 ; ## VALUE ( n "name" -- ) "Define a value"
 ; ## "value"  auto  ANS core
         ; """https://forth-standard.org/standard/core/VALUE
+        ;
         ; This is a dummy header for the WORDLIST. The actual code is
         ; identical to that of CONSTANT
         ; """
@@ -11061,7 +11158,7 @@ z_useraddr:     rts
 ; ## "variable"  auto  ANS core
         ; """https://forth-standard.org/standard/core/VARIABLE
         ; There are various Forth definitions for this word, such as
-        ; CREATE 1 CELLS ALLOT  or  CREATE 0 ,  We use a variant of the
+        ; `CREATE 1 CELLS ALLOT`  or  `CREATE 0 ,`  We use a variant of the
         ; second one so the variable is initialized to zero
         ; """
 xt_variable:    
@@ -11116,6 +11213,7 @@ z_while:        rts
 ; ## WITHIN ( n1 n2 n3 -- ) "See if within a range"
 ; ## "within"  auto  ANS core ext
         ; """https://forth-standard.org/standard/core/WITHIN
+        ;
         ; This an assembler version of the ANS Forth implementation 
         ; at https://forth-standard.org/standard/core/WITHIN which is
         ; OVER - >R - R> U<  note there is an alternative high-level version
@@ -11143,7 +11241,9 @@ z_within:       rts
         ; to modern format), and inserts a space after the string. See "Forth
         ; Programmer's Handbook" 3rd edition p. 159 and
         ; http://www.forth200x.org/documents/html/rationale.html#rat:core:PARSE 
-        ; for discussions of why you shouldn't be using WORD anymore. Forth
+        ; for discussions of why you shouldn't be using WORD anymore.
+        ;
+        ; Forth
         ; would be   PARSE DUP BUFFER1 C! OUTPUT 1+ SWAP MOVE BUFFER1
         ; We only allow input of 255 chars. Seriously, use PARSE-NAME.
         ; """
@@ -11236,6 +11336,7 @@ z_wordlist:     rts
 
 ; ## WORDS ( -- ) "Print known words from Dictionary"
 ; ## "words"  tested  ANS tools
+        ;
         ; """https://forth-standard.org/standard/tools/WORDS
         ; This is pretty much only used at the command line so we can
         ; be slow and try to save space. DROP must always be the first word in a
@@ -11398,9 +11499,10 @@ z_xor:          rts
 
 ; ## ZERO ( -- 0 ) "Push 0 to Data Stack"
 ; ## "0"  auto  Tali Forth
-;       ; """The disassembler assumes that this routine does not use Y. Note
-;       that CASE and FORTH-WORDLIST use the same routine, as the WD for Forth
-;       is 0."""
+
+        ; """The disassembler assumes that this routine does not use Y. Note
+        ; that CASE and FORTH-WORDLIST use the same routine, as the WD for Forth
+        ; is 0."""
 xt_case:
 xt_forth_wordlist:
 xt_zero:        

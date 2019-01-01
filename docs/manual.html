@@ -6579,9 +6579,7 @@ order if you run it too many times.</p>
 <td class="hdlist2">
 <p><em>ANS core</em> ( ud&#8201;&#8212;&#8201;ud ) "Add character to pictured output string"
 <a href="https://forth-standard.org/standard/core/num" class="bare">https://forth-standard.org/standard/core/num</a>
-Add one char to the beginning of the pictured output string. Based
-on <a href="https://github.com/philburk/pforth/blob/master/fth/numberio.fth" class="bare">https://github.com/philburk/pforth/blob/master/fth/numberio.fth</a>
-Forth code  BASE @ UD/MOD ROT 9 OVER &lt; IF 7 + THEN [CHAR] 0 + HOLD</p>
+Add one char to the beginning of the pictured output string.</p>
 </td>
 </tr>
 <tr>
@@ -6592,9 +6590,7 @@ Forth code  BASE @ UD/MOD ROT 9 OVER &lt; IF 7 + THEN [CHAR] 0 + HOLD</p>
 <p><em>ANS core</em> ( d&#8201;&#8212;&#8201;addr u ) "Finish pictured number conversion"
 <a href="https://forth-standard.org/standard/core/num-end" class="bare">https://forth-standard.org/standard/core/num-end</a>
 Finish conversion of pictured number string, putting address and
-length on the Data Stack. Original Fort is  2DROP HLD @ PAD OVER -
-Based on
-<a href="https://github.com/philburk/pforth/blob/master/fth/numberio.fth" class="bare">https://github.com/philburk/pforth/blob/master/fth/numberio.fth</a></p>
+length on the Data Stack.</p>
 </td>
 </tr>
 <tr>
@@ -6604,9 +6600,7 @@ Based on
 <td class="hdlist2">
 <p><em>ANS core</em> ( d&#8201;&#8212;&#8201;addr u ) "Completely convert pictured output"
 <a href="https://forth-standard.org/standard/core/numS" class="bare">https://forth-standard.org/standard/core/numS</a>
-Completely convert number for pictured numerical output. Based on
-<a href="https://github.com/philburk/pforth/blob/master/fth/system.fth" class="bare">https://github.com/philburk/pforth/blob/master/fth/system.fth</a>
-Original Forth code  BEGIN # 2DUP OR 0= UNTIL</p>
+Completely convert number for pictured numerical output.</p>
 </td>
 </tr>
 <tr>
@@ -6634,8 +6628,7 @@ Original Forth code  BEGIN # 2DUP OR 0= UNTIL</p>
 <td class="hdlist2">
 <p><em>ANS core</em> ( n n&#8201;&#8212;&#8201;n ) "16*16 -&#8594; 16 "
 <a href="https://forth-standard.org/standard/core/Times" class="bare">https://forth-standard.org/standard/core/Times</a>
-Multiply two signed 16 bit numbers, returning a 16 bit result.
-This is nothing  more than UM* DROP</p>
+Multiply two signed 16 bit numbers, returning a 16 bit result.</p>
 </td>
 </tr>
 <tr>
@@ -6646,9 +6639,7 @@ This is nothing  more than UM* DROP</p>
 <p><em>ANS core</em> ( n1 n2 n3&#8201;&#8212;&#8201;n4 ) "n1 * n2 / n3 -&#8594;  n"
 <a href="https://forth-standard.org/standard/core/TimesDiv" class="bare">https://forth-standard.org/standard/core/TimesDiv</a>
 Multiply n1 by n2 and divide by n3, returning the result
-without a remainder. This is */MOD without the mod, and
-can be defined in Fort as : */  */MOD SWAP DROP ; which is
-pretty much what we do here</p>
+without a remainder. This is */MOD without the mod.</p>
 </td>
 </tr>
 <tr>
@@ -6663,8 +6654,7 @@ Multiply n1 by n2 producing the intermediate double-cell result</p>
 <ol class="loweralpha" type="a">
 <li>
 <p>Divide d by n3 producing the single-cell remainder n4 and the
-single-cell quotient n5. In Forth, this is
-: <strong>/MOD  &gt;R M</strong> &gt;R SM/REM ;  Note that */ accesses this routine.</p>
+single-cell quotient n5.</p>
 </li>
 </ol>
 </div>
@@ -6694,14 +6684,7 @@ single-cell quotient n5. In Forth, this is
 </td>
 <td class="hdlist2">
 <p><em>ANS core</em> (&#8201;&#8212;&#8201;) "Finish loop construct"
-<a href="https://forth-standard.org/standard/core/PlusLOOP" class="bare">https://forth-standard.org/standard/core/PlusLOOP</a>
-Compile-time part of +LOOP, also used for LOOP. Is usually
-: +LOOP POSTPONE (+LOOP) , POSTPONE UNLOOP ; IMMEDIATE
-COMPILE-ONLY
-in Forth. LOOP uses this routine as well. We jump here with the
-address for looping as TOS and the address for aborting the loop
-(LEAVE) as the second double-byte entry on the Return Stack (see
-DO and docs/loops.txt for details).</p>
+<a href="https://forth-standard.org/standard/core/PlusLOOP" class="bare">https://forth-standard.org/standard/core/PlusLOOP</a></p>
 </td>
 </tr>
 <tr>
@@ -6711,8 +6694,7 @@ DO and docs/loops.txt for details).</p>
 <td class="hdlist2">
 <p><em>ANS core</em> ( n&#8201;&#8212;&#8201;) "Allot and store one cell in memory"
 <a href="https://forth-standard.org/standard/core/Comma" class="bare">https://forth-standard.org/standard/core/Comma</a>
-Store TOS at current place in memory. Since this an eight-bit
-machine, we can ignore all alignment issures.</p>
+Store TOS at current place in memory.</p>
 </td>
 </tr>
 <tr>
@@ -6789,9 +6771,7 @@ uses it for everything. We follow the book here, and recommend
 </td>
 <td class="hdlist2">
 <p><em>ANS core ext</em> ( n u&#8201;&#8212;&#8201;) "Print NOS as unsigned number with TOS with"
-<a href="https://forth-standard.org/standard/core/DotR" class="bare">https://forth-standard.org/standard/core/DotR</a>
-Based on the Forth code
-: .R  &gt;R DUP ABS 0 &lt;# #S ROT SIGN #&gt; R&gt; OVER - SPACES TYPE</p>
+<a href="https://forth-standard.org/standard/core/DotR" class="bare">https://forth-standard.org/standard/core/DotR</a></p>
 </td>
 </tr>
 <tr>
@@ -6801,8 +6781,7 @@ Based on the Forth code
 <td class="hdlist2">
 <p>_ANS tools _ (&#8201;&#8212;&#8201;) "Print content of Data Stack"
 <a href="https://forth-standard.org/standard/tools/DotS" class="bare">https://forth-standard.org/standard/tools/DotS</a>
-Print content of Data Stack non-distructively. Since this is for
-humans, we don&#8217;t have to worry about speed. We follow the format
+Print content of Data Stack non-distructively. We follow the format
 of Gforth and print the number of elements first in brackets,
 followed by the Data Stack content (if any).</p>
 </td>
@@ -6813,11 +6792,7 @@ followed by the Data Stack content (if any).</p>
 </td>
 <td class="hdlist2">
 <p><em>ANS core</em> ( n1 n2&#8201;&#8212;&#8201;n ) "Divide NOS by TOS"
-<a href="https://forth-standard.org/standard/core/Div" class="bare">https://forth-standard.org/standard/core/Div</a>
-Forth code is either  &gt;R S&gt;D R&gt; FM/MOD SWAP DROP
-or &gt;R S&gt;D R&gt; SM/REM SWAP DROP&#8201;&#8212;&#8201;we use SM/REM in Tali Forth.
-This code is currently unoptimized. This code without the SLASH
-DROP at the end is /MOD, so we share the code as far as possible.</p>
+<a href="https://forth-standard.org/standard/core/Div" class="bare">https://forth-standard.org/standard/core/Div</a></p>
 </td>
 </tr>
 <tr>
@@ -6826,8 +6801,7 @@ DROP at the end is /MOD, so we share the code as far as possible.</p>
 </td>
 <td class="hdlist2">
 <p><em>ANS core</em> ( n1 n2&#8201;&#8212;&#8201;n3 n4 ) "Divide NOS by TOS with a remainder"
-<a href="https://forth-standard.org/standard/core/DivMOD" class="bare">https://forth-standard.org/standard/core/DivMOD</a>
-This is a dummy entry, the actual code is shared with SLASH</p>
+<a href="https://forth-standard.org/standard/core/DivMOD" class="bare">https://forth-standard.org/standard/core/DivMOD</a></p>
 </td>
 </tr>
 <tr>
@@ -6836,11 +6810,7 @@ This is a dummy entry, the actual code is shared with SLASH</p>
 </td>
 <td class="hdlist2">
 <p><em>ANS string</em> ( addr u n&#8201;&#8212;&#8201;addr u ) "Shorten string by n"
-<a href="https://forth-standard.org/standard/string/DivSTRING" class="bare">https://forth-standard.org/standard/string/DivSTRING</a>
-Forth code is
-: /STRING ( ADDR U N&#8201;&#8212;&#8201;ADDR U ) ROT OVER + ROT ROT -
-Put differently, we need to add TOS and 3OS, and subtract
-TOS from NOS, and then drop TOS</p>
+<a href="https://forth-standard.org/standard/string/DivSTRING" class="bare">https://forth-standard.org/standard/string/DivSTRING</a></p>
 </td>
 </tr>
 <tr>
@@ -6848,10 +6818,7 @@ TOS from NOS, and then drop TOS</p>
 <code>0</code>
 </td>
 <td class="hdlist2">
-<p><em>Tali Forth</em> (&#8201;&#8212;&#8201;0 ) "Push 0 to Data Stack"
-; """The disassembler assumes that this routine does not use Y. Note
-that CASE and FORTH-WORDLIST use the same routine, as the WD for Forth
-is 0.</p>
+<p><em>Tali Forth</em> (&#8201;&#8212;&#8201;0 ) "Push 0 to Data Stack"</p>
 </td>
 </tr>
 <tr>
@@ -6905,8 +6872,7 @@ This is also the code for EDITOR-WORDLIST</p>
 </td>
 <td class="hdlist2">
 <p><em>ANS core</em> ( u&#8201;&#8212;&#8201;u+1 ) "Increase TOS by one"
-<a href="https://forth-standard.org/standard/core/OnePlus" class="bare">https://forth-standard.org/standard/core/OnePlus</a>
-Code is shared with CHAR-PLUS</p>
+<a href="https://forth-standard.org/standard/core/OnePlus" class="bare">https://forth-standard.org/standard/core/OnePlus</a></p>
 </td>
 </tr>
 <tr>
@@ -6964,10 +6930,7 @@ Also used for CELLS</p>
 <td class="hdlist2">
 <p><em>ANS core ext</em> ( n1 n2&#8201;&#8212;&#8201;)(R:&#8201;&#8212;&#8201;n1 n2 "Push top two entries to Return Stack"
 <a href="https://forth-standard.org/standard/core/TwotoR" class="bare">https://forth-standard.org/standard/core/TwotoR</a>
-Push top two entries to Return Stack. The same as SWAP &gt;R &gt;R
-except that if we jumped here, the return address will be in the
-way. May not be natively compiled unless we&#8217;re clever and use
-special routines.</p>
+Push top two entries to Return Stack.</p>
 </td>
 </tr>
 <tr>
@@ -6987,9 +6950,7 @@ the next byte. This is equvalent to  DUP CELL+ @ SWAP @</p>
 </td>
 <td class="hdlist2">
 <p><em>ANS double</em> (C: d "name"&#8201;&#8212;&#8201;) (&#8201;&#8212;&#8201;d) "Create a constant for a double word"
-<a href="https://forth-standard.org/standard/double/TwoCONSTANT" class="bare">https://forth-standard.org/standard/double/TwoCONSTANT</a>
-Based on the Forth code
-: 2CONSTANT ( D&#8201;&#8212;&#8201;)  CREATE SWAP , , DOES&gt; DUP @ SWAP CELL+ @</p>
+<a href="https://forth-standard.org/standard/double/TwoCONSTANT" class="bare">https://forth-standard.org/standard/double/TwoCONSTANT</a></p>
 </td>
 </tr>
 <tr>
@@ -7037,11 +6998,7 @@ Based on the Forth code
 <td class="hdlist2">
 <p><em>ANS core ext</em> (&#8201;&#8212;&#8201;n1 n2 ) (R: n1 n2&#8201;&#8212;&#8201;) "Pull two cells from Return Stack"
 <a href="https://forth-standard.org/standard/core/TwoRfrom" class="bare">https://forth-standard.org/standard/core/TwoRfrom</a>
-Pull top two entries from Return Stack. Is the same as
-R&gt; R&gt; SWAP. As with R&gt;, the problem with the is word is that
-the top value on the ReturnStack for a STC Forth is the
-return address, which we need to get out of the way first.
-Native compile needs to be handled as a special case.</p>
+Pull top two entries from Return Stack.</p>
 </td>
 </tr>
 <tr>
@@ -7050,13 +7007,7 @@ Native compile needs to be handled as a special case.</p>
 </td>
 <td class="hdlist2">
 <p><em>ANS core ext</em> (&#8201;&#8212;&#8201;n n ) "Copy top two entries from Return Stack"
-<a href="https://forth-standard.org/standard/core/TwoRFetch" class="bare">https://forth-standard.org/standard/core/TwoRFetch</a>
-This is R&gt; R&gt; 2DUP &gt;R &gt;R SWAP but we can do it a lot faster in
-assembler. We use trickery to access the elements on the Return
-Stack instead of pulling the return address first and storing
-it somewhere else like for 2R&gt; and 2&gt;R. In this version, we leave
-it as Never Native; at some point, we should compare versions to
-see if an Always Native version would be better</p>
+<a href="https://forth-standard.org/standard/core/TwoRFetch" class="bare">https://forth-standard.org/standard/core/TwoRFetch</a></p>
 </td>
 </tr>
 <tr>
@@ -7075,10 +7026,7 @@ see if an Always Native version would be better</p>
 <td class="hdlist2">
 <p><em>ANS double</em> ( "name"&#8201;&#8212;&#8201;) "Create a variable for a double word"
 <a href="https://forth-standard.org/standard/double/TwoVARIABLE" class="bare">https://forth-standard.org/standard/double/TwoVARIABLE</a>
-This can be realized in Forth as either
-CREATE 2 CELLS ALLOT  or just  CREATE 0 , 0 ,
-Note that in this case, the variable is not initialized to
-zero</p>
+The variable is not initialized to zero.</p>
 </td>
 </tr>
 <tr>
@@ -7087,8 +7035,7 @@ zero</p>
 </td>
 <td class="hdlist2">
 <p><em>ANS core</em> ( "name"&#8201;&#8212;&#8201;) "Start compilation of a new word"
-<a href="https://forth-standard.org/standard/core/Colon" class="bare">https://forth-standard.org/standard/core/Colon</a>
-Use the CREATE routine and fill in the rest by hand.</p>
+<a href="https://forth-standard.org/standard/core/Colon" class="bare">https://forth-standard.org/standard/core/Colon</a></p>
 </td>
 </tr>
 <tr>
@@ -7108,12 +7055,7 @@ Compile a word with no nt.  ";" will put its xt on the stack.</p>
 <td class="hdlist2">
 <p><em>ANS core</em> (&#8201;&#8212;&#8201;) "End compilation of new word"
 <a href="https://forth-standard.org/standard/core/Semi" class="bare">https://forth-standard.org/standard/core/Semi</a>
-End the compilation of a new word into the Dictionary. When we
-enter this, WORKWORD is pointing to the nt_ of this word in the
-Dictionary, DP to the previous word, and CP to the next free byte.
-A Forth definition would be (see "Starting Forth"):
-: POSTPONE EXIT  REVEAL POSTPONE ; [ ; IMMEDIATE  Following the
-practice of Gforth, we warn here if a word has been redefined.</p>
+End the compilation of a new word into the Dictionary.</p>
 </td>
 </tr>
 <tr>
@@ -7132,17 +7074,7 @@ practice of Gforth, we warn here if a word has been redefined.</p>
 <td class="hdlist2">
 <p><em>ANS core</em> (&#8201;&#8212;&#8201;) "Start number conversion"
 <a href="https://forth-standard.org/standard/core/num-start" class="bare">https://forth-standard.org/standard/core/num-start</a>
-Start the process to create pictured numeric output. The new
-string is constructed from back to front, saving the new character
-at the beginning of the output string. Since we use PAD as a
-starting address and work backward (!), the string is constructed
-in the space between the end of the Dictionary (as defined by CP)
-and the PAD. This allows us to satisfy the ANS Forth condition that
-programs don&#8217;t fool around with the PAD but still use its address.
-Based on pForth
-<a href="http://pforth.googlecode.com/svn/trunk/fth/numberio.fth" class="bare">http://pforth.googlecode.com/svn/trunk/fth/numberio.fth</a>
-pForth is in the pubic domain. Forth is : &lt;# PAD HLD ! ; we use the
-internal variable tohold instead of HLD.</p>
+Start the process to create pictured numeric output.</p>
 </td>
 </tr>
 <tr>
@@ -7151,9 +7083,7 @@ internal variable tohold instead of HLD.</p>
 </td>
 <td class="hdlist2">
 <p><em>ANS core ext</em> ( n m&#8201;&#8212;&#8201;f ) "Return a true flag if TOS != NOS"
-<a href="https://forth-standard.org/standard/core/ne" class="bare">https://forth-standard.org/standard/core/ne</a>
-This is just a variant of EQUAL, we code it separately
-for speed.</p>
+<a href="https://forth-standard.org/standard/core/ne" class="bare">https://forth-standard.org/standard/core/ne</a></p>
 </td>
 </tr>
 <tr>
@@ -7183,11 +7113,7 @@ for speed.</p>
 <a href="https://forth-standard.org/standard/core/toBODY" class="bare">https://forth-standard.org/standard/core/toBODY</a>
 Given a word&#8217;s execution token (xt), return the address of the
 start of that word&#8217;s parameter field (PFA). This is defined as the
-address that HERE would return right after CREATE. This is a
-difficult word for STC Forths, because most words don&#8217;t actually
-have a Code Field Area (CFA) to skip. We solve this by having CREATE
-add a flag, "has CFA" (HC), in the header so &gt;BODY know to skip
-the subroutine jumps to DOVAR, DOCONST, or DODOES</p>
+address that HERE would return right after CREATE.</p>
 </td>
 </tr>
 <tr>
@@ -7242,9 +7168,7 @@ word.</p>
 </td>
 <td class="hdlist2">
 <p><em>ANS tools</em> ( addr&#8201;&#8212;&#8201;) "Print content of a variable"
-<a href="https://forth-standard.org/standard/tools/q" class="bare">https://forth-standard.org/standard/tools/q</a>
-Only used interactively. Since humans are so slow, we
-save size and just go for the subroutine jumps</p>
+<a href="https://forth-standard.org/standard/tools/q" class="bare">https://forth-standard.org/standard/tools/q</a></p>
 </td>
 </tr>
 <tr>
@@ -7301,9 +7225,7 @@ This is an immediate and compile-only word</p>
 <p><em>ANS core</em> ( "c"&#8201;&#8212;&#8201;) "Compile character"
 <a href="https://forth-standard.org/standard/core/BracketCHAR" class="bare">https://forth-standard.org/standard/core/BracketCHAR</a>
 Compile the ASCII value of a character as a literal. This is an
-immediate, compile-only word. A definition given in
-<a href="http://forth-standard.org/standard/implement" class="bare">http://forth-standard.org/standard/implement</a> is
-: [CHAR]  CHAR POSTPONE LITERAL ; IMMEDIATE</p>
+immediate, compile-only word.</p>
 </td>
 </tr>
 <tr>
@@ -7396,10 +7318,16 @@ modern Forths.</p>
 <td class="hdlist2">
 <p><em>ANS core</em> (&#8201;&#8212;&#8201;) "Make sure CP is aligned on word size"
 <a href="https://forth-standard.org/standard/core/ALIGN" class="bare">https://forth-standard.org/standard/core/ALIGN</a>
-On a 8-bit machine, this does nothing. ALIGNED uses
-this routine as well, and also does nothing
-<mark> ALIGNED ( addr&#8201;&#8212;&#8201;addr ) "Return the first aligned address
-</mark> "aligned"  auto  ANS core</p>
+On a 8-bit machine, this does nothing.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>aligned</code>
+</td>
+<td class="hdlist2">
+<p><em>ANS core</em> ( addr&#8201;&#8212;&#8201;addr ) "Return the first aligned address"
+<a href="https://forth-standard.org/standard/core/ALIGNED" class="bare">https://forth-standard.org/standard/core/ALIGNED</a></p>
 </td>
 </tr>
 <tr>
@@ -7467,8 +7395,7 @@ This is a dummy entry, the code is shared with TWO</p>
 <p><em>ANS facility</em> ( n m&#8201;&#8212;&#8201;) "Move cursor to position given"
 <a href="https://forth-standard.org/standard/facility/AT-XY" class="bare">https://forth-standard.org/standard/facility/AT-XY</a>
 On an ANS compatible terminal, place cursor at row n colum m.
-Code is ESC[&lt;n&gt;;&lt;m&gt;H Do not use U. to print the numbers because the
-trailing space will not work with xterm</p>
+Code is ESC[&lt;n&gt;;&lt;m&gt;H</p>
 </td>
 </tr>
 <tr>
@@ -7486,12 +7413,7 @@ trailing space will not work with xterm</p>
 </td>
 <td class="hdlist2">
 <p><em>ANS core</em> (&#8201;&#8212;&#8201;addr ) "Mark entry point for loop"
-<a href="https://forth-standard.org/standard/core/BEGIN" class="bare">https://forth-standard.org/standard/core/BEGIN</a>
-This is just an immediate version of here which could just
-as well be coded in Forth as
-: BEGIN HERE ; IMMEDIATE COMPILE-ONLY
-Since this is a compiling word, we don&#8217;t care that much about
-about speed</p>
+<a href="https://forth-standard.org/standard/core/BEGIN" class="bare">https://forth-standard.org/standard/core/BEGIN</a></p>
 </td>
 </tr>
 <tr>
@@ -7547,7 +7469,7 @@ about speed</p>
 Create a RAM drive, with the given number of
 blocks, in the dictionary along with setting up the block words to
 use it.  The read/write routines do not provide bounds checking.
-Expected use: 4 block-ramdrive-init ( to create blocks 0-3 )</p>
+Expected use: <code>4 block-ramdrive-init</code> ( to create blocks 0-3 )</p>
 </td>
 </tr>
 <tr>
@@ -7602,7 +7524,7 @@ This word gives the address of the vector so it can be replaced.</p>
 <p><em>Gforth</em> ( addr u&#8201;&#8212;&#8201;addr+u addr ) "Prepare address for looping"
 <a href="http://www.complang.tuwien.ac.at/forth/gforth/Docs-html/Memory-Blocks.html" class="bare">http://www.complang.tuwien.ac.at/forth/gforth/Docs-html/Memory-Blocks.html</a>
 Given a string, return the correct Data Stack parameters for
-a DO/LOOP loop; over its characters. This is realized as
+a DO/LOOP loop over its characters. This is realized as
 OVER + SWAP in Forth, but we do it a lot faster in assembler</p>
 </td>
 </tr>
@@ -7684,8 +7606,7 @@ when its name is used.</p>
 </td>
 <td class="hdlist2">
 <p><em>ANS core ext</em> (C:&#8201;&#8212;&#8201;0) (&#8201;&#8212;&#8201;) "Conditional flow control"
-<a href="http://forth-standard.org/standard/core/CASE" class="bare">http://forth-standard.org/standard/core/CASE</a>
-This is a dummy header, CASE shares the actual code with ZERO.</p>
+<a href="http://forth-standard.org/standard/core/CASE" class="bare">http://forth-standard.org/standard/core/CASE</a></p>
 </td>
 </tr>
 <tr>
@@ -7705,9 +7626,7 @@ Since this is an 8 bit machine with 16 bit cells, we add two bytes.</p>
 </td>
 <td class="hdlist2">
 <p><em>ANS core</em> ( u&#8201;&#8212;&#8201;u ) "Convert cells to size in bytes"
-<a href="https://forth-standard.org/standard/core/CELLS" class="bare">https://forth-standard.org/standard/core/CELLS</a>
-Dummy entry for the CELLS word, the code is the same as for
-2*, which is where the header directs us to</p>
+<a href="https://forth-standard.org/standard/core/CELLS" class="bare">https://forth-standard.org/standard/core/CELLS</a></p>
 </td>
 </tr>
 <tr>
@@ -7725,8 +7644,7 @@ Dummy entry for the CELLS word, the code is the same as for
 </td>
 <td class="hdlist2">
 <p><em>ANS core</em> ( addr&#8201;&#8212;&#8201;addr+1 ) "Add the size of a character unit to address"
-<a href="https://forth-standard.org/standard/core/CHARPlus" class="bare">https://forth-standard.org/standard/core/CHARPlus</a>
-This is a dummy entry, the code is shared with ONE_PLUS</p>
+<a href="https://forth-standard.org/standard/core/CHARPlus" class="bare">https://forth-standard.org/standard/core/CHARPlus</a></p>
 </td>
 </tr>
 <tr>
@@ -7759,7 +7677,7 @@ compatibility with other Forth versions</p>
 Copy u bytes from addr1 to addr2, going low to high (addr2 is
 larger than addr1). Based on code in Leventhal, Lance A.
 6502 Assembly Language Routines", p. 201, where it is called
-move left". There are no official tests for this word.</p>
+move left".</p>
 </td>
 </tr>
 <tr>
@@ -7770,8 +7688,7 @@ move left". There are no official tests for this word.</p>
 <p><em>ANS string</em> ( add1 add2 u&#8201;&#8212;&#8201;) "Copy bytes from high to low"
 <a href="https://forth-standard.org/standard/string/CMOVEtop" class="bare">https://forth-standard.org/standard/string/CMOVEtop</a>
 Based on code in Leventhal, Lance A. "6502 Assembly Language
-Routines", p. 201, where it is called "move right". There are
-no official tests for this word.</p>
+Routines", p. 201, where it is called "move right".</p>
 </td>
 </tr>
 <tr>
@@ -7823,8 +7740,7 @@ Native) flag is set, the word is always natively compiled</p>
 <td class="hdlist2">
 <p><em>Tali Forth</em> (&#8201;&#8212;&#8201;) "Mark most recent word as COMPILE-ONLY"
 Set the Compile Only flag (CO) of the most recently defined
-word. The alternative way to do this is to define a word
-?COMPILE that makes sure  we&#8217;re in compile mode</p>
+word.</p>
 </td>
 </tr>
 <tr>
@@ -7833,12 +7749,7 @@ word. The alternative way to do this is to define a word
 </td>
 <td class="hdlist2">
 <p><em>ANS core</em> ( n "name"&#8201;&#8212;&#8201;) "Define a constant"
-<a href="https://forth-standard.org/standard/core/CONSTANT" class="bare">https://forth-standard.org/standard/core/CONSTANT</a>
-Forth equivalent is  CREATE , DOES&gt; @  but we do
-more in assembler and let CREATE do the heavy lifting.
-See <a href="http://www.bradrodriguez.com/papers/moving3.htm" class="bare">http://www.bradrodriguez.com/papers/moving3.htm</a> for
-a primer on how this works in various Forths. This is the
-same code as VALUE in our case.</p>
+<a href="https://forth-standard.org/standard/core/CONSTANT" class="bare">https://forth-standard.org/standard/core/CONSTANT</a></p>
 </td>
 </tr>
 <tr>
@@ -7849,7 +7760,7 @@ same code as VALUE in our case.</p>
 <p><em>ANS core</em> ( c-addr&#8201;&#8212;&#8201;addr u ) "Convert character string to normal format"
 <a href="https://forth-standard.org/standard/core/COUNT" class="bare">https://forth-standard.org/standard/core/COUNT</a>
 Convert old-style character string to address-length pair. Note
-that the length of the string c-addr ist stored in character length
+that the length of the string c-addr is stored in character length
 (8 bit), not cell length (16 bit). This is rarely used these days,
 though COUNT can also be used to step through a string character by
 character.</p>
@@ -7870,8 +7781,7 @@ character.</p>
 </td>
 <td class="hdlist2">
 <p><em>ANS core</em> ( "name"&#8201;&#8212;&#8201;) "Create Dictionary entry for 'name'"
-<a href="https://forth-standard.org/standard/core/CREATE" class="bare">https://forth-standard.org/standard/core/CREATE</a>
-See the drawing in headers.asm for details on the header</p>
+<a href="https://forth-standard.org/standard/core/CREATE" class="bare">https://forth-standard.org/standard/core/CREATE</a></p>
 </td>
 </tr>
 <tr>
@@ -7898,9 +7808,7 @@ See the drawing in headers.asm for details on the header</p>
 </td>
 <td class="hdlist2">
 <p><em>ANS double</em> ( d&#8201;&#8212;&#8201;) "Print double"
-<a href="http://forth-standard.org/standard/double/Dd" class="bare">http://forth-standard.org/standard/double/Dd</a>
-From the Forth code:
-: D. TUCK DABS &lt;# #S ROT SIGN #&gt; TYPE SPACE</p>
+<a href="http://forth-standard.org/standard/double/Dd" class="bare">http://forth-standard.org/standard/double/Dd</a></p>
 </td>
 </tr>
 <tr>
@@ -7948,10 +7856,7 @@ separate so we can test for underflow</p>
 <td class="hdlist2">
 <p><em>ANS core ext</em> ( "name"&#8201;&#8212;&#8201;) "Create a placeholder for words by name"
 <a href="https://forth-standard.org/standard/core/DEFER" class="bare">https://forth-standard.org/standard/core/DEFER</a>
-Reserve an name that can be linked to various xt by IS. The
-ANS reference implementation is
-CREATE ['] ABORT , DOES&gt; @ EXECUTE
-But we use this routine as a low-level word so things go faster</p>
+Reserve an name that can be linked to various xt by IS.</p>
 </td>
 </tr>
 <tr>
@@ -8030,14 +7935,7 @@ code, see the file disassembler.asm</p>
 </td>
 <td class="hdlist2">
 <p><em>ANS core</em> ( limit start&#8201;&#8212;&#8201;)(R:&#8201;&#8212;&#8201;limit start)  "Start a loop"
-<a href="https://forth-standard.org/standard/core/DO" class="bare">https://forth-standard.org/standard/core/DO</a>
-Compile-time part of DO. Could be realized in Forth as
-: DO POSTPONE (DO) HERE ; IMMEDIATE COMPILE-ONLY
-but we do it in assembler for speed. To work with LEAVE, we compile
-a routine that pushes the end address to the Return Stack at run
-time. This is based on a suggestion by Garth Wilson, see
-docs/loops.txt for details. This may not be native compile. Don&#8217;t
-check for a stack underflow</p>
+<a href="https://forth-standard.org/standard/core/DO" class="bare">https://forth-standard.org/standard/core/DO</a></p>
 </td>
 </tr>
 <tr>
@@ -8050,7 +7948,7 @@ check for a stack underflow</p>
 Create the payload for defining new defining words. See
 <a href="http://www.bradrodriguez.com/papers/moving3.htm" class="bare">http://www.bradrodriguez.com/papers/moving3.htm</a> and
 docs/create-does.txt for a discussion of
-DOES&gt;'s internal workings. This uses tmp1 and tmp2</p>
+DOES&gt;'s internal workings.</p>
 </td>
 </tr>
 <tr>
@@ -8068,11 +7966,7 @@ DOES&gt;'s internal workings. This uses tmp1 and tmp2</p>
 </td>
 <td class="hdlist2">
 <p><em>ANS tools</em> ( addr u&#8201;&#8212;&#8201;) "Display a memory region"
-<a href="https://forth-standard.org/standard/tools/DUMP" class="bare">https://forth-standard.org/standard/tools/DUMP</a>
-DUMP&#8217;s exact output is defined as "implementation dependent".
-This is in assembler because it is
-useful for testing and development, so we want to have it work
-as soon as possible. Uses TMP2</p>
+<a href="https://forth-standard.org/standard/tools/DUMP" class="bare">https://forth-standard.org/standard/tools/DUMP</a></p>
 </td>
 </tr>
 <tr>
@@ -8091,7 +7985,7 @@ as soon as possible. Uses TMP2</p>
 <td class="hdlist2">
 <p><em>Tali Forth</em> (&#8201;&#8212;&#8201;u ) "Line-based editor"
 Start the line-based editor ed6502. See separate file
-for details.</p>
+ed.asm or the manual for details.</p>
 </td>
 </tr>
 <tr>
@@ -8099,8 +7993,7 @@ for details.</p>
 <code>editor-wordlist</code>
 </td>
 <td class="hdlist2">
-<p><em>Tali Editor</em> (&#8201;&#8212;&#8201;u ) "WID for the Editor wordlist"
-This is a dummy entry, the code is shared with ONE</p>
+<p><em>Tali Editor</em> (&#8201;&#8212;&#8201;u ) "WID for the Editor wordlist"</p>
 </td>
 </tr>
 <tr>
@@ -8117,8 +8010,7 @@ This is a dummy entry, the code is shared with ONE</p>
 </td>
 <td class="hdlist2">
 <p><em>ANS core</em> (C: orig&#8201;&#8212;&#8201;orig) (&#8201;&#8212;&#8201;) "Conditional flow control"
-<a href="http://forth-standard.org/standard/core/ELSE" class="bare">http://forth-standard.org/standard/core/ELSE</a>
-The code is shared with ENDOF</p>
+<a href="http://forth-standard.org/standard/core/ELSE" class="bare">http://forth-standard.org/standard/core/ELSE</a></p>
 </td>
 </tr>
 <tr>
@@ -8131,7 +8023,7 @@ The code is shared with ENDOF</p>
 Run-time default for EMIT. The user can revector this by changing
 the value of the OUTPUT variable. We ignore the MSB completely, and
 do not check to see if we have been given a valid ASCII character.
-Don&#8217;t make this native compile</p>
+Don&#8217;t make this native compile.</p>
 </td>
 </tr>
 <tr>
@@ -8231,9 +8123,7 @@ accept more than 255 characters here, even though it&#8217;s a pain in
 <a href="https://www.complang.tuwien.ac.at/forth/gforth/Docs-html/The-Input-Stream.html" class="bare">https://www.complang.tuwien.ac.at/forth/gforth/Docs-html/The-Input-Stream.html</a>
 Execute the parsing word defined by the execution token (xt) on the
 string as if it were passed on the command line. See the file
-tests/tali.fs for examples. Note that this word is coded completely
-different in its Gforth version, see the file execute-parsing.fs
-(in /usr/share/gforth/0.7.3/compat/ on Ubuntu 18.04 LTS) for details.</p>
+tests/tali.fs for examples.</p>
 </td>
 </tr>
 <tr>
@@ -8245,7 +8135,7 @@ different in its Gforth version, see the file execute-parsing.fs
 <a href="https://forth-standard.org/standard/core/EXIT" class="bare">https://forth-standard.org/standard/core/EXIT</a>
 If we&#8217;re in a loop, we need to UNLOOP first and get everything
 we we might have put on the Return Stack off as well. This should
-be natively compiled</p>
+be natively compiled.</p>
 </td>
 </tr>
 <tr>
@@ -8311,12 +8201,6 @@ FIND-NAME, we get this all over with as quickly as possible. See
 <td class="hdlist2">
 <p><em>ANS core</em> ( d n1 &#8201;&#8212;&#8201;rem n2 ) "Floored signed division"
 <a href="https://forth-standard.org/standard/core/FMDivMOD" class="bare">https://forth-standard.org/standard/core/FMDivMOD</a>
-There are various ways to realize this. We follow EForth with
-DUP 0&lt; DUP &gt;R  IF NEGATE &gt;R DNEGATE R&gt; THEN &gt;R DUP
-0&lt;  IF R@ + THEN  R&gt; UM/MOD R&gt; IF SWAP NEGATE SWAP THEN
-See (<a href="http://www.forth.org/eforth.html" class="bare">http://www.forth.org/eforth.html</a>). However you can also
-go FM/MOD via SM/REM (<a href="http://www.figuk.plus.com/build/arith.htm" class="bare">http://www.figuk.plus.com/build/arith.htm</a>):
-DUP &gt;R  SM/REM DUP 0&lt; IF SWAP R&gt; + SWAP 1+ ELSE  R&gt; DROP THEN
 Note that by default, Tali Forth uses SM/REM for most things.</p>
 </td>
 </tr>
@@ -8398,9 +8282,7 @@ string produces a zero output.</p>
 <a href="https://forth-standard.org/standard/core/HOLD" class="bare">https://forth-standard.org/standard/core/HOLD</a>
 Insert a character at the current position of a pictured numeric
 output string on
-<a href="https://github.com/philburk/pforth/blob/master/fth/numberio.fth" class="bare">https://github.com/philburk/pforth/blob/master/fth/numberio.fth</a>
-Forth code is : HOLD  -1 HLD +!  HLD @ C! ;  We use the the internal
-variable tohold instead of HLD.</p>
+<a href="https://github.com/philburk/pforth/blob/master/fth/numberio.fth" class="bare">https://github.com/philburk/pforth/blob/master/fth/numberio.fth</a></p>
 </td>
 </tr>
 <tr>
@@ -8411,8 +8293,7 @@ variable tohold instead of HLD.</p>
 <p><em>ANS core</em> (&#8201;&#8212;&#8201;n )(R: n&#8201;&#8212;&#8201;n)  "Copy loop counter to stack"
 <a href="https://forth-standard.org/standard/core/I" class="bare">https://forth-standard.org/standard/core/I</a>
 Note that this is not the same as R@ because we use a fudge
-factor for loop control; see docs/loop.txt for details. We
-should make this native compile for speed.</p>
+factor for loop control; see docs/loop.txt for details.</p>
 </td>
 </tr>
 <tr>
@@ -8452,8 +8333,7 @@ error message.</p>
 <td class="hdlist2">
 <p><em>Tali Forth</em> (&#8201;&#8212;&#8201;) ( R:&#8201;&#8212;&#8201;n n n n ) "Save input state to the Return Stack"
 Save the current input state as defined by insrc, cib, ciblen, and
-toin to the Return Stack. Used by EVALUTE. The naive way of doing
-this is to push each two-byte variable to the stack in the form of</p>
+toin to the Return Stack. Used by EVALUTE.</p>
 </td>
 </tr>
 <tr>
@@ -8544,10 +8424,7 @@ The Gforth version of this word is called LATEST</p>
 <a href="https://forth-standard.org/standard/core/LEAVE" class="bare">https://forth-standard.org/standard/core/LEAVE</a>
 Note that this does not work with  anything but a DO/LOOP in
 contrast to other versions such as discussed at
-<a href="http://blogs.msdn.com/b/ashleyf/archive/2011/02/06/loopty-do-i-loop.aspx" class="bare">http://blogs.msdn.com/b/ashleyf/archive/2011/02/06/loopty-do-i-loop.aspx</a>
-: LEAVE POSTPONE BRANCH HERE SWAP 0 , ; IMMEDIATE COMPILE-ONLY
-See docs/loops.txt on details of how this works. This must be native
-compile and not IMMEDIATE</p>
+<a href="http://blogs.msdn.com/b/ashleyf/archive/2011/02/06/loopty-do-i-loop.aspx" class="bare">http://blogs.msdn.com/b/ashleyf/archive/2011/02/06/loopty-do-i-loop.aspx</a></p>
 </td>
 </tr>
 <tr>
@@ -8577,8 +8454,7 @@ compile and not IMMEDIATE</p>
 <a href="https://forth-standard.org/standard/core/LITERAL" class="bare">https://forth-standard.org/standard/core/LITERAL</a>
 Compile-only word to store TOS so that it is pushed on stack
 during runtime. This is a immediate, compile-only word. At runtime,
-it works by calling literal_runtime by compling JSR LITERAL_RT.
-Note the cmpl_ routines use TMPTOS</p>
+it works by calling literal_runtime by compling JSR LITERAL_RT.</p>
 </td>
 </tr>
 <tr>
@@ -8587,11 +8463,7 @@ Note the cmpl_ routines use TMPTOS</p>
 </td>
 <td class="hdlist2">
 <p><em>ANS block</em> ( scr#&#8201;&#8212;&#8201;) "Load the Forth code in a screen/block"
-<a href="https://forth-standard.org/standard/block/LOAD" class="bare">https://forth-standard.org/standard/block/LOAD</a>
-Note: LOAD current works because there is only one buffer.
-if/when multiple buffers are supported, we&#8217;ll have to deal
-with the fact that it might re-load the old block into a
-different buffer.</p>
+<a href="https://forth-standard.org/standard/block/LOAD" class="bare">https://forth-standard.org/standard/block/LOAD</a></p>
 </td>
 </tr>
 <tr>
@@ -8602,10 +8474,7 @@ different buffer.</p>
 <p><em>ANS core</em> (&#8201;&#8212;&#8201;) "Finish loop construct"
 <a href="https://forth-standard.org/standard/core/LOOP" class="bare">https://forth-standard.org/standard/core/LOOP</a>
 Compile-time part of LOOP. This does nothing more but push 1 on
-the stack and then call +LOOP. In Forth, this is
-: LOOP  POSTPONE 1 POSTPONE (+LOOP) , POSTPONE UNLOOP
-IMMEDIATE ; COMPILE-ONLY
-This drops through to +LOOP</p>
+the stack and then call +LOOP.</p>
 </td>
 </tr>
 <tr>
@@ -8625,9 +8494,7 @@ This drops through to +LOOP</p>
 <p><em>ANS core</em> ( n n&#8201;&#8212;&#8201;d ) "16 * 16 -&#8594; 32"
 <a href="https://forth-standard.org/standard/core/MTimes" class="bare">https://forth-standard.org/standard/core/MTimes</a>
 Multiply two 16 bit numbers, producing a 32 bit result. All
-values are signed. Adapted from FIG Forth for Tali Forth. The
-original Forth is : M* OVER OVER XOR &gt;R ABS SWAP ABS UM* R&gt; D+-
-with  : D+- O&lt; IF DNEGATE THEN</p>
+values are signed. Adapted from FIG Forth for Tali Forth.</p>
 </td>
 </tr>
 <tr>
@@ -8676,9 +8543,7 @@ Subroutines." Negative Flag indicateds which number is larger. See
 </td>
 <td class="hdlist2">
 <p><em>ANS core</em> ( n1 n2&#8201;&#8212;&#8201;n ) "Divide NOS by TOS and return the remainder"
-<a href="https://forth-standard.org/standard/core/MOD" class="bare">https://forth-standard.org/standard/core/MOD</a>
-The Forth definition of this word is  : MOD /MOD DROP
-so we just jump to xt_slash_mod and dump the actual result.</p>
+<a href="https://forth-standard.org/standard/core/MOD" class="bare">https://forth-standard.org/standard/core/MOD</a></p>
 </td>
 </tr>
 <tr>
@@ -8691,7 +8556,7 @@ so we just jump to xt_slash_mod and dump the actual result.</p>
 Copy u "address units" from addr1 to addr2. Since our address
 units are bytes, this is just a front-end for CMOVE and CMOVE&gt;. This
 is actually the only one of these three words that is in the CORE
-set. This word must not be natively compiled</p>
+set.</p>
 </td>
 </tr>
 <tr>
@@ -8762,9 +8627,7 @@ Gforth uses S&gt;NUMBER? and S&gt;UNUMBER? which return numbers and a flag
 <a href="https://www.complang.tuwien.ac.at/forth/gforth/Docs-html/Number-Conversion.html" class="bare">https://www.complang.tuwien.ac.at/forth/gforth/Docs-html/Number-Conversion.html</a>
 Another difference to Gforth is that we follow ANS Forth that the
 dot to signal a double cell number is required to be the last
-character of the string. Number calls &gt;NUMBER which in turn calls UM*,
-which uses tmp1, tmp2, and tmp3, so we can&#8217;t use them here, which is
-a pain.</p>
+character of the string.</p>
 </td>
 </tr>
 <tr>
@@ -8809,7 +8672,9 @@ a pain.</p>
 <td class="hdlist2">
 <p><em>ANS core</em> (&#8201;&#8212;&#8201;) "Print current word order list and current WID"
 <a href="https://forth-standard.org/standard/search/ORDER" class="bare">https://forth-standard.org/standard/search/ORDER</a>
-A Forth implementation of this word is:</p>
+Note the search order is displayed from first search to last
+searched and is therefore exactly the reverse of the order in which
+Forth stacks are displayed.</p>
 </td>
 </tr>
 <tr>
@@ -8910,10 +8775,7 @@ that FIG Forth has a different behavior for PICK than ANS Forth.</p>
 Add the compilation behavior of a word to a new word at
 compile time. If the word that follows it is immediate, include
 it so that it will be compiled when the word being defined is
-itself used for a new word. Tricky, but very useful. Because
-POSTPONE expects a word (not an xt) in the input stream (not
-on the Data Stack). This means we cannot build words with
-jsr xt_postpone, jsr &lt;word&gt;" directly.</p>
+itself used for a new word. Tricky, but very useful.</p>
 </td>
 </tr>
 <tr>
@@ -8942,10 +8804,7 @@ Rest the input and start command loop</p>
 <td class="hdlist2">
 <p><em>ANS core</em> (&#8201;&#8212;&#8201;n )(R: n --) "Move top of Return Stack to TOS"
 <a href="https://forth-standard.org/standard/core/Rfrom" class="bare">https://forth-standard.org/standard/core/Rfrom</a>
-Move Top of Return Stack to Top of Data Stack. We have to move
-the RTS address out of the way first. This word is handled
-differently for native and and subroutine compilation, see COMPILE,
-This is a compile-only word</p>
+Move Top of Return Stack to Top of Data Stack.</p>
 </td>
 </tr>
 <tr>
@@ -8955,8 +8814,7 @@ This is a compile-only word</p>
 <td class="hdlist2">
 <p><em>Tali Forth</em> (&#8201;&#8212;&#8201;) ( R: n n n n&#8201;&#8212;&#8201;) "Restore input state from Return Stack"
 Restore the current input state as defined by insrc, cib, ciblen,
-and toin from the Return Stack. See INPUT_TO_R for a discussion of
-this word. Uses tmp1</p>
+and toin from the Return Stack.</p>
 </td>
 </tr>
 <tr>
@@ -8967,9 +8825,7 @@ this word. Uses tmp1</p>
 <p><em>ANS core</em> (&#8201;&#8212;&#8201;n ) "Get copy of top of Return Stack"
 <a href="https://forth-standard.org/standard/core/RFetch" class="bare">https://forth-standard.org/standard/core/RFetch</a>
 This word is Compile Only in Tali Forth, though Gforth has it
-work normally as well&#8201;&#8212;&#8201;An alternative way to write this word
-would be to access the elements on the stack directly like 2R@
-does, these versions should be compared at some point.</p>
+work normally as well</p>
 </td>
 </tr>
 <tr>
@@ -8978,8 +8834,7 @@ does, these versions should be compared at some point.</p>
 </td>
 <td class="hdlist2">
 <p><em>ANS core</em> (&#8201;&#8212;&#8201;) "Copy recursive call to word being defined"
-<a href="https://forth-standard.org/standard/core/RECURSE" class="bare">https://forth-standard.org/standard/core/RECURSE</a>
-This word may not be natively compiled</p>
+<a href="https://forth-standard.org/standard/core/RECURSE" class="bare">https://forth-standard.org/standard/core/RECURSE</a></p>
 </td>
 </tr>
 <tr>
@@ -9048,9 +8903,7 @@ on top!</p>
 Store address and length of string given, returning ( addr u ).
 ANS core claims this is compile-only, but the file set expands it
 to be interpreted, so it is a state-sensitive word, which in theory
-are evil. We follow general usage. Can also be realized as
-: S" [CHAR] " PARSE POSTPONE SLITERAL ; IMMEDIATE
-but it is used so much we want it in code.</p>
+are evil. We follow general usage.</p>
 </td>
 </tr>
 <tr>
@@ -9154,10 +9007,7 @@ code and disassembles it.</p>
 </td>
 <td class="hdlist2">
 <p><em>ANS core</em> ( n&#8201;&#8212;&#8201;) "Add minus to pictured output"
-<a href="https://forth-standard.org/standard/core/SIGN" class="bare">https://forth-standard.org/standard/core/SIGN</a>
-Code based on
-<a href="http://pforth.googlecode.com/svn/trunk/fth/numberio.fth" class="bare">http://pforth.googlecode.com/svn/trunk/fth/numberio.fth</a>
-Original Forth code is   0&lt; IF ASCII - HOLD THEN</p>
+<a href="https://forth-standard.org/standard/core/SIGN" class="bare">https://forth-standard.org/standard/core/SIGN</a></p>
 </td>
 </tr>
 <tr>
@@ -9178,9 +9028,7 @@ Add the runtime for an existing string.</p>
 <p><em>ANS core</em> ( d n1&#8201;&#8212;&#8201;n2 n3 ) "Symmetic signed division"
 <a href="https://forth-standard.org/standard/core/SMDivREM" class="bare">https://forth-standard.org/standard/core/SMDivREM</a>
 Symmetic signed division. Compare FM/MOD. Based on F-PC 3.6
-by Ulrich Hoffmann. See <a href="http://www.xlerb.de/uho/ansi.seq" class="bare">http://www.xlerb.de/uho/ansi.seq</a> Forth:
-OVER &gt;R 2DUP XOR 0&lt; &gt;R ABS &gt;R DABS R&gt; UM/MOD R&gt; ?NEGATE SWAP
-R&gt; ?NEGATE SWAP</p>
+by Ulrich Hoffmann. See <a href="http://www.xlerb.de/uho/ansi.seq" class="bare">http://www.xlerb.de/uho/ansi.seq</a></p>
 </td>
 </tr>
 <tr>
@@ -9300,8 +9148,7 @@ Gives a new value to a, uh, VALUE.</p>
 <td class="hdlist2">
 <p><em>ANS core</em> ( addr u&#8201;&#8212;&#8201;) "Print string"
 <a href="https://forth-standard.org/standard/core/TYPE" class="bare">https://forth-standard.org/standard/core/TYPE</a>
-Works through EMIT to allow OUTPUT revectoring. Currently, only
-strings of up to 255 characters are printed</p>
+Works through EMIT to allow OUTPUT revectoring.</p>
 </td>
 </tr>
 <tr>
@@ -9310,10 +9157,7 @@ strings of up to 255 characters are printed</p>
 </td>
 <td class="hdlist2">
 <p><em>ANS core</em> ( u&#8201;&#8212;&#8201;) "Print TOS as unsigned number"
-<a href="https://forth-standard.org/standard/core/Ud" class="bare">https://forth-standard.org/standard/core/Ud</a>
-This is : U. 0 &lt;# #S #&gt; TYPE SPACE ; in Forth
-We use the internal assembler function print_u followed
-by a single space</p>
+<a href="https://forth-standard.org/standard/core/Ud" class="bare">https://forth-standard.org/standard/core/Ud</a></p>
 </td>
 </tr>
 <tr>
@@ -9383,8 +9227,7 @@ Divide double cell number by single cell number, returning the
 quotient as TOS and any remainder as NOS. All numbers are unsigned.
 This is the basic division operation all others use. Based on FIG
 Forth code, modified by Garth Wilson, see
-<a href="http://6502.org/source/integers/ummodfix/ummodfix.htm" class="bare">http://6502.org/source/integers/ummodfix/ummodfix.htm</a>
-This uses tmp1, tmp1+1, and tmptos</p>
+<a href="http://6502.org/source/integers/ummodfix/ummodfix.htm" class="bare">http://6502.org/source/integers/ummodfix/ummodfix.htm</a></p>
 </td>
 </tr>
 <tr>
@@ -9393,8 +9236,7 @@ This uses tmp1, tmp1+1, and tmptos</p>
 </td>
 <td class="hdlist2">
 <p><em>ANS core</em> (&#8201;&#8212;&#8201;)(R: n1 n2 n3 ---) "Drop loop control from Return stack"
-<a href="https://forth-standard.org/standard/core/UNLOOP" class="bare">https://forth-standard.org/standard/core/UNLOOP</a>
-Note that 6xPLA uses just as many bytes as a loop would</p>
+<a href="https://forth-standard.org/standard/core/UNLOOP" class="bare">https://forth-standard.org/standard/core/UNLOOP</a></p>
 </td>
 </tr>
 <tr>
@@ -9441,9 +9283,7 @@ defaults to $400</p>
 </td>
 <td class="hdlist2">
 <p><em>ANS core</em> ( n "name"&#8201;&#8212;&#8201;) "Define a value"
-<a href="https://forth-standard.org/standard/core/VALUE" class="bare">https://forth-standard.org/standard/core/VALUE</a>
-This is a dummy header for the WORDLIST. The actual code is
-identical to that of CONSTANT</p>
+<a href="https://forth-standard.org/standard/core/VALUE" class="bare">https://forth-standard.org/standard/core/VALUE</a></p>
 </td>
 </tr>
 <tr>
@@ -9454,7 +9294,7 @@ identical to that of CONSTANT</p>
 <p><em>ANS core</em> ( "name"&#8201;&#8212;&#8201;) "Define a variable"
 <a href="https://forth-standard.org/standard/core/VARIABLE" class="bare">https://forth-standard.org/standard/core/VARIABLE</a>
 There are various Forth definitions for this word, such as
-CREATE 1 CELLS ALLOT  or  CREATE 0 ,  We use a variant of the
+<code>CREATE 1 CELLS ALLOT</code>  or  <code>CREATE 0 ,</code>  We use a variant of the
 second one so the variable is initialized to zero</p>
 </td>
 </tr>
@@ -9473,11 +9313,7 @@ second one so the variable is initialized to zero</p>
 </td>
 <td class="hdlist2">
 <p><em>ANS core ext</em> ( n1 n2 n3&#8201;&#8212;&#8201;) "See if within a range"
-<a href="https://forth-standard.org/standard/core/WITHIN" class="bare">https://forth-standard.org/standard/core/WITHIN</a>
-This an assembler version of the ANS Forth implementation
-at <a href="https://forth-standard.org/standard/core/WITHIN" class="bare">https://forth-standard.org/standard/core/WITHIN</a> which is
-OVER - &gt;R - R&gt; U&lt;  note there is an alternative high-level version
-ROT TUCK &gt; -ROT &gt; INVERT AND</p>
+<a href="https://forth-standard.org/standard/core/WITHIN" class="bare">https://forth-standard.org/standard/core/WITHIN</a></p>
 </td>
 </tr>
 <tr>
@@ -9494,9 +9330,7 @@ Returns the result as a counted string (requires COUNT to convert
 to modern format), and inserts a space after the string. See "Forth
 Programmer&#8217;s Handbook" 3rd edition p. 159 and
 <a href="http://www.forth200x.org/documents/html/rationale.html#rat:core:PARSE" class="bare">http://www.forth200x.org/documents/html/rationale.html#rat:core:PARSE</a>
-for discussions of why you shouldn&#8217;t be using WORD anymore. Forth
-would be   PARSE DUP BUFFER1 C! OUTPUT 1+ SWAP MOVE BUFFER1
-We only allow input of 255 chars. Seriously, use PARSE-NAME.</p>
+for discussions of why you shouldn&#8217;t be using WORD anymore.</p>
 </td>
 </tr>
 <tr>
@@ -9513,13 +9347,7 @@ We only allow input of 255 chars. Seriously, use PARSE-NAME.</p>
 <code>words</code>
 </td>
 <td class="hdlist2">
-<p><em>ANS tools</em> (&#8201;&#8212;&#8201;) "Print known words from Dictionary"
-<a href="https://forth-standard.org/standard/tools/WORDS" class="bare">https://forth-standard.org/standard/tools/WORDS</a>
-This is pretty much only used at the command line so we can
-be slow and try to save space. DROP must always be the first word in a
-clean system (without Forth words), BYE the last. There is no reason
-why we couldn&#8217;t define this as a high level word except that it is
-really useful for testing</p>
+<p><em>ANS tools</em> (&#8201;&#8212;&#8201;) "Print known words from Dictionary"</p>
 </td>
 </tr>
 <tr>
