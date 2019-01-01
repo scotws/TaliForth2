@@ -94,10 +94,18 @@ def main():
             else:
                 # Not a comment line - back to the idle state.
                 current_state = State.IDLE
+
     # All of the words have been read in.
+
     # Print them back out in ASCIIbetical order.
+    print("[horizontal]")
     for word_name in sorted(short_descr.keys()):
-        print(word_name + short_descr[word_name])
+        print("`" + word_name + "`" + ":: _" + source[word_name] + \
+              "_ " +short_descr[word_name])
+        # Not all words have a long description.
+        # Print it for those that do.
+        if word_name in long_descr:
+            print(long_descr[word_name])
 
 
 if __name__ == '__main__':
