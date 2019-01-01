@@ -86,6 +86,9 @@ include::ch_tutorial_wordlists.adoc[]
 // --------------------------------------------------------
 = Appendix
 
+== Glossary
+include::ch_glossary.adoc[]
+
 == Reporting Problems
 
 The best way to point out a bug or make any other form of a comment is on Tali

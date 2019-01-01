@@ -60,8 +60,6 @@ def main():
             if match:
                 word_name = match.group(1)
                 word_source = match.group(2)
-                # DEBUG
-                print('Found: '+word_name)
                 # Try to get the description from the first line.
                 descr_match = first_line_re.match(first_line)
                 if descr_match:

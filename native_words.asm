@@ -3805,6 +3805,7 @@ z_endcase:      rts
 ; ## ENVIRONMENT_Q  ( addr u -- 0 | i*x true )  "Return system information"
 ; ## "environment?"  auto  ANS core
         ; """https://forth-standard.org/standard/core/ENVIRONMENTq
+
         ; By ANS definition, we use upper-case strings here, see the
         ; string file for details. This can be realized as a high-level
         ; Forth word as

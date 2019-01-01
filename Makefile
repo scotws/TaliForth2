@@ -54,6 +54,9 @@ sim:	taliforth-py65mon.bin
 docs/manual.html: docs/*.adoc 
 	cd docs; asciidoctor -a toc=left manual.adoc
 
+docs/ch_glossary.adoc:	native_words.asm
+	tools/generate_glossary.py > docs/ch_glossary.adoc
+
 # The diagrams use ditaa to generate pretty diagrams from text files.
 # They have their own makefile in the docs/pics directory.
 docs-diagrams: docs/pics/*.txt
