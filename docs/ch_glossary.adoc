@@ -32,7 +32,7 @@ without a remainder. This is */MOD without the mod.
 
 `*/mod`:: _ANS core_ ( n1 n2 n3 -- n4 n5 ) "n1 * n2 / n3 --> n-mod n"
 https://forth-standard.org/standard/core/TimesDivMOD
-Multiply n1 by n2 producing the intermediate double-cell result d. 
+Multiply n1 by n2 producing the intermediate double-cell result d.
 Divide d by n3 producing the single-cell remainder n4 and the
 single-cell quotient n5.
 
@@ -70,7 +70,7 @@ https://forth-standard.org/standard/core/Dotq
 Compile string that is printed during run time. ANS Forth wants
 this to be compile-only, even though everybody and their friend
 uses it for everything. We follow the book here, and recommend
-.( for general printing
+`.(` for general printing.
 
 `.(`:: _ANS core_ ( -- ) "Print input up to close paren .( comment )"
 http://forth-standard.org/standard/core/Dotp
@@ -78,7 +78,7 @@ http://forth-standard.org/standard/core/Dotp
 `.r`:: _ANS core ext_ ( n u -- ) "Print NOS as unsigned number with TOS with"
 https://forth-standard.org/standard/core/DotR
 
-`.s`:: _ANS tools _ ( -- ) "Print content of Data Stack"
+`.s`:: _ANS tools_ ( -- ) "Print content of Data Stack"
 https://forth-standard.org/standard/tools/DotS
 Print content of Data Stack non-distructively. We follow the format
 of Gforth and print the number of elements first in brackets,
@@ -116,16 +116,13 @@ https://forth-standard.org/standard/core/OnePlus
 https://forth-standard.org/standard/core/OneMinus
 
 `2`:: _Tali Forth_ ( -- u ) "Push the number 2 to stack"
-This code is shared with ASSEMBLER-WORDLIST
-
 `2!`:: _ANS core_ ( n1 n2 addr -- ) "Store two numbers at given address"
 https://forth-standard.org/standard/core/TwoStore
 Stores so n2 goes to addr and n1 to the next consecutive cell.
-Is equivalent to  SWAP OVER ! CELL+ !
+Is equivalent to  `SWAP OVER ! CELL+ !`
 
 `2*`:: _ANS core_ ( n -- n ) "Multiply TOS by two"
 https://forth-standard.org/standard/core/TwoTimes
-Also used for CELLS
 
 `2/`:: _ANS core_ ( n -- n ) "Divide TOS by two"
 https://forth-standard.org/standard/core/TwoDiv
@@ -137,7 +134,7 @@ Push top two entries to Return Stack.
 `2@`:: _ANS core_ ( addr -- n1 n2 ) "Fetch the cell pair n1 n2 stored at addr"
 https://forth-standard.org/standard/core/TwoFetch
 Note n2 stored at addr and n1 in the next cell -- in our case,
-the next byte. This is equvalent to  DUP CELL+ @ SWAP @
+the next two bytes. This is equvalent to  `DUP CELL+ @ SWAP @`
 
 `2constant`:: _ANS double_ (C: d "name" -- ) ( -- d) "Create a constant for a double word"
 https://forth-standard.org/standard/double/TwoCONSTANT
@@ -212,8 +209,7 @@ https://github.com/philburk/pforth/blob/master/fth/numberio.fth
 for the original Forth code. We arrive here from NUMBER which has
 made sure that we don't have to deal with a sign and we don't have
 to deal with a dot as a last character that signalizes double -
-this should be a pure number string. This routine calles UM*, which
-uses tmp1, tmp2 and tmp3, so we cannot access any of those.
+this should be a pure number string.
 
 `>order`:: _Gforth search_ ( wid -- ) "Add wordlist at beginning of search order"
 https://www.complang.tuwien.ac.at/forth/gforth/Docs-html/Word-Lists.html
@@ -221,7 +217,7 @@ https://www.complang.tuwien.ac.at/forth/gforth/Docs-html/Word-Lists.html
 `>r`:: _ANS core_ ( n -- )(R: -- n) "Push TOS to the Return Stack"
 https://forth-standard.org/standard/core/toR
 This word is handled differently for native and for
-subroutine coding, see COMPILE, . This is a complile-only
+subroutine coding, see `COMPILE,`. This is a complile-only
 word.
 
 `?`:: _ANS tools_ ( addr -- ) "Print content of a variable"
@@ -270,7 +266,7 @@ Abort with a message
 https://forth-standard.org/standard/core/ABS
 Return the absolute value of a number.
 
-`accept`:: _ANS core _ ( addr n -- n ) "Receive a string of characters from the keyboard"
+`accept`:: _ANS core_ ( addr n -- n ) "Receive a string of characters from the keyboard"
 https://forth-standard.org/standard/core/ACCEPT
 Receive a string of at most n1 characters, placing them at
 addr. Return the actual number of characters as n2. Characters
@@ -307,12 +303,15 @@ http://forth-standard.org/standard/search/ALSO
 https://forth-standard.org/standard/core/AND
 
 `assembler-wordlist`:: _Tali Assembler_ ( -- u ) "WID for the Assembler wordlist"
-This is a dummy entry, the code is shared with TWO
+ Commonly used like `assembler-wordlist >order` to add the
+assembler words to the search order so they can be used.
+See the tutorial on Wordlists and the Search Order for
+more information.
 
 `at-xy`:: _ANS facility_ ( n m -- ) "Move cursor to position given"
 https://forth-standard.org/standard/facility/AT-XY
-On an ANS compatible terminal, place cursor at row n colum m.
-Code is ESC[<n>;<m>H
+On an ANSI compatible terminal, place cursor at row n colum m.
+ANSI code is ESC[<n>;<m>H
 
 `base`:: _ANS core_ ( -- addr ) "Push address of radix base to stack"
 https://forth-standard.org/standard/core/BASE
@@ -516,7 +515,8 @@ itself is not ANS; we use DIGIT? following pForth and Gforth.
 Convert a segment of memory to assembler output. This
 word is vectored so people can add their own disassembler.
 Natively, this produces Simpler Assembly Notation (SAN)
-code, see the file disassembler.asm
+code, see the section on The Disassembler in the manual and
+the file disassembler.asm for more details.
 
 `dnegate`:: _ANS double_ ( d -- d ) "Negate double cell number"
 https://forth-standard.org/standard/double/DNEGATE
@@ -528,7 +528,7 @@ https://forth-standard.org/standard/core/DO
 https://forth-standard.org/standard/core/DOES
 Create the payload for defining new defining words. See
 http://www.bradrodriguez.com/papers/moving3.htm and
-docs/create-does.txt for a discussion of
+the Developer Guide in the manual for a discussion of
 DOES>'s internal workings.
 
 `drop`:: _ANS core_ ( u -- ) "Pop top entry on Data Stack"
@@ -545,6 +545,12 @@ Start the line-based editor ed6502. See separate file
 ed.asm or the manual for details.
 
 `editor-wordlist`:: _Tali Editor_ ( -- u ) "WID for the Editor wordlist"
+ Commonly used like `editor-wordlist >order` to add the editor
+words to the search order so they can be used.  This will need
+to be done before any of the words marked "Tali Editor" can be
+used.  See the tutorial on Wordlists and the Search Order for
+more information.
+
 `el`:: _Tali Editor_ ( line# -- ) "Erase the given line number"
 `else`:: _ANS core_ (C: orig -- orig) ( -- ) "Conditional flow control"
 http://forth-standard.org/standard/core/ELSE
@@ -665,7 +671,8 @@ https://github.com/philburk/pforth/blob/master/fth/numberio.fth
 `i`:: _ANS core_ ( -- n )(R: n -- n)  "Copy loop counter to stack"
 https://forth-standard.org/standard/core/I
 Note that this is not the same as R@ because we use a fudge
-factor for loop control; see docs/loop.txt for details.
+factor for loop control; see the Control Flow section of the
+manual for details.
 
 `if`:: _ANS core_ (C: -- orig) (flag -- ) "Conditional flow control"
 http://forth-standard.org/standard/core/IF
@@ -696,11 +703,11 @@ http://forth-standard.org/standard/core/IS
 `j`:: _ANS core_ ( -- n ) (R: n -- n ) "Copy second loop counter to stack"
 https://forth-standard.org/standard/core/J
 Copy second loop counter from Return Stack to stack. Note we use
-a fudge factor for loop control; see docs/loop.txt for more details.
+a fudge factor for loop control; see the Control Flow section of
+the manual for more details.
 At this point, we have the "I" counter/limit and the LEAVE address
 on the stack above this (three entries), whereas the ideal Forth
-implementation would just have two. Make this native compiled for
-speed
+implementation would just have two.
 
 `key`:: _ANS core_ ( -- char ) "Get one character from the input"
 `l`:: _Tali Editor_ ( -- ) "List the current screen"
@@ -1003,7 +1010,7 @@ it lives. The state should not be changed directly by the user; see
 http://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.2250
 
 `strip-underflow`:: _Tali Forth_ ( -- addr ) "Return address where underflow status is kept"
-STRIP_UNDERFLOW contains a flag that determines if underflow
+`STRIP-UNDERFLOW` is a flag variable that determines if underflow
 checking should be removed during the compilation of new words.
 Default is false.
 
@@ -1030,7 +1037,7 @@ Works through EMIT to allow OUTPUT revectoring.
 `u.`:: _ANS core_ ( u -- ) "Print TOS as unsigned number"
 https://forth-standard.org/standard/core/Ud
 
-`u.r`:: _ANS core ext_ ( u u -- ) "Print NOS as unsigned number with TOS with"
+`u.r`:: _ANS core ext_ ( u u -- ) "Print NOS as unsigned number right-justified with TOS width"
 https://forth-standard.org/standard/core/UDotR
 
 `u<`:: _ANS core_ ( n m -- f ) "Return true if NOS < TOS (unsigned)"
@@ -1040,11 +1047,7 @@ https://forth-standard.org/standard/core/Uless
 https://forth-standard.org/standard/core/Umore
 
 `ud.`:: _Tali double_ ( d -- ) "Print double as unsigned"
-Based on the Forth code  : UD. <# #S #> TYPE SPACE
-
 `ud.r`:: _Tali double_ ( d u -- ) "Print unsigned double right-justified u wide"
-Based on the Forth code : UD.R  >R <# #S #> R> OVER - SPACES TYPE
-
 `um*`:: _ANS core_ ( u u -- ud ) "Multiply 16 x 16 -> 32"
 https://forth-standard.org/standard/core/UMTimes
 Multiply two unsigned 16 bit numbers, producing a 32 bit result.
@@ -1092,7 +1095,7 @@ https://forth-standard.org/standard/core/WITHIN
 `word`:: _ANS core_ ( char "name " -- caddr ) "Parse input stream"
 https://forth-standard.org/standard/core/WORD
 Obsolete parsing word included for backwards compatibility only.
-Do not use this, use PARSE or PARSE-NAME. Skips leading delimiters
+Do not use this, use `PARSE` or `PARSE-NAME`. Skips leading delimiters
 and copies word to storage area for a maximum size of 255 bytes.
 Returns the result as a counted string (requires COUNT to convert
 to modern format), and inserts a space after the string. See "Forth
@@ -1102,6 +1105,8 @@ for discussions of why you shouldn't be using WORD anymore.
 
 `wordlist`:: _ANS search_ ( -- wid ) "Create new wordlist (from pool of 8)"
 https://forth-standard.org/standard/search/WORDLIST
+See the tutorial on Wordlists and the Search Order for
+more information.
 
 `words`:: _ANS tools_ ( -- ) "Print known words from Dictionary"
 `wordsize`:: _Tali Forth_ ( nt -- u ) "Get size of word in bytes"

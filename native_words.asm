@@ -354,7 +354,7 @@ z_abs:          rts
 
 
 ; ## ACCEPT ( addr n -- n ) "Receive a string of characters from the keyboard"
-; ## "accept"  auto  ANS core 
+; ## "accept"  auto  ANS core
         ; """https://forth-standard.org/standard/core/ACCEPT
         ; Receive a string of at most n1 characters, placing them at
         ; addr. Return the actual number of characters as n2. Characters
@@ -939,14 +939,20 @@ z_and:          rts
 
 ; ## ASSEMBLER_WORDLIST ( -- u ) "WID for the Assembler wordlist"
 ; ## "assembler-wordlist"  tested  Tali Assembler
+        ; """ Commonly used like `assembler-wordlist >order` to add the
+        ; assembler words to the search order so they can be used.
+        ; See the tutorial on Wordlists and the Search Order for
+        ; more information.
+        ;
         ; This is a dummy entry, the code is shared with TWO
+        ; """
         
 
 ; ## AT_XY ( n m -- ) "Move cursor to position given"
 ; ## "at-xy"  tested  ANS facility
         ; """https://forth-standard.org/standard/facility/AT-XY
-        ; On an ANS compatible terminal, place cursor at row n colum m. 
-        ; Code is ESC[<n>;<m>H
+        ; On an ANSI compatible terminal, place cursor at row n colum m. 
+        ; ANSI code is ESC[<n>;<m>H
         ;
         ; Do not use U. to print the numbers because the 
         ; trailing space will not work with xterm 
@@ -2993,7 +2999,8 @@ z_digit_question:
         ; """Convert a segment of memory to assembler output. This
         ; word is vectored so people can add their own disassembler.
         ; Natively, this produces Simpler Assembly Notation (SAN)
-        ; code, see the file disassembler.asm
+        ; code, see the section on The Disassembler in the manual and
+        ; the file disassembler.asm for more details.
         ; """
 xt_disasm:
                 jsr underflow_2
@@ -3049,8 +3056,9 @@ xt_question_do:
         ; but we do it in assembler for speed. To work with LEAVE, we compile
         ; a routine that pushes the end address to the Return Stack at run
         ; time. This is based on a suggestion by Garth Wilson, see
-        ; docs/loops.txt for details. This may not be native compile. Don't
-        ; check for a stack underflow
+        ; the Control Flow section of the manual for details.
+        ;
+        ; This may not be native compile. Don't check for a stack underflow
         ; """
 .scope
 xt_do:
@@ -3223,7 +3231,7 @@ question_do_runtime_end:
         ; """https://forth-standard.org/standard/core/DOES
         ; Create the payload for defining new defining words. See
         ; http://www.bradrodriguez.com/papers/moving3.htm and 
-        ; docs/create-does.txt for a discussion of
+        ; the Developer Guide in the manual for a discussion of
         ; DOES>'s internal workings.
         ;
         ; This uses tmp1 and tmp2
@@ -3348,7 +3356,7 @@ z_dot_paren:    rts
         ; Compile string that is printed during run time. ANS Forth wants
         ; this to be compile-only, even though everybody and their friend
         ; uses it for everything. We follow the book here, and recommend
-        ; .( for general printing
+        ; `.(` for general printing.
         ; """
 .scope
 xt_dot_quote:
@@ -3397,7 +3405,7 @@ z_dot_r:      rts
         
         
 ; ## DOT_S ( -- ) "Print content of Data Stack"
-; ## ".s"  tested  ANS tools 
+; ## ".s"  tested  ANS tools
         ; """https://forth-standard.org/standard/tools/DotS
         ; Print content of Data Stack non-distructively. We follow the format
         ; of Gforth and print the number of elements first in brackets,
@@ -3691,8 +3699,15 @@ z_ed:       rts
 
 ; ## EDITOR_WORDLIST ( -- u ) "WID for the Editor wordlist"
 ; ## "editor-wordlist"  tested  Tali Editor
+        ; """ Commonly used like `editor-wordlist >order` to add the editor
+        ; words to the search order so they can be used.  This will need
+        ; to be done before any of the words marked "Tali Editor" can be
+        ; used.  See the tutorial on Wordlists and the Search Order for
+        ; more information.
+
         ;
-        ; """This is a dummy entry, the code is shared with ONE"""
+        ; This is a dummy entry, the code is shared with ONE
+        ; """
 
 
 ; ## ELSE (C: orig -- orig) ( -- ) "Conditional flow control"
@@ -4992,7 +5007,8 @@ z_hold:         rts
 ; ## "i"  auto  ANS core
         ; """https://forth-standard.org/standard/core/I
         ; Note that this is not the same as R@ because we use a fudge
-        ; factor for loop control; see docs/loop.txt for details.
+        ; factor for loop control; see the Control Flow section of the
+        ; manual for details.
         ;
         ; We should make this native compile for speed. 
         ; """
@@ -5354,11 +5370,13 @@ z_is:           rts
 ; ## "j"  auto  ANS core
         ; """https://forth-standard.org/standard/core/J
         ; Copy second loop counter from Return Stack to stack. Note we use
-        ; a fudge factor for loop control; see docs/loop.txt for more details.
+        ; a fudge factor for loop control; see the Control Flow section of
+        ; the manual for more details.
         ; At this point, we have the "I" counter/limit and the LEAVE address
         ; on the stack above this (three entries), whereas the ideal Forth
-        ; implementation would just have two. Make this native compiled for
-        ; speed
+        ; implementation would just have two.
+        ;
+        ; Make this native compiled for speed
         ; """
 .scope
 xt_j:
@@ -5449,8 +5467,8 @@ z_latestxt:     rts
         ; http://blogs.msdn.com/b/ashleyf/archive/2011/02/06/loopty-do-i-loop.aspx
         ;
         ;       : LEAVE POSTPONE BRANCH HERE SWAP 0 , ; IMMEDIATE COMPILE-ONLY
-        ; See docs/loops.txt on details of how this works. This must be native
-        ; compile and not IMMEDIATE
+        ; See the Control Flow section in the manual for details of how this works.
+        ; This must be native compile and not IMMEDIATE
         ; """
 .scope
 xt_leave:
@@ -5714,7 +5732,7 @@ xt_loop:
         ; in Forth. LOOP uses this routine as well. We jump here with the
         ; address for looping as TOS and the address for aborting the loop
         ; (LEAVE) as the second double-byte entry on the Return Stack (see
-        ; DO and docs/loops.txt for details).
+        ; DO and the Control Flow section of the manual for details).
         ; """
 .scope
 xt_plus_loop:
@@ -5810,8 +5828,9 @@ plus_loop_runtime:
         ; """Runtime compile for loop control. This is used for both +LOOP and
         ; LOOP which are defined at high level. Note we use a fudge factor for
         ; loop  control so we can test with the Overflow Flag. See 
-        ; docs/loop.txt for details. The step value is TOS in the loop. This
-        ; musst always be native compiled. In some Forths, this is a separate
+        ; the Control Flow section of the manual for details.
+        ; The step value is TOS in the loop. This
+        ; must always be native compiled. In some Forths, this is a separate
         ; word called (+LOOP) or (LOOP)
         ; """
 .scope
@@ -9596,8 +9615,8 @@ z_star_slash:
 ; ## STAR_SLASH_MOD  ( n1 n2 n3 -- n4 n5 ) "n1 * n2 / n3 --> n-mod n"
 ; ## "*/mod"  auto  ANS core
         ; """https://forth-standard.org/standard/core/TimesDivMOD
-        ; Multiply n1 by n2 producing the intermediate double-cell result
-        ; d. Divide d by n3 producing the single-cell remainder n4 and the
+        ; Multiply n1 by n2 producing the intermediate double-cell result d.
+        ; Divide d by n3 producing the single-cell remainder n4 and the
         ; single-cell quotient n5.
         ;
         ; In Forth, this is
@@ -9662,7 +9681,7 @@ z_store:        rts
         
 ; ## STRIP_UNDERFLOW ( -- addr ) "Return address where underflow status is kept"
 ; ## "strip-underflow"  tested  Tali Forth
-        ; """STRIP_UNDERFLOW contains a flag that determines if underflow
+        ; """`STRIP-UNDERFLOW` is a flag variable that determines if underflow
         ; checking should be removed during the compilation of new words.
         ; Default is false.
         ; """
@@ -10015,8 +10034,10 @@ z_to_in:        rts
         ; for the original Forth code. We arrive here from NUMBER which has
         ; made sure that we don't have to deal with a sign and we don't have
         ; to deal with a dot as a last character that signalizes double -
-        ; this should be a pure number string. This routine calles UM*, which
-        ; uses tmp1, tmp2 and tmp3, so we cannot access any of those.
+        ; this should be a pure number string.
+        ;
+        ; This routine calles UM*, which uses tmp1, tmp2 and tmp3, so we
+        ; cannot access any of those.
         ;
         ; For the math routine, we move the inputs to the scratchpad to
         ; avoid having to fool around with the Data Stack. 
@@ -10213,7 +10234,7 @@ z_to_order:     rts
 ; ## ">r"  auto  ANS core
         ; """https://forth-standard.org/standard/core/toR
         ; This word is handled differently for native and for 
-        ; subroutine coding, see COMPILE, . This is a complile-only
+        ; subroutine coding, see `COMPILE,`. This is a complile-only
         ; word.
         ; """
 xt_to_r:
@@ -10287,6 +10308,7 @@ z_tuck:         rts
 
 ; ## TWO ( -- u ) "Push the number 2 to stack"
 ; ## "2"  auto  Tali Forth
+        ;
         ; This code is shared with ASSEMBLER-WORDLIST
 xt_assembler_wordlist:        
 xt_two:
@@ -10346,7 +10368,7 @@ z_two_dup:      rts
 ; ## "2@"  auto  ANS core
         ; """https://forth-standard.org/standard/core/TwoFetch
         ; Note n2 stored at addr and n1 in the next cell -- in our case,
-        ; the next byte. This is equvalent to  DUP CELL+ @ SWAP @
+        ; the next two bytes. This is equvalent to  `DUP CELL+ @ SWAP @`
         ; """ 
 .scope
 xt_two_fetch:
@@ -10521,6 +10543,7 @@ z_two_slash:    rts
 ; ## TWO_STAR ( n -- n ) "Multiply TOS by two"
 ; ## "2*"  auto  ANS core
         ; """https://forth-standard.org/standard/core/TwoTimes
+        ;
         ; Also used for CELLS
         ; """
 xt_two_star:
@@ -10537,7 +10560,7 @@ z_two_star:     rts
 ; ## "2!"  auto  ANS core
         ; """https://forth-standard.org/standard/core/TwoStore
         ; Stores so n2 goes to addr and n1 to the next consecutive cell.
-        ; Is equivalent to  SWAP OVER ! CELL+ !
+        ; Is equivalent to  `SWAP OVER ! CELL+ !`
         ; """
         
 xt_two_store:
@@ -10795,7 +10818,7 @@ z_u_dot:        rts
 .scend
 
 
-; ## U_DOT_R ( u u -- ) "Print NOS as unsigned number with TOS with"
+; ## U_DOT_R ( u u -- ) "Print NOS as unsigned number right-justified with TOS width"
 ; ## "u.r"  tested  ANS core ext
         ; """https://forth-standard.org/standard/core/UDotR"""
 
@@ -10865,6 +10888,7 @@ z_u_less_than:    rts
 
 ; ## UD_DOT ( d -- ) "Print double as unsigned"
 ; ## "ud."  auto  Tali double
+        ;
         ; """Based on the Forth code  : UD. <# #S #> TYPE SPACE ;
         ; """
 .scope
@@ -10883,6 +10907,7 @@ z_ud_dot:        rts
         
 ; ## UD_DOT_R ( d u -- ) "Print unsigned double right-justified u wide"
 ; ## "ud.r"  auto  Tali double
+        ;
         ; """Based on the Forth code : UD.R  >R <# #S #> R> OVER - SPACES TYPE ;
         ; """
 .scope
@@ -11235,7 +11260,7 @@ z_within:       rts
 ; ## "word"  auto  ANS core
         ; """https://forth-standard.org/standard/core/WORD
         ; Obsolete parsing word included for backwards compatibility only.
-        ; Do not use this, use PARSE or PARSE-NAME. Skips leading delimiters
+        ; Do not use this, use `PARSE` or `PARSE-NAME`. Skips leading delimiters
         ; and copies word to storage area for a maximum size of 255 bytes.
         ; Returns the result as a counted string (requires COUNT to convert
         ; to modern format), and inserts a space after the string. See "Forth
@@ -11308,7 +11333,10 @@ z_word:         rts
 
 ; ## WORDLIST ( -- wid ) "Create new wordlist (from pool of 8)"
 ; ## "wordlist" auto ANS search
-        ; """https://forth-standard.org/standard/search/WORDLIST"""
+        ; """https://forth-standard.org/standard/search/WORDLIST
+        ; See the tutorial on Wordlists and the Search Order for
+        ; more information.
+        ; """
 .scope
 xt_wordlist:
                 ; Get the current number of wordlists
