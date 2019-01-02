@@ -32,8 +32,8 @@ without a remainder. This is */MOD without the mod.
 
 `*/mod`:: _ANS core_ ( n1 n2 n3 -- n4 n5 ) "n1 * n2 / n3 --> n-mod n"
 https://forth-standard.org/standard/core/TimesDivMOD
-Multiply n1 by n2 producing the intermediate double-cell result
-d. Divide d by n3 producing the single-cell remainder n4 and the
+Multiply n1 by n2 producing the intermediate double-cell result d. 
+Divide d by n3 producing the single-cell remainder n4 and the
 single-cell quotient n5.
 
 `+`:: _ANS core_ ( n n -- n ) "Add TOS and NOS"
