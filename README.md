@@ -1,11 +1,7 @@
 # Tali Forth 2 for the 65c02  
 Scot W. Stevenson <scot.stevenson@gmail.com>   
 First version: 19. Jan 2014 (original Tali Forth)  
-This version: 28. Dec 2018
-
-**This is a LATE BETA version of Tali Forth. This means that everything here
-works pretty much as it should, but there are probably some sneaky hidden bugs
-and the documentation is not complete yet.**
+This version: 03. Jan 2019
 
 ## Dude, I am the very model of a Salarian scientist, just let me start!
 
@@ -64,7 +60,8 @@ parts of their internal logic.
 
 ## Seriously super lots more detail 
 
-See `docs\manual.html` for the Tali Forth manual, which covers the
-installation, setup and internal structure. The central discussion forum is
+See `docs\manual.html` for the Tali Forth manual, which covers the installation,
+setup and internal structure. It also includes various tutorials.  The central
+discussion forum is
 [http://forum.6502.org/viewtopic.php?f=9&t=2926](http://forum.6502.org/viewtopic.php?f=9&t=2926)
 at 6502.org.

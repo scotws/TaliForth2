@@ -1,20 +1,22 @@
 ; Disassembler for Tali Forth 2 
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 28. Apr 2018
-; This version: 18. Dec 2018
+; This version: 03. Jan 2019
 
 ; This is the default disassembler for Tali Forth 2. Use by passing
 ; the address and length of the block of memory to be disassembled:
 ;
 ;       disasm ( addr x -- ) 
 
-; The underflow checking is handled by the word's stub in
-; native_words.asm, see there for more information.
+; The underflow checking is handled by the word's stub in native_words.asm, see
+; there for more information.
 
 ; The code is disassembled in Simpler Assembler Notation (SAN), because that
-; is, uh, simpler. See the documentation for more information.  Because
-; disassemblers are used interactively with slow humans, we don't care that
-; much about speed and put the emphasis at being small.
+; is, uh, simpler. See the documentation and https://github.com/scotws/SAN for
+; more information. Because disassemblers are used interactively with slow
+; humans, we don't care that much about speed and put the emphasis at being
+; small.
+
 .scope
 disassembler:
                 jsr xt_cr       ; ( addr u ) 
@@ -66,8 +68,8 @@ _byte_loop:
                 ; to copy and paste directly from the disassembler to the
                 ; assembler. 
 
-                ; What happens next depends on the length of the
-                ; instruction in bytes: 
+                ; What happens next depends on the length of the instruction in
+                ; bytes: 
 
                 ;   1 byte:  OPC          -->          OPC  bit sequence: %01
                 ;   2 bytes: OPC LSB      -->    0 LSB OPC  bit sequence: %10
@@ -125,11 +127,12 @@ _byte_loop:
                 ; fall through to _print_operand
 
 _print_operand:
+
                 ; We arrive here with the lengths byte in Y, the address of the
-                ; opcode table entry for the on the stack and ( addr+n u-n opr
-                ; ). We want the output to be nicely formatted in columns, so
-                ; we use U.R. The maximal width of the number in decimal on an
-                ; 16-bit addressed machine is five characters
+                ; opcode table entry for the instruction on the stack ( addr+n
+                ; u-n opr). We want the output to be nicely formatted in
+                ; columns, so we use U.R. The maximal width of the number in
+                ; decimal on an 16-bit addressed machine is five characters
                 dex
                 dex
                 lda #5
@@ -271,7 +274,7 @@ oc_index_table:
         
 ; =========================================================
 oc_table:
-        ; Opcode data table for the disassember, which is also be used by the
+        ; Opcode data table for the disassember, which is also used by the
         ; assembler. Each entry starts with a "lengths byte":
       
         ;       bit 7-6:  Length of instruction in bytes (1 to 3 for the 65c02)
@@ -285,7 +288,7 @@ oc_table:
         ; To make debugging easier, we keep the raw numbers for the lengths of
         ; the instruction and mnemonicis and let the assembler do the math
         ; required to shift and add. The actual mnemonic string follows after
-        ; and is not zero terminated.
+        ; and is not zero terminated because we have the length in bits 2 to 0.
  
 	oc00:	.byte 2*64+3, "brk"              ; enforce the signature byte
 	oc01:	.byte 2*64+7, "ora.zxi"
