@@ -1,4 +1,4 @@
-; Assembler for Tali Forth 2 
+; Assembler for Tali Forth 2
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 07. Nov 2014 (as tasm65c02)
 ; This version: 03. Jan 2019
@@ -936,7 +936,7 @@ z_asm_tya:
 
 asm_common:
 .scope
-        
+
         ; """Common routine for all opcodes. We arrive here with the opcode in
         ; A. We do not need to check for the correct values because we are
         ; coming from the assembler Dictionary and trust our external test
@@ -983,7 +983,7 @@ asm_common:
                 tay
 
                 ; One byte means no operand, we're done. Use DEY as CPY #1
-                dey             
+                dey
                 beq _done
 
                 ; We have an operand which must be TOS
@@ -1001,7 +1001,7 @@ asm_common:
                 dey
                 beq _done_drop
 
-                ; This must be a three-byte instruction, get the MSB. 
+                ; This must be a three-byte instruction, get the MSB.
                 lda 1,x
                 jsr cmpl_a      ; Fall through to _done_drop
 
@@ -1010,7 +1010,7 @@ _done_drop:
                 inx             ; Fall through to _done
 _done:
                 rts             ; Returns to original caller
-.scend  
+.scend
 
 
 ; ==========================================================
@@ -1036,8 +1036,8 @@ z_asm_push_a:
                 rts
 _data:
         ; We can't use 00 as a terminator because STA 0,X assembles to 95 00
-        .byte $CA, $CA, $95, 00, $74, $01 
-        .byte $FF               ; terminator 
+        .byte $CA, $CA, $95, 00, $74, $01
+        .byte $FF               ; terminator
 .scend
 
 
@@ -1050,11 +1050,11 @@ _data:
 xt_asm_back_jump:
 z_asm_back_jump:
                 rts
-      
+
 ; The "<B" directive (back branch) takes an address that was placed on the Data
 ; Stack by the anonymous label directive "-->" (the "arrow") and the current
 ; address (via HERE) to calculate a backward branch offset. This is then stored
-; by a following branch instruction. 
+; by a following branch instruction.
 xt_asm_back_branch:
                 ; We arrive here with ( addr-l ) of the label on the stack and
                 ; then subtract the current address

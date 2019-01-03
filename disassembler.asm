@@ -1,4 +1,4 @@
-; Disassembler for Tali Forth 2 
+; Disassembler for Tali Forth 2
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 28. Apr 2018
 ; This version: 03. Jan 2019
@@ -6,7 +6,7 @@
 ; This is the default disassembler for Tali Forth 2. Use by passing
 ; the address and length of the block of memory to be disassembled:
 ;
-;       disasm ( addr x -- ) 
+;       disasm ( addr x -- )
 
 ; The underflow checking is handled by the word's stub in native_words.asm, see
 ; there for more information.
@@ -19,12 +19,12 @@
 
 .scope
 disassembler:
-                jsr xt_cr       ; ( addr u ) 
+                jsr xt_cr       ; ( addr u )
 _byte_loop:
                 ; Print address at start of the line. Note we use whatever
                 ; number base the user has
-                jsr xt_over     ; ( addr u addr ) 
-                jsr xt_u_dot    ; ( addr u ) 
+                jsr xt_over     ; ( addr u addr )
+                jsr xt_u_dot    ; ( addr u )
                 jsr xt_space
 
                 ; We use the opcode value as the offset in the oc_index_table.
@@ -56,9 +56,9 @@ _byte_loop:
                 sta tmp3+1
                 pha
 
-                ; The first byte is the "lengths byte" which is coded so 
+                ; The first byte is the "lengths byte" which is coded so
                 ; that bits 7 to 6 are the length of the instruction (1 to
-                ; 3 bytes) and 2 to 0 are the length of the mnemonic. 
+                ; 3 bytes) and 2 to 0 are the length of the mnemonic.
                 lda (tmp3)
                 tay                     ; save copy of lengths byte
 
@@ -66,10 +66,10 @@ _byte_loop:
                 ; system, we want to print any operand before we print the
                 ; mnemonic ('1000 sta' instead of 'sta 1000'). This allows us
                 ; to copy and paste directly from the disassembler to the
-                ; assembler. 
+                ; assembler.
 
                 ; What happens next depends on the length of the instruction in
-                ; bytes: 
+                ; bytes:
 
                 ;   1 byte:  OPC          -->          OPC  bit sequence: %01
                 ;   2 bytes: OPC LSB      -->    0 LSB OPC  bit sequence: %10
@@ -80,13 +80,13 @@ _byte_loop:
                 ; have an operand. We do this by use of the bit sequence in
                 ; bits 7 and 6.
                 bpl _no_operand         ; bit 7 clear, single-byte instruction
-                
+
                 ; We have an operand. Prepare the Data Stack
                 jsr xt_zero             ; ( addr u 0 ) ZERO does not use Y
 
                 ; Because of the glory of a little endian CPU, we can start
                 ; with the next byte regardless if this is a one or two byte
-                ; operand, because we'll need the LSB one way or the other. 
+                ; operand, because we'll need the LSB one way or the other.
                 ; We have a copy of the opcode on the stack, so we can now move
                 ; to the next byte
                 inc 4,x
@@ -108,7 +108,7 @@ _byte_loop:
                 tya                     ; retrieve copy of lengths byte
                 rol                     ; shift bit 6 to bit 7
                 bpl _print_operand
-                
+
                 ; We have a three-byte instruction, so we need to get the MSB
                 ; of the operand. Move to the next byte
                 inc 4,x
@@ -157,7 +157,7 @@ _no_operand:
                 jsr xt_spaces           ; ( addr u )
 
                 ; fall through to _print_mnemonic
-                
+
 _print_mnemonic:
                 ; We arrive here with the opcode table address on the stack and
                 ; ( addr u | addr+n u-n ). Time to print the mnemonic.
@@ -177,9 +177,9 @@ _print_mnemonic:
                 lda 0,x
                 and #%00000111          ; ( addr u addr-o u-o )
                 sta 0,x
-               
+
                 jsr xt_type             ; ( addr u )
-                jsr xt_cr 
+                jsr xt_cr
 
                 ; Housekeeping: Next byte
                 inc 2,x
@@ -209,87 +209,87 @@ oc_index_table:
 
         ; Opcodes 00-0F
         .word oc00, oc01, oc__, oc__, oc04, oc05, oc06, oc__
-        .word oc08, oc09, oc0a, oc__, oc0c, oc0d, oc0e, oc0f 
+        .word oc08, oc09, oc0a, oc__, oc0c, oc0d, oc0e, oc0f
 
         ; Opcodes 10-1F
         .word oc10, oc11, oc12, oc__, oc14, oc15, oc16, oc17
-        .word oc18, oc19, oc1a, oc__, oc1c, oc1d, oc__, oc1f 
-        
+        .word oc18, oc19, oc1a, oc__, oc1c, oc1d, oc__, oc1f
+
         ; Opcodes 20-2F
         .word oc20, oc21, oc__, oc__, oc24, oc25, oc26, oc27
-        .word oc28, oc29, oc2a, oc__, oc2c, oc2d, oc2e, oc2f 
+        .word oc28, oc29, oc2a, oc__, oc2c, oc2d, oc2e, oc2f
 
         ; Opcodes 30-3F
         .word oc30, oc31, oc32, oc__, oc34, oc35, oc36, oc37
-        .word oc38, oc39, oc3a, oc__, oc3c, oc3d, oc3e, oc0f 
+        .word oc38, oc39, oc3a, oc__, oc3c, oc3d, oc3e, oc0f
 
         ; Opcodes 40-4F
         .word oc40, oc41, oc__, oc__, oc__, oc45, oc46, oc47
-        .word oc48, oc49, oc4a, oc__, oc4c, oc4d, oc4e, oc4f 
+        .word oc48, oc49, oc4a, oc__, oc4c, oc4d, oc4e, oc4f
 
         ; Opcodes 50-5F
         .word oc50, oc51, oc52, oc__, oc__, oc55, oc56, oc57
-        .word oc58, oc59, oc5a, oc__, oc__, oc__, oc5e, oc5f 
-        
+        .word oc58, oc59, oc5a, oc__, oc__, oc__, oc5e, oc5f
+
         ; Opcodes 60-6F
         .word oc60, oc61, oc__, oc__, oc64, oc65, oc66, oc67
-        .word oc68, oc69, oc6a, oc__, oc6c, oc6d, oc6e, oc6f 
+        .word oc68, oc69, oc6a, oc__, oc6c, oc6d, oc6e, oc6f
 
         ; Opcodes 70-7F
         .word oc70, oc71, oc72, oc__, oc74, oc75, oc76, oc77
-        .word oc78, oc79, oc7a, oc__, oc7c, oc7d, oc7e, oc7f 
+        .word oc78, oc79, oc7a, oc__, oc7c, oc7d, oc7e, oc7f
 
         ; Opcodes 80-8F
         .word oc80, oc81, oc__, oc__, oc84, oc85, oc86, oc__
-        .word oc88, oc89, oc8a, oc__, oc8c, oc8d, oc8e, oc8f 
+        .word oc88, oc89, oc8a, oc__, oc8c, oc8d, oc8e, oc8f
 
         ; Opcodes 90-9F
         .word oc90, oc91, oc92, oc__, oc94, oc95, oc96, oc97
-        .word oc98, oc99, oc9a, oc__, oc9c, oc9d, oc9e, oc9f 
-        
+        .word oc98, oc99, oc9a, oc__, oc9c, oc9d, oc9e, oc9f
+
         ; Opcodes A0-AF
         .word oca0, oca1, oca2, oc__, oca4, oca5, oca6, oca7
-        .word oca8, oca9, ocaa, oc__, ocac, ocad, ocae, ocaf 
+        .word oca8, oca9, ocaa, oc__, ocac, ocad, ocae, ocaf
 
         ; Opcodes B0-BF
         .word ocb0, ocb1, ocb2, oc__, ocb4, ocb5, ocb6, ocb7
-        .word ocb8, ocb9, ocba, oc__, ocbc, ocbd, ocbe, ocbf 
+        .word ocb8, ocb9, ocba, oc__, ocbc, ocbd, ocbe, ocbf
 
         ; Opcodes C0-CF
         .word occ0, occ1, oc__, oc__, occ4, occ5, occ6, occ7
-        .word occ8, occ9, occa, oc__, occc, occd, occe, occf 
+        .word occ8, occ9, occa, oc__, occc, occd, occe, occf
 
         ; Opcodes D0-DF
         .word ocd0, ocd1, ocd2, oc__, oc__, ocd5, ocd6, ocd7
-        .word ocd8, ocd9, ocda, oc__, oc__, ocdd, ocde, ocdf 
-        
+        .word ocd8, ocd9, ocda, oc__, oc__, ocdd, ocde, ocdf
+
         ; Opcodes E0-EF
         .word oce0, oce1, oc__, oc__, oce4, oce5, oce6, oce7
-        .word oce8, oce9, ocea, oc__, ocec, oced, ocee, ocef 
+        .word oce8, oce9, ocea, oc__, ocec, oced, ocee, ocef
 
         ; Opcodes F0-FF
         .word ocf0, ocf1, ocf2, oc__, oc__, ocf5, ocf6, ocf7
         .word ocf8, ocf9, ocfa, oc__, oc__, ocfd, ocfe, ocff
 
-        
+
 ; =========================================================
 oc_table:
         ; Opcode data table for the disassember, which is also used by the
         ; assembler. Each entry starts with a "lengths byte":
-      
+
         ;       bit 7-6:  Length of instruction in bytes (1 to 3 for the 65c02)
         ;       bit 5-3:  unused
         ;       bit 2-0:  Length of mnemonic in chars (3 to 7)
 
         ; To convert a line in this table to a Forth string of the mnemonic,
-        ; use the COUNT word on the address of the lengths byte to get 
+        ; use the COUNT word on the address of the lengths byte to get
         ; ( addr u ) and then mask all but the bits 2-0 of the TOS.
 
         ; To make debugging easier, we keep the raw numbers for the lengths of
         ; the instruction and mnemonicis and let the assembler do the math
         ; required to shift and add. The actual mnemonic string follows after
         ; and is not zero terminated because we have the length in bits 2 to 0.
- 
+
 	oc00:	.byte 2*64+3, "brk"              ; enforce the signature byte
 	oc01:	.byte 2*64+7, "ora.zxi"
 ;      (oc02)

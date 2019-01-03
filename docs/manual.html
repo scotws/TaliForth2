@@ -8267,7 +8267,7 @@ This code is also used by the assembler directive ARROW
 <code>hexstore</code>
 </td>
 <td class="hdlist2">
-<p>_Tali _ ( addr1 u1 addr2&#8201;&#8212;&#8201;u2 ) "Store a list of numbers"
+<p><em>Tali</em> ( addr1 u1 addr2&#8201;&#8212;&#8201;u2 ) "Store a list of numbers"
 Given a string addr1 u1 with numbers in the current base seperated
 by spaces, store the numbers at the address addr2, returning the
 number of elements. Non-number elements are skipped, an zero-length
@@ -8855,7 +8855,9 @@ successful. If there is no input available from the current input
 source, return false. When the input source is a string from EVALUATE,
 return false and perform no other action." See
 <a href="https://www.complang.tuwien.ac.at/forth/gforth/Docs-html/The-Input-Stream.html" class="bare">https://www.complang.tuwien.ac.at/forth/gforth/Docs-html/The-Input-Stream.html</a>
-and Conklin &amp; Rather p. 156</p>
+and Conklin &amp; Rather p. 156. Note we don&#8217;t have to care about blocks
+because REFILL is never used on blocks - Tali is able to evaluate the
+entire block as a 1024 byte string.</p>
 </td>
 </tr>
 <tr>

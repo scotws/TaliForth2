@@ -1,7 +1,7 @@
 ; Dictionary Headers for Tali Forth 2
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 05. Dec 2016 (Liara Forth)
-; This version: 29. Dec 2018 
+; This version: 29. Dec 2018
 
 ; Dictionary headers are kept separately from the code, which allows various
 ; tricks in the code. We roughly follow the Gforth terminology: The Execution
@@ -9,7 +9,7 @@
 ; executed; the Name Token (nt) is a pointer to the beginning of the word's
 ; header in the Dictionary. There the link to the next word in the Dictionary
 ; is always one cell down from the current word's own nt. In the code itself,
-; we use "nt_<WORD>" for the nt and "xt_<WORD>" for the xt. 
+; we use "nt_<WORD>" for the nt and "xt_<WORD>" for the xt.
 
 ; This gives us the following header structure:
 
@@ -20,7 +20,7 @@
 ;             +--------+--------+
 ;          +2 | Next Header     | -> nt_next_word
 ;             +-----------------+
-;          +4 | Start of Code   | -> xt_word 
+;          +4 | Start of Code   | -> xt_word
 ;             +-----------------+
 ;          +6 | End of Code     | -> z_word
 ;             +--------+--------+
@@ -48,7 +48,7 @@
 ; a threshold the user can set. By default, all user-created words are flagged
 ; never-native. The user can override this by using the always-native word
 ; just after defining their new word.  The NN flag forbids native compiling,
-; the AN flag forces it.  
+; the AN flag forces it.
 
 ; The last word (top word in code) is always BYE. It is marked as the last word
 ; by its value of 0000 in its Next Header field. The words are sorted with the
@@ -115,12 +115,12 @@ nt_forth_wordlist:      ; shares code with ZERO
         .byte 14, 0
         .word nt_only, xt_forth_wordlist, z_forth_wordlist
         .byte "forth-wordlist"
-                
+
 nt_editor_wordlist:     ; shares code with ONE
         .byte 15, 0
         .word nt_forth_wordlist, xt_editor_wordlist, z_editor_wordlist
         .byte "editor-wordlist"
-                
+
 nt_assembler_wordlist:  ; shares code with TWO
         .byte 18, 0
         .word nt_editor_wordlist, xt_assembler_wordlist, z_assembler_wordlist
@@ -130,7 +130,7 @@ nt_root_wordlist:
         .byte 13, 0
         .word nt_assembler_wordlist, xt_root_wordlist, z_root_wordlist
         .byte "root-wordlist"
-                
+
 nt_get_order:
         .byte 9, 0
         .word nt_root_wordlist, xt_get_order, z_get_order
@@ -145,7 +145,7 @@ nt_get_current:
         .byte 11, 0
         .word nt_set_order, xt_get_current, z_get_current
         .byte "get-current"
-                
+
 nt_set_current:
         .byte 11, UF
         .word nt_get_current, xt_set_current, z_set_current
@@ -155,7 +155,7 @@ nt_search_wordlist:
         .byte 15, UF
         .word nt_set_current, xt_search_wordlist, z_search_wordlist
         .byte "search-wordlist"
-                
+
 nt_wordlist:
         .byte 8, 0
         .word nt_search_wordlist, xt_wordlist, z_wordlist
@@ -180,7 +180,7 @@ nt_thru:
         .byte 4, UF
         .word nt_list, xt_thru, z_thru
         .byte "thru"
-        
+
 nt_load:
         .byte 4, UF
         .word nt_thru, xt_load, z_load
@@ -190,32 +190,32 @@ nt_flush:
         .byte 5, 0
         .word nt_load, xt_flush, z_flush
         .byte "flush"
-                
+
 nt_empty_buffers:
         .byte 13, 0
         .word nt_flush, xt_empty_buffers, z_empty_buffers
         .byte "empty-buffers"
-                
+
 nt_buffer:
         .byte 6, 0
         .word nt_empty_buffers, xt_buffer, z_buffer
         .byte "buffer"
-                
+
 nt_update:
         .byte 6, 0
         .word nt_buffer, xt_update, z_update
         .byte "update"
-                
+
 nt_block:
         .byte 5, 0
         .word nt_update, xt_block, z_block
         .byte "block"
-                
+
 nt_save_buffers:
         .byte 12, 0
         .word nt_block, xt_save_buffers, z_save_buffers
         .byte "save-buffers"
-                
+
 nt_block_read_vector:
         .byte 17, HC+NN ; Deferred words need the HC (Code Field) flag.
         .word nt_save_buffers, xt_block_read_vector, z_block_read_vector
@@ -230,12 +230,12 @@ nt_block_write_vector:
         .byte 18, NN ; Deferred words need the HC (Code Field) flag.
         .word nt_block_read, xt_block_write_vector, z_block_write_vector
         .byte "block-write-vector"
-                
+
 nt_block_write:
         .byte 11, NN ; Deferred words need the HC (Code Field) flag.
         .word nt_block_write_vector, xt_block_write, z_block_write
         .byte "block-write"
-                
+
 nt_blk:
         .byte 3, 0
         .word nt_block_write, xt_blk, z_blk
@@ -362,11 +362,11 @@ nt_find:
         .byte "find"
 
 nt_environment_q:
-        .byte 12, UF 
+        .byte 12, UF
         .word nt_find, xt_environment_q, z_environment_q
         .byte "environment?"
 
-nt_search:  
+nt_search:
         .byte 6, UF+NN
         .word nt_environment_q, xt_search, z_search
         .byte "search"
@@ -1286,36 +1286,36 @@ nt_question:
         .word nt_false, xt_question, z_question
         .byte "?"
 
-nt_ud_dot_r:     
+nt_ud_dot_r:
         .byte 4, UF
         .word nt_question, xt_ud_dot_r, z_ud_dot_r
         .byte "ud.r"
-        
-nt_ud_dot:     
+
+nt_ud_dot:
         .byte 3, UF
         .word nt_ud_dot_r, xt_ud_dot, z_ud_dot
         .byte "ud."
-        
-nt_d_dot_r:     
+
+nt_d_dot_r:
         .byte 3, UF
         .word nt_ud_dot, xt_d_dot_r, z_d_dot_r
         .byte "d.r"
-        
-nt_d_dot:     
+
+nt_d_dot:
         .byte 2, UF
         .word nt_d_dot_r, xt_d_dot, z_d_dot
         .byte "d."
-        
-nt_dot_r:     
+
+nt_dot_r:
         .byte 2, UF
         .word nt_d_dot, xt_dot_r, z_dot_r
         .byte ".r"
-        
-nt_u_dot_r:     
+
+nt_u_dot_r:
         .byte 3, UF
         .word nt_dot_r, xt_u_dot_r, z_u_dot_r
         .byte "u.r"
-        
+
 nt_u_dot:
         .byte 2, UF
         .word nt_u_dot_r, xt_u_dot, z_u_dot
@@ -1450,15 +1450,15 @@ nt_root_forth:
         .byte 5, 0
         .word nt_root_forth_wordlist, xt_forth, z_forth
         .byte "forth"
-        
-root_dictionary_start:    
+
+root_dictionary_start:
 nt_root_set_order:
         .byte 9, 0
         .word nt_root_forth, xt_set_order, z_set_order
         .byte "set-order"
 
 ; END of ROOT-WORDLIST
-        
+
 
 ; EDITOR-WORDLIST
 
@@ -1492,16 +1492,16 @@ nt_editor_o:
         .byte 1, 0
         .word nt_editor_line, xt_editor_o, z_editor_o
         .byte "o"
-        
+
 ; END of EDITOR-WORDLIST
 
-        
+
 ; ASSEMBLER-WORDLIST
 
 ; Labels for the opcodes have the format "nt_asm_<OPC>" where a futher
 ; underscore replaces any dot present in the SAN mnemonic. The hash sign for
 ; immediate addressing is replaced by an "h" (for example, the label code for
-; "lda.#" is "xt_adm_lda_h"). All opcodes are immediate. 
+; "lda.#" is "xt_adm_lda_h"). All opcodes are immediate.
 assembler_dictionary_start:
 nt_asm_adc_h:
 		.byte 5, IM
@@ -2570,7 +2570,7 @@ nt_asm_tya:
 nt_asm_arrow:   ; uses same code as HERE, but immediate
                 .byte 3, IM
                 .word nt_asm_back_jump
-                .word xt_asm_arrow, z_asm_arrow   
+                .word xt_asm_arrow, z_asm_arrow
                 .byte "-->"
 
 
@@ -2580,7 +2580,7 @@ nt_asm_back_jump:  ; syntactic sugar, does nothing
                 .word xt_asm_back_jump, z_asm_back_jump
                 .byte "<j"
 
-nt_asm_back_branch: 
+nt_asm_back_branch:
                 .byte 2, IM
                 .word nt_asm_push_a
                 .word xt_asm_back_branch, z_asm_back_branch
@@ -2592,6 +2592,6 @@ nt_asm_push_a:
                 .word xt_asm_push_a, z_asm_push_a
                 .byte "push-a"
 
-; END of ASSEMBLER-WORDLIST        
+; END of ASSEMBLER-WORDLIST
 
 ; END

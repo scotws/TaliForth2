@@ -3459,4 +3459,3 @@ char "       ' word          cycle_test "txt" drop CYCLES:    676 ok
 5            ' 0<>           cycle_test drop       CYCLES:     52 ok
   ok
   ok
-bye 

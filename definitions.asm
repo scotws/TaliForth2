@@ -17,7 +17,7 @@
 ; floodplain.
 
 ; The four variables insrc, cib, ciblen, and toin must stay together in this
-; sequence for the words INPUT>R and R>INPUT to work correctly. 
+; sequence for the words INPUT>R and R>INPUT to work correctly.
 
 .alias cp        user0+0   ; Compiler Pointer
 .alias dp        user0+2   ; Dictionary Pointer
@@ -66,22 +66,22 @@
 .alias editor1   user0+46  ; temporary for editors
 .alias editor2   user0+48  ; temporary for editors
 .alias editor3   user0+50  ; temporary for editors
-.alias tohold    user0+52  ; pointer for formatted output 
+.alias tohold    user0+52  ; pointer for formatted output
 .alias scratch   user0+54  ; 8 byte scratchpad (see UM/MOD)
 
-; Zero Page:                
-; Bytes used for variables: 62 ($0000-$003D) 
-; First usable Data Stack location: $003E (decimal 62) 
+; Zero Page:
+; Bytes used for variables: 62 ($0000-$003D)
+; First usable Data Stack location: $003E (decimal 62)
 ; Bytes avaible for Data Stack: 128-62 = 66 --> 33 16-bit cells
 
 .alias dsp0      $78       ; initial Data Stack Pointer, see docs/stack.md
 
 ; User Variables:
-; Block variables                
+; Block variables
 .alias blk_offset 0        ; BLK : UP + 0
 .alias scr_offset 2        ; SCR : UP + 2
 
-; Wordlists                
+; Wordlists
 .alias current_offset 4    ; CURRENT (byte) : UP + 4 (Compilation wordlist)
 .alias num_wordlists_offset 5
                            ; #WORDLISTS (byte) : UP + 5
@@ -93,7 +93,7 @@
                            ; SEARCH-ORDER (bytes) : UP + 31 to UP + 39
                            ; Allowing for 9 to keep offsets even.
 .alias max_wordlists 12    ; Maximum number of wordlists supported
-                           ; 4 Tali built-ins + 8 user wordlists 
+                           ; 4 Tali built-ins + 8 user wordlists
 
 ; Buffer variables
 .alias blkbuffer_offset    40   ; Address of buffer
@@ -103,12 +103,12 @@
 ; Block I/O vectors
 .alias blockread_offset    46   ; Vector to block reading routine
 .alias blockwrite_offset   48   ; Vector to block writing routine
-       
+
 
 ; ASCII CHARACTERS
 .alias AscCC   $03  ; break (CTRL-c)
 .alias AscBELL $07  ; bell sound
-.alias AscBS   $08  ; backspace 
+.alias AscBS   $08  ; backspace
 .alias AscLF   $0a  ; line feed
 .alias AscCR   $0d  ; carriage return
 .alias AscESC  $1b  ; escape

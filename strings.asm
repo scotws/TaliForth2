@@ -3,11 +3,11 @@
 ; First version: 01. Apr 2016 (for Liara Forth)
 ; This version: 28. Dec 2018
 
-; This file is included by taliforth.asm 
+; This file is included by taliforth.asm
 
 ; ## GENERAL STRINGS
 
-; All general strings must be zero-terminated, names start with "s_", 
+; All general strings must be zero-terminated, names start with "s_",
 ; aliases with "str_"
 
 .alias str_ok              0
@@ -53,7 +53,7 @@ s_see_size:   .byte "size (decimal): ", 0
 
 ; All error strings must be zero-terminated, all names start with "es_",
 ; aliases with "err_". If the string texts are changed, the test suite must be
-; as well 
+; as well
 
 .alias err_allot        0
 .alias err_badsource    1
@@ -66,16 +66,16 @@ s_see_size:   .byte "size (decimal): ", 0
 .alias err_syntax       8
 .alias err_underflow    9
 .alias err_negallot     10
-.alias err_wordlist     11                
+.alias err_wordlist     11
 .alias err_blockwords   12
-                
+
 error_table:
         .word es_allot, es_badsource, es_compileonly, es_defer  ;  0-3
         .word es_divzero, es_noname, es_refill, es_state        ;  4-7
         .word es_syntax, es_underflow, es_negallot, es_wordlist ;  8-11
         .word es_blockwords                                    ; 12
 
-es_allot:       .byte "ALLOT using all available memory", 0 
+es_allot:       .byte "ALLOT using all available memory", 0
 es_badsource:   .byte "Illegal SOURCE-ID during REFILL", 0
 es_compileonly: .byte "Interpreting a compile-only word", 0
 es_defer:       .byte "DEFERed word not defined yet", 0
@@ -94,7 +94,7 @@ es_blockwords:  .byte "Please assign vectors BLOCK-READ-VECTOR and BLOCK-WRITE-V
 ; These are used by the ENVIRONMENT? word and stored in the old string format:
 ; Length byte first, then the string itself that is not rpt. not
 ; zero-terminated. Note these are uppercase by ANS defintion. All start with
-; "envs_". 
+; "envs_".
 
 ; These return a single-cell number
 envs_cs:        .byte 15, "/COUNTED-STRING"

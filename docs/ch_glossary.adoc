@@ -574,10 +574,10 @@ Don't make this native compile.
 `empty-buffers`:: _ANS block ext_ ( -- ) "Empty all buffers without saving"
 https://forth-standard.org/standard/block/EMPTY-BUFFERS
 
-`endcase`:: _ANS core ext_ (C: case-sys -- ) ( x -- ) "Conditional flow control" 
+`endcase`:: _ANS core ext_ (C: case-sys -- ) ( x -- ) "Conditional flow control"
 http://forth-standard.org/standard/core/ENDCASE
 
-`endof`:: _ANS core ext_ (C: case-sys1 of-sys1-- case-sys2) ( -- ) "Conditional flow control" 
+`endof`:: _ANS core ext_ (C: case-sys1 of-sys1-- case-sys2) ( -- ) "Conditional flow control"
 http://forth-standard.org/standard/core/ENDOF
 This is a dummy entry, the code is shared with ELSE
 
@@ -665,7 +665,7 @@ This code is also used by the assembler directive ARROW
 `hex`:: _ANS core ext_ ( -- ) "Change base radix to hexadecimal"
 https://forth-standard.org/standard/core/HEX
 
-`hexstore`:: _Tali _ ( addr1 u1 addr2 -- u2 ) "Store a list of numbers"
+`hexstore`:: _Tali_ ( addr1 u1 addr2 -- u2 ) "Store a list of numbers"
 Given a string addr1 u1 with numbers in the current base seperated
 by spaces, store the numbers at the address addr2, returning the
 number of elements. Non-number elements are skipped, an zero-length
@@ -820,7 +820,7 @@ dot to signal a double cell number is required to be the last
 character of the string.
 
 `o`:: _Tali Editor_ ( line# -- ) "Overwrite the given line"
-`of`:: _ANS core ext_ (C: -- of-sys) (x1 x2 -- |x1) "Conditional flow control" 
+`of`:: _ANS core ext_ (C: -- of-sys) (x1 x2 -- |x1) "Conditional flow control"
 http://forth-standard.org/standard/core/OF
 
 `only`:: _ANS search ext_ ( -- ) "Set earch order to minimum wordlist"
@@ -921,7 +921,9 @@ successful. If there is no input available from the current input
 source, return false. When the input source is a string from EVALUATE,
 return false and perform no other action." See
 https://www.complang.tuwien.ac.at/forth/gforth/Docs-html/The-Input-Stream.html
-and Conklin & Rather p. 156
+and Conklin & Rather p. 156. Note we don't have to care about blocks
+because REFILL is never used on blocks - Tali is able to evaluate the
+entire block as a 1024 byte string.
 
 `repeat`:: _ANS core_ (C: orig dest -- ) ( -- ) "Loop flow control"
 http://forth-standard.org/standard/core/REPEAT
