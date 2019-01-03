@@ -1,13 +1,13 @@
 ; Tali Forth 2 for the 65c02
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
-; First version: 19. Jan 2014 (Tali Forth)
-; This version: 29. Dec 2018
+; First version: 19. Jan 2014 (Tali Forth 1)
+; This version: 03. Jan 2018 (Version 1.0)
 
 ; This is the main file for Tali Forth 2
 
 ; Label used to calculate UNUSED. Silly for Tali Forth, where we assume
-; 32 KiB RAM and 32 KiB ROM, but kept here to make the code more useful
-; for other hardware configurations
+; 32 KiB RAM and 32 KiB ROM, but kept here to make the code more useful for
+; other hardware configurations
 code0:
 
 .require "definitions.asm"      ; Top-level definitions, memory map
@@ -31,26 +31,26 @@ user_words_start:
 user_words_end:
 
 .require "headers.asm"          ; Headers of native words
-.require "strings.asm"          ; Strings and error messages
+.require "strings.asm"          ; Strings, including error messages
 
 
 ; =====================================================================
 ; COMPILE WORDS, JUMPS and SUBROUTINE JUMPS INTO CODE
 
-; These three routines compile instructions such as "jsr xt_words" into a 
-; word at compile time so they are available at run time. Words that use 
-; this routine may not be natively compiled. We use "cmpl" as not to 
-; confuse these routines with the COMPILE, word. Always call this with a 
-; subroutine jump, which means combining JSR/RTS to JMP in those cases is
-; not okay. To use, load the LSB of the address in A and the MSB in Y:
-;
-;               ldy #>addr      ; MSB
-;               lda #<addr      ; LSB
+; These three routines compile instructions such as "jsr xt_words" into a word
+; at compile time so they are available at run time. Words that use this
+; routine may not be natively compiled. We use "cmpl" as not to confuse these
+; routines with the COMPILE, word. Always call this with a subroutine jump.
+; This means combining JSR/RTS to JMP in those cases is not going to work. To
+; use, load the LSB of the address in A and the MSB in Y. You can remember
+; which comes first by thinking of the song "Young Americans" ("YA") by David
+; Bowie. 
+
+;               ldy #>addr      ; MSB   ; "Young"
+;               lda #<addr      ; LSB   ; "Americans"
 ;               jsr cmpl_subroutine
-;
-; You can remember which comes first by thinking of the song "Young Americans"
-; ("YA") by David Bowie. Also, we keep a routine here to compile a single
-; byte passed through A.
+
+; Also, we keep a routine here to compile a single byte passed through A.
 .scope
 cmpl_subroutine:
                 ; This is the entry point to compile JSR <ADDR>
@@ -83,6 +83,7 @@ _done:
                 rts
 .scend
 
+
 ; =====================================================================
 ; CODE FIELD ROUTINES
 
@@ -101,7 +102,7 @@ doconst:
                 pla             ; MSB of return address
                 sta tmp1+1
 
-                ; start LDY with 1 instead of 0 because of how JSR stores
+                ; Start LDY with 1 instead of 0 because of how JSR stores
                 ; the return address on the 65c02
                 ldy #1
                 lda (tmp1),y
@@ -110,13 +111,12 @@ doconst:
                 lda (tmp1),y
                 sta 1,x
 
-                ; this takes us back to the original caller, not the
+                ; This takes us back to the original caller, not the
                 ; DOCONST caller
                 rts
 
 
 dodefer:
-.scope
         ; """Execute a DEFER statement at runtime: Execute the address we
         ; find after the caller in the Data Field
         ; """
@@ -137,7 +137,6 @@ dodefer:
                 sta tmp2+1
 
                 jmp (tmp2)      ; This is actually a jump to the new target
-.scend
 
 defer_error:
                 ; """Error routine for undefined DEFER: Complain and abort"""
@@ -145,7 +144,6 @@ defer_error:
                 jmp error
 
 dodoes:
-.scope
         ; """Execute the runtime portion of DOES>. See DOES> and
         ; docs/create-does.txt for details and
         ; http://www.bradrodriguez.com/papers/moving3.htm
@@ -172,7 +170,6 @@ dodoes:
                 ply
                 pla
                 iny
-                clc
                 bne +
                 inc
 *
@@ -184,11 +181,9 @@ dodoes:
                 ; to the special code of the defining word. It's RTS instruction
                 ; will take us back to the main routine
                 jmp (tmp2)
-.scend
 
 
 dovar:
-.scope
         ; """Execute a variable: Push the address of the first bytes of
         ; the Data Field onto the stack. This is called with JSR so we
         ; can pick up the address of the calling variable off the 65c02's
@@ -212,7 +207,6 @@ dovar:
                 sta 0,x
                 
                 rts
-.scend
 
 ; =====================================================================
 ; LOW LEVEL HELPER FUNCTIONS
@@ -234,9 +228,9 @@ _nibble_to_ascii:
         ; """Private helper function for byte_to_ascii: Print lower nibble
         ; of A and and EMIT it. This does the actual work.
         ; """
-                and #$0f
+                and #$0F
                 ora #'0
-                cmp #$3a        ; '9+1
+                cmp #$3A        ; '9+1
                 bcc +
                 adc #$06
 
@@ -273,12 +267,12 @@ compare_16bit:
                 bvs _overflow
                 bra _not_equal
 _equal:
-                ; low bytes are equal, so we compare high bytes
+                ; Low bytes are equal, so we compare high bytes
                 lda 1,x                 ; MSB of TOS
                 sbc 3,x                 ; MSB of NOS
                 bvc _done
 _overflow:
-                ; handle overflow because we use signed numbers
+                ; Handle overflow because we use signed numbers
                 eor #$80                ; complement negative flag
 _not_equal:     
                 ora #1                  ; if overflow, we can't be eqal
@@ -287,16 +281,16 @@ _done:
 .scend
 
 current_to_dp:
-        ; """:ook up the current (compilation) dictionary pointer
+        ; """Look up the current (compilation) dictionary pointer
         ; in the wordlist set and put it into the dp zero-page
         ; variable. Uses A and Y.
         ; """
-                ; determine which wordlist is current
+                ; Determine which wordlist is current
                 ldy #current_offset
                 lda (up),y      ; current is a byte variable
                 asl             ; turn it into an offset (in cells)
 
-                ; get the dictionary pointer for that wordlist.
+                ; Get the dictionary pointer for that wordlist.
                 clc
                 adc #wordlists_offset   ; add offset to wordlists base.
                 tay
@@ -305,6 +299,7 @@ current_to_dp:
                 iny
                 lda (up),y
                 sta dp+1
+
                 rts
 
 
@@ -312,12 +307,12 @@ dp_to_current:
         ; """Look up which wordlist is current and update its pointer
         ; with the value in dp. Uses A and Y.
         ; """
-                ; determine which wordlist is current
+                ; Determine which wordlist is current
                 ldy #current_offset
                 lda (up),y      ; current is a byte variable
                 asl             ; turn it into an offset (in cells)
 
-                ; get the dictionary pointer for that wordlist.
+                ; Get the dictionary pointer for that wordlist.
                 clc
                 adc #wordlists_offset   ; add offset to wordlists base.
                 tay
@@ -326,6 +321,7 @@ dp_to_current:
                 iny
                 lda dp+1
                 sta (up),y
+
                 rts
  
 interpret:
@@ -354,7 +350,7 @@ _loop:
                 jsr xt_two_dup          ; ( addr u -- addr u addr u ) 
                 jsr xt_find_name        ; ( addr u addr u -- addr u nt|0 )
 
-                ; a zero signals that we didn't find a word in the Dictionary
+                ; A zero signals that we didn't find a word in the Dictionary
                 lda 0,x
                 ora 1,x
                 bne _got_name_token
@@ -380,7 +376,7 @@ _loop:
                 beq _single_number
 
                 ; It's a double cell number.  If we swap the
-                ; upper and lower half, we can use the literlal_runtime twice
+                ; upper and lower half, we can use the literal_runtime twice
                 ; to compile it into the dictionary.
                 jsr xt_swap
                 ldy #>literal_runtime
@@ -406,7 +402,7 @@ _got_name_token:
                 ; We have a known word's nt TOS. We're going to need its xt
                 ; though, which is four bytes father down. 
                 
-                ; we arrive here with ( addr u nt ), so we NIP twice
+                ; We arrive here with ( addr u nt ), so we NIP twice
                 lda 0,x
                 sta 4,x
                 lda 1,x
@@ -488,6 +484,7 @@ is_printable:
                 bcc _done
                 cmp #'~ + 1             ; $7E
                 bcs _failed
+
                 sec
                 bra _done
 _failed:
@@ -505,10 +502,12 @@ is_whitespace:
         ; 0 (clear) is no, it isn't whitespace, while 1 (set) means
         ; that it is whitespace. See PARSE and PARSE-NAME for
         ; a discussion of the uses. Does not change A or Y.
-                cmp #00                 ; explicit comparison
+                cmp #00         ; explicit comparison to leave Y untouched
                 bcc _done
-                cmp #AscSP + 1
+
+                cmp #AscSP+1
                 bcs _failed
+
                 sec
                 bra _done
 _failed:
@@ -548,19 +547,20 @@ underflow_error:
 
 error: 
         ; """Given the error number in a, print the associated error string and 
-        ; call abort. uses tmp3.
+        ; call abort. Uses tmp3.
         ; """
                 asl
                 tay
                 lda error_table,y
-                sta tmp3                ; lsb
+                sta tmp3                ; LSB
                 iny
                 lda error_table,y
-                sta tmp3+1              ; msb
+                sta tmp3+1              ; MSB
 
                 jsr print_common
                 jsr xt_cr
                 jmp xt_abort            ; no jsr, as we clobber return stack
+
 
 ; =====================================================================
 ; PRINTING ROUTINES
@@ -602,6 +602,7 @@ print_common:
 _loop:
                 lda (tmp3),y
                 beq _done               ; strings are zero-terminated
+
                 jsr emit_a              ; allows vectoring via output
                 iny
                 bra _loop
