@@ -1,6 +1,6 @@
 # Manual for Tali Forth 2 for the 65c02
 
-Sam Colwell; Scot W. Stevenson :doctype: book :keywords: forth, 6502, assembler, programming, 8-bit, vintage, retro :revnumber: BETA :revdate: 31. Dec 2018 :showtitle: :icons: font :toc: left
+Sam Colwell; Scot W. Stevenson 
 
 Tali Forth 2 is a bare-metal ANS(ish) Forth for the 65c02 8-bit MPU. It aims to be, roughly in order of importance, easy to try out (just run the included binary), simple (subroutine threading model), specific (for the 65c02 only), and standardized (ANS Forth).
 
@@ -3065,7 +3065,7 @@ The only words from this list that are recommended for use are `ONLY FORTH` as a
 </tr>
 <tr class="even">
 <td><p><code>0</code></p></td>
-<td><p><em>Tali Forth</em> ( — 0 ) &quot;Push 0 to Data Stack&quot;</p></td>
+<td><p><em>Tali Forth</em> ( — 0 ) &quot;Push 0 to Data Stack&quot; The disassembler assumes that this routine does not use Y. Note that CASE and FORTH-WORDLIST use the same routine, as the WD for Forth is 0.</p></td>
 </tr>
 <tr class="odd">
 <td><p><code>0&lt;</code></p></td>
@@ -3245,11 +3245,11 @@ The only words from this list that are recommended for use are `ONLY FORTH` as a
 </tr>
 <tr class="odd">
 <td><p><code>abort</code></p></td>
-<td><p><em>ANS core</em> ( — ) &quot;Reset the Data Stack and restart the CLI&quot; <a href="https://forth-standard.org/standard/core/ABORT" class="uri">https://forth-standard.org/standard/core/ABORT</a> Clear Data Stack and continue into QUIT. We can jump here via subroutine if we want to because we are going to reset the 65c02’s stack pointer (the Return Stack) anyway during QUIT. Note we don’t actually delete the stuff on the Data Stack</p></td>
+<td><p><em>ANS core</em> ( — ) &quot;Reset the Data Stack and restart the CLI&quot; <a href="https://forth-standard.org/standard/core/ABORT" class="uri">https://forth-standard.org/standard/core/ABORT</a> Clear Data Stack and continue into QUIT. We can jump here via subroutine if we want to because we are going to reset the 65c02’s stack pointer (the Return Stack) anyway during QUIT. Note we don’t actually delete the stuff on the Data Stack.</p></td>
 </tr>
 <tr class="even">
 <td><p><code>abort&quot;</code></p></td>
-<td><p><em>ANS core</em> ( &quot;string&quot; — ) &quot;If flag TOS is true, MESSAGE with message&quot; <a href="https://forth-standard.org/standard/core/ABORTq" class="uri">https://forth-standard.org/standard/core/ABORTq</a> Abort with a message</p></td>
+<td><p><em>ANS core</em> ( &quot;string&quot; — ) &quot;If flag TOS is true, ABORT with message&quot; <a href="https://forth-standard.org/standard/core/ABORTq" class="uri">https://forth-standard.org/standard/core/ABORTq</a> Abort and print a string.</p></td>
 </tr>
 <tr class="odd">
 <td><p><code>abs</code></p></td>
@@ -3269,7 +3269,7 @@ The only words from this list that are recommended for use are `ONLY FORTH` as a
 </tr>
 <tr class="odd">
 <td><p><code>align</code></p></td>
-<td><p><em>ANS core</em> ( — ) &quot;Make sure CP is aligned on word size&quot; <a href="https://forth-standard.org/standard/core/ALIGN" class="uri">https://forth-standard.org/standard/core/ALIGN</a> On a 8-bit machine, this does nothing.</p></td>
+<td><p><em>ANS core</em> ( — ) &quot;Make sure CP is aligned on word size&quot; <a href="https://forth-standard.org/standard/core/ALIGN" class="uri">https://forth-standard.org/standard/core/ALIGN</a> On a 8-bit machine, this does nothing. ALIGNED uses this routine as well, and also does nothing</p></td>
 </tr>
 <tr class="even">
 <td><p><code>aligned</code></p></td>
@@ -3305,7 +3305,7 @@ The only words from this list that are recommended for use are `ONLY FORTH` as a
 </tr>
 <tr class="even">
 <td><p><code>base</code></p></td>
-<td><p><em>ANS core</em> ( — addr ) &quot;Push address of radix base to stack&quot; <a href="https://forth-standard.org/standard/core/BASE" class="uri">https://forth-standard.org/standard/core/BASE</a></p></td>
+<td><p><em>ANS core</em> ( — addr ) &quot;Push address of radix base to stack&quot; <a href="https://forth-standard.org/standard/core/BASE" class="uri">https://forth-standard.org/standard/core/BASE</a> The ANS Forth standard sees the base up to 36, so we can cheat and ingore the MSB</p></td>
 </tr>
 <tr class="odd">
 <td><p><code>begin</code></p></td>
@@ -3433,7 +3433,7 @@ The only words from this list that are recommended for use are `ONLY FORTH` as a
 </tr>
 <tr class="even">
 <td><p><code>compile,</code></p></td>
-<td><p><em>ANS core ext</em> ( xt — ) &quot;Compile xt&quot; <a href="https://forth-standard.org/standard/core/COMPILEComma" class="uri">https://forth-standard.org/standard/core/COMPILEComma</a> Compile the given xt in the current word definition. It is an error if we are not in the compile state. Because we are using subroutine threading, we can’t use , (COMMA) to compile new words the traditional way. By default, native compiled is allowed, unless there is a NN (Never Native) flag associated. If not, we use the value NC_LIMIT (from definitions.tasm) to decide if the code is too large to be natively coded: If the size is larger than NC_LIMIT, we silently use subroutine coding. If the AN (Always Native) flag is set, the word is always natively compiled</p></td>
+<td><p><em>ANS core ext</em> ( xt — ) &quot;Compile xt&quot; <a href="https://forth-standard.org/standard/core/COMPILEComma" class="uri">https://forth-standard.org/standard/core/COMPILEComma</a> Compile the given xt in the current word definition. It is an error if we are not in the compile state. Because we are using subroutine threading, we can’t use , (COMMA) to compile new words the traditional way. By default, native compiled is allowed, unless there is a NN (Never Native) flag associated. If not, we use the value NC_LIMIT (from definitions.tasm) to decide if the code is too large to be natively coded: If the size is larger than NC_LIMIT, we silently use subroutine coding. If the AN (Always Native) flag is set, the word is always natively compiled.</p></td>
 </tr>
 <tr class="odd">
 <td><p><code>compile-only</code></p></td>
@@ -3469,7 +3469,7 @@ The only words from this list that are recommended for use are `ONLY FORTH` as a
 </tr>
 <tr class="odd">
 <td><p><code>d.r</code></p></td>
-<td><p><em>ANS double</em> ( d u — ) &quot;Print double right-justified u wide&quot; <a href="http://forth-standard.org/standard/double/DDotR" class="uri">http://forth-standard.org/standard/double/DDotR</a></p></td>
+<td><p><em>ANS double</em> ( d u — ) &quot;Print double right-justified u wide&quot; <a href="http://forth-standard.org/standard/double/DDotR" class="uri">http://forth-standard.org/standard/double/DDotR</a> Based on the Forth code : D.R &gt;R TUCK DABS &lt;# #S ROT SIGN #&gt; R&gt; OVER - SPACES TYPE</p></td>
 </tr>
 <tr class="even">
 <td><p><code>d&gt;s</code></p></td>
@@ -3521,7 +3521,7 @@ The only words from this list that are recommended for use are `ONLY FORTH` as a
 </tr>
 <tr class="even">
 <td><p><code>does&gt;</code></p></td>
-<td><p><em>ANS core</em> ( — ) &quot;Add payload when defining new words&quot; <a href="https://forth-standard.org/standard/core/DOES" class="uri">https://forth-standard.org/standard/core/DOES</a> Create the payload for defining new defining words. See <a href="http://www.bradrodriguez.com/papers/moving3.htm" class="uri">http://www.bradrodriguez.com/papers/moving3.htm</a> and the Developer Guide in the manual for a discussion of DOES&gt;'s internal workings.</p></td>
+<td><p><em>ANS core</em> ( — ) &quot;Add payload when defining new words&quot; <a href="https://forth-standard.org/standard/core/DOES" class="uri">https://forth-standard.org/standard/core/DOES</a> Create the payload for defining new defining words. See <a href="http://www.bradrodriguez.com/papers/moving3.htm" class="uri">http://www.bradrodriguez.com/papers/moving3.htm</a> and the Developer Guide in the manual for a discussion of DOES&gt;'s internal workings. This uses tmp1 and tmp2.</p></td>
 </tr>
 <tr class="odd">
 <td><p><code>drop</code></p></td>
@@ -3585,7 +3585,7 @@ The only words from this list that are recommended for use are `ONLY FORTH` as a
 </tr>
 <tr class="even">
 <td><p><code>evaluate</code></p></td>
-<td><p><em>ANS core</em> ( addr u — ) &quot;Execute a string&quot; <a href="https://forth-standard.org/standard/core/EVALUATE" class="uri">https://forth-standard.org/standard/core/EVALUATE</a> Set SOURCE-ID to -1, make addr u the input source, set &gt;IN to zero. After processing the line, revert to old input source. We use this to compile high-level Forth words and user-defined words during start up and cold boot. In contrast to ACCEPT, we need to, uh, accept more than 255 characters here, even though it’s a pain in 8-bit.</p></td>
+<td><p><em>ANS core</em> ( addr u — ) &quot;Execute a string&quot; <a href="https://forth-standard.org/standard/core/EVALUATE" class="uri">https://forth-standard.org/standard/core/EVALUATE</a> Set SOURCE-ID to -1, make addr u the input source, set &gt;IN to zero. After processing the line, revert to old input source. We use this to compile high-level Forth words and user-defined words during start up and cold boot. In contrast to ACCEPT, we need to, uh, accept more than 255 characters here, even though it’s a pain in the 8-bit.</p></td>
 </tr>
 <tr class="odd">
 <td><p><code>execute</code></p></td>
@@ -3649,7 +3649,7 @@ The only words from this list that are recommended for use are `ONLY FORTH` as a
 </tr>
 <tr class="even">
 <td><p><code>hexstore</code></p></td>
-<td><p>_Tali _ ( addr1 u1 addr2 — u2 ) &quot;Change base radix to hexadecimal&quot; Given a string addr1 u1 with numbers in the current base seperated by spaces, store the numbers at the address addr2, returning the number of elements. Non-number elements are skipped, an zero-length string produces a zero output.</p></td>
+<td><p><em>Tali</em> ( addr1 u1 addr2 — u2 ) &quot;Store a list of numbers&quot; Given a string addr1 u1 with numbers in the current base seperated by spaces, store the numbers at the address addr2, returning the number of elements. Non-number elements are skipped, an zero-length string produces a zero output.</p></td>
 </tr>
 <tr class="odd">
 <td><p><code>hold</code></p></td>
@@ -3865,7 +3865,7 @@ The only words from this list that are recommended for use are `ONLY FORTH` as a
 </tr>
 <tr class="even">
 <td><p><code>refill</code></p></td>
-<td><p><em>ANS core ext</em> ( — f ) &quot;Refill the input buffer&quot; <a href="https://forth-standard.org/standard/core/REFILL" class="uri">https://forth-standard.org/standard/core/REFILL</a> Attempt to fill the input buffer from the input source, returning a true flag if successful. When the input source is the user input device, attempt to receive input into the terminal input buffer. If successful, make the result the input buffer, set &gt;IN to zero, and return true. Receipt of a line containing no characters is considered successful. If there is no input available from the current input source, return false. When the input source is a string from EVALUATE, return false and perform no other action.&quot; See <a href="https://www.complang.tuwien.ac.at/forth/gforth/Docs-html/The-Input-Stream.html" class="uri">https://www.complang.tuwien.ac.at/forth/gforth/Docs-html/The-Input-Stream.html</a> and Conklin &amp; Rather p. 156</p></td>
+<td><p><em>ANS core ext</em> ( — f ) &quot;Refill the input buffer&quot; <a href="https://forth-standard.org/standard/core/REFILL" class="uri">https://forth-standard.org/standard/core/REFILL</a> Attempt to fill the input buffer from the input source, returning a true flag if successful. When the input source is the user input device, attempt to receive input into the terminal input buffer. If successful, make the result the input buffer, set &gt;IN to zero, and return true. Receipt of a line containing no characters is considered successful. If there is no input available from the current input source, return false. When the input source is a string from EVALUATE, return false and perform no other action.&quot; See <a href="https://www.complang.tuwien.ac.at/forth/gforth/Docs-html/The-Input-Stream.html" class="uri">https://www.complang.tuwien.ac.at/forth/gforth/Docs-html/The-Input-Stream.html</a> and Conklin &amp; Rather p. 156. Note we don’t have to care about blocks because REFILL is never used on blocks - Tali is able to evaluate the entire block as a 1024 byte string.</p></td>
 </tr>
 <tr class="odd">
 <td><p><code>repeat</code></p></td>
@@ -3941,7 +3941,7 @@ The only words from this list that are recommended for use are `ONLY FORTH` as a
 </tr>
 <tr class="odd">
 <td><p><code>source-id</code></p></td>
-<td><p><em>ANS core ext</em> ( — n ) &quot;Return source identifier&quot; <a href="https://forth-standard.org/standard/core/SOURCE-ID" class="uri">https://forth-standard.org/standard/core/SOURCE-ID</a> Identify the input source unless it is a block (s. Conklin &amp; Rather p. 156). Since we don’t have blocks (yet), this will give the input source: 0 is keyboard, -1 (0ffff) is character string, and a text file gives the fileid.</p></td>
+<td><p><em>ANS core ext</em> ( — n ) &quot;Return source identifier&quot; <a href="https://forth-standard.org/standard/core/SOURCE-ID" class="uri">https://forth-standard.org/standard/core/SOURCE-ID</a> Identify the input source unless it is a block (s. Conklin &amp; Rather p. 156). This will give the input source: 0 is keyboard, -1 ($FFFF) is character string, and a text file gives the fileid.</p></td>
 </tr>
 <tr class="even">
 <td><p><code>space</code></p></td>
@@ -4061,7 +4061,7 @@ The only words from this list that are recommended for use are `ONLY FORTH` as a
 </tr>
 <tr class="odd">
 <td><p><code>words</code></p></td>
-<td><p><em>ANS tools</em> ( — ) &quot;Print known words from Dictionary&quot;</p></td>
+<td><p><em>ANS tools</em> ( — ) &quot;Print known words from Dictionary&quot; <a href="https://forth-standard.org/standard/tools/WORDS" class="uri">https://forth-standard.org/standard/tools/WORDS</a> This is pretty much only used at the command line so we can be slow and try to save space.</p></td>
 </tr>
 <tr class="even">
 <td><p><code>wordsize</code></p></td>
@@ -4080,16 +4080,10 @@ The best way to point out a bug or make any other form of a comment is on Tali F
 
 ## FAQ
 
-Why does Tali Forth take so long to start up?  
-After the default kernel string is printed, you’ll notice a short pause that didn’t occur with Tali Forth 1. This is because Tali Forth 2 has more words defined in high-level Forth (see `forth_code/forth-words.fs`). The pause happens because they are being compiled on the fly.
-
 What happened to Tali Forth 1 anyway?  
 Tali Forth 1Tali Forth 1, informally just Tali Forth, was my first Forth. As such, it is fondly remembered as a learning experience. You can still find it online at GitHubGitHub at <https://github.com/scotws/TaliForth>. When Tali Forth 2 entered BETA, Tali Forth was discontinued. It does not receive bug fixes. In fact, new bugs are not even documented.
 
 ![Screenshot of the Tali Forth 1 boot screen, version Alpha 3, April 2014](pics/tali_forth_alpha003.png)
-
-What does the word "FEHLT" mean in unfinished code?  
-That’s German for "missing". During development, I use it as a marker where stuff has to be added, sort of like another level of "TODO". Since there is no English word like that, it’s very easy to find with `grep`.
 
 Who’s "Tali"?  
 I like the name, and we’re probably not going to have any more kids I can give it to. If it sounds vaguely familiar, you’re probably thinking of Tali’Zorah vas Normandyvas Normandy, Tali’Zorah a character in the *Mass Effect* Mass Effect universe created by BioWareBioWare. This software has absolutely nothing to do with neither the game nor the companies and neither do I, expect that I’ve played the whole series and enjoyed it.[5]
@@ -4275,37 +4269,37 @@ Thank you, everybody.
 
 # References and Further Reading
 
-\[\] *Masterminds of Programming*, Federico Biancuzzi, O’Reilly Media 1st edition, 2009.
+\[FB\] *Masterminds of Programming*, Federico Biancuzzi, O’Reilly Media 1st edition, 2009.
 
-\[\] "Charles H. Moore: Geek of the Week", redgate Hub 2009 <https://www.red-gate.com/simple-talk/opinion/geek-of-the-week/chuck-moore-geek>
+\[CHM1\] "Charles H. Moore: Geek of the Week", redgate Hub 2009 <https://www.red-gate.com/simple-talk/opinion/geek-of-the-week/chuck-moore-geek>
 
-\[\] "The Evolution of FORTH, an Unusual Language", Charles H. Moore, *Byte* 1980, <https://wiki.forth-ev.de/doku.php/projects:the_evolution_of_forth>
+\[CHM2\] "The Evolution of FORTH, an Unusual Language", Charles H. Moore, *Byte* 1980, <https://wiki.forth-ev.de/doku.php/projects:the_evolution_of_forth>
 
-\[\] *Forth Programmer’s Handbook*, Edward K. Conklin and Elizabeth Rather, 3rd edition 2010
+\[CnR\] *Forth Programmer’s Handbook*, Edward K. Conklin and Elizabeth Rather, 3rd edition 2010
 
-\[\] *Forth Enzyclopedia*, Mitch Derick and Linda Baker, Mountain View Press 1982
+\[DB\] *Forth Enzyclopedia*, Mitch Derick and Linda Baker, Mountain View Press 1982
 
-\[\] "Some notes on Forth from a novice user", Douglas Hoffman, Feb 1988 <https://wiki.forth-ev.de/doku.php/projects:some_notes_on_forth_from_a_novice_user>
+\[DH\] "Some notes on Forth from a novice user", Douglas Hoffman, Feb 1988 <https://wiki.forth-ev.de/doku.php/projects:some_notes_on_forth_from_a_novice_user>
 
-\[\] "Reflections on Software Research", Dennis M. Ritchie, Turing Award Lecture in *Communications of the ACM* August 1984 Volume 27 Number 8 <http://www.valleytalk.org/wp-content/uploads/2011/10/p758-ritchie.pdf>
+\[DMR\] "Reflections on Software Research", Dennis M. Ritchie, Turing Award Lecture in *Communications of the ACM* August 1984 Volume 27 Number 8 <http://www.valleytalk.org/wp-content/uploads/2011/10/p758-ritchie.pdf>
 
-\[\] *Programming the 65816, including the 6502, 65C02 and 65802*, David Eyes and Ron Lichty (Currently not available from the WDC website)
+\[EnL\] *Programming the 65816, including the 6502, 65C02 and 65802*, David Eyes and Ron Lichty (Currently not available from the WDC website)
 
-\[\] "Forth: The Hacker’s Language", Elliot Williams, <https://hackaday.com/2017/01/27/forth-the-hackers-language/>
+\[EW\] "Forth: The Hacker’s Language", Elliot Williams, <https://hackaday.com/2017/01/27/forth-the-hackers-language/>
 
-\[\] "Forth System Comparisons", Guy Kelly, in *Forth Dimensions* V13N6, March/April 1992 [http://www.forth.org/fd/FD-V13N6.pdf}{http://www.forth.org/fd/FD-V13N6.pdf](http://www.forth.org/fd/FD-V13N6.pdf}{http://www.forth.org/fd/FD-V13N6.pdf)
+\[GK\] "Forth System Comparisons", Guy Kelly, in *Forth Dimensions* V13N6, March/April 1992 [http://www.forth.org/fd/FD-V13N6.pdf}{http://www.forth.org/fd/FD-V13N6.pdf](http://www.forth.org/fd/FD-V13N6.pdf}{http://www.forth.org/fd/FD-V13N6.pdf)
 
-\[\] *A Beginner’s Guide to Forth*, J.V. Nobel, <http://galileo.phys.virginia.edu/classes/551.jvn.fall01/primer.htm>
+\[JN\] *A Beginner’s Guide to Forth*, J.V. Nobel, <http://galileo.phys.virginia.edu/classes/551.jvn.fall01/primer.htm>
 
-\[\] *A Tutorial Introduction to the UNIX Text Editor*, B. W. Kernighan, <http://www.psue.uni-hannover.de/wise2017_2018/material/ed.pdf>
+\[BWK\] *A Tutorial Introduction to the UNIX Text Editor*, B. W. Kernighan, <http://www.psue.uni-hannover.de/wise2017_2018/material/ed.pdf>
 
-\[\] *Starting Forth*, Leo Brodie, new edition 2003, [https://www.forth.com/starting-forth/}{https://www.forth.com/starting-forth/](https://www.forth.com/starting-forth/}{https://www.forth.com/starting-forth/)
+\[LB1\] *Starting Forth*, Leo Brodie, new edition 2003, [https://www.forth.com/starting-forth/}{https://www.forth.com/starting-forth/](https://www.forth.com/starting-forth/}{https://www.forth.com/starting-forth/)
 
-\[\] *Thinking Forth*, Leo Brodie, 1984, [http://thinking-forth.sourceforge.net/\\\#21CENTURY](http://thinking-forth.sourceforge.net/\#21CENTURY)
+\[LB2\] *Thinking Forth*, Leo Brodie, 1984, [http://thinking-forth.sourceforge.net/\\\#21CENTURY](http://thinking-forth.sourceforge.net/\#21CENTURY)
 
-\[\] *6502 Assembly Language Programming*, Lance A. Leventhal, OSBORNE/McGRAW-HILL 1979
+\[LL\] *6502 Assembly Language Programming*, Lance A. Leventhal, OSBORNE/McGRAW-HILL 1979
 
-\[\] "The Daemon, the Gnu and the Penguin", Peter H. Saulus, 22. April 2005, <http://www.groklaw.net/article.php?story=20050422235450910>
+\[PHS\] "The Daemon, the Gnu and the Penguin", Peter H. Saulus, 22. April 2005, <http://www.groklaw.net/article.php?story=20050422235450910>
 
 The Tali Forth 2 Manual was written with the [vim](https://www.vim.org/) editor in [AsciiDoc](https://asciidoctor.org/docs/what-is-asciidoc/) format, formatted to HTML with AsciiDoctor, and version controlled with [Git](https://git-scm.com/), all under [Ubuntu](https://www.ubuntu.com/) Linux 16.04 LTS.
 

@@ -1,7 +1,7 @@
 # Tali Forth 2 for the 65c02  
 Scot W. Stevenson <scot.stevenson@gmail.com>   
-First version: 19. Jan 2014 (original Tali Forth)  
-This version: 03. Jan 2019
+First version: (Tali Forth 1 ) 19. Jan 2014
+This version: (Version 1.0 ) 03. Jan 2019 
 
 ## Dude, I am the very model of a Salarian scientist, just let me start!
 
@@ -20,20 +20,22 @@ GitHub. You can find the most current version at
 [https://github.com/scotws/TaliForth2](https://github.com/scotws/TaliForth2).
 
 
-## A little more detail 
+## A little more detail please
 
 Tali Forth 2 aims to be, roughly in order of priority: 
 
 - **Easy to try.** Download the source -- or even just the binary
   `taliforth-py65mon.bin` -- and run the emulator with `py65mon -m 65c02 -r
-  taliforth-py65mon.bin` to get it running.  This lets you experiment with a
-  working 8-bit Forth for the 65c02 without any special configuration.
+  taliforth-py65mon.bin` to get it running. This lets you experiment with a
+  working 8-bit Forth for the 65c02 without any special configuration. This
+  includes things like block wordset.
 
 - **Simple**. The simple subroutine-threaded (STC) design and excessively
   commented source code give hobbyists the chance to study a working Forth at
-  the lowest level. Separate documentation in the `docs` folder discusses
-  specific topics. The aim is to make it easy to port Tali Forth 2 to various
-  65c02 hardware projects. 
+  the lowest level. Separate documentation - including a manual with more than
+  100 pages - in the `docs` folder discusses specific topics and offers
+  tutorials. The aim is to make it easy to port Tali Forth 2 to various 65c02
+  hardware projects. 
 
 - **Specific**. Many Forths available are "general" implementations with a small
   core adapted to the target processor. Tali Forth 2 was written as a "bare
@@ -43,7 +45,7 @@ Tali Forth 2 aims to be, roughly in order of priority:
 - **Standardized**. Most Forths available for the 65c02 are based on ancient,
   outdated templates such as FIG Forth. Learning Forth with them is like trying
   to learn modern English by reading Chaucer. Tali Forth (mostly) follows the
-  current ANS Standard. 
+  current ANS Standard, and ensures this passing an enhanced test suite.
   
 The functional reference for Tali is GNU Forth (Gforth,
 [https://www.gnu.org/software/gforth/](https://www.gnu.org/software/gforth/)).
@@ -61,7 +63,6 @@ parts of their internal logic.
 ## Seriously super lots more detail 
 
 See `docs\manual.html` for the Tali Forth manual, which covers the installation,
-setup and internal structure. It also includes various tutorials.  The central
-discussion forum is
+setup, tutorials, and internal structure. The central discussion forum is
 [http://forum.6502.org/viewtopic.php?f=9&t=2926](http://forum.6502.org/viewtopic.php?f=9&t=2926)
 at 6502.org.

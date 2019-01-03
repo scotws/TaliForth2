@@ -2,8 +2,8 @@
 Sam Colwell; Scot W. Stevenson
 :doctype: book
 :keywords: forth, 6502, assembler, programming, 8-bit, vintage, retro
-:revnumber: BETA
-:revdate: 31. Dec 2018
+:revnumber: 1.0
+:revdate: 03. Jan 2019
 :showtitle:
 :icons: font
 :toc: left

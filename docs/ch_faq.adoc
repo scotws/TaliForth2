@@ -1,24 +1,13 @@
-Why does Tali Forth take so long to start up?::
-        After the default kernel string is printed, you'll notice a short pause that
-        didn't occur with Tali Forth 1. This is because Tali Forth 2 has more words
-        defined in high-level Forth (see `forth_code/forth-words.fs`). The pause
-        happens because they are being compiled on the fly.
-
 What happened to Tali Forth 1 anyway?::
         Tali Forth 1(((Tali Forth 1))), informally just Tali Forth, was my first Forth.
         As such, it is fondly remembered as a learning experience. You can still find
-        it online at GitHub(((GitHub))) at https://github.com/scotws/TaliForth.  When
+        it online at GitHub(((GitHub))) at https://github.com/scotws/TaliForth. When
         Tali Forth 2 entered BETA, Tali Forth was discontinued. It does not
         receive bug fixes. In fact, new bugs are not even documented.
 
 [#img_talialpha]
 .Screenshot of the Tali Forth 1 boot screen, version Alpha 3, April 2014
 image::pics/tali_forth_alpha003.png[align=center]
-
-What does the word "FEHLT" mean in unfinished code?::
-        That's German for "missing". During development, I use it as a marker
-        where stuff has to be added, sort of like another level of "TODO". Since there
-        is no English word like that, it's very easy to find with `grep`. 
 
 Who's "Tali"?::
         I like the name, and we're probably not going to have any more kids I can give
