@@ -256,11 +256,11 @@ https://forth-standard.org/standard/core/ABORT
 Clear Data Stack and continue into QUIT. We can jump here via
 subroutine if we want to because we are going to reset the 65c02's
 stack pointer (the Return Stack) anyway during QUIT. Note we don't
-actually delete the stuff on the Data Stack
+actually delete the stuff on the Data Stack.
 
-`abort"`:: _ANS core_ ( "string" -- ) "If flag TOS is true, MESSAGE with message"
+`abort"`:: _ANS core_ ( "string" -- ) "If flag TOS is true, ABORT with message"
 https://forth-standard.org/standard/core/ABORTq
-Abort with a message
+Abort and print a string.
 
 `abs`:: _ANS core_ ( n -- u ) "Return absolute value of a number"
 https://forth-standard.org/standard/core/ABS
@@ -281,7 +281,8 @@ https://forth-standard.org/standard/core/AGAIN
 
 `align`:: _ANS core_ ( -- ) "Make sure CP is aligned on word size"
 https://forth-standard.org/standard/core/ALIGN
-On a 8-bit machine, this does nothing.
+On a 8-bit machine, this does nothing. ALIGNED uses this
+routine as well, and also does nothing
 
 `aligned`:: _ANS core_ ( addr -- addr ) "Return the first aligned address"
 https://forth-standard.org/standard/core/ALIGNED
@@ -315,6 +316,8 @@ ANSI code is ESC[<n>;<m>H
 
 `base`:: _ANS core_ ( -- addr ) "Push address of radix base to stack"
 https://forth-standard.org/standard/core/BASE
+The ANS Forth standard sees the base up to 36, so we can cheat and
+ingore the MSB
 
 `begin`:: _ANS core_ ( -- addr ) "Mark entry point for loop"
 https://forth-standard.org/standard/core/BEGIN
@@ -443,7 +446,7 @@ there is a NN (Never Native) flag associated. If not, we use the
 value NC_LIMIT (from definitions.tasm) to decide if the code
 is too large to be natively coded: If the size is larger than
 NC_LIMIT, we silently use subroutine coding. If the AN (Always
-Native) flag is set, the word is always natively compiled
+Native) flag is set, the word is always natively compiled.
 
 `compile-only`:: _Tali Forth_ ( -- ) "Mark most recent word as COMPILE-ONLY"
 Set the Compile Only flag (CO) of the most recently defined
@@ -477,6 +480,8 @@ http://forth-standard.org/standard/double/Dd
 
 `d.r`:: _ANS double_ ( d u -- ) "Print double right-justified u wide"
 http://forth-standard.org/standard/double/DDotR
+Based on the Forth code
+: D.R >R TUCK DABS <# #S ROT SIGN #> R> OVER - SPACES TYPE
 
 `d>s`:: _ANS double_ ( d -- n ) "Convert a double number to single"
 https://forth-standard.org/standard/double/DtoS
@@ -529,7 +534,7 @@ https://forth-standard.org/standard/core/DOES
 Create the payload for defining new defining words. See
 http://www.bradrodriguez.com/papers/moving3.htm and
 the Developer Guide in the manual for a discussion of
-DOES>'s internal workings.
+DOES>'s internal workings. This uses tmp1 and tmp2.
 
 `drop`:: _ANS core_ ( u -- ) "Pop top entry on Data Stack"
 https://forth-standard.org/standard/core/DROP
@@ -589,7 +594,7 @@ After processing the line, revert to old input source. We use this
 to compile high-level Forth words and user-defined words during
 start up and cold boot. In contrast to ACCEPT, we need to, uh,
 accept more than 255 characters here, even though it's a pain in
-8-bit.
+the 8-bit.
 
 `execute`:: _ANS core_ ( xt -- ) "Jump to word based on execution token"
 https://forth-standard.org/standard/core/EXECUTE
@@ -656,7 +661,7 @@ This code is also used by the assembler directive ARROW
 `hex`:: _ANS core ext_ ( -- ) "Change base radix to hexadecimal"
 https://forth-standard.org/standard/core/HEX
 
-`hexstore`:: _Tali _ ( addr1 u1 addr2 -- u2 ) "Change base radix to hexadecimal"
+`hexstore`:: _Tali _ ( addr1 u1 addr2 -- u2 ) "Store a list of numbers"
 Given a string addr1 u1 with numbers in the current base seperated
 by spaces, store the numbers at the address addr2, returning the
 number of elements. Non-number elements are skipped, an zero-length
@@ -720,7 +725,7 @@ http://www.complang.tuwien.ac.at/forth/gforth/Docs-html/Anonymous-Definitions.ht
 
 `leave`:: _ANS core_ ( -- ) "Leave DO/LOOP construct"
 https://forth-standard.org/standard/core/LEAVE
-Note that this does not work with  anything but a DO/LOOP in
+Note that this does not work with anything but a DO/LOOP in
 contrast to other versions such as discussed at
 http://blogs.msdn.com/b/ashleyf/archive/2011/02/06/loopty-do-i-loop.aspx
 
@@ -941,7 +946,7 @@ https://forth-standard.org/standard/core/Seq
 Store address and length of string given, returning ( addr u ).
 ANS core claims this is compile-only, but the file set expands it
 to be interpreted, so it is a state-sensitive word, which in theory
-are evil. We follow general usage.  This is just like S" except
+are evil. We follow general usage. This is just like S" except
 that it allows for some special escaped characters.
 
 `save-buffers`:: _ANS block_ ( -- ) "Save all dirty buffers to storage"
@@ -953,10 +958,10 @@ https://forth-standard.org/standard/block/SCR
 `search`:: _ANS string_ ( addr1 u1 addr2 u2 -- addr3 u3 flag) "Search for a substring"
 https://forth-standard.org/standard/string/SEARCH
 Search for string2 (denoted by addr2 u2) in string1 (denoted by
-addr1 u1).  If a match is found the flag will be true and
+addr1 u1). If a match is found the flag will be true and
 addr3 will have the address of the start of the match and u3 will have
 the number of characters remaining from the match point to the end
-of the original string1.  If a match is not found, the flag will be
+of the original string1. If a match is not found, the flag will be
 false and addr3 and u3 will be the original string1's addr1 and u1.
 
 `search-wordlist`:: _ANS search_ ( caddr u wid -- 0 | xt 1 | xt -1) "Search for a word in a wordlist"
@@ -990,11 +995,10 @@ by Ulrich Hoffmann. See http://www.xlerb.de/uho/ansi.seq
 https://forth-standard.org/standard/core/SOURCE
 
 `source-id`:: _ANS core ext_ ( -- n ) "Return source identifier"
-https://forth-standard.org/standard/core/SOURCE-ID
-Identify the input source unless it is a block (s. Conklin &
-Rather p. 156). Since we don't have blocks (yet), this will give
-the input source: 0 is keyboard, -1 (0ffff) is character string,
-and a text file gives the fileid.
+https://forth-standard.org/standard/core/SOURCE-ID Identify the
+input source unless it is a block (s. Conklin & Rather p. 156). This
+will give the input source: 0 is keyboard, -1 ($FFFF) is character
+string, and a text file gives the fileid.
 
 `space`:: _ANS core_ ( -- ) "Print a single space"
 https://forth-standard.org/standard/core/SPACE
@@ -1109,10 +1113,14 @@ See the tutorial on Wordlists and the Search Order for
 more information.
 
 `words`:: _ANS tools_ ( -- ) "Print known words from Dictionary"
+https://forth-standard.org/standard/tools/WORDS
+This is pretty much only used at the command line so we can
+be slow and try to save space.
+
 `wordsize`:: _Tali Forth_ ( nt -- u ) "Get size of word in bytes"
 Given an word's name token (nt), return the size of the
 word's payload size in bytes (CFA plus PFA) in bytes. Does not
-count the final RTS.  
+count the final RTS.
 
 `xor`:: _ANS core_ ( n n -- n ) "Logically XOR TOS and NOS"
 https://forth-standard.org/standard/core/XOR

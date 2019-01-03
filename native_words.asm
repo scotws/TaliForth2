@@ -9603,7 +9603,7 @@ xt_source:
                 dex
                 lda ciblen
                 sta 0,x
-                lda ciblen+1    ; paranoid, should be zero
+                lda ciblen+1
                 sta 1,x
 
 z_source:       rts
@@ -10208,8 +10208,8 @@ xt_to_number:
 _loop:
                 ; Get one character based on address
                 lda (4,x)
-                sta 0,x         ; ( ud-lo ud-hi addr u char )
-                stz 1,x         ; paranoid
+                sta 0,x                 ; ( ud-lo ud-hi addr u char )
+                stz 1,x                 ; paranoid
 
                 jsr xt_digit_question   ; ( char -- n -1 | char 0 )
 
@@ -10339,14 +10339,18 @@ z_to_number:    rts
 xt_to_order:
                 ; Put the wid on the return stack for now.
                 jsr xt_to_r
+
                 ; Get the current search order.
                 jsr xt_get_order
+
                 ; Get back the wid and add it to the list.
                 jsr xt_r_from
                 jsr xt_swap
                 jsr xt_one_plus
+
                 ; Set the search order with the new list.
                 jsr xt_set_order
+
 z_to_order:     rts
 .scend
         
@@ -10394,9 +10398,10 @@ z_to_r:         rts
 ; ## TRUE ( -- f ) "Push TRUE flag to Data Stack"
 ; ## "true"  auto  ANS core ext
         ; """https://forth-standard.org/standard/core/TRUE"""
-xt_true:        dex
+xt_true:        
                 dex
-                lda #$ff
+                dex
+                lda #$FF
                 sta 0,x
                 sta 1,x
 
@@ -10446,7 +10451,6 @@ z_two:          rts
 ; ## TWO_DROP ( n n -- ) "Drop TOS and NOS"
 ; ## "2drop"  auto  ANS core
         ; """https://forth-standard.org/standard/core/TwoDROP"""
-.scope
 xt_two_drop:    
                 jsr underflow_2
 
@@ -10456,13 +10460,11 @@ xt_two_drop:
                 inx
 
 z_two_drop:     rts
-.scend
 
 
 ; ## TWO_DUP ( a b -- a b a b ) "Duplicate first two stack elements"
 ; ## "2dup"  auto  ANS core
         ; """https://forth-standard.org/standard/core/TwoDUP"""
-.scope
 xt_two_dup:
                 jsr underflow_2
 
@@ -10482,7 +10484,6 @@ xt_two_dup:
                 sta 3,x
 
 z_two_dup:      rts
-.scend
 
 
 ; ## TWO_FETCH ( addr -- n1 n2 ) "Fetch the cell pair n1 n2 stored at addr"
@@ -10491,7 +10492,6 @@ z_two_dup:      rts
         ; Note n2 stored at addr and n1 in the next cell -- in our case,
         ; the next two bytes. This is equvalent to  `DUP CELL+ @ SWAP @`
         ; """ 
-.scope
 xt_two_fetch:
                 jsr underflow_1
 
@@ -10516,12 +10516,10 @@ xt_two_fetch:
                 sta 3,x
 
 z_two_fetch:    rts
-.scend
 
 ; ## TWO_OVER ( d1 d2 -- d1 d2 d1 ) "Copy double word NOS to TOS"
 ; ## "2over"  auto  ANS core
         ; """https://forth-standard.org/standard/core/TwoOVER"""
-.scope
 xt_two_over:
                 jsr underflow_4
 
@@ -10543,7 +10541,6 @@ xt_two_over:
                 sta 3,x
 
 z_two_over:     rts
-.scend
 
 
 ; ## TWO_R_FETCH ( -- n n ) "Copy top two entries from Return Stack"
@@ -10557,7 +10554,6 @@ z_two_over:     rts
         ; it as Never Native; at some point, we should compare versions to
         ; see if an Always Native version would be better
         ; """
-.scope
 xt_two_r_fetch:
 		; make room on the Data Stack
                 dex
@@ -10577,7 +10573,6 @@ xt_two_r_fetch:
                 ; The Return Stack addreses $0101 and $0102 are occupied by
                 ; the return address for this word. This is a whole lot
                 ; easier on the 65816
-
                 lda $0103,y     ; LSB of top entry
                 sta 0,x
                 lda $0104,y     ; MSB of top entry
@@ -10588,7 +10583,6 @@ xt_two_r_fetch:
                 sta 3,x
 
 z_two_r_fetch:  rts
-.scend
 
 
 ; ## TWO_R_FROM ( -- n1 n2 ) (R: n1 n2 -- ) "Pull two cells from Return Stack"
@@ -10602,7 +10596,6 @@ z_two_r_fetch:  rts
         ; return address, which we need to get out of the way first.
         ; Native compile needs to be handled as a special case.
         ; """
-.scope
 xt_two_r_from:
                 ; save the return address
                 pla                     ; LSB
@@ -10640,10 +10633,9 @@ xt_two_r_from:
                 pha
                 lda tmp1                ; LSB
                 pha
-
                 
 z_two_r_from:   rts
-.scend
+
 
 ; ## TWO_SLASH ( n -- n ) "Divide TOS by two"
 ; ## "2/"  auto  ANS core
@@ -10683,7 +10675,6 @@ z_two_star:     rts
         ; Stores so n2 goes to addr and n1 to the next consecutive cell.
         ; Is equivalent to  `SWAP OVER ! CELL+ !`
         ; """
-        
 xt_two_store:
                 jsr underflow_3
 
@@ -10718,7 +10709,6 @@ z_two_store:    rts
 ; ## TWO_SWAP ( n1 n2 n3 n4 -- n3 n4 n1 n1 ) "Exchange two double words"
 ; ## "2swap"  auto  ANS core
         ; """https://forth-standard.org/standard/core/TwoSWAP"""
-.scope
 xt_two_swap:
                 jsr underflow_4
 
@@ -10747,7 +10737,6 @@ xt_two_swap:
                 sty 3,x
                 
 z_two_swap:     rts
-.scend
 
 
 ; ## TWO_TO_R ( n1 n2 -- )(R: -- n1 n2 "Push top two entries to Return Stack"
@@ -10760,7 +10749,6 @@ z_two_swap:     rts
         ; way. May not be natively compiled unless we're clever and use
         ; special routines.
         ; """
-.scope
 xt_two_to_r:
                 ; save the return address
                 pla             ; LSB
@@ -10769,6 +10757,7 @@ xt_two_to_r:
                 sta tmp1+1      
 
                 ; --- CUT HERE FOR NATIVE CODING ---
+
                 jsr underflow_2
 
                 ; now we can move the data 
@@ -10797,7 +10786,6 @@ xt_two_to_r:
                 pha
                 
 z_two_to_r:     rts
-.scend
 
 
 ; ## TWO_CONSTANT (C: d "name" -- ) ( -- d) "Create a constant for a double word"
@@ -10807,7 +10795,6 @@ z_two_to_r:     rts
         ; Based on the Forth code
         ; : 2CONSTANT ( D -- )  CREATE SWAP , , DOES> DUP @ SWAP CELL+ @ ;
         ; """
-.scope
 xt_two_constant:
                 jsr underflow_2
 
@@ -10826,7 +10813,6 @@ xt_two_constant:
                 jsr xt_fetch
                 
 z_two_constant: rts
-.scend
 
 
 ; ## TWO_LITERAL (C: d -- ) ( -- d) "Compile a literal double word"
@@ -10835,7 +10821,6 @@ z_two_constant: rts
         ; Based on the Forth code
         ; : 2LITERAL ( D -- ) SWAP POSTPONE LITERAL POSTPONE LITERAL ; IMMEDIATE
         ; """
-.scope
 xt_two_literal:
                 jsr underflow_2 ; double number
 
@@ -10844,7 +10829,6 @@ xt_two_literal:
                 jsr xt_literal
                 
 z_two_literal:  rts
-.scend
 
 
 ; ## TWO_VARIABLE ( "name" -- ) "Create a variable for a double word"
@@ -10855,7 +10839,6 @@ z_two_literal:  rts
         ; This can be realized in Forth as either 
         ; CREATE 2 CELLS ALLOT  or just  CREATE 0 , 0 , 
         ; """
-.scope
 xt_two_variable:
                 ; We just let CRATE and ALLOT do the heavy lifting
                 jsr xt_create
@@ -10869,7 +10852,6 @@ xt_two_variable:
                 jsr xt_allot
                 
 z_two_variable: rts
-.scend
 
 
 ; ## TYPE ( addr u -- ) "Print string"
@@ -10905,10 +10887,10 @@ _loop:
                 lda 0,x
                 bne +
                 dec 1,x
-*               dec 0,x
+*               
+                dec 0,x
 
                 bra _loop
-
 _done:
                 inx
                 inx
@@ -10927,7 +10909,6 @@ z_type:         rts
         ; We use the internal assembler function print_u followed
         ; by a single space
         ; """
-.scope
 xt_u_dot:         
                 jsr underflow_1
 
@@ -10936,14 +10917,11 @@ xt_u_dot:
                 jsr emit_a
 
 z_u_dot:        rts 
-.scend
 
 
 ; ## U_DOT_R ( u u -- ) "Print NOS as unsigned number right-justified with TOS width"
 ; ## "u.r"  tested  ANS core ext
         ; """https://forth-standard.org/standard/core/UDotR"""
-
-.scope
 xt_u_dot_r:         
                 jsr underflow_2
 
@@ -10959,13 +10937,11 @@ xt_u_dot_r:
                 jsr xt_type
 
 z_u_dot_r:      rts 
-.scend
         
         
 ; ## U_GREATER_THAN ( n m -- f ) "Return true if NOS > TOS (unsigned)"
 ; ## "u>"  auto  ANS core ext
         ; """https://forth-standard.org/standard/core/Umore"""
-.scope
 xt_u_greater_than:
                 jsr underflow_2
 
@@ -10982,12 +10958,10 @@ xt_u_greater_than:
                 sta 1,x
                 
 z_u_greater_than:    rts
-.scend
 
 ; ## U_LESS_THAN ( n m -- f ) "Return true if NOS < TOS (unsigned)"
 ; ## "u<"  auto  ANS core
         ; """https://forth-standard.org/standard/core/Uless"""
-.scope
 xt_u_less_than:
                 jsr underflow_2
 
@@ -11004,7 +10978,6 @@ xt_u_less_than:
                 sta 1,x
                 
 z_u_less_than:    rts
-.scend
 
 
 ; ## UD_DOT ( d -- ) "Print double as unsigned"
@@ -11012,7 +10985,6 @@ z_u_less_than:    rts
         ;
         ; """Based on the Forth code  : UD. <# #S #> TYPE SPACE ;
         ; """
-.scope
 xt_ud_dot:         
                 jsr underflow_2 ; double number
 
@@ -11023,7 +10995,6 @@ xt_ud_dot:
                 jsr xt_space
 
 z_ud_dot:        rts 
-.scend
         
         
 ; ## UD_DOT_R ( d u -- ) "Print unsigned double right-justified u wide"
@@ -11031,7 +11002,6 @@ z_ud_dot:        rts
         ;
         ; """Based on the Forth code : UD.R  >R <# #S #> R> OVER - SPACES TYPE ;
         ; """
-.scope
 xt_ud_dot_r:         
                 jsr underflow_3
 
@@ -11046,7 +11016,6 @@ xt_ud_dot_r:
                 jsr xt_type
 
 z_ud_dot_r:      rts 
-.scend
        
 
 ; ## UM_SLASH_MOD ( ud u -- ur u ) "32/16 -> 16 division"
@@ -11163,9 +11132,11 @@ xt_um_star:
                 stx tmp3        ; tested for exit from outer loop
                 dex
                 dex
+
 _outer_loop:
                 ldy #8          ; counter inner loop
                 lsr 4,x         ; think "2,x" then later "3,x"
+
 _inner_loop:
                 bcc _no_add
                 sta tmp1+1      ; save time, don't CLC
@@ -11174,6 +11145,7 @@ _inner_loop:
                 sta tmp1
                 lda tmp1+1
                 adc tmp2+1
+
 _no_add:
                 ror
                 ror tmp1
@@ -11191,6 +11163,7 @@ _no_add:
                 lda tmp1
                 sta 0,x
                 bra _done
+
 _zero:
                 stz 2,x
                 stz 3,x
@@ -11205,7 +11178,6 @@ z_um_star:      rts
         ;
         ; Note that 6xPLA uses just as many bytes as a loop would
         ; """
-.scope
 xt_unloop: 
                 ; Drop fudge number (limit/start from DO/?DO off the
                 ; return stack
@@ -11220,13 +11192,11 @@ xt_unloop:
                 pla
 
 z_unloop:       rts
-.scend
 
 
 ; ## UNTIL (C: dest -- ) ( -- ) "Loop flow control"
 ; ## "until"  auto  ANS core
         ; """http://forth-standard.org/standard/core/UNTIL"""
-.scope
 xt_until:
                 ; Compile a 0BRANCH
                 ldy #>zero_branch_runtime
@@ -11239,7 +11209,6 @@ xt_until:
                 jsr xt_comma
 
 z_until:        rts
-.scend
 
 
 ; ## UNUSED ( -- u ) "Return size of space available to Dictionary"
@@ -11269,7 +11238,8 @@ z_unused:       rts
 ; ## "update"  auto  ANS block
         ; """https://forth-standard.org/standard/block/UPDATE"""
 xt_update:
-                ; Turn on the dirty bit.
+                ; Turn on the dirty bit. We can't use TSB here because it only
+                ; has Absolute and Direct Pages addressing modes
                 ldy #buffstatus_offset
                 lda (up),y
                 ora #2          ; Turn on dirty flag (bit 2)
@@ -11334,7 +11304,6 @@ z_variable:     rts
 ; ## WHILE ( C: dest -- orig dest ) ( x -- ) "Loop flow control"
 ; ## "while"  auto  ANS core
         ; """http://forth-standard.org/standard/core/WHILE"""
-.scope
 xt_while:
                 ; Compile a 0branch
                 ldy #>zero_branch_runtime
@@ -11353,7 +11322,6 @@ xt_while:
                 jsr xt_swap
 
 z_while:        rts
-.scend
 
 
 ; ## WITHIN ( n1 n2 n3 -- ) "See if within a range"
@@ -11374,6 +11342,7 @@ xt_within:
                 jsr xt_minus
                 jsr xt_r_from
                 jsr xt_u_less_than
+
 z_within:       rts
 
 
@@ -11464,6 +11433,7 @@ xt_wordlist:
                 ldy #num_wordlists_offset
                 lda (up),y      ; This is a byte variable, so only
                                 ; the LSB needs to be checked.
+
                 ; See if we are already at the max.
                 cmp #max_wordlists
                 bne _ok
@@ -11472,7 +11442,8 @@ xt_wordlist:
                 lda #err_wordlist
                 jmp error
 
-_ok:            inc             ; Increment the wordlist#
+_ok:            
+                inc             ; Increment the wordlist#
                 sta (up),y      ; Save it into byte variable #wordlists
                 dex             ; and put it on the stack.
                 dex
@@ -11485,13 +11456,9 @@ z_wordlist:     rts
 
 ; ## WORDS ( -- ) "Print known words from Dictionary"
 ; ## "words"  tested  ANS tools
-        ;
         ; """https://forth-standard.org/standard/tools/WORDS
         ; This is pretty much only used at the command line so we can
-        ; be slow and try to save space. DROP must always be the first word in a
-        ; clean system (without Forth words), BYE the last. There is no reason
-        ; why we couldn't define this as a high level word except that it is
-        ; really useful for testing
+        ; be slow and try to save space.
         ; """
 .scope
 xt_words:       
@@ -11519,8 +11486,8 @@ _wordlist_loop:
 
                 ; We ran out of wordlists to search.
                 bra _words_done
-_have_wordlist: 
 
+_have_wordlist: 
                 ; start with last word in Dictionary
                 ; Get the current wordlist id
                 clc                     ; Index into byte array SEARCH-ORDER.
@@ -11589,7 +11556,8 @@ z_words:        rts
 ; ## "wordsize"  auto  Tali Forth
         ; """Given an word's name token (nt), return the size of the
         ; word's payload size in bytes (CFA plus PFA) in bytes. Does not
-        ; count the final RTS.  """
+        ; count the final RTS.
+        ; """
 .scope
 xt_wordsize:    
                 jsr underflow_1
