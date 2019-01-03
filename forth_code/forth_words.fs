@@ -18,9 +18,11 @@
 \ Splash strings. We leave these as high-level words because they are
 \ generated at the end of the boot process and signal that the other
 \ high-level definitions worked (or at least didn't crash)
+
         cr .( Tali Forth 2 for the 65c02)
         cr .( Version BETA 31. Dec 2018 )
-        cr .( Copyright 2014-2018 Scot W. Stevenson)
+        cr .( Copyright 2014-2019 Scot W. Stevenson)
         cr .( Tali Forth 2 comes with absolutely NO WARRANTY)
         cr .( Type 'bye' to exit) cr
+
 \ END

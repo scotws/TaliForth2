@@ -32,7 +32,7 @@
 .alias input     user0+18  ; vector for KEY
 .alias havekey   user0+20  ; vector for KEY?
 .alias state     user0+22  ; STATE: -1 compile, 0 interpret
-.alias base      user0+24  ; number radix, default 10
+.alias base      user0+24  ; number radix, default decimal
 .alias nc_limit  user0+26  ; limit for Native Compile size
 .alias uf_strip  user0+28  ; flag to strip underflow detection code
 .alias up        user0+30  ; User Pointer (Address of user variables)
@@ -41,11 +41,10 @@
                            ; Bit 7 = Redefined word message postpone
                            ;         When set before calling CREATE, it will
                            ;         not print the "redefined xxxx" message if
-                           ;         the word exists.  Instead, this bit will
+                           ;         the word exists. Instead, this bit will
                            ;         be reused and after CREATE has run, it will
                            ;         be set if the word was redefined and 0 if
-                           ;         not.
-                           ;         This bit should be 0 when not in use.
+                           ;         not. This bit should be 0 when not in use.
                            ; Bit 6 = 1 for normal ":" definitions
                            ;         WORKWORD contains nt of word being compiled
                            ;       = 0 for :NONAME definitions
@@ -58,7 +57,7 @@
                            ; Bit 1 = Current history buffer (0-7, wraps)
                            ; Bit 0 = Current history buffer lsb
                            ; status+1 is used by ACCEPT to hold history lengths.
-.alias tmpbranch user0+34  ; temp storage for 0BRANCH, BRANCH only
+.alias tmpbranch user0+34  ; temporary storage for 0BRANCH, BRANCH only
 .alias tmp1      user0+36  ; temporary storage
 .alias tmp2      user0+38  ; temporary storage
 .alias tmp3      user0+40  ; temporary storage (especially for print)
@@ -69,14 +68,13 @@
 .alias editor3   user0+50  ; temporary for editors
 .alias tohold    user0+52  ; pointer for formatted output 
 .alias scratch   user0+54  ; 8 byte scratchpad (see UM/MOD)
-        
 
 ; Zero Page:                
 ; Bytes used for variables: 62 ($0000-$003D) 
 ; First usable Data Stack location: $003E (decimal 62) 
 ; Bytes avaible for Data Stack: 128-62 = 66 --> 33 16-bit cells
 
-.alias dsp0      $78            ; initial Data Stack Pointer, see docs/stack.md
+.alias dsp0      $78       ; initial Data Stack Pointer, see docs/stack.md
 
 ; User Variables:
 ; Block variables                
@@ -88,7 +86,7 @@
 .alias num_wordlists_offset 5
                            ; #WORDLISTS (byte) : UP + 5
 .alias wordlists_offset 6  ; WORDLISTS (cells) : UP + 6 to UP + 29
-                           ;             (FORTH, EDITOR, ASSEMBLER, ROOT, +8 more)
+                           ;          (FORTH, EDITOR, ASSEMBLER, ROOT, +8 more)
 .alias num_order_offset 30 ; #ORDER (byte) : UP + 30
                            ;          (Number of wordlists in search order)
 .alias search_order_offset 31
@@ -101,13 +99,13 @@
 .alias blkbuffer_offset    40   ; Address of buffer
 .alias buffblocknum_offset 42   ; Block number current in buffer
 .alias buffstatus_offset   44   ; Status of buffer (bit 0 = used, bit 1 = dirty)
+
 ; Block I/O vectors
 .alias blockread_offset    46   ; Vector to block reading routine
 .alias blockwrite_offset   48   ; Vector to block writing routine
        
 
 ; ASCII CHARACTERS
-
 .alias AscCC   $03  ; break (CTRL-c)
 .alias AscBELL $07  ; bell sound
 .alias AscBS   $08  ; backspace 
@@ -120,9 +118,7 @@
 .alias AscCN   $0e  ; CTRL-n (used to recall next input history)
 
 ; DICTIONARY FLAGS
-
 ; The first three bits are currently unused
-
 .alias CO 1  ; Compile Only
 .alias AN 2  ; Always Native Compile
 .alias IM 4  ; Immediate Word
@@ -132,7 +128,6 @@
 
 
 ; VARIOUS
-
 .alias MAX_LINE_LENGTH  79      ; assumes 80 character lines
 
 ; END
