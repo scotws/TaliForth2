@@ -7487,7 +7487,6 @@ xt_pick:
                 ; something out, but it wouldn't work with underflow stripping
                 ; Since using PICK is considered poor form anyway, we just
                 ; leave it as it is
-
                 asl 0,x         ; we assume u < 128 (stack is small)
                 txa
                 adc 0,x
@@ -7521,7 +7520,6 @@ xt_plus:
                 inx
 
 z_plus:         rts
-
 
 
 ; ## PLUS_STORE ( n addr -- ) "Add number to value at given address"
@@ -7585,6 +7583,7 @@ xt_postpone:
                 bne +
                 lda #err_noname
                 jmp error
+
 *
                 ; keep a copy of nt for later
                 lda 0,x
@@ -7606,7 +7605,7 @@ xt_postpone:
                 and #IM         ; mask all but Intermediate flag
                 beq _not_immediate
 
-                ; we're immediate, so instead of executing it right now, we
+                ; We're immediate, so instead of executing it right now, we
                 ; compile it. xt is TOS, so this is easy. The RTS at the end
                 ; takes us back to the original caller
                 jsr xt_compile_comma
@@ -7637,9 +7636,9 @@ xt_previous:
                 jsr xt_nip
                 jsr xt_one_minus
                 jsr xt_set_order
+
 z_previous:     rts
 .scend
-
 
         
 ; ## QUESTION ( addr -- ) "Print content of a variable"
@@ -7821,13 +7820,13 @@ xt_recurse:
                 iny
 
                 ; Next, we save the LSB and MSB of the xt of the word 
-                ; we are currently working on.  We first need to see if
+                ; we are currently working on. We first need to see if
                 ; WORKWORD has the nt (: started the word) or the
-                ; xt (:NONAME started the word).  Bit 6 in status tells us.
+                ; xt (:NONAME started the word). Bit 6 in status tells us.
                 bit status
                 bvs _nt_in_workword
 
-                ; This is a special :NONAME word.  Just copy the xt
+                ; This is a special :NONAME word. Just copy the xt
                 ; from WORKWORD into the dictionary.
                 lda workword
                 sta (cp),y
@@ -7837,13 +7836,11 @@ xt_recurse:
                 iny
                 bra _update_cp
 
-                
 _nt_in_workword: 
                 ; This is a regular : word, so the xt is four bytes down
                 ; from the nt which we saved in WORKWORD. We could probably
                 ; use NAME>INT here but this is going to be faster, and 
                 ; fast counts with recursion
-
                 lda workword            ; LSB
                 clc
                 adc #4
@@ -7861,8 +7858,8 @@ _nt_in_workword:
                 iny
                 sta (cp),y
                 iny
+
 _update_cp:     
-                ; update CP
                 tya
                 clc
                 adc cp
@@ -7890,9 +7887,9 @@ z_recurse:      rts
         ; """"
 .scope
 xt_refill:      
-                ; Get input source from SOURCE-ID. We don't have blocks in this
-                ; version, or else we would have to check BLK first. This is an
+                ; Get input source from SOURCE-ID. This is an
                 ; optimized version of a subroutine jump to SOURCE-ID
+                ; TODO REFILL should check BLK first
                 lda insrc               ; cheat: We only check LSB
                 bne _src_not_kbd
 
@@ -7929,7 +7926,7 @@ xt_refill:
                 stz toin 
                 stz toin+1 
  
-                lda #$ff                ; overwrite with TRUE flag
+                lda #$FF                ; overwrite with TRUE flag
                 sta 0,x
                 sta 1,x
 
@@ -7938,7 +7935,7 @@ xt_refill:
 _src_not_kbd:
                 ; If SOURCE-ID doesn't return a zero, it must be a string in
                 ; memory or a file (remember, no blocks in this version).
-                ; If source is a string, we were given the flag -1 ($ffff)
+                ; If source is a string, we were given the flag -1 ($FFFF)
                 inc
                 bne _src_not_string
 
@@ -7956,7 +7953,6 @@ _src_not_string:
                 ; report an error and jump to ABORT.
                 lda #err_badsource
                 jmp error
-
 _done:
 z_refill:       rts
 .scend
@@ -7986,7 +7982,7 @@ z_repeat:       rts
         ; This is an immediate word.
         ; """
 xt_right_bracket:
-                lda #$ff
+                lda #$FF
                 sta state
                 sta state+1
 z_right_bracket:
@@ -8064,19 +8060,20 @@ z_rshift:       rts
         ; Store address and length of string given, returning ( addr u ).
         ; ANS core claims this is compile-only, but the file set expands it
         ; to be interpreted, so it is a state-sensitive word, which in theory
-        ; are evil. We follow general usage.  This is just like S" except
+        ; are evil. We follow general usage. This is just like S" except
         ; that it allows for some special escaped characters.
         ; """
 .scope
 xt_s_backslash_quote:
                 ; tmp2 will be used to determine if we are handling
-                ; escaped characters or not.  In this case, we are,
+                ; escaped characters or not. In this case, we are,
                 ; so set it to $FF (the upper byte will be used to
                 ; determine if we just had a \ and the next character
                 ; needs to be modifed as an escaped character).
                 lda #$FF
                 sta tmp2
                 stz tmp2+1
+
                 ; Now that the flag is set, jump into s_quote to process
                 ; the string.
                 jsr s_quote_start
@@ -8090,16 +8087,20 @@ z_s_backslash_quote:
 convert_hex_value:
 .scope
         cmp #'A
-        bcc _Digit
+        bcc _digit
+
         ; It's A-F
         and #$DF                ; Make it uppercase.
         sec
         sbc #'7                 ; gives value 10 for 'A'
-        rts
-_Digit:
+        bra _done
+
+_digit:
         ; It's 0-9
         sec
         sbc #'0
+
+_done:
         rts
 .scend
 
@@ -8112,7 +8113,7 @@ xt_search_wordlist:
                 jsr underflow_3
 
                 ; Set up tmp1 with the wordlist indicated by wid
-                ; on the stack.  Start by putting the base address
+                ; on the stack. Start by putting the base address
                 ; of the wordlists in tmp2.
                 lda up
                 clc
@@ -8129,6 +8130,7 @@ xt_search_wordlist:
                 sta tmp2
                 bcc +
                 inc tmp2+1      ; Propagate carry if needed.
+
                 ; tmp2 now holds the address of the dictionary pointer
                 ; for the given wordlist.
 *
@@ -8141,6 +8143,7 @@ xt_search_wordlist:
                 ora 1,x
                 bne _check_wordlist
                 jmp _done
+
 _check_wordlist:        
                 ; Check for special case of empty wordlist
                 ; (dictionary pointer, in tmp2, is 0)
@@ -8179,11 +8182,13 @@ _compare_string:
 
                 ; second quick test: Is the first character the same?
                 lda (tmp2)      ; first character of mystery string
+
                 ; Lowercase the incoming charcter.
                 cmp #$5B        ; ASCII '[' (one past Z)
                 bcs _compare_first
                 cmp #$41        ; ASCII 'A'
                 bcc _compare_first
+
                 ; An uppercase letter has been located.  Make it
                 ; lowercase.
                 clc
@@ -8208,7 +8213,6 @@ _compare_first:
                 ; because we've already compared the first char. 
 
                 ; The string of the word we're testing against is 8 bytes down
-
                 lda tmp1
                 pha             ; Preserve tmp1 on the return stack.
                 clc
@@ -8224,11 +8228,13 @@ _compare_first:
 
 _string_loop:
                 lda (tmp2),y    ; last char of mystery string
+
                 ; Lowercase the incoming charcter.
                 cmp #$5B         ; ASCII '[' (one past Z)
                 bcs _check_char
                 cmp #$41        ; ASCII 'A'
                 bcc _check_char
+
                 ; An uppercase letter has been located.  Make it
                 ; lowercase.
                 clc
@@ -8247,7 +8253,6 @@ _success_tmp1:
                 sta tmp1
 
 _success:
-
                 ; The strings match. Drop the count and put correct nt TOS
                 inx
                 inx
@@ -8255,6 +8260,7 @@ _success:
                 sta 0,x
                 lda tmp1+1
                 sta 1,x
+
                 ; Change the nt into an xt, but save a copy of the nt
                 ; to look up whether the word is immediate or not.
                 jsr xt_dup              ; ( nt nt ) 
@@ -8272,10 +8278,11 @@ _success:
                 and #IM
                 bne _immediate          ; bit set, we're immediate
 
-                lda #$ff                ; We're not immediate, return -1
+                lda #$FF                ; We're not immediate, return -1
                 sta 0,x
                 sta 1,x
                 bra _done_nodrop
+
 _immediate:
                 lda #1                  ; We're immediate, return 1
                 sta 0,x
@@ -8316,6 +8323,7 @@ _done_nodrop:
 z_search_wordlist:
                 rts
 .scend
+
 
 ; ## SEE ( "name" -- ) "Print information about a Forth word"
 ; ## "see" tested  ANS tools
