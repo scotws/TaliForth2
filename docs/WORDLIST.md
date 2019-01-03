@@ -12,7 +12,7 @@ RTS instruction at the end of each word.
 | QUIT | `quit` | ANS core | 66 | tested |
 | ABORT_QUOTE | `abort"` | ANS core | 10 | tested |
 | ABS | `abs` | ANS core | 20 | **auto** |
-| ACCEPT | `accept` | ANS core | 317 | **auto** |
+| ACCEPT | `accept` | ANS core | 315 | **auto** |
 | ACTION_OF | `action-of` | ANS core ext | 24 | **auto** |
 | AGAIN | `again` | ANS core ext | 32 | tested |
 | ALIGN | `align` | ANS core | 0 | **auto** |
@@ -25,7 +25,7 @@ RTS instruction at the end of each word.
 | ASSEMBLER_WORDLIST | `assembler-wordlist` | Tali Assembler | 8 | tested |
 | AT_XY | `at-xy` | ANS facility | 29 | tested |
 | BACKSLASH | `\` | ANS core ext | 8 | **auto** |
-| BASE | `base` | ANS core | 10 | **auto** |
+| BASE | `base` | ANS core | 8 | **auto** |
 | BEGIN | `begin` | ANS core | 3 | **auto** |
 | BELL | `bell` | Tali Forth | 5 | tested |
 | BL | `bl` | ANS core | 8 | **auto** |
