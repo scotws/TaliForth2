@@ -8371,6 +8371,8 @@ xt_see:
                 jsr xt_u_dot
                 jsr xt_cr               ; ( nt xt )
 
+                ; We print letters for flags and then later follow it with 1 or
+                ; 0 to mark if which flag is set
                 lda #str_see_flags
                 jsr print_string_no_lf
 
@@ -8381,7 +8383,7 @@ xt_see:
                 lda 0,x
 
                 ; This is crude, but for the moment it is good enough
-                ldy #6
+                ldy #6                  ; Not all bits are used
 _flag_loop:
                 pha
                 and #%00000001
@@ -8389,8 +8391,10 @@ _flag_loop:
                 adc #$30                ; ASCII "0"
                 jsr emit_a
                 jsr xt_space
+
                 pla
-                ror
+                ror                     ; Next flag
+
                 dey
                 bne _flag_loop
 
@@ -8435,7 +8439,7 @@ xt_set_current:
                 ldy #current_offset
                 lda 0,x         ; CURRENT is byte variable
                 sta (up),y      ; so only the LSB is used.
-                ; Remove the TOS.
+
                 inx
                 inx
                 
@@ -8465,11 +8469,9 @@ xt_set_order:
                 stz 1,x         ; Count is 1.
                 lda #1
                 sta 0,x
+
                 ; Continue processing with ( forth-wordlist 1 -- )
-
 _start: 
-
-        
                 ; Set #ORDER - the number of wordlists in the search order.
                 ldy #num_order_offset
                 lda 0,x
@@ -8477,7 +8479,6 @@ _start:
                 sta tmp1        ; Save a copy for zero check and looping.
                                 ; Only the low byte is saved in tmp1 as
                                 ; only 8 wordlists are allowed.
-                                
 
                 inx             ; Drop the count off the data stack.
                 inx
@@ -8493,12 +8494,15 @@ _loop:
                 lda 0,x         ; The search order is a byte array
                 sta (up),y      ; so only save the LSB
                 iny
+
                 ; Remove it from the data stack.
                 inx
                 inx
+
                 ; See if that was the last one to process (first in the list).
                 dec tmp1
                 bne _loop
+
 _done:
 z_set_order:    rts
 .scend        
@@ -8524,6 +8528,7 @@ xt_s_quote:
                 ; not, so set it to zero.
                 stz tmp2
                 stz tmp2+1
+
 s_quote_start:  
                 ; Make room on the data stack for the address.
                 dex
@@ -8536,10 +8541,10 @@ s_quote_start:
                 ; in later.
                 lda #$4C
                 jsr cmpl_a
-                ;; Address to be filled in later.
+
+                ; Address to be filled in later, just use $4C for the moment
                 jsr cmpl_a
                 jsr cmpl_a
-                
 
                 ; Save the current value of HERE on the data stack for the
                 ; address of the string.
@@ -8548,10 +8553,10 @@ s_quote_start:
                 lda cp+1
                 sta 3,x
 
-                ; Start saving the string into the dictionary up to the
-                ; ending double quote.
 _savechars_loop:
-                ; Check to see if the input buffer is empty.
+                ; Start saving the string into the dictionary up to the
+                ; ending double quote. First, check to see if the input 
+                ; buffer is empty.
                 lda toin+1              ; MSB
                 cmp ciblen+1
                 bcc _input_fine         ; unsigned comparison
@@ -8560,16 +8565,17 @@ _savechars_loop:
                 cmp ciblen
                 bcc _input_fine
 
-                ; Input buffer is empty.  Refill it.
-                ; Refill calls accept, which uses tmp2 and tmp3.
-                ; Save and restore them.
+                ; Input buffer is empty. Refill it. Refill calls accept,
+                ; which uses tmp2 and tmp3. Save and restore them.
                 lda tmp2
                 pha
                 lda tmp2+1
                 pha
                 lda tmp3    ; Only tmp3 used, so don't bother with tmp3+1
                 pha
+
                 jsr xt_refill           ; ( -- f )
+
                 pla
                 sta tmp3
                 pla
@@ -8590,9 +8596,10 @@ _refill_ok:
                 ; Remove the refill flag from the data stack.
                 inx
                 inx
-                ; For refill success, jump back up to the empty check,
-                ; just in case refill gave us an empty buffer
-                ; (eg. empty/blank line of input)
+
+                ; For refill success, jump back up to the empty check, just in
+                ; case refill gave us an empty buffer (eg. empty/blank line of
+                ; input)
                 bra _savechars_loop
 
 _input_fine:
@@ -8622,14 +8629,14 @@ _handle_escapes:
                 jmp _not_escaped
         
 _escaped:       
-                ; We have seen a backslash (previous character)
 
-                ; Check to see if we are in the middle of a \x sequence
-                ; (bit 6 of tmp2+1 will be clear in that case )
+                ; We have seen a backslash (previous character). Check to see if
+                ; we are in the middle of a \x sequence (bit 6 of tmp2+1 will
+                ; be clear in that case )
                 bvs _check_esc_chars
 
-                ; We are in the middle of a \x sequence.
-                ; Check to see if we are on the first or second digit.
+                ; We are in the middle of a \x sequence. Check to see if we
+                ; are on the first or second digit.
                 lda #1
                 bit tmp2+1
                 bne _esc_x_second_digit
@@ -8637,8 +8644,10 @@ _escaped:
                 ; First digit.
                 inc tmp2+1  ; Adjust flag for second digit next time.
                 lda (tmp1)  ; Get the char again.
+
                 ; Convert to hex
                 jsr convert_hex_value
+
                 ; This is the upper nybble, so move it up.
                 asl
                 asl
@@ -8648,12 +8657,11 @@ _escaped:
                 jmp _next_character
 
 _esc_x_second_digit:
-                ; We are on the second hex digit of a \x sequence.
 
-                ; Clear the escaped character flag (because we are
-                ; handling it right here)
+                ; We are on the second hex digit of a \x sequence. Clear the
+                ; escaped character flag (because we are handling it right
+                ; here)
                 stz tmp2+1
-        
                 lda (tmp1)
 
                 ; Convert to hex, combine with value in tmp3
@@ -8661,7 +8669,6 @@ _esc_x_second_digit:
                 ora tmp3
         
                 jmp _save_character
-
 
 _check_esc_chars:       
                 ; Clear the escaped character flag (because we are
@@ -8672,98 +8679,128 @@ _check_esc_chars:
 _check_esc_a:
                 cmp #'a
                 bne _check_esc_b
+
                 ; BEL (ASCII value 7)
                 lda #7
                 jmp _save_character
+
 _check_esc_b:
                 cmp #'b
                 bne _check_esc_e
+
                 ; Backspace (ASCII value 8)
                 lda #8
                 jmp _save_character
+
 _check_esc_e:
                 cmp #'e
                 bne _check_esc_f
+
                 ; ESC (ASCII value 27)
                 lda #27
                 bra _save_character
+
 _check_esc_f:
                 cmp #'f
                 bne _check_esc_l
+
                 ; FF (ASCII value 12)
                 lda #12
                 bra _save_character
+
 _check_esc_l:
                 cmp #'l
                 bne _check_esc_m
+
                 ; LF (ASCII value 10)
                 lda #10
                 bra _save_character
-_check_esc_m:
+
+_check_esc_m:   
+                ; This one is not like the others because we save two
+                ; characters
                 cmp #'m
                 bne _check_esc_n
+
                 ; CR/LF pair (ASCII values 13, 10)
                 lda #13
                 jsr cmpl_a
                 lda #10
                 bra _save_character
+
 _check_esc_n:
                 cmp #'n
                 bne _check_esc_q
+
                 ; newline, impl. dependant, using LF (ASCII values 10)
                 lda #10
                 bra _save_character
+
 _check_esc_q:
                 cmp #'q
                 bne _check_esc_r
+
                 ; Double quote (ASCII value 34)
                 lda #34
                 bra _save_character
+
 _check_esc_r:
                 cmp #'r
                 bne _check_esc_t
+
                 ; CR (ASCII value 13)
                 lda #13
                 bra _save_character
+
 _check_esc_t:
                 cmp #'t
                 bne _check_esc_v
+
                 ; Horizontal TAB (ASCII value 9)
                 lda #9
                 bra _save_character
+
 _check_esc_v:
                 cmp #'v
                 bne _check_esc_z
+
                 ; Vertical TAB (ASCII value 11)
                 lda #11
                 bra _save_character
+
 _check_esc_z:
                 cmp #'z
                 bne _check_esc_quote
+
                 ; NULL (ASCII value 0)
                 lda #0
                 bra _save_character
+
 _check_esc_quote:
                 cmp #$22
                 bne _check_esc_x
+
                 ; Double quote (ASCII value 34)
                 lda #34
                 bra _save_character
+
 _check_esc_x:
                 cmp #'x
                 bne _check_esc_backslash
-                ; This one is difficult.  We need to get the next TWO
+
+                ; This one is difficult. We need to get the next TWO
                 ; characters (which might require a refill in the middle)
-                ; and combine them as two hex digits.  We do this by
+                ; and combine them as two hex digits. We do this by
                 ; clearing bit 6 of tmp2+1 to indicate we are in a digit
                 ; and using bit 0 to keep track of which digit we are on.
-
                 lda #$BE        ; Clear bits 6 and 0
                 sta tmp2+1
                 bra _next_character
+
 _check_esc_backslash:
                 cmp #$5C
                 bne _not_escaped
+
                 ; Backslash (ASCII value 92)
                 lda #92
                 bra _save_character
@@ -8771,11 +8808,11 @@ _check_esc_backslash:
 _not_escaped:
                 ; Check for the backslash to see if we should escape
                 ; the next char.
-                cmp #$5C    ; The backslash char
+                cmp #$5C        ; The backslash char
                 bne _regular_char
 
                 ; We found a backslash.  Don't save anyhing, but set
-                ; a flag (in tmp2+1) to handle the next char.  We don't
+                ; a flag (in tmp2+1) to handle the next char. We don't
                 ; try to get the next char here as it may require a
                 ; refill of the input buffer.
                 lda #$FF
@@ -8786,15 +8823,18 @@ _regular_char:
                 ; Check if the current character is the end of the string.
                 cmp #$22        ; ASCII for "
                 beq _found_string_end
+
 _save_character:      
                 ; If we didn't reach the end of the string, compile this
                 ; character into the dictionary
                 jsr cmpl_a
+
 _next_character:        
                 ; Move on to the next character.
                 inc toin
                 bne _savechars_loop_longjump
                 inc toin+1
+
 _savechars_loop_longjump:       
                 jmp _savechars_loop
 
@@ -8818,7 +8858,6 @@ _found_string_end:
                 ; Update the address of the jump-over jmp instruction.
                 ; First determine location of jmp instructions address.
                 ; It should be 2 bytes before the start of the string.
-
                 ; Compute it into tmp1, which is no longer being used.
                 lda 2,x
                 sec
@@ -8834,7 +8873,6 @@ _found_string_end:
                 ldy #1
                 lda cp+1
                 sta (tmp1),y
-                
 
                 ; What happens next depends on the state (which is bad, but
                 ; that's the way it works at the moment). If we are
@@ -8854,6 +8892,7 @@ _found_string_end:
 _done:
 z_s_quote:      rts
 .scend
+
 
 ; ## S_TO_D ( u -- d ) "Convert single cell number to double cell"
 ; ## "s>d"  auto  ANS core
@@ -8894,6 +8933,7 @@ xt_save_buffers:
                 jsr xt_buffblocknum
                 jsr xt_fetch
                 jsr xt_block_write
+
                 ; Mark the buffer as clean now.
                 lda #1
                 ldy #buffstatus_offset
@@ -8921,17 +8961,17 @@ xt_scr:
 
 z_scr:          rts
 
+
 ; ## SEARCH ( addr1 u1 addr2 u2 -- addr3 u3 flag) "Search for a substring"
 ; ## "search"   auto  ANS string
         ; """https://forth-standard.org/standard/string/SEARCH
         ; Search for string2 (denoted by addr2 u2) in string1 (denoted by
-        ; addr1 u1).  If a match is found the flag will be true and
+        ; addr1 u1). If a match is found the flag will be true and
         ; addr3 will have the address of the start of the match and u3 will have
         ; the number of characters remaining from the match point to the end
-        ; of the original string1.  If a match is not found, the flag will be
+        ; of the original string1. If a match is not found, the flag will be
         ; false and addr3 and u3 will be the original string1's addr1 and u1.
         ; """
-
 .scope
 xt_search:
                 jsr underflow_4
@@ -8950,9 +8990,11 @@ xt_search:
                 sta 0,x
                 sta 1,x
                 jmp z_search
+
 _start_search:
                 ; Put an offset (starting at zero) on the stack.
                 jsr xt_zero
+
 _search_loop:
                 ; We stop (not found) when u2 + offset > u1
                 ; Calculate u2+offset into tmp1
@@ -8962,13 +9004,13 @@ _search_loop:
                 sta tmp1
                 lda 1,x
                 adc 3,x
-                ;sta tmp1+1
-                ; Compare to u1
-                ; Start with the high byte
-                ;lda tmp1+1 ; A already has the upper half.
+
+
+                ; Compare to u1. Start with the high byte
                 cmp 7,x
                 bcc _init_comparison ; Obviously less
                 bne _not_found
+
                 ; The upper address byte matched - check the lower byte
                 ; Load u1 first so we can use just a carry to check.
                 lda 6,x
@@ -9000,11 +9042,13 @@ _init_comparison:
                 lda 9,x
                 adc 1,x
                 sta tmp1+1
+
                 ; The starting address in string 2 is just addr2.
                 lda 4,x
                 sta tmp2
                 lda 5,x
                 sta tmp2+1
+
                 ; The number of characters to check is u2.
                 lda 2,x
                 sta tmp3
@@ -9023,7 +9067,6 @@ _comparison_loop:
                 bra _search_loop
                 
 _letters_match: 
-
                 ; The letters match.  Advance the pointers until the
                 ; count reaches zero.
                 inc tmp1
@@ -9040,6 +9083,7 @@ _letters_match:
                 dec tmp3+1
 *                
                 dec tmp3
+
                 ; Check if we've reached zero.
                 lda tmp3
                 ora tmp3+1
@@ -9055,6 +9099,7 @@ _letters_match:
                 lda 1,x
                 adc 9,x
                 sta 9,x
+
                 ; Subtract offset from u1.
                 sec
                 lda 6,x
@@ -9063,6 +9108,7 @@ _letters_match:
                 lda 7,x
                 sbc 1,x
                 sta 7,x
+
                 ; Replace addr2, u2, and offset with a true flag.
                 inx             ; drop offset
                 inx
@@ -9169,13 +9215,10 @@ _colonword:
 
                 ; Clear bit 7 of status (so future words will print message
                 ; by defaut)
-                lda #$7F
-                and status
-                sta status
+                lda #%10000000
+                trb status
 
-                ; Continue processing word.
 _new_word:
-
                 ; Let's get this over with. Save beginning of our word 
                 ; as new last word in the Dictionary
                 lda workword

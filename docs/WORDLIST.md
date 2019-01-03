@@ -163,7 +163,7 @@ RTS instruction at the end of each word.
 | NIP | `nip` | ANS core ext | 13 | **auto** |
 | NOT_EQUALS | `<>` | ANS core ext | 29 | **auto** |
 | NOT_ROTE | `-rot` | Gforth | 27 | **auto** |
-| NUMBER | `number` | Tali Forth | 144 | **auto** |
+| NUMBER | `number` | Tali Forth | 142 | **auto** |
 | NUMBER_SIGN | `#` | ANS core | 52 | **auto** |
 | NUMBER_SIGN_GREATER | `#>` | ANS core | 33 | **auto** |
 | NUMBER_SIGN_S | `#s` | ANS core | 16 | **auto** |
@@ -208,7 +208,7 @@ RTS instruction at the end of each word.
 | SAVE_BUFFERS | `save-buffers` | ANS block | 26 | tested |
 | SCR | `scr` | ANS block ext | 15 | **auto** |
 | SEARCH | `search` | ANS string | 158 | **auto** |
-| SEMICOLON | `;` | ANS core | 96 | **auto** |
+| SEMICOLON | `;` | ANS core | 94 | **auto** |
 | SIGN | `sign` | ANS core | 20 | **auto** |
 | SLASH | `/` | ANS core | 28 | **auto** |
 | SLASH_MOD | `/mod` | ANS core | 23 | **auto** |
