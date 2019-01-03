@@ -57,8 +57,8 @@ RTS instruction at the end of each word.
 | CLEAVE | `cleave` | Tali Forth | 76 | **auto** |
 | CMOVE | `cmove` | ANS string | 58 | **auto** |
 | CMOVE_UP | `cmove>` | ANS string | 58 | **auto** |
-| COLON | `:` | ANS core | 70 | **auto** |
-| COLON_NONAME | `:NONAME` | ANS core | 29 | **auto** |
+| COLON | `:` | ANS core | 66 | **auto** |
+| COLON_NONAME | `:NONAME` | ANS core | 27 | **auto** |
 | COMMA | `,` | ANS core | 25 | **auto** |
 | COMPARE | `compare` | ANS string | 100 | **auto** |
 | COMPILE_COMMA | `compile,` | ANS core ext | 279 | **auto** |

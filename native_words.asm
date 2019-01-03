@@ -1670,7 +1670,6 @@ _done:
 z_cleave:       rts
 .scend
 
-; TODO HIER HIER HERE HERE 
 
 ; ## CMOVE ( addr1 addr2 u -- ) "Copy bytes going from low to high"
 ; ## "cmove"  auto  ANS string
@@ -1701,6 +1700,7 @@ xt_cmove:
                 ldy #0
                 lda 1,x         ; number of whole pages to move
                 beq _dopartial
+
 _page:          
                 lda (tmp1),y
                 sta (tmp2),y
@@ -1711,9 +1711,11 @@ _page:
                 inc tmp2+1
                 dec 1,x
                 bne _page
+
 _dopartial:     
                 lda 0,x         ; length of last page
                 beq _done
+
 _partial:       
                 lda (tmp1),y
                 sta (tmp2),y
@@ -1744,7 +1746,7 @@ z_cmove:        rts
 xt_cmove_up:
                 jsr underflow_3
 
-                ; move dst address to where we can work with it
+                ; Move destination address to where we can work with it
                 lda 2,x
                 sta tmp2        ; use tmp2 because easier to remember
                 lda 3,x
@@ -1752,7 +1754,7 @@ xt_cmove_up:
                 adc 1,x
                 sta tmp2+1      ; point to last page of destination
 
-                ; move src address to where we can work with it
+                ; Move source address to where we can work with it
                 lda 4,x
                 sta tmp1        ; use tmp1 because easier to remember
                 lda 5,x
@@ -1761,20 +1763,24 @@ xt_cmove_up:
                 sta tmp1+1      ; point to last page of source
                 inc 1,x         ; allows us to use bne with dec 1,x below
 
-                ; move the last partial page first
+                ; Move the last partial page first
                 ldy 0,x         ; length of last page
                 beq _nopartial
+
 _outerloop:       
                 dey
                 beq _finishpage
+
 _innerloop:       
                 lda (tmp1),y
                 sta (tmp2),y
                 dey
                 bne _innerloop
+
 _finishpage:     
                 lda (tmp1)      ; handle y = 0 separately
                 sta (tmp2)
+
 _nopartial:     
                 dec tmp1+1      ; back up to previous pages 
                 dec tmp2+1
@@ -1799,7 +1805,7 @@ z_cmove_up:     rts
         ; """
 .scope
 xt_colon:       
-                ; if we're already in the compile state, complain
+                ; If we're already in the compile state, complain
                 ; and quit
                 lda state
                 ora state+1
@@ -1811,11 +1817,11 @@ xt_colon:
                 ; switch to compile state
                 dec state
                 dec state+1
-                ; Set bit6 in status to tell ";" and RECURSE this is a normal
-                ; word.
-                lda #$40
-                ora status
-                sta status
+
+                ; Set bit 6 in status to tell ";" and RECURSE this is a normal
+                ; word
+                lda #%01000000
+                tsb status
 
                 ; CREATE is going to change the DP to point to the new word's
                 ; header. While this is fine for (say) variables, it would mean
@@ -1830,9 +1836,8 @@ xt_colon:
                 pha
 
                 ; Tell create not to print warning for duplicate name.
-                lda #$80
-                ora status
-                sta status
+                lda #%10000000
+                tsb status
 
                 jsr xt_create
 
@@ -1870,7 +1875,7 @@ z_colon:        rts
         ; """
 .scope
 xt_colon_noname:       
-                ; if we're already in the compile state, complain
+                ; If we're already in the compile state, complain
                 ; and quit
                 lda state
                 ora state+1
@@ -1882,15 +1887,15 @@ xt_colon_noname:
                 ; switch to compile state
                 dec state
                 dec state+1
-                ; Clear bit6 in status to tell ";" and RECURSE this is a :NONAME
-                ; word.
-                lda #$bf
-                and status
-                sta status
 
-                ; Put cp (the xt for this word) in WORKWORD.
-                ; The flag above lets both ";" and RECURSE know that is is an
-                ; xt instead of an nt and they will modify their behavior.
+                ; Clear bit 6 in status to tell ";" and RECURSE this is
+                ; a :NONAME word.
+                lda #%01000000
+                trb status
+
+                ; Put cp (the xt for this word) in WORKWORD. The flag above
+                ; lets both ";" and RECURSE know that is is an xt instead of an
+                ; nt and they will modify their behavior.
                 lda cp
                 sta workword
                 lda cp+1
@@ -2011,6 +2016,7 @@ _str1_done:
                 lda 0,x
                 ora 1,x
                 beq _equal      ; Both out of letters
+
                 ; Falls into less (str1 is out but str2 has more)
 _less:
                 ; Return -1
@@ -2051,7 +2057,7 @@ z_compare:      rts
         ; value NC_LIMIT (from definitions.tasm) to decide if the code 
         ; is too large to be natively coded: If the size is larger than
         ; NC_LIMIT, we silently use subroutine coding. If the AN (Always
-        ; Native) flag is set, the word is always natively compiled
+        ; Native) flag is set, the word is always natively compiled.
         ; """
 .scope
 xt_compile_comma:
@@ -2071,7 +2077,8 @@ xt_compile_comma:
                 lda 0,x
                 ora 1,x
                 bne _check_nt
-                ; No nt in dictionary.  Just compile as a JSR.
+
+                ; No nt in dictionary. Just compile as a JSR.
                 jmp _compile_as_jump
                 
 _check_nt:      
@@ -2088,7 +2095,7 @@ _check_nt:
 *
                 lda (0,x)
                 sta tmp3                ; keep copy of status byte for NN
-                and #AN                 ; mask all but Always Native (AN bit
+                and #AN                 ; mask all but Always Native (AN) bit
                 beq _compile_check
 
                 ; We're natively compiling no matter what. Get length and
@@ -2143,19 +2150,19 @@ _compile_as_code:
                 ; xt on top of the Return Stack. MOVE will need ( xt cp u )
                 ; on the data stack
                 dex
-                dex                     ; ( -- u ?? )
+                dex                     ; ( -- u ? )
                 dex
-                dex                     ; ( -- u ?? ?? ) 
+                dex                     ; ( -- u ? ? ) 
 
                 lda 4,x
                 sta 0,x                 ; LSB of u 
                 lda 5,x
-                sta 1,x                 ; ( -- u ?? u )
+                sta 1,x                 ; ( -- u ? u )
 
                 pla
                 sta 4,x                 ; LSB of xt
                 pla
-                sta 5,x                 ; ( -- xt ?? u )
+                sta 5,x                 ; ( -- xt ? u )
 
                 lda cp                  ; LSB of cp
                 sta 2,x
@@ -2169,6 +2176,7 @@ _compile_as_code:
                 ; 2>R and 2R> (but not 2R@ in this version). We compare the
                 ; xt with the contents of the table
                 ldy #0
+
 _strip_loop:
                 lda _strip_table,y      ; LSB of first word
                 cmp 4,x                 ; LSB of xt
@@ -2196,14 +2204,14 @@ _found_entry:
                 ; adjusted during native compile. We find the values in the
                 ; next table with the same index, which is Y. However, Y is
                 ; pointing to the MSB, so we need to go back to the LSB and
-                ; halve the index before we can use it
+                ; halve the index before we can use it.
                 tya
                 lsr
                 tay
 
                 ; Get the adjustment out of the size table. We were clever
                 ; enough to make sure the cut on both ends of the code is
-                ; is the same size
+                ; is the same size.
                 lda _strip_size,y
                 sta tmptos              ; save a copy
 
@@ -2215,8 +2223,8 @@ _found_entry:
                 inc 5,x                 ; we just care about the carry
 *
 
-                ; Adjust u: Quit earlier. Since we cut off the top and the bottom of the
-                ; code, we have to double the value
+                ; Adjust u: Quit earlier. Since we cut off the top and the
+                ; bottom of the code, we have to double the value
                 asl tmptos
 
                 sec
@@ -2233,7 +2241,7 @@ _underflow_strip:
                 
                 ; The user can choose to remove the unterflow testing in those
                 ; words that have the UF flag. This shortens the word by
-                ; 5 bytes if there is no underflow.
+                ; 3 bytes if there is no underflow.
                 
                 ; See if the user wants underflow stripping turned on
                 lda uf_strip
@@ -2246,8 +2254,7 @@ _underflow_strip:
                 beq _specials_done
 
                 ; If we arrived here, underflow has to go. It's always 3 bytes
-                ; long (except for PICK, which has a special case that can't
-                ; be stripped)
+                ; long. Note hat PICK is a special case. 
  
                 ; Adjust xt: Start later
                 clc
@@ -2257,7 +2264,6 @@ _underflow_strip:
                 bcc +
                 inc 5,x                  ; we just care about the carry
 *
-
                 ; Adjust u: End earlier
                 sec
                 lda 0,x
@@ -2381,10 +2387,10 @@ xt_constant:
                 sbc #0
                 sta tmp1+1
 
-                lda #<doconst   ; LSB of DOCONST
+                lda #<doconst           ; LSB of DOCONST
                 sta (tmp1)
                 ldy #1
-                lda #>doconst   ; MSB of DOCONST
+                lda #>doconst           ; MSB of DOCONST
                 sta (tmp1),y
 
                 ; Now we save the constant number itself in the next cell
@@ -2410,7 +2416,7 @@ adjust_z:
                 sta (tmp1),y
                 iny
                 lda (tmp1),y
-                adc #0          ; only need carry
+                adc #0                  ; only need carry
                 sta (tmp1),y
               
                 inx
@@ -2488,6 +2494,7 @@ _got_name:
                 ; Check to see if this name already exists.
                 jsr xt_two_dup          ; ( addr u addr u )
                 jsr xt_find_name        ; ( addr u flag ) (non-zero nt as flag)
+
                 lda 0,x
                 ora 1,x
                 beq _new_name           ; We haven't seen this one before.
@@ -2496,6 +2503,7 @@ _got_name:
                 ; the message for it.
                 inx                     ; Drop flag (nt) from find-name.
                 inx
+
                 ; Check bit 7
                 bit status
                 bpl _redefined_name     ; Bit 7 is zero, so print the message.
@@ -2525,6 +2533,7 @@ _new_name:
                 lda #$7F                ; Clear bit 0 of status to indicate new word.
                 and status
                 sta status
+
 _process_name:
                 lda 0,x
                 sta tmp2                ; store length of string in tmp2
@@ -2536,7 +2545,7 @@ _process_name:
                 lda cp+1
                 sta tmp1+1
 
-                ; we need 8 bytes plus the length of the string for our new header.
+                ; We need 8 bytes plus the length of the string for our new header.
                 ; This is also the offset for the start of the code field (the
                 ; xt_ label) so we need to remember it. Otherwise, we could 
                 ; just allot the space afterwards
@@ -2572,6 +2581,7 @@ _process_name:
                 ; to "never native", user will have to decide if they should
                 ; be inlined
                 lda #NN 
+
                 ; Also, words defined by CREATE are marked in the header has
                 ; having a Code Field Area (CFA), which is a bit tricky for 
                 ; Subroutine Threaded Code (STC). We do this so >BODY works
@@ -2651,10 +2661,12 @@ _name_loop:
                 bcs _store_name
                 cmp #$41        ; ASCII 'A'
                 bcc _store_name
-                ; An uppercase letter has been located.  Make it
+
+                ; An uppercase letter has been located. Make it
                 ; lowercase.
                 clc
                 adc #$20
+
                 ; Fall into _store_name.
 
 _store_name:
@@ -2956,7 +2968,7 @@ xt_digit_question:
                 cmp #'9+1               ; this is actually ":"
                 bcc _checkbase
 
-                ; Well, then let's if this is the gap between "9" and "A"
+                ; Well, then let's see if this is the gap between "9" and "A"
                 ; so we can treat the whole range as a number
                 cmp #'A
                 bcc _done               ; failure flag is already set
@@ -3004,6 +3016,7 @@ z_digit_question:
         ; """
 xt_disasm:
                 jsr underflow_2
+
                 jsr disassembler
 
 z_disasm:       rts 
@@ -3045,7 +3058,7 @@ xt_question_do:
                 ; to mark which is which
                 lda #$ff                ; -1 is ?DO, jump to common code
                 sta tmp1
-                bra do_common
+                bra do_common           ; skip flag for DO
 
 ; ## DO ( limit start -- )(R: -- limit start)  "Start a loop"
 ; ## "do"  auto  ANS core
@@ -3076,7 +3089,7 @@ do_common:
                 
                 ; now we compile six dummy bytes that LOOP/+LOOP will
                 ; replace by the actual LDA/PHA instructions
-                lda #5                  ; we don't really care about the value 
+                lda #5                  ; we don't really care about the value,
                 tay                     ; so we use 5 to be tricky
 _loop:
                 sta (CP),y
@@ -3114,6 +3127,7 @@ _loop:
                 lda cp+1
                 adc #0          ; only care about carry
                 sta cp+1        ; fall through to _compile_do
+
 _compile_do:
                 ; compile runtime part of DO. 
                 ldy #do_runtime_end-do_runtime  ; counter
@@ -3192,8 +3206,7 @@ do_runtime:
                 inx
                 inx
                 inx
-                inx
-
+                inx             ; no RTS because this is copied into code
 do_runtime_end:
 
 question_do_runtime:
@@ -3221,7 +3234,7 @@ question_do_runtime:
                 rts
 _do_do:         
                 inx             ; clear flag from EQUAL off stack
-                inx
+                inx             ; no RTS because this is copied into code
 question_do_runtime_end:
 .scend
 
@@ -3232,9 +3245,7 @@ question_do_runtime_end:
         ; Create the payload for defining new defining words. See
         ; http://www.bradrodriguez.com/papers/moving3.htm and 
         ; the Developer Guide in the manual for a discussion of
-        ; DOES>'s internal workings.
-        ;
-        ; This uses tmp1 and tmp2
+        ; DOES>'s internal workings. This uses tmp1 and tmp2.
         ; """
 .scope
 xt_does:
@@ -3342,10 +3353,10 @@ xt_dot_paren:
                 lda #41     ; Right parenthesis
                 sta 0,x
                 stz 1,x
-                ; Call parse.
+
                 jsr xt_parse
-                ; Print the contents
                 jsr xt_type
+
 z_dot_paren:    rts
 .scend
 
@@ -3400,7 +3411,7 @@ xt_dot_r:
                 jsr xt_spaces
                 jsr xt_type
 
-z_dot_r:      rts 
+z_dot_r:        rts 
 .scend
         
         
@@ -3448,10 +3459,10 @@ xt_dot_s:
                 cpx #dsp0
                 beq _done
 
+_have_stack:
                 ; We have at least one element on the stack. The depth of the
                 ; stack is on the stack, we can use it as a counter. We go
                 ; from bottom to top
-_have_stack:
                 ply
 
                 lda #dsp0-1     ; go up one to avoid garbage
@@ -3511,12 +3522,13 @@ z_d_dot:        rts
 ; ## D_DOT_R ( d u -- ) "Print double right-justified u wide"
 ; ## "d.r"  tested  ANS double
         ; """http://forth-standard.org/standard/double/DDotR"""
+        ; Based on the Forth code
+        ;  : D.R >R TUCK DABS <# #S ROT SIGN #> R> OVER - SPACES TYPE ;
+        ; """
 .scope
 xt_d_dot_r:         
                 jsr underflow_3
-
                 ; From the forth code:
-; : d.r >r tuck dabs <# #s rot sign #> r> over - spaces type ;
                 jsr xt_to_r
                 jsr xt_tuck
                 jsr xt_dabs
@@ -3543,6 +3555,7 @@ xt_drop:
 
                 inx
                 inx
+
 z_drop:         rts
 
 
@@ -3610,6 +3623,7 @@ _next_char:
                 inc 2,x
                 bne _counter
                 inc 3,x
+
 _counter:
                 ; loop counter
                 lda 0,x
@@ -3694,7 +3708,7 @@ z_dup:          rts
 xt_ed:
                 jsr ed6502      ; kept in separate file
 
-z_ed:       rts 
+z_ed:           rts 
 
 
 ; ## EDITOR_WORDLIST ( -- u ) "WID for the Editor wordlist"
@@ -3722,8 +3736,8 @@ xt_endof:
                 ; Put an unconditional branch.
                 ldy #>branch_runtime
                 lda #<branch_runtime
-
                 jsr cmpl_subroutine
+
                 ; Put the address of the branch address on the stack.
                 jsr xt_here
 
@@ -3821,16 +3835,16 @@ xt_endcase:
                 lda #<xt_drop
                 jsr cmpl_subroutine
 
-                ; There are a number of address (of branches
-                ; that need their jump addressed filled in with
-                ; the address of right here).  Keep calling
-                ; THEN to deal with them until we reach the
+                ; There are a number of address (of branches that need their
+                ; jump addressed filled in with the address of right here).
+                ; Keep calling THEN to deal with them until we reach the
                 ; 0 that CASE put on the stack at the beginning.
 _endcase_loop:  
                 ; Check for 0 on the stack.
                 lda 0,x
                 ora 1,x
                 beq _done
+
                 jsr xt_then
                 bra _endcase_loop
 _done:
@@ -3941,12 +3955,12 @@ _table_loop:
                 inx
 
                 bra _table_loop
+
 _got_result:    
                 ; We arrive here with ( addr u -1 ) and know that we've found
                 ; a match. The index of the match+2 is in Y. 
                 inx                     ; drop flag, now ( addr u )
                 inx
-
                 dey                     ; go back to index we had
                 dey
 
@@ -4116,7 +4130,7 @@ xt_blank:
                 sta 0,x
                 stz 1,x
 
-                bra xt_fill
+                bra xt_fill     ; skip over code for ERASE
 
 
 ; ## ERASE ( addr u -- ) "Fill memory region with zeros"
@@ -4219,6 +4233,7 @@ xt_execute:
                 jsr underflow_1
 
                 jsr doexecute   ; do not combine to JMP (native coding)
+
 z_execute:      rts
 
 doexecute:
@@ -4349,8 +4364,6 @@ xt_find:
                 ; Convert ancient-type counted string address to
                 ; modern format
                 jsr xt_count            ; ( caddr -- addr u )
-
-
                 jsr xt_find_name        ; ( addr u -- nt | 0 )
 
                 lda 0,x
@@ -4368,8 +4381,9 @@ xt_find:
                 sta 3,x                 ; MSB of address
 
                 bra _done               ; ( addr 0 ) 
+
 _found_word:
-                ; We don't need the address after all, dump
+                ; We don't need the address after all, dump it
                 pla
                 pla
 
@@ -4390,10 +4404,11 @@ _found_word:
                 and #IM
                 bne _immediate          ; bit set, we're immediate
 
-                lda #$ff                ; We're not immediate, return -1
+                lda #$FF                ; We're not immediate, return -1
                 sta 0,x
                 sta 1,x
                 bra _done
+
 _immediate:
                 lda #1                  ; We're immediate, return 1
                 sta 0,x
@@ -4422,11 +4437,13 @@ xt_find_name:
                 lda 0,x
                 ora 1,x
                 bne _nonempty
+
                 jmp _fail_done
         
 _nonempty:      
                 ; Set up for traversing the wordlist search order.
                 stz tmp3                ; Start at the beginning
+
 _wordlist_loop: 
                 ldy #num_order_offset   ; Compare to byte variable #ORDER
                 lda tmp3
@@ -4474,11 +4491,13 @@ _compare_string:
 
                 ; second quick test: Is the first character the same?
                 lda (tmp2)      ; first character of mystery string
+
                 ; Lowercase the incoming charcter.
                 cmp #$5B        ; ASCII '[' (one past Z)
                 bcs _compare_first
                 cmp #$41        ; ASCII 'A'
                 bcc _compare_first
+
                 ; An uppercase letter has been located.  Make it
                 ; lowercase.
                 clc
@@ -4489,7 +4508,7 @@ _compare_first:
                 cmp (tmp1),y    ; first character of current word
                 bne _next_entry
 
-                ; string length are the same and the first character is the
+                ; String length is the same and the first character is the
                 ; same. If the length of the string is 1, we're already done
                 lda 0,x
                 dec
@@ -4503,7 +4522,6 @@ _compare_first:
                 ; because we've already compared the first char. 
 
                 ; The string of the word we're testing against is 8 bytes down
-
                 lda tmp1
                 pha             ; Preserve tmp1 on the return stack.
                 clc
@@ -4519,15 +4537,18 @@ _compare_first:
 
 _string_loop:
                 lda (tmp2),y    ; last char of mystery string
+
                 ; Lowercase the incoming charcter.
                 cmp #$5B         ; ASCII '[' (one past Z)
                 bcs _check_char
                 cmp #$41        ; ASCII 'A'
                 bcc _check_char
+
                 ; An uppercase letter has been located.  Make it
                 ; lowercase.
                 clc
                 adc #$20
+
 _check_char:    
                 cmp (tmp1),y    ; last char of word we're testing against
                 bne _next_entry_tmp1
@@ -4542,7 +4563,6 @@ _success_tmp1:
                 sta tmp1
 
 _success:
-
                 ; The strings match. Put correct nt NOS, because we'll drop
                 ; TOS before we leave
                 lda tmp1
@@ -4557,6 +4577,7 @@ _next_entry_tmp1:
                 sta tmp1+1
                 pla
                 sta tmp1
+
 _next_entry:    
                 ; Not the same, so we get the next word. Next header
                 ; address is two bytes down
@@ -4594,6 +4615,7 @@ z_find_name:    rts
         ; """https://forth-standard.org/standard/block/FLUSH"""
 xt_flush:
                 jsr xt_save_buffers
+
                 ; Set the buffer status to empty.
                 ldy #buffstatus_offset
                 lda #0
@@ -4629,7 +4651,8 @@ xt_fm_slash_mod:
                 jsr xt_dnegate  ; DNEGATE
                 jsr xt_r_from   ; R>
 
-_check_d:       ; if d is negative, add n1 to high cell of d
+_check_d:       
+                ; If d is negative, add n1 to high cell of d
                 lda 3,x         ; MSB of high word of d
                 bpl _multiply
 
@@ -4641,6 +4664,7 @@ _check_d:       ; if d is negative, add n1 to high cell of d
                 lda 1,x         ; MSB of n1
                 adc 3,x         ; MSB of dh
                 sta 3,x
+
 _multiply:
                 jsr xt_um_slash_mod     ; ( d n1 -- rem n2 )
 
@@ -4656,7 +4680,6 @@ _multiply:
 _done:
 z_fm_slash_mod: rts
 .scend
-
        
 
 ; ## FORTH ( -- ) "Replace first WID in search order with Forth-Wordlist"
@@ -4688,7 +4711,7 @@ load_evaluate:
         ; to compile high-level Forth words and user-defined words during
         ; start up and cold boot. In contrast to ACCEPT, we need to, uh,
         ; accept more than 255 characters here, even though it's a pain in
-        ; 8-bit.
+        ; the 8-bit.
         ; """
 .scope
 xt_evaluate:
@@ -4731,6 +4754,7 @@ _got_work:
                 sta (up),y
                 iny
                 sta (up),y
+
 _nozero:        
                 ; Save the input state to the Return Stack
                 jsr xt_input_to_r
@@ -4772,6 +4796,7 @@ _nozero:
                 iny
                 pla
                 sta (up),y
+
 _done:  
 z_evaluate:     rts
 .scend
