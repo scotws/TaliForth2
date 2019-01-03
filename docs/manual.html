@@ -6805,7 +6805,10 @@ followed by the Data Stack content (if any).</p>
 <code>0</code>
 </td>
 <td class="hdlist2">
-<p><em>Tali Forth</em> (&#8201;&#8212;&#8201;0 ) "Push 0 to Data Stack"</p>
+<p><em>Tali Forth</em> (&#8201;&#8212;&#8201;0 ) "Push 0 to Data Stack"
+The disassembler assumes that this routine does not use Y. Note
+that CASE and FORTH-WORDLIST use the same routine, as the WD for Forth
+is 0.</p>
 </td>
 </tr>
 <tr>

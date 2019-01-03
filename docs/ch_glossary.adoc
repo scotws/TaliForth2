@@ -94,6 +94,10 @@ https://forth-standard.org/standard/core/DivMOD
 https://forth-standard.org/standard/string/DivSTRING
 
 `0`:: _Tali Forth_ ( -- 0 ) "Push 0 to Data Stack"
+The disassembler assumes that this routine does not use Y. Note
+that CASE and FORTH-WORDLIST use the same routine, as the WD for Forth
+is 0.
+
 `0<`:: _ANS core_ ( n -- f ) "Return a TRUE flag if TOS negative"
 https://forth-standard.org/standard/core/Zeroless
 

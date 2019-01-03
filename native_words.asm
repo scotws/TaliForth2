@@ -7883,13 +7883,14 @@ z_recurse:      rts
         ; source, return false. When the input source is a string from EVALUATE,
         ; return false and perform no other action." See
         ; https://www.complang.tuwien.ac.at/forth/gforth/Docs-html/The-Input-Stream.html
-        ; and Conklin & Rather p. 156
+        ; and Conklin & Rather p. 156. Note we don't have to care about blocks
+        ; because REFILL is never used on blocks - Tali is able to evaluate the
+        ; entire block as a 1024 byte string.
         ; """"
 .scope
 xt_refill:      
                 ; Get input source from SOURCE-ID. This is an
                 ; optimized version of a subroutine jump to SOURCE-ID
-                ; TODO REFILL should check BLK first
                 lda insrc               ; cheat: We only check LSB
                 bne _src_not_kbd
 
@@ -11558,7 +11559,6 @@ z_words:        rts
         ; word's payload size in bytes (CFA plus PFA) in bytes. Does not
         ; count the final RTS.
         ; """
-.scope
 xt_wordsize:    
                 jsr underflow_1
 
@@ -11589,13 +11589,11 @@ xt_wordsize:
                 sta 1,x
 
 z_wordsize:     rts
-.scend
 
 
 ; ## XOR ( n n -- n ) "Logically XOR TOS and NOS"
 ; ## "xor"  auto  ANS core
         ; """https://forth-standard.org/standard/core/XOR"""
-.scope
 xt_xor:         
                 jsr underflow_2
 
@@ -11611,12 +11609,10 @@ xt_xor:
                 inx
 
 z_xor:          rts
-.scend
 
 
 ; ## ZERO ( -- 0 ) "Push 0 to Data Stack"
 ; ## "0"  auto  Tali Forth
-
         ; """The disassembler assumes that this routine does not use Y. Note
         ; that CASE and FORTH-WORDLIST use the same routine, as the WD for Forth
         ; is 0."""
@@ -11627,11 +11623,11 @@ xt_zero:
                 dex
                 stz 0,x
                 stz 1,x
-
 z_case:
 z_forth_wordlist:
 z_zero:         
                 rts
+
 
 ; ## ZERO_EQUAL ( n -- f ) "Check if TOS is zero"
 ; ## "0="  auto  ANS core
@@ -11726,14 +11722,13 @@ _got_zero:
 z_zero_unequal: rts
 .scend
 
-;
+
 ; ==========================================================
 ; EDITOR words        
 
 ; This routine is used by both enter-screen and erase-screen
 ; to get a buffer for the given screen number and set SCR to
 ; the given screen number.  This word is not in the dictionary.
-.scope                
 xt_editor_screen_helper:
                 jsr xt_dup
                 jsr xt_scr
@@ -11741,7 +11736,6 @@ xt_editor_screen_helper:
                 jsr xt_buffer
 z_editor_screen_helper:
                 rts
-.scend
                 
                 
 ; ## EDITOR_ENTER_SCREEN ( scr# -- ) "Enter all lines for given screen"
@@ -11751,8 +11745,10 @@ xt_editor_enter_screen:
                 ; Set the variable SCR and get a buffer for the
                 ; given screen number.
                 jsr xt_editor_screen_helper
+
                 ; Drop the buffer address.
                 jsr xt_drop
+
                 ; Overwrite the lines one at a time.
                 stz editor1
 _prompt_loop:
@@ -11762,13 +11758,16 @@ _prompt_loop:
                 lda editor1
                 sta 0,x
                 stz 1,x
+
                 ; Use the O word to prompt for overwrite.
                 jsr xt_editor_o
+
                 ; Move on to the next line.
                 inc editor1
                 lda #16
                 cmp editor1
                 bne _prompt_loop
+
 z_editor_enter_screen:
                 rts
 .scend                
@@ -11776,46 +11775,50 @@ z_editor_enter_screen:
 
 ; ## EDITOR_ERASE_SCREEN ( scr# -- ) "Erase all lines for given screen"
 ; ## "erase-screen"  tested  Tali Editor
-.scope
 xt_editor_erase_screen:
                 ; Set the variable SCR and get a buffer for the
                 ; given screen number.
                 jsr xt_editor_screen_helper
+
                 ; Put 1024 (chars/screen) on stack.
                 dex
                 dex
                 stz 0,x
-                lda #4          ; 4 in MSB makes 1024.
+                lda #4          ; 4 in MSB makes 1024 ($400).
                 sta 1,x
+
                 ; Erase the entire block (fill with spaces).
                 jsr xt_blank
+
                 ; Mark buffer as updated.
                 jsr xt_update
+
 z_editor_erase_screen:
                 rts
-.scend                
                 
                 
 ; ## EDITOR_EL ( line# -- ) "Erase the given line number"
 ; ## "el"  tested  Tali Editor
-.scope
 xt_editor_el:
                 ; Turn the line number into buffer offset.
                 ; This also loads the block into the buffer if it's
                 ; not there for some reason.
                 jsr xt_editor_line
+
                 ; Put 64 (# of chars/line) on the stack.
                 dex
                 dex
                 lda #64
                 sta 0,x
                 stz 1,x
+
                 ; Fill with spaces.
                 jsr xt_blank
+
                 ; Mark buffer as updated.
                 jsr xt_update
+
 z_editor_el:    rts
-.scend
 
 
 ; ## EDITOR_L ( -- ) "List the current screen"
@@ -11839,12 +11842,14 @@ xt_editor_l:
                 ; We're using sliteral, so we need to set up the
                 ; appropriate data structure (see sliteral)
                 bra _after_screen_msg
+
 _screen_msg:        
-.byte "Screen #"
+                .byte "Screen #"
 
 _after_screen_msg:
                 jsr sliteral_runtime
-.word _screen_msg, _after_screen_msg-_screen_msg
+                .word _screen_msg, _after_screen_msg-_screen_msg
+
                 jsr xt_type
 
                 ; Put the screen number and printed size for u.r on the stack.
@@ -11858,11 +11863,13 @@ _after_screen_msg:
                 jsr xt_u_dot_r
 
                 ; The address of the buffer is currently on the stack.
-                ; Print 64 chars at a time.  TYPE uses tmp1, so we'll
+                ; Print 64 chars at a time. TYPE uses tmp1, so we'll
                 ; keep track of the line number in tmp3.
                 stz tmp3
+
 _line_loop:
                 jsr xt_cr
+
                 ; Print the line number (2-space fixed width)
                 dex
                 dex
@@ -11940,7 +11947,6 @@ z_editor_line:  rts
 
 ; ## EDITOR_O ( line# -- ) "Overwrite the given line"
 ; ## "o"  tested  Tali Editor
-.scope
 xt_editor_o:
                 ; Print prompt
                 jsr xt_cr
@@ -11951,6 +11957,7 @@ xt_editor_o:
                 lda #42         ; ASCII for *
                 jsr emit_a
                 jsr xt_space
+
                 ; Accept new input (directly into the buffer)
                 jsr xt_editor_line
                 jsr xt_dup      ; Save a copy of the line address for later.
@@ -11960,6 +11967,7 @@ xt_editor_o:
                 sta 0,x
                 stz 1,x
                 jsr xt_accept
+
                 ; Fill the rest with spaces.
                 ; Stack is currently ( line_address numchars_from_accept )
                 jsr xt_dup
@@ -11973,10 +11981,10 @@ xt_editor_o:
                 jsr xt_rot
                 jsr xt_minus
                 jsr xt_blank
+
                 ; Mark buffer as updated.
                 jsr xt_update
                 
 z_editor_o:     rts
-.scend                
               
 ; END
