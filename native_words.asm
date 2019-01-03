@@ -4826,6 +4826,7 @@ xt_get_current:
 z_get_current:  rts
 .scend        
 
+
 ; ## GET_ORDER ( -- wid_n .. wid_1 n) "Get the current search order"
 ; ## "get-order" auto ANS search
         ; """https://forth-standard.org/standard/search/GET-ORDER"""
@@ -4836,6 +4837,7 @@ xt_get_order:
                 lda (up),y
                 sta tmp1
                 beq _done       ; If zero, there are no wordlists.
+
 _loop:  
                 ; Count down towards the front of the list.
                 ; By decrementing first, we also turn the length into an offset.
@@ -4846,16 +4848,19 @@ _loop:
                 clc
                 adc tmp1
                 tay
+
                 ; Put that wordlist id on the stack.
                 dex
                 dex
                 lda (up),y
                 sta 0,x         ; Search order array is bytes, so
                 stz 1,x         ; put a zero in the high byte.
+
                 ; See if that was the last one to process (first in the list).
                 lda #0
                 cmp tmp1
                 bne _loop
+
 _done:
                 ; Put the number of items on the stack.
                 dex
@@ -4926,7 +4931,7 @@ xt_hex:
 z_hex:          rts
 
 
-; ## HEXSTORE ( addr1 u1 addr2 -- u2 ) "Change base radix to hexadecimal"
+; ## HEXSTORE ( addr1 u1 addr2 -- u2 ) "Store a list of numbers"
 ; ## "hexstore"  auto  Tali 
         ; """Given a string addr1 u1 with numbers in the current base seperated
         ; by spaces, store the numbers at the address addr2, returning the
@@ -4983,7 +4988,6 @@ _have_chars_left:
                 clc
                 adc #8
                 tax
-
                 bra _loop
 
 _done:
@@ -5017,11 +5021,11 @@ xt_hold:
                 lda tohold
                 bne +
                 dec tohold+1
-*               dec tohold
+*
+                dec tohold
 
                 lda 0,x
                 sta (tohold)
-
                 inx
                 inx
 
@@ -5115,10 +5119,11 @@ zero_branch_runtime:
                 sta tmp1+1
 
                 bra _done
+
 _zero:
-                ; flag is FALSE (0) so we take the jump to the address given in the next
-                ; two bytes.  However, the address points to the last byte of the JSR
-                ; instruction, not to the next byte afterwards
+                ; Flag is FALSE (0) so we take the jump to the address given in
+                ; the next two bytes. However, the address points to the last
+                ; byte of the JSR instruction, not to the next byte afterwards
                 ldy #1
                 lda (tmpbranch),y
                 sta tmp1
@@ -5131,7 +5136,9 @@ _zero:
                 lda tmp1
                 bne +
                 dec tmp1+1
-*               dec tmp1
+*
+                dec tmp1
+
 _done:
                 ; However we got here, tmp1 has the value we push to jump
                 ; to
@@ -5183,7 +5190,7 @@ z_input:        rts
 
 ; ## INPUT_TO_R ( -- ) ( R: -- n n n n ) "Save input state to the Return Stack"
 ; ## "input>r"  tested  Tali Forth
-   	    ; """Save the current input state as defined by insrc, cib, ciblen, and
+   	; """Save the current input state as defined by insrc, cib, ciblen, and
         ; toin to the Return Stack. Used by EVALUTE.
         ;
         ; The naive way of doing
@@ -5241,20 +5248,20 @@ xt_int_to_name:
                 jsr underflow_1
 
                 ; Unfortunately, to find the header, we have to walk through
-                ; all of the wordlists.
-
-                ; We are running out of tmp variables.
-                ; (I'm assuming there is a reason this is avoiding tmp1)
-                ; so hold the current wordlist on the data stack.
-                ; This searches all of the wordlists in id order.
+                ; all of the wordlists. We are running out of tmp variables.
+                ; (I'm assuming there is a reason this is avoiding tmp1) so
+                ; hold the current wordlist on the data stack. This searches
+                ; all of the wordlists in id order.
                 dex
                 dex
                 stz 0,x
                 stz 1,x
+
 _wordlist_loop:
                 ; A needs to have the current wordlist id in it at
                 ; the top of this loop.
                 lda 0,x                 ; Get the current wordlist.
+
                 ; Get the DP for that wordlist.
                 asl                     ; Turn offset into cells offset.
                 clc
@@ -5271,11 +5278,11 @@ _wordlist_loop:
                 ora tmp2+1
                 beq _next_wordlist
                 
-
                 lda 2,x         ; Target xt is now behind wordlist id.
                 sta tmp3        ; Save target xt in tmp3
                 lda 3,x
                 sta tmp3+1
+
 _loop:
                 ldy #4          ; xt is four bytes down
                 lda (tmp2),y    ; LSB of xt of current nt
@@ -5287,6 +5294,7 @@ _loop:
                 lda (tmp2),y    ; MSB of xt of current nt
                 cmp tmp3+1
                 beq _match
+
 _no_match: 
                 ; no match, so we need to get the next word. Next nt is two
                 ; bytes down
@@ -5311,9 +5319,11 @@ _no_match:
                 pla
                 sta tmp2
                 bra _loop
+
 _zero:
                 ; if next word is zero, the xt has no nt in this wordlist
                 pla             ; Leftover from above loop
+
 _next_wordlist: 
                 ; Move on to the next wordlist.
                 lda 0,x
@@ -5331,10 +5341,12 @@ _next_wordlist:
                 stz 0,x
                 stz 1,x
                 bra z_int_to_name
+
 _match:
-                ; We found it.. remove wordlist id from stack.
+                ; We found it. Remove wordlist id from stack.
                 inx
                 inx
+
                 ; It's a match! Replace TOS with nt
                 lda tmp2
                 sta 0,x
@@ -5373,16 +5385,18 @@ xt_is:
                 lda state
                 ora state+1
                 beq _interpreting
+
 _compiling:
-                ; Run ['] to compile the xt of the next word
-                ; as a literal.
+                ; Run ['] to compile the xt of the next word as a literal.
                 jsr xt_bracket_tick
 
                 ; Postpone DEFER! by compiling a JSR to it.
                 ldy #>xt_defer_store
                 lda #<xt_defer_store
                 jsr cmpl_subroutine
+
                 bra _done
+
 _interpreting:
                 jsr xt_tick
                 jsr xt_defer_store
@@ -5456,7 +5470,6 @@ key_a:
                 jmp (input)             ; JSR/RTS
 
 
-
 ; ## LATESTNT ( -- nt ) "Push most recent nt to the stack"
 ; ## "latestnt"  auto  Tali Forth
         ; """www.complang.tuwien.ac.at/forth/gforth/Docs-html/Name-token.html
@@ -5467,6 +5480,7 @@ xt_latestnt:
                 dex
 
                 jsr current_to_dp
+
                 lda dp
                 sta 0,x
                 lda dp+1
@@ -5481,13 +5495,14 @@ z_latestnt:     rts
 xt_latestxt:    
                 jsr xt_latestnt         ; ( nt )
                 jsr xt_name_to_int      ; ( xt ) 
+
 z_latestxt:     rts
 
 
 ; ## LEAVE ( -- ) "Leave DO/LOOP construct"
 ; ## "leave"  auto  ANS core
         ; """https://forth-standard.org/standard/core/LEAVE
-        ; Note that this does not work with  anything but a DO/LOOP in
+        ; Note that this does not work with anything but a DO/LOOP in
         ; contrast to other versions such as discussed at
         ; http://blogs.msdn.com/b/ashleyf/archive/2011/02/06/loopty-do-i-loop.aspx
         ;
@@ -5548,6 +5563,7 @@ xt_less_number_sign:
 
                 inx
                 inx
+
 z_less_number_sign:
                 rts
 
@@ -5589,8 +5605,10 @@ xt_list:
                 ; Save the screen number in SCR
                 jsr xt_scr
                 jsr xt_store
+
                 ; Use L from the editor-wordlist to display the screen.
                 jsr xt_editor_l
+
 z_list:         rts
 .scend
         
@@ -5676,15 +5694,17 @@ xt_load:
                 dey
                 lda (up),y
                 pha
+
                 ; Set BLK to the given block/screen number.
-;                ldy #blk_offset    ; blk_offset already in y
                 lda 0,x
                 sta (up),y
                 iny
                 lda 1,x
                 sta (up),y
+
                 ; Load that block into a buffer
                 jsr xt_block
+
                 ; Put 1024 on the stack for the screen length.
                 dex
                 dex
@@ -5720,6 +5740,7 @@ xt_load:
                 lda (up),y
                 sta 1,x
                 jsr xt_block
+
                 ; Drop the buffer address.
                 inx
                 inx
@@ -5738,7 +5759,6 @@ z_load:         rts
         ; In Forth, this is 
         ;       : LOOP  POSTPONE 1 POSTPONE (+LOOP) , POSTPONE UNLOOP ;
         ;       IMMEDIATE ; COMPILE-ONLY
-        ; This drops through to +LOOP
         ; """
 xt_loop:
                 ; Have the finished word push 1 on the stack
@@ -5827,7 +5847,7 @@ xt_plus_loop:
                 ; now compile this in the DO/?DO routine
                 ldy #0
 
-                lda #$a9        ; opcode for LDA immediate
+                lda #$A9        ; opcode for LDA immediate
                 sta (tmp1),y
                 iny
                 lda tmp2+1      ; MSB
@@ -5837,7 +5857,7 @@ xt_plus_loop:
                 sta (tmp1),y
                 iny
 
-                lda #$a9        ; opcode for LDA immediate
+                lda #$A9        ; opcode for LDA immediate
                 sta (tmp1),y
                 iny
                 lda tmp2        ; LSB
@@ -5852,7 +5872,7 @@ z_plus_loop:    rts
 plus_loop_runtime:
         ; """Runtime compile for loop control. This is used for both +LOOP and
         ; LOOP which are defined at high level. Note we use a fudge factor for
-        ; loop  control so we can test with the Overflow Flag. See 
+        ; loop control so we can test with the Overflow Flag. See 
         ; the Control Flow section of the manual for details.
         ; The step value is TOS in the loop. This
         ; must always be native compiled. In some Forths, this is a separate
@@ -5875,7 +5895,7 @@ plus_loop_runtime:
                 inx             ; dump step from TOS 
                 inx
 
-                ; if V flag is set, we're done looping and continue
+                ; If V flag is set, we're done looping and continue
                 ; after the +LOOP instruction
                 bvs _hack+3     ; skip over JMP instruction
 
@@ -5883,7 +5903,7 @@ _hack:          ; This is why this routine must be natively compiled: We
                 ; compile the opcode for JMP here without an address to 
                 ; go to, which is added by the next next instruction of
                 ; LOOP/+LOOP during compile time
-                .byte $4c
+                .byte $4C
 .scend
 plus_loop_runtime_end:
 
@@ -5901,11 +5921,13 @@ xt_lshift:
                 beq _done
 
                 tay
+
 _loop:
                 asl 2,x
                 rol 3,x
                 dey
                 bne _loop
+
 _done:
                 inx
                 inx
@@ -5988,6 +6010,7 @@ xt_marker:
                 ; uses tmp1 and tmp2, so we take the speed hit and push stuff
                 ; to the stack
                 jsr current_to_dp
+
                 lda dp
                 pha
                 lda dp+1
@@ -6079,6 +6102,7 @@ marker_runtime:
                 ; Conveniently, the offset into both tmp1 and UP is 4
                 ; to start restoring the wordlists and search order.
                 ldy #4
+
 _marker_restore_loop:
                 ; Copy from the dictionary back on top of the wordlists
                 ; and search order.
@@ -6090,6 +6114,7 @@ _marker_restore_loop:
                 bne _marker_restore_loop
 
                 jsr dp_to_current       ; Move the CURRENT DP back.
+
                 ; The return instruction takes us back to the original caller
                 rts
 .scend
@@ -6118,6 +6143,7 @@ xt_max:
 
                 ; handle overflow, because we use signed numbers
                 eor #$80        ; complement negative flag
+
 _no_overflow:
                 ; if negative, NOS is larger and needs to be kept
                 bmi _keep_nos
@@ -6127,6 +6153,7 @@ _no_overflow:
                 sta 2,x
                 lda 1,x
                 sta 3,x
+
 _keep_nos:
                 inx
                 inx
@@ -6156,6 +6183,7 @@ xt_min:
 
                 ; handle overflow because we use signed numbers
                 eor #$80
+
 _no_overflow:
                 ; if negative, NOS is larger and needs to be dumped
                 bpl _keep_nos
@@ -6165,6 +6193,7 @@ _no_overflow:
                 sta 2,x
                 lda 1,x
                 sta 3,x
+
 _keep_nos:
                 inx
                 inx
@@ -6201,6 +6230,7 @@ z_minus:        rts
 .scope
 xt_minus_leading:
                 jsr underflow_2
+
 _loop:
                 ; Quit if we were given an empty string. This also terminates
                 ; the main loop
@@ -6254,11 +6284,12 @@ xt_minus_trailing:
                 lda tmp1
                 bne +
                 dec tmp1+1
-*               dec tmp1
+*               
+                dec tmp1
 
+_loop:
                 ; While spaces are found, move tmp1 backwards and
                 ; decrease the count on the data stack.
-_loop:
                 lda (tmp1)
                 cmp #AscSP
                 bne _done
@@ -6267,13 +6298,15 @@ _loop:
                 lda tmp1
                 bne +
                 dec tmp1+1
-*               dec tmp1
+*               
+                dec tmp1
 
                 ; Decrement count by one.
                 lda 0,x
                 bne +
                 dec 1,x
-*               dec 0,x
+*               
+                dec 0,x
 
                 ; Check if there are any characters left.
                 lda 0,x
@@ -6325,18 +6358,19 @@ xt_move:
                 lda 3,x                 ; MSB of addr2
                 cmp 5,x                 ; MSB of addr1
                 beq _lsb                ; wasn't helpful, move to LSB
-
                 bcs _to_move_up         ; we want CMOVE>
 
                 jmp xt_cmove            ; JSR/RTS
+
 _lsb:        
                 ; MSB were equal, so do the whole thing over with LSB
                 lda 2,x                 ; LSB of addr2
                 cmp 4,x                 ; LSB of addr1
                 beq _equal              ; LSB is equal as well 
-
                 bcs _to_move_up         ; we want CMOVE>
+
                 jmp xt_cmove            ; JSR/RTS
+
 _to_move_up:
                 jmp xt_cmove_up         ; JSR/RTS
 _equal:         
@@ -6468,6 +6502,7 @@ xt_nip:
                 sta 2,x
                 lda 1,x         ; MSB
                 sta 3,x
+
                 inx
                 inx
 
@@ -6496,13 +6531,14 @@ xt_not_equals:
                 cmp 3,x
                 bne _not_equal
 
-                lda #$ff
+                lda #$FF
                 bra _done
+
 _not_equal:     
                 dey                     ; drop thru to done
+
 _done:          
                 tya
-
                 inx
                 inx
                 sta 0,x
@@ -6568,7 +6604,7 @@ xt_number:
                 ; If the first character is a minus, strip it off and set
                 ; the flag
                 lda (2,x)
-                cmp #$2d        ; ASCII for "-"
+                cmp #$2D        ; ASCII for "-"
                 bne _check_dot
 
                 ; It's a minus
@@ -6595,7 +6631,8 @@ _check_dot:
                 lda tmptos
                 bne +
                 dec tmptos+1
-*               dec tmptos
+*               
+                dec tmptos
 
                 lda (tmptos)
                 cmp #'.
@@ -6605,8 +6642,9 @@ _check_dot:
                 ; the fact and reduce string length by one
                 dec tmpdsp
                 dec 0,x
+
 _main:                
-                ; set up stack for subroutine jump to >NUMBER, which means
+                ; Set up stack for subroutine jump to >NUMBER, which means
                 ; we have to go ( addr u --> ud addr u )
                 dex
                 dex
@@ -6637,10 +6675,10 @@ _main:
                 ; so we print an error and abort. If the NUMBER was called
                 ; by INTERPRET, we've already checked for Forth words, so
                 ; we're in deep trouble one way or another
-                lda #$3e        ; ASCII for ">"
+                lda #$3E        ; ASCII for ">"
                 jsr emit_a
                 jsr xt_type
-                lda #$3c        ; ASCII for "<"
+                lda #$3C        ; ASCII for "<"
                 jsr emit_a
                 jsr xt_space
 
@@ -6660,9 +6698,8 @@ _all_converted:
                 beq _single
 
                 ; Set status bit 5 to indicate this is a double number
-                lda status
-                ora #$20
-                sta status
+                lda #%00100000
+                tsb status
 
                 ; This is a double cell number. If it had a minus, we'll have
                 ; to negate it
@@ -6672,15 +6709,15 @@ _all_converted:
                 jsr xt_dnegate
 
                 bra _done
+
 _single:
                 ; This is a single number, so we just drop the top cell
                 inx
                 inx
 
                 ; Clear status bit 5 to indicate this is a single number
-                lda status
-                and #$DF
-                sta status
+                lda #%00100000
+                trb status
 
                 ; If we had a minus, we'll have to negate it
                 lda tmpdsp+1
@@ -6707,11 +6744,12 @@ xt_number_sign:
                 jsr xt_base
                 jsr xt_fetch            ; ( ud1 base )
 
-                ; The following code is the ancient Forth word UD/MOD, which in various
-                ; Forths (including Gforth) lives on under the hood, even though it's not
-                ; an ANS standard word, it doesn't appear in the docs, it's only used
-                ; here, and there are no tests for it. This is why we got rid of it. We'll
-                ; be converting this mess to something more sane in the long run.
+                ; The following code is the ancient Forth word UD/MOD, which in
+                ; various Forths (including Gforth) lives on under the hood,
+                ; even though it's not an ANS standard word, it doesn't appear
+                ; in the docs, it's only used here, and there are no tests for
+                ; it. This is why we got rid of it. We'll be converting this
+                ; mess to something more sane in the long run.
                 jsr xt_to_r             ; >r
                 jsr xt_zero             ; 0
                 jsr xt_r_fetch          ; r@
@@ -6820,10 +6858,11 @@ xt_of:
                 lda #<xt_over
                 jsr cmpl_subroutine
 
-                ; Pospone = (eg. compile a jsr to it)
+                ; Postpone = (EQUAL), that is, compile a jsr to it
                 ldy #>xt_equal
                 lda #<xt_equal
                 jsr cmpl_subroutine
+
                 jsr xt_if
 
                 ; If it's true, consume the original value.
@@ -6831,6 +6870,7 @@ xt_of:
                 ldy #>xt_drop
                 lda #<xt_drop
                 jsr cmpl_subroutine
+
 z_of:           rts
 .scend
 
@@ -6861,7 +6901,8 @@ xt_one_minus:
                 lda 0,x
                 bne +
                 dec 1,x
-*               dec 0,x
+*               
+                dec 0,x
 
 z_one_minus:    rts
 .scend
@@ -6881,6 +6922,7 @@ xt_one_plus:
                 inc 0,x
                 bne _done
                 inc 1,x
+
 _done:
 z_char_plus:
 z_one_plus:     rts
@@ -6898,6 +6940,7 @@ xt_only:
                 lda #$FF
                 sta 0,x
                 sta 1,x
+
                 ; Invoke set-order to set the minimum search order.
                 jsr xt_set_order
 
@@ -6924,6 +6967,7 @@ xt_or:
 
 z_or:           rts
 
+
 ; ## ORDER ( -- ) "Print current word order list and current WID"
 ; ## "order"  auto  ANS core
         ; """https://forth-standard.org/standard/search/ORDER
@@ -6934,10 +6978,10 @@ z_or:           rts
         ; A Forth implementation of this word is:
         ;
         ; 	: .wid ( wid -- )
-        ; 	dup 0=  if ." FORTH "  drop    else
-        ; 	dup 1 = if ." EDITOR " drop    else
-        ; 	dup 2 = if ." ASSEMBLER " drop else
-        ; 	dup 3 = if ." ROOT " drop      else
+        ; 	dup 0=  if ." Forth "  drop    else
+        ; 	dup 1 = if ." Editor " drop    else
+        ; 	dup 2 = if ." Assembler " drop else
+        ; 	dup 3 = if ." Root " drop      else
         ; 	           . ( just print the number )
         ; 	then then then then ;
         ;
@@ -7130,13 +7174,16 @@ xt_paren:
                 lda #41     ; Right parenthesis
                 sta 0,x
                 stz 1,x
+
                 ; Call parse.
                 jsr xt_parse
+
                 ; Throw away the result.
                 inx
                 inx
                 inx
                 inx
+
 z_paren:        rts
 .scend
 
@@ -7306,7 +7353,7 @@ _go_parse:
                 lda 0,x
                 sta tmptos
 
-               ; We can now prepare the Data Stack for the return value
+                ; We can now prepare the Data Stack for the return value
                 dex
                 dex
  
