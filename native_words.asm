@@ -9254,10 +9254,9 @@ xt_sign:
 
                 inx
                 inx
-
                 bra _done
 _minus:
-                lda #$2d        ; ASCII for "-"
+                lda #$2D        ; ASCII for "-"
                 sta 0,x         ; overwrite TOS
                 stz 1,x         ; paranoid
 
@@ -9287,15 +9286,15 @@ xt_slash:
                 bra _common
 
 xt_slash_mod:
-                ; Note that MOD accesses this code
+                ; Note that /MOD accesses this code
                 lda #$FF
                 pha             ; falls through to _common
 
 _common:
-                jsr xt_to_r
-                jsr xt_s_to_d
-                jsr xt_r_from
-                jsr xt_sm_slash_rem
+                jsr xt_to_r             ; >R
+                jsr xt_s_to_d           ; S>D
+                jsr xt_r_from           ; R>
+                jsr xt_sm_slash_rem     ; SM/REM
 
                 ; Get the flag back from the 65c02's stack. Zero is SLASH, 
                 ; $FF is SLASH MOD
@@ -9357,6 +9356,7 @@ xt_slash_string:
 z_slash_string: rts
 .scend
 
+
 ; ## SLITERAL ( addr u -- )( -- addr u ) "Compile a string for runtime"
 ; ## "sliteral" auto  ANS string
         ; """https://forth-standard.org/standard/string/SLITERAL
@@ -9366,16 +9366,16 @@ z_slash_string: rts
 xt_sliteral:
                 jsr underflow_2
 
-                ; We can't assume that ( addr u ) of the current
-                ; string is in a stable area (eg. already in the
-                ; dictionary.)  Copy the string data into the
-                ; dictionary using move.
+                ; We can't assume that ( addr u ) of the current string is in
+                ; a stable area (eg. already in the dictionary.) Copy the
+                ; string data into the dictionary using move.
 
                 ; Put a jmp over the string data with address to be filled
                 ; in later.
                 lda #$4C
                 jsr cmpl_a
-                ;; Address to be filled in later.
+
+                ; Address to be filled in later.
                 jsr cmpl_a
                 jsr cmpl_a
 
@@ -9387,16 +9387,19 @@ xt_sliteral:
                 sec
                 sbc #6
                 tax
+
                 ; Move addr down from TOS-4 to TOS-2
                 lda 8,x
                 sta 4,x
                 lda 9,x
                 sta 5,x
+
                 ; Copy u from TOS-3 to TOS
                 lda 6,x
                 sta 0,x
                 lda 7,x
                 sta 1,x
+
                 ; Put HERE into TOS-1 and TOS-4
                 lda cp
                 sta 8,x
@@ -9407,6 +9410,7 @@ xt_sliteral:
 
                 ; Copy the string into the dictionary.
                 jsr xt_move
+
                 ; Update cp.
                 clc
                 lda cp
@@ -9496,7 +9500,6 @@ sliteral_runtime:
 
                 ; Walk through both and save them
                 ldy #1          ; adjust for JSR/RTS mechanics on 65c02
-
                 lda (tmp1),y
                 sta 2,x         ; LSB of address
                 iny
@@ -9608,11 +9611,10 @@ z_source:       rts
 
 ; ## SOURCE_ID ( -- n ) "Return source identifier"
 ; ## "source-id"  tested  ANS core ext
-        ; """https://forth-standard.org/standard/core/SOURCE-ID
-        ; Identify the input source unless it is a block (s. Conklin &
-        ; Rather p. 156). Since we don't have blocks (yet), this will give
-        ; the input source: 0 is keyboard, -1 (0ffff) is character string,
-        ; and a text file gives the fileid.
+        ; """https://forth-standard.org/standard/core/SOURCE-ID Identify the
+        ; input source unless it is a block (s. Conklin & Rather p. 156). This
+        ; will give the input source: 0 is keyboard, -1 ($FFFF) is character
+        ; string, and a text file gives the fileid.
         ; """
 xt_source_id:   
                 dex
@@ -9648,7 +9650,7 @@ xt_spaces:
                 ora 1,x
                 beq _done
 
-                ; usually we're only going to print far less than 256 spaces,
+                ; Usually we're only going to print far less than 256 spaces,
                 ; so we create a quick loop for that. Short loop could be realized
                 ; as a separate subroutine, but unless we're really pressed for
                 ; memory at some point, this is faster
@@ -9666,7 +9668,7 @@ _quick_loop:
                 bra _quick_loop
 
 _lots_of_spaces:
-                ; we go through the first loop once to get rid of the lower
+                ; We go through the first loop once to get rid of the lower
                 ; counter byte. This could be zero
                 ldy 0,x
 
@@ -9779,7 +9781,6 @@ z_state:        rts
 ; ## STORE ( n addr -- ) "Store TOS in memory"
 ; ## "!"  auto  ANS core
         ; """https://forth-standard.org/standard/core/Store"""
-.scope
 xt_store:
                 jsr underflow_2
 
@@ -9799,7 +9800,6 @@ xt_store:
                 inx
 
 z_store:        rts
-.scend
  
         
 ; ## STRIP_UNDERFLOW ( -- addr ) "Return address where underflow status is kept"
@@ -9808,7 +9808,6 @@ z_store:        rts
         ; checking should be removed during the compilation of new words.
         ; Default is false.
         ; """
-.scope
 xt_strip_underflow:
                 dex
                 dex
@@ -9820,14 +9819,12 @@ xt_strip_underflow:
 
 z_strip_underflow:     
                 rts
-.scend
 
 
 ; ## SWAP ( b a -- a b ) "Exchange TOS and NOS"
 ; ## "swap"  auto  ANS core
         ; """https://forth-standard.org/standard/core/SWAP"""
 xt_swap:        
-.scope
                 jsr underflow_2
 
                 lda 0,x         ; LSB
@@ -9841,13 +9838,11 @@ xt_swap:
                 sty 1,x
 
 z_swap:         rts
-.scend
 
 
 ; ## THEN (C: orig -- ) ( -- ) "Conditional flow control"
 ; ## "then"  auto  ANS core
         ; """http://forth-standard.org/standard/core/THEN"""
-.scope
 xt_then:
                 ; Get the address to jump to.
                 jsr xt_here
@@ -9858,7 +9853,6 @@ xt_then:
                 jsr xt_store
 
 z_then:         rts
-.scend
 
 
 ; ## THRU ( scr# scr# -- ) "Load screens in the given range"
@@ -9899,6 +9893,7 @@ _thru_loop:
                 sta tmp1
                 pla
                 sta tmp1+1
+
                 ; Get the ending screen.
                 pla
                 sta tmp2
@@ -9920,6 +9915,7 @@ _next_screen:
                 pha
                 lda tmp2
                 pha
+
                 ; Increment the current screen.
                 inc tmp1
                 bne +
@@ -9934,8 +9930,6 @@ _next_screen:
                 lda tmp1+1
                 sta 1,x
                 bra _thru_loop
-                
-                
 _done:  
 z_thru:         rts
 .scend
@@ -10029,7 +10023,10 @@ xt_to:
                 ;       inx                     - E8
                 ;       inx                     - E8
                 ;
-                ; which at least is nice and short.
+                ; which at least is nice and short. Other than that, we pretty
+                ; much have to do this the hard and long way, because with the
+                ; LSBs and MSBs, we can't really put the numbers in a data
+                ; range and store them with a loop. Sigh.
                 
                 ldy #$00                ; Code for LDA 0,X
                 lda #$B5
@@ -10062,6 +10059,7 @@ xt_to:
                 jsr cmpl_word
 
                 bra _done
+
 _interpret:
                 ; We're interpreting, so we arrive here with n 
                 ; on the stack. This is an annoying place to put
