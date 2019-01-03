@@ -390,7 +390,7 @@ Screen #   0
  ok
 editor-wordlist >order  ok
 4 o 
- 4 * ( Blocks 3-7 contain binary data )  ok   
+ 4 * ( Blocks 3-6 contain binary data )  ok   
 5 o 
  5 * ( Blocks 1-2 contain the routines to access this data )  ok
 l 
@@ -399,7 +399,7 @@ Screen #   0
  1                                                                 
  2 ( There are 128 blocks on this EEPROM )                         
  3                                                                 
- 4 ( Blocks 3-7 contain binary data )                              
+ 4 ( Blocks 3-6 contain binary data )                              
  5 ( Blocks 1-2 contain the routines to access this data )         
  6                                                                 
  7                                                                 
@@ -479,7 +479,7 @@ cell is 2047.  Please note that the code given above does not range check the
 index, so it is up to the user to not exceed this value or to add range
 checking.
 
-The blocks 3-7 being used to store the array may be uninitialized or may have
+The blocks 3-6 being used to store the array may be uninitialized or may have
 been initialized for text.  We'll use the helper words to initialize all of the
 elements in the array, and then place some data into the array.
 
