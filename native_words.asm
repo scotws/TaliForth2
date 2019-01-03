@@ -532,32 +532,7 @@ _recall_history:
                 lda #%00001000
                 trb status
 
-                ; Generate the address of the buffer in tmp3. Start with the
-                ; base address.
-                lda #<hist_buff
-                sta tmp3
-                lda #>hist_buff
-                sta tmp3+1
-
-                ; This is a bit annoying as some bits go into each byte.
-                ; .....xxx gets put into address like ......xx x.......
-                lda status
-                ror
-                and #3
-                clc
-                adc tmp3+1
-                sta tmp3+1
-
-                lda status
-                ror             ; Rotate through carry into msb.
-                ror
-                and #$80
-                clc
-                adc tmp3
-                sta tmp3
-                bcc +           ; Increment the upper byte on carry
-                inc tmp3+1
-*
+                jsr _total_recall
                 
                 ; tmp3 now has the address of the previous history buffer.
                 ; First byte of buffer is length. Clear the line by sending
@@ -625,6 +600,36 @@ _hist_filled_buffer:
 _done:
                 ; Copy the input buffer into the currently
                 ; selected history buffer.
+                jsr _total_recall 
+                sta status+1
+
+                ; Also save it in the first buffer byte.
+                ldy #0
+                sta (tmp3),y
+
+                ; Move path the count to the data bytes
+                inc tmp3
+                bne +           ; Increment the upper byte on carry.
+                inc tmp3+1
+*                
+                ; Copy the characters from the input buffer to the
+                ; history buffer.
+
+_save_history_loop: 
+                cpy status+1
+                beq _save_history_done
+
+                lda (tmp1),y
+                sta (tmp3),y
+                iny
+                bra _save_history_loop
+
+_save_history_done:
+z_accept:       
+                rts
+
+_total_recall:
+        ; """Internal subroutine for ACCEPT that recalls history entry"""
                 
                 ; Generate the address of the buffer in tmp3. Start with the
                 ; base address.
@@ -657,35 +662,12 @@ _done:
                 tya
                 cmp #$80
                 bcc +
-                lda #$7f
+                lda #$7F
 *
-                sta status+1
-
-                ; Also save it in the first buffer byte.
-                ldy #0
-                sta (tmp3),y
-
-                ; Move path the count to the data bytes
-                inc tmp3
-                bne +           ; Increment the upper byte on carry.
-                inc tmp3+1
-*                
-                ; Copy the characters from the input buffer to the
-                ; history buffer.
-
-_save_history_loop: 
-                cpy status+1
-                beq _save_history_done
-
-                lda (tmp1),y
-                sta (tmp3),y
-                iny
-                bra _save_history_loop
-
-_save_history_done:
-z_accept:       
                 rts
 .scend
+
+
 
 
 ; ## ACTION_OF ( "name" -- xt ) "Get named deferred word's xt"
