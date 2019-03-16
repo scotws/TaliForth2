@@ -36,18 +36,18 @@ files should not contain tabs.
 
 ### Running tests
 
-To run the test suite, simply run the talitest.py script in this folder.
+To run the test suite, simply run the **talitest.py** script in this folder.
 The output will show up on the screen and a summary will display at
 the end.  The results can be found in the file results.txt once it
 completes.  This should work on all systems.
 
-If you have a Linux machine, the ptest.sh can be used instead.  This
-spawns a separate process for each test (14 at the time of this
-writing) and runs them all in parallel.  With a multicore CPU, this
-noticeably shortens the test time.  This script runs the tests with
-the -m (--mute) option to supress output and only displays the summary
-results for each test.  Once all of the test have completed, the
-results are compiled into the results.txt file.
+If you have a Linux machine, the shell script **ptest.sh** can be used
+instead.  This spawns a separate process for each test (14 at the time
+of this writing) and runs them all in parallel.  With a multicore CPU,
+this noticeably shortens the test time.  This script runs the tests
+with the -m (--mute) option to supress output and only displays the
+summary results for each test.  Once all of the test have completed,
+the results are compiled into the results.txt file.
 
 It's worth noting that if you interrupt ptest.sh (eg. with a CTRL-C)
 it will leave behind some "results_testname.txt" files.  These can
