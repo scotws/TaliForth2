@@ -6,7 +6,7 @@
 
 # This list will need to be kept in sync with the one in talitest.py
 LEGAL_TESTS=( core_a core_b core_c string double facility ed asm
-              stringlong tali tools block search user cycles )
+              tali tools block search user cycles )
 
 
 # Launch the tester for each .fs file except tester.fs
