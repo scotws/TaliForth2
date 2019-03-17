@@ -14,9 +14,6 @@ can be triggered with the `--tests all`. The files roughly follow the separation
 into ANS word sets (see https://forth-standard.org/standard/words). Words
 special to Tali Forth have their own file, `tali.fs`. 
 
-Currently, the tests suite is in ALPHA state as all of Tali Forth 2. Some tests
-are missing, some other are only partial.
-
 ## Source of tests
 
 The tests themselves originated with John Hayes S1I (see header of `tester.fs`
@@ -38,15 +35,15 @@ files should not contain tabs.
 
 To run the test suite, simply run the **talitest.py** script in this folder.
 The output will show up on the screen and a summary will display at
-the end.  The results can be found in the file results.txt once it
-completes.  This should work on all systems.
+the end. The results can be found in the file results.txt once it
+completes. This should work on all systems.
 
 If you have a Linux machine, the shell script **ptest.sh** can be used
-instead.  This spawns a separate process for each test (14 at the time
-of this writing) and runs them all in parallel.  With a multicore CPU,
-this noticeably shortens the test time.  This script runs the tests
+instead. This spawns a separate process for each test (14 at the time
+of this writing) and runs them all in parallel. With a multicore CPU,
+this noticeably shortens the test time. This script runs the tests
 with the -m (--mute) option to supress output and only displays the
-summary results for each test.  Once all of the test have completed,
+summary results for each test. Once all of the test have completed,
 the results are compiled into the results.txt file.
 
 It's worth noting that if you interrupt ptest.sh (eg. with a CTRL-C)
