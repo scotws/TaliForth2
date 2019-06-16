@@ -1,7 +1,7 @@
 ; This is the platform file for 65C02 based Apple 1 machines
-; This version has a memory layout for ROM based TaliForth2
-; Jump to $E000 from the WOZMON with "E000R" after burning the 
-; Forth into ROM.
+; This version has a memory layout for RAM based TaliForth2
+; Jump to $2900 from the WOZMON with "2900R" after loading the
+; Forth into RAM.
 ; The original Apple 1 has a 6502, so TaliForth2 will not work
 ; on an origial Apple 1. But some replica machines (such as the
 ; Replica 1 from Vince Briel) have a 65C02.
@@ -12,7 +12,7 @@
 ;  * lua_6502, an 65C02 Emulator written in Lua 5.3+
 ;    https://github.com/JorjBauer/lua-6502
 
-.org $8000
+.org $2900
 
 ; I/O facilities are handled in the separate kernel files because of their
 ; hardware dependencies. See docs/memorymap.txt for a discussion of Tali's
@@ -62,11 +62,11 @@
 ;           |                   |
 ;           |                   |
 ;           |                   |
-;    $7C00  +-------------------+  hist_buff, cp_end
+;    $2500  +-------------------+  hist_buff, cp_end
 ;           |   Input History   |
 ;           |    for ACCEPT     |
 ;           |  8x128B buffers   |
-;    $7fff  +-------------------+  ram_end
+;    $28ff  +-------------------+  ram_end
 
 
 ; HARD PHYSICAL ADDRESSES
@@ -77,7 +77,7 @@
 ; help people new to these things.
 
 .alias ram_start $0000          ; start of installed 32 KiB of RAM
-.alias ram_end   $8000-1        ; end of installed RAM
+.alias ram_end   $2900-1        ; end of free RAM
 .alias zpage     ram_start      ; begin of Zero Page ($0000-$00ff)
 .alias stack0    $0100          ; begin of Return Stack ($0100-$01ff)
 .alias hist_buff ram_end-$03ff  ; begin of history buffers
@@ -105,12 +105,6 @@
 ; =====================================================================
 ; FINALLY
 
-; Of the 32 KiB we use, 24 KiB are reserved for Tali (from $8000 to $DFFF)
-; and the last eight (from $E000 to $FFFF) are left for whatever the user
-; wants to use them for.
-
-.advance $e000
-
 ; Default kernel file for Tali Forth 2
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 19. Jan 2014
@@ -132,9 +126,7 @@
 ; All vectors currently end up in the same place - we restart the system
 ; hard. If you want to use them on actual hardware, you'll have to redirect
 ; them all.
-v_nmi:
-v_reset:
-v_irq:
+
 kernel_init:
         ; """Initialize the hardware. This is called with a JMP and not
         ; a JSR because we don't have anything set up for that yet.
@@ -210,5 +202,5 @@ out:
 s_kernel_id:
         .byte AscLF, AscLF, "Tali Forth 2 default kernel for Apple 1 (15.06.2019)", AscLF, 0
 
-
+_taliend:	NOP
 ; END
