@@ -192,6 +192,10 @@ kernel_putc:
   bcs out			; higher than 'z'
   and #$DF			; clear bit 6 (make upper case)
 out:
+  cmp #AscLF			; Line feet?
+  bne nolf
+  lda #AscCR			; change to carriage return
+nolf:
   sta DSP			; write out char
   rts
 .scend
@@ -200,7 +204,7 @@ out:
 ; is easier to see where the kernel ends in hex dumps. This string is
 ; displayed after a successful boot
 s_kernel_id:
-        .byte AscLF, AscLF, "Tali Forth 2 default kernel for Apple 1 (15.06.2019)", AscLF, 0
+        .byte AscCR, AscCR, "Tali Forth 2 default kernel for Apple 1 (15.06.2019)", AscCR, 0
 
 _taliend:	NOP
 ; END
