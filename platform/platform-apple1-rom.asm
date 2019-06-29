@@ -1,6 +1,6 @@
 ; This is the platform file for 65C02 based Apple 1 machines
 ; This version has a memory layout for ROM based TaliForth2
-; Jump to $E000 from the WOZMON with "E000R" after burning the 
+; Jump to $E000 from the WOZMON with "E000R" after burning the
 ; Forth into ROM.
 ; The original Apple 1 has a 6502, so TaliForth2 will not work
 ; on an origial Apple 1. But some replica machines (such as the
@@ -200,6 +200,10 @@ kernel_putc:
   bcs out			; higher than 'z'
   and #$DF			; clear bit 6 (make upper case)
 out:
+  cmp #AscLF			; Line feet?
+  bne nolf
+  lda #AscCR			; change to carriage return
+nolf:
   sta DSP			; write out char
   rts
 .scend
