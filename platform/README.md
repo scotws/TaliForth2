@@ -20,5 +20,5 @@ your supervillain hide-out, the Evil League of Evil suggests you keep it off of
 GitHub. 
 
 Note that this is being provided as a service only. As always, we take no
-resposibility for anythinig, and you'll have to keep an eye on the code
+resposibility for anything, and you'll have to keep an eye on the code
 yourself.
