@@ -148,6 +148,9 @@ _done:
 ; that because it would make using it out of the box harder, so we just
 ; advance past the virtual hardware addresses.
 ;.advance $f010
+platform_bye:
+        jmp $e800
+
 
 
 kernel_getc:

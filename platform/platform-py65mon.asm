@@ -7,7 +7,7 @@
 
 ; MEMORY MAP OF RAM
 
-; Drawing is not only very ugly, but also not to scale. See the manual for 
+; Drawing is not only very ugly, but also not to scale. See the manual for
 ; details on the memory map. Note that some of the values are hard-coded in
 ; the testing routines, especially the size of the input history buffer, the
 ; offset for PAD, and the total RAM size. If these are changed, the tests will
@@ -16,21 +16,21 @@
 
 ;    $0000  +-------------------+  ram_start, zpage, user0
 ;           |  User varliables  |
-;           +-------------------+  
+;           +-------------------+
 ;           |                   |
 ;           |                   |
 ;           +~~~~~~~~~~~~~~~~~~~+  <-- dsp
 ;           |                   |
-;           |  ^  Data Stack    |  
+;           |  ^  Data Stack    |
 ;           |  |                |
 ;    $0078  +-------------------+  dsp0, stack
 ;           |                   |
 ;           |   (Reserved for   |
 ;           |      kernel)      |
 ;           |                   |
-;    $0100  +-------------------+  
+;    $0100  +-------------------+
 ;           |                   |
-;           |  ^  Return Stack  |  <-- rsp 
+;           |  ^  Return Stack  |  <-- rsp
 ;           |  |                |
 ;    $0200  +-------------------+  rsp0, buffer, buffer0
 ;           |  |                |
@@ -59,7 +59,7 @@
 
 ; Some of these are somewhat silly for the 65c02, where for example
 ; the location of the Zero Page is fixed by hardware. However, we keep
-; these for easier comparisons with Liara Forth's structure and to 
+; these for easier comparisons with Liara Forth's structure and to
 ; help people new to these things.
 
 .alias ram_start $0000          ; start of installed 32 KiB of RAM
@@ -96,8 +96,10 @@
 ; wants to use them for.
 
 .advance $e000
+platform_bye:
+    brk
 
-; Default kernel file for Tali Forth 2 
+; Default kernel file for Tali Forth 2
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 19. Jan 2014
 ; This version: 18. Feb 2018
@@ -112,12 +114,12 @@
 ;       kernel_putc - Prints the character in A to the screen
 ;       s_kernel_id - The zero-terminated string printed at boot
 ;
-; This default version Tali ships with is written for the py65mon machine 
-; monitor (see docs/MANUAL.md for details). 
+; This default version Tali ships with is written for the py65mon machine
+; monitor (see docs/MANUAL.md for details).
 
 ; The main file of Tali got us to $e000. However, py65mon by default puts
 ; the basic I/O routines at the beginning of $f000. We don't want to change
-; that because it would make using it out of the box harder, so we just 
+; that because it would make using it out of the box harder, so we just
 ; advance past the virtual hardware addresses.
 .advance $f010
 
@@ -139,7 +141,7 @@ kernel_init:
                 ; them in your system in any way, you're going to have to
                 ; do it from scratch. Sorry.
                 sei             ; Disable interrupts
-                
+
                 ; We've successfully set everything up, so print the kernel
                 ; string
                 ldx #0
@@ -165,7 +167,7 @@ _loop:
                 beq _loop
                 rts
 .scend
- 
+
 
 kernel_putc:
         ; """Print a single character to the console. By default, py65mon
@@ -173,16 +175,16 @@ kernel_putc:
         ; """
                 sta $f001
                 rts
-        
-        
+
+
 ; Leave the following string as the last entry in the kernel routine so it
 ; is easier to see where the kernel ends in hex dumps. This string is
 ; displayed after a successful boot
-s_kernel_id: 
+s_kernel_id:
         .byte "Tali Forth 2 default kernel for py65mon (18. Feb 2018)", AscLF, 0
 
 
-; Add the interrupt vectors 
+; Add the interrupt vectors
 .advance $fffa
 
 .word v_nmi
@@ -190,4 +192,4 @@ s_kernel_id:
 .word v_irq
 
 ; END
-	
+

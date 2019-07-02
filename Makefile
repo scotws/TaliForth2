@@ -8,6 +8,8 @@ COMMON_SOURCES=taliforth.asm definitions.asm native_words.asm headers.asm string
 TEST_SOURCES=tests/core.fs tests/string.fs tests/double.fs tests/facility.fs tests/stringlong.fs tests/tali.fs tests/tools.fs tests/block.fs tests/user.fs tests/cycles.fs tests/talitest.py tests/ed.fs tests/search.fs tests/asm.fs
 
 all: taliforth-py65mon.bin docs/WORDLIST.md
+clean:
+	rm *.bin *.prg
 
 taliforth-%.bin: platform/platform-%.asm $(COMMON_SOURCES)
 	ophis -l docs/$*-listing.txt \
@@ -51,7 +53,7 @@ sim:	taliforth-py65mon.bin
 	py65mon -m 65c02 -r taliforth-py65mon.bin
 
 # Some convenience targets for the documentation.
-docs/manual.html: docs/*.adoc 
+docs/manual.html: docs/*.adoc
 	cd docs; asciidoctor -a toc=left manual.adoc
 
 docs/ch_glossary.adoc:	native_words.asm
@@ -66,7 +68,7 @@ docs: docs/manual.html docs-diagrams
 
 # This one is experimental at the moment.
 docsmd: docs/manual.html
-	cd docs; ./asciidoc_to_markdown.sh 
+	cd docs; ./asciidoc_to_markdown.sh
 
 # A convenience target for preparing for a git commit.
 gitready: docs all tests
