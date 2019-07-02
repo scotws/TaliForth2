@@ -208,6 +208,11 @@ nolf:
   rts
 .scend
 
+; platform dependend "bye" behaviour. for now, brk is retained like in platform-py65mon
+platform_bye:
+    brk
+
+
 ; Leave the following string as the last entry in the kernel routine so it
 ; is easier to see where the kernel ends in hex dumps. This string is
 ; displayed after a successful boot
