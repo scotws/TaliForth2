@@ -90,3 +90,6 @@ want to have your project added to the list.
 - *SamCo's SBC* (https://github.com/SamCoVT/SBC) by Sam Colwell.  A
    single-board computer running at 4MHz.  Platform file:
    `platform-sbc.asm` (29. Oct 2018)
+
+There are various benchmarks of Tali Forth 2 running different hardware at _The
+Ultimate Forth Benchmark_ (https://theultimatebenchmark.org/#sec-7).

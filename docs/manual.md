@@ -1,7 +1,5 @@
 # Manual for Tali Forth 2 for the 65c02
 
-Sam Colwell; Scot W. Stevenson 
-
 Tali Forth 2 is a bare-metal ANS(ish) Forth for the 65c02 8-bit MPU. It aims to be, roughly in order of importance, easy to try out (just run the included binary), simple (subroutine threading model), specific (for the 65c02 only), and standardized (ANS Forth).
 
 For the crew at 6502.org, who made this possible in more ways than one.
@@ -225,6 +223,8 @@ This is a list of projects known to run Tali Forth 2. Please let me know if you 
 -   **Steckschwein** (<https://steckschwein.de/>) by Thomas Woinke and Marko Lauke. A multi-board 8 MHz 65c02 system. Platform file: `platform-steckschwein.asm` (26. Oct 2018)
 
 -   **SamCo’s SBC** (<https://github.com/SamCoVT/SBC>) by Sam Colwell. A single-board computer running at 4MHz. Platform file: `platform-sbc.asm` (29. Oct 2018)
+
+There are various benchmarks of Tali Forth 2 running different hardware at *The Ultimate Forth Benchmark* (<https://theultimatebenchmark.org/#sec-7>).
 
 ## Running Tali Forth
 
