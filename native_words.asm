@@ -1438,8 +1438,9 @@ z_buffstatus:   rts
         ; """https://forth-standard.org/standard/tools/BYE"""
 .scope
 xt_bye:
-                brk
-z_bye:          rts             ; never reached
+                ;brk
+                jmp platform_bye
+z_bye:          ;rts             ; never reached
 .scend
 
 
