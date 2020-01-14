@@ -61,9 +61,9 @@ docs/WORDLIST.md: taliforth-py65mon.bin
 tests:	tests/results.txt
 
 tests/results.txt:	taliforth-py65mon.bin $(TEST_SOURCES)
-	cd tests && ./talitest.py
+	cd tests && $(PYTHON) ./talitest.py
 
-# Convenience target for parallel tests
+# Convenience target for parallel tests (Linux only)
 ptests:	taliforth-py65mon.bin $(TEST_SOURCES)
 	cd tests && ./ptest.sh
 
