@@ -21,7 +21,7 @@ ifdef OS
 	RM = del
 	PYTHON = py -3
 else
-	RM = rm
+	RM = rm -f
 	PYTHON = python3
 endif
 
