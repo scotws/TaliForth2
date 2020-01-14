@@ -1,9 +1,10 @@
 # Makefile for Tali Forth 2
 # This version: 14. Jan 2020
 
-# Notes: The manual is not automatically updated because not everybody can be
-# expected to have the asciidoc toolchain installed.  Tali requires python 3.x,
-# Ophis, and GNU make to build the 65C02 binary image.
+# Notes: The manual is not automatically updated because not everybody
+# can be expected to have the asciidoc toolchain and ditaa installed.
+# Tali requires python 3.x, Ophis, and GNU make to build the 65C02
+# binary image.
 
 # Example uses ($ is the prompt - yours might be C:\>):
 # Build tailforth-py65mon.bin for use with the py65mon simulator.
@@ -14,8 +15,8 @@
 # There must be a matching platform file in the platform folder.
 # $ make taliforth-steckschwein.bin
 
-# Determine which python launcher to use (python3 on Linux, "py -3" on Windows)
-# and other OS-specific commands (rm vs del)
+# Determine which python launcher to use (python3 on Linux and OSX,
+# "py -3" on Windows) and other OS-specific commands (rm vs del).
 ifdef OS
 	RM = del
 	PYTHON = py -3
@@ -25,7 +26,7 @@ else
 endif
 
 COMMON_SOURCES=taliforth.asm definitions.asm native_words.asm headers.asm strings.asm forth_words.asc user_words.asc disassembler.asm ed.asm assembler.asm
-TEST_SOURCES=tests/core.fs tests/string.fs tests/double.fs tests/facility.fs tests/stringlong.fs tests/tali.fs tests/tools.fs tests/block.fs tests/user.fs tests/cycles.fs tests/talitest.py tests/ed.fs tests/search.fs tests/asm.fs
+TEST_SOURCES=tests/core_a.fs tests/core_b.fs tests/core_c.fs tests/string.fs tests/double.fs tests/facility.fs tests/tali.fs tests/tools.fs tests/block.fs tests/user.fs tests/cycles.fs tests/talitest.py tests/ed.fs tests/search.fs tests/asm.fs
 
 all: taliforth-py65mon.bin docs/WORDLIST.md
 clean:
