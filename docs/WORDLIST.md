@@ -44,7 +44,7 @@ RTS instruction at the end of each word.
 | BUFFER | `buffer` | ANS block | 48 | **auto** |
 | BUFFER_COLON | `buffer:` | ANS core ext | 6 | **auto** |
 | BUFFSTATUS | `buffstatus` | Tali block | 15 | **auto** |
-| BYE | `bye` | ANS tools ext | 1 | tested |
+| BYE | `bye` | ANS tools ext | 3 | tested |
 | C_COMMA | `c,` | ANS core | 10 | **auto** |
 | C_FETCH | `c@` | ANS core | 9 | **auto** |
 | C_STORE | `c!` | ANS core | 11 | **auto** |
