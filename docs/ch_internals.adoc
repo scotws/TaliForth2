@@ -197,12 +197,12 @@ In the second case, we use `source-id` to find out where input is coming from:
 |===
 
 The input can be redirected by storing the address of your routine in
-the memory location given by the word `output`.  Tali expects this
+the memory location given by the word `input`.  Tali expects this
 routine to wait until a character is available and to return the
 character in A, rather than on the stack.
 
 The output can similarly be redirected by storing the address of your
-routine in the memory location given by the word `input`.  Tali
+routine in the memory location given by the word `output`.  Tali
 expects this routine to accept the character to out in A, rather than
 on the stack.
 
