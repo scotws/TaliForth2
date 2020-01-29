@@ -218,7 +218,7 @@ RTS instruction at the end of each word.
 | SOURCE | `source` | ANS core | 20 | **auto** |
 | SOURCE_ID | `source-id` | ANS core ext | 10 | tested |
 | SPACE | `space` | ANS core | 5 | **auto** |
-| SPACES | `spaces` | ANS core | 49 | **auto** |
+| SPACES | `spaces` | ANS core | 53 | **auto** |
 | STAR | `*` | ANS core | 8 | **auto** |
 | STAR_SLASH | `*/` | ANS core | 8 | **auto** |
 | STAR_SLASH_MOD | `*/mod` | ANS core | 15 | **auto** |
