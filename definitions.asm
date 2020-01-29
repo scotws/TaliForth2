@@ -1,7 +1,7 @@
 ; Definitions for Tali Forth 2
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
 ; First version: 01. Apr 2016 (Liara Forth)
-; This version: 24. Dec 2018
+; This version: 29. Jan 2020
 
 ; This file is included by taliforth.asm. These are the general
 ; definitions; platform-specific definitions such as the
@@ -74,7 +74,7 @@
 ; First usable Data Stack location: $003E (decimal 62)
 ; Bytes avaible for Data Stack: 128-62 = 66 --> 33 16-bit cells
 
-.alias dsp0      zpage_end-8  ; initial Data Stack Pointer
+.alias dsp0      zpage_end-7    ; initial Data Stack Pointer
 
 ; User Variables:
 ; Block variables
