@@ -39,13 +39,13 @@ _load_zp_loop:
                 ; This loop loads them back to front. We can use X here
                 ; because Tali hasn't started using the stack yet.
                 lda cold_zp_table,x
-                sta 0,x
+                sta zpage,x
                 dex
                 bne _load_zp_loop
 
                 ; Copy the 0th element.
                 lda cold_zp_table
-                sta 0
+                sta zpage
 
                 ; Initialize 65c02 stack (Return Stack)
                 ldx #rsp0
@@ -70,7 +70,6 @@ _load_user_vars_loop:
                 ; Copy the 0th element.
                 lda cold_user_table
                 sta (up)
-
                 jsr xt_cr
 
                 ; Define high-level words in forth_words.asm via EVALUATE. If

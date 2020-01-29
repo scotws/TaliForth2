@@ -74,7 +74,7 @@
 ; First usable Data Stack location: $003E (decimal 62)
 ; Bytes avaible for Data Stack: 128-62 = 66 --> 33 16-bit cells
 
-.alias dsp0      $78       ; initial Data Stack Pointer, see docs/stack.md
+.alias dsp0      zpage_end-8  ; initial Data Stack Pointer
 
 ; User Variables:
 ; Block variables
