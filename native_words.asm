@@ -9654,7 +9654,6 @@ xt_spaces:
                 ; so we create a quick loop for that. Short loop could be realized
                 ; as a separate subroutine, but unless we're really pressed for
                 ; memory at some point, this is faster
-                lda #AscSP
                 ldy 1,x
                 bne _lots_of_spaces
 
@@ -9662,6 +9661,7 @@ xt_spaces:
 _quick_loop:
                 ; we reach here knowing that there must be a number that is not
                 ; zero in the TOS
+                lda #AscSP
                 jsr emit_a
                 dey
                 beq _done
@@ -9674,6 +9674,7 @@ _lots_of_spaces:
 
 _first_slow_loop:
                 beq _slow_outer_loop
+                lda #AscSP
                 jsr emit_a
                 dey
                 bra _first_slow_loop
@@ -9683,6 +9684,7 @@ _slow_outer_loop:
                 ldy #00
 
 _slow_inner_loop:
+                lda #AscSP
                 jsr emit_a
                 dey
                 bne _slow_inner_loop
