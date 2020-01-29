@@ -734,9 +734,8 @@ contrast to other versions such as discussed at
 http://blogs.msdn.com/b/ashleyf/archive/2011/02/06/loopty-do-i-loop.aspx
 
 `line`:: _Tali Editor_ ( line# -- c-addr ) "Turn a line number into address in current screen"
-`list`:: _ANS block ext_ ( scr# scr# -- ) "Load screens in the given range"
+`list`:: _ANS block ext_ ( scr# -- ) "List the given screen"
 https://forth-standard.org/standard/block/LIST
-https://forth-standard.org/standard/block/THRU
 
 `literal`:: _ANS core_ ( n -- ) "Store TOS to be push on stack during runtime"
 https://forth-standard.org/standard/core/LITERAL
@@ -1029,6 +1028,9 @@ https://forth-standard.org/standard/core/SWAP
 
 `then`:: _ANS core_ (C: orig -- ) ( -- ) "Conditional flow control"
 http://forth-standard.org/standard/core/THEN
+
+`thru`:: _ANS block ext_ ( scr# scr# -- ) "Load screens in the given range"
+https://forth-standard.org/standard/block/THRU
 
 `to`:: _ANS core ext_ ( n "name" -- ) or ( "name") "Change a value"
 https://forth-standard.org/standard/core/TO

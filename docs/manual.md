@@ -1,4 +1,4 @@
-# Manual for Tali Forth 2 for the 65c02
+# 
 
 Tali Forth 2 is a bare-metal ANS(ish) Forth for the 65c02 8-bit MPU. It aims to be, roughly in order of importance, easy to try out (just run the included binary), simple (subroutine threading model), specific (for the 65c02 only), and standardized (ANS Forth).
 
@@ -1325,9 +1325,9 @@ To check which one is being used, we first call `blk` which gives us the number 
 </tbody>
 </table>
 
-The input can be redirected by storing the address of your routine in the memory location given by the word `output`. Tali expects this routine to wait until a character is available and to return the character in A, rather than on the stack.
+The input can be redirected by storing the address of your routine in the memory location given by the word `input`. Tali expects this routine to wait until a character is available and to return the character in A, rather than on the stack.
 
-The output can similarly be redirected by storing the address of your routine in the memory location given by the word `input`. Tali expects this routine to accept the character to out in A, rather than on the stack.
+The output can similarly be redirected by storing the address of your routine in the memory location given by the word `output`. Tali expects this routine to accept the character to out in A, rather than on the stack.
 
 Both the input routine and output routine may use the tmp1, tmp2, and tmp3 memory locations (defined in assembly.asm), but they need to push/pop them so they can restore the original values before returning. If the input or output routines are written in Forth, extra care needs to be taken because many of the Forth words use these tmp variables and it’s not immediately obvious without checking the assembly for each word.
 
@@ -3717,7 +3717,7 @@ The only words from this list that are recommended for use are `ONLY FORTH` as a
 </tr>
 <tr class="odd">
 <td><p><code>list</code></p></td>
-<td><p><em>ANS block ext</em> ( scr# scr# — ) &quot;Load screens in the given range&quot; <a href="https://forth-standard.org/standard/block/LIST" class="uri">https://forth-standard.org/standard/block/LIST</a> <a href="https://forth-standard.org/standard/block/THRU" class="uri">https://forth-standard.org/standard/block/THRU</a></p></td>
+<td><p><em>ANS block ext</em> ( scr# — ) &quot;List the given screen&quot; <a href="https://forth-standard.org/standard/block/LIST" class="uri">https://forth-standard.org/standard/block/LIST</a></p></td>
 </tr>
 <tr class="even">
 <td><p><code>literal</code></p></td>
@@ -3968,106 +3968,110 @@ The only words from this list that are recommended for use are `ONLY FORTH` as a
 <td><p><em>ANS core</em> (C: orig — ) ( — ) &quot;Conditional flow control&quot; <a href="http://forth-standard.org/standard/core/THEN" class="uri">http://forth-standard.org/standard/core/THEN</a></p></td>
 </tr>
 <tr class="even">
+<td><p><code>thru</code></p></td>
+<td><p><em>ANS block ext</em> ( scr# scr# — ) &quot;Load screens in the given range&quot; <a href="https://forth-standard.org/standard/block/THRU" class="uri">https://forth-standard.org/standard/block/THRU</a></p></td>
+</tr>
+<tr class="odd">
 <td><p><code>to</code></p></td>
 <td><p><em>ANS core ext</em> ( n &quot;name&quot; — ) or ( &quot;name&quot;) &quot;Change a value&quot; <a href="https://forth-standard.org/standard/core/TO" class="uri">https://forth-standard.org/standard/core/TO</a> Gives a new value to a, uh, VALUE.</p></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><p><code>true</code></p></td>
 <td><p><em>ANS core ext</em> ( — f ) &quot;Push TRUE flag to Data Stack&quot; <a href="https://forth-standard.org/standard/core/TRUE" class="uri">https://forth-standard.org/standard/core/TRUE</a></p></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><p><code>tuck</code></p></td>
 <td><p><em>ANS core ext</em> ( b a — a b a ) &quot;Copy TOS below NOS&quot; <a href="https://forth-standard.org/standard/core/TUCK" class="uri">https://forth-standard.org/standard/core/TUCK</a></p></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><p><code>type</code></p></td>
 <td><p><em>ANS core</em> ( addr u — ) &quot;Print string&quot; <a href="https://forth-standard.org/standard/core/TYPE" class="uri">https://forth-standard.org/standard/core/TYPE</a> Works through EMIT to allow OUTPUT revectoring.</p></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><p><code>u.</code></p></td>
 <td><p><em>ANS core</em> ( u — ) &quot;Print TOS as unsigned number&quot; <a href="https://forth-standard.org/standard/core/Ud" class="uri">https://forth-standard.org/standard/core/Ud</a></p></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><p><code>u.r</code></p></td>
 <td><p><em>ANS core ext</em> ( u u — ) &quot;Print NOS as unsigned number right-justified with TOS width&quot; <a href="https://forth-standard.org/standard/core/UDotR" class="uri">https://forth-standard.org/standard/core/UDotR</a></p></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><p><code>u&lt;</code></p></td>
 <td><p><em>ANS core</em> ( n m — f ) &quot;Return true if NOS &lt; TOS (unsigned)&quot; <a href="https://forth-standard.org/standard/core/Uless" class="uri">https://forth-standard.org/standard/core/Uless</a></p></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><p><code>u&gt;</code></p></td>
 <td><p><em>ANS core ext</em> ( n m — f ) &quot;Return true if NOS &gt; TOS (unsigned)&quot; <a href="https://forth-standard.org/standard/core/Umore" class="uri">https://forth-standard.org/standard/core/Umore</a></p></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><p><code>ud.</code></p></td>
 <td><p><em>Tali double</em> ( d — ) &quot;Print double as unsigned&quot;</p></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><p><code>ud.r</code></p></td>
 <td><p><em>Tali double</em> ( d u — ) &quot;Print unsigned double right-justified u wide&quot;</p></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><p><code>um*</code></p></td>
 <td><p><em>ANS core</em> ( u u — ud ) &quot;Multiply 16 x 16 → 32&quot; <a href="https://forth-standard.org/standard/core/UMTimes" class="uri">https://forth-standard.org/standard/core/UMTimes</a> Multiply two unsigned 16 bit numbers, producing a 32 bit result. Old Forth versions such as FIG Forth call this U*</p></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><p><code>um/mod</code></p></td>
 <td><p><em>ANS core</em> ( ud u — ur u ) &quot;32/16 → 16 division&quot; <a href="https://forth-standard.org/standard/core/UMDivMOD" class="uri">https://forth-standard.org/standard/core/UMDivMOD</a> Divide double cell number by single cell number, returning the quotient as TOS and any remainder as NOS. All numbers are unsigned. This is the basic division operation all others use. Based on FIG Forth code, modified by Garth Wilson, see <a href="http://6502.org/source/integers/ummodfix/ummodfix.htm" class="uri">http://6502.org/source/integers/ummodfix/ummodfix.htm</a></p></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><p><code>unloop</code></p></td>
 <td><p><em>ANS core</em> ( — )(R: n1 n2 n3 ---) &quot;Drop loop control from Return stack&quot; <a href="https://forth-standard.org/standard/core/UNLOOP" class="uri">https://forth-standard.org/standard/core/UNLOOP</a></p></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><p><code>until</code></p></td>
 <td><p><em>ANS core</em> (C: dest — ) ( — ) &quot;Loop flow control&quot; <a href="http://forth-standard.org/standard/core/UNTIL" class="uri">http://forth-standard.org/standard/core/UNTIL</a></p></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><p><code>unused</code></p></td>
 <td><p><em>ANS core ext</em> ( — u ) &quot;Return size of space available to Dictionary&quot; <a href="https://forth-standard.org/standard/core/UNUSED" class="uri">https://forth-standard.org/standard/core/UNUSED</a> UNUSED does not include the ACCEPT history buffers. Total RAM should be HERE + UNUSED + &lt;history buffer size&gt;, the last of which defaults to $400</p></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><p><code>update</code></p></td>
 <td><p><em>ANS block</em> ( — ) &quot;Mark current block as dirty&quot; <a href="https://forth-standard.org/standard/block/UPDATE" class="uri">https://forth-standard.org/standard/block/UPDATE</a></p></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><p><code>useraddr</code></p></td>
 <td><p><em>Tali Forth</em> ( — addr ) &quot;Push address of base address of user variables&quot;</p></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><p><code>value</code></p></td>
 <td><p><em>ANS core</em> ( n &quot;name&quot; — ) &quot;Define a value&quot; <a href="https://forth-standard.org/standard/core/VALUE" class="uri">https://forth-standard.org/standard/core/VALUE</a></p></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><p><code>variable</code></p></td>
 <td><p><em>ANS core</em> ( &quot;name&quot; — ) &quot;Define a variable&quot; <a href="https://forth-standard.org/standard/core/VARIABLE" class="uri">https://forth-standard.org/standard/core/VARIABLE</a> There are various Forth definitions for this word, such as <code>CREATE 1 CELLS ALLOT</code> or <code>CREATE 0 ,</code> We use a variant of the second one so the variable is initialized to zero</p></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><p><code>while</code></p></td>
 <td><p><em>ANS core</em> ( C: dest — orig dest ) ( x — ) &quot;Loop flow control&quot; <a href="http://forth-standard.org/standard/core/WHILE" class="uri">http://forth-standard.org/standard/core/WHILE</a></p></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><p><code>within</code></p></td>
 <td><p><em>ANS core ext</em> ( n1 n2 n3 — ) &quot;See if within a range&quot; <a href="https://forth-standard.org/standard/core/WITHIN" class="uri">https://forth-standard.org/standard/core/WITHIN</a></p></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><p><code>word</code></p></td>
 <td><p><em>ANS core</em> ( char &quot;name &quot; — caddr ) &quot;Parse input stream&quot; <a href="https://forth-standard.org/standard/core/WORD" class="uri">https://forth-standard.org/standard/core/WORD</a> Obsolete parsing word included for backwards compatibility only. Do not use this, use <code>PARSE</code> or <code>PARSE-NAME</code>. Skips leading delimiters and copies word to storage area for a maximum size of 255 bytes. Returns the result as a counted string (requires COUNT to convert to modern format), and inserts a space after the string. See &quot;Forth Programmer’s Handbook&quot; 3rd edition p. 159 and <a href="http://www.forth200x.org/documents/html/rationale.html#rat:core:PARSE" class="uri">http://www.forth200x.org/documents/html/rationale.html#rat:core:PARSE</a> for discussions of why you shouldn’t be using WORD anymore.</p></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><p><code>wordlist</code></p></td>
 <td><p><em>ANS search</em> ( — wid ) &quot;Create new wordlist (from pool of 8)&quot; <a href="https://forth-standard.org/standard/search/WORDLIST" class="uri">https://forth-standard.org/standard/search/WORDLIST</a> See the tutorial on Wordlists and the Search Order for more information.</p></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><p><code>words</code></p></td>
 <td><p><em>ANS tools</em> ( — ) &quot;Print known words from Dictionary&quot; <a href="https://forth-standard.org/standard/tools/WORDS" class="uri">https://forth-standard.org/standard/tools/WORDS</a> This is pretty much only used at the command line so we can be slow and try to save space.</p></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><p><code>wordsize</code></p></td>
 <td><p><em>Tali Forth</em> ( nt — u ) &quot;Get size of word in bytes&quot; Given an word’s name token (nt), return the size of the word’s payload size in bytes (CFA plus PFA) in bytes. Does not count the final RTS.</p></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><p><code>xor</code></p></td>
 <td><p><em>ANS core</em> ( n n — n ) &quot;Logically XOR TOS and NOS&quot; <a href="https://forth-standard.org/standard/core/XOR" class="uri">https://forth-standard.org/standard/core/XOR</a></p></td>
 </tr>

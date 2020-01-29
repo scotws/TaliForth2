@@ -9858,7 +9858,7 @@ z_then:         rts
 
 
 ; ## THRU ( scr# scr# -- ) "Load screens in the given range"
-; ## "list"  tested  ANS block ext
+; ## "thru"  tested  ANS block ext
         ; """https://forth-standard.org/standard/block/THRU"""
 .scope
 xt_thru:
