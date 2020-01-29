@@ -227,7 +227,7 @@ RTS instruction at the end of each word.
 | STRIP_UNDERFLOW | `strip-underflow` | Tali Forth | 10 | tested |
 | SWAP | `swap` | ANS core | 19 | **auto** |
 | THEN | `then` | ANS core | 9 | **auto** |
-| THRU | `list` | ANS block ext | 68 | tested |
+| THRU | `thru` | ANS block ext | 68 | tested |
 | TICK | `'` | ANS core | 31 | **auto** |
 | TO | `to` | ANS core ext | 91 | **auto** |
 | TO_BODY | `>body` | ANS core | 36 | **auto** |
