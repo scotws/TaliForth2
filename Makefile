@@ -33,7 +33,7 @@ clean:
 	$(RM) *.bin *.prg
 
 taliforth-%.bin: platform/platform-%.asm $(COMMON_SOURCES)
-	64tass \
+	64tass --nostart \
 	--list=docs/$*-listing.txt \
 	--labels=docs/$*-labelmap.txt \
 	--output $@ \
