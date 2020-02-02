@@ -10,28 +10,28 @@
 ; other hardware configurations
 code0:
 
-.require "definitions.asm"      ; Top-level definitions, memory map
+.include "definitions.asm"      ; Top-level definitions, memory map
 
 ; Insert point for Tali Forth after kernel hardware setup
 forth:
 
-.require "native_words.asm"     ; Native Forth words. Starts with COLD
-.require "assembler.asm"        ; SAN assembler
-.require "disassembler.asm"     ; SAN disassembler
-.require "ed.asm"               ; Line-based editor ed6502
+.include "native_words.asm"     ; Native Forth words. Starts with COLD
+.include "assembler.asm"        ; SAN assembler
+.include "disassembler.asm"     ; SAN disassembler
+.include "ed.asm"               ; Line-based editor ed6502
 
 ; High-level Forth words, see forth_code/README.md
 forth_words_start:
-.incbin "forth_words.asc"
+.binary "forth_words.asc"
 forth_words_end:
 
 ; User-defined Forth words, see forth_code/README.md
 user_words_start:
-.incbin "user_words.asc"
+.binary "user_words.asc"
 user_words_end:
 
-.require "headers.asm"          ; Headers of native words
-.require "strings.asm"          ; Strings, including error messages
+.include "headers.asm"          ; Headers of native words
+.include "strings.asm"          ; Strings, including error messages
 
 
 ; =====================================================================
@@ -51,7 +51,6 @@ user_words_end:
 ;               jsr cmpl_subroutine
 
 ; Also, we keep a routine here to compile a single byte passed through A.
-.scope
 cmpl_subroutine:
                 ; This is the entry point to compile JSR <ADDR>
                 pha             ; save LSB of address
@@ -81,7 +80,6 @@ cmpl_a:
                 inc cp+1
 _done:
                 rts
-.scend
 
 
 ; =====================================================================
@@ -156,8 +154,8 @@ dodoes:
                 pla             ; MSB
                 iny
                 bne +
-                inc
-*
+                ina
++
                 sty tmp2
                 sta tmp2+1
 
@@ -171,8 +169,8 @@ dodoes:
                 pla
                 iny
                 bne +
-                inc
-*
+                ina
++
                 sty 0,x         ; LSB
                 sta 1,x         ; MSB
 
@@ -197,8 +195,8 @@ dovar:
                 pla             ; MSB
                 iny
                 bne +
-                inc
-*
+                ina
++
                 dex
                 dex
 
@@ -213,7 +211,6 @@ dovar:
 
 byte_to_ascii:
         ; """Convert byte in A to two ASCII hex digits and EMIT them"""
-.scope
                 pha
                 lsr             ; convert high nibble first
                 lsr
@@ -229,15 +226,14 @@ _nibble_to_ascii:
         ; of A and and EMIT it. This does the actual work.
         ; """
                 and #$0F
-                ora #'0
+                ora #'0'
                 cmp #$3A        ; '9+1
                 bcc +
                 adc #$06
 
-*               jmp emit_a
++               jmp emit_a
 
                 rts
-.scend
 
 compare_16bit:
         ; """Compare TOS/NOS and return results in form of the 65c02 flags
@@ -254,7 +250,6 @@ compare_16bit:
         ; Compared to the book routine, WORD1 (MINUED) is TOS
         ;                               WORD2 (SUBTRAHEND) is NOS
         ; """
-.scope
                 ; Compare LSB first to set the carry flag
                 lda 0,x                 ; LSB of TOS
                 cmp 2,x                 ; LSB of NOS
@@ -278,7 +273,6 @@ _not_equal:
                 ora #1                  ; if overflow, we can't be eqal
 _done:
                 rts
-.scend
 
 current_to_dp:
         ; """Look up the current (compilation) dictionary pointer
@@ -325,7 +319,6 @@ dp_to_current:
                 rts
 
 interpret:
-.scope
         ; """Core routine for the interpreter called by EVALUATE and QUIT.
         ; Process one line only. Assumes that the address of name is in
         ; cib and the length of the whole input line string is in ciblen
@@ -469,11 +462,9 @@ _line_done:
                 inx
 
                 rts
-.scend
 
 
 is_printable:
-.scope
         ; """Given a character in A, check if it is a printable ASCII
         ; character in the range from $20 to $7E inclusive. Returns the
         ; result in the Carry Flag: 0 (clear) is not printable, 1 (set)
@@ -482,7 +473,7 @@ is_printable:
         ; discussion of various ways to do this
                 cmp #AscSP              ; $20
                 bcc _done
-                cmp #'~ + 1             ; $7E
+                cmp #$7F + 1             ; '~'
                 bcs _failed
 
                 sec
@@ -491,11 +482,9 @@ _failed:
                 clc
 _done:
                 rts
-.scend
 
 
 is_whitespace:
-.scope
         ; """Given a character in A, check if it is a whitespace
         ; character, that is, an ASCII value from 0 to 32 (where
         ; 32 is SPACE). Returns the result in the Carry Flag:
@@ -514,7 +503,6 @@ _failed:
                 clc
 _done:
                 rts
-.scend
 
 
 ; Underflow tests. We jump to the label with the number of cells (not: bytes)
@@ -597,7 +585,6 @@ print_common:
         ; the error printing routine. Assumes string address is in tmp3. Uses
         ; Y.
         ; """
-.scope
                 ldy #0
 _loop:
                 lda (tmp3),y
@@ -608,7 +595,6 @@ _loop:
                 bra _loop
 _done:
                 rts
-.scend
 
 print_string:
         ; """Print a zero-terminated string to the console/screen, adding a LF.

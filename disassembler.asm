@@ -17,7 +17,6 @@
 ; humans, we don't care that much about speed and put the emphasis at being
 ; small.
 
-.scope
 disassembler:
                 jsr xt_cr       ; ( addr u )
 _byte_loop:
@@ -40,7 +39,7 @@ _byte_loop:
                 asl             ; multiply by two for offset
                 bcc +
                 inc tmp2+1      ; we're on second page
-*
++
                 tay             ; use Y as the index
 
                 ; Get address of the entry in the opcode table. We put it
@@ -92,11 +91,11 @@ _byte_loop:
                 inc 4,x
                 bne +
                 inc 5,x                 ; ( addr+1 u 0 )
-*
++
                 lda 2,x
                 bne +
                 dec 3,x
-*
++
                 dec 2,x                 ; ( addr+1 u-1 0 )
 
                 lda (4,x)
@@ -114,11 +113,11 @@ _byte_loop:
                 inc 4,x
                 bne +
                 inc 5,x                 ; ( addr+2 u-1 LSB )
-*
++
                 lda 2,x
                 bne +
                 dec 3,x
-*
++
                 dec 2,x                 ; ( addr+2 u-2 LSB )
 
                 lda (4,x)
@@ -185,7 +184,7 @@ _print_mnemonic:
                 inc 2,x
                 bne +
                 inc 3,x                 ; ( addr+1 u )
-*
++
                 jsr xt_one_minus        ; ( addr+1 u-1 )
 
                 lda 0,x                 ; All done?
@@ -199,7 +198,6 @@ _print_mnemonic:
 _done:
                 ; Clean up and leave
                 jmp xt_two_drop         ; JSR/RTS
-.scend
 
 ; =========================================================
 oc_index_table:
@@ -290,280 +288,280 @@ oc_table:
         ; required to shift and add. The actual mnemonic string follows after
         ; and is not zero terminated because we have the length in bits 2 to 0.
 
-	oc00:	.byte 2*64+3, "brk"              ; enforce the signature byte
-	oc01:	.byte 2*64+7, "ora.zxi"
+	oc00:	.text 2*64+3, "brk"              ; enforce the signature byte
+	oc01:	.text 2*64+7, "ora.zxi"
 ;      (oc02)
 ;      (oc03)
-        oc04:   .byte 2*64+5, "tsb.z"
-	oc05:	.byte 2*64+5, "ord.z"
-	oc06:	.byte 2*64+5, "asl.z"
+        oc04:   .text 2*64+5, "tsb.z"
+	oc05:	.text 2*64+5, "ord.z"
+	oc06:	.text 2*64+5, "asl.z"
 ;      (oc07)
-	oc08:	.byte 1*64+3, "php"
-	oc09:	.byte 2*64+5, "ora.#"
-	oc0a:	.byte 1*64+5, "asl.a"
+	oc08:	.text 1*64+3, "php"
+	oc09:	.text 2*64+5, "ora.#"
+	oc0a:	.text 1*64+5, "asl.a"
 ;      (oc0b)
-	oc0c:	.byte 3*64+3, "tsb"
-	oc0d:	.byte 3*64+3, "ora"
-	oc0e:	.byte 3*64+3, "asl"
-	oc0f:	.byte 3*64+4, "bbr0"
+	oc0c:	.text 3*64+3, "tsb"
+	oc0d:	.text 3*64+3, "ora"
+	oc0e:	.text 3*64+3, "asl"
+	oc0f:	.text 3*64+4, "bbr0"
 
-	oc10:	.byte 2*64+3, "bpl"
-	oc11:	.byte 2*64+7, "ora.ziy"
-	oc12:	.byte 2*64+6, "ora.zi"
+	oc10:	.text 2*64+3, "bpl"
+	oc11:	.text 2*64+7, "ora.ziy"
+	oc12:	.text 2*64+6, "ora.zi"
 ;      (oc13:)
-	oc14:	.byte 2*64+5, "trb.z"
-	oc15:	.byte 2*64+6, "ora.zx"
-	oc16:	.byte 2*64+6, "asl.zx"
-	oc17:	.byte 2*64+6, "rmb1.z"
-	oc18:	.byte 1*64+3, "clc"
-	oc19:	.byte 3*64+5, "ora.y"
-	oc1a:	.byte 1*64+5, "inc.a"
+	oc14:	.text 2*64+5, "trb.z"
+	oc15:	.text 2*64+6, "ora.zx"
+	oc16:	.text 2*64+6, "asl.zx"
+	oc17:	.text 2*64+6, "rmb1.z"
+	oc18:	.text 1*64+3, "clc"
+	oc19:	.text 3*64+5, "ora.y"
+	oc1a:	.text 1*64+5, "inc.a"
 ;      (oc1b:)
-	oc1c:	.byte 3*64+3, "trb"
-	oc1d:	.byte 3*64+5, "ora.x"
+	oc1c:	.text 3*64+3, "trb"
+	oc1d:	.text 3*64+5, "ora.x"
 ;      (oc1e:)
-	oc1f:	.byte 3*64+5, "asl.x"
+	oc1f:	.text 3*64+5, "asl.x"
 
-	oc20:	.byte 3*64+3, "jsr"
-	oc21:	.byte 2*64+7, "and.zxi"
+	oc20:	.text 3*64+3, "jsr"
+	oc21:	.text 2*64+7, "and.zxi"
 ;      (oc22:)
 ;      (oc23:)
-	oc24:	.byte 2*64+5, "bit.z"
-	oc25:	.byte 2*64+5, "and.z"
-	oc26:	.byte 2*64+5, "rol.z"
-	oc27:	.byte 2*64+6, "rmb2.z"
-	oc28:	.byte 1*64+3, "plp"
-	oc29:	.byte 2*64+5, "and.#"
-	oc2a:	.byte 1*64+5, "rol.a"
+	oc24:	.text 2*64+5, "bit.z"
+	oc25:	.text 2*64+5, "and.z"
+	oc26:	.text 2*64+5, "rol.z"
+	oc27:	.text 2*64+6, "rmb2.z"
+	oc28:	.text 1*64+3, "plp"
+	oc29:	.text 2*64+5, "and.#"
+	oc2a:	.text 1*64+5, "rol.a"
 ;      (oc2b:)
-	oc2c:	.byte 3*64+3, "bit"
-	oc2d:	.byte 3*64+4, "and."
-	oc2e:	.byte 3*64+3, "rol"
-	oc2f:	.byte 3*64+4, "bbr2"
+	oc2c:	.text 3*64+3, "bit"
+	oc2d:	.text 3*64+4, "and."
+	oc2e:	.text 3*64+3, "rol"
+	oc2f:	.text 3*64+4, "bbr2"
 
-	oc30:	.byte 2*64+3, "bmi"
-	oc31:	.byte 2*64+7, "and.ziy"
-	oc32:	.byte 2*64+6, "and.zi"
+	oc30:	.text 2*64+3, "bmi"
+	oc31:	.text 2*64+7, "and.ziy"
+	oc32:	.text 2*64+6, "and.zi"
 ;      (oc33:)
-	oc34:	.byte 2*64+7, "bit.zxi"
-	oc35:	.byte 2*64+6, "and.zx"
-	oc36:	.byte 2*64+6, "rol.zx"
-	oc37:	.byte 2*64+6, "rmb3.z"
-	oc38:	.byte 1*64+3, "sec"
-	oc39:	.byte 3*64+5, "and.y"
-	oc3a:	.byte 1*64+5, "dec.a"
+	oc34:	.text 2*64+7, "bit.zxi"
+	oc35:	.text 2*64+6, "and.zx"
+	oc36:	.text 2*64+6, "rol.zx"
+	oc37:	.text 2*64+6, "rmb3.z"
+	oc38:	.text 1*64+3, "sec"
+	oc39:	.text 3*64+5, "and.y"
+	oc3a:	.text 1*64+5, "dec.a"
 ;      (oc3b:)
-	oc3c:	.byte 3*64+5, "bit.x"
-	oc3d:	.byte 3*64+5, "and.x"
-	oc3e:	.byte 3*64+5, "rol.x"
-	oc3f:	.byte 3*64+4, "bbr3"
+	oc3c:	.text 3*64+5, "bit.x"
+	oc3d:	.text 3*64+5, "and.x"
+	oc3e:	.text 3*64+5, "rol.x"
+	oc3f:	.text 3*64+4, "bbr3"
 
-	oc40:	.byte 1*64+3, "rti"
-	oc41:	.byte 2*64+7, "eor.zxi"
+	oc40:	.text 1*64+3, "rti"
+	oc41:	.text 2*64+7, "eor.zxi"
 ;      (oc42:)
 ;      (oc43:)
 ;      (oc44:)
-	oc45:	.byte 2*64+5, "eor.z"
-	oc46:	.byte 2*64+5, "lsr.z"
-	oc47:	.byte 2*64+6, "rbm4.z"
-	oc48:	.byte 1*64+3, "pha"
-	oc49:	.byte 2*64+5, "eor.#"
-	oc4a:	.byte 1*64+5, "lsr.a"
+	oc45:	.text 2*64+5, "eor.z"
+	oc46:	.text 2*64+5, "lsr.z"
+	oc47:	.text 2*64+6, "rbm4.z"
+	oc48:	.text 1*64+3, "pha"
+	oc49:	.text 2*64+5, "eor.#"
+	oc4a:	.text 1*64+5, "lsr.a"
 ;      (oc4b:)
-	oc4c:	.byte 3*64+3, "jmp"
-	oc4d:	.byte 3*64+3, "eor"
-	oc4e:	.byte 3*64+3, "lsr"
-	oc4f:	.byte 3*64+4, "bbr4"
+	oc4c:	.text 3*64+3, "jmp"
+	oc4d:	.text 3*64+3, "eor"
+	oc4e:	.text 3*64+3, "lsr"
+	oc4f:	.text 3*64+4, "bbr4"
 
-	oc50:	.byte 2*64+3, "bvc"
-	oc51:	.byte 2*64+7, "eor.ziy"
-	oc52:	.byte 2*64+6, "eor.zi"
+	oc50:	.text 2*64+3, "bvc"
+	oc51:	.text 2*64+7, "eor.ziy"
+	oc52:	.text 2*64+6, "eor.zi"
 ;      (oc53:)
 ;      (oc54:)
-	oc55:	.byte 2*64+6, "eor.zx"
-	oc56:	.byte 2*64+6, "lsr.zx"
-	oc57:	.byte 2*64+6, "rbm5.z"
-	oc58:	.byte 1*64+3, "cli"
-	oc59:	.byte 3*64+5, "eor.y"
-	oc5a:	.byte 1*64+3, "phy"
+	oc55:	.text 2*64+6, "eor.zx"
+	oc56:	.text 2*64+6, "lsr.zx"
+	oc57:	.text 2*64+6, "rbm5.z"
+	oc58:	.text 1*64+3, "cli"
+	oc59:	.text 3*64+5, "eor.y"
+	oc5a:	.text 1*64+3, "phy"
 ;      (oc5b:)
 ;      (oc5c:)
-	oc5d:	.byte 3*64+5, "eor.x"
-	oc5e:	.byte 3*64+5, "lsr.x"
-	oc5f:	.byte 3*64+4, "bbr5"
+	oc5d:	.text 3*64+5, "eor.x"
+	oc5e:	.text 3*64+5, "lsr.x"
+	oc5f:	.text 3*64+4, "bbr5"
 
-	oc60:	.byte 1*64+3, "rts"
-	oc61:	.byte 2*64+7, "adc.zxi"
+	oc60:	.text 1*64+3, "rts"
+	oc61:	.text 2*64+7, "adc.zxi"
 ;      (oc62:)
 ;      (oc63:)
-	oc64:	.byte 2*64+5, "stz.z"
-	oc65:	.byte 2*64+5, "adc.z"
-	oc66:	.byte 2*64+5, "ror.z"
-	oc67:	.byte 2*64+6, "rmb6.z"
-	oc68:	.byte 1*64+3, "pla"
-	oc69:	.byte 2*64+5, "adc.#"
-	oc6a:	.byte 1*64+5, "ror.a"
+	oc64:	.text 2*64+5, "stz.z"
+	oc65:	.text 2*64+5, "adc.z"
+	oc66:	.text 2*64+5, "ror.z"
+	oc67:	.text 2*64+6, "rmb6.z"
+	oc68:	.text 1*64+3, "pla"
+	oc69:	.text 2*64+5, "adc.#"
+	oc6a:	.text 1*64+5, "ror.a"
 ;      (oc6b:)
-	oc6c:	.byte 3*64+5, "jmp.i"
-	oc6d:	.byte 3*64+3, "adc"
-	oc6e:	.byte 3*64+3, "ror"
-	oc6f:	.byte 3*64+4, "bbr6"
+	oc6c:	.text 3*64+5, "jmp.i"
+	oc6d:	.text 3*64+3, "adc"
+	oc6e:	.text 3*64+3, "ror"
+	oc6f:	.text 3*64+4, "bbr6"
 
-	oc70:	.byte 2*64+3, "bvs"
-	oc71:	.byte 2*64+7, "adc.ziy"
-	oc72:	.byte 2*64+6, "adc.zi"
+	oc70:	.text 2*64+3, "bvs"
+	oc71:	.text 2*64+7, "adc.ziy"
+	oc72:	.text 2*64+6, "adc.zi"
 ;      (oc73:)
-	oc74:	.byte 2*64+6, "stz.zx"
-	oc75:	.byte 2*64+6, "adc.zx"
-	oc76:	.byte 2*64+6, "ror.zx"
-	oc77:	.byte 2*64+6, "rmb7.z"
-	oc78:	.byte 1*64+3, "sei"
-	oc79:	.byte 3*64+5, "adc.y"
-	oc7a:	.byte 1*64+3, "ply"
+	oc74:	.text 2*64+6, "stz.zx"
+	oc75:	.text 2*64+6, "adc.zx"
+	oc76:	.text 2*64+6, "ror.zx"
+	oc77:	.text 2*64+6, "rmb7.z"
+	oc78:	.text 1*64+3, "sei"
+	oc79:	.text 3*64+5, "adc.y"
+	oc7a:	.text 1*64+3, "ply"
 ;      (oc7b:)
-	oc7c:	.byte 3*64+6, "jmp.xi"
-	oc7d:	.byte 3*64+5, "adc.x"
-	oc7e:	.byte 3*64+5, "ror.x"
-	oc7f:	.byte 3*64+4, "bbr7"
+	oc7c:	.text 3*64+6, "jmp.xi"
+	oc7d:	.text 3*64+5, "adc.x"
+	oc7e:	.text 3*64+5, "ror.x"
+	oc7f:	.text 3*64+4, "bbr7"
 
-	oc80:	.byte 2*64+3, "bra"
-	oc81:	.byte 2*64+7, "sta.zxi"
+	oc80:	.text 2*64+3, "bra"
+	oc81:	.text 2*64+7, "sta.zxi"
 ;      (oc82:)
 ;      (oc83:)
-	oc84:	.byte 2*64+5, "sty.z"
-	oc85:	.byte 2*64+5, "sta.z"
-	oc86:	.byte 2*64+5, "stx.z"
+	oc84:	.text 2*64+5, "sty.z"
+	oc85:	.text 2*64+5, "sta.z"
+	oc86:	.text 2*64+5, "stx.z"
 ;      (oc87:)
-	oc88:	.byte 1*64+3, "dey"
-	oc89:	.byte 2*64+5, "bit.#"
-	oc8a:	.byte 1*64+3, "txa"
+	oc88:	.text 1*64+3, "dey"
+	oc89:	.text 2*64+5, "bit.#"
+	oc8a:	.text 1*64+3, "txa"
 ;      (oc8b:)
-	oc8c:	.byte 3*64+3, "sty"
-	oc8d:	.byte 3*64+3, "sta"
-	oc8e:	.byte 3*64+3, "stx"
-	oc8f:	.byte 3*64+4, "bbs0"
+	oc8c:	.text 3*64+3, "sty"
+	oc8d:	.text 3*64+3, "sta"
+	oc8e:	.text 3*64+3, "stx"
+	oc8f:	.text 3*64+4, "bbs0"
 
-	oc90:	.byte 2*64+3, "bcc"
-	oc91:	.byte 2*64+7, "sta.ziy"
-	oc92:	.byte 2*64+6, "sta.zi"
+	oc90:	.text 2*64+3, "bcc"
+	oc91:	.text 2*64+7, "sta.ziy"
+	oc92:	.text 2*64+6, "sta.zi"
 ;      (oc93:)
-	oc94:	.byte 2*64+6, "sty.zx"
-	oc95:	.byte 2*64+6, "sta.zx"
-	oc96:	.byte 2*64+6, "stx.zy"
-	oc97:	.byte 2*64+6, "smb1.z"
-	oc98:	.byte 1*64+3, "tya"
-	oc99:	.byte 3*64+5, "sta.y"
-	oc9a:	.byte 1*64+3, "txs"
+	oc94:	.text 2*64+6, "sty.zx"
+	oc95:	.text 2*64+6, "sta.zx"
+	oc96:	.text 2*64+6, "stx.zy"
+	oc97:	.text 2*64+6, "smb1.z"
+	oc98:	.text 1*64+3, "tya"
+	oc99:	.text 3*64+5, "sta.y"
+	oc9a:	.text 1*64+3, "txs"
 ;      (oc9b:)
-	oc9c:	.byte 3*64+3, "stz"
-	oc9d:	.byte 3*64+5, "sta.x"
-	oc9e:	.byte 3*64+5, "stz.x"
-	oc9f:	.byte 3*64+4, "bbs1"
+	oc9c:	.text 3*64+3, "stz"
+	oc9d:	.text 3*64+5, "sta.x"
+	oc9e:	.text 3*64+5, "stz.x"
+	oc9f:	.text 3*64+4, "bbs1"
 
-	oca0:	.byte 2*64+5, "ldy.#"
-	oca1:	.byte 2*64+7, "lda.zxi"
-	oca2:	.byte 2*64+5, "ldx.#"
+	oca0:	.text 2*64+5, "ldy.#"
+	oca1:	.text 2*64+7, "lda.zxi"
+	oca2:	.text 2*64+5, "ldx.#"
 ;      (oca3:)
-	oca4:	.byte 2*64+5, "ldy.z"
-	oca5:	.byte 2*64+5, "lda.z"
-	oca6:	.byte 2*64+5, "ldx.z"
-	oca7:	.byte 2*64+6, "smb2.z"
-	oca8:	.byte 1*64+3, "tay"
-	oca9:	.byte 2*64+5, "lda.#"
-	ocaa:	.byte 1*64+3, "tax"
+	oca4:	.text 2*64+5, "ldy.z"
+	oca5:	.text 2*64+5, "lda.z"
+	oca6:	.text 2*64+5, "ldx.z"
+	oca7:	.text 2*64+6, "smb2.z"
+	oca8:	.text 1*64+3, "tay"
+	oca9:	.text 2*64+5, "lda.#"
+	ocaa:	.text 1*64+3, "tax"
 ;      (ocab:)
-	ocac:	.byte 3*64+3, "ldy"
-	ocad:	.byte 3*64+3, "lda"
-	ocae:	.byte 3*64+3, "ldx"
-	ocaf:	.byte 3*64+4, "bbs2"
+	ocac:	.text 3*64+3, "ldy"
+	ocad:	.text 3*64+3, "lda"
+	ocae:	.text 3*64+3, "ldx"
+	ocaf:	.text 3*64+4, "bbs2"
 
-	ocb0:	.byte 2*64+3, "bcs"
-	ocb1:	.byte 2*64+7, "lda.ziy"
-	ocb2:	.byte 2*64+6, "lda.zi"
+	ocb0:	.text 2*64+3, "bcs"
+	ocb1:	.text 2*64+7, "lda.ziy"
+	ocb2:	.text 2*64+6, "lda.zi"
 ;      (ocb3:)
-	ocb4:	.byte 2*64+6, "ldy.zx"
-	ocb5:	.byte 2*64+6, "lda.zx"
-	ocb6:	.byte 2*64+6, "ldx.zy"
-	ocb7:	.byte 2*64+6, "smb3.z"
-	ocb8:	.byte 1*64+3, "clv"
-	ocb9:	.byte 3*64+5, "lda.y"
-	ocba:	.byte 1*64+3, "tsx"
+	ocb4:	.text 2*64+6, "ldy.zx"
+	ocb5:	.text 2*64+6, "lda.zx"
+	ocb6:	.text 2*64+6, "ldx.zy"
+	ocb7:	.text 2*64+6, "smb3.z"
+	ocb8:	.text 1*64+3, "clv"
+	ocb9:	.text 3*64+5, "lda.y"
+	ocba:	.text 1*64+3, "tsx"
 ;      (ocbb:)
-	ocbc:	.byte 3*64+5, "ldy.x"
-	ocbd:	.byte 3*64+5, "lda.x"
-	ocbe:	.byte 3*64+5, "ldx.y"
-	ocbf:	.byte 3*64+4, "bbs4"
+	ocbc:	.text 3*64+5, "ldy.x"
+	ocbd:	.text 3*64+5, "lda.x"
+	ocbe:	.text 3*64+5, "ldx.y"
+	ocbf:	.text 3*64+4, "bbs4"
 
-	occ0:	.byte 2*64+5, "cpy.#"
-	occ1:	.byte 2*64+7, "cmp.zxi"
+	occ0:	.text 2*64+5, "cpy.#"
+	occ1:	.text 2*64+7, "cmp.zxi"
 ;      (occ2:)
 ;      (occ3:)
-	occ4:	.byte 2*64+5, "cpy.z"
-	occ5:	.byte 2*64+5, "cmp.z"
-	occ6:	.byte 2*64+5, "dec.z"
-	occ7:	.byte 2*64+6, "smb4.z"
-	occ8:	.byte 1*64+3, "iny"
-	occ9:	.byte 2*64+5, "cmp.#"
-	occa:	.byte 1*64+3, "dex"
+	occ4:	.text 2*64+5, "cpy.z"
+	occ5:	.text 2*64+5, "cmp.z"
+	occ6:	.text 2*64+5, "dec.z"
+	occ7:	.text 2*64+6, "smb4.z"
+	occ8:	.text 1*64+3, "iny"
+	occ9:	.text 2*64+5, "cmp.#"
+	occa:	.text 1*64+3, "dex"
 ;      (occb:)
-	occc:	.byte 3*64+3, "cpy"
-	occd:	.byte 3*64+3, "cmp"
-	occe:	.byte 3*64+3, "dec"
-	occf:	.byte 3*64+4, "bbs4"
+	occc:	.text 3*64+3, "cpy"
+	occd:	.text 3*64+3, "cmp"
+	occe:	.text 3*64+3, "dec"
+	occf:	.text 3*64+4, "bbs4"
 
-	ocd0:	.byte 2*64+3, "bne"
-	ocd1:	.byte 2*64+7, "cmp.ziy"
-	ocd2:	.byte 2*64+6, "cmp.zi"
+	ocd0:	.text 2*64+3, "bne"
+	ocd1:	.text 2*64+7, "cmp.ziy"
+	ocd2:	.text 2*64+6, "cmp.zi"
 ;      (ocd3:)
 ;      (ocd4:)
-	ocd5:	.byte 2*64+6, "cmp.zx"
-	ocd6:	.byte 2*64+6, "dec.zx"
-	ocd7:	.byte 2*64+6, "smb5.z"
-	ocd8:	.byte 1*64+3, "cld"
-	ocd9:	.byte 3*64+5, "cmp.y"
-	ocda:	.byte 1*64+3, "phx"
+	ocd5:	.text 2*64+6, "cmp.zx"
+	ocd6:	.text 2*64+6, "dec.zx"
+	ocd7:	.text 2*64+6, "smb5.z"
+	ocd8:	.text 1*64+3, "cld"
+	ocd9:	.text 3*64+5, "cmp.y"
+	ocda:	.text 1*64+3, "phx"
 ;      (ocdb:)
 ;      (ocdc:)
-	ocdd:	.byte 3*64+5, "cmp.x"
-	ocde:	.byte 3*64+5, "dec.x"
-	ocdf:	.byte 3*64+4, "bbs5"
+	ocdd:	.text 3*64+5, "cmp.x"
+	ocde:	.text 3*64+5, "dec.x"
+	ocdf:	.text 3*64+4, "bbs5"
 
-	oce0:	.byte 2*64+5, "cpx.#"
-	oce1:	.byte 2*64+7, "sbc.zxi"
+	oce0:	.text 2*64+5, "cpx.#"
+	oce1:	.text 2*64+7, "sbc.zxi"
 ;      (oce2:)
 ;      (oce3:)
-	oce4:	.byte 2*64+5, "cpx.z"
-	oce5:	.byte 2*64+5, "sbc.z"
-	oce6:	.byte 2*64+5, "inc.z"
-	oce7:	.byte 2*64+6, "smb6.z"
-	oce8:	.byte 1*64+3, "inx"
-	oce9:	.byte 2*64+5, "sbc.#"
-	ocea:	.byte 1*64+3, "nop"
+	oce4:	.text 2*64+5, "cpx.z"
+	oce5:	.text 2*64+5, "sbc.z"
+	oce6:	.text 2*64+5, "inc.z"
+	oce7:	.text 2*64+6, "smb6.z"
+	oce8:	.text 1*64+3, "inx"
+	oce9:	.text 2*64+5, "sbc.#"
+	ocea:	.text 1*64+3, "nop"
 ;      (oceb:)
-	ocec:	.byte 3*64+3, "cpx"
-	oced:	.byte 3*64+3, "sbc"
-	ocee:	.byte 3*64+3, "inc"
-	ocef:	.byte 3*64+4, "bbs6"
+	ocec:	.text 3*64+3, "cpx"
+	oced:	.text 3*64+3, "sbc"
+	ocee:	.text 3*64+3, "inc"
+	ocef:	.text 3*64+4, "bbs6"
 
-	ocf0:	.byte 2*64+3, "beq"
-	ocf1:	.byte 2*64+7, "sbc.ziy"
-	ocf2:	.byte 2*64+6, "sbc.zi"
+	ocf0:	.text 2*64+3, "beq"
+	ocf1:	.text 2*64+7, "sbc.ziy"
+	ocf2:	.text 2*64+6, "sbc.zi"
 ;      (ocf3:)
 ;      (ocf4:)
-	ocf5:	.byte 2*64+6, "sbc.zx"
-	ocf6:	.byte 2*64+6, "inc.zx"
-	ocf7:	.byte 2*64+6, "smb7.z"
-	ocf8:	.byte 1*64+3, "sed"
-	ocf9:	.byte 3*64+5, "sbc.y"
-	ocfa:	.byte 1*64+3, "plx"
+	ocf5:	.text 2*64+6, "sbc.zx"
+	ocf6:	.text 2*64+6, "inc.zx"
+	ocf7:	.text 2*64+6, "smb7.z"
+	ocf8:	.text 1*64+3, "sed"
+	ocf9:	.text 3*64+5, "sbc.y"
+	ocfa:	.text 1*64+3, "plx"
 ;      (ocfb:)
 ;      (ocfc:)
-	ocfd:	.byte 3*64+5, "sbc.x"
-	ocfe:	.byte 3*64+5, "inc.x"
-	ocff:	.byte 3*64+4, "bbs7"
+	ocfd:	.text 3*64+5, "sbc.x"
+	ocfe:	.text 3*64+5, "inc.x"
+	ocff:	.text 3*64+4, "bbs7"
 
         ; Common routine for opcodes that are not supported by the 65c02
-	oc__:	.byte 1, "?"
+	oc__:	.text 1, "?"
 
 ; used to calculate size of assembled disassembler code
 disassembler_end:

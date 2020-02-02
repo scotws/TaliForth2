@@ -1,2358 +1,1864 @@
-$0000 | blk_offset                      | definitions.asm:81
-$0000 | cp                              | definitions.asm:22
-$0000 | err_allot                       | strings.asm:58
-$0000 | ram_start                       | platform-py65mon.asm:65
-$0000 | str_ok                          | strings.asm:13
-$0000 | user0                           | platform-py65mon.asm:81
-$0000 | zpage                           | platform-py65mon.asm:67
-$0001 | co                              | definitions.asm:122
-$0001 | err_badsource                   | strings.asm:59
-$0001 | str_compile                     | strings.asm:14
-$0002 | an                              | definitions.asm:123
-$0002 | dp                              | definitions.asm:23
-$0002 | err_compileonly                 | strings.asm:60
-$0002 | scr_offset                      | definitions.asm:82
-$0002 | str_redefined                   | strings.asm:15
-$0003 | asccc                           | definitions.asm:109
-$0003 | err_defer                       | strings.asm:61
-$0003 | str_wid_forth                   | strings.asm:16
-$0004 | current_offset                  | definitions.asm:85
-$0004 | err_divzero                     | strings.asm:62
-$0004 | im                              | definitions.asm:124
-$0004 | str_abc_lower                   | strings.asm:17
-$0004 | workword                        | definitions.asm:24
-$0005 | err_noname                      | strings.asm:63
-$0005 | num_wordlists_offset            | definitions.asm:86
-$0005 | str_abc_upper                   | strings.asm:18
-$0006 | err_refill                      | strings.asm:64
-$0006 | insrc                           | definitions.asm:26
-$0006 | str_wid_editor                  | strings.asm:19
-$0006 | wordlists_offset                | definitions.asm:88
-$0007 | ascbell                         | definitions.asm:110
-$0007 | err_state                       | strings.asm:65
-$0007 | str_wid_assembler               | strings.asm:20
-$0008 | ascbs                           | definitions.asm:111
-$0008 | cib                             | definitions.asm:27
-$0008 | err_syntax                      | strings.asm:66
-$0008 | nn                              | definitions.asm:125
-$0008 | str_wid_root                    | strings.asm:21
-$0009 | err_underflow                   | strings.asm:67
-$0009 | str_see_flags                   | strings.asm:22
-$000A | asclf                           | definitions.asm:112
-$000A | ciblen                          | definitions.asm:28
-$000A | err_negallot                    | strings.asm:68
-$000A | str_see_nt                      | strings.asm:23
-$000B | err_wordlist                    | strings.asm:69
-$000B | str_see_xt                      | strings.asm:24
-$000C | err_blockwords                  | strings.asm:70
-$000C | max_wordlists                   | definitions.asm:95
-$000C | str_see_size                    | strings.asm:25
-$000C | toin                            | definitions.asm:29
-$000D | asccr                           | definitions.asm:113
-$000E | asccn                           | definitions.asm:118
-$000E | ip                              | definitions.asm:30
-$0010 | asccp                           | definitions.asm:117
-$0010 | output                          | definitions.asm:31
-$0010 | uf                              | definitions.asm:126
-$0012 | input                           | definitions.asm:32
-$0014 | havekey                         | definitions.asm:33
-$0016 | state                           | definitions.asm:34
-$0018 | base                            | definitions.asm:35
-$001A | nc_limit                        | definitions.asm:36
-$001B | ascesc                          | definitions.asm:114
-$001C | uf_strip                        | definitions.asm:37
-$001E | num_order_offset                | definitions.asm:90
-$001E | up                              | definitions.asm:38
-$001F | search_order_offset             | definitions.asm:92
-$0020 | ascsp                           | definitions.asm:115
-$0020 | hc                              | definitions.asm:127
-$0020 | status                          | definitions.asm:39
-$0022 | tmpbranch                       | definitions.asm:60
-$0024 | tmp1                            | definitions.asm:61
-$0026 | tmp2                            | definitions.asm:62
-$0028 | blkbuffer_offset                | definitions.asm:99
-$0028 | tmp3                            | definitions.asm:63
-$002A | buffblocknum_offset             | definitions.asm:100
-$002A | tmpdsp                          | definitions.asm:64
-$002C | buffstatus_offset               | definitions.asm:101
-$002C | tmptos                          | definitions.asm:65
-$002E | blockread_offset                | definitions.asm:104
-$002E | ed_head                         | ed.asm:54
-$002E | editor1                         | definitions.asm:66
-$0030 | blockwrite_offset               | definitions.asm:105
-$0030 | ed_cur                          | ed.asm:55
-$0030 | editor2                         | definitions.asm:67
-$0032 | ed_flags                        | ed.asm:56
-$0032 | editor3                         | definitions.asm:68
-$0034 | tohold                          | definitions.asm:69
-$0036 | scratch                         | definitions.asm:70
-$004F | max_line_length                 | definitions.asm:131
-$0078 | dsp0                            | definitions.asm:77
-$007F | ascdel                          | definitions.asm:116
-$007F | zpage_end                       | platform-py65mon.asm:68
-$00FF | bsize                           | platform-py65mon.asm:83
-$00FF | padoffset                       | platform-py65mon.asm:87
-$00FF | rsp0                            | platform-py65mon.asm:82
-$0100 | stack0                          | platform-py65mon.asm:69
-$0200 | buffer0                         | platform-py65mon.asm:84
-$0300 | cp0                             | platform-py65mon.asm:85
-$7C00 | cp_end                          | platform-py65mon.asm:86
-$7C00 | hist_buff                       | platform-py65mon.asm:70
-$7FFF | ram_end                         | platform-py65mon.asm:66
-$8000 | code0                           | taliforth.asm:11
-$8000 | forth                           | taliforth.asm:16
-$8000 | xt_cold                         | native_words.asm:24
-$800B | _load_zp_loop                   | native_words.asm:38
-$8021 | _load_user_vars_loop            | native_words.asm:62
-$8081 | xt_abort                        | native_words.asm:149
-$8083 | xt_quit                         | native_words.asm:161
-$8094 | _get_line                       | native_words.asm:182
-$80AC | _success                        | native_words.asm:207
-$80BA | _stack_ok                       | native_words.asm:225
-$80C0 | _print                          | native_words.asm:233
-$80C5 | cold_zp_table                   | native_words.asm:247
-$80C5 | z_abort                         | native_words.asm:240
-$80C5 | z_cold                          | native_words.asm:239
-$80C5 | z_quit                          | native_words.asm:241
-$80E7 | cold_user_table                 | native_words.asm:274
-$80E7 | cold_zp_table_end               | native_words.asm:267
-$8119 | cold_user_table_end             | native_words.asm:291
-$8119 | xt_abort_quote                  | native_words.asm:300
-$8123 | z_abort_quote                   | native_words.asm:309
-$8124 | abort_quote_runtime             | native_words.asm:312
-$8133 | _done                           | native_words.asm:325
-$8139 | xt_abs                          | native_words.asm:342
-$814D | _done                           | native_words.asm:358
-$814D | z_abs                           | native_words.asm:359
-$814E | xt_accept                       | native_words.asm:372
-$8160 | _not_zero                       | native_words.asm:387
-$817B | _loop                           | native_words.asm:417
-$81A2 | _eol                            | native_words.asm:455
-$81A5 | _buffer_full                    | native_words.asm:458
-$81AC | _backspace                      | native_words.asm:465
-$81B6 | *                               | native_words.asm:474
-$81C8 | _ctrl_p                         | native_words.asm:485
-$81D6 | _ctrl_p_dec                     | native_words.asm:501
-$81DA | _ctrl_n                         | native_words.asm:506
-$81E7 | _recall_history                 | native_words.asm:529
-$81F3 | input_clear                     | native_words.asm:542
-$81FF | input_cleared                   | native_words.asm:551
-$820E | *                               | native_words.asm:566
-$8213 | _history_loop                   | native_words.asm:572
-$821A | *                               | native_words.asm:577
-$8228 | _hist_filled_buffer             | native_words.asm:593
-$822C | _done                           | native_words.asm:599
-$823B | *                               | native_words.asm:613
-$823B | _save_history_loop              | native_words.asm:617
-$8246 | _save_history_done              | native_words.asm:626
-$8246 | z_accept                        | native_words.asm:627
-$8247 | _total_recall                   | native_words.asm:630
-$8268 | *                               | native_words.asm:658
-$826F | *                               | native_words.asm:665
-$8270 | xt_action_of                    | native_words.asm:676
-$8276 | _compiling                      | native_words.asm:684
-$8282 | _interpreting                   | native_words.asm:695
-$8288 | _done                           | native_words.asm:699
-$8288 | z_action_of                     | native_words.asm:700
-$8289 | xt_again                        | native_words.asm:708
-$82A7 | _done                           | native_words.asm:734
-$82A9 | z_again                         | native_words.asm:738
-$82AA | xt_align                        | native_words.asm:753
-$82AA | xt_aligned                      | native_words.asm:754
-$82AA | z_align                         | native_words.asm:755
-$82AA | z_aligned                       | native_words.asm:756
-$82AB | xt_allot                        | native_words.asm:770
-$82D4 | _release                        | native_words.asm:808
-$8307 | _nega_done                      | native_words.asm:866
-$8311 | _done                           | native_words.asm:875
-$8313 | z_allot                         | native_words.asm:878
-$8314 | xt_allow_native                 | native_words.asm:885
-$831F | z_allow_native                  | native_words.asm:891
-$8320 | xt_also                         | native_words.asm:898
-$832F | z_also                          | native_words.asm:905
-$8330 | xt_always_native                | native_words.asm:910
-$833D | z_always_native                 | native_words.asm:917
-$833E | xt_and                          | native_words.asm:924
-$834F | z_and                           | native_words.asm:938
-$8350 | xt_at_xy                        | native_words.asm:961
-$836D | z_at_xy                         | native_words.asm:975
-$836E | xt_backslash                    | native_words.asm:981
-$8376 | z_backslash                     | native_words.asm:987
-$8377 | xt_base                         | native_words.asm:996
-$837F | z_base                          | native_words.asm:1003
-$8380 | xt_begin                        | native_words.asm:1017
-$8383 | z_begin                         | native_words.asm:1019
-$8384 | xt_bell                         | native_words.asm:1025
-$8389 | z_bell                          | native_words.asm:1029
-$838A | xt_bl                           | native_words.asm:1036
-$8392 | z_bl                            | native_words.asm:1043
-$8393 | xt_blk                          | native_words.asm:1049
-$83A2 | z_blk                           | native_words.asm:1061
-$83A3 | xt_blkbuffer                    | native_words.asm:1066
-$83B0 | z_blkbuffer                     | native_words.asm:1081
-$83B1 | xt_block                        | native_words.asm:1088
-$83C8 | _not_in_buffer                  | native_words.asm:1110
-$83DC | _buffer_available               | native_words.asm:1123
-$83F8 | _done                           | native_words.asm:1146
-$8403 | z_block                         | native_words.asm:1155
-$8404 | xt_block_ramdrive_init          | native_words.asm:1167
-$840A | _ramdrive_code                  | native_words.asm:1176
-$8522 | _after_ramdrive_code            | native_words.asm:1190
-$852C | z_block_ramdrive_init           | native_words.asm:1199
-$852D | xt_block_read                   | native_words.asm:1210
-$853B | xt_block_read_vector            | native_words.asm:1230
-$853B | z_block_read                    | native_words.asm:1221
-$854A | z_block_read_vector             | native_words.asm:1242
-$854B | xt_block_word_error             | native_words.asm:1248
-$8550 | xt_block_write                  | native_words.asm:1259
-$8550 | z_block_word_error              | native_words.asm:1251
-$855E | xt_block_write_vector           | native_words.asm:1278
-$855E | z_block_write                   | native_words.asm:1269
-$856D | z_block_write_vector            | native_words.asm:1290
-$856E | xt_bounds                       | native_words.asm:1301
-$8586 | z_bounds                        | native_words.asm:1317
-$8587 | xt_bracket_char                 | native_words.asm:1330
-$858D | z_bracket_char                  | native_words.asm:1333
-$858E | xt_bracket_tick                 | native_words.asm:1339
-$8594 | z_bracket_tick                  | native_words.asm:1342
-$8595 | xt_buffblocknum                 | native_words.asm:1347
-$85A4 | z_buffblocknum                  | native_words.asm:1359
-$85A5 | xt_buffer                       | native_words.asm:1366
-$85B9 | _buffer_available               | native_words.asm:1379
-$85CA | _done                           | native_words.asm:1393
-$85D5 | z_buffer                        | native_words.asm:1402
-$85D6 | xt_buffer_colon                 | native_words.asm:1412
-$85DC | z_buffer_colon                  | native_words.asm:1415
-$85DD | xt_buffstatus                   | native_words.asm:1420
-$85EC | z_buffstatus                    | native_words.asm:1432
-$85ED | xt_bye                          | native_words.asm:1439
-$85F0 | xt_c_comma                      | native_words.asm:1450
-$85F0 | z_bye                           | native_words.asm:1442
-$85FA | z_c_comma                       | native_words.asm:1459
-$85FB | xt_c_fetch                      | native_words.asm:1466
-$8604 | z_c_fetch                       | native_words.asm:1473
-$8605 | xt_c_store                      | native_words.asm:1479
-$8610 | z_c_store                       | native_words.asm:1490
-$8611 | xt_cell_plus                    | native_words.asm:1508
-$861A | *                               | native_words.asm:1514
-$8620 | _done                           | native_words.asm:1518
-$8620 | z_cell_plus                     | native_words.asm:1519
-$8621 | xt_char                         | native_words.asm:1536
-$862F | _not_empty                      | native_words.asm:1548
-$8637 | z_char                          | native_words.asm:1555
-$8638 | xt_chars                        | native_words.asm:1575
-$863B | z_chars                         | native_words.asm:1582
-$863C | xt_cleave                       | native_words.asm:1601
-$8685 | _done                           | native_words.asm:1665
-$8688 | z_cleave                        | native_words.asm:1669
-$8689 | xt_cmove                        | native_words.asm:1684
-$86A2 | _page                           | native_words.asm:1703
-$86B1 | _dopartial                      | native_words.asm:1714
-$86B5 | _partial                        | native_words.asm:1718
-$86BE | _done                           | native_words.asm:1726
-$86C3 | z_cmove                         | native_words.asm:1732
-$86C4 | xt_cmove_up                     | native_words.asm:1745
-$86E3 | _outerloop                      | native_words.asm:1769
-$86E6 | _innerloop                      | native_words.asm:1773
-$86ED | _finishpage                     | native_words.asm:1779
-$86F1 | _nopartial                      | native_words.asm:1783
-$86F9 | _done                           | native_words.asm:1788
-$86FE | z_cmove_up                      | native_words.asm:1795
-$86FF | xt_colon                        | native_words.asm:1806
-$870A | *                               | native_words.asm:1815
-$8741 | _done                           | native_words.asm:1866
-$8741 | z_colon                         | native_words.asm:1867
-$8742 | xt_colon_noname                 | native_words.asm:1876
-$874D | *                               | native_words.asm:1885
-$875D | _done                           | native_words.asm:1902
-$875D | z_colon_noname                  | native_words.asm:1903
-$875E | xt_comma                        | native_words.asm:1915
-$876B | *                               | native_words.asm:1924
-$8775 | _done                           | native_words.asm:1931
-$8777 | z_comma                         | native_words.asm:1935
-$8778 | xt_compare                      | native_words.asm:1949
-$878B | _compare_loop                   | native_words.asm:1963
-$8797 | _check_letter                   | native_words.asm:1976
-$879F | _next_letter                    | native_words.asm:1983
-$87A5 | *                               | native_words.asm:1990
-$87AB | *                               | native_words.asm:1995
-$87B1 | *                               | native_words.asm:2000
-$87B9 | *                               | native_words.asm:2007
-$87BD | _str1_done                      | native_words.asm:2013
-$87C3 | _less                           | native_words.asm:2020
-$87CB | _equal                          | native_words.asm:2026
-$87D1 | _greater                        | native_words.asm:2031
-$87D7 | _done                           | native_words.asm:2037
-$87DC | z_compare                       | native_words.asm:2044
-$87DD | xt_compile_comma                | native_words.asm:2062
-$87F2 | _check_nt                       | native_words.asm:2083
-$8800 | *                               | native_words.asm:2094
-$8815 | _compile_check                  | native_words.asm:2111
-$881E | _check_size_limit               | native_words.asm:2120
-$8839 | _jumpto_compile_as_jump         | native_words.asm:2142
-$883C | _compile_as_code                | native_words.asm:2147
-$8858 | _strip_loop                     | native_words.asm:2179
-$8866 | _next_entry                     | native_words.asm:2191
-$8872 | _found_entry                    | native_words.asm:2201
-$8883 | *                               | native_words.asm:2223
-$8890 | *                               | native_words.asm:2235
-$8890 | _underflow_strip                | native_words.asm:2238
-$88A7 | *                               | native_words.asm:2265
-$88B2 | *                               | native_words.asm:2273
-$88B2 | _specials_done                  | native_words.asm:2276
-$88C8 | _strip_table                    | native_words.asm:2301
-$88D4 | _strip_size                     | native_words.asm:2308
-$88DA | _compile_as_jump                | native_words.asm:2314
-$88F2 | *                               | native_words.asm:2333
-$88F4 | _done                           | native_words.asm:2336
-$88F4 | z_compile_comma                 | native_words.asm:2337
-$88F5 | xt_compile_only                 | native_words.asm:2351
-$8900 | z_compile_only                  | native_words.asm:2358
-$8901 | xt_constant                     | native_words.asm:2373
-$8901 | xt_value                        | native_words.asm:2372
-$8921 | adjust_z                        | native_words.asm:2398
-$893E | z_constant                      | native_words.asm:2425
-$893E | z_value                         | native_words.asm:2424
-$893F | xt_count                        | native_words.asm:2437
-$894B | *                               | native_words.asm:2449
-$8952 | z_count                         | native_words.asm:2455
-$8953 | xt_cr                           | native_words.asm:2461
-$8958 | z_cr                            | native_words.asm:2464
-$8959 | xt_create                       | native_words.asm:2474
-$8967 | _got_name                       | native_words.asm:2486
-$8983 | _redefined_name                 | native_words.asm:2518
-$8993 | _new_name                       | native_words.asm:2529
-$899B | _process_name                   | native_words.asm:2536
-$8A06 | _name_loop                      | native_words.asm:2655
-$8A13 | _store_name                     | native_words.asm:2671
-$8A2D | z_create                        | native_words.asm:2697
-$8A2E | xt_d_minus                      | native_words.asm:2705
-$8A4E | z_d_minus                       | native_words.asm:2731
-$8A4F | xt_d_plus                       | native_words.asm:2739
-$8A6F | z_d_plus                        | native_words.asm:2764
-$8A70 | xt_d_to_s                       | native_words.asm:2775
-$8A75 | z_d_to_s                        | native_words.asm:2781
-$8A76 | xt_dabs                         | native_words.asm:2789
-$8A94 | _done                           | native_words.asm:2814
-$8A94 | z_dabs                          | native_words.asm:2815
-$8A95 | xt_decimal                      | native_words.asm:2822
-$8A9B | z_decimal                       | native_words.asm:2827
-$8A9C | xt_defer                        | native_words.asm:2839
-$8AC1 | *                               | native_words.asm:2871
-$8ACB | *                               | native_words.asm:2877
-$8ACE | z_defer                         | native_words.asm:2880
-$8ACF | xt_defer_fetch                  | native_words.asm:2888
-$8AD5 | z_defer_fetch                   | native_words.asm:2892
-$8AD6 | xt_defer_store                  | native_words.asm:2900
-$8ADC | z_defer_store                   | native_words.asm:2904
-$8ADD | xt_definitions                  | native_words.asm:2910
-$8AE5 | z_definitions                   | native_words.asm:2915
-$8AE6 | xt_depth                        | native_words.asm:2921
-$8AF4 | z_depth                         | native_words.asm:2935
-$8AF5 | xt_digit_question               | native_words.asm:2948
-$8B19 | _case_done                      | native_words.asm:2984
-$8B1C | _checkbase                      | native_words.asm:2990
-$8B29 | _done                           | native_words.asm:3003
-$8B29 | z_digit_question                | native_words.asm:3004
-$8B2A | xt_disasm                       | native_words.asm:3016
-$8B30 | z_disasm                        | native_words.asm:3021
-$8B31 | xt_dnegate                      | native_words.asm:3027
-$8B4B | z_dnegate                       | native_words.asm:3049
-$8B4C | xt_question_do                  | native_words.asm:3055
-$8B52 | xt_do                           | native_words.asm:3076
-$8B54 | do_common                       | native_words.asm:3079
-$8B61 | _loop                           | native_words.asm:3093
-$8B70 | *                               | native_words.asm:3105
-$8B77 | *                               | native_words.asm:3115
-$8B8B | _compile_do                     | native_words.asm:3130
-$8B8E | *                               | native_words.asm:3134
-$8BAC | z_do                            | native_words.asm:3159
-$8BAC | z_question_do                   | native_words.asm:3158
-$8BAD | do_runtime                      | native_words.asm:3162
-$8BD1 | do_runtime_end                  | native_words.asm:3209
-$8BD1 | question_do_runtime             | native_words.asm:3211
-$8BE3 | _do_do                          | native_words.asm:3234
-$8BE5 | question_do_runtime_end         | native_words.asm:3237
-$8BE5 | xt_does                         | native_words.asm:3250
-$8BF3 | z_does                          | native_words.asm:3263
-$8BF4 | does_runtime                    | native_words.asm:3266
-$8BFA | *                               | native_words.asm:3281
-$8C26 | xt_dot                          | native_words.asm:3326
-$8C47 | z_dot                           | native_words.asm:3340
-$8C48 | xt_dot_paren                    | native_words.asm:3348
-$8C56 | z_dot_paren                     | native_words.asm:3359
-$8C57 | xt_dot_quote                    | native_words.asm:3372
-$8C61 | z_dot_quote                     | native_words.asm:3383
-$8C62 | xt_dot_r                        | native_words.asm:3395
-$8C8F | z_dot_r                         | native_words.asm:3413
-$8C90 | xt_dot_s                        | native_words.asm:3427
-$8CB4 | _have_stack                     | native_words.asm:3461
-$8CBB | _loop                           | native_words.asm:3470
-$8CD2 | _done                           | native_words.asm:3490
-$8CD3 | z_dot_s                         | native_words.asm:3492
-$8CD4 | xt_d_dot                        | native_words.asm:3504
-$8CF2 | z_d_dot                         | native_words.asm:3517
-$8CF3 | xt_d_dot_r                      | native_words.asm:3528
-$8D1D | z_d_dot_r                       | native_words.asm:3545
-$8D1E | xt_drop                         | native_words.asm:3552
-$8D23 | z_drop                          | native_words.asm:3558
-$8D24 | xt_dump                         | native_words.asm:3571
-$8D27 | _row                            | native_words.asm:3573
-$8D3E | _loop                           | native_words.asm:3592
-$8D55 | _printable                      | native_words.asm:3609
-$8D64 | _next_char                      | native_words.asm:3621
-$8D6A | _counter                        | native_words.asm:3626
-$8D70 | *                               | native_words.asm:3631
-$8D7D | _all_printed                    | native_words.asm:3643
-$8D87 | _done                           | native_words.asm:3657
-$8D8A | z_dump                          | native_words.asm:3659
-$8D8B | _print_ascii                    | native_words.asm:3662
-$8D8D | _ascii_loop                     | native_words.asm:3668
-$8D9A | *                               | native_words.asm:3677
-$8D9F | xt_dup                          | native_words.asm:3688
-$8DAC | z_dup                           | native_words.asm:3699
-$8DAD | xt_ed                           | native_words.asm:3707
-$8DB0 | z_ed                            | native_words.asm:3710
-$8DB1 | xt_else                         | native_words.asm:3733
-$8DB1 | xt_endof                        | native_words.asm:3734
-$8DCA | z_else                          | native_words.asm:3756
-$8DCA | z_endof                         | native_words.asm:3757
-$8DCB | branch_runtime                  | native_words.asm:3762
-$8DDF | xt_emit                         | native_words.asm:3796
-$8DE6 | emit_a                          | native_words.asm:3803
-$8DE9 | xt_empty_buffers                | native_words.asm:3817
-$8DE9 | z_emit                          | native_words.asm:3810
-$8DEF | z_empty_buffers                 | native_words.asm:3822
-$8DF0 | xt_endcase                      | native_words.asm:3830
-$8DF7 | _endcase_loop                   | native_words.asm:3841
-$8E02 | _done                           | native_words.asm:3849
-$8E04 | z_endcase                       | native_words.asm:3853
-$8E05 | xt_environment_q                | native_words.asm:3899
-$8E0B | _table_loop                     | native_words.asm:3916
-$8E32 | _got_result                     | native_words.asm:3958
-$8E46 | _double_result                  | native_words.asm:3979
-$8E65 | _set_flag                       | native_words.asm:4014
-$8E6D | _table_done                     | native_words.asm:4020
-$8E79 | _no_match                       | native_words.asm:4043
-$8E81 | _done                           | native_words.asm:4052
-$8E81 | z_environment_q                 | native_words.asm:4053
-$8E82 | _env_table_single               | native_words.asm:4064
-$8E9A | _env_table_double               | native_words.asm:4069
-$8EA0 | _env_results_single             | native_words.asm:4072
-$8EB6 | _env_results_double             | native_words.asm:4085
-$8EBE | xt_equal                        | native_words.asm:4094
-$8ED1 | _false                          | native_words.asm:4108
-$8ED3 | _done                           | native_words.asm:4110
-$8ED9 | z_equal                         | native_words.asm:4116
-$8EDA | xt_blank                        | native_words.asm:4123
-$8EE4 | xt_erase                        | native_words.asm:4142
-$8EEA | xt_fill                         | native_words.asm:4160
-$8F00 | _loop                           | native_words.asm:4178
-$8F0E | _check_counter                  | native_words.asm:4191
-$8F1D | *                               | native_words.asm:4206
-$8F27 | _done                           | native_words.asm:4215
-$8F2C | z_blank                         | native_words.asm:4222
-$8F2C | z_erase                         | native_words.asm:4223
-$8F2C | z_fill                          | native_words.asm:4224
-$8F2D | xt_execute                      | native_words.asm:4231
-$8F33 | z_execute                       | native_words.asm:4236
-$8F34 | doexecute                       | native_words.asm:4238
-$8F41 | xt_execute_parsing              | native_words.asm:4265
-$8F67 | z_execute_parsing               | native_words.asm:4289
-$8F68 | xt_exit                         | native_words.asm:4301
-$8F69 | xt_false                        | native_words.asm:4310
-$8F69 | z_exit                          | native_words.asm:4303
-$8F6F | z_false                         | native_words.asm:4316
-$8F70 | xt_fetch                        | native_words.asm:4322
-$8F7C | *                               | native_words.asm:4330
-$8F82 | z_fetch                         | native_words.asm:4335
-$8F83 | xt_find                         | native_words.asm:4351
-$8FA3 | _found_word                     | native_words.asm:4384
-$8FB6 | *                               | native_words.asm:4401
-$8FC4 | _immediate                      | native_words.asm:4411
-$8FCA | _done                           | native_words.asm:4415
-$8FCA | z_find                          | native_words.asm:4416
-$8FCB | xt_find_name                    | native_words.asm:4423
-$8FD7 | _nonempty                       | native_words.asm:4442
-$8FD9 | _wordlist_loop                  | native_words.asm:4446
-$8FE4 | _have_string                    | native_words.asm:4455
-$9000 | _loop                           | native_words.asm:4481
-$9006 | _compare_string                 | native_words.asm:4487
-$9013 | _compare_first                  | native_words.asm:4505
-$9030 | _string_loop                    | native_words.asm:4537
-$903D | _check_char                     | native_words.asm:4551
-$9044 | _success_tmp1                   | native_words.asm:4558
-$904A | _success                        | native_words.asm:4564
-$9054 | _next_entry_tmp1                | native_words.asm:4574
-$905A | _next_entry                     | native_words.asm:4580
-$9070 | _fail_done                      | native_words.asm:4601
-$9074 | _done                           | native_words.asm:4604
-$9076 | z_find_name                     | native_words.asm:4608
-$9077 | xt_flush                        | native_words.asm:4615
-$9080 | z_flush                         | native_words.asm:4622
-$9081 | xt_fm_slash_mod                 | native_words.asm:4639
-$9098 | _check_d                        | native_words.asm:4653
-$90A9 | _multiply                       | native_words.asm:4667
-$90B7 | _done                           | native_words.asm:4679
-$90B7 | z_fm_slash_mod                  | native_words.asm:4680
-$90B8 | xt_forth                        | native_words.asm:4687
-$90BE | z_forth                         | native_words.asm:4692
-$90BF | load_evaluate                   | native_words.asm:4699
-$90C5 | xt_evaluate                     | native_words.asm:4716
-$90D6 | _got_work                       | native_words.asm:4738
-$90D6 | load_evaluate_start             | native_words.asm:4737
-$90E8 | _nozero                         | native_words.asm:4757
-$9118 | _done                           | native_words.asm:4799
-$9118 | z_evaluate                      | native_words.asm:4800
-$9119 | xt_get_current                  | native_words.asm:4814
-$9123 | z_get_current                   | native_words.asm:4825
-$9124 | xt_get_order                    | native_words.asm:4833
-$912C | _loop                           | native_words.asm:4840
-$9142 | _done                           | native_words.asm:4863
-$914C | z_get_order                     | native_words.asm:4872
-$914D | xt_greater_than                 | native_words.asm:4880
-$915A | _false                          | native_words.asm:4892
-$9161 | z_greater_than                  | native_words.asm:4900
-$9162 | xt_asm_arrow                    | native_words.asm:4910
-$9162 | xt_here                         | native_words.asm:4909
-$916C | z_asm_arrow                     | native_words.asm:4918
-$916C | z_here                          | native_words.asm:4919
-$916D | xt_hex                          | native_words.asm:4925
-$9173 | z_hex                           | native_words.asm:4930
-$9174 | xt_hexstore                     | native_words.asm:4941
-$917D | _loop                           | native_words.asm:4947
-$91B2 | _have_chars_left                | native_words.asm:4982
-$91B9 | _done                           | native_words.asm:4992
-$91C6 | z_hexstore                      | native_words.asm:5003
-$91C7 | xt_hold                         | native_words.asm:5017
-$91D0 | *                               | native_words.asm:5023
-$91D8 | z_hold                          | native_words.asm:5031
-$91D9 | xt_i                            | native_words.asm:5044
-$91F2 | z_i                             | native_words.asm:5067
-$91F3 | xt_if                           | native_words.asm:5075
-$9203 | z_if                            | native_words.asm:5088
-$9204 | zero_branch_runtime             | native_words.asm:5091
-$921F | _zero                           | native_words.asm:5122
-$9230 | *                               | native_words.asm:5138
-$9232 | _done                           | native_words.asm:5141
-$923B | xt_immediate                    | native_words.asm:5165
-$9246 | z_immediate                     | native_words.asm:5172
-$9247 | xt_input                        | native_words.asm:5178
-$9251 | z_input                         | native_words.asm:5186
-$9252 | xt_input_to_r                   | native_words.asm:5211
-$925A | _loop                           | native_words.asm:5223
-$9267 | z_input_to_r                    | native_words.asm:5235
-$9268 | xt_int_to_name                  | native_words.asm:5246
-$9271 | _wordlist_loop                  | native_words.asm:5259
-$928F | _loop                           | native_words.asm:5285
-$929E | _no_match                       | native_words.asm:5297
-$92BE | _zero                           | native_words.asm:5322
-$92BF | _next_wordlist                  | native_words.asm:5326
-$92D0 | _match                          | native_words.asm:5344
-$92DA | z_int_to_name                   | native_words.asm:5355
-$92DB | xt_invert                       | native_words.asm:5362
-$92EA | z_invert                        | native_words.asm:5373
-$92EB | xt_is                           | native_words.asm:5380
-$92F1 | _compiling                      | native_words.asm:5388
-$92FD | _interpreting                   | native_words.asm:5399
-$9303 | _done                           | native_words.asm:5402
-$9303 | z_is                            | native_words.asm:5403
-$9304 | xt_j                            | native_words.asm:5420
-$931D | z_j                             | native_words.asm:5443
-$931E | xt_key                          | native_words.asm:5449
-$9327 | z_key                           | native_words.asm:5461
-$9328 | key_a                           | native_words.asm:5463
-$932B | xt_latestnt                     | native_words.asm:5477
-$9338 | z_latestnt                      | native_words.asm:5488
-$9339 | xt_latestxt                     | native_words.asm:5494
-$933F | z_latestxt                      | native_words.asm:5498
-$9340 | xt_leave                        | native_words.asm:5513
-$9345 | xt_left_bracket                 | native_words.asm:5531
-$9345 | z_leave                         | native_words.asm:5522
-$9349 | z_left_bracket                  | native_words.asm:5535
-$934A | xt_less_number_sign             | native_words.asm:5555
-$9357 | z_less_number_sign              | native_words.asm:5566
-$9358 | xt_less_than                    | native_words.asm:5573
-$9365 | _false                          | native_words.asm:5585
-$936C | z_less_than                     | native_words.asm:5593
-$936D | xt_list                         | native_words.asm:5601
-$9379 | z_list                          | native_words.asm:5611
-$937A | xt_literal                      | native_words.asm:5624
-$9387 | z_literal                       | native_words.asm:5635
-$9388 | literal_runtime                 | native_words.asm:5637
-$93A7 | xt_load                         | native_words.asm:5686
-$93EA | _done                           | native_words.asm:5747
-$93EA | z_load                          | native_words.asm:5748
-$93EB | xt_loop                         | native_words.asm:5762
-$93F2 | xt_plus_loop                    | native_words.asm:5782
-$93F5 | *                               | native_words.asm:5788
-$9410 | *                               | native_words.asm:5812
-$9458 | z_loop                          | native_words.asm:5867
-$9458 | z_plus_loop                     | native_words.asm:5868
-$9459 | plus_loop_runtime               | native_words.asm:5871
-$9469 | _hack                           | native_words.asm:5901
-$946A | plus_loop_runtime_end           | native_words.asm:5907
-$946A | xt_lshift                       | native_words.asm:5914
-$9474 | _loop                           | native_words.asm:5924
-$947B | _done                           | native_words.asm:5930
-$947D | z_lshift                        | native_words.asm:5934
-$947E | xt_m_star                       | native_words.asm:5948
-$9498 | _done                           | native_words.asm:5973
-$9498 | z_m_star                        | native_words.asm:5974
-$9499 | xt_marker                       | native_words.asm:6006
-$94CB | _marker_loop                    | native_words.asm:6055
-$94D6 | z_marker                        | native_words.asm:6063
-$94D7 | marker_runtime                  | native_words.asm:6067
-$94E3 | *                               | native_words.asm:6083
-$94FA | _marker_restore_loop            | native_words.asm:6105
-$9508 | xt_max                          | native_words.asm:6132
-$9517 | _no_overflow                    | native_words.asm:6146
-$9521 | _keep_nos                       | native_words.asm:6156
-$9523 | z_max                           | native_words.asm:6160
-$9524 | xt_min                          | native_words.asm:6172
-$9533 | _no_overflow                    | native_words.asm:6186
-$953D | _keep_nos                       | native_words.asm:6196
-$953F | z_min                           | native_words.asm:6200
-$9540 | xt_minus                        | native_words.asm:6207
-$9552 | z_minus                         | native_words.asm:6222
-$9553 | xt_minus_leading                | native_words.asm:6230
-$9556 | _loop                           | native_words.asm:6233
-$956B | _done                           | native_words.asm:6249
-$956B | z_minus_leading                 | native_words.asm:6250
-$956C | xt_minus_trailing               | native_words.asm:6261
-$9588 | *                               | native_words.asm:6286
-$958A | _loop                           | native_words.asm:6289
-$9596 | *                               | native_words.asm:6300
-$959E | *                               | native_words.asm:6307
-$95A8 | _done                           | native_words.asm:6317
-$95A8 | z_minus_trailing                | native_words.asm:6318
-$95A9 | xt_mod                          | native_words.asm:6330
-$95B1 | z_mod                           | native_words.asm:6337
-$95B2 | xt_move                         | native_words.asm:6352
-$95BD | _lsb                            | native_words.asm:6364
-$95C8 | _to_move_up                     | native_words.asm:6373
-$95CB | _equal                          | native_words.asm:6375
-$95D0 | z_move                          | native_words.asm:6382
-$95D1 | xt_name_to_int                  | native_words.asm:6392
-$95E0 | _done                           | native_words.asm:6404
-$95ED | z_name_to_int                   | native_words.asm:6414
-$95EE | xt_name_to_string               | native_words.asm:6422
-$9607 | z_name_to_string                | native_words.asm:6444
-$9608 | xt_nc_limit                     | native_words.asm:6451
-$9612 | z_nc_limit                      | native_words.asm:6459
-$9613 | xt_negate                       | native_words.asm:6466
-$9623 | z_negate                        | native_words.asm:6478
-$9624 | xt_never_native                 | native_words.asm:6483
-$9631 | z_never_native                  | native_words.asm:6490
-$9632 | xt_nip                          | native_words.asm:6497
-$963F | z_nip                           | native_words.asm:6508
-$9640 | xt_not_equals                   | native_words.asm:6519
-$9655 | _not_equal                      | native_words.asm:6536
-$9656 | _done                           | native_words.asm:6539
-$965D | z_not_equals                    | native_words.asm:6546
-$965E | xt_not_rote                     | native_words.asm:6554
-$9679 | z_not_rote                      | native_words.asm:6573
-$967A | xt_number                       | native_words.asm:6595
-$968F | *                               | native_words.asm:6614
-$9691 | _check_dot                      | native_words.asm:6617
-$96A4 | *                               | native_words.asm:6633
-$96B0 | _main                           | native_words.asm:6645
-$96E6 | _all_converted                  | native_words.asm:6687
-$96FB | _single                         | native_words.asm:6712
-$9708 | _done                           | native_words.asm:6726
-$9708 | z_number                        | native_words.asm:6727
-$9709 | xt_number_sign                  | native_words.asm:6740
-$973D | z_number_sign                   | native_words.asm:6776
-$973E | xt_number_sign_greater          | native_words.asm:6790
-$975F | z_number_sign_greater           | native_words.asm:6817
-$9760 | xt_number_sign_s                | native_words.asm:6831
-$9763 | _loop                           | native_words.asm:6833
-$9770 | z_number_sign_s                 | native_words.asm:6844
-$9771 | xt_of                           | native_words.asm:6853
-$9789 | z_of                            | native_words.asm:6873
-$978A | xt_editor_wordlist              | native_words.asm:6880
-$978A | xt_one                          | native_words.asm:6881
-$9792 | z_editor_wordlist               | native_words.asm:6888
-$9792 | z_one                           | native_words.asm:6889
-$9793 | xt_one_minus                    | native_words.asm:6897
-$979C | *                               | native_words.asm:6903
-$979E | z_one_minus                     | native_words.asm:6906
-$979F | xt_char_plus                    | native_words.asm:6917
-$979F | xt_one_plus                     | native_words.asm:6918
-$97A8 | _done                           | native_words.asm:6925
-$97A8 | z_char_plus                     | native_words.asm:6926
-$97A8 | z_one_plus                      | native_words.asm:6927
-$97A9 | xt_only                         | native_words.asm:6935
-$97B4 | z_only                          | native_words.asm:6946
-$97B5 | xt_or                           | native_words.asm:6953
-$97C6 | z_or                            | native_words.asm:6967
-$97C7 | xt_order                        | native_words.asm:6996
-$97D1 | _have_wordlists                 | native_words.asm:7006
-$97D2 | _loop                           | native_words.asm:7010
-$97EF | _drop_done                      | native_words.asm:7032
-$97F1 | z_order                         | native_words.asm:7035
-$97F2 | _print_wid_string               | native_words.asm:7038
-$97FF | _output_string                  | native_words.asm:7063
-$9806 | _wid_data                       | native_words.asm:7071
-$980A | xt_output                       | native_words.asm:7083
-$9814 | z_output                        | native_words.asm:7096
-$9815 | xt_over                         | native_words.asm:7102
-$9822 | z_over                          | native_words.asm:7113
-$9823 | xt_pad                          | native_words.asm:7124
-$9832 | z_pad                           | native_words.asm:7137
-$9833 | xt_page                         | native_words.asm:7147
-$9850 | z_page                          | native_words.asm:7162
-$9851 | xt_paren                        | native_words.asm:7169
-$9860 | z_paren                         | native_words.asm:7186
-$9861 | xt_parse_name                   | native_words.asm:7206
-$9881 | _skip_loop                      | native_words.asm:7239
-$988E | *                               | native_words.asm:7248
-$9894 | *                               | native_words.asm:7253
-$989C | _empty_line                     | native_words.asm:7259
-$98A7 | _char_found                     | native_words.asm:7274
-$98BC | xt_parse                        | native_words.asm:7321
-$98D1 | _abort_parse                    | native_words.asm:7341
-$98D9 | _go_parse                       | native_words.asm:7349
-$9903 | _loop                           | native_words.asm:7390
-$990F | _not_empty                      | native_words.asm:7399
-$991E | _not_whitespace                 | native_words.asm:7423
-$992A | _found_delimiter                | native_words.asm:7435
-$992C | _eol                            | native_words.asm:7440
-$9953 | _done                           | native_words.asm:7468
-$9953 | z_parse                         | native_words.asm:7470
-$9953 | z_parse_name                    | native_words.asm:7469
-$9954 | xt_pick                         | native_words.asm:7483
-$9964 | z_pick                          | native_words.asm:7499
-$9965 | xt_plus                         | native_words.asm:7506
-$9977 | z_plus                          | native_words.asm:7521
-$9978 | xt_plus_store                   | native_words.asm:7527
-$9997 | z_plus_store                    | native_words.asm:7552
-$9998 | xt_postpone                     | native_words.asm:7568
-$99A6 | *                               | native_words.asm:7578
-$99B0 | *                               | native_words.asm:7586
-$99C1 | *                               | native_words.asm:7602
-$99CC | _not_immediate                  | native_words.asm:7613
-$99D6 | _done                           | native_words.asm:7624
-$99D6 | z_postpone                      | native_words.asm:7625
-$99D7 | xt_previous                     | native_words.asm:7633
-$99E3 | z_previous                      | native_words.asm:7639
-$99E4 | xt_question                     | native_words.asm:7650
-$99EA | z_question                      | native_words.asm:7655
-$99EB | xt_question_dup                 | native_words.asm:7662
-$99FE | _done                           | native_words.asm:7677
-$99FE | z_question_dup                  | native_words.asm:7678
-$99FF | xt_r_fetch                      | native_words.asm:7692
-$9A13 | z_r_fetch                       | native_words.asm:7721
-$9A14 | xt_r_from                       | native_words.asm:7735
-$9A24 | z_r_from                        | native_words.asm:7762
-$9A25 | xt_r_to_input                   | native_words.asm:7773
-$9A2D | _loop                           | native_words.asm:7787
-$9A3C | z_r_to_input                    | native_words.asm:7800
-$9A3D | xt_recurse                      | native_words.asm:7811
-$9A54 | _nt_in_workword                 | native_words.asm:7838
-$9A6F | _update_cp                      | native_words.asm:7861
-$9A79 | _done                           | native_words.asm:7868
-$9A79 | z_recurse                       | native_words.asm:7869
-$9A7A | xt_refill                       | native_words.asm:7890
-$9AAB | _src_not_kbd                    | native_words.asm:7935
-$9AB6 | _src_not_string                 | native_words.asm:7950
-$9ABB | _done                           | native_words.asm:7956
-$9ABB | z_refill                        | native_words.asm:7957
-$9ABC | xt_repeat                       | native_words.asm:7965
-$9AC8 | z_repeat                        | native_words.asm:7975
-$9AC9 | xt_right_bracket                | native_words.asm:7984
-$9ACF | z_right_bracket                 | native_words.asm:7988
-$9AD0 | xt_root_wordlist                | native_words.asm:7994
-$9AD8 | z_root_wordlist                 | native_words.asm:8001
-$9AD9 | xt_rot                          | native_words.asm:8012
-$9AF4 | z_rot                           | native_words.asm:8029
-$9AF5 | xt_rshift                       | native_words.asm:8036
-$9AFF | _loop                           | native_words.asm:8045
-$9B06 | _done                           | native_words.asm:8050
-$9B08 | z_rshift                        | native_words.asm:8054
-$9B09 | xt_s_backslash_quote            | native_words.asm:8067
-$9B12 | _done                           | native_words.asm:8080
-$9B12 | z_s_backslash_quote             | native_words.asm:8081
-$9B13 | convert_hex_value               | native_words.asm:8087
-$9B1E | _digit                          | native_words.asm:8098
-$9B21 | _done                           | native_words.asm:8103
-$9B22 | xt_search_wordlist              | native_words.asm:8112
-$9B3D | *                               | native_words.asm:8136
-$9B48 | _check_wordlist                 | native_words.asm:8147
-$9B51 | _have_string                    | native_words.asm:8155
-$9B5B | *                               | native_words.asm:8163
-$9B67 | _loop                           | native_words.asm:8173
-$9B6D | _compare_string                 | native_words.asm:8179
-$9B7A | _compare_first                  | native_words.asm:8197
-$9B97 | _string_loop                    | native_words.asm:8229
-$9BA4 | _check_char                     | native_words.asm:8242
-$9BAB | _success_tmp1                   | native_words.asm:8249
-$9BB1 | _success                        | native_words.asm:8255
-$9BCC | *                               | native_words.asm:8276
-$9BDA | _immediate                      | native_words.asm:8286
-$9BE2 | _next_entry_tmp1                | native_words.asm:8293
-$9BE8 | _next_entry                     | native_words.asm:8298
-$9BFC | _fail_done                      | native_words.asm:8316
-$9C00 | _done                           | native_words.asm:8319
-$9C02 | _done_nodrop                    | native_words.asm:8322
-$9C02 | z_search_wordlist               | native_words.asm:8323
-$9C03 | xt_see                          | native_words.asm:8336
-$9C14 | *                               | native_words.asm:8348
-$9C51 | _flag_loop                      | native_words.asm:8387
-$9C90 | z_see                           | native_words.asm:8427
-$9C91 | xt_set_current                  | native_words.asm:8435
-$9C9C | z_set_current                   | native_words.asm:8446
-$9C9D | xt_set_order                    | native_words.asm:8454
-$9CB5 | _start                          | native_words.asm:8474
-$9CC5 | _loop                           | native_words.asm:8492
-$9CD0 | _done                           | native_words.asm:8506
-$9CD0 | z_set_order                     | native_words.asm:8507
-$9CD1 | xt_s_quote                      | native_words.asm:8525
-$9CD5 | s_quote_start                   | native_words.asm:8532
-$9CEC | _savechars_loop                 | native_words.asm:8556
-$9D18 | _refill_ok                      | native_words.asm:8595
-$9D1C | _input_fine                     | native_words.asm:8605
-$9D32 | _handle_escapes                 | native_words.asm:8624
-$9D39 | _escaped                        | native_words.asm:8631
-$9D51 | _esc_x_second_digit             | native_words.asm:8659
-$9D5D | _check_esc_chars                | native_words.asm:8673
-$9D5F | _check_esc_a                    | native_words.asm:8679
-$9D68 | _check_esc_b                    | native_words.asm:8687
-$9D71 | _check_esc_e                    | native_words.asm:8695
-$9D79 | _check_esc_f                    | native_words.asm:8703
-$9D81 | _check_esc_l                    | native_words.asm:8711
-$9D89 | _check_esc_m                    | native_words.asm:8719
-$9D96 | _check_esc_n                    | native_words.asm:8731
-$9D9E | _check_esc_q                    | native_words.asm:8739
-$9DA6 | _check_esc_r                    | native_words.asm:8747
-$9DAE | _check_esc_t                    | native_words.asm:8755
-$9DB6 | _check_esc_v                    | native_words.asm:8763
-$9DBE | _check_esc_z                    | native_words.asm:8771
-$9DC6 | _check_esc_quote                | native_words.asm:8779
-$9DCE | _check_esc_x                    | native_words.asm:8787
-$9DD8 | _check_esc_backslash            | native_words.asm:8800
-$9DE0 | _not_escaped                    | native_words.asm:8808
-$9DEA | _regular_char                   | native_words.asm:8822
-$9DEE | _save_character                 | native_words.asm:8827
-$9DF1 | _next_character                 | native_words.asm:8832
-$9DF7 | _savechars_loop_longjump        | native_words.asm:8838
-$9DFA | _found_string_end               | native_words.asm:8841
-$9E00 | *                               | native_words.asm:8846
-$9E2D | _done                           | native_words.asm:8892
-$9E2D | z_s_quote                       | native_words.asm:8893
-$9E2E | xt_s_to_d                       | native_words.asm:8901
-$9E3F | _done                           | native_words.asm:8915
-$9E3F | z_s_to_d                        | native_words.asm:8916
-$9E40 | xt_save_buffers                 | native_words.asm:8924
-$9E5A | _done                           | native_words.asm:8942
-$9E5A | z_save_buffers                  | native_words.asm:8943
-$9E5B | xt_scr                          | native_words.asm:8950
-$9E6A | z_scr                           | native_words.asm:8962
-$9E6B | xt_search                       | native_words.asm:8976
-$9E7F | _start_search                   | native_words.asm:8994
-$9E82 | _search_loop                    | native_words.asm:8998
-$9E99 | _not_found                      | native_words.asm:9020
-$9EA3 | _init_comparison                | native_words.asm:9031
-$9EC0 | _comparison_loop                | native_words.asm:9058
-$9ECB | _letters_match                  | native_words.asm:9069
-$9ED1 | *                               | native_words.asm:9075
-$9ED7 | *                               | native_words.asm:9079
-$9EDD | *                               | native_words.asm:9084
-$9F09 | z_search                        | native_words.asm:9121
-$9F0A | xt_semicolon                    | native_words.asm:9138
-$9F1F | _colonword                      | native_words.asm:9156
-$9F59 | _new_word                       | native_words.asm:9221
-$9F64 | _semicolon_done                 | native_words.asm:9230
-$9F68 | z_semicolon                     | native_words.asm:9236
-$9F69 | xt_sign                         | native_words.asm:9249
-$9F74 | _minus                          | native_words.asm:9258
-$9F7D | _done                           | native_words.asm:9264
-$9F7D | z_sign                          | native_words.asm:9265
-$9F7E | xt_slash                        | native_words.asm:9279
-$9F83 | xt_slash_mod                    | native_words.asm:9288
-$9F86 | _common                         | native_words.asm:9293
-$9F9A | _done                           | native_words.asm:9308
-$9F9A | z_slash                         | native_words.asm:9310
-$9F9A | z_slash_mod                     | native_words.asm:9309
-$9F9B | xt_slash_string                 | native_words.asm:9332
-$9FBA | z_slash_string                  | native_words.asm:9356
-$9FBB | xt_sliteral                     | native_words.asm:9366
-$A011 | sliteral_const_str              | native_words.asm:9446
-$A02A | z_sliteral                      | native_words.asm:9480
-$A02B | sliteral_runtime                | native_words.asm:9483
-$A057 | xt_sm_slash_rem                 | native_words.asm:9543
-$A075 | *                               | native_words.asm:9573
-$A07F | _done                           | native_words.asm:9584
-$A07F | z_sm_slash_rem                  | native_words.asm:9585
-$A080 | xt_source                       | native_words.asm:9592
-$A094 | z_source                        | native_words.asm:9609
-$A095 | xt_source_id                    | native_words.asm:9619
-$A09F | z_source_id                     | native_words.asm:9628
-$A0A0 | xt_space                        | native_words.asm:9634
-$A0A5 | z_space                         | native_words.asm:9638
-$A0A6 | xt_spaces                       | native_words.asm:9645
-$A0B5 | _quick_loop                     | native_words.asm:9661
-$A0BF | _lots_of_spaces                 | native_words.asm:9670
-$A0C1 | _first_slow_loop                | native_words.asm:9675
-$A0CB | _slow_outer_loop                | native_words.asm:9682
-$A0CD | _slow_inner_loop                | native_words.asm:9686
-$A0D9 | _done                           | native_words.asm:9695
-$A0DB | z_spaces                        | native_words.asm:9699
-$A0DC | xt_star                         | native_words.asm:9711
-$A0E4 | z_star                          | native_words.asm:9718
-$A0E5 | xt_star_slash                   | native_words.asm:9732
-$A0ED | z_star_slash                    | native_words.asm:9738
-$A0EE | xt_star_slash_mod               | native_words.asm:9752
-$A0FD | z_star_slash_mod                | native_words.asm:9760
-$A0FE | xt_state                        | native_words.asm:9772
-$A108 | z_state                         | native_words.asm:9780
-$A109 | xt_store                        | native_words.asm:9786
-$A116 | *                               | native_words.asm:9795
-$A11E | z_store                         | native_words.asm:9804
-$A11F | xt_strip_underflow              | native_words.asm:9813
-$A129 | z_strip_underflow               | native_words.asm:9822
-$A12A | xt_swap                         | native_words.asm:9829
-$A13D | z_swap                          | native_words.asm:9842
-$A13E | xt_then                         | native_words.asm:9848
-$A147 | z_then                          | native_words.asm:9857
-$A148 | xt_thru                         | native_words.asm:9864
-$A153 | _thru_loop                      | native_words.asm:9879
-$A174 | _next_screen                    | native_words.asm:9914
-$A180 | *                               | native_words.asm:9925
-$A18C | _done                           | native_words.asm:9935
-$A18C | z_thru                          | native_words.asm:9936
-$A18D | xt_tick                         | native_words.asm:9944
-$A19B | *                               | native_words.asm:9955
-$A1A9 | *                               | native_words.asm:9965
-$A1AC | z_tick                          | native_words.asm:9968
-$A1AD | xt_to                           | native_words.asm:9991
-$A1EA | *                               | native_words.asm:10054
-$A1F9 | _interpret                      | native_words.asm:10065
-$A208 | _done                           | native_words.asm:10084
-$A208 | z_to                            | native_words.asm:10085
-$A209 | xt_to_body                      | native_words.asm:10103
-$A218 | *                               | native_words.asm:10115
-$A22B | _no_cfa                         | native_words.asm:10129
-$A22D | _done                           | native_words.asm:10132
-$A22D | z_to_body                       | native_words.asm:10133
-$A22E | xt_to_in                        | native_words.asm:10139
-$A238 | z_to_in                         | native_words.asm:10148
-$A239 | xt_to_number                    | native_words.asm:10188
-$A24E | _loop                           | native_words.asm:10210
-$A25F | _digit_ok                       | native_words.asm:10228
-$A2C2 | *                               | native_words.asm:10309
-$A2C6 | _done                           | native_words.asm:10314
-$A2D8 | z_to_number                     | native_words.asm:10333
-$A2D9 | xt_to_order                     | native_words.asm:10341
-$A2EB | z_to_order                      | native_words.asm:10356
-$A2EC | xt_to_r                         | native_words.asm:10367
-$A2FF | z_to_r                          | native_words.asm:10397
-$A300 | xt_true                         | native_words.asm:10403
-$A308 | z_true                          | native_words.asm:10410
-$A309 | xt_tuck                         | native_words.asm:10416
-$A322 | z_tuck                          | native_words.asm:10434
-$A323 | xt_assembler_wordlist           | native_words.asm:10441
-$A323 | xt_two                          | native_words.asm:10442
-$A32B | z_assembler_wordlist            | native_words.asm:10449
-$A32B | z_two                           | native_words.asm:10450
-$A32C | xt_two_drop                     | native_words.asm:10456
-$A333 | z_two_drop                      | native_words.asm:10464
-$A334 | xt_two_dup                      | native_words.asm:10470
-$A34B | z_two_dup                       | native_words.asm:10488
-$A34C | xt_two_fetch                    | native_words.asm:10497
-$A36D | z_two_fetch                     | native_words.asm:10520
-$A36E | xt_two_over                     | native_words.asm:10525
-$A385 | z_two_over                      | native_words.asm:10545
-$A386 | xt_two_r_fetch                  | native_words.asm:10559
-$A3A3 | z_two_r_fetch                   | native_words.asm:10587
-$A3A4 | xt_two_r_from                   | native_words.asm:10601
-$A3C0 | z_two_r_from                    | native_words.asm:10639
-$A3C1 | xt_two_slash                    | native_words.asm:10645
-$A3CB | z_two_slash                     | native_words.asm:10655
-$A3CC | xt_cells                        | native_words.asm:10665
-$A3CC | xt_two_star                     | native_words.asm:10664
-$A3D3 | z_cells                         | native_words.asm:10670
-$A3D3 | z_two_star                      | native_words.asm:10671
-$A3D4 | xt_two_store                    | native_words.asm:10680
-$A3F9 | z_two_store                     | native_words.asm:10708
-$A3FA | xt_two_swap                     | native_words.asm:10714
-$A41D | z_two_swap                      | native_words.asm:10741
-$A41E | xt_two_to_r                     | native_words.asm:10754
-$A43D | z_two_to_r                      | native_words.asm:10790
-$A43E | xt_two_constant                 | native_words.asm:10800
-$A462 | z_two_constant                  | native_words.asm:10817
-$A463 | xt_two_literal                  | native_words.asm:10826
-$A46F | z_two_literal                   | native_words.asm:10833
-$A470 | xt_two_variable                 | native_words.asm:10844
-$A47E | z_two_variable                  | native_words.asm:10856
-$A47F | xt_type                         | native_words.asm:10865
-$A48A | _loop                           | native_words.asm:10873
-$A49B | *                               | native_words.asm:10887
-$A4A1 | *                               | native_words.asm:10892
-$A4A5 | _done                           | native_words.asm:10896
-$A4A9 | z_type                          | native_words.asm:10902
-$A4AA | xt_u_dot                        | native_words.asm:10914
-$A4B5 | z_u_dot                         | native_words.asm:10921
-$A4B6 | xt_u_dot_r                      | native_words.asm:10927
-$A4D7 | z_u_dot_r                       | native_words.asm:10941
-$A4D8 | xt_u_greater_than               | native_words.asm:10947
-$A4ED | z_u_greater_than                | native_words.asm:10962
-$A4EE | xt_u_less_than                  | native_words.asm:10967
-$A503 | z_u_less_than                   | native_words.asm:10982
-$A504 | xt_ud_dot                       | native_words.asm:10990
-$A516 | z_ud_dot                        | native_words.asm:10999
-$A517 | xt_ud_dot_r                     | native_words.asm:11007
-$A535 | z_ud_dot_r                      | native_words.asm:11020
-$A536 | xt_um_slash_mod                 | native_words.asm:11035
-$A544 | _not_zero                       | native_words.asm:11046
-$A548 | _loop                           | native_words.asm:11051
-$A572 | _done                           | native_words.asm:11086
-$A577 | z_um_slash_mod                  | native_words.asm:11092
-$A578 | xt_um_star                      | native_words.asm:11117
-$A592 | _outer_loop                     | native_words.asm:11138
-$A596 | _inner_loop                     | native_words.asm:11142
-$A5A4 | _no_add                         | native_words.asm:11151
-$A5B9 | _zero                           | native_words.asm:11169
-$A5BD | _done                           | native_words.asm:11172
-$A5BD | z_um_star                       | native_words.asm:11173
-$A5BE | xt_unloop                       | native_words.asm:11183
-$A5C4 | z_unloop                        | native_words.asm:11196
-$A5C5 | xt_until                        | native_words.asm:11202
-$A5CF | z_until                         | native_words.asm:11213
-$A5D0 | xt_unused                       | native_words.asm:11223
-$A5DF | z_unused                        | native_words.asm:11236
-$A5E0 | xt_update                       | native_words.asm:11242
-$A5E8 | z_update                        | native_words.asm:11250
-$A5E9 | xt_useraddr                     | native_words.asm:11255
-$A5F3 | z_useraddr                      | native_words.asm:11263
-$A5F4 | xt_variable                     | native_words.asm:11282
-$A601 | *                               | native_words.asm:11294
-$A609 | *                               | native_words.asm:11299
-$A60C | z_variable                      | native_words.asm:11303
-$A60D | xt_while                        | native_words.asm:11309
-$A620 | z_while                         | native_words.asm:11326
-$A621 | xt_within                       | native_words.asm:11338
-$A636 | z_within                        | native_words.asm:11348
-$A637 | xt_word                         | native_words.asm:11368
-$A63C | _loop                           | native_words.asm:11374
-$A649 | _found_char                     | native_words.asm:11383
-$A67C | z_word                          | native_words.asm:11423
-$A67D | xt_wordlist                     | native_words.asm:11433
-$A68A | _ok                             | native_words.asm:11447
-$A693 | z_wordlist                      | native_words.asm:11455
-$A694 | xt_words                        | native_words.asm:11466
-$A69E | _wordlist_loop                  | native_words.asm:11483
-$A6A8 | _have_wordlist                  | native_words.asm:11492
-$A6BC | _loop                           | native_words.asm:11511
-$A6D0 | *                               | native_words.asm:11526
-$A6EC | _words_done                     | native_words.asm:11547
-$A6EF | z_words                         | native_words.asm:11553
-$A6F0 | xt_wordsize                     | native_words.asm:11563
-$A710 | z_wordsize                      | native_words.asm:11592
-$A711 | xt_xor                          | native_words.asm:11598
-$A722 | z_xor                           | native_words.asm:11612
-$A723 | xt_case                         | native_words.asm:11620
-$A723 | xt_forth_wordlist               | native_words.asm:11621
-$A723 | xt_zero                         | native_words.asm:11622
-$A729 | z_case                          | native_words.asm:11627
-$A729 | z_forth_wordlist                | native_words.asm:11628
-$A729 | z_zero                          | native_words.asm:11629
-$A72A | xt_zero_equal                   | native_words.asm:11637
-$A737 | _zero                           | native_words.asm:11647
-$A739 | _store                          | native_words.asm:11650
-$A73D | z_zero_equal                    | native_words.asm:11654
-$A73E | xt_zero_greater                 | native_words.asm:11662
-$A74C | _done                           | native_words.asm:11673
-$A751 | z_zero_greater                  | native_words.asm:11678
-$A752 | xt_zero_less                    | native_words.asm:11686
-$A75C | _done                           | native_words.asm:11695
-$A761 | z_zero_less                     | native_words.asm:11700
-$A762 | xt_zero_unequal                 | native_words.asm:11708
-$A76E | _got_zero                       | native_words.asm:11718
-$A773 | z_zero_unequal                  | native_words.asm:11723
-$A774 | xt_editor_screen_helper         | native_words.asm:11733
-$A780 | z_editor_screen_helper          | native_words.asm:11738
-$A781 | xt_editor_enter_screen          | native_words.asm:11745
-$A789 | _prompt_loop                    | native_words.asm:11755
-$A79C | z_editor_enter_screen           | native_words.asm:11772
-$A79D | xt_editor_erase_screen          | native_words.asm:11779
-$A7AE | z_editor_erase_screen           | native_words.asm:11797
-$A7AF | xt_editor_el                    | native_words.asm:11803
-$A7C0 | z_editor_el                     | native_words.asm:11822
-$A7C1 | xt_editor_l                     | native_words.asm:11828
-$A7D6 | _screen_msg                     | native_words.asm:11847
-$A7DE | _after_screen_msg               | native_words.asm:11850
-$A7FB | _line_loop                      | native_words.asm:11871
-$A83C | z_editor_l                      | native_words.asm:11919
-$A83D | xt_editor_line                  | native_words.asm:11926
-$A842 | _shift_tos_left                 | native_words.asm:11931
-$A855 | z_editor_line                   | native_words.asm:11945
-$A856 | xt_editor_o                     | native_words.asm:11951
-$A89B | z_editor_o                      | native_words.asm:11989
-$A89C | assembler                       | assembler.asm:43
-$A89C | xt_asm_adc_h                    | assembler.asm:45
-$A8A1 | xt_asm_adc_x                    | assembler.asm:50
-$A8A1 | z_asm_adc_h                     | assembler.asm:48
-$A8A6 | xt_asm_adc_y                    | assembler.asm:55
-$A8A6 | z_asm_adc_x                     | assembler.asm:53
-$A8AB | xt_asm_adc_z                    | assembler.asm:60
-$A8AB | z_asm_adc_y                     | assembler.asm:58
-$A8B0 | xt_asm_adc_zi                   | assembler.asm:65
-$A8B0 | z_asm_adc_z                     | assembler.asm:63
-$A8B5 | xt_asm_adc_ziy                  | assembler.asm:70
-$A8B5 | z_asm_adc_zi                    | assembler.asm:68
-$A8BA | xt_asm_adc_zx                   | assembler.asm:75
-$A8BA | z_asm_adc_ziy                   | assembler.asm:73
-$A8BF | xt_asm_adc_zxi                  | assembler.asm:80
-$A8BF | z_asm_adc_zx                    | assembler.asm:78
-$A8C4 | xt_asm_and                      | assembler.asm:85
-$A8C4 | z_asm_adc_zxi                   | assembler.asm:83
-$A8C9 | xt_asm_and_h                    | assembler.asm:90
-$A8C9 | z_asm_and                       | assembler.asm:88
-$A8CE | xt_asm_and_x                    | assembler.asm:95
-$A8CE | z_asm_and_h                     | assembler.asm:93
-$A8D3 | xt_asm_and_y                    | assembler.asm:100
-$A8D3 | z_asm_and_x                     | assembler.asm:98
-$A8D8 | xt_asm_and_z                    | assembler.asm:105
-$A8D8 | z_asm_and_y                     | assembler.asm:103
-$A8DD | xt_asm_and_zi                   | assembler.asm:110
-$A8DD | z_asm_and_z                     | assembler.asm:108
-$A8E2 | xt_asm_and_ziy                  | assembler.asm:115
-$A8E2 | z_asm_and_zi                    | assembler.asm:113
-$A8E7 | xt_asm_and_zx                   | assembler.asm:120
-$A8E7 | z_asm_and_ziy                   | assembler.asm:118
-$A8EC | xt_asm_and_zxi                  | assembler.asm:125
-$A8EC | z_asm_and_zx                    | assembler.asm:123
-$A8F1 | xt_asm_asl                      | assembler.asm:130
-$A8F1 | z_asm_and_zxi                   | assembler.asm:128
-$A8F6 | xt_asm_asl_a                    | assembler.asm:135
-$A8F6 | z_asm_asl                       | assembler.asm:133
-$A8FB | xt_asm_asl_x                    | assembler.asm:140
-$A8FB | z_asm_asl_a                     | assembler.asm:138
-$A900 | xt_asm_asl_z                    | assembler.asm:145
-$A900 | z_asm_asl_x                     | assembler.asm:143
-$A905 | xt_asm_asl_zx                   | assembler.asm:150
-$A905 | z_asm_asl_z                     | assembler.asm:148
-$A90A | xt_asm_bcc                      | assembler.asm:155
-$A90A | z_asm_asl_zx                    | assembler.asm:153
-$A90F | xt_asm_bcs                      | assembler.asm:160
-$A90F | z_asm_bcc                       | assembler.asm:158
-$A916 | xt_asm_beq                      | assembler.asm:166
-$A916 | z_asm_bcs                       | assembler.asm:164
-$A91B | xt_asm_bit                      | assembler.asm:171
-$A91B | z_asm_beq                       | assembler.asm:169
-$A920 | xt_asm_bit_h                    | assembler.asm:176
-$A920 | z_asm_bit                       | assembler.asm:174
-$A925 | xt_asm_bit_x                    | assembler.asm:181
-$A925 | z_asm_bit_h                     | assembler.asm:179
-$A92A | xt_asm_bit_z                    | assembler.asm:186
-$A92A | z_asm_bit_x                     | assembler.asm:184
-$A92F | xt_asm_bit_zx                   | assembler.asm:191
-$A92F | z_asm_bit_z                     | assembler.asm:189
-$A934 | xt_asm_bmi                      | assembler.asm:196
-$A934 | z_asm_bit_zx                    | assembler.asm:194
-$A939 | xt_asm_bne                      | assembler.asm:201
-$A939 | z_asm_bmi                       | assembler.asm:199
-$A93E | xt_asm_bpl                      | assembler.asm:206
-$A93E | z_asm_bne                       | assembler.asm:204
-$A943 | xt_asm_bra                      | assembler.asm:211
-$A943 | z_asm_bpl                       | assembler.asm:209
-$A948 | xt_asm_brk                      | assembler.asm:216
-$A948 | z_asm_bra                       | assembler.asm:214
-$A94D | xt_asm_bvc                      | assembler.asm:221
-$A94D | z_asm_brk                       | assembler.asm:219
-$A952 | xt_asm_bvs                      | assembler.asm:226
-$A952 | z_asm_bvc                       | assembler.asm:224
-$A957 | xt_asm_clc                      | assembler.asm:231
-$A957 | z_asm_bvs                       | assembler.asm:229
-$A95C | xt_asm_cld                      | assembler.asm:236
-$A95C | z_asm_clc                       | assembler.asm:234
-$A961 | xt_asm_cli                      | assembler.asm:241
-$A961 | z_asm_cld                       | assembler.asm:239
-$A966 | xt_asm_clv                      | assembler.asm:246
-$A966 | z_asm_cli                       | assembler.asm:244
-$A96B | xt_asm_cmp                      | assembler.asm:251
-$A96B | z_asm_clv                       | assembler.asm:249
-$A970 | xt_asm_cmp_h                    | assembler.asm:256
-$A970 | z_asm_cmp                       | assembler.asm:254
-$A975 | xt_asm_cmp_x                    | assembler.asm:261
-$A975 | z_asm_cmp_h                     | assembler.asm:259
-$A97A | xt_asm_cmp_y                    | assembler.asm:266
-$A97A | z_asm_cmp_x                     | assembler.asm:264
-$A97F | xt_asm_cmp_z                    | assembler.asm:271
-$A97F | z_asm_cmp_y                     | assembler.asm:269
-$A984 | xt_asm_cmp_zi                   | assembler.asm:276
-$A984 | z_asm_cmp_z                     | assembler.asm:274
-$A989 | xt_asm_cmp_ziy                  | assembler.asm:281
-$A989 | z_asm_cmp_zi                    | assembler.asm:279
-$A98E | xt_asm_cmp_zx                   | assembler.asm:286
-$A98E | z_asm_cmp_ziy                   | assembler.asm:284
-$A993 | xt_asm_cmp_zxi                  | assembler.asm:291
-$A993 | z_asm_cmp_zx                    | assembler.asm:289
-$A998 | xt_asm_cpx                      | assembler.asm:296
-$A998 | z_asm_cmp_zxi                   | assembler.asm:294
-$A99D | xt_asm_cpx_h                    | assembler.asm:301
-$A99D | z_asm_cpx                       | assembler.asm:299
-$A9A2 | xt_asm_cpx_z                    | assembler.asm:306
-$A9A2 | z_asm_cpx_h                     | assembler.asm:304
-$A9A7 | xt_asm_cpy                      | assembler.asm:311
-$A9A7 | z_asm_cpx_z                     | assembler.asm:309
-$A9AE | xt_asm_cpy_h                    | assembler.asm:317
-$A9AE | z_asm_cpy                       | assembler.asm:315
-$A9B3 | xt_asm_cpy_z                    | assembler.asm:322
-$A9B3 | z_asm_cpy_h                     | assembler.asm:320
-$A9B8 | xt_asm_dec                      | assembler.asm:327
-$A9B8 | z_asm_cpy_z                     | assembler.asm:325
-$A9BD | xt_asm_dec_a                    | assembler.asm:332
-$A9BD | z_asm_dec                       | assembler.asm:330
-$A9C2 | xt_asm_dec_x                    | assembler.asm:337
-$A9C2 | z_asm_dec_a                     | assembler.asm:335
-$A9C7 | xt_asm_dec_z                    | assembler.asm:342
-$A9C7 | z_asm_dec_x                     | assembler.asm:340
-$A9CC | xt_asm_dec_zx                   | assembler.asm:347
-$A9CC | z_asm_dec_z                     | assembler.asm:345
-$A9D1 | xt_asm_dex                      | assembler.asm:352
-$A9D1 | z_asm_dec_zx                    | assembler.asm:350
-$A9D6 | xt_asm_dey                      | assembler.asm:357
-$A9D6 | z_asm_dex                       | assembler.asm:355
-$A9DB | xt_asm_eor                      | assembler.asm:362
-$A9DB | z_asm_dey                       | assembler.asm:360
-$A9E0 | xt_asm_eor_h                    | assembler.asm:367
-$A9E0 | z_asm_eor                       | assembler.asm:365
-$A9E5 | xt_asm_eor_x                    | assembler.asm:372
-$A9E5 | z_asm_eor_h                     | assembler.asm:370
-$A9EA | xt_asm_eor_y                    | assembler.asm:377
-$A9EA | z_asm_eor_x                     | assembler.asm:375
-$A9EF | xt_asm_eor_z                    | assembler.asm:382
-$A9EF | z_asm_eor_y                     | assembler.asm:380
-$A9F4 | xt_asm_eor_zi                   | assembler.asm:387
-$A9F4 | z_asm_eor_z                     | assembler.asm:385
-$A9F9 | xt_asm_eor_ziy                  | assembler.asm:392
-$A9F9 | z_asm_eor_zi                    | assembler.asm:390
-$A9FE | xt_asm_eor_zx                   | assembler.asm:397
-$A9FE | z_asm_eor_ziy                   | assembler.asm:395
-$AA03 | xt_asm_eor_zxi                  | assembler.asm:402
-$AA03 | z_asm_eor_zx                    | assembler.asm:400
-$AA08 | xt_asm_inc                      | assembler.asm:407
-$AA08 | z_asm_eor_zxi                   | assembler.asm:405
-$AA0D | xt_asm_inc_a                    | assembler.asm:412
-$AA0D | z_asm_inc                       | assembler.asm:410
-$AA12 | xt_asm_inc_x                    | assembler.asm:417
-$AA12 | z_asm_inc_a                     | assembler.asm:415
-$AA17 | xt_asm_inc_z                    | assembler.asm:422
-$AA17 | z_asm_inc_x                     | assembler.asm:420
-$AA1C | xt_asm_inc_zx                   | assembler.asm:427
-$AA1C | z_asm_inc_z                     | assembler.asm:425
-$AA21 | xt_asm_inx                      | assembler.asm:432
-$AA21 | z_asm_inc_zx                    | assembler.asm:430
-$AA26 | xt_asm_iny                      | assembler.asm:437
-$AA26 | z_asm_inx                       | assembler.asm:435
-$AA2B | xt_asm_jmp                      | assembler.asm:442
-$AA2B | z_asm_iny                       | assembler.asm:440
-$AA30 | xt_asm_jmp_i                    | assembler.asm:447
-$AA30 | z_asm_jmp                       | assembler.asm:445
-$AA35 | xt_asm_jmp_xi                   | assembler.asm:452
-$AA35 | z_asm_jmp_i                     | assembler.asm:450
-$AA3A | xt_asm_jsr                      | assembler.asm:457
-$AA3A | z_asm_jmp_xi                    | assembler.asm:455
-$AA3F | xt_asm_lda                      | assembler.asm:462
-$AA3F | z_asm_jsr                       | assembler.asm:460
-$AA44 | xt_asm_lda_h                    | assembler.asm:467
-$AA44 | z_asm_lda                       | assembler.asm:465
-$AA49 | xt_asm_lda_x                    | assembler.asm:472
-$AA49 | z_asm_lda_h                     | assembler.asm:470
-$AA4E | xt_asm_lda_y                    | assembler.asm:477
-$AA4E | z_asm_lda_x                     | assembler.asm:475
-$AA53 | xt_asm_lda_z                    | assembler.asm:482
-$AA53 | z_asm_lda_y                     | assembler.asm:480
-$AA58 | xt_asm_lda_zi                   | assembler.asm:487
-$AA58 | z_asm_lda_z                     | assembler.asm:485
-$AA5D | xt_asm_lda_ziy                  | assembler.asm:492
-$AA5D | z_asm_lda_zi                    | assembler.asm:490
-$AA62 | xt_asm_lda_zx                   | assembler.asm:497
-$AA62 | z_asm_lda_ziy                   | assembler.asm:495
-$AA67 | xt_asm_lda_zxi                  | assembler.asm:502
-$AA67 | z_asm_lda_zx                    | assembler.asm:500
-$AA6C | xt_asm_ldx                      | assembler.asm:507
-$AA6C | z_asm_lda_zxi                   | assembler.asm:505
-$AA71 | xt_asm_ldx_h                    | assembler.asm:512
-$AA71 | z_asm_ldx                       | assembler.asm:510
-$AA76 | xt_asm_ldx_y                    | assembler.asm:517
-$AA76 | z_asm_ldx_h                     | assembler.asm:515
-$AA7B | xt_asm_ldx_z                    | assembler.asm:522
-$AA7B | z_asm_ldx_y                     | assembler.asm:520
-$AA80 | xt_asm_ldx_zy                   | assembler.asm:527
-$AA80 | z_asm_ldx_z                     | assembler.asm:525
-$AA85 | xt_asm_ldy                      | assembler.asm:532
-$AA85 | z_asm_ldx_zy                    | assembler.asm:530
-$AA8A | xt_asm_ldy_h                    | assembler.asm:537
-$AA8A | z_asm_ldy                       | assembler.asm:535
-$AA8F | xt_asm_ldy_x                    | assembler.asm:542
-$AA8F | z_asm_ldy_h                     | assembler.asm:540
-$AA94 | xt_asm_ldy_z                    | assembler.asm:547
-$AA94 | z_asm_ldy_x                     | assembler.asm:545
-$AA99 | xt_asm_ldy_zx                   | assembler.asm:552
-$AA99 | z_asm_ldy_z                     | assembler.asm:550
-$AA9E | xt_asm_lsr                      | assembler.asm:557
-$AA9E | z_asm_ldy_zx                    | assembler.asm:555
-$AAA3 | xt_asm_lsr_a                    | assembler.asm:562
-$AAA3 | z_asm_lsr                       | assembler.asm:560
-$AAA8 | xt_asm_lsr_x                    | assembler.asm:567
-$AAA8 | z_asm_lsr_a                     | assembler.asm:565
-$AAAD | xt_asm_lsr_z                    | assembler.asm:572
-$AAAD | z_asm_lsr_x                     | assembler.asm:570
-$AAB2 | xt_asm_lsr_zx                   | assembler.asm:577
-$AAB2 | z_asm_lsr_z                     | assembler.asm:575
-$AAB7 | xt_asm_nop                      | assembler.asm:582
-$AAB7 | z_asm_lsr_zx                    | assembler.asm:580
-$AABC | xt_asm_ora                      | assembler.asm:587
-$AABC | z_asm_nop                       | assembler.asm:585
-$AAC1 | xt_asm_ora_h                    | assembler.asm:592
-$AAC1 | z_asm_ora                       | assembler.asm:590
-$AAC6 | xt_asm_ora_x                    | assembler.asm:597
-$AAC6 | z_asm_ora_h                     | assembler.asm:595
-$AACB | xt_asm_ora_y                    | assembler.asm:602
-$AACB | z_asm_ora_x                     | assembler.asm:600
-$AAD0 | xt_asm_ora_z                    | assembler.asm:607
-$AAD0 | z_asm_ora_y                     | assembler.asm:605
-$AAD5 | xt_asm_ora_zi                   | assembler.asm:612
-$AAD5 | z_asm_ora_z                     | assembler.asm:610
-$AADC | xt_asm_ora_ziy                  | assembler.asm:618
-$AADC | z_asm_ora_zi                    | assembler.asm:616
-$AAE1 | xt_asm_ora_zx                   | assembler.asm:623
-$AAE1 | z_asm_ora_ziy                   | assembler.asm:621
-$AAE6 | xt_asm_ora_zxi                  | assembler.asm:628
-$AAE6 | z_asm_ora_zx                    | assembler.asm:626
-$AAEB | xt_asm_pha                      | assembler.asm:633
-$AAEB | z_asm_ora_zxi                   | assembler.asm:631
-$AAF0 | xt_asm_php                      | assembler.asm:638
-$AAF0 | z_asm_pha                       | assembler.asm:636
-$AAF5 | xt_asm_phx                      | assembler.asm:643
-$AAF5 | z_asm_php                       | assembler.asm:641
-$AAFA | xt_asm_phy                      | assembler.asm:648
-$AAFA | z_asm_phx                       | assembler.asm:646
-$AAFF | xt_asm_pla                      | assembler.asm:653
-$AAFF | z_asm_phy                       | assembler.asm:651
-$AB04 | xt_asm_plp                      | assembler.asm:658
-$AB04 | z_asm_pla                       | assembler.asm:656
-$AB09 | xt_asm_plx                      | assembler.asm:663
-$AB09 | z_asm_plp                       | assembler.asm:661
-$AB0E | xt_asm_ply                      | assembler.asm:668
-$AB0E | z_asm_plx                       | assembler.asm:666
-$AB13 | xt_asm_rol                      | assembler.asm:673
-$AB13 | z_asm_ply                       | assembler.asm:671
-$AB18 | xt_asm_rol_a                    | assembler.asm:678
-$AB18 | z_asm_rol                       | assembler.asm:676
-$AB1D | xt_asm_rol_x                    | assembler.asm:683
-$AB1D | z_asm_rol_a                     | assembler.asm:681
-$AB22 | xt_asm_rol_z                    | assembler.asm:688
-$AB22 | z_asm_rol_x                     | assembler.asm:686
-$AB27 | xt_asm_rol_zx                   | assembler.asm:693
-$AB27 | z_asm_rol_z                     | assembler.asm:691
-$AB2C | xt_asm_ror                      | assembler.asm:698
-$AB2C | z_asm_rol_zx                    | assembler.asm:696
-$AB31 | xt_asm_ror_a                    | assembler.asm:703
-$AB31 | z_asm_ror                       | assembler.asm:701
-$AB36 | xt_asm_ror_x                    | assembler.asm:708
-$AB36 | z_asm_ror_a                     | assembler.asm:706
-$AB3B | xt_asm_ror_z                    | assembler.asm:713
-$AB3B | z_asm_ror_x                     | assembler.asm:711
-$AB40 | xt_asm_ror_zx                   | assembler.asm:718
-$AB40 | z_asm_ror_z                     | assembler.asm:716
-$AB45 | xt_asm_rti                      | assembler.asm:723
-$AB45 | z_asm_ror_zx                    | assembler.asm:721
-$AB4A | xt_asm_rts                      | assembler.asm:728
-$AB4A | z_asm_rti                       | assembler.asm:726
-$AB4F | xt_asm_sbc                      | assembler.asm:733
-$AB4F | z_asm_rts                       | assembler.asm:731
-$AB54 | xt_asm_sbc_h                    | assembler.asm:738
-$AB54 | z_asm_sbc                       | assembler.asm:736
-$AB59 | xt_asm_sbc_x                    | assembler.asm:743
-$AB59 | z_asm_sbc_h                     | assembler.asm:741
-$AB5E | xt_asm_sbc_y                    | assembler.asm:748
-$AB5E | z_asm_sbc_x                     | assembler.asm:746
-$AB63 | xt_asm_sbc_z                    | assembler.asm:753
-$AB63 | z_asm_sbc_y                     | assembler.asm:751
-$AB68 | xt_asm_sbc_zi                   | assembler.asm:758
-$AB68 | z_asm_sbc_z                     | assembler.asm:756
-$AB6D | xt_asm_sbc_ziy                  | assembler.asm:763
-$AB6D | z_asm_sbc_zi                    | assembler.asm:761
-$AB72 | xt_asm_sbc_zx                   | assembler.asm:768
-$AB72 | z_asm_sbc_ziy                   | assembler.asm:766
-$AB77 | xt_asm_sbc_zxi                  | assembler.asm:773
-$AB77 | z_asm_sbc_zx                    | assembler.asm:771
-$AB7B | xt_asm_sec                      | assembler.asm:778
-$AB7B | z_asm_sbc_zxi                   | assembler.asm:776
-$AB7F | xt_asm_sed                      | assembler.asm:783
-$AB7F | z_asm_sec                       | assembler.asm:781
-$AB83 | xt_asm_sei                      | assembler.asm:788
-$AB83 | z_asm_sed                       | assembler.asm:786
-$AB87 | xt_asm_sta                      | assembler.asm:793
-$AB87 | z_asm_sei                       | assembler.asm:791
-$AB8B | xt_asm_sta_x                    | assembler.asm:798
-$AB8B | z_asm_sta                       | assembler.asm:796
-$AB8F | xt_asm_sta_y                    | assembler.asm:803
-$AB8F | z_asm_sta_x                     | assembler.asm:801
-$AB93 | xt_asm_sta_z                    | assembler.asm:808
-$AB93 | z_asm_sta_y                     | assembler.asm:806
-$AB97 | xt_asm_sta_zi                   | assembler.asm:813
-$AB97 | z_asm_sta_z                     | assembler.asm:811
-$AB9B | xt_asm_sta_ziy                  | assembler.asm:818
-$AB9B | z_asm_sta_zi                    | assembler.asm:816
-$AB9F | xt_asm_sta_zx                   | assembler.asm:823
-$AB9F | z_asm_sta_ziy                   | assembler.asm:821
-$ABA3 | xt_asm_sta_zxi                  | assembler.asm:828
-$ABA3 | z_asm_sta_zx                    | assembler.asm:826
-$ABA7 | xt_asm_stx                      | assembler.asm:833
-$ABA7 | z_asm_sta_zxi                   | assembler.asm:831
-$ABAB | xt_asm_stx_z                    | assembler.asm:838
-$ABAB | z_asm_stx                       | assembler.asm:836
-$ABAF | xt_asm_stx_zy                   | assembler.asm:843
-$ABAF | z_asm_stx_z                     | assembler.asm:841
-$ABB3 | xt_asm_sty                      | assembler.asm:848
-$ABB3 | z_asm_stx_zy                    | assembler.asm:846
-$ABB7 | xt_asm_sty_z                    | assembler.asm:853
-$ABB7 | z_asm_sty                       | assembler.asm:851
-$ABBB | xt_asm_sty_zx                   | assembler.asm:858
-$ABBB | z_asm_sty_z                     | assembler.asm:856
-$ABBF | xt_asm_stz                      | assembler.asm:863
-$ABBF | z_asm_sty_zx                    | assembler.asm:861
-$ABC3 | xt_asm_stz_x                    | assembler.asm:868
-$ABC3 | z_asm_stz                       | assembler.asm:866
-$ABC7 | xt_asm_stz_z                    | assembler.asm:873
-$ABC7 | z_asm_stz_x                     | assembler.asm:871
-$ABCB | xt_asm_stz_zx                   | assembler.asm:878
-$ABCB | z_asm_stz_z                     | assembler.asm:876
-$ABCF | xt_asm_tax                      | assembler.asm:883
-$ABCF | z_asm_stz_zx                    | assembler.asm:881
-$ABD3 | xt_asm_tay                      | assembler.asm:888
-$ABD3 | z_asm_tax                       | assembler.asm:886
-$ABD7 | xt_asm_trb                      | assembler.asm:893
-$ABD7 | z_asm_tay                       | assembler.asm:891
-$ABDB | xt_asm_trb_z                    | assembler.asm:898
-$ABDB | z_asm_trb                       | assembler.asm:896
-$ABDF | xt_asm_tsb                      | assembler.asm:903
-$ABDF | z_asm_trb_z                     | assembler.asm:901
-$ABE3 | xt_asm_tsb_z                    | assembler.asm:908
-$ABE3 | z_asm_tsb                       | assembler.asm:906
-$ABE7 | xt_asm_tsx                      | assembler.asm:913
-$ABE7 | z_asm_tsb_z                     | assembler.asm:911
-$ABEB | xt_asm_txa                      | assembler.asm:918
-$ABEB | z_asm_tsx                       | assembler.asm:916
-$ABEF | xt_asm_txs                      | assembler.asm:923
-$ABEF | z_asm_txa                       | assembler.asm:921
-$ABF3 | xt_asm_tya                      | assembler.asm:928
-$ABF3 | z_asm_txs                       | assembler.asm:926
-$ABF7 | asm_common                      | assembler.asm:937
-$ABF7 | z_asm_tya                       | assembler.asm:931
-$AC09 | *                               | assembler.asm:963
-$AC2E | _done_drop                      | assembler.asm:1008
-$AC30 | _done                           | assembler.asm:1011
-$AC31 | xt_asm_push_a                   | assembler.asm:1019
-$AC33 | _loop                           | assembler.asm:1026
-$AC40 | _done                           | assembler.asm:1034
-$AC40 | z_asm_push_a                    | assembler.asm:1035
-$AC41 | _data                           | assembler.asm:1037
-$AC48 | xt_asm_back_jump                | assembler.asm:1050
-$AC48 | z_asm_back_jump                 | assembler.asm:1051
-$AC49 | xt_asm_back_branch              | assembler.asm:1058
-$AC51 | z_asm_back_branch               | assembler.asm:1068
-$AC52 | assembler_end                   | assembler.asm:1071
-$AC52 | disassembler                    | disassembler.asm:21
-$AC55 | _byte_loop                      | disassembler.asm:23
-$AC6D | *                               | disassembler.asm:43
-$AC87 | *                               | disassembler.asm:95
-$AC8D | *                               | disassembler.asm:99
-$AC9D | *                               | disassembler.asm:117
-$ACA3 | *                               | disassembler.asm:121
-$ACA9 | _print_operand                  | disassembler.asm:129
-$ACB6 | _no_operand                     | disassembler.asm:146
-$ACC1 | _print_mnemonic                 | disassembler.asm:161
-$ACE3 | *                               | disassembler.asm:188
-$ACF3 | _done                           | disassembler.asm:199
-$ACF6 | oc_index_table                  | disassembler.asm:205
-$AEF6 | oc00                            | disassembler.asm:293
-$AEF6 | oc_table                        | disassembler.asm:276
-$AEFA | oc01                            | disassembler.asm:294
-$AF02 | oc04                            | disassembler.asm:297
-$AF08 | oc05                            | disassembler.asm:298
-$AF0E | oc06                            | disassembler.asm:299
-$AF14 | oc08                            | disassembler.asm:301
-$AF18 | oc09                            | disassembler.asm:302
-$AF1E | oc0a                            | disassembler.asm:303
-$AF24 | oc0c                            | disassembler.asm:305
-$AF28 | oc0d                            | disassembler.asm:306
-$AF2C | oc0e                            | disassembler.asm:307
-$AF30 | oc0f                            | disassembler.asm:308
-$AF35 | oc10                            | disassembler.asm:310
-$AF39 | oc11                            | disassembler.asm:311
-$AF41 | oc12                            | disassembler.asm:312
-$AF48 | oc14                            | disassembler.asm:314
-$AF4E | oc15                            | disassembler.asm:315
-$AF55 | oc16                            | disassembler.asm:316
-$AF5C | oc17                            | disassembler.asm:317
-$AF63 | oc18                            | disassembler.asm:318
-$AF67 | oc19                            | disassembler.asm:319
-$AF6D | oc1a                            | disassembler.asm:320
-$AF73 | oc1c                            | disassembler.asm:322
-$AF77 | oc1d                            | disassembler.asm:323
-$AF7D | oc1f                            | disassembler.asm:325
-$AF83 | oc20                            | disassembler.asm:327
-$AF87 | oc21                            | disassembler.asm:328
-$AF8F | oc24                            | disassembler.asm:331
-$AF95 | oc25                            | disassembler.asm:332
-$AF9B | oc26                            | disassembler.asm:333
-$AFA1 | oc27                            | disassembler.asm:334
-$AFA8 | oc28                            | disassembler.asm:335
-$AFAC | oc29                            | disassembler.asm:336
-$AFB2 | oc2a                            | disassembler.asm:337
-$AFB8 | oc2c                            | disassembler.asm:339
-$AFBC | oc2d                            | disassembler.asm:340
-$AFC1 | oc2e                            | disassembler.asm:341
-$AFC5 | oc2f                            | disassembler.asm:342
-$AFCA | oc30                            | disassembler.asm:344
-$AFCE | oc31                            | disassembler.asm:345
-$AFD6 | oc32                            | disassembler.asm:346
-$AFDD | oc34                            | disassembler.asm:348
-$AFE5 | oc35                            | disassembler.asm:349
-$AFEC | oc36                            | disassembler.asm:350
-$AFF3 | oc37                            | disassembler.asm:351
-$AFFA | oc38                            | disassembler.asm:352
-$AFFE | oc39                            | disassembler.asm:353
-$B004 | oc3a                            | disassembler.asm:354
-$B00A | oc3c                            | disassembler.asm:356
-$B010 | oc3d                            | disassembler.asm:357
-$B016 | oc3e                            | disassembler.asm:358
-$B01C | oc3f                            | disassembler.asm:359
-$B021 | oc40                            | disassembler.asm:361
-$B025 | oc41                            | disassembler.asm:362
-$B02D | oc45                            | disassembler.asm:366
-$B033 | oc46                            | disassembler.asm:367
-$B039 | oc47                            | disassembler.asm:368
-$B040 | oc48                            | disassembler.asm:369
-$B044 | oc49                            | disassembler.asm:370
-$B04A | oc4a                            | disassembler.asm:371
-$B050 | oc4c                            | disassembler.asm:373
-$B054 | oc4d                            | disassembler.asm:374
-$B058 | oc4e                            | disassembler.asm:375
-$B05C | oc4f                            | disassembler.asm:376
-$B061 | oc50                            | disassembler.asm:378
-$B065 | oc51                            | disassembler.asm:379
-$B06D | oc52                            | disassembler.asm:380
-$B074 | oc55                            | disassembler.asm:383
-$B07B | oc56                            | disassembler.asm:384
-$B082 | oc57                            | disassembler.asm:385
-$B089 | oc58                            | disassembler.asm:386
-$B08D | oc59                            | disassembler.asm:387
-$B093 | oc5a                            | disassembler.asm:388
-$B097 | oc5d                            | disassembler.asm:391
-$B09D | oc5e                            | disassembler.asm:392
-$B0A3 | oc5f                            | disassembler.asm:393
-$B0A8 | oc60                            | disassembler.asm:395
-$B0AC | oc61                            | disassembler.asm:396
-$B0B4 | oc64                            | disassembler.asm:399
-$B0BA | oc65                            | disassembler.asm:400
-$B0C0 | oc66                            | disassembler.asm:401
-$B0C6 | oc67                            | disassembler.asm:402
-$B0CD | oc68                            | disassembler.asm:403
-$B0D1 | oc69                            | disassembler.asm:404
-$B0D7 | oc6a                            | disassembler.asm:405
-$B0DD | oc6c                            | disassembler.asm:407
-$B0E3 | oc6d                            | disassembler.asm:408
-$B0E7 | oc6e                            | disassembler.asm:409
-$B0EB | oc6f                            | disassembler.asm:410
-$B0F0 | oc70                            | disassembler.asm:412
-$B0F4 | oc71                            | disassembler.asm:413
-$B0FC | oc72                            | disassembler.asm:414
-$B103 | oc74                            | disassembler.asm:416
-$B10A | oc75                            | disassembler.asm:417
-$B111 | oc76                            | disassembler.asm:418
-$B118 | oc77                            | disassembler.asm:419
-$B11F | oc78                            | disassembler.asm:420
-$B123 | oc79                            | disassembler.asm:421
-$B129 | oc7a                            | disassembler.asm:422
-$B12D | oc7c                            | disassembler.asm:424
-$B134 | oc7d                            | disassembler.asm:425
-$B13A | oc7e                            | disassembler.asm:426
-$B140 | oc7f                            | disassembler.asm:427
-$B145 | oc80                            | disassembler.asm:429
-$B149 | oc81                            | disassembler.asm:430
-$B151 | oc84                            | disassembler.asm:433
-$B157 | oc85                            | disassembler.asm:434
-$B15D | oc86                            | disassembler.asm:435
-$B163 | oc88                            | disassembler.asm:437
-$B167 | oc89                            | disassembler.asm:438
-$B16D | oc8a                            | disassembler.asm:439
-$B171 | oc8c                            | disassembler.asm:441
-$B175 | oc8d                            | disassembler.asm:442
-$B179 | oc8e                            | disassembler.asm:443
-$B17D | oc8f                            | disassembler.asm:444
-$B182 | oc90                            | disassembler.asm:446
-$B186 | oc91                            | disassembler.asm:447
-$B18E | oc92                            | disassembler.asm:448
-$B195 | oc94                            | disassembler.asm:450
-$B19C | oc95                            | disassembler.asm:451
-$B1A3 | oc96                            | disassembler.asm:452
-$B1AA | oc97                            | disassembler.asm:453
-$B1B1 | oc98                            | disassembler.asm:454
-$B1B5 | oc99                            | disassembler.asm:455
-$B1BB | oc9a                            | disassembler.asm:456
-$B1BF | oc9c                            | disassembler.asm:458
-$B1C3 | oc9d                            | disassembler.asm:459
-$B1C9 | oc9e                            | disassembler.asm:460
-$B1CF | oc9f                            | disassembler.asm:461
-$B1D4 | oca0                            | disassembler.asm:463
-$B1DA | oca1                            | disassembler.asm:464
-$B1E2 | oca2                            | disassembler.asm:465
-$B1E8 | oca4                            | disassembler.asm:467
-$B1EE | oca5                            | disassembler.asm:468
-$B1F4 | oca6                            | disassembler.asm:469
-$B1FA | oca7                            | disassembler.asm:470
-$B201 | oca8                            | disassembler.asm:471
-$B205 | oca9                            | disassembler.asm:472
-$B20B | ocaa                            | disassembler.asm:473
-$B20F | ocac                            | disassembler.asm:475
-$B213 | ocad                            | disassembler.asm:476
-$B217 | ocae                            | disassembler.asm:477
-$B21B | ocaf                            | disassembler.asm:478
-$B220 | ocb0                            | disassembler.asm:480
-$B224 | ocb1                            | disassembler.asm:481
-$B22C | ocb2                            | disassembler.asm:482
-$B233 | ocb4                            | disassembler.asm:484
-$B23A | ocb5                            | disassembler.asm:485
-$B241 | ocb6                            | disassembler.asm:486
-$B248 | ocb7                            | disassembler.asm:487
-$B24F | ocb8                            | disassembler.asm:488
-$B253 | ocb9                            | disassembler.asm:489
-$B259 | ocba                            | disassembler.asm:490
-$B25D | ocbc                            | disassembler.asm:492
-$B263 | ocbd                            | disassembler.asm:493
-$B269 | ocbe                            | disassembler.asm:494
-$B26F | ocbf                            | disassembler.asm:495
-$B274 | occ0                            | disassembler.asm:497
-$B27A | occ1                            | disassembler.asm:498
-$B282 | occ4                            | disassembler.asm:501
-$B288 | occ5                            | disassembler.asm:502
-$B28E | occ6                            | disassembler.asm:503
-$B294 | occ7                            | disassembler.asm:504
-$B29B | occ8                            | disassembler.asm:505
-$B29F | occ9                            | disassembler.asm:506
-$B2A5 | occa                            | disassembler.asm:507
-$B2A9 | occc                            | disassembler.asm:509
-$B2AD | occd                            | disassembler.asm:510
-$B2B1 | occe                            | disassembler.asm:511
-$B2B5 | occf                            | disassembler.asm:512
-$B2BA | ocd0                            | disassembler.asm:514
-$B2BE | ocd1                            | disassembler.asm:515
-$B2C6 | ocd2                            | disassembler.asm:516
-$B2CD | ocd5                            | disassembler.asm:519
-$B2D4 | ocd6                            | disassembler.asm:520
-$B2DB | ocd7                            | disassembler.asm:521
-$B2E2 | ocd8                            | disassembler.asm:522
-$B2E6 | ocd9                            | disassembler.asm:523
-$B2EC | ocda                            | disassembler.asm:524
-$B2F0 | ocdd                            | disassembler.asm:527
-$B2F6 | ocde                            | disassembler.asm:528
-$B2FC | ocdf                            | disassembler.asm:529
-$B301 | oce0                            | disassembler.asm:531
-$B307 | oce1                            | disassembler.asm:532
-$B30F | oce4                            | disassembler.asm:535
-$B315 | oce5                            | disassembler.asm:536
-$B31B | oce6                            | disassembler.asm:537
-$B321 | oce7                            | disassembler.asm:538
-$B328 | oce8                            | disassembler.asm:539
-$B32C | oce9                            | disassembler.asm:540
-$B332 | ocea                            | disassembler.asm:541
-$B336 | ocec                            | disassembler.asm:543
-$B33A | oced                            | disassembler.asm:544
-$B33E | ocee                            | disassembler.asm:545
-$B342 | ocef                            | disassembler.asm:546
-$B347 | ocf0                            | disassembler.asm:548
-$B34B | ocf1                            | disassembler.asm:549
-$B353 | ocf2                            | disassembler.asm:550
-$B35A | ocf5                            | disassembler.asm:553
-$B361 | ocf6                            | disassembler.asm:554
-$B368 | ocf7                            | disassembler.asm:555
-$B36F | ocf8                            | disassembler.asm:556
-$B373 | ocf9                            | disassembler.asm:557
-$B379 | ocfa                            | disassembler.asm:558
-$B37D | ocfd                            | disassembler.asm:561
-$B383 | ocfe                            | disassembler.asm:562
-$B389 | ocff                            | disassembler.asm:563
-$B38E | oc__                            | disassembler.asm:566
-$B390 | disassembler_end                | disassembler.asm:569
-$B390 | ed6502                          | ed.asm:64
-$B3A3 | _input_loop                     | ed.asm:88
-$B3C7 | *                               | ed.asm:125
-$B3CD | _command_mode                   | ed.asm:133
-$B3D3 | _prefix_dot                     | ed.asm:202
-$B3F0 | *                               | ed.asm:231
-$B413 | _prefix_dollar                  | ed.asm:258
-$B430 | *                               | ed.asm:288
-$B435 | _prefix_percent                 | ed.asm:295
-$B43F | _whole_text                     | ed.asm:303
-$B448 | _semicolon_entry                | ed.asm:313
-$B456 | _prefix_semicolon               | ed.asm:330
-$B469 | _prefix_number                  | ed.asm:348
-$B498 | _line_number_only_from_external | ed.asm:401
-$B4A3 | *                               | ed.asm:409
-$B4B0 | _have_unconverted_chars         | ed.asm:420
-$B4D4 | _no_command_yet                 | ed.asm:464
-$B4F0 | _check_for_para2                | ed.asm:490
-$B503 | _got_comma                      | ed.asm:517
-$B509 | *                               | ed.asm:524
-$B50F | *                               | ed.asm:528
-$B52B | _para2_not_dollar               | ed.asm:564
-$B55A | _second_number                  | ed.asm:603
-$B56C | _check_command                  | ed.asm:624
-$B573 | _cmd_loop                       | ed.asm:645
-$B57F | _illegal_command                | ed.asm:656
-$B583 | _found_cmd                      | ed.asm:662
-$B589 | _next_command                   | ed.asm:676
-$B58D | _next_command_empty             | ed.asm:686
-$B590 | _all_done                       | ed.asm:691
-$B598 | _cmd_a                          | ed.asm:724
-$B5A7 | _cmd_a_have_para                | ed.asm:751
-$B5A7 | _entry_cmd_i                    | ed.asm:746
-$B5AD | _next_string_loop               | ed.asm:755
-$B5CC | _add_line                       | ed.asm:788
-$B5F2 | *                               | ed.asm:822
-$B5F8 | *                               | ed.asm:829
-$B627 | *                               | ed.asm:866
-$B647 | _cmd_d                          | ed.asm:893
-$B65C | *                               | ed.asm:913
-$B664 | _cmd_d_loop                     | ed.asm:922
-$B67D | _cmd_d_done_with_flag           | ed.asm:946
-$B685 | *                               | ed.asm:956
-$B68F | _cmd_d_done                     | ed.asm:964
-$B699 | _cmd_d_common                   | ed.asm:973
-$B6AF | _cmd_equ                        | ed.asm:990
-$B6BE | _cmd_equ_have_text              | ed.asm:1011
-$B6D1 | _cmd_equ_have_para              | ed.asm:1029
-$B6DC | _cmd_equ_two_paras              | ed.asm:1043
-$B6DF | _cmd_equ_done                   | ed.asm:1046
-$B6EB | _cmd_f                          | ed.asm:1055
-$B707 | _cmd_f_have_para                | ed.asm:1079
-$B718 | _cmd_f_done                     | ed.asm:1092
-$B71E | _cmd_i                          | ed.asm:1099
-$B72D | _cmd_i_have_para                | ed.asm:1121
-$B73C | _cmd_i_done                     | ed.asm:1132
-$B73F | _cmd_n                          | ed.asm:1137
-$B746 | _cmd_p                          | ed.asm:1150
-$B747 | _cmd_p_from_external            | ed.asm:1160
-$B74B | _cmd_p_entry_for_cmd_n          | ed.asm:1166
-$B762 | _cmd_p_loop                     | ed.asm:1187
-$B77C | *                               | ed.asm:1209
-$B77E | _cmd_p_done                     | ed.asm:1212
-$B780 | _cmd_p_all_done                 | ed.asm:1216
-$B783 | _cmd_p_common                   | ed.asm:1220
-$B793 | _cmd_p_common_no_num            | ed.asm:1239
-$B79A | _cmd_q                          | ed.asm:1248
-$B7A2 | *                               | ed.asm:1256
-$B7A5 | _cmd_qq                         | ed.asm:1261
-$B7A9 | _cmd_w                          | ed.asm:1271
-$B7BA | *                               | ed.asm:1297
-$B7C4 | _cmd_w_have_para                | ed.asm:1307
-$B7CC | _cmd_w_para_ready               | ed.asm:1316
-$B7DA | _cmd_w_loop                     | ed.asm:1333
-$B838 | _cmd_w_eol                      | ed.asm:1394
-$B85C | _error_2drop                    | ed.asm:1424
-$B85E | _error_1drop                    | ed.asm:1429
-$B860 | _error                          | ed.asm:1432
-$B86E | _get_input                      | ed.asm:1450
-$B87C | *                               | ed.asm:1469
-$B87F | _have_text                      | ed.asm:1477
-$B889 | *                               | ed.asm:1490
-$B88A | _is_valid_line                  | ed.asm:1494
-$B8A8 | _is_valid_line_too_small        | ed.asm:1523
-$B8AA | _is_valid_line_nope_zero        | ed.asm:1527
-$B8AB | _is_valid_line_done             | ed.asm:1530
-$B8AC | _last_line                      | ed.asm:1535
-$B8BA | _last_line_loop                 | ed.asm:1551
-$B8C9 | *                               | ed.asm:1563
-$B8CB | _last_line_done                 | ed.asm:1566
-$B8D4 | _no_line_zero                   | ed.asm:1576
-$B8E1 | _no_line_zero_done              | ed.asm:1594
-$B8E2 | _num_to_addr                    | ed.asm:1599
-$B8F7 | _num_to_addr_loop               | ed.asm:1625
-$B905 | *                               | ed.asm:1636
-$B916 | _num_to_addr_finished           | ed.asm:1651
-$B918 | _num_to_addr_done               | ed.asm:1656
-$B919 | _para1_to_cur                   | ed.asm:1661
-$B922 | _print_addr                     | ed.asm:1673
-$B944 | ed_cmd_list                     | ed.asm:1706
-$B94F | ed_cmd_table                    | ed.asm:1708
-$B963 | ed6502_end                      | ed.asm:1713
-$B963 | forth_words_start               | taliforth.asm:24
-$BA27 | forth_words_end                 | taliforth.asm:26
-$BA27 | user_words_start                | taliforth.asm:29
-$BA29 | nt_bye                          | headers.asm:62
-$BA29 | user_words_end                  | taliforth.asm:31
-$BA34 | nt_cold                         | headers.asm:70
-$BA40 | nt_ed                           | headers.asm:75
-$BA4A | nt_see                          | headers.asm:80
-$BA55 | nt_forth                        | headers.asm:84
-$BA62 | nt_order                        | headers.asm:89
-$BA6F | nt_to_order                     | headers.asm:94
-$BA7D | nt_previous                     | headers.asm:99
-$BA8D | nt_also                         | headers.asm:104
-$BA99 | nt_only                         | headers.asm:109
-$BAA5 | nt_forth_wordlist               | headers.asm:114
-$BABB | nt_editor_wordlist              | headers.asm:119
-$BAD2 | nt_assembler_wordlist           | headers.asm:124
-$BAEC | nt_root_wordlist                | headers.asm:129
-$BB01 | nt_get_order                    | headers.asm:134
-$BB12 | nt_set_order                    | headers.asm:139
-$BB23 | nt_get_current                  | headers.asm:144
-$BB36 | nt_set_current                  | headers.asm:149
-$BB49 | nt_search_wordlist              | headers.asm:154
-$BB60 | nt_wordlist                     | headers.asm:159
-$BB70 | nt_definitions                  | headers.asm:164
-$BB83 | nt_block_ramdrive_init          | headers.asm:169
-$BB9E | nt_list                         | headers.asm:174
-$BBAA | nt_thru                         | headers.asm:179
-$BBB6 | nt_load                         | headers.asm:184
-$BBC2 | nt_flush                        | headers.asm:189
-$BBCF | nt_empty_buffers                | headers.asm:194
-$BBE4 | nt_buffer                       | headers.asm:199
-$BBF2 | nt_update                       | headers.asm:204
-$BC00 | nt_block                        | headers.asm:209
-$BC0D | nt_save_buffers                 | headers.asm:214
-$BC21 | nt_block_read_vector            | headers.asm:219
-$BC3A | nt_block_read                   | headers.asm:224
-$BC4C | nt_block_write_vector           | headers.asm:229
-$BC66 | nt_block_write                  | headers.asm:234
-$BC79 | nt_blk                          | headers.asm:239
-$BC84 | nt_scr                          | headers.asm:244
-$BC8F | nt_blkbuffer                    | headers.asm:249
-$BCA0 | nt_buffblocknum                 | headers.asm:254
-$BCB4 | nt_buffstatus                   | headers.asm:259
-$BCC6 | nt_buffer_colon                 | headers.asm:264
-$BCD5 | nt_useraddr                     | headers.asm:269
-$BCE5 | nt_action_of                    | headers.asm:274
-$BCF6 | nt_is                           | headers.asm:279
-$BD00 | nt_defer_store                  | headers.asm:284
-$BD0E | nt_defer_fetch                  | headers.asm:289
-$BD1C | nt_endcase                      | headers.asm:294
-$BD2B | nt_endof                        | headers.asm:299
-$BD38 | nt_of                           | headers.asm:304
-$BD42 | nt_case                         | headers.asm:309
-$BD4E | nt_while                        | headers.asm:314
-$BD5B | nt_until                        | headers.asm:319
-$BD68 | nt_repeat                       | headers.asm:324
-$BD76 | nt_else                         | headers.asm:329
-$BD82 | nt_then                         | headers.asm:334
-$BD8E | nt_if                           | headers.asm:339
-$BD98 | nt_dot_paren                    | headers.asm:344
-$BDA2 | nt_paren                        | headers.asm:349
-$BDAB | nt_word                         | headers.asm:354
-$BDB7 | nt_find                         | headers.asm:359
-$BDC3 | nt_environment_q                | headers.asm:364
-$BDD7 | nt_search                       | headers.asm:369
-$BDE5 | nt_compare                      | headers.asm:374
-$BDF4 | nt_disasm                       | headers.asm:379
-$BE02 | nt_dot_s                        | headers.asm:384
-$BE0C | nt_dump                         | headers.asm:389
-$BE18 | nt_bell                         | headers.asm:394
-$BE24 | nt_align                        | headers.asm:399
-$BE31 | nt_aligned                      | headers.asm:404
-$BE40 | nt_wordsize                     | headers.asm:409
-$BE50 | nt_words                        | headers.asm:414
-$BE5D | nt_marker                       | headers.asm:419
-$BE6B | nt_at_xy                        | headers.asm:424
-$BE78 | nt_page                         | headers.asm:429
-$BE84 | nt_cr                           | headers.asm:434
-$BE8E | nt_input                        | headers.asm:439
-$BE9B | nt_output                       | headers.asm:444
-$BEA9 | nt_sign                         | headers.asm:449
-$BEB5 | nt_hold                         | headers.asm:454
-$BEC1 | nt_number_sign_greater          | headers.asm:459
-$BECB | nt_number_sign_s                | headers.asm:464
-$BED5 | nt_number_sign                  | headers.asm:469
-$BEDE | nt_less_number_sign             | headers.asm:474
-$BEE8 | nt_to_in                        | headers.asm:479
-$BEF3 | nt_within                       | headers.asm:484
-$BF01 | nt_hexstore                     | headers.asm:489
-$BF11 | nt_cleave                       | headers.asm:494
-$BF1F | nt_pad                          | headers.asm:499
-$BF2A | nt_cmove                        | headers.asm:504
-$BF37 | nt_cmove_up                     | headers.asm:509
-$BF45 | nt_move                         | headers.asm:514
-$BF51 | nt_backslash                    | headers.asm:519
-$BF5A | nt_star_slash                   | headers.asm:524
-$BF64 | nt_star_slash_mod               | headers.asm:529
-$BF71 | nt_mod                          | headers.asm:534
-$BF7C | nt_slash_mod                    | headers.asm:539
-$BF88 | nt_slash                        | headers.asm:544
-$BF91 | nt_fm_slash_mod                 | headers.asm:549
-$BF9F | nt_sm_slash_rem                 | headers.asm:554
-$BFAD | nt_um_slash_mod                 | headers.asm:559
-$BFBB | nt_star                         | headers.asm:564
-$BFC4 | nt_um_star                      | headers.asm:569
-$BFCF | nt_m_star                       | headers.asm:574
-$BFD9 | nt_count                        | headers.asm:579
-$BFE6 | nt_decimal                      | headers.asm:584
-$BFF5 | nt_hex                          | headers.asm:589
-$C000 | nt_to_number                    | headers.asm:594
-$C00F | nt_number                       | headers.asm:599
-$C01D | nt_digit_question               | headers.asm:604
-$C02B | nt_base                         | headers.asm:609
-$C037 | nt_evaluate                     | headers.asm:614
-$C047 | nt_state                        | headers.asm:619
-$C054 | nt_again                        | headers.asm:624
-$C061 | nt_begin                        | headers.asm:629
-$C06E | nt_quit                         | headers.asm:634
-$C07A | nt_recurse                      | headers.asm:639
-$C089 | nt_leave                        | headers.asm:644
-$C096 | nt_unloop                       | headers.asm:649
-$C0A4 | nt_exit                         | headers.asm:654
-$C0B0 | nt_plus_loop                    | headers.asm:659
-$C0BD | nt_loop                         | headers.asm:664
-$C0C9 | nt_j                            | headers.asm:669
-$C0D2 | nt_i                            | headers.asm:674
-$C0DB | nt_question_do                  | headers.asm:679
-$C0E6 | nt_do                           | headers.asm:684
-$C0F0 | nt_abort_quote                  | headers.asm:689
-$C0FE | nt_abort                        | headers.asm:694
-$C10B | nt_strip_underflow              | headers.asm:699
-$C122 | nt_nc_limit                     | headers.asm:704
-$C132 | nt_allow_native                 | headers.asm:709
-$C146 | nt_always_native                | headers.asm:714
-$C15B | nt_never_native                 | headers.asm:719
-$C16F | nt_compile_only                 | headers.asm:724
-$C183 | nt_immediate                    | headers.asm:729
-$C194 | nt_postpone                     | headers.asm:734
-$C1A4 | nt_s_backslash_quote            | headers.asm:739
-$C1AF | nt_s_quote                      | headers.asm:744
-$C1B9 | nt_dot_quote                    | headers.asm:749
-$C1C3 | nt_sliteral                     | headers.asm:754
-$C1D3 | nt_literal                      | headers.asm:759
-$C1E2 | nt_right_bracket                | headers.asm:764
-$C1EB | nt_left_bracket                 | headers.asm:769
-$C1F4 | nt_compile_comma                | headers.asm:774
-$C204 | nt_colon_noname                 | headers.asm:779
-$C213 | nt_semicolon                    | headers.asm:784
-$C21C | nt_colon                        | headers.asm:789
-$C225 | nt_source_id                    | headers.asm:794
-$C236 | nt_source                       | headers.asm:799
-$C244 | nt_execute_parsing              | headers.asm:804
-$C25B | nt_parse                        | headers.asm:809
-$C268 | nt_parse_name                   | headers.asm:814
-$C27A | nt_latestnt                     | headers.asm:819
-$C28A | nt_latestxt                     | headers.asm:824
-$C29A | nt_defer                        | headers.asm:829
-$C2A7 | nt_to_body                      | headers.asm:834
-$C2B4 | nt_name_to_string               | headers.asm:839
-$C2C7 | nt_int_to_name                  | headers.asm:844
-$C2D7 | nt_name_to_int                  | headers.asm:849
-$C2E7 | nt_bracket_tick                 | headers.asm:854
-$C2F2 | nt_tick                         | headers.asm:859
-$C2FB | nt_find_name                    | headers.asm:864
-$C30C | nt_fill                         | headers.asm:869
-$C318 | nt_blank                        | headers.asm:874
-$C325 | nt_erase                        | headers.asm:879
-$C332 | nt_d_plus                       | headers.asm:884
-$C33C | nt_d_minus                      | headers.asm:889
-$C346 | nt_d_to_s                       | headers.asm:894
-$C351 | nt_s_to_d                       | headers.asm:899
-$C35C | nt_to                           | headers.asm:904
-$C366 | nt_value                        | headers.asm:909
-$C373 | nt_constant                     | headers.asm:914
-$C383 | nt_variable                     | headers.asm:919
-$C393 | nt_does                         | headers.asm:924
-$C3A0 | nt_create                       | headers.asm:929
-$C3AE | nt_allot                        | headers.asm:934
-$C3BB | nt_key                          | headers.asm:939
-$C3C6 | nt_depth                        | headers.asm:944
-$C3D3 | nt_unused                       | headers.asm:949
-$C3E1 | nt_r_to_input                   | headers.asm:954
-$C3F0 | nt_input_to_r                   | headers.asm:959
-$C3FF | nt_accept                       | headers.asm:964
-$C40D | nt_refill                       | headers.asm:969
-$C41B | nt_slash_string                 | headers.asm:974
-$C42A | nt_minus_leading                | headers.asm:979
-$C43A | nt_minus_trailing               | headers.asm:984
-$C44B | nt_bl                           | headers.asm:989
-$C455 | nt_spaces                       | headers.asm:994
-$C463 | nt_bounds                       | headers.asm:999
-$C471 | nt_c_comma                      | headers.asm:1004
-$C47B | nt_dnegate                      | headers.asm:1009
-$C48A | nt_negate                       | headers.asm:1014
-$C498 | nt_invert                       | headers.asm:1019
-$C4A6 | nt_two_to_r                     | headers.asm:1024
-$C4B1 | nt_two_r_from                   | headers.asm:1029
-$C4BC | nt_two_r_fetch                  | headers.asm:1034
-$C4C7 | nt_two_literal                  | headers.asm:1039
-$C4D7 | nt_two_constant                 | headers.asm:1044
-$C4E8 | nt_two_variable                 | headers.asm:1049
-$C4F9 | nt_two_fetch                    | headers.asm:1054
-$C503 | nt_two_store                    | headers.asm:1059
-$C50D | nt_two_over                     | headers.asm:1064
-$C51A | nt_two_swap                     | headers.asm:1069
-$C527 | nt_two_drop                     | headers.asm:1074
-$C534 | nt_max                          | headers.asm:1079
-$C53F | nt_min                          | headers.asm:1084
-$C54A | nt_zero_less                    | headers.asm:1089
-$C554 | nt_zero_greater                 | headers.asm:1094
-$C55E | nt_zero_unequal                 | headers.asm:1099
-$C569 | nt_zero_equal                   | headers.asm:1104
-$C573 | nt_greater_than                 | headers.asm:1109
-$C57C | nt_u_greater_than               | headers.asm:1114
-$C586 | nt_u_less_than                  | headers.asm:1119
-$C590 | nt_less_than                    | headers.asm:1124
-$C599 | nt_not_equals                   | headers.asm:1129
-$C5A3 | nt_equal                        | headers.asm:1134
-$C5AC | nt_two_slash                    | headers.asm:1139
-$C5B6 | nt_two_star                     | headers.asm:1144
-$C5C0 | nt_one_plus                     | headers.asm:1149
-$C5CA | nt_one_minus                    | headers.asm:1154
-$C5D4 | nt_here                         | headers.asm:1159
-$C5E0 | nt_cell_plus                    | headers.asm:1164
-$C5ED | nt_cells                        | headers.asm:1169
-$C5FA | nt_chars                        | headers.asm:1174
-$C607 | nt_char_plus                    | headers.asm:1179
-$C614 | nt_bracket_char                 | headers.asm:1184
-$C622 | nt_char                         | headers.asm:1189
-$C62E | nt_pick                         | headers.asm:1194
-$C63A | nt_lshift                       | headers.asm:1199
-$C648 | nt_rshift                       | headers.asm:1204
-$C656 | nt_xor                          | headers.asm:1209
-$C661 | nt_or                           | headers.asm:1214
-$C66B | nt_and                          | headers.asm:1219
-$C676 | nt_dabs                         | headers.asm:1224
-$C682 | nt_abs                          | headers.asm:1229
-$C68D | nt_minus                        | headers.asm:1234
-$C696 | nt_plus                         | headers.asm:1239
-$C69F | nt_question_dup                 | headers.asm:1244
-$C6AB | nt_two_dup                      | headers.asm:1249
-$C6B7 | nt_two                          | headers.asm:1254
-$C6C0 | nt_one                          | headers.asm:1259
-$C6C9 | nt_zero                         | headers.asm:1264
-$C6D2 | nt_space                        | headers.asm:1269
-$C6DF | nt_true                         | headers.asm:1274
-$C6EB | nt_false                        | headers.asm:1279
-$C6F8 | nt_question                     | headers.asm:1284
-$C701 | nt_ud_dot_r                     | headers.asm:1289
-$C70D | nt_ud_dot                       | headers.asm:1294
-$C718 | nt_d_dot_r                      | headers.asm:1299
-$C723 | nt_d_dot                        | headers.asm:1304
-$C72D | nt_dot_r                        | headers.asm:1309
-$C737 | nt_u_dot_r                      | headers.asm:1314
-$C742 | nt_u_dot                        | headers.asm:1319
-$C74C | nt_dot                          | headers.asm:1324
-$C755 | nt_type                         | headers.asm:1329
-$C761 | nt_emit                         | headers.asm:1334
-$C76D | nt_execute                      | headers.asm:1339
-$C77C | nt_plus_store                   | headers.asm:1344
-$C786 | nt_c_store                      | headers.asm:1349
-$C790 | nt_c_fetch                      | headers.asm:1354
-$C79A | nt_comma                        | headers.asm:1359
-$C7A3 | nt_tuck                         | headers.asm:1364
-$C7AF | nt_not_rote                     | headers.asm:1369
-$C7BB | nt_rot                          | headers.asm:1374
-$C7C6 | nt_nip                          | headers.asm:1379
-$C7D1 | nt_r_fetch                      | headers.asm:1384
-$C7DB | nt_r_from                       | headers.asm:1389
-$C7E5 | nt_to_r                         | headers.asm:1394
-$C7EF | nt_over                         | headers.asm:1399
-$C7FB | nt_fetch                        | headers.asm:1404
-$C804 | nt_store                        | headers.asm:1409
-$C80D | nt_swap                         | headers.asm:1414
-$C819 | nt_dup                          | headers.asm:1419
-$C824 | dictionary_start                | headers.asm:1425
-$C824 | nt_drop                         | headers.asm:1426
-$C830 | nt_root_words                   | headers.asm:1439
-$C83D | nt_root_forth_wordlist          | headers.asm:1444
-$C853 | nt_root_forth                   | headers.asm:1449
-$C860 | nt_root_set_order               | headers.asm:1455
-$C860 | root_dictionary_start           | headers.asm:1454
-$C871 | nt_editor_enter_screen          | headers.asm:1465
-$C885 | nt_editor_erase_screen          | headers.asm:1470
-$C899 | nt_editor_el                    | headers.asm:1475
-$C8A3 | nt_editor_l                     | headers.asm:1480
-$C8AC | nt_editor_line                  | headers.asm:1485
-$C8B8 | editor_dictionary_start         | headers.asm:1490
-$C8B8 | nt_editor_o                     | headers.asm:1491
-$C8C1 | assembler_dictionary_start      | headers.asm:1505
-$C8C1 | nt_asm_adc_h                    | headers.asm:1506
-$C8CE | nt_asm_adc_x                    | headers.asm:1512
-$C8DB | nt_asm_adc_y                    | headers.asm:1518
-$C8E8 | nt_asm_adc_z                    | headers.asm:1524
-$C8F5 | nt_asm_adc_zi                   | headers.asm:1530
-$C903 | nt_asm_adc_ziy                  | headers.asm:1536
-$C912 | nt_asm_adc_zx                   | headers.asm:1542
-$C920 | nt_asm_adc_zxi                  | headers.asm:1548
-$C92F | nt_asm_and                      | headers.asm:1554
-$C93B | nt_asm_and_h                    | headers.asm:1560
-$C948 | nt_asm_and_x                    | headers.asm:1566
-$C955 | nt_asm_and_y                    | headers.asm:1572
-$C962 | nt_asm_and_z                    | headers.asm:1578
-$C96F | nt_asm_and_zi                   | headers.asm:1584
-$C97D | nt_asm_and_ziy                  | headers.asm:1590
-$C98C | nt_asm_and_zx                   | headers.asm:1596
-$C99A | nt_asm_and_zxi                  | headers.asm:1602
-$C9A9 | nt_asm_asl                      | headers.asm:1608
-$C9B4 | nt_asm_asl_a                    | headers.asm:1614
-$C9C1 | nt_asm_asl_x                    | headers.asm:1620
-$C9CE | nt_asm_asl_z                    | headers.asm:1626
-$C9DB | nt_asm_asl_zx                   | headers.asm:1632
-$C9E9 | nt_asm_bcc                      | headers.asm:1638
-$C9F4 | nt_asm_bcs                      | headers.asm:1644
-$C9FF | nt_asm_beq                      | headers.asm:1650
-$CA0A | nt_asm_bit                      | headers.asm:1656
-$CA15 | nt_asm_bit_h                    | headers.asm:1662
-$CA22 | nt_asm_bit_x                    | headers.asm:1668
-$CA2F | nt_asm_bit_z                    | headers.asm:1674
-$CA3C | nt_asm_bit_zx                   | headers.asm:1680
-$CA4A | nt_asm_bmi                      | headers.asm:1686
-$CA55 | nt_asm_bne                      | headers.asm:1692
-$CA60 | nt_asm_bpl                      | headers.asm:1698
-$CA6B | nt_asm_bra                      | headers.asm:1704
-$CA76 | nt_asm_brk                      | headers.asm:1710
-$CA81 | nt_asm_bvc                      | headers.asm:1716
-$CA8C | nt_asm_bvs                      | headers.asm:1722
-$CA97 | nt_asm_clc                      | headers.asm:1728
-$CAA2 | nt_asm_cld                      | headers.asm:1734
-$CAAD | nt_asm_cli                      | headers.asm:1740
-$CAB8 | nt_asm_clv                      | headers.asm:1746
-$CAC3 | nt_asm_cmp                      | headers.asm:1752
-$CACE | nt_asm_cmp_h                    | headers.asm:1758
-$CADB | nt_asm_cmp_x                    | headers.asm:1764
-$CAE8 | nt_asm_cmp_y                    | headers.asm:1770
-$CAF5 | nt_asm_cmp_z                    | headers.asm:1776
-$CB02 | nt_asm_cmp_zi                   | headers.asm:1782
-$CB10 | nt_asm_cmp_ziy                  | headers.asm:1788
-$CB1F | nt_asm_cmp_zx                   | headers.asm:1794
-$CB2D | nt_asm_cmp_zxi                  | headers.asm:1800
-$CB3C | nt_asm_cpx                      | headers.asm:1806
-$CB47 | nt_asm_cpx_h                    | headers.asm:1812
-$CB54 | nt_asm_cpx_z                    | headers.asm:1818
-$CB61 | nt_asm_cpy                      | headers.asm:1824
-$CB6C | nt_asm_cpy_h                    | headers.asm:1830
-$CB79 | nt_asm_cpy_z                    | headers.asm:1836
-$CB86 | nt_asm_dec                      | headers.asm:1842
-$CB91 | nt_asm_dec_a                    | headers.asm:1848
-$CB9E | nt_asm_dec_x                    | headers.asm:1854
-$CBAB | nt_asm_dec_z                    | headers.asm:1860
-$CBB8 | nt_asm_dec_zx                   | headers.asm:1866
-$CBC6 | nt_asm_dex                      | headers.asm:1872
-$CBD1 | nt_asm_dey                      | headers.asm:1878
-$CBDC | nt_asm_eor                      | headers.asm:1884
-$CBE7 | nt_asm_eor_h                    | headers.asm:1890
-$CBF4 | nt_asm_eor_x                    | headers.asm:1896
-$CC01 | nt_asm_eor_y                    | headers.asm:1902
-$CC0E | nt_asm_eor_z                    | headers.asm:1908
-$CC1B | nt_asm_eor_zi                   | headers.asm:1914
-$CC29 | nt_asm_eor_ziy                  | headers.asm:1920
-$CC38 | nt_asm_eor_zx                   | headers.asm:1926
-$CC46 | nt_asm_eor_zxi                  | headers.asm:1932
-$CC55 | nt_asm_inc                      | headers.asm:1938
-$CC60 | nt_asm_inc_a                    | headers.asm:1944
-$CC6D | nt_asm_inc_x                    | headers.asm:1950
-$CC7A | nt_asm_inc_z                    | headers.asm:1956
-$CC87 | nt_asm_inc_zx                   | headers.asm:1962
-$CC95 | nt_asm_inx                      | headers.asm:1968
-$CCA0 | nt_asm_iny                      | headers.asm:1974
-$CCAB | nt_asm_jmp                      | headers.asm:1980
-$CCB6 | nt_asm_jmp_i                    | headers.asm:1986
-$CCC3 | nt_asm_jmp_xi                   | headers.asm:1992
-$CCD1 | nt_asm_jsr                      | headers.asm:1998
-$CCDC | nt_asm_lda                      | headers.asm:2004
-$CCE7 | nt_asm_lda_h                    | headers.asm:2010
-$CCF4 | nt_asm_lda_x                    | headers.asm:2016
-$CD01 | nt_asm_lda_y                    | headers.asm:2022
-$CD0E | nt_asm_lda_z                    | headers.asm:2028
-$CD1B | nt_asm_lda_zi                   | headers.asm:2034
-$CD29 | nt_asm_lda_ziy                  | headers.asm:2040
-$CD38 | nt_asm_lda_zx                   | headers.asm:2046
-$CD46 | nt_asm_lda_zxi                  | headers.asm:2052
-$CD55 | nt_asm_ldx                      | headers.asm:2058
-$CD60 | nt_asm_ldx_h                    | headers.asm:2064
-$CD6D | nt_asm_ldx_y                    | headers.asm:2070
-$CD7A | nt_asm_ldx_z                    | headers.asm:2076
-$CD87 | nt_asm_ldx_zy                   | headers.asm:2082
-$CD95 | nt_asm_ldy                      | headers.asm:2088
-$CDA0 | nt_asm_ldy_h                    | headers.asm:2094
-$CDAD | nt_asm_ldy_x                    | headers.asm:2100
-$CDBA | nt_asm_ldy_z                    | headers.asm:2106
-$CDC7 | nt_asm_ldy_zx                   | headers.asm:2112
-$CDD5 | nt_asm_lsr                      | headers.asm:2118
-$CDE0 | nt_asm_lsr_a                    | headers.asm:2124
-$CDED | nt_asm_lsr_x                    | headers.asm:2130
-$CDFA | nt_asm_lsr_z                    | headers.asm:2136
-$CE07 | nt_asm_lsr_zx                   | headers.asm:2142
-$CE15 | nt_asm_nop                      | headers.asm:2148
-$CE20 | nt_asm_ora                      | headers.asm:2154
-$CE2B | nt_asm_ora_h                    | headers.asm:2160
-$CE38 | nt_asm_ora_x                    | headers.asm:2166
-$CE45 | nt_asm_ora_y                    | headers.asm:2172
-$CE52 | nt_asm_ora_z                    | headers.asm:2178
-$CE5F | nt_asm_ora_zi                   | headers.asm:2184
-$CE6D | nt_asm_ora_ziy                  | headers.asm:2190
-$CE7C | nt_asm_ora_zx                   | headers.asm:2196
-$CE8A | nt_asm_ora_zxi                  | headers.asm:2202
-$CE99 | nt_asm_pha                      | headers.asm:2208
-$CEA4 | nt_asm_php                      | headers.asm:2214
-$CEAF | nt_asm_phx                      | headers.asm:2220
-$CEBA | nt_asm_phy                      | headers.asm:2226
-$CEC5 | nt_asm_pla                      | headers.asm:2232
-$CED0 | nt_asm_plp                      | headers.asm:2238
-$CEDB | nt_asm_plx                      | headers.asm:2244
-$CEE6 | nt_asm_ply                      | headers.asm:2250
-$CEF1 | nt_asm_rol                      | headers.asm:2256
-$CEFC | nt_asm_rol_a                    | headers.asm:2262
-$CF09 | nt_asm_rol_x                    | headers.asm:2268
-$CF16 | nt_asm_rol_z                    | headers.asm:2274
-$CF23 | nt_asm_rol_zx                   | headers.asm:2280
-$CF31 | nt_asm_ror                      | headers.asm:2286
-$CF3C | nt_asm_ror_a                    | headers.asm:2292
-$CF49 | nt_asm_ror_x                    | headers.asm:2298
-$CF56 | nt_asm_ror_z                    | headers.asm:2304
-$CF63 | nt_asm_ror_zx                   | headers.asm:2310
-$CF71 | nt_asm_rti                      | headers.asm:2316
-$CF7C | nt_asm_rts                      | headers.asm:2322
-$CF87 | nt_asm_sbc                      | headers.asm:2328
-$CF92 | nt_asm_sbc_h                    | headers.asm:2334
-$CF9F | nt_asm_sbc_x                    | headers.asm:2340
-$CFAC | nt_asm_sbc_y                    | headers.asm:2346
-$CFB9 | nt_asm_sbc_z                    | headers.asm:2352
-$CFC6 | nt_asm_sbc_zi                   | headers.asm:2358
-$CFD4 | nt_asm_sbc_ziy                  | headers.asm:2364
-$CFE3 | nt_asm_sbc_zx                   | headers.asm:2370
-$CFF1 | nt_asm_sbc_zxi                  | headers.asm:2376
-$D000 | nt_asm_sec                      | headers.asm:2382
-$D00B | nt_asm_sed                      | headers.asm:2388
-$D016 | nt_asm_sei                      | headers.asm:2394
-$D021 | nt_asm_sta                      | headers.asm:2400
-$D02C | nt_asm_sta_x                    | headers.asm:2406
-$D039 | nt_asm_sta_y                    | headers.asm:2412
-$D046 | nt_asm_sta_z                    | headers.asm:2418
-$D053 | nt_asm_sta_zi                   | headers.asm:2424
-$D061 | nt_asm_sta_ziy                  | headers.asm:2430
-$D070 | nt_asm_sta_zx                   | headers.asm:2436
-$D07E | nt_asm_sta_zxi                  | headers.asm:2442
-$D08D | nt_asm_stx                      | headers.asm:2448
-$D098 | nt_asm_stx_z                    | headers.asm:2454
-$D0A5 | nt_asm_stx_zy                   | headers.asm:2460
-$D0B3 | nt_asm_sty                      | headers.asm:2466
-$D0BE | nt_asm_sty_z                    | headers.asm:2472
-$D0CB | nt_asm_sty_zx                   | headers.asm:2478
-$D0D9 | nt_asm_stz                      | headers.asm:2484
-$D0E4 | nt_asm_stz_x                    | headers.asm:2490
-$D0F1 | nt_asm_stz_z                    | headers.asm:2496
-$D0FE | nt_asm_stz_zx                   | headers.asm:2502
-$D10C | nt_asm_tax                      | headers.asm:2508
-$D117 | nt_asm_tay                      | headers.asm:2514
-$D122 | nt_asm_trb                      | headers.asm:2520
-$D12D | nt_asm_trb_z                    | headers.asm:2526
-$D13A | nt_asm_tsb                      | headers.asm:2532
-$D145 | nt_asm_tsb_z                    | headers.asm:2538
-$D152 | nt_asm_tsx                      | headers.asm:2544
-$D15D | nt_asm_txa                      | headers.asm:2550
-$D168 | nt_asm_txs                      | headers.asm:2556
-$D173 | nt_asm_tya                      | headers.asm:2562
-$D17E | nt_asm_arrow                    | headers.asm:2570
-$D189 | nt_asm_back_jump                | headers.asm:2577
-$D193 | nt_asm_back_branch              | headers.asm:2583
-$D19D | nt_asm_push_a                   | headers.asm:2589
-$D1AB | string_table                    | strings.asm:29
-$D1C5 | s_ok                            | strings.asm:34
-$D1C9 | s_compiled                      | strings.asm:35
-$D1D3 | s_redefined                     | strings.asm:36
-$D1DE | s_abc_lower                     | strings.asm:38
-$D202 | s_abc_upper                     | strings.asm:39
-$D226 | s_wid_asm                       | strings.asm:41
-$D231 | s_wid_editor                    | strings.asm:42
-$D239 | s_wid_forth                     | strings.asm:43
-$D240 | s_wid_root                      | strings.asm:44
-$D246 | s_see_flags                     | strings.asm:46
-$D262 | s_see_nt                        | strings.asm:47
-$D267 | s_see_xt                        | strings.asm:48
-$D26C | s_see_size                      | strings.asm:49
-$D27D | error_table                     | strings.asm:72
-$D297 | es_allot                        | strings.asm:78
-$D2B8 | es_badsource                    | strings.asm:79
-$D2D8 | es_compileonly                  | strings.asm:80
-$D2F9 | es_defer                        | strings.asm:81
-$D316 | es_divzero                      | strings.asm:82
-$D327 | es_noname                       | strings.asm:83
-$D337 | es_refill                       | strings.asm:84
-$D365 | es_state                        | strings.asm:85
-$D37D | es_syntax                       | strings.asm:86
-$D38C | es_underflow                    | strings.asm:87
-$D39C | es_negallot                     | strings.asm:88
-$D3B8 | es_wordlist                     | strings.asm:89
-$D3CF | es_blockwords                   | strings.asm:90
-$D40E | envs_cs                         | strings.asm:100
-$D41E | envs_hold                       | strings.asm:101
-$D424 | envs_pad                        | strings.asm:102
-$D429 | envs_aub                        | strings.asm:103
-$D43B | envs_floored                    | strings.asm:104
-$D443 | envs_max_char                   | strings.asm:105
-$D44C | envs_max_n                      | strings.asm:106
-$D452 | envs_max_u                      | strings.asm:107
-$D458 | envs_rsc                        | strings.asm:108
-$D46B | envs_sc                         | strings.asm:109
-$D477 | envs_wl                         | strings.asm:110
-$D481 | envs_max_d                      | strings.asm:113
-$D487 | envs_max_ud                     | strings.asm:114
-$D48E | cmpl_subroutine                 | taliforth.asm:55
-$D493 | cmpl_jump                       | taliforth.asm:60
-$D496 | cmpl_common                     | taliforth.asm:64
-$D49A | cmpl_word                       | taliforth.asm:70
-$D49E | cmpl_a                          | taliforth.asm:74
-$D4A6 | _done                           | taliforth.asm:82
-$D4A7 | doconst                         | taliforth.asm:90
-$D4BB | dodefer                         | taliforth.asm:119
-$D4CF | defer_error                     | taliforth.asm:141
-$D4D4 | dodoes                          | taliforth.asm:146
-$D4DA | *                               | taliforth.asm:160
-$D4E6 | *                               | taliforth.asm:175
-$D4ED | dovar                           | taliforth.asm:186
-$D4F3 | *                               | taliforth.asm:201
-$D4FB | byte_to_ascii                   | taliforth.asm:214
-$D504 | _nibble_to_ascii                | taliforth.asm:227
-$D50E | *                               | taliforth.asm:237
-$D512 | compare_16bit                   | taliforth.asm:242
-$D522 | _equal                          | taliforth.asm:269
-$D528 | _overflow                       | taliforth.asm:274
-$D52A | _not_equal                      | taliforth.asm:277
-$D52C | _done                           | taliforth.asm:279
-$D52D | current_to_dp                   | taliforth.asm:283
-$D540 | dp_to_current                   | taliforth.asm:306
-$D553 | _loop                           | taliforth.asm:338
-$D553 | interpret                       | taliforth.asm:327
-$D584 | _single_number                  | taliforth.asm:390
-$D590 | _got_name_token                 | taliforth.asm:401
-$D5B8 | _interpret                      | taliforth.asm:439
-$D5BE | _compile                        | taliforth.asm:450
-$D5CC | _line_done                      | taliforth.asm:464
-$D5D1 | is_printable                    | taliforth.asm:475
-$D5DC | _failed                         | taliforth.asm:490
-$D5DD | _done                           | taliforth.asm:492
-$D5DE | is_whitespace                   | taliforth.asm:497
-$D5E9 | _failed                         | taliforth.asm:513
-$D5EA | _done                           | taliforth.asm:515
-$D5EB | underflow_1                     | taliforth.asm:523
-$D5F0 | underflow_2                     | taliforth.asm:528
-$D5F5 | underflow_3                     | taliforth.asm:533
-$D5FA | underflow_4                     | taliforth.asm:538
-$D5FF | underflow_error                 | taliforth.asm:544
-$D601 | error                           | taliforth.asm:548
-$D617 | print_string_no_lf              | taliforth.asm:580
-$D624 | print_common                    | taliforth.asm:595
-$D626 | _loop                           | taliforth.asm:602
-$D630 | _done                           | taliforth.asm:609
-$D631 | print_string                    | taliforth.asm:613
-$D637 | print_u                         | taliforth.asm:621
-$E000 | platform_bye                    | platform-py65mon.asm:100
-$F010 | kernel_init                     | platform-py65mon.asm:133
-$F010 | v_irq                           | platform-py65mon.asm:132
-$F010 | v_nmi                           | platform-py65mon.asm:130
-$F010 | v_reset                         | platform-py65mon.asm:131
-$F013 | *                               | platform-py65mon.asm:149
-$F01E | _done                           | platform-py65mon.asm:154
-$F021 | _loop                           | platform-py65mon.asm:166
-$F021 | kernel_getc                     | platform-py65mon.asm:158
-$F027 | kernel_putc                     | platform-py65mon.asm:173
-$F02B | s_kernel_id                     | platform-py65mon.asm:184
+nt_block_write	= $bc66
+xt_asm_rti	= $ab45
+xt_asm_rts	= $ab4a
+AscCN		= $0e
+AscCC		= $03
+AscCR		= $0d
+AscCP		= $10
+ed_is_valid_line= $b88a
+AscBS		= $08
+nt_emit		= $c761
+xt_zero_greater	= $a73e
+es_state	= $d365
+AscESC		= $1b
+xt_comma	= $875e
+nt_ud_dot_r	= $c701
+xt_r_fetch	= $99ff
+z_digit_question= $8b29
+xt_asm_ror	= $ab2c
+xt_asm_rol	= $ab13
+xt_cmove	= $8689
+env_table_double= $8e9a
+xt_s_quote	= $9cd1
+nt_accept	= $c3ff
+xt_asm_back_jump= $ac48
+nt_asm_ora_h	= $ce2b
+nt_asm_ora_z	= $ce52
+nt_asm_ora_x	= $ce38
+nt_asm_ora_y	= $ce45
+z_d_dot_r	= $8d1d
+z_editor_screen_helper= $a780
+z_asm_dey	= $a9db
+z_asm_dex	= $a9d6
+z_asm_dec	= $a9bd
+z_c_fetch	= $8604
+nt_definitions	= $bb70
+buffer0		= 512
+z_zero_equal	= $a73d
+z_asm_cpx_z	= $a9a7
+z_asm_cpx_h	= $a9a2
+z_asm_lda_ziy	= $aa62
+envs_floored	= $d43b
+xt_to_r		= $a2ec
+nc_limit	= 26
+xt_two_constant	= $a43e
+nt_bounds	= $c463
+nt_root_set_order= $c860
+xt_word		= $a637
+env_table_single= $8e82
+z_minus		= $9552
+convert_hex_value= $9b13
+nt_case		= $bd42
+z_star_slash_mod= $a0fd
+s_wid_asm	= $d226
+xt_asm_inc_a	= $aa0d
+xt_asm_inc_x	= $aa12
+xt_asm_inc_z	= $aa17
+nt_asm_rti	= $cf71
+nt_asm_rts	= $cf7c
+z_asm_sbc	= $ab54
+z_constant	= $893e
+nt_asm_ror	= $cf31
+nt_asm_rol	= $cef1
+z_question_dup	= $99fe
+z_asm_lda_zxi	= $aa6c
+z_asm_sei	= $ab87
+z_asm_sed	= $ab83
+z_asm_sec	= $ab7f
+es_wordlist	= $d3b8
+sliteral_runtime= $a02b
+xt_cells	= $a3cc
+xt_u_less_than	= $a4ee
+editor2		= 48
+editor3		= 50
+editor1		= 46
+xt_d_dot	= $8cd4
+z_question_do	= $8bac
+nt_move		= $bf45
+xt_repeat	= $9abc
+nt_asm_asl_z	= $c9ce
+nt_asm_asl_x	= $c9c1
+nt_asm_asl_a	= $c9b4
+z_asm_sty	= $abb7
+z_asm_stx	= $abab
+z_asm_stz	= $abc3
+z_asm_sta	= $ab8b
+xt_bracket_tick	= $858e
+nt_asm_asl	= $c9a9
+xt_begin	= $8380
+nt_minus_trailing= $c43a
+s_wid_root	= $d240
+xt_block_write	= $8550
+env_results_double= $8eb6
+z_two_r_from	= $a3c0
+z_strip_underflow= $a129
+xt_minus	= $9540
+kernel_init	= $f010
+xt_asm_ldx_y	= $aa76
+xt_asm_ldx_z	= $aa7b
+xt_asm_ldx_h	= $aa71
+z_asm_sta_zi	= $ab9b
+z_asm_sta_zx	= $aba3
+nt_two_store	= $c503
+z_set_order	= $9cd0
+nt_plus		= $c696
+nt_asm_ora_zxi	= $ce8a
+xt_block_write_vector= $855e
+xt_only		= $97a9
+nt_asm_and	= $c92f
+xt_over		= $9815
+xt_asm_ora	= $aabc
+xt_tuck		= $a309
+xt_asm_bit_x	= $a925
+xt_asm_bit_z	= $a92a
+xt_asm_bit_h	= $a920
+nt_asm_cmp_zx	= $cb1f
+nt_asm_cmp_zi	= $cb02
+xt_sm_slash_rem	= $a057
+nt_asm_ora_ziy	= $ce6d
+z_asm_bra	= $a948
+z_asm_brk	= $a94d
+z_asm_bpl	= $a943
+z_asm_bvc	= $a952
+z_asm_bvs	= $a957
+xt_zero		= $a723
+z_asm_bit	= $a920
+nt_find		= $bdb7
+z_asm_bne	= $a93e
+xt_save_buffers	= $9e40
+nt_fill		= $c30c
+z_asm_bmi	= $a939
+s_wid_forth	= $d239
+z_asm_bcc	= $a90f
+z_asm_bcs	= $a916
+xt_c_comma	= $85f0
+nt_input_to_r	= $c3f0
+z_asm_beq	= $a91b
+z_refill	= $9abb
+z_asm_lda_x	= $aa4e
+z_asm_lda_y	= $aa53
+z_asm_lda_z	= $aa58
+z_asm_lda_h	= $aa49
+nt_d_plus	= $c332
+nt_asm_and_zi	= $c96f
+nt_asm_and_zx	= $c98c
+stack0		= $0100
+xt_slash_mod	= $9f83
+xt_dot_s	= $8c90
+xt_dot_r	= $8c62
+z_asm_asl_zx	= $a90a
+xt_name_to_int	= $95d1
+ed_all_done	= $b590
+z_two_slash	= $a3cb
+z_number_sign_greater= $975f
+xt_asm_sty_zx	= $abbb
+z_defer_fetch	= $8ad5
+envs_max_ud	= $d487
+z_r_from	= $9a24
+xt_d_plus	= $8a4f
+xt_asm_inc	= $aa08
+xt_asm_inx	= $aa21
+xt_asm_iny	= $aa26
+z_not_rote	= $9679
+z_asm_cmp_zi	= $a989
+z_asm_cmp_zx	= $a993
+z_dot_r		= $8c8f
+z_dot_s		= $8cd3
+xt_int_to_name	= $9268
+sliteral_const_str= $a011
+z_unused	= $a5df
+z_sm_slash_rem	= $a07f
+xt_slash_string	= $9f9b
+xt_output	= $980a
+xt_compile_only	= $88f5
+es_negallot	= $d39c
+nt_sign		= $bea9
+xt_asm_ror_x	= $ab36
+xt_asm_ror_z	= $ab3b
+xt_asm_ror_a	= $ab31
+nt_compare	= $bde5
+nt_asm_nop	= $ce15
+xt_asm_sta_ziy	= $ab9b
+compare_16bit	= $d512
+xt_asm_cmp_ziy	= $a989
+xt_sliteral	= $9fbb
+z_abort		= $80c5
+xt_asm_sta_zxi	= $aba3
+z_asm_adc_zxi	= $a8c4
+xt_sign		= $9f69
+xt_does		= $8be5
+ed_error_1drop	= $b85e
+adjust_z	= $8921
+cmpl_jump	= $d493
+xt_cmove_up	= $86c4
+xt_asm_cmp_zxi	= $a993
+str_wid_assembler= 7
+xt_asm_adc_h	= $a89c
+xt_asm_adc_z	= $a8ab
+xt_asm_adc_x	= $a8a1
+xt_asm_adc_y	= $a8a6
+xt_asm_tsb_z	= $abe3
+z_asm_adc_ziy	= $a8ba
+z_block_word_error= $8550
+xt_digit_question= $8af5
+nt_leave	= $c089
+z_s_backslash_quote= $9b12
+xt_within	= $a621
+branch_runtime	= $8dcb
+ed_cmd_p_from_external= $b747
+nt_fm_slash_mod	= $bf91
+err_wordlist	= 11
+nt_asm_dec	= $cb86
+nt_asm_dex	= $cbc6
+nt_asm_dey	= $cbd1
+envs_rsc	= $d458
+nt_over		= $c7ef
+xt_asm_sbc_zi	= $ab68
+xt_asm_sbc_zx	= $ab72
+underflow_4	= $d5fa
+underflow_1	= $d5eb
+underflow_2	= $d5f0
+underflow_3	= $d5f5
+z_fetch		= $8f82
+ed_error	= $b860
+z_cold		= $80c5
+xt_asm_jmp	= $aa2b
+z_slash		= $9f9a
+z_flush		= $9080
+dp_to_current	= $d540
+xt_two_over	= $a36e
+z_comma		= $8777
+xt_asm_and_h	= $a8c9
+xt_asm_and_z	= $a8d8
+xt_asm_and_y	= $a8d3
+xt_asm_and_x	= $a8ce
+z_pick		= $9964
+z_find_name	= $9076
+xt_exit		= $8f68
+nt_comma	= $c79a
+z_unloop	= $a5c4
+z_get_order	= $914c
+nt_always_native= $c146
+xt_unused	= $a5d0
+xt_asm_jsr	= $aa3a
+xt_asm_eor	= $a9db
+nt_u_less_than	= $c586
+v_irq		= $f010
+xt_less_than	= $9358
+nt_asm_ror_zx	= $cf63
+z_move		= $95d0
+z_hex		= $9173
+xt_name_to_string= $95ee
+z_environment_q	= $8e81
+error		= $d601
+nt_create	= $c3a0
+doexecute	= $8f34
+ed6502		= $b390
+nt_state	= $c047
+xt_find_name	= $8fcb
+xt_semicolon	= $9f0a
+nt_cmove	= $bf2a
+xt_pad		= $9823
+str_abc_upper	= 5
+assembler_dictionary_start= $c8c1
+nt_s_to_d	= $c351
+nt_literal	= $c1d3
+xt_recurse	= $9a3d
+xt_two_store	= $a3d4
+z_left_bracket	= $9349
+nt_editor_el	= $c899
+xt_one_plus	= $979f
+nt_two		= $c6b7
+xt_wordlist	= $a67d
+z_asm_and_zx	= $a8ec
+z_asm_and_zi	= $a8e2
+xt_rshift	= $9af5
+nt_here		= $c5d4
+z_one_minus	= $979e
+nt_unloop	= $c096
+xt_immediate	= $923b
+z_asm_and_zxi	= $a8f1
+xt_editor_o	= $a856
+xt_editor_l	= $a7c1
+marker_runtime	= $94d7
+z_asm_sta_ziy	= $ab9f
+nt_root_words	= $c830
+z_two_over	= $a385
+z_latestnt	= $9338
+nt_also		= $ba8d
+z_block_read	= $853b
+z_space		= $a0a5
+z_asm_and_ziy	= $a8e7
+nt_at_xy	= $be6b
+xt_at_xy	= $8350
+z_asm_jmp_i	= $aa35
+z_asm_sta_zxi	= $aba7
+z_latestxt	= $933f
+xt_block_word_error= $854b
+nt_output	= $be9b
+nt_asm_adc_x	= $c8ce
+nt_asm_adc_y	= $c8db
+nt_asm_adc_z	= $c8e8
+nt_asm_adc_h	= $c8c1
+nt_false	= $c6eb
+xt_move		= $95b2
+nt_asm_stz_zx	= $d0fe
+cib		= 8
+z_asm_eor_z	= $a9f4
+z_asm_eor_y	= $a9ef
+z_asm_eor_x	= $a9ea
+z_asm_eor_h	= $a9e5
+nt_endcase	= $bd1c
+z_char_plus	= $97a8
+z_min		= $953f
+xt_here		= $9162
+z_plus_store	= $9997
+z_type		= $a4a9
+z_useraddr	= $a5f3
+z_mod		= $95b1
+z_max		= $9523
+nt_two_slash	= $c5ac
+nt_r_from	= $c7db
+ed_get_input	= $b86e
+nt_space	= $c6d2
+cp0		= 768
+xt_value	= $8901
+xt_asm_stx_z	= $abab
+z_asm_asl_x	= $a900
+z_asm_asl_z	= $a905
+z_asm_asl_a	= $a8fb
+nt_c_store	= $c786
+z_cell_plus	= $8620
+xt_defer_store	= $8ad6
+hist_buff	= 31744
+ciblen		= 10
+nt_slash_mod	= $bf7c
+nt_block_read_vector= $bc21
+nt_aligned	= $be31
+z_source_id	= $a09f
+xt_ud_dot	= $a504
+z_asm_ora_zxi	= $aaeb
+xt_u_dot_r	= $a4b6
+xt_d_to_s	= $8a70
+oc__		= $b38e
+xt_dot		= $8c26
+nt_u_dot_r	= $c737
+z_order		= $97f1
+print_string_no_lf= $d617
+nt_asm_asl_zx	= $c9db
+z_blank		= $8f2c
+z_key		= $9327
+z_scr		= $9e6a
+emit_a		= $8de6
+z_asm_ora_ziy	= $aae1
+z_see		= $9c90
+xt_page		= $9833
+z_else		= $8dca
+nt_name_to_string= $c2b4
+nt_disasm	= $bdf4
+xt_definitions	= $8add
+ocbd		= $b263
+ocbe		= $b269
+ocbf		= $b26f
+ocba		= $b259
+ocbc		= $b25d
+ocb8		= $b24f
+ocb9		= $b253
+ocb4		= $b233
+ocb5		= $b23a
+ocb6		= $b241
+ocb7		= $b248
+ocb0		= $b220
+ocb1		= $b224
+ocb2		= $b22c
+occ9		= $b29f
+occ8		= $b29b
+occ7		= $b294
+occ6		= $b28e
+occ5		= $b288
+occ4		= $b282
+occ1		= $b27a
+occ0		= $b274
+occf		= $b2b5
+occe		= $b2b1
+occd		= $b2ad
+occc		= $b2a9
+occa		= $b2a5
+nt_then		= $bd82
+ocae		= $b217
+ocad		= $b213
+ocaf		= $b21b
+ocaa		= $b20b
+ocac		= $b20f
+oca5		= $b1ee
+oca4		= $b1e8
+oca7		= $b1fa
+oca6		= $b1f4
+oca1		= $b1da
+oca0		= $b1d4
+oca2		= $b1e2
+oca9		= $b205
+oca8		= $b201
+ocf0		= $b347
+ocf1		= $b34b
+ocf2		= $b353
+ocf5		= $b35a
+ocf6		= $b361
+ocf7		= $b368
+ocf8		= $b36f
+ocf9		= $b373
+ocfa		= $b379
+ocfd		= $b37d
+ocfe		= $b383
+ocff		= $b389
+xt_one		= $978a
+z_number_sign	= $973d
+nt_star_slash	= $bf5a
+ocd8		= $b2e2
+ocd9		= $b2e6
+ocd6		= $b2d4
+ocd7		= $b2db
+ocd5		= $b2cd
+ocd2		= $b2c6
+ocd0		= $b2ba
+ocd1		= $b2be
+ocdf		= $b2fc
+ocdd		= $b2f0
+ocde		= $b2f6
+ocda		= $b2ec
+nt_asm_back_jump= $d189
+ocea		= $b332
+ocec		= $b336
+ocee		= $b33e
+oced		= $b33a
+ocef		= $b342
+oce9		= $b32c
+oce8		= $b328
+oce1		= $b307
+oce0		= $b301
+oce5		= $b315
+oce4		= $b30f
+oce7		= $b321
+oce6		= $b31b
+xt_dup		= $8d9f
+is_printable	= $d5d1
+xt_state	= $a0fe
+z_d_dot		= $8cf2
+err_blockwords	= 12
+es_syntax	= $d37d
+nt_postpone	= $c194
+nt_thru		= $bbaa
+z_state		= $a108
+nt_asm_ldy_zx	= $cdc7
+xt_lshift	= $946a
+output		= 16
+nt_get_current	= $bb23
+dovar		= $d4ed
+nt_fetch	= $c7fb
+nt_refill	= $c40d
+xt_empty_buffers= $8de9
+nt_char_plus	= $c607
+nt_erase	= $c325
+z_depth		= $8af4
+xt_cold		= $8000
+nt_zero_unequal	= $c55e
+underflow_error	= $d5ff
+xt_swap		= $a12a
+nt_asm_cmp_zxi	= $cb2d
+nt_d_to_s	= $c346
+buffblocknum_offset= 42
+xt_char_plus	= $979f
+asm_push_a_data	= $ac41
+z_question	= $99ea
+z_bracket_char	= $858d
+xt_i		= $91d9
+xt_j		= $9304
+nt_input	= $be8e
+nt_one		= $c6c0
+z_tuck		= $a322
+nt_asm_cmp_ziy	= $cb10
+nt_asm_lda_ziy	= $cd29
+err_state	= 7
+xt_one_minus	= $9793
+xt_cell_plus	= $8611
+oc8c		= $b171
+oc8a		= $b16d
+oc8f		= $b17d
+oc8d		= $b175
+oc8e		= $b179
+oc80		= $b145
+oc81		= $b149
+oc86		= $b15d
+oc84		= $b151
+oc85		= $b157
+oc88		= $b163
+oc89		= $b167
+oc99		= $b1b5
+oc98		= $b1b1
+oc95		= $b19c
+oc94		= $b195
+oc97		= $b1aa
+oc96		= $b1a3
+oc91		= $b186
+oc90		= $b182
+oc92		= $b18e
+oc9e		= $b1c9
+oc9d		= $b1c3
+oc9f		= $b1cf
+oc9a		= $b1bb
+oc9c		= $b1bf
+nt_zero_equal	= $c569
+xt_wordsize	= $a6f0
+z_abs		= $814d
+oc2d		= $afbc
+oc2e		= $afc1
+oc2f		= $afc5
+oc2a		= $afb2
+oc2c		= $afb8
+oc28		= $afa8
+oc29		= $afac
+oc24		= $af8f
+oc25		= $af95
+oc26		= $af9b
+oc27		= $afa1
+oc20		= $af83
+oc21		= $af87
+oc39		= $affe
+oc38		= $affa
+oc37		= $aff3
+oc36		= $afec
+oc35		= $afe5
+oc34		= $afdd
+oc32		= $afd6
+oc31		= $afce
+oc30		= $afca
+oc3f		= $b01c
+oc3e		= $b016
+oc3d		= $b010
+oc3c		= $b00a
+oc3a		= $b004
+nt_asm_lda_zxi	= $cd46
+z_and		= $834f
+oc0c		= $af24
+oc0a		= $af1e
+oc0f		= $af30
+oc0d		= $af28
+oc0e		= $af2c
+oc08		= $af14
+oc09		= $af18
+oc00		= $aef6
+oc01		= $aefa
+oc06		= $af0e
+oc04		= $af02
+oc05		= $af08
+oc15		= $af4e
+oc14		= $af48
+oc17		= $af5c
+oc16		= $af55
+oc11		= $af39
+oc10		= $af35
+oc12		= $af41
+oc19		= $af67
+oc18		= $af63
+oc1d		= $af77
+oc1f		= $af7d
+oc1a		= $af6d
+oc1c		= $af73
+oc6a		= $b0d7
+oc6c		= $b0dd
+oc6d		= $b0e3
+oc6e		= $b0e7
+oc6f		= $b0eb
+oc60		= $b0a8
+oc61		= $b0ac
+oc64		= $b0b4
+oc65		= $b0ba
+oc66		= $b0c0
+oc67		= $b0c6
+oc68		= $b0cd
+oc69		= $b0d1
+forth_words_end	= $ba27
+z_hold		= $91d8
+oc72		= $b0fc
+oc71		= $b0f4
+oc70		= $b0f0
+oc77		= $b118
+oc76		= $b111
+oc75		= $b10a
+oc74		= $b103
+oc79		= $b123
+oc78		= $b11f
+oc7c		= $b12d
+oc7a		= $b129
+oc7f		= $b140
+oc7e		= $b13a
+oc7d		= $b134
+nt_block_ramdrive_init= $bb83
+oc4f		= $b05c
+oc4d		= $b054
+oc4e		= $b058
+oc4c		= $b050
+oc4a		= $b04a
+oc48		= $b040
+oc49		= $b044
+oc46		= $b033
+oc47		= $b039
+oc45		= $b02d
+oc40		= $b021
+oc41		= $b025
+oc59		= $b08d
+oc58		= $b089
+oc51		= $b065
+oc50		= $b061
+oc52		= $b06d
+oc55		= $b074
+oc57		= $b082
+oc56		= $b07b
+oc5a		= $b093
+oc5e		= $b09d
+oc5d		= $b097
+oc5f		= $b0a3
+z_plus_loop	= $9458
+es_allot	= $d297
+cold_user_table_end= $8119
+z_sign		= $9f7d
+z_asm_sty_z	= $abbb
+z_exit		= $8f69
+z_pad		= $9832
+z_editor_enter_screen= $a79c
+nt_page		= $be78
+nt_buffer	= $bbe4
+ed_cmd_table	= $b94f
+z_repeat	= $9ac8
+xt_asm_sta_zi	= $ab97
+xt_asm_sta_zx	= $ab9f
+z_compare	= $87dc
+nt_tuck		= $c7a3
+dodoes		= $d4d4
+nt_editor_line	= $c8ac
+nt_else		= $bd76
+z_asm_sbc_z	= $ab68
+z_asm_sbc_y	= $ab63
+z_asm_sbc_x	= $ab5e
+z_asm_sbc_h	= $ab59
+xt_asm_arrow	= $9162
+es_defer	= $d2f9
+AN		= 2
+xt_update	= $a5e0
+z_editor_erase_screen= $a7ae
+nt_c_fetch	= $c790
+xt_bracket_char	= $8587
+nt_asm_sbc_x	= $cf9f
+nt_asm_sbc_y	= $cfac
+nt_asm_sbc_z	= $cfb9
+nt_asm_sbc_h	= $cf92
+z_u_less_than	= $a503
+CO		= 1
+cp		= 0
+v_reset		= $f010
+z_fm_slash_mod	= $90b7
+dp		= 2
+nt_dot_s	= $be02
+nt_dot_r	= $c72d
+nt_one_plus	= $c5c0
+wordlists_offset= 6
+xt_space	= $a0a0
+nt_right_bracket= $c1e2
+xt_marker	= $9499
+err_syntax	= 8
+z_asm_cmp_y	= $a97f
+z_asm_cmp_x	= $a97a
+z_asm_cmp_z	= $a984
+z_asm_cmp_h	= $a975
+xt_question_dup	= $99eb
+z_asm_arrow	= $916c
+z_nc_limit	= $9612
+xt_r_from	= $9a14
+root_dictionary_start= $c860
+HC		= 32
+xt_colon_noname	= $8742
+forth		= $8000
+str_compile	= 1
+nt_asm_stz_z	= $d0f1
+nt_asm_stz_x	= $d0e4
+ip		= 14
+IM		= 4
+dsp0		= 120
+z_allot		= $8313
+nt_bell		= $be18
+z_until		= $a5cf
+z_compile_comma	= $88f4
+nt_buffer_colon	= $bcc6
+z_asm_lsr_z	= $aab2
+z_asm_lsr_x	= $aaad
+z_asm_lsr_a	= $aaa8
+nt_value	= $c366
+xt_asm_cmp_h	= $a970
+xt_asm_cmp_x	= $a975
+xt_asm_cmp_y	= $a97a
+xt_asm_cmp_z	= $a97f
+xt_greater_than	= $914d
+tmp1		= 36
+tmp3		= 40
+tmp2		= 38
+xt_execute	= $8f2d
+xt_fill		= $8eea
+do_runtime	= $8bad
+xt_find		= $8f83
+literal_runtime	= $9388
+NN		= 8
+z_also		= $832f
+xt_asm_ror_zx	= $ab40
+nt_execute	= $c76d
+asm_common	= $abf7
+xt_compile_comma= $87dd
+xt_buffer	= $85a5
+nt_execute_parsing= $c244
+nt_marker	= $be5d
+max_wordlists	= 12
+z_d_to_s	= $8a75
+nt_load		= $bbb6
+xt_asm_tsb	= $abdf
+xt_asm_tsx	= $abe7
+tmpdsp		= 42
+uf_strip	= 28
+xt_asm_trb	= $abd7
+nt_u_dot	= $c742
+nt_slash_string	= $c41b
+nt_loop		= $c0bd
+xt_asm_tya	= $abf3
+zpage		= $0000
+z_two_store	= $a3f9
+xt_asm_txa	= $abeb
+xt_asm_txs	= $abef
+nt_parse	= $c25b
+z_editor_l	= $a83c
+z_editor_o	= $a89b
+ed_next_command	= $b589
+xt_execute_parsing= $8f41
+str_wid_editor	= 6
+xt_decimal	= $8a95
+xt_cr		= $8953
+xt_quit		= $8083
+xt_bl		= $838a
+xt_ed		= $8dad
+xt_asm_tax	= $abcf
+xt_asm_tay	= $abd3
+xt_do		= $8b52
+nt_endof	= $bd2b
+z_asm_cpy	= $a9ae
+z_asm_cpx	= $a99d
+xt_is		= $92eb
+xt_if		= $91f3
+nt_asm_plp	= $ced0
+nt_asm_ply	= $cee6
+nt_asm_plx	= $cedb
+nt_asm_pla	= $cec5
+up		= 30
+UF		= 16
+z_asm_ldx_zy	= $aa85
+nt_asm_pha	= $ce99
+nt_asm_phy	= $ceba
+nt_asm_phx	= $ceaf
+nt_asm_php	= $cea4
+xt_refill	= $9a7a
+z_cmove_up	= $86fe
+xt_of		= $9771
+xt_or		= $97b5
+xt_two_r_from	= $a3a4
+nt_unused	= $c3d3
+xt_to_number	= $a239
+nt_depth	= $c3c6
+cmpl_subroutine	= $d48e
+z_asm_clv	= $a96b
+z_asm_cld	= $a961
+z_asm_clc	= $a95c
+z_asm_cli	= $a966
+nt_asm_adc_ziy	= $c903
+z_asm_cmp	= $a970
+nt_paren	= $bda2
+xt_to		= $a1ad
+blockread_offset= 46
+z_asm_eor_ziy	= $a9fe
+nt_less_than	= $c590
+nt_search	= $bdd7
+nt_blank	= $c318
+es_compileonly	= $d2d8
+z_previous	= $99e3
+xt_blkbuffer	= $83a3
+xt_asm_rol_zx	= $ab27
+nt_asm_adc_zxi	= $c920
+evaluate_done	= $9118
+nt_exit		= $c0a4
+xt_allow_native	= $8314
+xt_not_equals	= $9640
+nt_list		= $bb9e
+z_asm_eor_zxi	= $aa08
+accept_done	= $822c
+xt_again	= $8289
+z_asm_ror_a	= $ab36
+z_asm_ror_x	= $ab3b
+z_asm_ror_z	= $ab40
+nt_dnegate	= $c47b
+z_ud_dot_r	= $a535
+ed_last_line	= $b8ac
+ram_end		= 32767
+do_runtime_end	= $8bd1
+xt_asm_ora_zi	= $aad5
+xt_asm_ora_zx	= $aae1
+xt_drop		= $8d1e
+z_asm_iny	= $aa2b
+z_asm_inx	= $aa26
+z_asm_inc	= $aa0d
+nt_not_equals	= $c599
+nt_asm_bit_h	= $ca15
+nt_asm_bit_z	= $ca2f
+nt_asm_bit_x	= $ca22
+nt_number	= $c00f
+forth_words_start= $b963
+buffstatus_offset= 44
+z_asm_rol_zx	= $ab2c
+oc_index_table	= $acf6
+z_colon_noname	= $875d
+nt_asm_ora	= $ce20
+nt_get_order	= $bb01
+ed_cur		= 48
+xt_to_in	= $a22e
+xt_block	= $83b1
+ed_cmd_equ	= $b6af
+z_asm_adc_zx	= $a8bf
+z_asm_adc_zi	= $a8b5
+doconst		= $d4a7
+xt_buffstatus	= $85dd
+z_d_plus	= $8a6f
+nt_asm_cpx_z	= $cb54
+nt_asm_cpx_h	= $cb47
+xt_asm_ldy_zx	= $aa99
+ed_cmd_a_have_para= $b5a7
+err_divzero	= 4
+nt_asm_lsr_x	= $cded
+nt_asm_lsr_z	= $cdfa
+nt_asm_lsr_a	= $cde0
+ed_para1_to_cur	= $b919
+search_order_offset= 31
+str_wid_forth	= 3
+xt_um_star	= $a578
+z_rshift	= $9b08
+xt_fm_slash_mod	= $9081
+z_decimal	= $8a9b
+xt_two_variable	= $a470
+nt_quit		= $c06e
+scratch		= 54
+string_table	= $d1ab
+xt_asm_ora_x	= $aac6
+xt_asm_ora_y	= $aacb
+xt_asm_ora_z	= $aad0
+xt_asm_ora_h	= $aac1
+xt_minus_leading= $9553
+xt_cleave	= $863c
+xt_asm_asl	= $a8f1
+xt_two_r_fetch	= $a386
+nt_cleave	= $bf11
+xt_plus_loop	= $93f2
+nt_repeat	= $bd68
+z_u_greater_than= $a4ed
+xt_zero_less	= $a752
+z_two_literal	= $a46f
+xt_asm_and	= $a8c4
+s_compiled	= $d1c9
+xt_plus_store	= $9978
+xt_type		= $a47f
+nt_asm_eor	= $cbdc
+es_divzero	= $d316
+blkbuffer_offset= 40
+err_underflow	= 9
+nt_evaluate	= $c037
+nt_asm_lda	= $ccdc
+nt_asm_ldy	= $cd95
+nt_asm_ldx	= $cd55
+z_less_than	= $936c
+xt_two_to_r	= $a41e
+z_variable	= $a60c
+xt_asm_and_zx	= $a8e7
+xt_asm_and_zi	= $a8dd
+xt_asm_ora_ziy	= $aadc
+z_two_variable	= $a47e
+xt_asm_sei	= $ab83
+xt_asm_sec	= $ab7b
+xt_asm_sed	= $ab7f
+xt_asm_sbc	= $ab4f
+z_asm_nop	= $aabc
+nt_asm_lsr	= $cdd5
+z_word		= $a67c
+z_asm_lda_zi	= $aa5d
+z_asm_lda_zx	= $aa67
+nt_c_comma	= $c471
+xt_c_fetch	= $85fb
+xt_asm_ora_zxi	= $aae6
+nt_buffstatus	= $bcb4
+xt_asm_sta	= $ab87
+xt_asm_stx	= $aba7
+xt_asm_sty	= $abb3
+xt_asm_stz	= $abbf
+z_asm_back_jump	= $ac48
+xt_asm_bcc	= $a90a
+xt_asm_bcs	= $a90f
+z_empty_buffers	= $8def
+xt_asm_beq	= $a916
+nt_asm_tsb_z	= $d145
+z_asm_eor	= $a9e0
+xt_asm_bit	= $a91b
+abort_quote_runtime= $8124
+ed_input_loop	= $b3a3
+nt_store	= $c804
+xt_asm_bmi	= $a934
+nt_word		= $bdab
+nt_asm_lda_zi	= $cd1b
+nt_asm_lda_zx	= $cd38
+xt_search_wordlist= $9b22
+xt_asm_bne	= $a939
+nt_dabs		= $c676
+xt_nc_limit	= $9608
+ed_have_text	= $b87f
+nt_block_write_vector= $bc4c
+xt_asm_bpl	= $a93e
+xt_asm_bra	= $a943
+xt_asm_brk	= $a948
+xt_dump		= $8d24
+xt_asm_bvc	= $a94d
+xt_asm_bvs	= $a952
+xt_constant	= $8901
+z_evaluate	= $9118
+nt_asm_stz	= $d0d9
+nt_asm_stx	= $d08d
+nt_asm_sty	= $d0b3
+nt_asm_sta	= $d021
+input_clear	= $81f3
+nt_useraddr	= $bcd5
+accept_loop	= $817b
+z_char		= $8637
+xt_u_dot	= $a4aa
+accept_total_recall= $8247
+nt_zero		= $c6c9
+z_quit		= $80c5
+nt_asm_sec	= $d000
+nt_asm_sed	= $d00b
+nt_asm_sei	= $d016
+nt_editor_l	= $c8a3
+nt_editor_o	= $c8b8
+key_a		= $9328
+nt_asm_sbc	= $cf87
+nt_dot_paren	= $bd98
+nt_to_order	= $ba6f
+xt_d_dot_r	= $8cf3
+z_zero_unequal	= $a773
+nt_asm_bne	= $ca55
+nt_asm_bmi	= $ca4a
+z_minus_leading	= $956b
+z_two_dup	= $a34b
+nt_asm_bit	= $ca0a
+nt_count	= $bfd9
+str_see_flags	= 9
+z_bell		= $8389
+nt_asm_beq	= $c9ff
+nt_asm_bcc	= $c9e9
+nt_asm_bcs	= $c9f4
+z_load		= $93ea
+z_literal	= $9387
+z_loop		= $9458
+nt_asm_ror_a	= $cf3c
+nt_asm_ror_z	= $cf56
+nt_asm_ror_x	= $cf49
+z_page		= $9850
+xt_asm_ldy_h	= $aa8a
+xt_asm_ldy_x	= $aa8f
+xt_asm_ldy_z	= $aa94
+cmpl_common	= $d496
+nt_asm_inc	= $cc55
+nt_asm_inx	= $cc95
+nt_asm_iny	= $cca0
+nt_asm_bvc	= $ca81
+nt_asm_bvs	= $ca8c
+nt_negate	= $c48a
+nt_asm_brk	= $ca76
+nt_asm_bra	= $ca6b
+xt_asm_dec_x	= $a9c2
+xt_asm_dec_z	= $a9c7
+xt_asm_dec_a	= $a9bd
+xt_set_current	= $9c91
+nt_asm_bpl	= $ca60
+xt_star_slash	= $a0e5
+xt_parse_name	= $9861
+z_input_to_r	= $9267
+print_string	= $d631
+z_buffer	= $85d5
+xt_editor_erase_screen= $a79d
+xt_list		= $936d
+xt_two_literal	= $a463
+xt_asm_inc_zx	= $aa1c
+xt_asm_lda_y	= $aa4e
+xt_asm_lda_x	= $aa49
+xt_asm_lda_z	= $aa53
+xt_asm_lda_h	= $aa44
+xt_less_number_sign= $934a
+current_offset	= 4
+str_ok		= 0
+nt_defer	= $c29a
+xt_asm_lda	= $aa3f
+xt_asm_ldy	= $aa85
+xt_asm_ldx	= $aa6c
+z_create	= $8a2d
+nt_two_constant	= $c4d7
+nt_dot		= $c74c
+xt_asm_lsr	= $aa9e
+nt_dup		= $c819
+xt_fetch	= $8f70
+xt_defer_fetch	= $8acf
+z_save_buffers	= $9e5a
+nt_parse_name	= $c268
+xt_postpone	= $9998
+dodefer		= $d4bb
+nt_s_backslash_quote= $c1a4
+xt_asm_rol_z	= $ab22
+xt_asm_rol_x	= $ab1d
+xt_asm_rol_a	= $ab18
+z_output	= $9814
+xt_zero_unequal	= $a762
+xt_editor_wordlist= $978a
+z_source	= $a094
+envs_max_u	= $d452
+envs_max_d	= $d481
+envs_max_n	= $d44c
+xt_asm_lda_zxi	= $aa67
+xt_unloop	= $a5be
+does_runtime	= $8bf4
+err_allot	= 0
+z_nip		= $963f
+xt_get_current	= $9119
+xt_editor_enter_screen= $a781
+nt_bracket_char	= $c614
+z_begin		= $8383
+xt_allot	= $82ab
+nt_find_name	= $c2fb
+xt_action_of	= $8270
+xt_asm_lda_ziy	= $aa5d
+xt_latestnt	= $932b
+xt_two_star	= $a3cc
+z_asm_sbc_zi	= $ab6d
+z_asm_sbc_zx	= $ab77
+ed_cmd_list	= $b944
+xt_rot		= $9ad9
+nt_asm_eor_zi	= $cc1b
+nt_asm_eor_zx	= $cc38
+nt_two_drop	= $c527
+nt_to_r		= $c7e5
+xt_dabs		= $8a76
+xt_latestxt	= $9339
+z_defer_store	= $8adc
+xt_spaces	= $a0a6
+err_negallot	= 10
+xt_loop		= $93eb
+nt_defer_fetch	= $bd0e
+nt_asm_jmp_xi	= $ccc3
+xt_load		= $93a7
+z_dot		= $8c47
+xt_asm_eor_zxi	= $aa03
+xt_emit		= $8ddf
+xt_source_id	= $a095
+z_dup		= $8dac
+z_wordlist	= $a693
+xt_left_bracket	= $9345
+xt_defer	= $8a9c
+z_disasm	= $8b30
+nt_tick		= $c2f2
+z_thru		= $a18c
+xt_asm_eor_ziy	= $a9f9
+nt_rot		= $c7bb
+str_abc_lower	= 4
+z_two_swap	= $a41d
+z_asm_ldx_y	= $aa7b
+z_asm_ldx_z	= $aa80
+z_asm_ldx_h	= $aa76
+nt_asm_inc_z	= $cc7a
+nt_asm_inc_x	= $cc6d
+nt_asm_inc_a	= $cc60
+nt_zero_less	= $c54a
+xt_pick		= $9954
+z_asm_stx_zy	= $abb3
+z_blkbuffer	= $83b0
+z_then		= $a147
+xt_while	= $a60d
+nt_and		= $c66b
+xt_set_order	= $9c9d
+interpret	= $d553
+es_underflow	= $d38c
+nt_number_sign_s= $becb
+nt_abs		= $c682
+z_asm_dec_zx	= $a9d1
+xt_asm_lda_zx	= $aa62
+xt_asm_lda_zi	= $aa58
+z_two_r_fetch	= $a3a3
+blockwrite_offset= 48
+env_results_single= $8ea0
+z_c_comma	= $85fa
+z_plus		= $9977
+nt_r_to_input	= $c3e1
+nt_asm_dec_zx	= $cbb8
+nt_two_swap	= $c51a
+nt_two_to_r	= $c4a6
+nt_wordsize	= $be40
+xt_false	= $8f69
+z_compile_only	= $8900
+z_asm_rol_z	= $ab27
+z_asm_rol_x	= $ab22
+z_asm_rol_a	= $ab1d
+nt_xor		= $c656
+bsize		= $ff
+nt_rshift	= $c648
+z_name_to_int	= $95ed
+z_dot_paren	= $8c56
+nt_save_buffers	= $bc0d
+z_um_star	= $a5bd
+xt_m_star	= $947e
+nt_asm_ldx_zy	= $cd87
+nt_asm_ora_zx	= $ce7c
+nt_asm_ora_zi	= $ce5f
+nt_never_native	= $c15b
+z_asm_ora_zx	= $aae6
+z_asm_ora_zi	= $aadc
+nt_two_dup	= $c6ab
+AscBELL		= $07
+num_order_offset= 30
+xt_asm_bit_zx	= $a92f
+xt_previous	= $99d7
+xt_variable	= $a5f4
+nt_again	= $c054
+z_equal		= $8ed9
+z_bye		= $85f0
+slashmod_common	= $9f86
+nt_root_forth	= $c853
+z_greater_than	= $9161
+nt_minus	= $c68d
+nt_um_star	= $bfc4
+z_chars		= $863b
+xt_d_minus	= $8a2e
+z_blk		= $83a2
+xt_erase	= $8ee4
+xt_block_read	= $852d
+nt_star_slash_mod= $bf64
+z_asm_stx_z	= $abaf
+nt_um_slash_mod	= $bfad
+kernel_getc	= $f021
+ed_cmd_w	= $b7a9
+ed_cmd_q	= $b79a
+ed_cmd_p	= $b746
+ed_cmd_n	= $b73f
+ed_cmd_i	= $b71e
+ed_cmd_f	= $b6eb
+ed_cmd_d	= $b647
+ed_cmd_a	= $b598
+nt_asm_and_ziy	= $c97d
+nt_u_greater_than= $c57c
+z_to_body	= $a22d
+z_to_in		= $a238
+z_block_read_vector= $854a
+defer_error	= $d4cf
+z_s_to_d	= $9e3f
+xt_two_swap	= $a3fa
+xt_editor_screen_helper= $a774
+envs_max_char	= $d443
+workword	= 4
+xt_editor_el	= $a7af
+s_ok		= $d1c5
+xt_store	= $a109
+xt_asm_sbc_z	= $ab63
+xt_asm_sbc_x	= $ab59
+xt_asm_sbc_y	= $ab5e
+xt_asm_sbc_h	= $ab54
+nt_asm_and_zxi	= $c99a
+current_to_dp	= $d52d
+nt_asm_ldx_h	= $cd60
+nt_asm_ldx_z	= $cd7a
+nt_asm_ldx_y	= $cd6d
+z_asm_sta_z	= $ab97
+z_asm_sta_y	= $ab93
+z_asm_sta_x	= $ab8f
+es_noname	= $d327
+z_xor		= $a722
+z_find		= $8fca
+xt_xor		= $a711
+z_drop		= $8d23
+z_fill		= $8f2c
+nt_constant	= $c373
+nt_true		= $c6df
+z_c_store	= $8610
+xt_input_to_r	= $9252
+xt_endof	= $8db1
+z_to_r		= $a2ff
+z_definitions	= $8ae5
+z_two_drop	= $a333
+z_wordsize	= $a710
+z_two_to_r	= $a43d
+z_align		= $82aa
+plus_loop_runtime= $9459
+z_less_number_sign= $9357
+nt_words	= $be50
+z_buffstatus	= $85ec
+z_asm_inc_a	= $aa12
+z_asm_inc_x	= $aa17
+z_asm_inc_z	= $aa1c
+xt_backslash	= $836e
+nt_max		= $c534
+z_two_constant	= $a462
+nt_mod		= $bf71
+nt_asm_eor_ziy	= $cc29
+xt_asm_lsr_zx	= $aab2
+nt_asm_sta_x	= $d02c
+nt_asm_sta_y	= $d039
+nt_asm_sta_z	= $d046
+nt_left_bracket	= $c1eb
+nt_asm_lda_z	= $cd0e
+nt_asm_lda_y	= $cd01
+nt_asm_lda_x	= $ccf4
+nt_asm_lda_h	= $cce7
+err_refill	= 6
+nt_min		= $c53f
+nt_two_r_fetch	= $c4bc
+dump_print_ascii= $8d8b
+cp_end		= 31744
+nt_source_id	= $c225
+nt_asm_eor_zxi	= $cc46
+xt_asm_and_zxi	= $a8ec
+nt_char		= $c622
+xt_create	= $8959
+nt_forth_wordlist= $baa5
+xt_forth_wordlist= $a723
+z_lshift	= $947d
+xt_hold		= $91c7
+xt_asm_and_ziy	= $a8e2
+xt_to_order	= $a2d9
+nt_asm_sta_zxi	= $d07e
+z_asm_bit_h	= $a925
+z_asm_bit_x	= $a92a
+z_asm_bit_z	= $a92f
+s_see_nt	= $d262
+xt_negate	= $9613
+xt_asm_jmp_i	= $aa30
+xt_char		= $8621
+z_at_xy		= $836d
+xt_um_slash_mod	= $a536
+print_u		= $d637
+nt_asm_sta_ziy	= $d061
+padoffset	= $ff
+z_false		= $8f6f
+xt_key		= $931e
+nt_asm_rol_zx	= $cf23
+disassembler	= $ac52
+s_see_flags	= $d246
+nt_asm_stx_zy	= $d0a5
+z_asm_trb_z	= $abdf
+z_star		= $a0e4
+xt_order	= $97c7
+s_see_xt	= $d267
+z_within	= $a636
+z_block		= $8403
+xt_c_store	= $8605
+z_asm_ldy_zx	= $aa9e
+z_number_sign_s	= $9770
+xt_block_ramdrive_init= $8404
+xt_bell		= $8384
+xt_asm_sta_z	= $ab93
+xt_asm_sta_x	= $ab8b
+xt_asm_sta_y	= $ab8f
+z_um_slash_mod	= $a577
+ed_num_to_addr	= $b8e2
+xt_asm_adc_zxi	= $a8bf
+nt_int_to_name	= $c2c7
+nt_strip_underflow= $c10b
+z_update	= $a5e8
+z_asm_tya	= $abf7
+z_asm_txa	= $abef
+z_asm_txs	= $abf3
+nt_block	= $bc00
+nt_zero_greater	= $c554
+xt_get_order	= $9124
+xt_equal	= $8ebe
+z_again		= $82a9
+z_u_dot		= $a4b5
+ed_no_line_zero	= $b8d4
+z_asm_tsb	= $abe3
+z_asm_tsx	= $abeb
+z_asm_trb	= $abdb
+user_words_end	= $ba29
+nt_assembler_wordlist= $bad2
+xt_asm_adc_ziy	= $a8b5
+z_block_write_vector= $856d
+cmpl_word	= $d49a
+z_value		= $893e
+nt_recurse	= $c07a
+print_common	= $d624
+xt_question	= $99e4
+z_asm_tay	= $abd7
+z_asm_tax	= $abd3
+nt_update	= $bbf2
+z_forth		= $90be
+AscDEL		= $7f
+xt_asm_cpy_z	= $a9b3
+xt_asm_cpy_h	= $a9ae
+z_cleave	= $8688
+z_while		= $a620
+z_asm_sbc_ziy	= $ab72
+z_store		= $a11e
+z_swap		= $a13d
+xt_two_dup	= $a334
+xt_asm_sbc_ziy	= $ab6d
+nt_order	= $ba62
+z_asm_cpy_z	= $a9b8
+z_asm_cpy_h	= $a9b3
+nt_one_minus	= $c5ca
+z_asm_sbc_zxi	= $ab7b
+nt_r_fetch	= $c7d1
+xt_asm_sbc_zxi	= $ab77
+z_asm_rol	= $ab18
+z_asm_ror	= $ab31
+nt_equal	= $c5a3
+z_to_order	= $a2eb
+nt_d_minus	= $c33c
+nt_source	= $c236
+s_redefined	= $d1d3
+z_defer		= $8ace
+xt_question_do	= $8b4c
+xt_blank	= $8eda
+nt_asm_rol_a	= $cefc
+nt_asm_rol_x	= $cf09
+nt_asm_rol_z	= $cf16
+z_action_of	= $8288
+nt_buffblocknum	= $bca0
+nt_abort	= $c0fe
+z_asm_rts	= $ab4f
+z_asm_rti	= $ab4a
+z_d_minus	= $8a4e
+z_bounds	= $8586
+z_here		= $916c
+nt_two_variable	= $c4e8
+z_aligned	= $82aa
+question_do_runtime_end= $8be5
+toin		= 12
+z_to		= $a208
+es_refill	= $d337
+xt_to_body	= $a209
+nt_within	= $bef3
+nt_begin	= $c061
+z_cr		= $8958
+nt_empty_buffers= $bbcf
+z_bl		= $8392
+error_table	= $d27d
+nt_j		= $c0c9
+nt_i		= $c0d2
+z_cells		= $a3d3
+z_u_dot_r	= $a4d7
+tmpbranch	= 34
+nt_flush	= $bbc2
+z_ed		= $8db0
+z_do		= $8bac
+z_if		= $9203
+z_is		= $9303
+z_asm_jmp_xi	= $aa3a
+nt_cells	= $c5ed
+z_or		= $97c6
+z_of		= $9789
+nt_latestnt	= $c27a
+nt_asm_dec_z	= $cbab
+nt_asm_dec_x	= $cb9e
+nt_asm_dec_a	= $cb91
+z_asm_tsb_z	= $abe7
+z_asm_asl	= $a8f6
+z_not_equals	= $965d
+nt_dump		= $be0c
+z_asm_and	= $a8c9
+xt_asm_ldx_zy	= $aa80
+nt_latestxt	= $c28a
+str_redefined	= 2
+xt_buffer_colon	= $85d6
+nt_sm_slash_rem	= $bf9f
+nt_cmove_up	= $bf37
+nt_decimal	= $bfe6
+xt_endcase	= $8df0
+z_right_bracket	= $9acf
+xt_asm_pha	= $aaeb
+xt_asm_php	= $aaf0
+xt_asm_phy	= $aafa
+xt_asm_phx	= $aaf5
+xt_two_drop	= $a32c
+xt_asm_ply	= $ab0e
+xt_asm_plx	= $ab09
+xt_asm_plp	= $ab04
+xt_asm_pla	= $aaff
+xt_abort	= $8081
+z_minus_trailing= $95a8
+xt_compare	= $8778
+nt_asm_sbc_zxi	= $cff1
+nt_editor_enter_screen= $c871
+xt_asm_adc_zx	= $a8ba
+xt_asm_adc_zi	= $a8b0
+z_int_to_name	= $92da
+assembler	= $a89c
+z_zero_greater	= $a751
+z_always_native	= $833d
+xt_then		= $a13e
+xt_assembler_wordlist= $a323
+nt_asm_sbc_ziy	= $cfd4
+xt_star_slash_mod= $a0ee
+nt_does		= $c393
+nt_two_over	= $c50d
+z_asm_eor_zi	= $a9f9
+z_asm_eor_zx	= $aa03
+z_zero_less	= $a761
+nt_sliteral	= $c1c3
+xt_always_native= $8330
+z_endof		= $8dca
+z_asm_ora	= $aac1
+z_editor_wordlist= $9792
+xt_thru		= $a148
+z_block_ramdrive_init= $852c
+nt_asm_tya	= $d173
+nt_asm_txa	= $d15d
+nt_asm_txs	= $d168
+cold_zp_table_end= $80e7
+nt_asm_sty_z	= $d0be
+nt_asm_tsx	= $d152
+nt_asm_tsb	= $d13a
+user_words_start= $ba27
+nt_asm_trb	= $d122
+ed_print_addr	= $b922
+xt_words	= $a694
+es_badsource	= $d2b8
+xt_asm_eor_zx	= $a9fe
+xt_asm_eor_zi	= $a9f4
+nt_asm_tax	= $d10c
+nt_asm_tay	= $d117
+cold_user_table	= $80e7
+z_editor_line	= $a855
+z_one_plus	= $97a8
+z_set_current	= $9c9c
+xt_asm_cpx	= $a998
+xt_asm_cpy	= $a9a7
+z_abort_quote	= $8123
+nt_asm_cli	= $caad
+nt_asm_clc	= $ca97
+nt_asm_cld	= $caa2
+nt_asm_clv	= $cab8
+xt_also		= $8320
+nt_asm_cmp	= $cac3
+xt_asm_clv	= $a966
+xt_asm_cli	= $a961
+xt_asm_cld	= $a95c
+xt_asm_clc	= $a957
+input_cleared	= $81ff
+nt_action_of	= $bce5
+xt_asm_cmp	= $a96b
+nt_two_r_from	= $c4b1
+nt_question_dup	= $c69f
+xt_count	= $893f
+byte_to_ascii	= $d4fb
+nt_slash	= $bf88
+s_see_size	= $d26c
+nt_dot_quote	= $c1b9
+order_print_wid_string= $97f2
+z_asm_bit_zx	= $a934
+nt_variable	= $c383
+xt_asm_trb_z	= $abdb
+nt_asm_cpx	= $cb3c
+nt_asm_cpy	= $cb61
+xt_dot_paren	= $8c48
+nt_asm_jmp	= $ccab
+z_negate	= $9623
+nt_forth	= $ba55
+s_quote_start	= $9cd5
+nt_environment_q= $bdc3
+nt_asm_jsr	= $ccd1
+z_asm_lsr_zx	= $aab7
+xt_colon	= $86ff
+nt_number_sign	= $bed5
+z_search_wordlist= $9c02
+status		= 32
+z_asm_lsr	= $aaa3
+nt_align	= $be24
+nt_spaces	= $c455
+z_asm_ldx	= $aa71
+z_asm_ldy	= $aa8a
+z_asm_lda	= $aa44
+nt_d_dot	= $c723
+xt_paren	= $9851
+xt_source	= $a080
+xt_asm_dec	= $a9b8
+xt_asm_dex	= $a9d1
+xt_asm_dey	= $a9d6
+tohold		= 52
+ed_entry_cmd_i	= $b5a7
+xt_literal	= $937a
+z_slash_mod	= $9f9a
+z_two_fetch	= $a36d
+xt_number_sign_s= $9760
+xt_asm_stz_zx	= $abcb
+xt_hexstore	= $9174
+xt_parse	= $98bc
+xt_number	= $967a
+z_asm_ldy_h	= $aa8f
+z_asm_ldy_x	= $aa94
+z_asm_ldy_z	= $aa99
+s_wid_editor	= $d231
+is_whitespace	= $d5de
+z_allow_native	= $831f
+nt_asm_sta_zx	= $d070
+nt_asm_sta_zi	= $d053
+nt_to_number	= $c000
+ed_error_2drop	= $b85c
+nt_asm_eor_h	= $cbe7
+nt_asm_eor_x	= $cbf4
+nt_asm_eor_y	= $cc01
+nt_asm_eor_z	= $cc0e
+xt_two_fetch	= $a34c
+xt_zero_equal	= $a72a
+z_asm_jmp	= $aa30
+z_asm_jsr	= $aa3f
+z_slash_string	= $9fba
+ed_cmd_p_entry_for_cmd_n= $b74b
+z_list		= $9379
+nt_digit_question= $c01d
+nt_previous	= $ba7d
+envs_aub	= $d429
+z_spaces	= $a0db
+nt_asm_arrow	= $d17e
+nt_not_rote	= $c7af
+nt_asm_inc_zx	= $cc87
+envs_hold	= $d41e
+z_dot_quote	= $8c61
+load_evaluate	= $90bf
+nt_see		= $ba4a
+zpage_end	= $7f
+nt_scr		= $bc84
+envs_pad	= $d424
+z_buffblocknum	= $85a4
+z_zero		= $a729
+nt_allot	= $c3ae
+err_noname	= 5
+nt_hold		= $beb5
+z_input		= $9251
+nt_blkbuffer	= $bc8f
+err_badsource	= 1
+xt_asm_stx_zy	= $abaf
+str_see_size	= 12
+nt_blk		= $bc79
+xt_abort_quote	= $8119
+z_r_to_input	= $9a3c
+xt_asm_nop	= $aab7
+nt_block_read	= $bc3a
+nt_question_do	= $c0db
+s_abc_lower	= $d1de
+nt_less_number_sign= $bede
+str_wid_root	= 8
+nt_bye		= $ba29
+nt_chars	= $c5fa
+z_search	= $9f09
+nt_name_to_int	= $c2d7
+z_base		= $837f
+xt_slash	= $9f7e
+z_asm_dec_a	= $a9c2
+z_asm_dec_x	= $a9c7
+z_asm_dec_z	= $a9cc
+z_asm_sty_zx	= $abbf
+z_block_write	= $855e
+z_name_to_string= $9607
+z_accept	= $8246
+nt_of		= $bd38
+nt_or		= $c661
+xt_two		= $a323
+xt_environment_q= $8e05
+nt_is		= $bcf6
+nt_if		= $bd8e
+nt_ed		= $ba40
+nt_do		= $c0e6
+nt_cr		= $be84
+nt_bl		= $c44b
+z_to_number	= $a2d8
+nt_asm_and_h	= $c93b
+nt_asm_and_y	= $c955
+nt_asm_and_x	= $c948
+nt_asm_and_z	= $c962
+z_editor_el	= $a7c0
+nt_invert	= $c498
+nt_to		= $c35c
+xt_search	= $9e6b
+nt_asm_jmp_i	= $ccb6
+nt_s_quote	= $c1af
+xt_number_sign_greater= $973e
+es_blockwords	= $d3cf
+z_m_star	= $9498
+nt_plus_store	= $c77c
+z_recurse	= $9a79
+nt_minus_leading= $c42a
+xt_dnegate	= $8b31
+xt_nip		= $9632
+oc_table	= $aef6
+nt_asm_adc_zi	= $c8f5
+nt_asm_adc_zx	= $c912
+xt_align	= $82aa
+z_assembler_wordlist= $a32b
+editor_dictionary_start= $c8b8
+nt_pad		= $bf1f
+nt_hex		= $bff5
+z_dnegate	= $8b4b
+xt_number_sign	= $9709
+nt_search_wordlist= $bb49
+z_immediate	= $9246
+z_buffer_colon	= $85dc
+disassembler_end= $b390
+nt_backslash	= $bf51
+nt_only		= $ba99
+nt_compile_only	= $c16f
+nt_hexstore	= $bf01
+xt_s_backslash_quote= $9b09
+z_asm_back_branch= $ac51
+nt_star		= $bfbb
+evaluate_got_work= $90d6
+z_count		= $8952
+nt_question	= $c6f8
+xt_r_to_input	= $9a25
+nt_asm_lsr_zx	= $ce07
+nt_two_literal	= $c4c7
+cmpl_a		= $d49e
+z_asm_inc_zx	= $aa21
+xt_star		= $a0dc
+xt_base		= $8377
+nt_nip		= $c7c6
+z_s_quote	= $9e2d
+nt_compile_comma= $c1f4
+xt_asm_stz_x	= $abc3
+xt_asm_stz_z	= $abc7
+xt_dot_quote	= $8c57
+z_colon		= $8741
+nt_bracket_tick	= $c2e7
+nt_abort_quote	= $c0f0
+nt_number_sign_greater= $bec1
+z_sliteral	= $a02a
+nt_colon	= $c21c
+xt_bounds	= $856e
+z_case		= $a729
+nt_greater_than	= $c573
+MAX_LINE_LENGTH	= 79
+xt_chars	= $8638
+nt_asm_bit_zx	= $ca3c
+xt_not_rote	= $965e
+err_compileonly	= 2
+nt_ud_dot	= $c70d
+xt_ud_dot_r	= $a517
+z_asm_stz_x	= $abc7
+z_asm_stz_z	= $abcb
+xt_asm_cmp_zi	= $a984
+xt_asm_cmp_zx	= $a98e
+xt_minus_trailing= $956c
+z_backslash	= $8376
+z_bracket_tick	= $8594
+z_one		= $9792
+xt_plus		= $9965
+nt_to_in	= $bee8
+nt_while	= $bd4e
+cold_zp_table	= $80c5
+xt_input	= $9247
+xt_hex		= $916d
+load_evaluate_start= $90d6
+nt_set_current	= $bb36
+nt_editor_wordlist= $babb
+nt_allow_native	= $c132
+z_star_slash	= $a0ed
+xt_see		= $9c03
+xt_asm_back_branch= $ac49
+ram_start	= $0000
+xt_scr		= $9e5b
+xt_editor_line	= $a83d
+z_dump		= $8d8a
+xt_asm_jmp_xi	= $aa35
+nt_swap		= $c80d
+z_postpone	= $99d6
+v_nmi		= $f010
+xt_blk		= $8393
+zero_branch_runtime= $9204
+xt_leave	= $9340
+xt_else		= $8db1
+xt_depth	= $8ae6
+z_invert	= $92ea
+xt_bye		= $85ed
+nt_asm_cmp_z	= $caf5
+nt_asm_cmp_x	= $cadb
+nt_asm_cmp_y	= $cae8
+nt_asm_cmp_h	= $cace
+nt_asm_sty_zx	= $d0cb
+havekey		= 20
+z_two_star	= $a3d3
+nt_key		= $c3bb
+xt_max		= $9508
+xt_asm_cpx_z	= $a9a2
+xt_asm_cpx_h	= $a99d
+xt_root_wordlist= $9ad0
+xt_mod		= $95a9
+xt_min		= $9524
+nt_asm_push_a	= $d19d
+z_r_fetch	= $9a13
+z_tick		= $a1ac
+str_see_nt	= 10
+z_hexstore	= $91c6
+ed_head		= 46
+z_get_current	= $9123
+xt_case		= $a723
+nt_wordlist	= $bb60
+nt_root_wordlist= $baec
+xt_useraddr	= $a5e9
+z_endcase	= $8e04
+z_asm_adc_h	= $a8a1
+z_asm_adc_z	= $a8b0
+z_asm_adc_y	= $a8ab
+z_asm_adc_x	= $a8a6
+str_see_xt	= 11
+xt_aligned	= $82aa
+z_two		= $a32b
+nt_asm_trb_z	= $d12d
+xt_strip_underflow= $a11f
+xt_disasm	= $8b2a
+nt_d_dot_r	= $c718
+tmptos		= 44
+plus_loop_runtime_end= $946a
+nt_two_fetch	= $c4f9
+z_does		= $8bf3
+xt_right_bracket= $9ac9
+xt_asm_sty_z	= $abb7
+nt_type		= $c755
+ed_cmd_qq	= $b7a5
+ed6502_end	= $b963
+num_wordlists_offset= 5
+z_asm_cmp_ziy	= $a98e
+nt_lshift	= $c63a
+xt_buffblocknum	= $8595
+scr_offset	= 2
+xt_two_slash	= $a3c1
+s_kernel_id	= $f02c
+z_ud_dot	= $a516
+z_emit		= $8de9
+nt_defer_store	= $bd00
+input		= 18
+z_forth_wordlist= $a729
+z_asm_cmp_zxi	= $a998
+ed_flags	= 50
+z_dabs		= $8a94
+z_marker	= $94d6
+nt_two_star	= $c5b6
+z_only		= $97b4
+z_rot		= $9af4
+nt_drop		= $c824
+xt_block_read_vector= $853b
+z_true		= $a308
+rsp0		= $ff
+nt_editor_erase_screen= $c885
+user0		= $0000
+z_over		= $9822
+z_i		= $91f2
+z_j		= $931d
+z_asm_ora_h	= $aac6
+z_asm_ora_y	= $aad0
+z_asm_ora_x	= $aacb
+z_asm_ora_z	= $aad5
+xt_u_greater_than= $a4d8
+xt_invert	= $92db
+nt_asm_ldy_z	= $cdba
+nt_asm_ldy_x	= $cdad
+nt_asm_ldy_h	= $cda0
+nt_nc_limit	= $c122
+code0		= $8000
+nt_set_order	= $bb12
+nt_plus_loop	= $c0b0
+nt_base		= $c02b
+z_words		= $a6ef
+err_defer	= 3
+nt_m_star	= $bfcf
+xt_flush	= $9077
+z_parse_name	= $9953
+xt_abs		= $8139
+z_semicolon	= $9f68
+z_root_wordlist	= $9ad8
+z_execute	= $8f33
+xt_never_native	= $9624
+xt_until	= $a5c5
+xt_asm_asl_a	= $a8f6
+xt_asm_asl_x	= $a8fb
+xt_asm_asl_z	= $a900
+z_parse		= $9953
+nt_immediate	= $c183
+do_common	= $8b54
+xt_true		= $a300
+xt_and		= $833e
+xt_tick		= $a18d
+nt_to_body	= $c2a7
+platform_bye	= $f02b
+z_asm_pha	= $aaf0
+z_asm_php	= $aaf5
+z_asm_phx	= $aafa
+z_asm_phy	= $aaff
+assembler_end	= $ac52
+z_asm_plx	= $ab0e
+z_asm_ply	= $ab13
+z_asm_plp	= $ab09
+z_asm_pla	= $ab04
+z_paren		= $9860
+xt_forth	= $90b8
+s_abc_upper	= $d202
+blk_offset	= 0
+xt_s_to_d	= $9e2e
+xt_asm_eor_z	= $a9ef
+xt_asm_eor_x	= $a9e5
+xt_asm_eor_y	= $a9ea
+xt_asm_eor_h	= $a9e0
+z_cmove		= $86c3
+envs_sc		= $d46b
+dictionary_start= $c824
+state		= 22
+nt_asm_cpy_h	= $cb6c
+nt_asm_cpy_z	= $cb79
+z_asm_stz_zx	= $abcf
+envs_wl		= $d477
+nt_asm_stx_z	= $d098
+xt_asm_dec_zx	= $a9cc
+z_never_native	= $9631
+nt_cold		= $ba34
+nt_asm_sbc_zx	= $cfe3
+nt_asm_sbc_zi	= $cfc6
+base		= 24
+envs_cs		= $d40e
+z_execute_parsing= $8f67
+z_number	= $9708
+nt_asm_back_branch= $d193
+kernel_putc	= $f027
+z_leave		= $9345
+xt_asm_lsr_a	= $aaa3
+xt_asm_lsr_z	= $aaad
+xt_asm_lsr_x	= $aaa8
+xt_evaluate	= $90c5
+nt_pick		= $c62e
+nt_semicolon	= $c213
+nt_root_forth_wordlist= $c83d
+question_do_runtime= $8bd1
+nt_cell_plus	= $c5e0
+xt_asm_asl_zx	= $a905
+z_asm_push_a	= $ac40
+xt_asm_push_a	= $ac31
+z_asm_and_h	= $a8ce
+z_asm_and_z	= $a8dd
+z_asm_and_x	= $a8d3
+z_asm_and_y	= $a8d8
+nt_until	= $bd5b
+AscSP		= $20
+nt_colon_noname	= $c204
+z_erase		= $8f2c
+xt_accept	= $814e
+insrc		= 6
+AscLF		= $0a
+z_asm_ror_zx	= $ab45
