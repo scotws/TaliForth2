@@ -25,7 +25,7 @@ def get_sizes(label_dict):
     in bytes. Returns a dictionary that contains them based on the
     names. Assumes lines in label map are of the format
 
-    "$0000 | cp                      | definitions.asm:90"
+    "cp  = $0000"
 
     """
 
@@ -33,16 +33,18 @@ def get_sizes(label_dict):
         raw_list = f.readlines()
 
     for line in raw_list:
-        ws = line.split()
+        ws = line.split('=')
         
-        if not ws[2].startswith('xt_') and not ws[2].startswith('z_'):
+        if not ws[0].startswith('xt_') and not ws[0].startswith('z_'):
             continue
 
-        addr_hex = ws[0].replace('$', '0x')
+        #print("Debug: ", ws)
+        addr_hex = ws[1].replace('$', '0x')
         addr = int(addr_hex, 16)
 
-        label_dict[ws[2]] = addr
+        label_dict[ws[0].strip()] = addr
 
+    #print(label_dict)
     return label_dict
 
 

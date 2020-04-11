@@ -137,7 +137,6 @@ kernel_init:
         ; py65mon, of course, this is really easy. -- At the end, we JMP
         ; back to the label forth to start the Forth system.
         ; """
-.block
                 ; Since the default case for Tali is the py65mon emulator, we
                 ; have no use for interrupts. If you are going to include
                 ; them in your system in any way, you're going to have to
@@ -154,7 +153,6 @@ kernel_init:
                 bra -
 _done:
                 jmp forth
-.bend
 
 kernel_getc:
         ; """Get a single character from the keyboard. By default, py65mon
@@ -163,12 +161,10 @@ kernel_getc:
         ; pressed. We turn this into a blocking version by waiting for a
         ; non-zero character.
         ; """
-.block
 _loop:
                 lda $f004
                 beq _loop
                 rts
-.bend
 
 
 kernel_putc:
