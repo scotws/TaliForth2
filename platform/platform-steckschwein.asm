@@ -1,14 +1,19 @@
-; from the steckos jumptable
-.alias krn_chrout $FFB3
-.alias krn_getkey $FFB0
-.alias krn_uart_tx  $FFDD
-.alias krn_uart_rx  $FFE0
+        ; 65C02 processor (Tali will not compile on older 6502)
+        .cpu "65c02"
+        ; No special text encoding (eg. ASCII)
+        .enc "none"
 
+; from the steckos jumptable
+krn_chrout = $FFB3
+krn_getkey = $FFB0
+krn_uart_tx  = $FFDD
+krn_uart_rx  = $FFE0
 
 ; steckOS uses the prg format used on the C64 with the first
 ; two bytes containing the load address
+* = $7FFE        
 .word $8000
-.org $8000
+* = $8000
 kernel_init:
         ; """Initialize the hardware.
         ; There is really not a lot to do as we use the steckOS kernel which already has done
@@ -16,18 +21,18 @@ kernel_init:
         ; We put this right before including the "real" taliforth as kernel_init is not called
         ; through any vector. Also, we save a few bytes as we need no jmp to kernel_init and no jmp to forth
         ; """
-.scope
+
                 ; We've successfully set everything up, so print the kernel
                 ; string
                 ldx #0
-*               lda s_kernel_id,x
+-               lda s_kernel_id,x
                 beq _done
                 jsr kernel_putc
                 inx
                 bra -
 _done:
                 ;jmp forth
-.scend
+
 
 ; I/O facilities are handled in the separate kernel files because of their
 ; hardware dependencies. See docs/memorymap.txt for a discussion of Tali's
@@ -93,12 +98,12 @@ _done:
 ; these for easier comparisons with Liara Forth's structure and to
 ; help people new to these things.
 
-.alias ram_start $0000          ; start of installed 32 KiB of RAM
-.alias ram_end   $8000-1        ; end of installed RAM
-.alias zpage     ram_start      ; begin of Zero Page ($0000-$00ff)
-.alias zpage_end $7F            ; end of Zero Page used ($0000-$007f)	
-.alias stack0    $0100          ; begin of Return Stack ($0100-$01ff)
-.alias hist_buff ram_end-$03ff  ; begin of history buffers
+ram_start = $0000          ; start of installed 32 KiB of RAM
+ram_end   = $8000-1        ; end of installed RAM
+zpage     = ram_start      ; begin of Zero Page ($0000-$00ff)
+zpage_end = $7F            ; end of Zero Page used ($0000-$007f)	
+stack0    = $0100          ; begin of Return Stack ($0100-$01ff)
+hist_buff = ram_end-$03ff  ; begin of history buffers
 
 
 ; SOFT PHYSICAL ADDRESSES
@@ -107,18 +112,18 @@ _done:
 ; prepare for this, though, we've already named the location of the user
 ; variables user0.
 
-.alias user0     zpage          ; user and system variables
-.alias rsp0      $ff            ; initial Return Stack Pointer (65c02 stack)
-.alias bsize     $ff            ; size of input/output buffers
-.alias buffer0   stack0+$190    ; input buffer ($0290-$02ff)
+user0     = zpage          ; user and system variables
+rsp0      = $ff            ; initial Return Stack Pointer (65c02 stack)
+bsize     = $ff            ; size of input/output buffers
+buffer0   = stack0+$190    ; input buffer ($0290-$02ff)
                                 ; we need to skip $0200-$027f and then some
                                 ; because IO area and other stuff
-.alias cp0       buffer0+bsize  ; Dictionary starts after last buffer
-.alias cp_end    hist_buff      ; Last RAM byte available for code
-.alias padoffset $ff            ; offset from CP to PAD (holds number strings)
+cp0       = buffer0+bsize  ; Dictionary starts after last buffer
+cp_end    = hist_buff      ; Last RAM byte available for code
+padoffset = $ff            ; offset from CP to PAD (holds number strings)
 
 
-.require "../taliforth.asm" ; zero page variables, definitions
+.include "../taliforth.asm" ; zero page variables, definitions
 
 ; =====================================================================
 ; FINALLY
@@ -159,21 +164,21 @@ kernel_getc:
         ; krn_getkey does not block and uses the carry flag to signal
         ; if there was a byte. We need a small wrapper routine.
         ; """
-.scope
-*       jsr krn_getkey
+
+-       jsr krn_getkey
         bcc -
         rts
-.scend
+
 
 ; we need no wrapper routine but alias krn_chrout as kernel_putc as they are compatible
-.alias kernel_putc krn_chrout
+kernel_putc = krn_chrout
 
 
 ; Leave the following string as the last entry in the kernel routine so it
 ; is easier to see where the kernel ends in hex dumps. This string is
 ; displayed after a successful boot
 s_kernel_id:
-        .byte "Tali Forth 2 default kernel for steckOS (19. Oct 2018)", AscLF, 0
+        .text "Tali Forth 2 default kernel for steckOS (19. Oct 2018)", AscLF, 0
 
 
 ; Add the interrupt vectors

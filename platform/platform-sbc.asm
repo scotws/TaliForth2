@@ -1,4 +1,8 @@
-.org $8000
+        ; 65C02 processor (Tali will not compile on older 6502)
+        .cpu "65c02"
+        ; No special text encoding (eg. ASCII)
+        .enc "none"
+        * = $8000
 ; I/O facilities are handled in the separate kernel files because of their
 ; hardware dependencies. See docs/memorymap.txt for a discussion of Tali's
 ; memory layout.
@@ -61,13 +65,13 @@
 ; these for easier comparisons with Liara Forth's structure and to 
 ; help people new to these things.
 
-.alias ram_start $0000          ; start of installed 32 KiB of RAM
-.alias ram_end   $7F00-1        ; end of installed RAM
-.alias zpage     ram_start      ; begin of Zero Page ($0000-$00ff)
-.alias zpage_end $7F            ; end of Zero Page used ($0000-$007f)	
-.alias stack0    $0100          ; begin of Return Stack ($0100-$01ff)
-.alias hist_buff ram_end-$03ff  ; begin of history buffers
-.alias acia_buff hist_buff-$102 ; begin of ACIA buffer memory                
+ram_start = $0000          ; start of installed 32 KiB of RAM
+ram_end   = $7F00-1        ; end of installed RAM
+zpage     = ram_start      ; begin of Zero Page ($0000-$00ff)
+zpage_end = $7F            ; end of Zero Page used ($0000-$007f)	
+stack0    = $0100          ; begin of Return Stack ($0100-$01ff)
+hist_buff = ram_end-$03ff  ; begin of history buffers
+acia_buff = hist_buff-$102 ; begin of ACIA buffer memory                
 
 
 ; SOFT PHYSICAL ADDRESSES
@@ -76,16 +80,16 @@
 ; prepare for this, though, we've already named the location of the user
 ; variables user0. 
 
-.alias user0     zpage          ; user and system variables
-.alias rsp0      $ff            ; initial Return Stack Pointer (65c02 stack)
-.alias bsize     $ff            ; size of input/output buffers
-.alias buffer0   stack0+$100    ; input buffer ($0200-$027f)
-.alias cp0       buffer0+bsize  ; Dictionary starts after last buffer
-.alias cp_end    acia_buff      ; Last RAM byte available for code
-.alias padoffset $ff            ; offset from CP to PAD (holds number strings)
+user0     = zpage          ; user and system variables
+rsp0      = $ff            ; initial Return Stack Pointer (65c02 stack)
+bsize     = $ff            ; size of input/output buffers
+buffer0   = stack0+$100    ; input buffer ($0200-$027f)
+cp0       = buffer0+bsize  ; Dictionary starts after last buffer
+cp_end    = acia_buff      ; Last RAM byte available for code
+padoffset = $ff            ; offset from CP to PAD (holds number strings)
 
 
-.require "../taliforth.asm" ; Top-level definitions, memory map
+.include "../taliforth.asm" ; Top-level definitions, memory map
 
 ; =====================================================================
 ; FINALLY
@@ -93,8 +97,6 @@
 ; Of the 32 KiB we use, 24 KiB are reserved for Tali (from $8000 to $DFFF)
 ; and the last eight (from $E000 to $FFFF) are left for whatever the user
 ; wants to use them for.
-
-.advance $e000
 
 ; Default kernel file for Tali Forth 2 
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
@@ -114,11 +116,8 @@
 ; This default version Tali ships with is written for the py65mon machine 
 ; monitor (see docs/MANUAL.md for details). 
 
-; The main file of Tali got us to $e000. However, py65mon by default puts
-; the basic I/O routines at the beginning of $f000. We don't want to change
-; that because it would make using it out of the box harder, so we just 
-; advance past the virtual hardware addresses.
-.advance $f006
+; Put the I/O routines in the last 1K of ROM
+        * = $FC00
 
 ; All vectors currently end up in the same place - we restart the system
 ; hard. If you want to use them on actual hardware, you'll have to redirect
@@ -132,20 +131,19 @@ kernel_init:
         ; py65mon, of course, this is really easy. -- At the end, we JMP
         ; back to the label forth to start the Forth system.
         ; """
-.scope
 
                 jsr Init_ACIA
                 ; We've successfully set everything up, so print the kernel
                 ; string
                 ldx #0
-*               lda s_kernel_id,x
+-               lda s_kernel_id,x
                 beq _done
                 jsr kernel_putc
                 inx
                 bra -
 _done:
                 jmp forth
-.scend
+
 
 ; My SBC runs Tali Forth 2 as the OS, to there is nowhere to go back to.
 ; Just restart TALI.
@@ -155,14 +153,14 @@ platform_bye:
 
 
     ;; Defines for hardware:
-.alias ACIA_DATA    $7F80
-.alias ACIA_STATUS  $7F81
-.alias ACIA_COMMAND $7F82
-.alias ACIA_CTRL    $7F83
+ACIA_DATA    = $7F80
+ACIA_STATUS  = $7F81
+ACIA_COMMAND = $7F82
+ACIA_CTRL    = $7F83
     ;; Defines for the 256 byte circular buffer with two 8-bit pointers.
-.alias ACIA_BUFFER acia_buff+2
-.alias ACIA_RD_PTR acia_buff+0
-.alias ACIA_WR_PTR acia_buff+1
+ACIA_BUFFER = acia_buff+2
+ACIA_RD_PTR = acia_buff+0
+ACIA_WR_PTR = acia_buff+1
 
     ;; Init ACIA to 19200 8,N,1
     ;; Uses: A (not restored)
@@ -320,11 +318,11 @@ check_tx:
 ; is easier to see where the kernel ends in hex dumps. This string is
 ; displayed after a successful boot
 s_kernel_id: 
-        .byte "Tali Forth 2 default kernel for SamCo's SBC (2018-09-26)", AscLF, 0
+        .text "Tali Forth 2 default kernel for SamCo's SBC (2018-09-26)", AscLF, 0
 
 
 ; Add the interrupt vectors 
-.advance $fffa
+        * = $fffa
 
 .word v_nmi
 .word v_reset

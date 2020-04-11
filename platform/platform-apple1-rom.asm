@@ -12,7 +12,11 @@
 ;  * lua_6502, an 65C02 Emulator written in Lua 5.3+
 ;    https://github.com/JorjBauer/lua-6502
 
-.org $8000
+        ; 65C02 processor (Tali will not compile on older 6502)
+        .cpu "65c02"
+        ; No special text encoding (eg. ASCII)
+        .enc "none"
+        * = $8000
 
 ; I/O facilities are handled in the separate kernel files because of their
 ; hardware dependencies. See docs/memorymap.txt for a discussion of Tali's
@@ -76,12 +80,12 @@
 ; these for easier comparisons with Liara Forth's structure and to
 ; help people new to these things.
 
-.alias ram_start $0000          ; start of installed 32 KiB of RAM
-.alias ram_end   $8000-1        ; end of installed RAM
-.alias zpage     ram_start      ; begin of Zero Page ($0000-$00ff)
-.alias zpage_end $7F            ; end of Zero Page used ($0000-$007f)	
-.alias stack0    $0100          ; begin of Return Stack ($0100-$01ff)
-.alias hist_buff ram_end-$03ff  ; begin of history buffers
+ram_start = $0000          ; start of installed 32 KiB of RAM
+ram_end   = $8000-1        ; end of installed RAM
+zpage     = ram_start      ; begin of Zero Page ($0000-$00ff)
+zpage_end = $7F            ; end of Zero Page used ($0000-$007f)	
+stack0    = $0100          ; begin of Return Stack ($0100-$01ff)
+hist_buff = ram_end-$03ff  ; begin of history buffers
 
 
 ; SOFT PHYSICAL ADDRESSES
@@ -92,16 +96,16 @@
 ; has the address $300 and not $2FF. This avoids crossing the page boundry when
 ; accessing the user table, which would cost an extra cycle.
 
-.alias user0     zpage            ; user and system variables
-.alias rsp0      $ff              ; initial Return Stack Pointer (65c02 stack)
-.alias bsize     $ff              ; size of input/output buffers
-.alias buffer0   stack0+$100      ; input buffer ($0200-$027f)
-.alias cp0       buffer0+bsize+1  ; Dictionary starts after last buffer
-.alias cp_end    hist_buff        ; Last RAM byte available for code
-.alias padoffset $ff              ; offset from CP to PAD (holds number strings)
+user0     = zpage            ; user and system variables
+rsp0      = $ff              ; initial Return Stack Pointer (65c02 stack)
+bsize     = $ff              ; size of input/output buffers
+buffer0   = stack0+$100      ; input buffer ($0200-$027f)
+cp0       = buffer0+bsize+1  ; Dictionary starts after last buffer
+cp_end    = hist_buff        ; Last RAM byte available for code
+padoffset = $ff              ; offset from CP to PAD (holds number strings)
 
 
-.require "../taliforth.asm" ; zero page variables, definitions
+.include "../taliforth.asm" ; zero page variables, definitions
 
 ; =====================================================================
 ; FINALLY
@@ -110,7 +114,7 @@
 ; and the last eight (from $E000 to $FFFF) are left for whatever the user
 ; wants to use them for.
 
-.advance $e000
+* = $e000
 
 ; Default kernel file for Tali Forth 2
 ; Scot W. Stevenson <scot.stevenson@gmail.com>
@@ -142,20 +146,20 @@ kernel_init:
         ; In an Apple 1, the machine is already initialized from WOZROM
         ; so we just print the Kernel message and leave.
         ; """
-.scope
+
                 sei             ; Disable interrupts
 
                 ; We've successfully set everything up, so print the kernel
                 ; string
                 ldx #0
-*               lda s_kernel_id,x
+-               lda s_kernel_id,x
                 beq _done
                 jsr kernel_putc
                 inx
                 bra -
 _done:
                 jmp forth
-.scend
+
 
 kernel_getc:
         ; """The high bit in the Apple 1 Keyboard Control Register KBDCR
@@ -164,9 +168,9 @@ kernel_getc:
         ; and TaliForth2 needs lower case Forth words, we shift all upper case
         ; ASCII characters between 'A' and 'Z' to lower case 'a' to 'z'.
         ; """
-.scope
-.alias KBD   $D010		; Apple 1 keyboard register
-.alias KBDCR $D011 		; Apple 1 keyboard control register
+
+KBD   = $D010		; Apple 1 keyboard register
+KBDCR = $D011 		; Apple 1 keyboard control register
 
 _loop:
   lda KBDCR 			; key press waiting?
@@ -180,10 +184,9 @@ _loop:
   eor #$20                      ; make lower case
 _exit:
   rts
-.scend
 
-.scope
-.alias DSP $D012 		; Display output register
+
+DSP = $D012 		; Display output register
 
 kernel_putc:
                                 ; """Print a single character to the console.
@@ -207,7 +210,7 @@ out:
 nolf:
   sta DSP			; write out char
   rts
-.scend
+
 
 ; platform dependend "bye" behaviour. for now, brk is retained like in platform-py65mon
 platform_bye:
@@ -218,7 +221,7 @@ platform_bye:
 ; is easier to see where the kernel ends in hex dumps. This string is
 ; displayed after a successful boot
 s_kernel_id:
-        .byte AscLF, AscLF, "Tali Forth 2 default kernel for Apple 1 (15.06.2019)", AscLF, 0
+        .text AscLF, AscLF, "Tali Forth 2 default kernel for Apple 1 (15.06.2019)", AscLF, 0
 
 
 ; END
