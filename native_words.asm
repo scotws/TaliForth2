@@ -157,7 +157,6 @@ xt_abort:
         ; """https://forth-standard.org/standard/core/QUIT
         ; Rest the input and start command loop
         ; """
-.scope
 xt_quit:
                 ; Clear the Return Stack. This is a little screwed up
                 ; because the 65c02 can only set the Return Stack via X,
@@ -239,7 +238,7 @@ _print:
 z_cold:
 z_abort:
 z_quit:         ; no RTS required
-.scend
+
 
 
 ; This table holds all of the initial values for the variables in zero page.
@@ -296,7 +295,7 @@ cold_user_table_end:
         ; """https://forth-standard.org/standard/core/ABORTq
         ; Abort and print a string.
         ; """
-.scope
+
 xt_abort_quote:
                 ; save the string
                 jsr xt_s_quote          ; S"
@@ -307,11 +306,10 @@ xt_abort_quote:
                 jsr cmpl_subroutine     ; may not be JMP as JSR/RTS
 
 z_abort_quote:  rts
-.scend
+
 
 abort_quote_runtime:
         ; """Runtime aspect of ABORT_QUOTE"""
-.scope
                 ; We arrive here with ( f addr u )
                 lda 4,x
                 ora 5,x
@@ -330,7 +328,6 @@ _done:
                 tax
 
                 rts
-.scend
 
 
 ; ## ABS ( n -- u ) "Return absolute value of a number"
@@ -338,7 +335,6 @@ _done:
         ; """https://forth-standard.org/standard/core/ABS
         ; Return the absolute value of a number.
         ; """
-.scope
 xt_abs:
                 jsr underflow_1
 
@@ -357,7 +353,6 @@ xt_abs:
 
 _done:
 z_abs:          rts
-.scend
 
 
 ; ## ACCEPT ( addr n -- n ) "Receive a string of characters from the keyboard"
@@ -368,7 +363,6 @@ z_abs:          rts
         ; are echoed as they are received. ACCEPT is called by REFILL in
         ; modern Forths.
         ; """
-.scope
 xt_accept:
                 jsr underflow_2
 
@@ -382,7 +376,7 @@ xt_accept:
                 stz 0,x
                 stz 1,x
 
-                jmp _done
+                jmp accept_done
 
 _not_zero:
                 lda 0,x         ; number of chars to get in tmp2 ...
@@ -405,7 +399,7 @@ _not_zero:
                 and #$f7
 
                 ; Increment the buffer number (overflow from 7 to 0 OK)
-                inc
+               ina
 
                 ; Set bit 3 for detecting if CTRL-n has been pressed the first
                 ; time. This bit will be cleared on the first CTRL-n or CTRL-p
@@ -414,7 +408,7 @@ _not_zero:
                 ora #$08
                 sta status
 
-_loop:
+accept_loop:
                 ; Out of the box, py65mon catches some CTRL sequences such as
                 ; CTRL-c. We also don't need to check for CTRL-l because a
                 ; vt100 terminal clears the screen automatically.
@@ -449,7 +443,7 @@ _loop:
                 jsr emit_a
 
                 cpy tmp2        ; reached character limit?
-                bne _loop       ; fall through if buffer limit reached
+                bne accept_loop       ; fall through if buffer limit reached
                 bra _buffer_full
 
 _eol:
@@ -460,7 +454,7 @@ _buffer_full:
                 sty 0,x         ; Y contains number of chars accepted already
                 stz 1,x         ; we only accept 256 chars
 
-                jmp _done
+                jmp accept_done
 
 _backspace:
                 ; Handle backspace and delete kex, which currently do the same
@@ -471,7 +465,7 @@ _backspace:
                 lda #AscBELL    ; complain and don't delete beyond the start of line
                 jsr emit_a
                 iny
-*
++
                 dey
                 lda #AscBS      ; move back one
                 jsr emit_a
@@ -480,7 +474,7 @@ _backspace:
                 lda #AscBS      ; move back over space
                 jsr emit_a
 
-                bra _loop
+                bra accept_loop
 
 _ctrl_p:
                 ; CTRL-p was pressed. Recall the previous input buffer.
@@ -518,7 +512,7 @@ _ctrl_n:
                 and #$f7
 
                 ; Increment the buffer number (overflow from 7 to 0 OK)
-                inc
+               ina
 
                 ; Bit 3 (if it got set by going from buffer 7 to 0) will
                 ; be cleared below.
@@ -531,7 +525,7 @@ _recall_history:
                 lda #%00001000
                 trb status
 
-                jsr _total_recall
+                jsr accept_total_recall
 
                 ; tmp3 now has the address of the previous history buffer.
                 ; First byte of buffer is length. Clear the line by sending
@@ -563,7 +557,7 @@ input_cleared:
                 inc tmp3
                 bne +           ; Increment the upper byte on carry.
                 inc tmp3+1
-*
++
                 ; Copy the history buffer into the input buffer,
                 ; sending the characters to the output as we go.
                 lda #AscCR
@@ -573,8 +567,8 @@ _history_loop:
                 ; See if we have reached the end of the history buffer.
                 cpy status+1
                 bne +
-                jmp _loop       ; Needs a long jump
-*
+                jmp accept_loop       ; Needs a long jump
++
                 ; See if we have reached the end of the input buffer.
                 ; (only comparing to lower byte as we currently limit
                 ; to 255 characters max)
@@ -594,12 +588,12 @@ _hist_filled_buffer:
                 ; We don't want a history recall to EOL our buffer,
                 ; so back up one character and return to editing.
                 dey
-                jmp _loop
+                jmp accept_loop
 
-_done:
+accept_done:
                 ; Copy the input buffer into the currently
                 ; selected history buffer.
-                jsr _total_recall
+                jsr accept_total_recall
                 sta status+1
 
                 ; Also save it in the first buffer byte.
@@ -610,7 +604,7 @@ _done:
                 inc tmp3
                 bne +           ; Increment the upper byte on carry.
                 inc tmp3+1
-*
++
                 ; Copy the characters from the input buffer to the
                 ; history buffer.
 
@@ -627,7 +621,7 @@ _save_history_done:
 z_accept:
                 rts
 
-_total_recall:
+accept_total_recall:
         ; """Internal subroutine for ACCEPT that recalls history entry"""
 
                 ; Generate the address of the buffer in tmp3. Start with the
@@ -655,24 +649,21 @@ _total_recall:
                 sta tmp3
                 bcc +           ; Increment the upper byte on carry.
                 inc tmp3+1
-*
++
                 ; Save the current length of the input buffer in
                 ; histinfo+1 temporarily.  Reduce to 127 if larger.
                 tya
                 cmp #$80
                 bcc +
                 lda #$7F
-*
++
                 rts
-.scend
-
 
 
 
 ; ## ACTION_OF ( "name" -- xt ) "Get named deferred word's xt"
 ; ## "action-of"  auto  ANS core ext
         ; """http://forth-standard.org/standard/core/ACTION-OF"""
-.scope
 xt_action_of:
                 ; This is a state aware word with differet behavior
                 ; when used while compiling vs interpreting.
@@ -698,13 +689,11 @@ _interpreting:
 
 _done:
 z_action_of:           rts
-.scend
 
 
 ; ## AGAIN ( addr -- ) "Code backwards branch to address left by BEGIN"
 ; ## "again"  tested  ANS core ext
         ; """https://forth-standard.org/standard/core/AGAIN"""
-.scope
 xt_again:
                 jsr underflow_1
 
@@ -736,7 +725,6 @@ _done:
                 inx
 
 z_again:        rts
-.scend
 
 
 ; ## ALIGN ( -- ) "Make sure CP is aligned on word size"
@@ -749,12 +737,10 @@ z_again:        rts
 ; ## ALIGNED ( addr -- addr ) "Return the first aligned address"
 ; ## "aligned"  auto  ANS core
         ; """https://forth-standard.org/standard/core/ALIGNED"""
-.scope
 xt_align:
 xt_aligned:
 z_align:
 z_aligned:      rts             ; stripped out during native compile
-.scend
 
 
 ; ## ALLOT ( n -- ) "Reserve or release memory"
@@ -766,7 +752,6 @@ z_aligned:      rts             ; stripped out during native compile
         ; common case), reserve n bytes, but not past the end of the
         ; Dictionary. See http://forth-standard.org/standard/core/ALLOT
         ; """
-.scope
 xt_allot:
                 jsr underflow_1
 
@@ -877,7 +862,6 @@ _done:
                 inx
 z_allot:
                 rts
-.scend
 
 
 ; ## ALLOW_NATIVE ( -- ) "Flag last word to allow native compiling"
@@ -969,7 +953,7 @@ xt_at_xy:
                 lda #$3B        ; ASCII for ";"
                 jsr emit_a
                 jsr print_u
-                lda #'H
+                lda #'H'
                 jsr emit_a
 
 z_at_xy:        rts
@@ -1013,11 +997,9 @@ z_base:         rts
         ; Since this is a compiling word, we don't care that much about
         ; about speed
         ; """
-.scope
 xt_begin:
                 jsr xt_here
 z_begin:        rts
-.scend
 
 
 ; ## BELL ( -- ) "Emit ASCII BELL"
@@ -1032,7 +1014,6 @@ z_bell:         rts
 ; ## BL ( -- c ) "Push ASCII value of SPACE to stack"
 ; ## "bl"  auto  ANS core
         ; """https://forth-standard.org/standard/core/BL"""
-.scope
 xt_bl:
                 dex
                 dex
@@ -1041,7 +1022,6 @@ xt_bl:
                 stz 1,x
 
 z_bl:           rts
-.scend
 
 ; ## BLK ( -- addr ) "Push address of block being interpreted"
 ; ## "block"  auto  ANS block
@@ -1084,7 +1064,6 @@ z_blkbuffer:    rts
 ; ## BLOCK ( u -- a-addr ) "Fetch a block into a buffer"
 ; ## "block"  auto  ANS block
         ; """https://forth-standard.org/standard/block/BLOCK"""
-.scope
 xt_block:
 
                 ; See if the block requested is the same as the one we
@@ -1153,7 +1132,6 @@ _done:
                 sta 1,x
 
 z_block:        rts
-.scend
 
 
 ; ## BLOCK_RAMDRIVE_INIT ( u -- ) "Create a ramdrive for blocks"
@@ -1163,7 +1141,6 @@ z_block:        rts
         ; use it.  The read/write routines do not provide bounds checking.
         ; Expected use: `4 block-ramdrive-init` ( to create blocks 0-3 )
         ; """
-.scope
 xt_block_ramdrive_init:
                 jsr underflow_1
 
@@ -1174,18 +1151,18 @@ xt_block_ramdrive_init:
                 jmp _after_ramdrive_code
 
 _ramdrive_code:
-        .byte "base @ swap decimal"
-        .byte " 1024 *" ; ( Calculate how many bytes are needed for numblocks blocks )
-        .byte " dup"    ; ( Save a copy for formatting it at the end )
-        .byte " buffer: ramdrive" ; ( Create ramdrive )
+        .text "base @ swap decimal"
+        .text " 1024 *" ; ( Calculate how many bytes are needed for numblocks blocks )
+        .text " dup"    ; ( Save a copy for formatting it at the end )
+        .text " buffer: ramdrive" ; ( Create ramdrive )
         ; ( These routines just copy between the buffer and the ramdrive blocks )
-        .byte " : block-read-ramdrive"  ; ( addr u -- )
-        .byte " ramdrive swap 1024 * + swap 1024 move ;"
-        .byte " : block-write-ramdrive" ; ( addr u -- )
-        .byte " ramdrive swap 1024 * + 1024 move ;"
-        .byte " ' block-read-ramdrive block-read-vector !" ; ( Replace I/O vectors )
-        .byte " ' block-write-ramdrive block-write-vector !"
-        .byte " ramdrive swap blank base !"
+        .text " : block-read-ramdrive"  ; ( addr u -- )
+        .text " ramdrive swap 1024 * + swap 1024 move ;"
+        .text " : block-write-ramdrive" ; ( addr u -- )
+        .text " ramdrive swap 1024 * + 1024 move ;"
+        .text " ' block-read-ramdrive block-read-vector !" ; ( Replace I/O vectors )
+        .text " ' block-write-ramdrive block-write-vector !"
+        .text " ramdrive swap blank base !"
 
 _after_ramdrive_code:
                 jsr sliteral_runtime
@@ -1198,7 +1175,6 @@ _after_ramdrive_code:
 
 z_block_ramdrive_init:
                 rts
-.scend
 
 
 ; ## BLOCK_READ ( addr u -- ) "Read a block from storage (deferred word)"
@@ -1362,7 +1338,6 @@ z_buffblocknum: rts
 ; ## BUFFER ( u -- a-addr ) "Get a buffer for a block"
 ; ## "buffer"  auto  ANS block
         ; """https://forth-standard.org/standard/block/BUFFER"""
-.scope
 xt_buffer:
                 ; Check the buffer status
                 ldy #buffstatus_offset
@@ -1400,7 +1375,6 @@ _done:
                 sta 1,x
 
 z_buffer:       rts
-.scend
 
 
 ; ## BUFFER_COLON ( u "<name>" -- ; -- addr ) "Create an uninitialized buffer"
@@ -1435,18 +1409,15 @@ z_buffstatus:   rts
 ; ## BYE ( -- ) "Break"
 ; ## "bye"  tested  ANS tools ext
         ; """https://forth-standard.org/standard/tools/BYE"""
-.scope
 xt_bye:
                 ;brk
                 jmp platform_bye
 z_bye:          ;rts             ; never reached
-.scend
 
 
 ; ## C_COMMA ( c -- ) "Store one byte/char in the Dictionary"
 ; ## "c,"  auto  ANS core
         ; """https://forth-standard.org/standard/core/CComma"""
-.scope
 xt_c_comma:
                 jsr underflow_1
 
@@ -1457,7 +1428,6 @@ xt_c_comma:
                 inx
 
 z_c_comma:      rts
-.scend
 
 
 ; ## C_FETCH ( addr -- c ) "Get a character/byte from given address"
@@ -1504,20 +1474,18 @@ z_c_store:      rts
         ; Add the number of bytes ("address units") that one cell needs.
         ; Since this is an 8 bit machine with 16 bit cells, we add two bytes.
         ; """
-.scope
 xt_cell_plus:
                 jsr underflow_1
 
                 inc 0,x
                 bne +
                 inc 1,x
-*
++
                 inc 0,x
                 bne _done
                 inc 1,x
 _done:
 z_cell_plus:    rts
-.scend
 
 
 ; ## CELLS ( u -- u ) "Convert cells to size in bytes"
@@ -1532,7 +1500,6 @@ z_cell_plus:    rts
 ; ## CHAR ( "c" -- u ) "Convert character to ASCII value"
 ; ## "char"  auto  ANS core
         ; """https://forth-standard.org/standard/core/CHAR"""
-.scope
 xt_char:
                 ; get character from string, returns ( addr u )
                 jsr xt_parse_name
@@ -1553,7 +1520,6 @@ _not_empty:
                 stz 1,x         ; MSB is always zero
 
 z_char:         rts
-.scend
 
 
 ; ## CHAR_PLUS ( addr -- addr+1 ) "Add the size of a character unit to address"
@@ -1571,7 +1537,6 @@ z_char:         rts
         ; machine, this does absolutely nothing and is included for
         ; compatibility with other Forth versions
         ; """
-.scope
 xt_chars:
                 ; Checking for underflow seems a bit stupid because this
                 ; routine does nothing on this machine. However, the user
@@ -1580,7 +1545,6 @@ xt_chars:
                 jsr underflow_1
 
 z_chars:        rts
-.scend
 
 ; ## CLEAVE ( addr u -- addr2 u2 addr1 u1 ) "Split off word from string"
 ; ## "cleave"  auto  Tali Forth
@@ -1597,7 +1561,6 @@ z_chars:        rts
         ; assembler and be as fast as we can make it. Calls PARSE-NAME so we
         ; strip leading delimiters.
         ; """
-.scope
 xt_cleave:
                 jsr underflow_2
 
@@ -1667,7 +1630,6 @@ _done:
                 jsr xt_r_to_input
 
 z_cleave:       rts
-.scend
 
 
 ; ## CMOVE ( addr1 addr2 u -- ) "Copy bytes going from low to high"
@@ -1680,7 +1642,6 @@ z_cleave:       rts
         ;
         ; There are no official tests for this word.
         ; """
-.scope
 xt_cmove:
                 jsr underflow_3
 
@@ -1730,7 +1691,6 @@ _done:          ; clear the stack
                 tax
 
 z_cmove:        rts
-.scend
 
 
 ; ## CMOVE_UP ( add1 add2 u -- ) "Copy bytes from high to low"
@@ -1741,7 +1701,6 @@ z_cmove:        rts
         ;
         ; There are no official tests for this word.
         ; """
-.scope
 xt_cmove_up:
                 jsr underflow_3
 
@@ -1793,7 +1752,6 @@ _done:
                 tax
 
 z_cmove_up:     rts
-.scend
 
 
 ; ## COLON ( "name" -- ) "Start compilation of a new word"
@@ -1802,7 +1760,6 @@ z_cmove_up:     rts
         ;
         ; Use the CREATE routine and fill in the rest by hand.
         ; """
-.scope
 xt_colon:
                 ; If we're already in the compile state, complain
                 ; and quit
@@ -1812,7 +1769,7 @@ xt_colon:
 
                 lda #err_state
                 jmp error
-*
++
                 ; switch to compile state
                 dec state
                 dec state+1
@@ -1865,14 +1822,12 @@ xt_colon:
                 dec cp+1
 _done:
 z_colon:        rts
-.scend
 
 ; ## COLON_NONAME ( -- ) "Start compilation of a new word""
 ; ## ":NONAME"  auto  ANS core
         ; """https://forth-standard.org/standard/core/ColonNONAME
         ; Compile a word with no nt.  ";" will put its xt on the stack.
         ; """
-.scope
 xt_colon_noname:
                 ; If we're already in the compile state, complain
                 ; and quit
@@ -1882,7 +1837,7 @@ xt_colon_noname:
 
                 lda #err_state
                 jmp error
-*
++
                 ; switch to compile state
                 dec state
                 dec state+1
@@ -1901,7 +1856,6 @@ xt_colon_noname:
                 sta workword+1
 _done:
 z_colon_noname:        rts
-.scend
 
 
 ; ## COMMA ( n -- ) "Allot and store one cell in memory"
@@ -1911,7 +1865,6 @@ z_colon_noname:        rts
         ;
         ; Since this an eight-bit machine, we can ignore all alignment issues.
         ; """
-.scope
 xt_comma:
                 jsr underflow_1
 
@@ -1921,7 +1874,7 @@ xt_comma:
                 inc cp
                 bne +
                 inc cp+1
-*
++
                 lda 1,x
                 sta (cp)
 
@@ -1933,7 +1886,6 @@ _done:
                 inx
 
 z_comma:        rts
-.scend
 
 
 ; ## COMPARE ( addr1 u1 addr2 u2 -- -1 | 0 | 1) "Compare two strings"
@@ -1945,7 +1897,6 @@ z_comma:        rts
         ; that entirely matches the beginning of the other string, but is
         ; shorter, is considered less than the longer string.
         ; """
-.scope
 xt_compare:
                 jsr underflow_4
 
@@ -1987,24 +1938,24 @@ _next_letter:
                 inc tmp1
                 bne +
                 inc tmp1+1
-*
++
                 ; Increment tmp2
                 inc tmp2
                 bne +
                 inc tmp2+1
-*
++
                 ; Decrement count1 on the stack.
                 lda 4,x
                 bne +
                 dec 5,x
-*
++
                 dec 4,x
 
                 ; Decrement count2 on the stack.
                 lda 0,x
                 bne +
                 dec 1,x
-*
++
                 dec 0,x
 
                 ; Loop around and check again.
@@ -2042,7 +1993,6 @@ _done:
                 tax
 
 z_compare:      rts
-.scend
 
 
 ; ## COMPILE_COMMA ( xt -- ) "Compile xt"
@@ -2058,7 +2008,6 @@ z_compare:      rts
         ; NC_LIMIT, we silently use subroutine coding. If the AN (Always
         ; Native) flag is set, the word is always natively compiled.
         ; """
-.scope
 xt_compile_comma:
                 jsr underflow_1
 
@@ -2091,7 +2040,7 @@ _check_nt:
                 inc 0,x
                 bne +
                 inc 1,x                 ; ( nt -- nt+1 )
-*
++
                 lda (0,x)
                 sta tmp3                ; keep copy of status byte for NN
                 and #AN                 ; mask all but Always Native (AN) bit
@@ -2220,7 +2169,7 @@ _found_entry:
                 sta 4,x
                 bcc+
                 inc 5,x                 ; we just care about the carry
-*
++
 
                 ; Adjust u: Quit earlier. Since we cut off the top and the
                 ; bottom of the code, we have to double the value
@@ -2232,7 +2181,7 @@ _found_entry:
                 sta 0,x
                 bcs +
                 dec 1,x                 ; we just care about the borrow
-*
++
                 ; drop through to underflow check stripping
 
 _underflow_strip:
@@ -2262,7 +2211,7 @@ _underflow_strip:
                 sta 4,x
                 bcc +
                 inc 5,x                  ; we just care about the carry
-*
++
                 ; Adjust u: End earlier
                 sec
                 lda 0,x
@@ -2270,7 +2219,7 @@ _underflow_strip:
                 sta 0,x
                 bcs +
                 dec 1,x                  ; we just care about the borrow
-*
++
 
                 ; --- END OF SPECIAL CASES ---
 _specials_done:
@@ -2330,13 +2279,12 @@ _compile_as_jump:
                 sta cp
                 bcc +
                 inc cp+1
-*
++
                 inx             ; drop xt
                 inx
 _done:
 z_compile_comma:
                 rts
-.scend
 
 
 ; ## COMPILE_ONLY ( -- ) "Mark most recent word as COMPILE-ONLY"
@@ -2347,7 +2295,6 @@ z_compile_comma:
         ; The alternative way to do this is to define a word
         ; ?COMPILE that makes sure  we're in compile mode
         ; """
-.scope
 xt_compile_only:
                 jsr current_to_dp
                 ldy #1          ; offset for status byte
@@ -2356,7 +2303,6 @@ xt_compile_only:
                 sta (dp),y
 
 z_compile_only: rts
-.scend
 
 
 ; ## CONSTANT ( n "name" -- ) "Define a constant"
@@ -2446,7 +2392,7 @@ xt_count:
                 inc 1,x         ; MSB
 
                 ; save number of characters to stack
-*               tya
++               tya
                 dex
                 dex
                 sta 0,x         ; LSB
@@ -2470,7 +2416,6 @@ z_cr:           rts
         ;
         ; See the drawing in headers.asm for details on the header
         ; """
-.scope
 xt_create:
                 ; get string
                 jsr xt_parse_name       ; ( addr u )
@@ -2695,13 +2640,11 @@ _store_name:
                 inx
 
 z_create:       rts
-.scend
 
 
 ; ## D_MINUS ( d d -- d ) "Subtract two double-celled numbers"
 ; ## "d-"  auto  ANS double
         ; """https://forth-standard.org/standard/double/DMinus"""
-.scope
 xt_d_minus:
                 jsr underflow_4 ; two double numbers
 
@@ -2729,13 +2672,11 @@ xt_d_minus:
                 inx
 
 z_d_minus:      rts
-.scend
 
 
 ; ## D_PLUS ( d d -- d ) "Add two double-celled numbers"
 ; ## "d+"  auto  ANS double
         ; """https://forth-standard.org/standard/double/DPlus"""
-.scope
 xt_d_plus:
                 jsr underflow_4 ; two double numbers
 
@@ -2762,7 +2703,6 @@ xt_d_plus:
                 inx
 
 z_d_plus:       rts
-.scend
 
 
 ; ## D_TO_S ( d -- n ) "Convert a double number to single"
@@ -2771,7 +2711,7 @@ z_d_plus:       rts
         ; Though this is basically just DROP, we keep it
         ; separate so we can test for underflow
         ; """
-.scope
+
 xt_d_to_s:
                 jsr underflow_2
 
@@ -2779,13 +2719,13 @@ xt_d_to_s:
                 inx
 
 z_d_to_s:       rts
-.scend
+
 
 
 ; ## DABS ( d -- d ) "Return the absolute value of a double"
 ; ## "dabs"  auto  ANS double
         ; """https://forth-standard.org/standard/double/DABS"""
-.scope
+
 xt_dabs:
                 jsr underflow_2 ; double number
 
@@ -2813,7 +2753,7 @@ xt_dabs:
                 sta 1,x
 _done:
 z_dabs:         rts
-.scend
+
 
 
 ; ## DECIMAL ( -- ) "Change radix base to decimal"
@@ -2835,7 +2775,7 @@ z_decimal:      rts
         ; The ANS reference implementation is
         ;       CREATE ['] ABORT , DOES> @ EXECUTE ;
         ; But we use this routine as a low-level word so things go faster
-.scope
+
 xt_defer:
                 jsr xt_create
 
@@ -2868,41 +2808,41 @@ xt_defer:
                 inc cp
                 bne +
                 inc cp+1
-*
++
                 lda #>defer_error
                 sta (cp)
                 inc cp
                 bne +
                 inc cp+1
-*
++
                 jsr adjust_z    ; adjust header to correct length
 
 z_defer:        rts
-.scend
+
 
 
 ; ## DEFER_FETCH ( xt1 -- xt2 ) "Get the current XT for a deferred word"
 ; ## "defer@"  auto  ANS core ext
         ; """http://forth-standard.org/standard/core/DEFERFetch"""
-.scope
+
 xt_defer_fetch:
                 ; No underflow checking as >BODY does it.
                 jsr xt_to_body
                 jsr xt_fetch
 z_defer_fetch:  rts
-.scend
+
 
 
 ; ## DEFER_STORE ( xt2 x1 -- ) "Set xt1 to execute xt2"
 ; ## "defer!"  auto  ANS core ext
         ; """http://forth-standard.org/standard/core/DEFERStore"""
-.scope
+
 xt_defer_store:
                 ; No underflow checking as >BODY and ! do it.
                 jsr xt_to_body
                 jsr xt_store
 z_defer_store:  rts
-.scend
+
 
 
 ; ## DEFINITIONS ( -- ) "Make first wordlist in search order the current wordlist"
@@ -2944,7 +2884,7 @@ z_depth:        rts
         ; user provide it. There is no standard name for this routine, which
         ; itself is not ANS; we use DIGIT? following pForth and Gforth.
         ; """
-.scope
+
 xt_digit_question:
                 jsr underflow_1
 
@@ -2959,23 +2899,23 @@ xt_digit_question:
                 ; Check the character, now in the LSB of NOS. First, make
                 ; sure we're not below the ASCII code for "0"
                 lda 2,x
-                cmp #'0
+                cmp #'0'
                 bcc _done               ; failure flag already set
 
                 ; Next, see if we are below "9", because that would make
                 ; this a normal number
-                cmp #'9+1               ; this is actually ":"
+                cmp #'9'+1               ; this is actually ":"
                 bcc _checkbase
 
                 ; Well, then let's see if this is the gap between "9" and "A"
                 ; so we can treat the whole range as a number
-                cmp #'A
+                cmp #'A'
                 bcc _done               ; failure flag is already set
 
                 ; probably a letter, so we make sure it is uppercase
-                cmp #'a
+                cmp #'a'
                 bcc _case_done          ; not lower case, too low
-                cmp #'z+1
+                cmp #'z'+1
                 bcs _case_done          ; not lower case, too high
 
                 clc                     ; just right
@@ -2991,7 +2931,7 @@ _checkbase:
                 ; we have a number, now see if it falls inside the range
                 ; provided by BASE
                 sec
-                sbc #'0                 ; this is also the conversion step
+                sbc #'0'                 ; this is also the conversion step
                 cmp base
                 bcs _done               ; already have false flag
 
@@ -3003,7 +2943,7 @@ _checkbase:
 _done:
 z_digit_question:
                 rts
-.scend
+
 
 ; ## DISASM ( addr u -- ) "Disassemble a block of memory"
 ; ## "disasm"  tested  Tali Forth
@@ -3072,7 +3012,7 @@ xt_question_do:
         ;
         ; This may not be native compile. Don't check for a stack underflow
         ; """
-.scope
+
 xt_do:
                 ; DO and ?DO share most of their code, use tmp1 as a flag.
                 stz tmp1                ; 0 is DO, drop through to DO_COMMON
@@ -3096,13 +3036,13 @@ _loop:
                 bpl _loop
 
                 ; update CP
-                inc             ; we used 5 as a dummy value, this is why
+                ina             ; we used 5 as a dummy value, this is why
                 clc
                 adc CP
                 sta CP
                 bcc +
                 inc CP+1
-*
++
                 ; compile the (?DO) portion of ?DO if appropriate
                 lda tmp1
                 beq _compile_do
@@ -3112,7 +3052,7 @@ _loop:
                 ; Always Native anyway
                 ldy #question_do_runtime_end-question_do_runtime
                 phy             ; save counter to calculate new CP
-*
+-
                 lda question_do_runtime,y
                 sta (cp),y
                 dey
@@ -3131,7 +3071,7 @@ _compile_do:
                 ; compile runtime part of DO.
                 ldy #do_runtime_end-do_runtime  ; counter
                 phy             ; save counter to calculate new CP
-*
+-
                 lda do_runtime,y
                 sta (cp),y
                 dey
@@ -3157,7 +3097,7 @@ _compile_do:
                 sta 1,x
 z_question_do:
 z_do:           rts
-.scend
+
 
 do_runtime:
         ; """Runtime routine for DO loop. Note that ANS loops quit when the
@@ -3209,7 +3149,7 @@ do_runtime:
 do_runtime_end:
 
 question_do_runtime:
-.scope
+
         ; """This is called (?DO) in some Forths. See the explanation at
         ; do_runtime for the background on this design
         ; """
@@ -3235,7 +3175,7 @@ _do_do:
                 inx             ; clear flag from EQUAL off stack
                 inx             ; no RTS because this is copied into code
 question_do_runtime_end:
-.scend
+
 
 
 ; ## DOES ( -- ) "Add payload when defining new words"
@@ -3246,7 +3186,7 @@ question_do_runtime_end:
         ; the Developer Guide in the manual for a discussion of
         ; DOES>'s internal workings. This uses tmp1 and tmp2.
         ; """
-.scope
+
 xt_does:
                 ; compile a subroutine jump to runtime of DOES>
                 ldy #>does_runtime
@@ -3261,7 +3201,7 @@ xt_does:
                 jsr cmpl_subroutine
 
 z_does:         rts
-.scend
+
 
 does_runtime:
         ; """Runtime portion of DOES>. This replaces the subroutine jump
@@ -3271,14 +3211,14 @@ does_runtime:
         ; the return addresses. This routine is also known as "(DOES)" in
         ; other Forths
         ; """
-.scope
+
                 ply             ; LSB
                 pla             ; MSB
 
                 iny
                 bne +
-                inc
-*
+                ina
++
                 sty tmp1
                 sta tmp1+1
 
@@ -3316,13 +3256,13 @@ does_runtime:
                 ; go back to whatever the main routine was. Otherwise, we we
                 ; smash into the subroutine jump to DODOES.
                 rts
-.scend
+
 
 
 ; ## DOT ( u -- ) "Print TOS"
 ; ## "."  auto  ANS core
         ; """https://forth-standard.org/standard/core/d"""
-.scope
+
 xt_dot:
                 jsr underflow_1
 
@@ -3338,13 +3278,13 @@ xt_dot:
                 jsr xt_space
 
 z_dot:          rts
-.scend
+
 
 
 ; ## DOT_PAREN ( -- ) "Print input up to close paren .( comment )"
 ; ## ".("  auto  ANS core
         ; """http://forth-standard.org/standard/core/Dotp"""
-.scope
+
 xt_dot_paren:
                 ; Put a right paren on the stack.
                 dex
@@ -3357,7 +3297,7 @@ xt_dot_paren:
                 jsr xt_type
 
 z_dot_paren:    rts
-.scend
+
 
 
 ; ## DOT_QUOTE ( "string" -- ) "Print string from compiled word"
@@ -3368,7 +3308,7 @@ z_dot_paren:    rts
         ; uses it for everything. We follow the book here, and recommend
         ; `.(` for general printing.
         ; """
-.scope
+
 xt_dot_quote:
                 ; we let S" do the heavy lifting. Since we're in
                 ; compile mode, it will save the string and reproduce it
@@ -3381,7 +3321,7 @@ xt_dot_quote:
                 jsr cmpl_subroutine
 
 z_dot_quote:    rts
-.scend
+
 
 
 ; ## DOT_R ( n u -- ) "Print NOS as unsigned number with TOS with"
@@ -3391,7 +3331,7 @@ z_dot_quote:    rts
         ; Based on the Forth code
         ;  : .R  >R DUP ABS 0 <# #S ROT SIGN #> R> OVER - SPACES TYPE ;
         ; """
-.scope
+
 xt_dot_r:
                 jsr underflow_2
 
@@ -3411,7 +3351,7 @@ xt_dot_r:
                 jsr xt_type
 
 z_dot_r:        rts
-.scend
+
 
 
 ; ## DOT_S ( -- ) "Print content of Data Stack"
@@ -3423,7 +3363,7 @@ z_dot_r:        rts
         ;
         ; Since this is for humans, we don't have to worry about speed.
         ; """
-.scope
+
 xt_dot_s:
                 jsr xt_depth    ; ( -- u )
 
@@ -3490,7 +3430,7 @@ _loop:
 _done:
                 pla
 z_dot_s:        rts
-.scend
+
 
 
 ; ## D_DOT ( d -- ) "Print double"
@@ -3500,7 +3440,7 @@ z_dot_s:        rts
         ; From the Forth code:
         ; : D. TUCK DABS <# #S ROT SIGN #> TYPE SPACE ;
         ; """
-.scope
+
 xt_d_dot:
                 jsr underflow_2
 
@@ -3515,7 +3455,7 @@ xt_d_dot:
                 jsr xt_space
 
 z_d_dot:        rts
-.scend
+
 
 
 ; ## D_DOT_R ( d u -- ) "Print double right-justified u wide"
@@ -3524,7 +3464,7 @@ z_d_dot:        rts
         ; Based on the Forth code
         ;  : D.R >R TUCK DABS <# #S ROT SIGN #> R> OVER - SPACES TYPE ;
         ; """
-.scope
+
 xt_d_dot_r:
                 jsr underflow_3
                 ; From the forth code:
@@ -3543,7 +3483,7 @@ xt_d_dot_r:
                 jsr xt_type
 
 z_d_dot_r:      rts
-.scend
+
 
 
 ; ## DROP ( u -- ) "Pop top entry on Data Stack"
@@ -3567,7 +3507,7 @@ z_drop:         rts
         ; useful for testing and development, so we want to have it work
         ; as soon as possible. Uses TMP2
         ; """
-.scope
+
 xt_dump:
                 jsr underflow_2
 _row:
@@ -3605,7 +3545,7 @@ _loop:
                 ; Handle ASCII printing
                 jsr is_printable
                 bcs _printable
-                lda #'.                 ; Print dot if not printable
+                lda #'.'                 ; Print dot if not printable
 _printable:
                 phy                     ; save counter
                 ldy tmp2
@@ -3628,7 +3568,7 @@ _counter:
                 lda 0,x
                 bne +
                 dec 1,x
-*
++
                 dec 0,x
                 dey
                 bne _loop               ; next byte
@@ -3636,7 +3576,7 @@ _counter:
                 ; Done with one line, print the ASCII version of these
                 ; characters
                 jsr xt_space
-                jsr _print_ascii
+                jsr dump_print_ascii
 
                 bra _row                ; new row
 
@@ -3653,13 +3593,13 @@ _all_printed:
                 ; makes it harder to read. We settle for one extra
                 ; space instead for the moment
                 jsr xt_space
-                jsr _print_ascii
+                jsr dump_print_ascii
 _done:
                 jsr xt_two_drop         ; one byte less than 4x INX
 z_dump:         rts
 
 
-_print_ascii:
+dump_print_ascii:
                 ; Print the ASCII characters that we have saved from
                 ; HERE (CP) to HERE plus whatever is in TMP2. This routine
                 ; is not compiled (DUMP is probably never compiled anyway)
@@ -3674,12 +3614,12 @@ _ascii_loop:
                 cpy #8
                 bne +
                 jsr xt_space
-*
++
                 dec tmp2
                 bne _ascii_loop
 
                 rts
-.scend
+
 
 
 ; ## DUP ( u -- u u ) "Duplicate TOS"
@@ -3729,7 +3669,7 @@ z_ed:           rts
         ;
         ; The code is shared with ENDOF
         ; """
-.scope
+
 xt_else:
 xt_endof:
                 ; Put an unconditional branch.
@@ -3756,14 +3696,14 @@ xt_endof:
 z_else:
 z_endof:
                 rts
-.scend
+
 
 
 branch_runtime:
         ; """Runtime component for a branch. Used by ELSE and ENDOF. This was
         ; formally part of a separate word BRANCH which was later removed.
         ; """
-.scope
+
                 ; The address on the Return Stack points to the last byte
                 ; of the JSR address, one byte below the branch literal
                 pla
@@ -3781,7 +3721,7 @@ branch_runtime:
                 sta tmp1+1
 
                 jmp (tmp1)
-.scend
+
 
 
 ; ## EMIT ( char -- ) "Print character to current output"
@@ -3792,7 +3732,7 @@ branch_runtime:
         ; do not check to see if we have been given a valid ASCII character.
         ; Don't make this native compile.
         ; """
-.scope
+
 xt_emit:
                 jsr underflow_1
 
@@ -3808,7 +3748,7 @@ emit_a:
                 jmp (output)            ; JSR/RTS
 
 z_emit:         ; never reached
-.scend
+
 
 
 ; ## EMPTY_BUFFERS ( -- ) "Empty all buffers without saving"
@@ -3826,7 +3766,7 @@ z_empty_buffers:
 ; ## ENDCASE (C: case-sys -- ) ( x -- ) "Conditional flow control"
 ; ## "endcase"  auto  ANS core ext
         ; """http://forth-standard.org/standard/core/ENDCASE"""
-.scope
+
 xt_endcase:
                 ; Postpone DROP to remove the item
                 ; being checked.
@@ -3851,7 +3791,7 @@ _done:
                 inx
                 inx
 z_endcase:      rts
-.scend
+
 
 
 ; ## ENDOF (C: case-sys1 of-sys1-- case-sys2) ( -- ) "Conditional flow control"
@@ -3895,7 +3835,7 @@ z_endcase:      rts
         ; word is rarely used so we can try to keep it short at the expense
         ; of speed.
         ; """
-.scope
+
 xt_environment_q:
                 jsr underflow_1
 
@@ -3923,10 +3863,10 @@ _table_loop:
                 dex                     ; ( addr u addr u ? )
 
                 ; Get address of string to check from table
-                lda _env_table_single,y
+                lda env_table_single,y
                 sta 0,x
                 iny
-                lda _env_table_single,y
+                lda env_table_single,y
                 sta 1,x                 ; ( addr u addr u addr-t )
                 iny
 
@@ -3968,10 +3908,10 @@ _got_result:
                 bne _double_result
 
                 ; Single-cell result
-                lda _env_results_single,y
+                lda env_results_single,y
                 sta 2,x
                 iny
-                lda _env_results_single,y
+                lda env_results_single,y
                 sta 3,x                 ; ( res u )
 
                 bra _set_flag
@@ -3997,17 +3937,17 @@ _double_result:
                 asl
                 tay
 
-                lda _env_results_double,y
+                lda env_results_double,y
                 sta 2,x
                 iny
-                lda _env_results_double,y
+                lda env_results_double,y
                 sta 3,x                 ; ( res u ? )
                 iny
 
-                lda _env_results_double,y
+                lda env_results_double,y
                 sta 4,x
                 iny
-                lda _env_results_double,y
+                lda env_results_double,y
                 sta 5,x                 ; ( res res ? )
 
                 ; fall through to _set_flag
@@ -4031,7 +3971,7 @@ _table_done:
 
                 ; Flag is zero, increase it to one and start over to check
                 ; double-cell values
-                inc
+                ina
                 pha
 
                 txa
@@ -4052,7 +3992,7 @@ _no_match:
 _done:
 z_environment_q:
                 rts
-.scend
+
 
 ; Tables for ENVIRONMENT?. We use two separate ones, one for the single-cell
 ; results and one for the double-celled results. The zero cell at the
@@ -4061,15 +4001,15 @@ z_environment_q:
 ; have to adapt the result code for double printout, where we subtract 22
 ; (two bytes each single-cell string and two bytes for the end-of-table
 ; marker 0000
-_env_table_single:
+env_table_single:
         .word envs_cs, envs_hold, envs_pad, envs_aub, envs_floored
         .word envs_max_char, envs_max_n, envs_max_u, envs_rsc
         .word envs_sc, envs_wl, 0000
 
-_env_table_double:
+env_table_double:
         .word envs_max_d, envs_max_ud, 0000
 
-_env_results_single:
+env_results_single:
         .word $7FFF     ; /COUNTED-STRING
         .word $00FF     ; /HOLD
         .word $0054     ; /PAD (this is 84 decimal)
@@ -4082,7 +4022,7 @@ _env_results_single:
         .word $0020     ; STACK-CELLS (from definitions.asm)
         .word $0009     ; WORDLISTS
 
-_env_results_double:
+env_results_double:
         .word $7FFF, $FFFF      ; MAX-D
         .word $FFFF, $FFFF      ; MAX-UD
 
@@ -4090,7 +4030,7 @@ _env_results_double:
 ; ## EQUAL ( n n -- f ) "See if TOS and NOS are equal"
 ; ## "="  auto  ANS core
         ; """https://forth-standard.org/standard/core/Equal"""
-.scope
+
 xt_equal:
                 jsr underflow_2
 
@@ -4114,7 +4054,7 @@ _done:          sta 2,x
                 inx
 
 z_equal:        rts
-.scend
+
 
 
 ; ## BLANK ( addr u -- ) "Fill memory region with spaces"
@@ -4138,7 +4078,7 @@ xt_blank:
         ; Note that ERASE works with "address" units
         ; (bytes), not cells.
         ; """
-.scope
+
 xt_erase:
                 ; We don't check for underflow here because
                 ; we deal with that in FILL
@@ -4203,7 +4143,7 @@ _check_counter:
                 lda tmp2
                 bne +
                 dec tmp2+1
-*               dec tmp2
++               dec tmp2
 
                 ; Next address
                 inc tmp1
@@ -4222,7 +4162,7 @@ _done:
 z_blank:
 z_erase:
 z_fill:         rts
-.scend
+
 
 
 ; ## EXECUTE ( xt -- ) "Jump to word based on execution token"
@@ -4297,11 +4237,11 @@ z_execute_parsing:
         ; we we might have put on the Return Stack off as well. This should
         ; be natively compiled.
         ; """
-.scope
+
 xt_exit:
                 rts             ; keep before z_exit
 z_exit:                         ; never reached
-.scend
+
 
 
 ; ## FALSE ( -- f ) "Push flag FALSE to Data Stack"
@@ -4327,7 +4267,7 @@ xt_fetch:
                 inc 0,x
                 bne +
                 inc 1,x
-*
++
                 lda (0,x)               ; MSB
                 sta 1,x
                 sty 0,x
@@ -4347,7 +4287,7 @@ z_fetch:        rts
         ; https://www.complang.tuwien.ac.at/forth/gforth/Docs-html/Word-Lists.html
         ; https://www.complang.tuwien.ac.at/forth/gforth/Docs-html/Name-token.html
         ; """
-.scope
+
 xt_find:
                 jsr underflow_1
 
@@ -4398,7 +4338,7 @@ _found_word:
                 inc 0,x
                 bne +
                 inc 1,x                 ; ( xt nt+1 )
-*
++
                 lda (0,x)               ; ( xt char )
                 and #IM
                 bne _immediate          ; bit set, we're immediate
@@ -4414,12 +4354,12 @@ _immediate:
                 stz 1,x
 _done:
 z_find:         rts
-.scend
+
 
 
 ; ## FIND_NAME ( addr u -- nt|0 ) "Get the name token of input word"
 ; ## "find-name"  auto  Gforth
-.scope
+
 xt_find_name:
         ; """www.complang.tuwien.ac.at/forth/gforth/Docs-html/Name-token.html
         ; Given a string, find the Name Token (nt) of a word or return
@@ -4510,7 +4450,7 @@ _compare_first:
                 ; String length is the same and the first character is the
                 ; same. If the length of the string is 1, we're already done
                 lda 0,x
-                dec
+                dea
                 beq _success
 
                 ; No such luck: The strings are the same length and the first
@@ -4606,7 +4546,7 @@ _done:
                 inx
 
 z_find_name:    rts
-.scend
+
 
 
 ; ## FLUSH ( -- ) "Save dirty buffers and empty buffers"
@@ -4635,7 +4575,7 @@ z_flush:
         ; go FM/MOD via SM/REM (http://www.figuk.plus.com/build/arith.htm):
         ;     DUP >R  SM/REM DUP 0< IF SWAP R> + SWAP 1+ ELSE  R> DROP THEN
         ; """
-.scope
+
 xt_fm_slash_mod:
                 jsr underflow_3
 
@@ -4678,7 +4618,7 @@ _multiply:
                 dex
 _done:
 z_fm_slash_mod: rts
-.scend
+
 
 
 ; ## FORTH ( -- ) "Replace first WID in search order with Forth-Wordlist"
@@ -4712,7 +4652,7 @@ load_evaluate:
         ; accept more than 255 characters here, even though it's a pain in
         ; the 8-bit.
         ; """
-.scope
+
 xt_evaluate:
                 jsr underflow_2
 
@@ -4724,18 +4664,18 @@ xt_evaluate:
                 ; words), just leave again
                 lda 0,x
                 ora 1,x
-                bne _got_work
+                bne evaluate_got_work
 
                 inx
                 inx
                 inx
                 inx
 
-                bra _done
+                bra evaluate_done
 
 ; Special entry point for LOAD to bypass the zeroing of BLK.
 load_evaluate_start:
-_got_work:
+evaluate_got_work:
                 ; Save the current value of BLK on the return stack.
                 ldy #blk_offset+1
                 lda (up),y
@@ -4796,9 +4736,9 @@ _nozero:
                 pla
                 sta (up),y
 
-_done:
+evaluate_done:
 z_evaluate:     rts
-.scend
+
 
 
 ; ## FORTH_WORDLIST ( -- u ) "WID for the Forth Wordlist"
@@ -4810,7 +4750,7 @@ z_evaluate:     rts
 ; ## GET_CURRENT ( -- wid ) "Get the id of the compilation wordlist"
 ; ## "get-current" auto ANS search
         ; """https://forth-standard.org/standard/search/GET-CURRENT"""
-.scope
+
 xt_get_current:
                 ; This is a little different than some of the variables
                 ; in the user area as we want the value rather than
@@ -4823,13 +4763,13 @@ xt_get_current:
                 stz 1,x         ; so the MSB is zero.
 
 z_get_current:  rts
-.scend
+
 
 
 ; ## GET_ORDER ( -- wid_n .. wid_1 n) "Get the current search order"
 ; ## "get-order" auto ANS search
         ; """https://forth-standard.org/standard/search/GET-ORDER"""
-.scope
+
 xt_get_order:
                 ; Get #ORDER - the number of wordlists in the search order.
                 ldy #num_order_offset
@@ -4870,13 +4810,13 @@ _done:
                 stz 1,x         ; We only support 8 wordlists.
 
 z_get_order:    rts
-.scend
+
 
 
 ; ## GREATER_THAN ( n n -- f ) "See if NOS is greater than TOS"
 ; ## ">"  auto  ANS core
         ; """https://forth-standard.org/standard/core/more"""
-.scope
+
 xt_greater_than:
                 jsr underflow_2
 
@@ -4898,7 +4838,7 @@ _false:
                 sta 1,x
 
 z_greater_than: rts
-.scend
+
 
 
 ; ## HERE ( -- addr ) "Put Compiler Pointer on Data Stack"
@@ -4937,7 +4877,7 @@ z_hex:          rts
         ; number of elements. Non-number elements are skipped, an zero-length
         ; string produces a zero output.
         ; """
-.scope
+
 xt_hexstore:
                 jsr underflow_3
 
@@ -5001,7 +4941,7 @@ _done:
                 jsr xt_minus            ; ( n )
 
 z_hexstore:     rts
-.scend
+
 
 
 ; ## HOLD ( char -- ) "Insert character at current output"
@@ -5020,7 +4960,7 @@ xt_hold:
                 lda tohold
                 bne +
                 dec tohold+1
-*
++
                 dec tohold
 
                 lda 0,x
@@ -5040,7 +4980,7 @@ z_hold:         rts
         ;
         ; We should make this native compile for speed.
         ; """
-.scope
+
 xt_i:
                 dex
                 dex
@@ -5065,13 +5005,13 @@ xt_i:
                 sty 0,x         ; LSB of de-fudged index
 
 z_i:            rts
-.scend
+
 
 
 ; ## IF (C: -- orig) (flag -- ) "Conditional flow control"
 ; ## "if"  auto  ANS core
         ; """http://forth-standard.org/standard/core/IF"""
-.scope
+
 xt_if:
                 ; Compile a 0BRANCH
                 ldy #>zero_branch_runtime
@@ -5086,14 +5026,14 @@ xt_if:
                 jsr xt_zero
                 jsr xt_comma
 z_if:           rts
-.scend
+
 
 zero_branch_runtime:
         ; """In some Forths, this is called (0BRANCH). Tali Forth originally
         ; included 0BRANCH as a high-level word that inserted this code at
         ; runtime.
         ; """
-.scope
+
                 ; We use the return value on the 65c02 stack to determine
                 ; where we want to return to.
                 pla
@@ -5135,7 +5075,7 @@ _zero:
                 lda tmp1
                 bne +
                 dec tmp1+1
-*
++
                 dec tmp1
 
 _done:
@@ -5151,7 +5091,7 @@ _done:
                 inx
 
                 rts
-.scend
+
 
 
 ; ## IMMEDIATE ( -- ) "Mark most recent word as IMMEDIATE"
@@ -5174,7 +5114,7 @@ z_immediate:    rts
 
 ; ## INPUT ( -- addr ) "Return address of input vector"
 ; ## "input" tested Tali Forth
-.scope
+
 xt_input:
                 dex
                 dex
@@ -5184,7 +5124,7 @@ xt_input:
                 sta 1,x
 
 z_input:        rts
-.scend
+
 
 
 ; ## INPUT_TO_R ( -- ) ( R: -- n n n n ) "Save input state to the Return Stack"
@@ -5207,7 +5147,7 @@ z_input:        rts
         ; for details). The reverse operation is r_to_input. These words must
         ; be flagged as Never Native. Uses tmp1
         ; """
-.scope
+
 xt_input_to_r:
                 ; We arrive here with the return address on the top of the
                 ; 65c02's stack. We need to move it out of the way first
@@ -5233,7 +5173,7 @@ _loop:
                 pha
 
 z_input_to_r: 	rts
-.scend
+
 
 
 ; ## INT_TO_NAME ( xt -- nt ) "Get name token from execution token"
@@ -5242,7 +5182,7 @@ z_input_to_r: 	rts
         ; This is called >NAME in Gforth, but we change it to
         ; INT>NAME to match NAME>INT
         ; """
-.scope
+
 xt_int_to_name:
                 jsr underflow_1
 
@@ -5326,7 +5266,7 @@ _zero:
 _next_wordlist:
                 ; Move on to the next wordlist.
                 lda 0,x
-                inc
+                ina
                 sta 0,x
                 cmp #max_wordlists
                 bne _wordlist_loop
@@ -5353,7 +5293,7 @@ _match:
                 sta 1,x
 
 z_int_to_name:  rts
-.scend
+
 
 
 ; ## INVERT ( n -- n ) "Complement of TOS"
@@ -5376,7 +5316,7 @@ z_invert:       rts
 ; ## IS ( xt "name" -- ) "Set named word to execute xt"
 ; ## "is"  auto  ANS core ext
         ; """http://forth-standard.org/standard/core/IS"""
-.scope
+
 xt_is:
                 ; This is a state aware word with differet behavior
                 ; when used while compiling vs interpreting.
@@ -5401,7 +5341,7 @@ _interpreting:
                 jsr xt_defer_store
 _done:
 z_is:           rts
-.scend
+
 
 
 ; ## J ( -- n ) (R: n -- n ) "Copy second loop counter to stack"
@@ -5416,7 +5356,7 @@ z_is:           rts
         ;
         ; Make this native compiled for speed
         ; """
-.scope
+
 xt_j:
                 dex
                 dex
@@ -5441,7 +5381,7 @@ xt_j:
                 sty 0,x         ; LSB of de-fudged index
 
 z_j:            rts
-.scend
+
 
 
 ; ## KEY ( -- char ) "Get one character from the input"
@@ -5509,7 +5449,7 @@ z_latestxt:     rts
         ; See the Control Flow section in the manual for details of how this works.
         ; This must be native compile and not IMMEDIATE
         ; """
-.scope
+
 xt_leave:
                 ; We dump the limit/start entries off the Return Stack
                 ; (four bytes)
@@ -5520,7 +5460,7 @@ xt_leave:
 
                 rts             ; this must be compiled, so keep before z_leave
 z_leave:                        ; not reached, not compiled
-.scend
+
 
 
 ; ## LEFT_BRACKET ( -- ) "Enter interpretation state"
@@ -5569,7 +5509,7 @@ z_less_number_sign:
 ; ## LESS_THAN ( n m -- f ) "Return true if NOS < TOS"
 ; ## "<"  auto  ANS core
         ; """https://forth-standard.org/standard/core/less"""
-.scope
+
 xt_less_than:
                 jsr underflow_2
 
@@ -5591,13 +5531,13 @@ _false:
                 sta 1,x
 
 z_less_than:    rts
-.scend
+
 
 
 ; ## LIST ( scr# -- ) "List the given screen"
 ; ## "list"  tested  ANS block ext
         ; """https://forth-standard.org/standard/block/LIST"""
-.scope
+
 xt_list:
                 jsr underflow_1
 
@@ -5609,7 +5549,7 @@ xt_list:
                 jsr xt_editor_l
 
 z_list:         rts
-.scend
+
 
 
 ; ## LITERAL ( n -- ) "Store TOS to be push on stack during runtime"
@@ -5635,7 +5575,7 @@ xt_literal:
 z_literal:      rts
 
 literal_runtime:
-.scope
+
                 ; During runtime, we push the value following this word back
                 ; on the Data Stack. The subroutine jump that brought us
                 ; here put the address to return to on the Return Stack -
@@ -5670,7 +5610,7 @@ literal_runtime:
                 phy
 
                 rts
-.scend
+
 
 
 ; ## LOAD ( scr# -- ) "Load the Forth code in a screen/block"
@@ -5682,7 +5622,7 @@ literal_runtime:
         ; with the fact that it might re-load the old block into a
         ; different buffer.
         ; """
-.scope
+
 xt_load:
                 jsr underflow_1
 
@@ -5746,7 +5686,7 @@ xt_load:
 
 _done:
 z_load:         rts
-.scend
+
 
 
 ; ## LOOP ( -- ) "Finish loop construct"
@@ -5778,14 +5718,14 @@ xt_loop:
         ; (LEAVE) as the second double-byte entry on the Return Stack (see
         ; DO and the Control Flow section of the manual for details).
         ; """
-.scope
+
 xt_plus_loop:
                 ; Compile the run-time part. We do this with a short loop
                 ; and not a call to COMPILE, because it has to be natively
                 ; coded anyway.
                 ldy #plus_loop_runtime_end-plus_loop_runtime
                 phy             ; save counter to adjust CP
-*
+-
                 lda plus_loop_runtime,y
                 sta (cp),y
                 dey
@@ -5809,7 +5749,7 @@ xt_plus_loop:
                 ; all over the place
                 lda #$68                ; opcode for PLA
                 ldy #6
-*
+-
                 sta (cp),y
                 dey
                 bpl -
@@ -5866,7 +5806,7 @@ xt_plus_loop:
                 sta (tmp1),y
 z_loop:
 z_plus_loop:    rts
-.scend
+
 
 plus_loop_runtime:
         ; """Runtime compile for loop control. This is used for both +LOOP and
@@ -5877,7 +5817,7 @@ plus_loop_runtime:
         ; must always be native compiled. In some Forths, this is a separate
         ; word called (+LOOP) or (LOOP)
         ; """
-.scope
+
                 clc
                 pla             ; LSB of index
                 adc 0,x         ; LSB of step
@@ -5903,14 +5843,14 @@ _hack:          ; This is why this routine must be natively compiled: We
                 ; go to, which is added by the next next instruction of
                 ; LOOP/+LOOP during compile time
                 .byte $4C
-.scend
+
 plus_loop_runtime_end:
 
 
 ; ## LSHIFT ( x u -- u ) "Shift TOS left"
 ; ## "lshift"  auto  ANS core
         ; """https://forth-standard.org/standard/core/LSHIFT"""
-.scope
+
 xt_lshift:
                 jsr underflow_2
 
@@ -5932,7 +5872,7 @@ _done:
                 inx
 
 z_lshift:       rts
-.scend
+
 
 
 ; ## M_STAR ( n n -- d ) "16 * 16 --> 32"
@@ -5944,7 +5884,7 @@ z_lshift:       rts
         ; The original Forth is : M* OVER OVER XOR >R ABS SWAP ABS UM* R> D+- ;
         ; with  : D+- O< IF DNEGATE THEN ;
         ; """
-.scope
+
 xt_m_star:
                 jsr underflow_2
 
@@ -5972,7 +5912,7 @@ xt_m_star:
                 jsr xt_dnegate
 _done:
 z_m_star:       rts
-.scend
+
 
 
 ; ## MARKER ( "name" -- ) "Create a deletion boundry"
@@ -6002,7 +5942,7 @@ z_m_star:       rts
         ;
         ; This code uses tmp1 and tmp2
         ; """
-.scope
+
 xt_marker:
                 ; Before we do anything, we need to save CP, which
                 ; after all is the whole point of this operation. CREATE
@@ -6061,9 +6001,9 @@ _marker_loop:
                 bne _marker_loop
 
 z_marker:       rts
-.scend
 
-.scope
+
+
 marker_runtime:
         ; """Restore Dictionary and memory (DP and CP) to where the were
         ; when this marker was defined. We arrive here with the return
@@ -6080,7 +6020,7 @@ marker_runtime:
                 inc tmp1
                 bne +
                 inc tmp1+1
-*
++
                 ldy #0
 
                 ; CP was stored first
@@ -6116,7 +6056,7 @@ _marker_restore_loop:
 
                 ; The return instruction takes us back to the original caller
                 rts
-.scend
+
 
 
 ; ## MAX ( n n -- n ) "Keep larger of two numbers"
@@ -6128,7 +6068,7 @@ _marker_restore_loop:
         ; http://6502.org/tutorials/compare_instructions.html and
         ; http://www.righto.com/2012/12/the-6502-overflow-flag-explained.html
         ; """
-.scope
+
 xt_max:
                 jsr underflow_2
 
@@ -6158,7 +6098,7 @@ _keep_nos:
                 inx
 
 z_max:          rts
-.scend
+
 
 
 ; ## MIN ( n n -- n ) "Keep smaller of two numbers"
@@ -6168,7 +6108,7 @@ z_max:          rts
         ; Subroutines." Negative Flag indicateds which number is larger. See
         ; http://www.righto.com/2012/12/the-6502-overflow-flag-explained.html
         ; """
-.scope
+
 xt_min:
                 jsr underflow_2
 
@@ -6198,7 +6138,7 @@ _keep_nos:
                 inx
 
 z_min:          rts
-.scend
+
 
 
 ; ## MINUS ( n n -- n ) "Subtract TOS from NOS"
@@ -6226,7 +6166,7 @@ z_minus:        rts
 ; ## "-leading"  auto  Tali String
         ; """Remove leading whitespace. This is the reverse of -TRAILING
         ; """
-.scope
+
 xt_minus_leading:
                 jsr underflow_2
 
@@ -6249,7 +6189,7 @@ _loop:
 _done:
 z_minus_leading:
                 rts
-.scend
+
 
 
 ; ## MINUS_TRAILING ( addr u1 -- addr u2 ) "Remove trailing spaces"
@@ -6257,7 +6197,7 @@ z_minus_leading:
         ; """https://forth-standard.org/standard/string/MinusTRAILING
         ; Remove trailing spaces
         ; """
-.scope
+
 xt_minus_trailing:
                 jsr underflow_2
 
@@ -6283,7 +6223,7 @@ xt_minus_trailing:
                 lda tmp1
                 bne +
                 dec tmp1+1
-*
++
                 dec tmp1
 
 _loop:
@@ -6297,14 +6237,14 @@ _loop:
                 lda tmp1
                 bne +
                 dec tmp1+1
-*
++
                 dec tmp1
 
                 ; Decrement count by one.
                 lda 0,x
                 bne +
                 dec 1,x
-*
++
                 dec 0,x
 
                 ; Check if there are any characters left.
@@ -6317,7 +6257,7 @@ _loop:
 _done:
 z_minus_trailing:
                 rts
-.scend
+
 
 
 ; ## MOD ( n1 n2 -- n ) "Divide NOS by TOS and return the remainder"
@@ -6348,7 +6288,7 @@ z_mod:
         ;
         ; This word must not be natively compiled.
         ; """
-.scope
+
 xt_move:
                 ; We let CMOVE and CMOVE> check if there is underflow or
                 ; we've been told to copy zero bytes
@@ -6380,7 +6320,7 @@ _equal:
                 tax
 
 z_move:         rts
-.scend
+
 
 
 ; ## NAME_TO_INT ( nt -- xt ) "Convert Name Token to Execute Token"
@@ -6388,7 +6328,7 @@ z_move:         rts
         ; """See
         ; https://www.complang.tuwien.ac.at/forth/gforth/Docs-html/Name-token.html
         ; """
-.scope
+
 xt_name_to_int:
                 jsr underflow_1
 
@@ -6400,7 +6340,7 @@ xt_name_to_int:
 
                 lda 1,x
                 bcc _done
-                inc
+                ina
 _done:
                 sta tmp3+1
 
@@ -6412,13 +6352,13 @@ _done:
                 sta 1,x
 
 z_name_to_int:  rts
-.scend
+
 
 
 ; ## NAME_TO_STRING ( nt -- addr u ) "Given a name token, return string of word"
 ; ## "name>string"  tested  Gforth
         ; """http://www.complang.tuwien.ac.at/forth/gforth/Docs-html/Name-token.html"""
-.scope
+
 xt_name_to_string:
                 jsr underflow_1
 
@@ -6443,11 +6383,11 @@ xt_name_to_string:
 
 z_name_to_string:
                 rts
-.scend
+
 
 ; ## NC_LIMIT ( -- addr ) "Return address where NC-LIMIT value is kept"
 ; ## "nc-limit"  tested  Tali Forth
-.scope
+
 xt_nc_limit:
                 dex
                 dex
@@ -6457,7 +6397,7 @@ xt_nc_limit:
                 sta 1,x
 
 z_nc_limit:     rts
-.scend
+
 
 
 ; ## NEGATE ( n -- n ) "Two's complement"
@@ -6515,7 +6455,7 @@ z_nip:          rts
         ; This is just a variant of EQUAL, we code it separately
         ; for speed.
         ; """
-.scope
+
 xt_not_equals:
                 jsr underflow_2
 
@@ -6544,13 +6484,13 @@ _done:
                 sta 1,x
 
 z_not_equals:   rts
-.scend
+
 
 
 ; ## NOT_ROTE ( a b c -- c a b ) "Rotate upwards"
 ; ## "-rot"  auto  Gforth
         ; """http://www.complang.tuwien.ac.at/forth/gforth/Docs-html/Data-stack.html"""
-.scope
+
 xt_not_rote:
                 jsr underflow_3
 
@@ -6571,7 +6511,7 @@ xt_not_rote:
                 sty 4,x
 
 z_not_rote:     rts
-.scend
+
 
 
 ; ## NUMBER ( addr u -- u | d ) "Convert a number string"
@@ -6591,7 +6531,7 @@ z_not_rote:     rts
         ; which uses tmp1, tmp2, and tmp3, so we can't use them here, which is
         ; a pain.
         ;"""
-.scope
+
 xt_number:
                 jsr underflow_2
 
@@ -6611,7 +6551,7 @@ xt_number:
                 inc 2,x         ; start one character later
                 bne +
                 inc 3,x
-*
++
                 dec 0,x         ; decrease string length by one
 
 _check_dot:
@@ -6630,11 +6570,11 @@ _check_dot:
                 lda tmptos
                 bne +
                 dec tmptos+1
-*
++
                 dec tmptos
 
                 lda (tmptos)
-                cmp #'.
+                cmp #'.'
                 bne _main
 
                 ; We have a dot, which means this is a double number. Flag
@@ -6725,7 +6665,7 @@ _single:
                 jsr xt_negate
 _done:
 z_number:       rts
-.scend
+
 
 
 ; ## NUMBER_SIGN ( ud -- ud ) "Add character to pictured output string"
@@ -6827,7 +6767,7 @@ z_number_sign_greater:
         ; https://github.com/philburk/pforth/blob/master/fth/system.fth
         ; Original Forth code  BEGIN # 2DUP OR 0= UNTIL
         ; """
-.scope
+
 xt_number_sign_s:
                 jsr underflow_2
 _loop:
@@ -6843,13 +6783,13 @@ _loop:
 
 z_number_sign_s:
                 rts
-.scend
+
 
 
 ; ## OF (C: -- of-sys) (x1 x2 -- |x1) "Conditional flow control"
 ; ## "of"  auto  ANS core ext
         ; """http://forth-standard.org/standard/core/OF"""
-.scope
+
 xt_of:
                 ; Check if value is equal to this case.
                 ; Postpone over (eg. compile a jsr to it)
@@ -6871,7 +6811,7 @@ xt_of:
                 jsr cmpl_subroutine
 
 z_of:           rts
-.scend
+
 
 
 ; ## ONE ( -- n ) "Push the number 1 to the Data Stack"
@@ -6893,18 +6833,18 @@ z_one:
 ; ## ONE_MINUS ( u -- u-1 ) "Decrease TOS by one"
 ; ## "1-"  auto  ANS core
         ; """https://forth-standard.org/standard/core/OneMinus"""
-.scope
+
 xt_one_minus:
                 jsr underflow_1
 
                 lda 0,x
                 bne +
                 dec 1,x
-*
++
                 dec 0,x
 
 z_one_minus:    rts
-.scend
+
 
 
 ; ## ONE_PLUS ( u -- u+1 ) "Increase TOS by one"
@@ -6913,7 +6853,7 @@ z_one_minus:    rts
         ;
         ; Code is shared with CHAR-PLUS
         ; """
-.scope
+
 xt_char_plus:
 xt_one_plus:
                 jsr underflow_1
@@ -6925,13 +6865,13 @@ xt_one_plus:
 _done:
 z_char_plus:
 z_one_plus:     rts
-.scend
+
 
 
 ; ## ONLY ( -- ) "Set earch order to minimum wordlist"
 ; ## "only"  auto  ANS search ext
         ; """https://forth-standard.org/standard/search/ONLY"""
-.scope
+
 xt_only:
                 ; Put -1 on data stack.
                 dex
@@ -6944,7 +6884,7 @@ xt_only:
                 jsr xt_set_order
 
 z_only:         rts
-.scend
+
 
 
 ; ## OR ( m n -- n ) "Logically OR TOS and NOS"
@@ -6992,7 +6932,7 @@ z_or:           rts
         ; is not as important as size. We assume we do not have more than 255
         ; wordlists.
         ; """
-.scope
+
 xt_order:
                 jsr xt_cr
                 jsr xt_get_order        ; ( wid_n ... wid_1 n )
@@ -7013,7 +6953,7 @@ _loop:
                 lda 0,x
 
                 phy
-                jsr _print_wid_string   ; internal helper function
+                jsr order_print_wid_string   ; internal helper function
                 ply
 
                 dey
@@ -7026,7 +6966,7 @@ _loop:
                 jsr xt_get_current      ; ( wid )
 
                 lda 0,x
-                jsr _print_wid_string
+                jsr order_print_wid_string
                 jsr xt_cr
 
 _drop_done:
@@ -7035,7 +6975,7 @@ _drop_done:
 z_order:
                 rts
 
-_print_wid_string:
+order_print_wid_string:
         ; """Helper function for ORDER: Given a WID in A, print the
         ; corresponding string. If there is no such word list defined, just
         ; print the number. Assumes we will not have more than 256 WIDs; also
@@ -7075,7 +7015,7 @@ _wid_data:
         .byte str_wid_editor           ; WID 1: "Editor"
         .byte str_wid_assembler        ; WID 2: "Assembler"
         .byte str_wid_root             ; WID 3: "Root"
-.scend
+
 
 
 ; ## OUTPUT ( -- addr ) "Return the address of the EMIT vector address"
@@ -7149,9 +7089,9 @@ xt_page:
                 jsr emit_a
                 lda #$5B        ; ASCII for "["
                 jsr emit_a
-                lda #'2
+                lda #'2'
                 jsr emit_a
-                lda #'J
+                lda #'J'
                 jsr emit_a
 
                 ; move cursor to top left of screen
@@ -7165,7 +7105,7 @@ z_page:         rts
 ; ## PAREN ( -- ) "Discard input up to close paren ( comment )"
 ; ## "("  auto  ANS core
         ; """http://forth-standard.org/standard/core/p"""
-.scope
+
 xt_paren:
                 ; Put a right paren on the stack.
                 dex
@@ -7184,7 +7124,7 @@ xt_paren:
                 inx
 
 z_paren:        rts
-.scend
+
 
 
 ; ## PARSE_NAME ( "name" -- addr u ) "Parse the input"
@@ -7202,7 +7142,7 @@ z_paren:        rts
         ; http://forth-standard.org/standard/usage#subsubsection.3.4.1.1).
         ; Otherwise, PARSE-NAME chokes on tabs.
         ; """
-.scope
+
 xt_parse_name:
                 ; To enable the compilation of the high-level Forth words
                 ; in forth-words.asm and user-words.asm at boot time,
@@ -7245,12 +7185,12 @@ _skip_loop:
                 inc tmp2
                 bne +
                 inc tmp2+1
-*
++
                 ; Adjust counter
                 lda tmp1
                 bne +
                 dec tmp1+1
-*               dec tmp1
++               dec tmp1
 
                 lda tmp1
                 ora tmp1+1
@@ -7291,7 +7231,7 @@ _char_found:
                 lda #AscSP
                 sta 0,x
                 stz 1,x                 ; paranoid, now ( "name" c )
-.scend
+
 
 ; ## PARSE ( "name" c -- addr u ) "Parse input with delimiter character"
 ; ## "parse"  tested  ANS core ext
@@ -7317,7 +7257,7 @@ _char_found:
         ; PARSE-NAME, we must be able to handle strings with a length of
         ; 16-bit for EVALUTE, which is a pain on an 8-bit machine.
         ; """
-.scope
+
 xt_parse:
                 jsr underflow_1
 
@@ -7468,7 +7408,7 @@ _eol:
 _done:
 z_parse_name:
 z_parse:        rts
-.scend
+
 
 
 ; ## PICK ( n n u -- n n n ) "Move element u of the stack to TOS"
@@ -7479,7 +7419,7 @@ z_parse:        rts
         ; OVER. Note that using PICK is considered poor coding form. Also note
         ; that FIG Forth has a different behavior for PICK than ANS Forth.
         ; """
-.scope
+
 xt_pick:
                 ; Checking for underflow is difficult because it depends on
                 ; which element we want to grab. We could probably figure
@@ -7497,7 +7437,7 @@ xt_pick:
                 sta 1,x
 
 z_pick:         rts
-.scend
+
 
 
 ; ## PLUS ( n n -- n ) "Add TOS and NOS"
@@ -7564,7 +7504,7 @@ z_plus_store:   rts
         ; on the Data Stack). This means we cannot build words with
         ; "jsr xt_postpone, jsr <word>" directly.
         ; """
-.scope
+
 xt_postpone:
                 jsr xt_parse_name               ; ( -- addr n )
 
@@ -7575,7 +7515,7 @@ xt_postpone:
 
                 lda #err_noname
                 jmp error
-*
++
                 jsr xt_find_name                ; ( -- nt | 0 )
 
                 ; if word not in Dictionary, complain and quit
@@ -7583,7 +7523,7 @@ xt_postpone:
                 lda #err_noname
                 jmp error
 
-*
++
                 ; keep a copy of nt for later
                 lda 0,x
                 sta tmp1
@@ -7599,7 +7539,7 @@ xt_postpone:
                 inc tmp1
                 bne +
                 inc tmp1+1
-*
++
                 lda (tmp1)
                 and #IM         ; mask all but Intermediate flag
                 beq _not_immediate
@@ -7623,13 +7563,13 @@ _not_immediate:
                 jsr cmpl_subroutine
 _done:
 z_postpone:     rts
-.scend
+
 
 
 ; ## PREVIOUS ( -- ) "Remove the first wordlist in the search order"
 ; ## "previous"  auto  ANS search ext
         ; """http://forth-standard.org/standard/search/PREVIOUS"""
-.scope
+
 xt_previous:
                 jsr xt_get_order
                 jsr xt_nip
@@ -7637,7 +7577,7 @@ xt_previous:
                 jsr xt_set_order
 
 z_previous:     rts
-.scend
+
 
 
 ; ## QUESTION ( addr -- ) "Print content of a variable"
@@ -7658,7 +7598,7 @@ z_question:     rts
 ; ## QUESTION_DUP ( n -- 0 | n n ) "Duplicate TOS non-zero"
 ; ## "?dup"  auto  ANS core
         ; """https://forth-standard.org/standard/core/qDUP"""
-.scope
+
 xt_question_dup:
                 jsr underflow_1
 
@@ -7676,7 +7616,7 @@ xt_question_dup:
                 sta 1,x
 _done:
 z_question_dup: rts
-.scend
+
 
 
 ; ## R_FETCH ( -- n ) "Get copy of top of Return Stack"
@@ -7769,7 +7709,7 @@ z_r_from:       rts
         ;
         ; See INPUT_TO_R for a discussion of this word. Uses tmp1
         ; """
-.scope
+
 xt_r_to_input:
 
                 ; We arrive here with the return address on the top of the
@@ -7798,7 +7738,7 @@ _loop:
                 pha
 
 z_r_to_input: 	rts
-.scend
+
 
 
 ; ## RECURSE ( -- ) "Copy recursive call to word being defined"
@@ -7807,7 +7747,7 @@ z_r_to_input: 	rts
         ;
         ; This word may not be natively compiled
         ; """
-.scope
+
 xt_recurse:
                 ; The whole routine amounts to compiling a reference to
                 ; the word that is being compiled. First, we save the JSR
@@ -7867,7 +7807,7 @@ _update_cp:
                 inc cp+1
 _done:
 z_recurse:      rts
-.scend
+
 
 
 ; ## REFILL ( -- f ) "Refill the input buffer"
@@ -7886,7 +7826,7 @@ z_recurse:      rts
         ; because REFILL is never used on blocks - Tali is able to evaluate the
         ; entire block as a 1024 byte string.
         ; """"
-.scope
+
 xt_refill:
                 ; Get input source from SOURCE-ID. This is an
                 ; optimized version of a subroutine jump to SOURCE-ID
@@ -7936,7 +7876,7 @@ _src_not_kbd:
                 ; If SOURCE-ID doesn't return a zero, it must be a string in
                 ; memory or a file (remember, no blocks in this version).
                 ; If source is a string, we were given the flag -1 ($FFFF)
-                inc
+                ina
                 bne _src_not_string
 
                 ; Simply return FALSE flag as per specification
@@ -7955,13 +7895,13 @@ _src_not_string:
                 jmp error
 _done:
 z_refill:       rts
-.scend
+
 
 
 ; ## REPEAT (C: orig dest -- ) ( -- ) "Loop flow control"
 ; ## "repeat"  auto  ANS core
         ; """http://forth-standard.org/standard/core/REPEAT"""
-.scope
+
 xt_repeat:
                 ; Run again first
                 jsr xt_again
@@ -7973,7 +7913,7 @@ xt_repeat:
                 jsr xt_store
 
 z_repeat:       rts
-.scend
+
 
 
 ; ## RIGHT_BRACKET ( -- ) "Enter the compile state"
@@ -8008,7 +7948,7 @@ z_root_wordlist:
         ; Remember "R for 'Revolution'" - the bottom entry comes out
         ; on top!
         ; """
-.scope
+
 xt_rot:
                 jsr underflow_3
 
@@ -8027,7 +7967,7 @@ xt_rot:
                 sty 0,x
 
 z_rot:          rts
-.scend
+
 
 
 ; ## RSHIFT ( x u -- x ) "Shift TOS to the right"
@@ -8063,7 +8003,7 @@ z_rshift:       rts
         ; are evil. We follow general usage. This is just like S" except
         ; that it allows for some special escaped characters.
         ; """
-.scope
+
 xt_s_backslash_quote:
                 ; tmp2 will be used to determine if we are handling
                 ; escaped characters or not. In this case, we are,
@@ -8080,35 +8020,35 @@ xt_s_backslash_quote:
 _done:
 z_s_backslash_quote:
                 rts
-.scend
+
 
 ; This is a helper function for s_backslash_quote to convert a character
 ; from ASCII to the corresponding hex value, eg 'F'->15
 convert_hex_value:
-.scope
-        cmp #'A
+
+        cmp #'A'
         bcc _digit
 
         ; It's A-F
         and #$DF                ; Make it uppercase.
         sec
-        sbc #'7                 ; gives value 10 for 'A'
+        sbc #'7'                 ; gives value 10 for 'A'
         bra _done
 
 _digit:
         ; It's 0-9
         sec
-        sbc #'0
+        sbc #'0'
 
 _done:
         rts
-.scend
+
 
 
 ; ## SEARCH_WORDLIST ( caddr u wid -- 0 | xt 1 | xt -1) "Search for a word in a wordlist"
 ; ## "search-wordlist" auto ANS search
         ; """https://forth-standard.org/standard/search/SEARCH_WORDLIST"""
-.scope
+
 xt_search_wordlist:
                 jsr underflow_3
 
@@ -8133,7 +8073,7 @@ xt_search_wordlist:
 
                 ; tmp2 now holds the address of the dictionary pointer
                 ; for the given wordlist.
-*
++
                 ; Remove the wid from the stack.
                 inx
                 inx
@@ -8160,7 +8100,7 @@ _have_string:
                 inc tmp2                ; Move to the upper byte
                 bne +
                 inc tmp2+1
-*
++
                 lda (tmp2)
                 sta tmp1+1
 
@@ -8202,7 +8142,7 @@ _compare_first:
                 ; string length are the same and the first character is the
                 ; same. If the length of the string is 1, we're already done
                 lda 0,x
-                dec
+                dea
                 beq _success
 
                 ; No such luck: The strings are the same length and the first
@@ -8273,7 +8213,7 @@ _success:
                 inc 0,x
                 bne +
                 inc 1,x                 ; ( xt nt+1 )
-*
++
                 lda (0,x)               ; ( xt char )
                 and #IM
                 bne _immediate          ; bit set, we're immediate
@@ -8322,7 +8262,7 @@ _done:
 _done_nodrop:
 z_search_wordlist:
                 rts
-.scend
+
 
 
 ; ## SEE ( "name" -- ) "Print information about a Forth word"
@@ -8332,7 +8272,7 @@ z_search_wordlist:
         ; execution token (xt), size in bytes, flags used, and then dumps the
         ; code and disassembles it.
         ; """
-.scope
+
 xt_see:
                 jsr xt_parse_name       ; ( addr u )
                 jsr xt_find_name        ; ( nt | 0 )
@@ -8345,7 +8285,7 @@ xt_see:
 
                 lda #err_noname
                 jmp error
-*
++
                 jsr xt_cr
 
                 ; We have a legal word, so let's get serious. Save the current
@@ -8425,13 +8365,13 @@ _flag_loop:
                 sta base
 
 z_see:          rts
-.scend
+
 
 
 ; ## SET_CURRENT ( wid -- ) "Set the compilation wordlist"
 ; ## "set-current" auto ANS search
         ; """https://forth-standard.org/standard/search/SET-CURRENT"""
-.scope
+
 xt_set_current:
                 jsr underflow_1
 
@@ -8444,13 +8384,13 @@ xt_set_current:
                 inx
 
 z_set_current:  rts
-.scend
+
 
 
 ; ## SET_ORDER ( wid_n .. wid_1 n -- ) "Set the current search order"
 ; ## "set-order" auto ANS search
         ; """https://forth-standard.org/standard/search/SET-ORDER"""
-.scope
+
 xt_set_order:
                 ; Test for -1 TOS
                 lda #$FF
@@ -8505,7 +8445,7 @@ _loop:
 
 _done:
 z_set_order:    rts
-.scend
+
 
 
 
@@ -8521,7 +8461,7 @@ z_set_order:    rts
         ;     : S" [CHAR] " PARSE POSTPONE SLITERAL ; IMMEDIATE
         ; but it is used so much we want it in code.
         ; """
-.scope
+
 xt_s_quote:
                 ; tmp2 will be used to determine if we are handling
                 ; escaped characters or not.  In this case, we are
@@ -8677,7 +8617,7 @@ _check_esc_chars:
 
                 ; Process the escaped character
 _check_esc_a:
-                cmp #'a
+                cmp #'a'
                 bne _check_esc_b
 
                 ; BEL (ASCII value 7)
@@ -8685,7 +8625,7 @@ _check_esc_a:
                 jmp _save_character
 
 _check_esc_b:
-                cmp #'b
+                cmp #'b'
                 bne _check_esc_e
 
                 ; Backspace (ASCII value 8)
@@ -8693,7 +8633,7 @@ _check_esc_b:
                 jmp _save_character
 
 _check_esc_e:
-                cmp #'e
+                cmp #'e'
                 bne _check_esc_f
 
                 ; ESC (ASCII value 27)
@@ -8701,7 +8641,7 @@ _check_esc_e:
                 bra _save_character
 
 _check_esc_f:
-                cmp #'f
+                cmp #'f'
                 bne _check_esc_l
 
                 ; FF (ASCII value 12)
@@ -8709,7 +8649,7 @@ _check_esc_f:
                 bra _save_character
 
 _check_esc_l:
-                cmp #'l
+                cmp #'l'
                 bne _check_esc_m
 
                 ; LF (ASCII value 10)
@@ -8719,7 +8659,7 @@ _check_esc_l:
 _check_esc_m:
                 ; This one is not like the others because we save two
                 ; characters
-                cmp #'m
+                cmp #'m'
                 bne _check_esc_n
 
                 ; CR/LF pair (ASCII values 13, 10)
@@ -8729,7 +8669,7 @@ _check_esc_m:
                 bra _save_character
 
 _check_esc_n:
-                cmp #'n
+                cmp #'n'
                 bne _check_esc_q
 
                 ; newline, impl. dependant, using LF (ASCII values 10)
@@ -8737,7 +8677,7 @@ _check_esc_n:
                 bra _save_character
 
 _check_esc_q:
-                cmp #'q
+                cmp #'q'
                 bne _check_esc_r
 
                 ; Double quote (ASCII value 34)
@@ -8745,7 +8685,7 @@ _check_esc_q:
                 bra _save_character
 
 _check_esc_r:
-                cmp #'r
+                cmp #'r'
                 bne _check_esc_t
 
                 ; CR (ASCII value 13)
@@ -8753,7 +8693,7 @@ _check_esc_r:
                 bra _save_character
 
 _check_esc_t:
-                cmp #'t
+                cmp #'t'
                 bne _check_esc_v
 
                 ; Horizontal TAB (ASCII value 9)
@@ -8761,7 +8701,7 @@ _check_esc_t:
                 bra _save_character
 
 _check_esc_v:
-                cmp #'v
+                cmp #'v'
                 bne _check_esc_z
 
                 ; Vertical TAB (ASCII value 11)
@@ -8769,7 +8709,7 @@ _check_esc_v:
                 bra _save_character
 
 _check_esc_z:
-                cmp #'z
+                cmp #'z'
                 bne _check_esc_quote
 
                 ; NULL (ASCII value 0)
@@ -8785,7 +8725,7 @@ _check_esc_quote:
                 bra _save_character
 
 _check_esc_x:
-                cmp #'x
+                cmp #'x'
                 bne _check_esc_backslash
 
                 ; This one is difficult. We need to get the next TWO
@@ -8843,7 +8783,7 @@ _found_string_end:
                 inc toin
                 bne +
                 inc toin+1
-*
++
                 ; Calculate the length of the string, which is the
                 ; difference between cp and the address of the start
                 ; of the string (currently saved on the stack).
@@ -8891,13 +8831,13 @@ _found_string_end:
 
 _done:
 z_s_quote:      rts
-.scend
+
 
 
 ; ## S_TO_D ( u -- d ) "Convert single cell number to double cell"
 ; ## "s>d"  auto  ANS core
         ; """https://forth-standard.org/standard/core/StoD"""
-.scope
+
 xt_s_to_d:
                 jsr underflow_1
 
@@ -8914,13 +8854,13 @@ xt_s_to_d:
                 dec 1,x
 _done:
 z_s_to_d:       rts
-.scend
+
 
 
 ; ## SAVE_BUFFERS ( -- ) "Save all dirty buffers to storage"
 ; ## "save-buffers"  tested  ANS block
         ; """https://forth-standard.org/standard/block/SAVE-BUFFERS"""
-.scope
+
 xt_save_buffers:
                 ; Check the buffer status
                 ldy #buffstatus_offset
@@ -8941,7 +8881,7 @@ xt_save_buffers:
 
 _done:
 z_save_buffers: rts
-.scend
+
 
 
 ; ## SCR ( -- addr ) "Push address of variable holding last screen listed"
@@ -8972,7 +8912,7 @@ z_scr:          rts
         ; of the original string1. If a match is not found, the flag will be
         ; false and addr3 and u3 will be the original string1's addr1 and u1.
         ; """
-.scope
+
 xt_search:
                 jsr underflow_4
 
@@ -9072,16 +9012,16 @@ _letters_match:
                 inc tmp1
                 bne +
                 inc tmp1+1
-*
++
                 inc tmp2
                 bne +
                 inc tmp2+1
-*
++
                 ; Decrement the count of remaining letters to check.
                 lda tmp3
                 bne +
                 dec tmp3+1
-*
++
                 dec tmp3
 
                 ; Check if we've reached zero.
@@ -9119,7 +9059,7 @@ _letters_match:
                 sta 1,x
 
 z_search:       rts
-.scend
+
 
 
 ; ## SEMICOLON ( -- ) "End compilation of new word"
@@ -9134,7 +9074,7 @@ z_search:       rts
         ; : POSTPONE EXIT  REVEAL POSTPONE ; [ ; IMMEDIATE  Following the
         ; practice of Gforth, we warn here if a word has been redefined.
         ; """
-.scope
+
 xt_semicolon:
                 ; Check if this is a : word or a :NONAME word.
                 bit status
@@ -9234,7 +9174,7 @@ _semicolon_done:
                 stz state+1
 
 z_semicolon:    rts
-.scend
+
 
 
 ; ## SIGN ( n -- ) "Add minus to pictured output"
@@ -9245,7 +9185,7 @@ z_semicolon:    rts
         ; http://pforth.googlecode.com/svn/trunk/fth/numberio.fth
         ; Original Forth code is   0< IF ASCII - HOLD THEN
         ; """
-.scope
+
 xt_sign:
                 jsr underflow_1
 
@@ -9263,7 +9203,7 @@ _minus:
                 jsr xt_hold
 _done:
 z_sign:         rts
-.scend
+
 
 
 ; ## SLASH ( n1 n2 -- n ) "Divide NOS by TOS"
@@ -9275,7 +9215,7 @@ z_sign:         rts
         ; This code is currently unoptimized. This code without the SLASH
         ; DROP at the end is /MOD, so we share the code as far as possible.
         ; """
-.scope
+
 xt_slash:
                 ; With all the multiplication going on, it would be hard to
                 ; make sure that one of our temporary variables is not
@@ -9283,14 +9223,14 @@ xt_slash:
                 ; hit of pushing the flag to the 65c02's stack
                 lda #0
                 pha
-                bra _common
+                bra slashmod_common
 
 xt_slash_mod:
                 ; Note that /MOD accesses this code
                 lda #$FF
                 pha             ; falls through to _common
 
-_common:
+slashmod_common:
                 jsr xt_to_r             ; >R
                 jsr xt_s_to_d           ; S>D
                 jsr xt_r_from           ; R>
@@ -9308,7 +9248,7 @@ _common:
 _done:
 z_slash_mod:
 z_slash:        rts
-.scend
+
 
 
 ; ## SLASH_MOD ( n1 n2 -- n3 n4 ) "Divide NOS by TOS with a remainder"
@@ -9328,7 +9268,7 @@ z_slash:        rts
         ; Put differently, we need to add TOS and 3OS, and subtract
         ; TOS from NOS, and then drop TOS
         ; """
-.scope
+
 xt_slash_string:
                 jsr underflow_3
 
@@ -9354,7 +9294,7 @@ xt_slash_string:
                 inx
 
 z_slash_string: rts
-.scend
+
 
 
 ; ## SLITERAL ( addr u -- )( -- addr u ) "Compile a string for runtime"
@@ -9362,7 +9302,7 @@ z_slash_string: rts
         ; """https://forth-standard.org/standard/string/SLITERAL
         ; Add the runtime for an existing string.
         ; """
-.scope
+
 xt_sliteral:
                 jsr underflow_2
 
@@ -9478,10 +9418,10 @@ sliteral_const_str:
                 inx
 
 z_sliteral:     rts
-.scend
+
 
 sliteral_runtime:
-.scope
+
         ; """Run time behaviour of SLITERAL: Push ( addr u ) of string to
         ; the Data Stack. We arrive here with the return address as the
         ; top of Return Stack, which points to the address of the string
@@ -9526,7 +9466,7 @@ sliteral_runtime:
                 phy
 
                 rts
-.scend
+
 
 
 ; ## SM_SLASH_REM ( d n1 -- n2 n3 ) "Symmetic signed division"
@@ -9539,7 +9479,7 @@ sliteral_runtime:
         ; OVER >R 2DUP XOR 0< >R ABS >R DABS R> UM/MOD R> ?NEGATE SWAP
         ; R> ?NEGATE SWAP
         ; """
-.scope
+
 xt_sm_slash_rem:
                 jsr underflow_3 ; contains double number
 
@@ -9570,7 +9510,7 @@ xt_sm_slash_rem:
                 pla
                 bpl +
                 jsr xt_negate
-*
++
                 ; if d was negative, negate the remainder (n2)
                 pla
                 bpl _done
@@ -9583,7 +9523,7 @@ xt_sm_slash_rem:
 
 _done:
 z_sm_slash_rem: rts
-.scend
+
 
 
 ; ## SOURCE ( -- addr u ) "Return location and size of input buffer""
@@ -9641,7 +9581,7 @@ z_space:        rts
 ; ## SPACES ( u -- ) "Print a number of spaces"
 ; ## "spaces"  auto  ANS core
         ; """https://forth-standard.org/standard/core/SPACES"""
-.scope
+
 xt_spaces:
                 jsr underflow_1
 
@@ -9697,7 +9637,7 @@ _done:
                 inx
 
 z_spaces:       rts
-.scend
+
 
 
 ; ## STAR ( n n -- n ) "16*16 --> 16 "
@@ -9707,7 +9647,7 @@ z_spaces:       rts
         ;
         ; This is nothing  more than UM* DROP
         ; """
-.scope
+
 xt_star:
                 jsr underflow_2
 
@@ -9716,7 +9656,7 @@ xt_star:
                 inx
 
 z_star:         rts
-.scend
+
 
 
 ; ## STAR_SLASH  ( n1 n2 n3 -- n4 ) "n1 * n2 / n3 -->  n"
@@ -9792,7 +9732,7 @@ xt_store:
                 inc 0,x
                 bne +
                 inc 1,x
-*
++
                 lda 3,x         ; MSB
                 sta (0,x)
 
@@ -9860,7 +9800,7 @@ z_then:         rts
 ; ## THRU ( scr# scr# -- ) "Load screens in the given range"
 ; ## "thru"  tested  ANS block ext
         ; """https://forth-standard.org/standard/block/THRU"""
-.scope
+
 xt_thru:
                 jsr underflow_2
 
@@ -9922,7 +9862,7 @@ _next_screen:
                 inc tmp1
                 bne +
                 inc tmp1+1
-*
++
                 ; Put the current screen on the stack to prepare for
                 ; the next loop.
                 dex
@@ -9934,13 +9874,13 @@ _next_screen:
                 bra _thru_loop
 _done:
 z_thru:         rts
-.scend
+
 
 
 ; ## TICK ( "name" -- xt ) "Return a word's execution token (xt)"
 ; ## "'"  auto  ANS core
         ; """https://forth-standard.org/standard/core/Tick"""
-.scope
+
 xt_tick:
                 jsr xt_parse_name       ; ( -- addr u )
 
@@ -9952,7 +9892,7 @@ xt_tick:
 
                 lda #err_noname
                 jmp error
-*
++
                 jsr xt_find_name        ; ( addr u -- nt )
 
                 ; If we didn't find the word in the Dictionary, abort
@@ -9962,11 +9902,11 @@ xt_tick:
 
                 lda #err_syntax
                 jmp error
-*
++
                 jsr xt_name_to_int      ; ( nt -- xt )
 
 z_tick:         rts
-.scend
+
 
 
 ; ## TO ( n "name" -- ) or ( "name") "Change a value"
@@ -9987,7 +9927,7 @@ z_tick:         rts
         ; word may not be natively compiled and must be immediate. Frankly,
         ; it would have made more sense to have two words for this.
         ; """
-.scope
+
 xt_to:
                 ; One way or the other, we need the xt of the word after this
                 ; one. At this point, we don't know if we are interpreted or
@@ -10051,7 +9991,7 @@ xt_to:
                 inc tmp1                ; Calculate MSB
                 bne +
                 inc tmp1+1
-*
++
                 ldy tmp1+1              ; MSB goes in Y
                 lda tmp1
                 jsr cmpl_word
@@ -10083,7 +10023,7 @@ _interpret:
                 inx
 _done:
 z_to:           rts
-.scend
+
 
 
 ; ## TO_BODY ( xt -- addr ) "Return a word's Code Field Area (CFA)"
@@ -10099,7 +10039,7 @@ z_to:           rts
         ; add a flag, "has CFA" (HC), in the header so >BODY know to skip
         ; the subroutine jumps to DOVAR, DOCONST, or DODOES
         ; """
-.scope
+
 xt_to_body:
                 jsr underflow_1
 
@@ -10112,7 +10052,7 @@ xt_to_body:
                 inc 0,x
                 bne +
                 inc 1,x
-*
++
                 lda (0,x)               ; get status byte
                 and #HC
                 beq _no_cfa
@@ -10131,7 +10071,7 @@ _no_cfa:
                 inx
 _done:
 z_to_body:      rts
-.scend
+
 
 
 ; ## TO_IN ( -- addr ) "Return address of the input pointer"
@@ -10184,7 +10124,7 @@ z_to_in:        rts
         ; round with it as the new UD-LO and UD-HI.
         ; """
 
-.scope
+
 xt_to_number:
                 jsr underflow_4
 
@@ -10306,7 +10246,7 @@ _digit_ok:
                 inc 4,x
                 bne +
                 inc 5,x
-*
++
                 ; Decrease counter
                 dec 2,x
                 bne _loop
@@ -10331,13 +10271,13 @@ _done:
                 sta 5,x
 
 z_to_number:    rts
-.scend
+
 
 
 ; ## TO_ORDER ( wid -- ) "Add wordlist at beginning of search order"
 ; ## ">order"  tested  Gforth search
         ; """https://www.complang.tuwien.ac.at/forth/gforth/Docs-html/Word-Lists.html"""
-.scope
+
 xt_to_order:
                 ; Put the wid on the return stack for now.
                 jsr xt_to_r
@@ -10354,7 +10294,7 @@ xt_to_order:
                 jsr xt_set_order
 
 z_to_order:     rts
-.scend
+
 
 
 ; ## TO_R ( n -- )(R: -- n) "Push TOS to the Return Stack"
@@ -10861,7 +10801,7 @@ z_two_variable: rts
         ; """https://forth-standard.org/standard/core/TYPE
         ; Works through EMIT to allow OUTPUT revectoring.
         ; """
-.scope
+
 xt_type:
                 jsr underflow_2
 
@@ -10884,12 +10824,12 @@ _loop:
                 inc tmp1
                 bne +
                 inc tmp1+1
-*
++
                 ; Reduce the count (on the data stack)
                 lda 0,x
                 bne +
                 dec 1,x
-*
++
                 dec 0,x
 
                 bra _loop
@@ -10900,7 +10840,7 @@ _done:
                 inx
 
 z_type:         rts
-.scend
+
 
 
 ; ## U_DOT ( u -- ) "Print TOS as unsigned number"
@@ -11031,7 +10971,7 @@ z_ud_dot_r:      rts
         ;
         ; This uses tmp1, tmp1+1, and tmptos
         ; """
-.scope
+
 xt_um_slash_mod:
                 jsr underflow_3
 
@@ -11090,7 +11030,7 @@ _done:
                 jsr xt_swap
 
 z_um_slash_mod: rts
-.scend
+
 
 
 ; ## UM_STAR ( u u -- ud ) "Multiply 16 x 16 -> 32"
@@ -11113,7 +11053,7 @@ z_um_slash_mod: rts
         ; http://forum.6502.org/viewtopic.php?p=205#p205
         ; http://forum.6502.org/viewtopic.php?f=9&t=689
         ; """
-.scope
+
 xt_um_star:
                 jsr underflow_2
 
@@ -11171,7 +11111,7 @@ _zero:
                 stz 3,x
 _done:
 z_um_star:      rts
-.scend
+
 
 
 ; ## UNLOOP ( -- )(R: n1 n2 n3 ---) "Drop loop control from Return stack"
@@ -11291,12 +11231,12 @@ xt_variable:
                 inc cp
                 bne +
                 inc cp+1
-*
++
                 sta (cp)
                 inc cp
                 bne +
                 inc cp+1
-*
++
                 ; Now we need to adjust the length of the complete word by two
                 jsr adjust_z
 
@@ -11364,7 +11304,7 @@ z_within:       rts
         ; would be   PARSE DUP BUFFER1 C! OUTPUT 1+ SWAP MOVE BUFFER1
         ; We only allow input of 255 chars. Seriously, use PARSE-NAME.
         ; """
-.scope
+
 xt_word:
                 jsr underflow_1
 
@@ -11421,7 +11361,7 @@ _found_char:
                 adc #0                  ; we only need the carry
                 sta cp+1
 z_word:         rts
-.scend
+
 
 ; ## WORDLIST ( -- wid ) "Create new wordlist (from pool of 8)"
 ; ## "wordlist" auto ANS search
@@ -11429,7 +11369,7 @@ z_word:         rts
         ; See the tutorial on Wordlists and the Search Order for
         ; more information.
         ; """
-.scope
+
 xt_wordlist:
                 ; Get the current number of wordlists
                 ldy #num_wordlists_offset
@@ -11445,7 +11385,7 @@ xt_wordlist:
                 jmp error
 
 _ok:
-                inc             ; Increment the wordlist#
+                ina             ; Increment the wordlist#
                 sta (up),y      ; Save it into byte variable #wordlists
                 dex             ; and put it on the stack.
                 dex
@@ -11453,7 +11393,7 @@ _ok:
                 stz 1,x         ; 12 is the max, so upper byte is always zero.
 
 z_wordlist:     rts
-.scend
+
 
 
 ; ## WORDS ( -- ) "Print known words from Dictionary"
@@ -11462,7 +11402,7 @@ z_wordlist:     rts
         ; This is pretty much only used at the command line so we can
         ; be slow and try to save space.
         ; """
-.scope
+
 xt_words:
                 ; we follow Gforth by starting on the next
                 ; line
@@ -11517,13 +11457,13 @@ _loop:
                 pla
                 clc
                 adc 0,x
-                inc                     ; don't forget the space between words
+                ina                     ; don't forget the space between words
                 cmp #MAX_LINE_LENGTH    ; usually 79
                 bcc +
 
                 jsr xt_cr
                 lda #0
-*
++
                 pha
                 jsr xt_type             ; ( nt )
 
@@ -11551,7 +11491,7 @@ _words_done:
                 inx
 
 z_words:        rts
-.scend
+
 
 
 ; ## WORDSIZE ( nt -- u ) "Get size of word in bytes"
@@ -11633,7 +11573,7 @@ z_zero:
 ; ## ZERO_EQUAL ( n -- f ) "Check if TOS is zero"
 ; ## "0="  auto  ANS core
         ; """https://forth-standard.org/standard/core/ZeroEqual"""
-.scope
+
 xt_zero_equal:
                 jsr underflow_1
 
@@ -11652,13 +11592,13 @@ _store:
                 sta 1,x
 
 z_zero_equal:   rts
-.scend
+
 
 
 ; ## ZERO_GREATER ( n -- f ) "Return a TRUE flag if TOS is positive"
 ; ## "0>"  auto  ANS core ext
         ; """https://forth-standard.org/standard/core/Zeromore"""
-.scope
+
 xt_zero_greater:
                 jsr underflow_1
 
@@ -11676,13 +11616,13 @@ _done:
                 sta 1,x
 
 z_zero_greater: rts
-.scend
+
 
 
 ; ## ZERO_LESS ( n -- f ) "Return a TRUE flag if TOS negative"
 ; ## "0<"  auto  ANS core
         ; """https://forth-standard.org/standard/core/Zeroless"""
-.scope
+
 xt_zero_less:
                 jsr underflow_1
 
@@ -11698,13 +11638,13 @@ _done:
                 sta 1,x
 
 z_zero_less:    rts
-.scend
+
 
 
 ; ## ZERO_UNEQUAL ( m -- f ) "Return TRUE flag if not zero"
 ; ## "0<>"  auto  ANS core ext
         ; """https://forth-standard.org/standard/core/Zerone"""
-.scope
+
 xt_zero_unequal:
                 jsr underflow_1
 
@@ -11721,7 +11661,7 @@ _got_zero:
                 sta 1,x
 
 z_zero_unequal: rts
-.scend
+
 
 
 ; ==========================================================
@@ -11741,7 +11681,7 @@ z_editor_screen_helper:
 
 ; ## EDITOR_ENTER_SCREEN ( scr# -- ) "Enter all lines for given screen"
 ; ## "enter-screen"  auto  Tali Editor
-.scope
+
 xt_editor_enter_screen:
                 ; Set the variable SCR and get a buffer for the
                 ; given screen number.
@@ -11771,7 +11711,7 @@ _prompt_loop:
 
 z_editor_enter_screen:
                 rts
-.scend
+
 
 
 ; ## EDITOR_ERASE_SCREEN ( scr# -- ) "Erase all lines for given screen"
@@ -11824,7 +11764,7 @@ z_editor_el:    rts
 
 ; ## EDITOR_L ( -- ) "List the current screen"
 ; ## "l"  tested  Tali Editor
-.scope
+
 xt_editor_l:
                 ; Load the current screen
                 dex             ; Put SCR on the stack.
@@ -11845,7 +11785,7 @@ xt_editor_l:
                 bra _after_screen_msg
 
 _screen_msg:
-                .byte "Screen #"
+                .text "Screen #"
 
 _after_screen_msg:
                 jsr sliteral_runtime
@@ -11917,12 +11857,12 @@ _line_loop:
                 inx
 
 z_editor_l:            rts
-.scend
+
 
 
 ; ## EDITOR_LINE ( line# -- c-addr ) "Turn a line number into address in current screen"
 ; ## "line"  tested  Tali Editor
-.scope
+
 xt_editor_line:
                 jsr underflow_1
 
@@ -11943,7 +11883,7 @@ _shift_tos_left:
                 jsr xt_plus
 
 z_editor_line:  rts
-.scend
+
 
 
 ; ## EDITOR_O ( line# -- ) "Overwrite the given line"

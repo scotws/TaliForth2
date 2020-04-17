@@ -935,7 +935,6 @@ z_asm_tya:
 ; ASSEMBLER HELPER FUNCTIONS
 
 asm_common:
-.scope
 
         ; """Common routine for all opcodes. We arrive here with the opcode in
         ; A. We do not need to check for the correct values because we are
@@ -958,9 +957,9 @@ asm_common:
 
                 tya             ; retrieve opcode
                 asl             ; times two for offset
-                bcc+
+                bcc +
                 inc tmp2+1
-*
++
                 tay             ; use Y as the index
 
                 ; Get address of the entry in the opcode table. We put it in
@@ -1010,7 +1009,6 @@ _done_drop:
                 inx             ; Fall through to _done
 _done:
                 rts             ; Returns to original caller
-.scend
 
 
 ; ==========================================================
@@ -1021,10 +1019,9 @@ xt_asm_push_a:
         ; data stack as the TOS. This is a convience routine that encodes the
         ; instructions  DEX  DEX  STA 0,X  STZ 1,X
         ; """
-.scope
                 ldy #0
 _loop:
-                lda _data,y
+                lda asm_push_a_data,y
                 cmp #$FF
                 beq _done
 
@@ -1034,11 +1031,11 @@ _loop:
 _done:
 z_asm_push_a:
                 rts
-_data:
+asm_push_a_data:
         ; We can't use 00 as a terminator because STA 0,X assembles to 95 00
         .byte $CA, $CA, $95, 00, $74, $01
         .byte $FF               ; terminator
-.scend
+
 
 
 ; ==========================================================
@@ -1062,8 +1059,8 @@ xt_asm_back_branch:
                 jsr xt_minus            ; ( offset )
 
                 ; We subtract two more because of the branch instruction itself
-                dec
-                dec
+                dea
+                dea
 
 z_asm_back_branch:
                 rts

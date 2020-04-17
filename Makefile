@@ -33,10 +33,11 @@ clean:
 	$(RM) *.bin *.prg
 
 taliforth-%.bin: platform/platform-%.asm $(COMMON_SOURCES)
-	ophis -l docs/$*-listing.txt \
-	-m docs/$*-labelmap.txt \
-	-o $@ \
-	-c $<
+	64tass --nostart \
+	--list=docs/$*-listing.txt \
+	--labels=docs/$*-labelmap.txt \
+	--output $@ \
+	$<
 
 taliforth-%.prg: platform/platform-%.asm $(COMMON_SOURCES)
 	ophis -l docs/$*-listing.txt \
