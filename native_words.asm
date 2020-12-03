@@ -3644,11 +3644,12 @@ z_dup:          rts
         ; """Start the line-based editor ed6502. See separate file
         ; ed.asm or the manual for details.
         ; """
+.if "ed" in TALI_OPTIONAL_WORDS        
 xt_ed:
                 jsr ed6502      ; kept in separate file
 
 z_ed:           rts
-
+.endif
 
 ; ## EDITOR_WORDLIST ( -- u ) "WID for the Editor wordlist"
 ; ## "editor-wordlist"  tested  Tali Editor

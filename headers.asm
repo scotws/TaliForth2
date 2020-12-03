@@ -67,19 +67,26 @@ nt_bye:
         .word z_bye     ; end of code (RTS)
         .text "bye"     ; word name, always lower case, not zero-terminated
 
+    ; WIP Work In Progress TODO - ed/cold/see rearranged to test
+    ; optional words.
+    ; *************************************************
+nt_see: .byte 3, NN
+        .word +, xt_see, z_see
+        .text "see"
+
+.if "ed" in TALI_OPTIONAL_WORDS
+nt_ed:                  ; ed6502
+        .byte 2, NN
+        .word +, xt_ed, z_ed
+        .text "ed"
+.endif
+
 nt_cold:
         .byte 4, 0
         .word nt_bye, xt_cold, z_cold
         .text "cold"
+    ; *************************************************
 
-nt_ed:                  ; ed6502
-        .byte 2, NN
-        .word nt_cold, xt_ed, z_ed
-        .text "ed"
-
-nt_see: .byte 3, NN
-        .word nt_ed, xt_see, z_see
-        .text "see"
 
 nt_forth:
         .byte 5, 0

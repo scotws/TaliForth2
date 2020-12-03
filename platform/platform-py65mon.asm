@@ -2,9 +2,11 @@
         .cpu "65c02"
         ; No special text encoding (eg. ASCII)
         .enc "none"
+
+        ; Where to start Tali Forth 2 in ROM (or RAM if loading it) 
         * = $8000
 
-; I/O facilities are handled in the separate kernel files because of their
+; I/O facilities are handled in these separate kernel files because of their
 ; hardware dependencies. See docs/memorymap.txt for a discussion of Tali's
 ; memory layout.
 
@@ -89,6 +91,36 @@ buffer0   = stack0+$100      ; input buffer ($0200-$027f)
 cp0       = buffer0+bsize+1  ; Dictionary starts after last buffer
 cp_end    = hist_buff        ; Last RAM byte available for code
 padoffset = $ff              ; offset from CP to PAD (holds number strings)
+
+
+; WORDSETS
+
+; Tali Forth 2 is a bit of a beast, expecting about 24K of ROM space.
+; For some applications, the user might not need certain words and would
+; prefer to have the memory back instead.  Remove any of the items in
+; TALI_OPTIONAL_WORDS to remove the associated words when Tali is
+; assembled.
+
+
+; The "ed" editor for editing strings in memory.
+TALI_OPTIONAL_WORDS = [ "ed", "editor", "block", "environment?",
+                        "assembler", "wordlist" ]
+
+; "ed" is a string editor.
+; "editor" is a block editor.
+;     The EDITOR-WORDLIST will also be removed.
+; "block" is the optional BLOCK words.
+; "environment?" is the ENVIRONMENT? word.  While this is a core word
+;     for ANS-2012, it uses a lot of strings and therefore takes up a lot
+;     of memory.
+; "assembler" is an assembler.
+;     The ASSEMBLER-WORDLIST will also be removed.
+; "wordlist" is for the optional SEARCH-ORDER words (eg. wordlists)
+;     Note: Without "wordlist", you will not be able to use any words from
+;     the EDITOR or ASSEMBLER wordlists (they should probably be disabled
+;     by also removing "editor" and "assembler"), and all new words will
+;     be compiled into the FORTH wordlist.
+
 
 
 .include "../taliforth.asm" ; zero page variables, definitions
