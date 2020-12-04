@@ -1121,14 +1121,16 @@ nt_compare:
 
 nt_search:
         .byte 6, UF+NN
-        .word nt_environment_q, xt_search, z_search
+        .word +, xt_search, z_search
         .text "search"
-
++
+.if "environment?" in TALI_OPTIONAL_WORDS
 nt_environment_q:
         .byte 12, UF
-        .word nt_find, xt_environment_q, z_environment_q
+        .word +, xt_environment_q, z_environment_q
         .text "environment?"
-
++
+.endif
 nt_find:
         .byte 4, UF
         .word nt_word, xt_find, z_find
@@ -1361,14 +1363,18 @@ nt_get_order:
 
 nt_root_wordlist:
         .byte 13, 0
-        .word nt_assembler_wordlist, xt_root_wordlist, z_root_wordlist
+        .word +, xt_root_wordlist, z_root_wordlist
         .text "root-wordlist"
++
 
+.if "assembler" in TALI_OPTIONAL_WORDS
 nt_assembler_wordlist:  ; shares code with TWO
         .byte 18, 0
         .word +, xt_assembler_wordlist, z_assembler_wordlist
         .text "assembler-wordlist"
 +
+.endif
+
 .if "editor" in TALI_OPTIONAL_WORDS
 nt_editor_wordlist:     ; shares code with ONE
         .byte 15, 0
@@ -1376,6 +1382,7 @@ nt_editor_wordlist:     ; shares code with ONE
         .text "editor-wordlist"
 +
 .endif
+
 nt_forth_wordlist:      ; shares code with ZERO
         .byte 14, 0
         .word nt_only, xt_forth_wordlist, z_forth_wordlist
@@ -1415,6 +1422,7 @@ nt_see: .byte 3, NN
         .word +, xt_see, z_see
         .text "see"
 +
+
 .if "ed" in TALI_OPTIONAL_WORDS
 nt_ed:                  ; ed6502
         .byte 2, NN
@@ -1512,6 +1520,7 @@ nt_editor_enter_screen:
 ; immediate addressing is replaced by an "h" (for example, the label code for
 ; "lda.#" is "xt_adm_lda_h"). All opcodes are immediate.
 assembler_dictionary_start:
+.if "assembler" in TALI_OPTIONAL_WORDS
 nt_asm_adc_h:
 		.byte 5, IM
                 .word nt_asm_adc_x
@@ -2600,7 +2609,7 @@ nt_asm_push_a:
                 .word 0000
                 .word xt_asm_push_a, z_asm_push_a
                 .text "push-a"
-
+.endif
 ; END of ASSEMBLER-WORDLIST
 
 ; END

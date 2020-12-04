@@ -3836,7 +3836,7 @@ z_endcase:      rts
         ; word is rarely used so we can try to keep it short at the expense
         ; of speed.
         ; """
-
+.if "environment?" in TALI_OPTIONAL_WORDS
 xt_environment_q:
                 jsr underflow_1
 
@@ -4026,7 +4026,7 @@ env_results_single:
 env_results_double:
         .word $7FFF, $FFFF      ; MAX-D
         .word $FFFF, $FFFF      ; MAX-UD
-
+.endif
 
 ; ## EQUAL ( n n -- f ) "See if TOS and NOS are equal"
 ; ## "="  auto  ANS core
