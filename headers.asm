@@ -1482,7 +1482,7 @@ nt_root_set_order:
 ; EDITOR-WORDLIST
 
 editor_dictionary_start:
-.if "editor" in TALI_OPTIONAL_WORDS
+.if "editor" in TALI_OPTIONAL_WORDS && "block" in TALI_OPTIONAL_WORDS
 nt_editor_o:
         .byte 1, 0
         .word nt_editor_line, xt_editor_o, z_editor_o

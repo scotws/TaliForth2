@@ -11692,7 +11692,7 @@ z_zero_unequal: rts
 ; ==========================================================
 ; EDITOR words
 
-.if "editor" in TALI_OPTIONAL_WORDS
+.if "editor" in TALI_OPTIONAL_WORDS && "block" in TALI_OPTIONAL_WORDS
 ; This routine is used by both enter-screen and erase-screen
 ; to get a buffer for the given screen number and set SCR to
 ; the given screen number.  This word is not in the dictionary.
