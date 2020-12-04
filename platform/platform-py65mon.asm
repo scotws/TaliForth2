@@ -103,12 +103,13 @@ padoffset = $ff              ; offset from CP to PAD (holds number strings)
 
 
 ; The "ed" editor for editing strings in memory.
-TALI_OPTIONAL_WORDS = [ "ed", "editor", "block", "environment?",
+TALI_OPTIONAL_WORDS = [ "ed", "editor", "ramdrive", "block", "environment?",
                         "assembler", "wordlist" ]
 
 ; "ed" is a string editor.
 ; "editor" is a block editor.
 ;     The EDITOR-WORDLIST will also be removed.
+; "ramdrive" is a ramdrive for testing block words without a block device.
 ; "block" is the optional BLOCK words.
 ; "environment?" is the ENVIRONMENT? word.  While this is a core word
 ;     for ANS-2012, it uses a lot of strings and therefore takes up a lot

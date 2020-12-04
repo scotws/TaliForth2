@@ -1023,6 +1023,7 @@ xt_bl:
 
 z_bl:           rts
 
+.if "block" in TALI_OPTIONAL_WORDS
 ; ## BLK ( -- addr ) "Push address of block being interpreted"
 ; ## "block"  auto  ANS block
         ; """https://forth-standard.org/standard/block/BLK"""
@@ -1039,8 +1040,10 @@ xt_blk:
                 sta 1,x
 
 z_blk:          rts
+.endif
 
 
+.if "block" in TALI_OPTIONAL_WORDS
 ; ## BLKBUFFER ( -- addr ) "Push address of block buffer"
 ; ## "blkbuffer"  auto  Tali block
 xt_blkbuffer:
@@ -1059,8 +1062,9 @@ xt_blkbuffer:
                 sta 1,x
 
 z_blkbuffer:    rts
+.endif
 
-
+.if "block" in TALI_OPTIONAL_WORDS
 ; ## BLOCK ( u -- a-addr ) "Fetch a block into a buffer"
 ; ## "block"  auto  ANS block
         ; """https://forth-standard.org/standard/block/BLOCK"""
@@ -1132,8 +1136,9 @@ _done:
                 sta 1,x
 
 z_block:        rts
+.endif
 
-
+.if "block" in TALI_OPTIONAL_WORDS && "ramdrive" in TALI_OPTIONAL_WORDS
 ; ## BLOCK_RAMDRIVE_INIT ( u -- ) "Create a ramdrive for blocks"
 ; ## "block-ramdrive-init"  auto  Tali block
         ; """Create a RAM drive, with the given number of
@@ -1175,8 +1180,10 @@ _after_ramdrive_code:
 
 z_block_ramdrive_init:
                 rts
+.endif
 
 
+.if "block" in TALI_OPTIONAL_WORDS
 ; ## BLOCK_READ ( addr u -- ) "Read a block from storage (deferred word)"
 ; ## "block-read"  auto  Tali block
         ; """BLOCK-READ is a vectored word that the user needs to override
@@ -1195,8 +1202,10 @@ xt_block_read:
                 jmp (tmp1)
 
 z_block_read:   ; No RTS needed
+.endif
 
 
+.if "block" in TALI_OPTIONAL_WORDS
 ; ## BLOCK_READ_VECTOR ( -- addr ) "Address of the block-read vector"
 ; ## "block-read-vector"  auto  Tali block
         ; """BLOCK-READ is a vectored word that the user needs to override
@@ -1217,7 +1226,7 @@ xt_block_read_vector:
 
 z_block_read_vector:
                 rts
-
+.endif
 
 ; This is the default error message the vectored words BLOCK-READ and
 ; BLOCK-WRITE start with. This word is not included in the dictionary.
@@ -1226,6 +1235,7 @@ xt_block_word_error:
                 jmp error       ; no RTS needed
 z_block_word_error:
 
+.if "block" in TALI_OPTIONAL_WORDS
 ; ## BLOCK_WRITE ( addr u -- ) "Write a block to storage (deferred word)"
 ; ## "block-write"  auto  Tali block
         ; """BLOCK-WRITE is a vectored word that the user needs to override
@@ -1243,8 +1253,10 @@ xt_block_write:
                 jmp (tmp1)
 
 z_block_write:  ; No RTS needed
+.endif
 
 
+.if "block" in TALI_OPTIONAL_WORDS
 ; ## BLOCK_WRITE_VECTOR ( -- addr ) "Address of the block-write vector"
 ; ## "block-write-vector"  auto  Tali block
         ; """BLOCK-WRITE is a vectored word that the user needs to override
@@ -1265,7 +1277,7 @@ xt_block_write_vector:
 
 z_block_write_vector:
                 rts
-
+.endif
 
 ; ## BOUNDS ( addr u -- addr+u addr ) "Prepare address for looping"
 ; ## "bounds"  auto  Gforth
@@ -1317,7 +1329,7 @@ xt_bracket_tick:
                 jsr xt_literal
 z_bracket_tick: rts
 
-
+.if "block" in TALI_OPTIONAL_WORDS
 ; ## BUFFBLOCKNUM ( -- addr ) "Push address of variable holding block in buffer"
 ; ## "buffblocknum"  auto  Tali block
 xt_buffblocknum:
@@ -1333,8 +1345,10 @@ xt_buffblocknum:
                 sta 1,x
 
 z_buffblocknum: rts
+.endif
 
 
+.if "block" in TALI_OPTIONAL_WORDS
 ; ## BUFFER ( u -- a-addr ) "Get a buffer for a block"
 ; ## "buffer"  auto  ANS block
         ; """https://forth-standard.org/standard/block/BUFFER"""
@@ -1375,7 +1389,7 @@ _done:
                 sta 1,x
 
 z_buffer:       rts
-
+.endif
 
 ; ## BUFFER_COLON ( u "<name>" -- ; -- addr ) "Create an uninitialized buffer"
 ; ## "buffer:"  auto  ANS core ext
@@ -1389,6 +1403,7 @@ xt_buffer_colon:
 z_buffer_colon: rts
 
 
+.if "block" in TALI_OPTIONAL_WORDS
 ; ## BUFFSTATUS ( -- addr ) "Push address of variable holding buffer status"
 ; ## "buffstatus"  auto  Tali block
 xt_buffstatus:
@@ -1404,6 +1419,7 @@ xt_buffstatus:
                 sta 1,x
 
 z_buffstatus:   rts
+.endif
 
 
 ; ## BYE ( -- ) "Break"
@@ -3752,6 +3768,7 @@ z_emit:         ; never reached
 
 
 
+.if "block" in TALI_OPTIONAL_WORDS
 ; ## EMPTY_BUFFERS ( -- ) "Empty all buffers without saving"
 ; ## "empty-buffers"  tested  ANS block ext
         ; """https://forth-standard.org/standard/block/EMPTY-BUFFERS"""
@@ -3762,7 +3779,7 @@ xt_empty_buffers:
                 sta (up),y      ; Only LSB is used.
 z_empty_buffers:
                 rts
-
+.endif
 
 ; ## ENDCASE (C: case-sys -- ) ( x -- ) "Conditional flow control"
 ; ## "endcase"  auto  ANS core ext
@@ -3802,6 +3819,7 @@ z_endcase:      rts
         ; """
 
 
+.if "environment?" in TALI_OPTIONAL_WORDS
 ; ## ENVIRONMENT_Q  ( addr u -- 0 | i*x true )  "Return system information"
 ; ## "environment?"  auto  ANS core
         ; """https://forth-standard.org/standard/core/ENVIRONMENTq
@@ -3836,7 +3854,6 @@ z_endcase:      rts
         ; word is rarely used so we can try to keep it short at the expense
         ; of speed.
         ; """
-.if "environment?" in TALI_OPTIONAL_WORDS
 xt_environment_q:
                 jsr underflow_1
 
@@ -4550,6 +4567,7 @@ z_find_name:    rts
 
 
 
+.if "block" in TALI_OPTIONAL_WORDS
 ; ## FLUSH ( -- ) "Save dirty buffers and empty buffers"
 ; ## "flush"  auto  ANS block
         ; """https://forth-standard.org/standard/block/FLUSH"""
@@ -4562,6 +4580,7 @@ xt_flush:
                 sta (up),y      ; Only LSB is used.
 z_flush:
                 rts
+.endif
 
 
 ; ## FM_SLASH_MOD ( d n1  -- rem n2 ) "Floored signed division"
@@ -5534,7 +5553,7 @@ _false:
 z_less_than:    rts
 
 
-
+.if "block" in TALI_OPTIONAL_WORDS
 ; ## LIST ( scr# -- ) "List the given screen"
 ; ## "list"  tested  ANS block ext
         ; """https://forth-standard.org/standard/block/LIST"""
@@ -5550,7 +5569,7 @@ xt_list:
                 jsr xt_editor_l
 
 z_list:         rts
-
+.endif
 
 
 ; ## LITERAL ( n -- ) "Store TOS to be push on stack during runtime"
@@ -5614,6 +5633,7 @@ literal_runtime:
 
 
 
+.if "block" in TALI_OPTIONAL_WORDS
 ; ## LOAD ( scr# -- ) "Load the Forth code in a screen/block"
 ; ## "load"  auto  ANS block
         ; """https://forth-standard.org/standard/block/LOAD
@@ -5687,7 +5707,7 @@ xt_load:
 
 _done:
 z_load:         rts
-
+.endif
 
 
 ; ## LOOP ( -- ) "Finish loop construct"
@@ -8857,7 +8877,7 @@ _done:
 z_s_to_d:       rts
 
 
-
+.if "block" in TALI_OPTIONAL_WORDS
 ; ## SAVE_BUFFERS ( -- ) "Save all dirty buffers to storage"
 ; ## "save-buffers"  tested  ANS block
         ; """https://forth-standard.org/standard/block/SAVE-BUFFERS"""
@@ -8882,9 +8902,10 @@ xt_save_buffers:
 
 _done:
 z_save_buffers: rts
+.endif
 
 
-
+.if "block" in TALI_OPTIONAL_WORDS
 ; ## SCR ( -- addr ) "Push address of variable holding last screen listed"
 ; ## "scr"  auto  ANS block ext
         ; """https://forth-standard.org/standard/block/SCR"""
@@ -8901,7 +8922,7 @@ xt_scr:
                 sta 1,x
 
 z_scr:          rts
-
+.endif
 
 ; ## SEARCH ( addr1 u1 addr2 u2 -- addr3 u3 flag) "Search for a substring"
 ; ## "search"   auto  ANS string
@@ -9798,6 +9819,7 @@ xt_then:
 z_then:         rts
 
 
+.if "block" in TALI_OPTIONAL_WORDS
 ; ## THRU ( scr# scr# -- ) "Load screens in the given range"
 ; ## "thru"  tested  ANS block ext
         ; """https://forth-standard.org/standard/block/THRU"""
@@ -9875,7 +9897,7 @@ _next_screen:
                 bra _thru_loop
 _done:
 z_thru:         rts
-
+.endif
 
 
 ; ## TICK ( "name" -- xt ) "Return a word's execution token (xt)"
@@ -11177,6 +11199,7 @@ xt_unused:
 z_unused:       rts
 
 
+.if "block" in TALI_OPTIONAL_WORDS
 ; ## UPDATE ( -- ) "Mark current block as dirty"
 ; ## "update"  auto  ANS block
         ; """https://forth-standard.org/standard/block/UPDATE"""
@@ -11189,6 +11212,7 @@ xt_update:
                 sta (up),y
 
 z_update:       rts
+.endif
 
 
 ; ## USERADDR ( -- addr ) "Push address of base address of user variables"
