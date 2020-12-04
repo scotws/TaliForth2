@@ -3639,12 +3639,12 @@ xt_dup:
 z_dup:          rts
 
 
+.if "ed" in TALI_OPTIONAL_WORDS        
 ; ## ED ( -- u ) "Line-based editor"
 ; ## "ed"  fragment  Tali Forth
         ; """Start the line-based editor ed6502. See separate file
         ; ed.asm or the manual for details.
         ; """
-.if "ed" in TALI_OPTIONAL_WORDS        
 xt_ed:
                 jsr ed6502      ; kept in separate file
 
@@ -11668,6 +11668,7 @@ z_zero_unequal: rts
 ; ==========================================================
 ; EDITOR words
 
+.if "editor" in TALI_OPTIONAL_WORDS
 ; This routine is used by both enter-screen and erase-screen
 ; to get a buffer for the given screen number and set SCR to
 ; the given screen number.  This word is not in the dictionary.
@@ -11761,8 +11762,10 @@ xt_editor_el:
                 jsr xt_update
 
 z_editor_el:    rts
+.endif
 
-
+; "l" needs special handling as it's used by LIST in the block words.  
+.if "editor" in TALI_OPTIONAL_WORDS || "block" in TALI_OPTIONAL_WORDS
 ; ## EDITOR_L ( -- ) "List the current screen"
 ; ## "l"  tested  Tali Editor
 
@@ -11858,9 +11861,9 @@ _line_loop:
                 inx
 
 z_editor_l:            rts
+.endif
 
-
-
+.if "editor" in TALI_OPTIONAL_WORDS
 ; ## EDITOR_LINE ( line# -- c-addr ) "Turn a line number into address in current screen"
 ; ## "line"  tested  Tali Editor
 
@@ -11928,5 +11931,6 @@ xt_editor_o:
                 jsr xt_update
 
 z_editor_o:     rts
+.endif
 
 ; END

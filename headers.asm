@@ -1228,9 +1228,10 @@ nt_useraddr:
 
 nt_buffer_colon:
         .byte 7, 0
-        .word nt_buffstatus, xt_buffer_colon, z_buffer_colon
+        .word +, xt_buffer_colon, z_buffer_colon
         .text "buffer:"
-
++
+.if "block" in TALI_OPTIONAL_WORDS
 nt_buffstatus:
         .byte 10, 0
         .word nt_buffblocknum, xt_buffstatus, z_buffstatus
@@ -1323,8 +1324,10 @@ nt_list:
 
 nt_block_ramdrive_init:
         .byte 19, UF
-        .word nt_definitions, xt_block_ramdrive_init, z_block_ramdrive_init
+        .word +, xt_block_ramdrive_init, z_block_ramdrive_init
         .text "block-ramdrive-init"
++
+.endif
 
 nt_definitions:
         .byte 11, 0
