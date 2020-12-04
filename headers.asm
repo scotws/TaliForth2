@@ -1366,14 +1366,16 @@ nt_root_wordlist:
 
 nt_assembler_wordlist:  ; shares code with TWO
         .byte 18, 0
-        .word nt_editor_wordlist, xt_assembler_wordlist, z_assembler_wordlist
+        .word +, xt_assembler_wordlist, z_assembler_wordlist
         .text "assembler-wordlist"
-
++
+.if "editor" in TALI_OPTIONAL_WORDS
 nt_editor_wordlist:     ; shares code with ONE
         .byte 15, 0
-        .word nt_forth_wordlist, xt_editor_wordlist, z_editor_wordlist
+        .word +, xt_editor_wordlist, z_editor_wordlist
         .text "editor-wordlist"
-
++
+.endif
 nt_forth_wordlist:      ; shares code with ZERO
         .byte 14, 0
         .word nt_only, xt_forth_wordlist, z_forth_wordlist
@@ -1412,12 +1414,13 @@ nt_forth:
 nt_see: .byte 3, NN
         .word +, xt_see, z_see
         .text "see"
-
++
 .if "ed" in TALI_OPTIONAL_WORDS
 nt_ed:                  ; ed6502
         .byte 2, NN
         .word +, xt_ed, z_ed
         .text "ed"
++        
 .endif
 
 nt_cold:
@@ -1467,37 +1470,38 @@ nt_root_set_order:
 
 ; EDITOR-WORDLIST
 
-nt_editor_enter_screen:
-        .byte 12, 0
-        .word 0000, xt_editor_enter_screen, z_editor_enter_screen
-        .text "enter-screen"
-
-nt_editor_erase_screen:
-        .byte 12, 0
-        .word nt_editor_enter_screen, xt_editor_erase_screen, z_editor_erase_screen
-        .text "erase-screen"
-
-nt_editor_el:
-        .byte 2, 0
-        .word nt_editor_erase_screen, xt_editor_el, z_editor_el
-        .text "el"
-
-nt_editor_l:
+editor_dictionary_start:
+.if "editor" in TALI_OPTIONAL_WORDS
+nt_editor_o:
         .byte 1, 0
-        .word nt_editor_el, xt_editor_l, z_editor_l
-        .text "l"
+        .word nt_editor_line, xt_editor_o, z_editor_o
+        .text "o"
 
 nt_editor_line:
         .byte 4, UF
         .word nt_editor_l, xt_editor_line, z_editor_line
         .text "line"
 
-editor_dictionary_start:
-nt_editor_o:
+nt_editor_l:
         .byte 1, 0
-        .word nt_editor_line, xt_editor_o, z_editor_o
-        .text "o"
+        .word nt_editor_el, xt_editor_l, z_editor_l
+        .text "l"
 
+nt_editor_el:
+        .byte 2, 0
+        .word nt_editor_erase_screen, xt_editor_el, z_editor_el
+        .text "el"
+
+nt_editor_erase_screen:
+        .byte 12, 0
+        .word nt_editor_enter_screen, xt_editor_erase_screen, z_editor_erase_screen
+        .text "erase-screen"
+
+nt_editor_enter_screen:
+        .byte 12, 0
+        .word 0000, xt_editor_enter_screen, z_editor_enter_screen
+        .text "enter-screen"
+.endif
 ; END of EDITOR-WORDLIST
 
 
