@@ -93,7 +93,7 @@ cp_end    = hist_buff        ; Last RAM byte available for code
 padoffset = $ff              ; offset from CP to PAD (holds number strings)
 
 
-; WORDSETS
+; OPTIONAL WORDSETS
 
 ; Tali Forth 2 is a bit of a beast, expecting about 24K of ROM space.
 ; For some applications, the user might not need certain words and would
@@ -101,8 +101,6 @@ padoffset = $ff              ; offset from CP to PAD (holds number strings)
 ; TALI_OPTIONAL_WORDS to remove the associated words when Tali is
 ; assembled.
 
-
-; The "ed" editor for editing strings in memory.
 TALI_OPTIONAL_WORDS = [ "ed", "editor", "ramdrive", "block", "environment?",
                         "assembler", "wordlist" ]
 
@@ -120,7 +118,7 @@ TALI_OPTIONAL_WORDS = [ "ed", "editor", "ramdrive", "block", "environment?",
 ;     Note: Without "wordlist", you will not be able to use any words from
 ;     the EDITOR or ASSEMBLER wordlists (they should probably be disabled
 ;     by also removing "editor" and "assembler"), and all new words will
-;     be compiled into the FORTH wordlist.
+;     be compiled into the FORTH wordlist. (~0.9K)
 
 
 

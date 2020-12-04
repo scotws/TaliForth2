@@ -1332,6 +1332,7 @@ nt_block_ramdrive_init:
 +
 .endif
 
+.if "wordlist" in TALI_OPTIONAL_WORDS
 nt_definitions:
         .byte 11, 0
         .word nt_wordlist, xt_definitions, z_definitions
@@ -1372,8 +1373,9 @@ nt_root_wordlist:
         .word +, xt_root_wordlist, z_root_wordlist
         .text "root-wordlist"
 +
+.endif
 
-.if "assembler" in TALI_OPTIONAL_WORDS
+.if "assembler" in TALI_OPTIONAL_WORDS && "wordlist" in TALI_OPTIONAL_WORDS
 nt_assembler_wordlist:  ; shares code with TWO
         .byte 18, 0
         .word +, xt_assembler_wordlist, z_assembler_wordlist
@@ -1381,7 +1383,7 @@ nt_assembler_wordlist:  ; shares code with TWO
 +
 .endif
 
-.if "editor" in TALI_OPTIONAL_WORDS
+.if "editor" in TALI_OPTIONAL_WORDS && "wordlist" in TALI_OPTIONAL_WORDS
 nt_editor_wordlist:     ; shares code with ONE
         .byte 15, 0
         .word +, xt_editor_wordlist, z_editor_wordlist
@@ -1389,6 +1391,7 @@ nt_editor_wordlist:     ; shares code with ONE
 +
 .endif
 
+.if "wordlist" in TALI_OPTIONAL_WORDS
 nt_forth_wordlist:      ; shares code with ZERO
         .byte 14, 0
         .word nt_only, xt_forth_wordlist, z_forth_wordlist
@@ -1421,8 +1424,10 @@ nt_order:
 
 nt_forth:
         .byte 5, 0
-        .word nt_see, xt_forth, z_forth
+        .word +, xt_forth, z_forth
         .text "forth"
++
+.endif
 
 nt_see: .byte 3, NN
         .word +, xt_see, z_see
@@ -1458,27 +1463,28 @@ nt_bye:
         ; set the wordlists. These words are also included in the
         ; FORTH-WORDLIST as well.
 
-nt_root_words:
-        .byte 5, 0
-        .word 0000, xt_words, z_words
-        .text "words"
-
-nt_root_forth_wordlist: ; shares code with ZERO
-        .byte 14, 0
-        .word nt_root_words, xt_forth_wordlist, z_forth_wordlist
-        .text "forth-wordlist"
+root_dictionary_start:
+.if "wordlist" in TALI_OPTIONAL_WORDS
+nt_root_set_order:
+        .byte 9, 0
+        .word nt_root_forth, xt_set_order, z_set_order
+        .text "set-order"
 
 nt_root_forth:
         .byte 5, 0
         .word nt_root_forth_wordlist, xt_forth, z_forth
         .text "forth"
 
-root_dictionary_start:
-nt_root_set_order:
-        .byte 9, 0
-        .word nt_root_forth, xt_set_order, z_set_order
-        .text "set-order"
+nt_root_forth_wordlist: ; shares code with ZERO
+        .byte 14, 0
+        .word nt_root_words, xt_forth_wordlist, z_forth_wordlist
+        .text "forth-wordlist"
 
+nt_root_words:
+        .byte 5, 0
+        .word 0000, xt_words, z_words
+        .text "words"
+.endif
 ; END of ROOT-WORDLIST
 
 

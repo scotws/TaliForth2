@@ -876,6 +876,7 @@ z_allow_native:
                 rts
 
 
+.if "wordlist" in TALI_OPTIONAL_WORDS
 ; ## ALSO ( -- ) "Make room in the search order for another wordlist"
 ; ## "also"  auto  ANS search ext
         ; """http://forth-standard.org/standard/search/ALSO"""
@@ -887,6 +888,7 @@ xt_also:
                 jsr xt_set_order
 
 z_also:         rts
+.endif
 
 
 ; ## ALWAYS_NATIVE ( -- ) "Flag last word as always natively compiled"
@@ -2860,7 +2862,7 @@ xt_defer_store:
 z_defer_store:  rts
 
 
-
+.if "wordlist" in TALI_OPTIONAL_WORDS
 ; ## DEFINITIONS ( -- ) "Make first wordlist in search order the current wordlist"
 ; ## "definitions" auto ANS search
 xt_definitions:
@@ -2869,6 +2871,7 @@ xt_definitions:
                 ldy #current_offset         ; byte variable CURRENT.
                 sta (up),y
 z_definitions:  rts
+.endif
 
 
 ; ## DEPTH ( -- u ) "Get number of cells (not bytes) used by stack"
@@ -4641,6 +4644,7 @@ z_fm_slash_mod: rts
 
 
 
+.if "wordlist" in TALI_OPTIONAL_WORDS
 ; ## FORTH ( -- ) "Replace first WID in search order with Forth-Wordlist"
 ; ## "forth"  auto  ANS search ext
         ; """https://forth-standard.org/standard/search/FORTH"""
@@ -4651,7 +4655,7 @@ xt_forth:
                 sta (up),y
 z_forth:
                 rts
-
+.endif
 
 ; This is a special jsr target to skip the zeroing of BLK at the beginning
 ; of evaluate.  It's used by LOAD to allow setting BLK while the block is
@@ -4767,6 +4771,7 @@ z_evaluate:     rts
         ; This is a dummy entry, the actual code is shared with ZERO.
 
 
+.if "wordlist" in TALI_OPTIONAL_WORDS
 ; ## GET_CURRENT ( -- wid ) "Get the id of the compilation wordlist"
 ; ## "get-current" auto ANS search
         ; """https://forth-standard.org/standard/search/GET-CURRENT"""
@@ -4783,9 +4788,10 @@ xt_get_current:
                 stz 1,x         ; so the MSB is zero.
 
 z_get_current:  rts
+.endif
 
 
-
+.if "wordlist" in TALI_OPTIONAL_WORDS
 ; ## GET_ORDER ( -- wid_n .. wid_1 n) "Get the current search order"
 ; ## "get-order" auto ANS search
         ; """https://forth-standard.org/standard/search/GET-ORDER"""
@@ -4830,7 +4836,7 @@ _done:
                 stz 1,x         ; We only support 8 wordlists.
 
 z_get_order:    rts
-
+.endif
 
 
 ; ## GREATER_THAN ( n n -- f ) "See if NOS is greater than TOS"
@@ -6889,6 +6895,7 @@ z_one_plus:     rts
 
 
 
+.if "wordlist" in TALI_OPTIONAL_WORDS
 ; ## ONLY ( -- ) "Set earch order to minimum wordlist"
 ; ## "only"  auto  ANS search ext
         ; """https://forth-standard.org/standard/search/ONLY"""
@@ -6905,7 +6912,7 @@ xt_only:
                 jsr xt_set_order
 
 z_only:         rts
-
+.endif
 
 
 ; ## OR ( m n -- n ) "Logically OR TOS and NOS"
@@ -6928,6 +6935,7 @@ xt_or:
 z_or:           rts
 
 
+.if "wordlist" in TALI_OPTIONAL_WORDS
 ; ## ORDER ( -- ) "Print current word order list and current WID"
 ; ## "order"  auto  ANS core
         ; """https://forth-standard.org/standard/search/ORDER
@@ -7036,7 +7044,7 @@ _wid_data:
         .byte str_wid_editor           ; WID 1: "Editor"
         .byte str_wid_assembler        ; WID 2: "Assembler"
         .byte str_wid_root             ; WID 3: "Root"
-
+.endif
 
 
 ; ## OUTPUT ( -- addr ) "Return the address of the EMIT vector address"
@@ -7587,6 +7595,7 @@ z_postpone:     rts
 
 
 
+.if "wordlist" in TALI_OPTIONAL_WORDS
 ; ## PREVIOUS ( -- ) "Remove the first wordlist in the search order"
 ; ## "previous"  auto  ANS search ext
         ; """http://forth-standard.org/standard/search/PREVIOUS"""
@@ -7598,7 +7607,7 @@ xt_previous:
                 jsr xt_set_order
 
 z_previous:     rts
-
+.endif
 
 
 ; ## QUESTION ( addr -- ) "Print content of a variable"
@@ -7950,6 +7959,7 @@ z_right_bracket:
                 rts
 
 
+.if "wordlist" in TALI_OPTIONAL_WORDS
 ; ## ROOT_WORDLIST ( -- u ) "WID for the Root (minimal) wordlist"
 ; ## "root-wordlist"  tested  Tali Editor
 xt_root_wordlist:
@@ -7961,7 +7971,7 @@ xt_root_wordlist:
 
 z_root_wordlist:
                 rts
-
+.endif
 
 ; ## ROT ( a b c -- b c a ) "Rotate first three stack entries downwards"
 ; ## "rot"  auto  ANS core
@@ -8066,6 +8076,7 @@ _done:
 
 
 
+.if "wordlist" in TALI_OPTIONAL_WORDS
 ; ## SEARCH_WORDLIST ( caddr u wid -- 0 | xt 1 | xt -1) "Search for a word in a wordlist"
 ; ## "search-wordlist" auto ANS search
         ; """https://forth-standard.org/standard/search/SEARCH_WORDLIST"""
@@ -8283,6 +8294,7 @@ _done:
 _done_nodrop:
 z_search_wordlist:
                 rts
+.endif
 
 
 
@@ -8389,6 +8401,7 @@ z_see:          rts
 
 
 
+.if "wordlist" in TALI_OPTIONAL_WORDS
 ; ## SET_CURRENT ( wid -- ) "Set the compilation wordlist"
 ; ## "set-current" auto ANS search
         ; """https://forth-standard.org/standard/search/SET-CURRENT"""
@@ -8405,9 +8418,10 @@ xt_set_current:
                 inx
 
 z_set_current:  rts
+.endif
 
 
-
+.if "wordlist" in TALI_OPTIONAL_WORDS
 ; ## SET_ORDER ( wid_n .. wid_1 n -- ) "Set the current search order"
 ; ## "set-order" auto ANS search
         ; """https://forth-standard.org/standard/search/SET-ORDER"""
@@ -8466,7 +8480,7 @@ _loop:
 
 _done:
 z_set_order:    rts
-
+.endif
 
 
 
@@ -10297,6 +10311,7 @@ z_to_number:    rts
 
 
 
+.if "wordlist" in TALI_OPTIONAL_WORDS
 ; ## TO_ORDER ( wid -- ) "Add wordlist at beginning of search order"
 ; ## ">order"  tested  Gforth search
         ; """https://www.complang.tuwien.ac.at/forth/gforth/Docs-html/Word-Lists.html"""
@@ -10317,7 +10332,7 @@ xt_to_order:
                 jsr xt_set_order
 
 z_to_order:     rts
-
+.endif
 
 
 ; ## TO_R ( n -- )(R: -- n) "Push TOS to the Return Stack"
@@ -11388,6 +11403,7 @@ _found_char:
 z_word:         rts
 
 
+.if "wordlist" in TALI_OPTIONAL_WORDS
 ; ## WORDLIST ( -- wid ) "Create new wordlist (from pool of 8)"
 ; ## "wordlist" auto ANS search
         ; """https://forth-standard.org/standard/search/WORDLIST
@@ -11418,7 +11434,7 @@ _ok:
                 stz 1,x         ; 12 is the max, so upper byte is always zero.
 
 z_wordlist:     rts
-
+.endif
 
 
 ; ## WORDS ( -- ) "Print known words from Dictionary"
