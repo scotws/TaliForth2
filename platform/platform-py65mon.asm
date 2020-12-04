@@ -106,15 +106,15 @@ padoffset = $ff              ; offset from CP to PAD (holds number strings)
 TALI_OPTIONAL_WORDS = [ "ed", "editor", "ramdrive", "block", "environment?",
                         "assembler", "wordlist" ]
 
-; "ed" is a string editor.
-; "editor" is a block editor.
+; "ed" is a string editor. (~1.5K)
+; "editor" is a block editor. (~0.25K)
 ;     The EDITOR-WORDLIST will also be removed.
-; "ramdrive" is a ramdrive for testing block words without a block device.
-; "block" is the optional BLOCK words.
+; "ramdrive" is for testing block words without a block device. (~0.3K)
+; "block" is the optional BLOCK words. (~1.4K)
 ; "environment?" is the ENVIRONMENT? word.  While this is a core word
 ;     for ANS-2012, it uses a lot of strings and therefore takes up a lot
-;     of memory.
-; "assembler" is an assembler.
+;     of memory. (~0.2K)
+; "assembler" is an assembler. (~3.2K)
 ;     The ASSEMBLER-WORDLIST will also be removed.
 ; "wordlist" is for the optional SEARCH-ORDER words (eg. wordlists)
 ;     Note: Without "wordlist", you will not be able to use any words from

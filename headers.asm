@@ -1319,9 +1319,12 @@ nt_thru:
 
 nt_list:
         .byte 4, UF
-        .word nt_block_ramdrive_init, xt_list, z_list
+        .word +, xt_list, z_list
         .text "list"
++
+.endif
 
+.if "block" in TALI_OPTIONAL_WORDS && "ramdrive" in TALI_OPTIONAL_WORDS
 nt_block_ramdrive_init:
         .byte 19, UF
         .word +, xt_block_ramdrive_init, z_block_ramdrive_init

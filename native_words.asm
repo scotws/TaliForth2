@@ -11789,7 +11789,7 @@ z_editor_el:    rts
 .endif
 
 ; "l" needs special handling as it's used by LIST in the block words.  
-.if "editor" in TALI_OPTIONAL_WORDS || "block" in TALI_OPTIONAL_WORDS
+.if "block" in TALI_OPTIONAL_WORDS
 ; ## EDITOR_L ( -- ) "List the current screen"
 ; ## "l"  tested  Tali Editor
 
@@ -11887,7 +11887,7 @@ _line_loop:
 z_editor_l:            rts
 .endif
 
-.if "editor" in TALI_OPTIONAL_WORDS
+.if "editor" in TALI_OPTIONAL_WORDS && "block" in TALI_OPTIONAL_WORDS
 ; ## EDITOR_LINE ( line# -- c-addr ) "Turn a line number into address in current screen"
 ; ## "line"  tested  Tali Editor
 
