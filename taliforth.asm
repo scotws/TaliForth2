@@ -5,6 +5,10 @@
 
 ; This is the main file for Tali Forth 2
 
+; Assemble all words unless overridden in the platform file.
+TALI_OPTIONAL_WORDS :?= [ "ed", "editor", "ramdrive", "block",
+                          "environment?", "assembler", "wordlist" ]
+
 ; Label used to calculate UNUSED. Silly for Tali Forth, where we assume
 ; 32 KiB RAM and 32 KiB ROM, but kept here to make the code more useful for
 ; other hardware configurations

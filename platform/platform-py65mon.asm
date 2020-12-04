@@ -101,8 +101,8 @@ padoffset = $ff              ; offset from CP to PAD (holds number strings)
 ; TALI_OPTIONAL_WORDS to remove the associated words when Tali is
 ; assembled.
 
-TALI_OPTIONAL_WORDS = [ "ed", "editor", "ramdrive", "block", "environment?",
-                        "assembler", "wordlist" ]
+TALI_OPTIONAL_WORDS := [ "ed", "editor", "ramdrive", "block",
+                         "environment?", "assembler", "wordlist" ]
 
 ; "ed" is a string editor. (~1.5K)
 ; "editor" is a block editor. (~0.25K)
