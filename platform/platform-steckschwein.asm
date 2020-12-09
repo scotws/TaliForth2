@@ -11,8 +11,10 @@ krn_uart_rx  = $FFE0
 
 ; steckOS uses the prg format used on the C64 with the first
 ; two bytes containing the load address
-* = $7FFE        
-.word $8000
+; This is now handled in the makefile by running:
+;   make taliforth-steckschwein.prg
+;* = $7FFE
+;.word $8000
 * = $8000
 kernel_init:
         ; """Initialize the hardware.

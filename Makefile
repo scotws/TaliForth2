@@ -40,10 +40,11 @@ taliforth-%.bin: platform/platform-%.asm $(COMMON_SOURCES)
 	$<
 
 taliforth-%.prg: platform/platform-%.asm $(COMMON_SOURCES)
-	ophis -l docs/$*-listing.txt \
-	-m docs/$*-labelmap.txt \
-	-o $@ \
-	-c $<
+	64tass --cbm-prg \
+	--list=docs/$*-listing.txt \
+	--labels=docs/$*-labelmap.txt \
+	--output $@ \
+	$<
 
 # Convert the high-level Forth words to ASCII files that Ophis can include
 %.asc: forth_code/%.fs
