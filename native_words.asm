@@ -6567,9 +6567,84 @@ xt_number:
                 stz tmpdsp      ; flag for double
                 stz tmpdsp+1    ; flag for minus
 
+                ; Push the current base onto the stack.
+                ; This is done to handle constants in a different base
+                ; like #1234 and $ABCD and %0101
+                lda base
+                pha
+
+                ; Look at the first character.
+                lda (2,x)
+_check_dec:                
+                cmp #$23        ; ASCII for "#"
+                bne _check_hex
+                ; Switch temporarily to decimal
+                lda #$0A
+                bra _base_changed
+_check_hex:
+                cmp #$24        ; ASCII for "$"
+                bne _check_binary
+                ; Switch temporarily to hexadecimal
+                lda #$10
+                bra _base_changed
+_check_binary:
+                cmp #$25        ; ASCII for "%"
+                bne _check_char
+                ; Switch temporarily to hexadecimal
+                lda #$02
+                bra _base_changed
+_check_char:                
+                cmp #$27        ; ASCII for "'"
+                bne _check_minus
+                ; Character constants should have a length of 3
+                ; and another single quote in position 3.
+                lda 0,x         ; Get the length
+                cmp #$03
+                bne _not_a_char
+                lda 1,x
+                bne _not_a_char ; No compare needed to check for non-zero.
+                ; Compute location of last character
+                ; We know the string is 3 characters long, so last char
+                ; is known to be at offset +2.
+                lda 2,x         ; LSB of address
+                clc
+                adc #2          ; length of string
+                sta tmptos
+                lda 3,x
+                adc #0          ; only need carry
+                sta tmptos+1
+                lda (tmptos)
+                cmp #$27        ; ASCII for "'"
+                bne _not_a_char
+                ; The char we want is between the single quotes.
+                inc 2,x
+                bne +
+                inc 3,x
++
+                ; Grab the character and replace the string with just the char.
+                lda (2,x)
+                sta 2,x
+                stz 3,x
+                jmp _single ; Single with drop the TOS for us.
+_not_a_char:
+                ; This label was just a bit too far away for a single bra from
+                ; the character checking code, so we'll sneak it here and
+                ; then bra again to get there.
+                bra _number_error
+
+_base_changed:
+                sta base        ; Switch to the new base
+                inc 2,x         ; start one character later
+                bne +
+                inc 3,x
++
+                dec 0,x         ; decrease string length by one
+
+    
+                lda (2,x)       ; Load the first char again
+_check_minus:                
                 ; If the first character is a minus, strip it off and set
                 ; the flag
-                lda (2,x)
                 cmp #$2D        ; ASCII for "-"
                 bne _check_dot
 
@@ -6636,7 +6711,8 @@ _main:
                 ; test length of returned string, which should be zero
                 lda 0,x
                 beq _all_converted
-
+                
+_number_error:
                 ; Something went wrong, we still have characters left over,
                 ; so we print an error and abort. If the NUMBER was called
                 ; by INTERPRET, we've already checked for Forth words, so
@@ -6647,6 +6723,10 @@ _main:
                 lda #$3C        ; ASCII for "<"
                 jsr emit_a
                 jsr xt_space
+
+                ; Pull the base of the stack and restore it.
+                pla
+                sta base
 
                 lda #err_syntax
                 jmp error
@@ -6691,6 +6771,9 @@ _single:
 
                 jsr xt_negate
 _done:
+                ; Restore the base (in case it was changed by #/$/%)
+                pla
+                sta base
 z_number:       rts
 
 
