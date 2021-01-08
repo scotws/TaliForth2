@@ -163,7 +163,7 @@ RTS instruction at the end of each word.
 | NIP | `nip` | ANS core ext | 13 | **auto** |
 | NOT_EQUALS | `<>` | ANS core ext | 29 | **auto** |
 | NOT_ROTE | `-rot` | Gforth | 27 | **auto** |
-| NUMBER | `number` | Tali Forth | 142 | **auto** |
+| NUMBER | `number` | Tali Forth | 237 | **auto** |
 | NUMBER_SIGN | `#` | ANS core | 52 | **auto** |
 | NUMBER_SIGN_GREATER | `#>` | ANS core | 33 | **auto** |
 | NUMBER_SIGN_S | `#s` | ANS core | 16 | **auto** |
