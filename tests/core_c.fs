@@ -180,6 +180,43 @@ T{ max-uint dup max-base gn1 -> max-uint dup 0 }T
 T{ gn2 -> 10 a }T
 
 \ ------------------------------------------------------------------------
+testing numeric constants (eg. #1234 $ABCD %1010 'A')
+decimal
+T{ #10 -> 10 }T
+T{ $10 -> 16 }T
+T{ %10 -> 2 }T
+T{ #-10 -> -10 }T
+T{ $-10 -> -16 }T
+T{ %-10 -> -2 }T
+\ Double number versions
+T{ #10. -> 10 0 }T
+T{ $10. -> 16 0 }T
+T{ %10. -> 2 0 }T
+T{ #-10. -> -10 -1 }T
+T{ $-10. -> -16 -1 }T
+T{ %-10. -> -2 -1 }T
+\ Test again using a different base
+hex
+T{ #10 -> A }T
+T{ $10 -> 10 }T
+T{ %10 -> 2 }T
+T{ #-10 -> -A }T
+T{ $-10 -> -10 }T
+T{ %-10 -> -2 }T
+\ Double number versions
+T{ #10. -> A 0 }T
+T{ $10. -> 10 0 }T
+T{ %10. -> 2 0 }T
+T{ #-10. -> -A -1 }T
+T{ $-10. -> -10 -1 }T
+T{ %-10. -> -2 -1 }T
+\ Character constants
+T{ '!' -> 21 }T
+T{ 'A' -> 41 }T
+T{ 'a' -> 61 }T
+T{ '~' -> 7E }T
+
+\ ------------------------------------------------------------------------
 testing action-of defer defer! defer@ is
 
 T{ defer defer1 -> }T
