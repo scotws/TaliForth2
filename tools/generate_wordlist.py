@@ -56,10 +56,15 @@ def calc_size(word, raw_labels=labels):
     start = 'xt_'+word
     end = 'z_'+word
 
-    start_addr = raw_labels[start]
-    end_addr = raw_labels[end]
+    try:
+        start_addr = raw_labels[start]
+        end_addr = raw_labels[end]
 
-    size = end_addr-start_addr
+        size = end_addr-start_addr
+    except KeyError:
+        # If certain words are deselected in the platform file,
+        # they will be reported as missing.
+        size = "missing"
 
     return size
 

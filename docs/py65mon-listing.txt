@@ -1,7 +1,7 @@
 
 ; 64tass Turbo Assembler Macro V1.54.1900 listing file
 ; 64tass --nostart --list=docs/py65mon-listing.txt --labels=docs/py65mon-labelmap.txt --output taliforth-py65mon.bin platform/platform-py65mon.asm
-; Sat Apr 11 16:02:18 2020
+; Fri Dec  4 16:11:22 2020
 
 ;Offset	;Hex		;Monitor	;Source
 
@@ -20,6 +20,8 @@
 =768					cp0       = buffer0+bsize+1  ; Dictionary starts after last buffer
 =31744					cp_end    = hist_buff        ; Last RAM byte available for code
 =$ff					padoffset = $ff              ; offset from CP to PAD (holds number strings)
+=["ed","editor","ramdrive","block","environment?","assembler","wordlist"]
+					                         "environment?", "assembler", "wordlist" ]
 
 ;******  Processing file: platform/../taliforth.asm
 
@@ -205,7 +207,7 @@
 .80c5					z_quit:
 .80c5					cold_zp_table:
 >80c5	00 08				        .word cp0+256+1024      ; cp moved to make room for user vars and
->80c7	24 c8				        .word dictionary_start  ; dp
+>80c7	29 ba				        .word dictionary_start  ; dp
 >80c9	00 00				        .word 0                 ; workword
 >80cb	00 00				        .word 0                 ; insrc (SOURCE-ID is 0 for keyboard)
 >80cd	00 02				        .word buffer0           ; cib
@@ -227,10 +229,10 @@
 >80e9	00 00				        .word 0                         ; SCR
 >80eb	00				        .byte 0                         ; CURRENT = FORTH-WORDLIST
 >80ec	04				        .byte 4                         ; #WORDLISTS (FORTH EDITOR ASSEMBLER ROOT)
->80ed	24 c8				        .word dictionary_start          ; FORTH-WORDLIST
->80ef	b8 c8				        .word editor_dictionary_start   ; EDITOR-WORDLIST
+>80ed	29 ba				        .word dictionary_start          ; FORTH-WORDLIST
+>80ef	71 c8				        .word editor_dictionary_start   ; EDITOR-WORDLIST
 >80f1	c1 c8				        .word assembler_dictionary_start ; ASSEMBLER-WORDLIST
->80f3	60 c8				        .word root_dictionary_start     ; ROOT-WORDLIST
+>80f3	30 c8				        .word root_dictionary_start     ; ROOT-WORDLIST
 >80f5	00 00 00 00 00 00 00 00		        .word 0,0,0,0,0,0,0,0           ; User wordlists
 >80fd	00 00 00 00 00 00 00 00
 >8105	01				        .byte 1                         ; #ORDER
@@ -528,9 +530,9 @@
 .82f4	85 00		sta $00		                sta cp
 .82f6	a9 03		lda #$03	                lda #>cp0
 .82f8	85 01		sta $01		                sta cp+1
-.82fa	a9 24		lda #$24	                lda #<dictionary_start
+.82fa	a9 29		lda #$29	                lda #<dictionary_start
 .82fc	85 02		sta $02		                sta dp
-.82fe	a9 c8		lda #$c8	                lda #>dictionary_start
+.82fe	a9 ba		lda #$ba	                lda #>dictionary_start
 .8300	85 03		sta $03		                sta dp+1
 .8302	a9 0a		lda #$0a	                lda #err_negallot
 .8304	4c 01 d6	jmp $d601	                jmp error
@@ -8157,1183 +8159,1194 @@
 
 ;******  Processing file: platform/../headers.asm
 
-.ba29					nt_bye:
->ba29	03				        .byte 3         ; length of word strings
->ba2a	00				        .byte 0         ; status byte
->ba2b	00 00				        .word 0000      ; next word in Dictionary, 0000 signals end
->ba2d	ed 85				        .word xt_bye    ; start of code block (xt of this word)
->ba2f	f0 85				        .word z_bye     ; end of code (RTS)
->ba31	62 79 65			        .text "bye"     ; word name, always lower case, not zero-terminated
-.ba34					nt_cold:
->ba34	04 00				        .byte 4, 0
->ba36	29 ba 00 80 c5 80		        .word nt_bye, xt_cold, z_cold
->ba3c	63 6f 6c 64			        .text "cold"
-.ba40					nt_ed:
->ba40	02 08				        .byte 2, NN
->ba42	34 ba ad 8d b0 8d		        .word nt_cold, xt_ed, z_ed
->ba48	65 64				        .text "ed"
->ba4a	03 08				nt_see: .byte 3, NN
->ba4c	40 ba 03 9c 90 9c		        .word nt_ed, xt_see, z_see
->ba52	73 65 65			        .text "see"
-.ba55					nt_forth:
->ba55	05 00				        .byte 5, 0
->ba57	4a ba b8 90 be 90		        .word nt_see, xt_forth, z_forth
->ba5d	66 6f 72 74 68			        .text "forth"
-.ba62					nt_order:
->ba62	05 00				        .byte 5, 0
->ba64	55 ba c7 97 f1 97		        .word nt_forth, xt_order, z_order
->ba6a	6f 72 64 65 72			        .text "order"
-.ba6f					nt_to_order:
->ba6f	06 00				        .byte 6, 0
->ba71	62 ba d9 a2 eb a2		        .word nt_order, xt_to_order, z_to_order
->ba77	3e 6f 72 64 65 72		        .text ">order"
-.ba7d					nt_previous:
->ba7d	08 00				        .byte 8, 0
->ba7f	6f ba d7 99 e3 99		        .word nt_to_order, xt_previous, z_previous
->ba85	70 72 65 76 69 6f 75 73		        .text "previous"
-.ba8d					nt_also:
->ba8d	04 00				        .byte 4, 0
->ba8f	7d ba 20 83 2f 83		        .word nt_previous, xt_also, z_also
->ba95	61 6c 73 6f			        .text "also"
-.ba99					nt_only:
->ba99	04 00				        .byte 4, 0
->ba9b	8d ba a9 97 b4 97		        .word nt_also, xt_only, z_only
->baa1	6f 6e 6c 79			        .text "only"
-.baa5					nt_forth_wordlist:
->baa5	0e 00				        .byte 14, 0
->baa7	99 ba 23 a7 29 a7		        .word nt_only, xt_forth_wordlist, z_forth_wordlist
->baad	66 6f 72 74 68 2d 77 6f		        .text "forth-wordlist"
->bab5	72 64 6c 69 73 74
-.babb					nt_editor_wordlist:
->babb	0f 00				        .byte 15, 0
->babd	a5 ba 8a 97 92 97		        .word nt_forth_wordlist, xt_editor_wordlist, z_editor_wordlist
->bac3	65 64 69 74 6f 72 2d 77		        .text "editor-wordlist"
->bacb	6f 72 64 6c 69 73 74
-.bad2					nt_assembler_wordlist:
->bad2	12 00				        .byte 18, 0
->bad4	bb ba 23 a3 2b a3		        .word nt_editor_wordlist, xt_assembler_wordlist, z_assembler_wordlist
->bada	61 73 73 65 6d 62 6c 65		        .text "assembler-wordlist"
->bae2	72 2d 77 6f 72 64 6c 69 73 74
-.baec					nt_root_wordlist:
->baec	0d 00				        .byte 13, 0
->baee	d2 ba d0 9a d8 9a		        .word nt_assembler_wordlist, xt_root_wordlist, z_root_wordlist
->baf4	72 6f 6f 74 2d 77 6f 72		        .text "root-wordlist"
->bafc	64 6c 69 73 74
-.bb01					nt_get_order:
->bb01	09 00				        .byte 9, 0
->bb03	ec ba 24 91 4c 91		        .word nt_root_wordlist, xt_get_order, z_get_order
->bb09	67 65 74 2d 6f 72 64 65		        .text "get-order"
->bb11	72
-.bb12					nt_set_order:
->bb12	09 00				        .byte 9, 0
->bb14	01 bb 9d 9c d0 9c		        .word nt_get_order, xt_set_order, z_set_order
->bb1a	73 65 74 2d 6f 72 64 65		        .text "set-order"
->bb22	72
-.bb23					nt_get_current:
->bb23	0b 00				        .byte 11, 0
->bb25	12 bb 19 91 23 91		        .word nt_set_order, xt_get_current, z_get_current
->bb2b	67 65 74 2d 63 75 72 72		        .text "get-current"
->bb33	65 6e 74
-.bb36					nt_set_current:
->bb36	0b 10				        .byte 11, UF
->bb38	23 bb 91 9c 9c 9c		        .word nt_get_current, xt_set_current, z_set_current
->bb3e	73 65 74 2d 63 75 72 72		        .text "set-current"
->bb46	65 6e 74
-.bb49					nt_search_wordlist:
->bb49	0f 10				        .byte 15, UF
->bb4b	36 bb 22 9b 02 9c		        .word nt_set_current, xt_search_wordlist, z_search_wordlist
->bb51	73 65 61 72 63 68 2d 77		        .text "search-wordlist"
->bb59	6f 72 64 6c 69 73 74
-.bb60					nt_wordlist:
->bb60	08 00				        .byte 8, 0
->bb62	49 bb 7d a6 93 a6		        .word nt_search_wordlist, xt_wordlist, z_wordlist
->bb68	77 6f 72 64 6c 69 73 74		        .text "wordlist"
-.bb70					nt_definitions:
->bb70	0b 00				        .byte 11, 0
->bb72	60 bb dd 8a e5 8a		        .word nt_wordlist, xt_definitions, z_definitions
->bb78	64 65 66 69 6e 69 74 69		        .text "definitions"
->bb80	6f 6e 73
-.bb83					nt_block_ramdrive_init:
->bb83	13 10				        .byte 19, UF
->bb85	70 bb 04 84 2c 85		        .word nt_definitions, xt_block_ramdrive_init, z_block_ramdrive_init
->bb8b	62 6c 6f 63 6b 2d 72 61		        .text "block-ramdrive-init"
->bb93	6d 64 72 69 76 65 2d 69 6e 69 74
-.bb9e					nt_list:
->bb9e	04 10				        .byte 4, UF
->bba0	83 bb 6d 93 79 93		        .word nt_block_ramdrive_init, xt_list, z_list
->bba6	6c 69 73 74			        .text "list"
-.bbaa					nt_thru:
->bbaa	04 10				        .byte 4, UF
->bbac	9e bb 48 a1 8c a1		        .word nt_list, xt_thru, z_thru
->bbb2	74 68 72 75			        .text "thru"
-.bbb6					nt_load:
->bbb6	04 10				        .byte 4, UF
->bbb8	aa bb a7 93 ea 93		        .word nt_thru, xt_load, z_load
->bbbe	6c 6f 61 64			        .text "load"
-.bbc2					nt_flush:
->bbc2	05 00				        .byte 5, 0
->bbc4	b6 bb 77 90 80 90		        .word nt_load, xt_flush, z_flush
->bbca	66 6c 75 73 68			        .text "flush"
-.bbcf					nt_empty_buffers:
->bbcf	0d 00				        .byte 13, 0
->bbd1	c2 bb e9 8d ef 8d		        .word nt_flush, xt_empty_buffers, z_empty_buffers
->bbd7	65 6d 70 74 79 2d 62 75		        .text "empty-buffers"
->bbdf	66 66 65 72 73
-.bbe4					nt_buffer:
->bbe4	06 00				        .byte 6, 0
->bbe6	cf bb a5 85 d5 85		        .word nt_empty_buffers, xt_buffer, z_buffer
->bbec	62 75 66 66 65 72		        .text "buffer"
-.bbf2					nt_update:
->bbf2	06 00				        .byte 6, 0
->bbf4	e4 bb e0 a5 e8 a5		        .word nt_buffer, xt_update, z_update
->bbfa	75 70 64 61 74 65		        .text "update"
-.bc00					nt_block:
->bc00	05 00				        .byte 5, 0
->bc02	f2 bb b1 83 03 84		        .word nt_update, xt_block, z_block
->bc08	62 6c 6f 63 6b			        .text "block"
-.bc0d					nt_save_buffers:
->bc0d	0c 00				        .byte 12, 0
->bc0f	00 bc 40 9e 5a 9e		        .word nt_block, xt_save_buffers, z_save_buffers
->bc15	73 61 76 65 2d 62 75 66		        .text "save-buffers"
->bc1d	66 65 72 73
-.bc21					nt_block_read_vector:
->bc21	11 28				        .byte 17, HC+NN ; Deferred words need the HC (Code Field) flag.
->bc23	0d bc 3b 85 4a 85		        .word nt_save_buffers, xt_block_read_vector, z_block_read_vector
->bc29	62 6c 6f 63 6b 2d 72 65		        .text "block-read-vector"
->bc31	61 64 2d 76 65 63 74 6f 72
-.bc3a					nt_block_read:
->bc3a	0a 28				        .byte 10, HC+NN ; Deferred words need the HC (Code Field) flag.
->bc3c	21 bc 2d 85 3b 85		        .word nt_block_read_vector, xt_block_read, z_block_read
->bc42	62 6c 6f 63 6b 2d 72 65		        .text "block-read"
->bc4a	61 64
-.bc4c					nt_block_write_vector:
->bc4c	12 08				        .byte 18, NN ; Deferred words need the HC (Code Field) flag.
->bc4e	3a bc 5e 85 6d 85		        .word nt_block_read, xt_block_write_vector, z_block_write_vector
->bc54	62 6c 6f 63 6b 2d 77 72		        .text "block-write-vector"
->bc5c	69 74 65 2d 76 65 63 74 6f 72
-.bc66					nt_block_write:
->bc66	0b 08				        .byte 11, NN ; Deferred words need the HC (Code Field) flag.
->bc68	4c bc 50 85 5e 85		        .word nt_block_write_vector, xt_block_write, z_block_write
->bc6e	62 6c 6f 63 6b 2d 77 72		        .text "block-write"
->bc76	69 74 65
-.bc79					nt_blk:
->bc79	03 00				        .byte 3, 0
->bc7b	66 bc 93 83 a2 83		        .word nt_block_write, xt_blk, z_blk
->bc81	62 6c 6b			        .text "blk"
-.bc84					nt_scr:
->bc84	03 00				        .byte 3, 0
->bc86	79 bc 5b 9e 6a 9e		        .word nt_blk, xt_scr, z_scr
->bc8c	73 63 72			        .text "scr"
-.bc8f					nt_blkbuffer:
->bc8f	09 00				        .byte 9, 0
->bc91	84 bc a3 83 b0 83		        .word nt_scr, xt_blkbuffer, z_blkbuffer
->bc97	62 6c 6b 62 75 66 66 65		        .text "blkbuffer"
->bc9f	72
-.bca0					nt_buffblocknum:
->bca0	0c 00				        .byte 12, 0
->bca2	8f bc 95 85 a4 85		        .word nt_blkbuffer, xt_buffblocknum, z_buffblocknum
->bca8	62 75 66 66 62 6c 6f 63		        .text "buffblocknum"
->bcb0	6b 6e 75 6d
-.bcb4					nt_buffstatus:
->bcb4	0a 00				        .byte 10, 0
->bcb6	a0 bc dd 85 ec 85		        .word nt_buffblocknum, xt_buffstatus, z_buffstatus
->bcbc	62 75 66 66 73 74 61 74		        .text "buffstatus"
->bcc4	75 73
-.bcc6					nt_buffer_colon:
->bcc6	07 00				        .byte 7, 0
->bcc8	b4 bc d6 85 dc 85		        .word nt_buffstatus, xt_buffer_colon, z_buffer_colon
->bcce	62 75 66 66 65 72 3a		        .text "buffer:"
-.bcd5					nt_useraddr:
->bcd5	08 00				        .byte 8, 0
->bcd7	c6 bc e9 a5 f3 a5		        .word nt_buffer_colon, xt_useraddr, z_useraddr
->bcdd	75 73 65 72 61 64 64 72		        .text "useraddr"
-.bce5					nt_action_of:
->bce5	09 04				        .byte 9, IM
->bce7	d5 bc 70 82 88 82		        .word nt_useraddr, xt_action_of, z_action_of
->bced	61 63 74 69 6f 6e 2d 6f		        .text "action-of"
->bcf5	66
-.bcf6					nt_is:
->bcf6	02 04				        .byte 2, IM
->bcf8	e5 bc eb 92 03 93		        .word nt_action_of, xt_is, z_is
->bcfe	69 73				        .text "is"
-.bd00					nt_defer_store:
->bd00	06 00				        .byte 6, 0
->bd02	f6 bc d6 8a dc 8a		        .word nt_is, xt_defer_store, z_defer_store
->bd08	64 65 66 65 72 21		        .text "defer!"
-.bd0e					nt_defer_fetch:
->bd0e	06 00				        .byte 6, 0
->bd10	00 bd cf 8a d5 8a		        .word nt_defer_store, xt_defer_fetch, z_defer_fetch
->bd16	64 65 66 65 72 40		        .text "defer@"
-.bd1c					nt_endcase:
->bd1c	07 0d				        .byte 7, IM+CO+NN
->bd1e	0e bd f0 8d 04 8e		        .word nt_defer_fetch, xt_endcase, z_endcase
->bd24	65 6e 64 63 61 73 65		        .text "endcase"
-.bd2b					nt_endof:
->bd2b	05 0d				        .byte 5, IM+CO+NN
->bd2d	1c bd b1 8d ca 8d		        .word nt_endcase, xt_endof, z_endof ; shares code with ELSE
->bd33	65 6e 64 6f 66			        .text "endof"
-.bd38					nt_of:
->bd38	02 0d				        .byte 2, IM+CO+NN
->bd3a	2b bd 71 97 89 97		        .word nt_endof, xt_of, z_of
->bd40	6f 66				        .text "of"
-.bd42					nt_case:
->bd42	04 0d				        .byte 4, IM+CO+NN
->bd44	38 bd 23 a7 29 a7		        .word nt_of, xt_case, z_case    ; shares code with ZERO
->bd4a	63 61 73 65			        .text "case"
-.bd4e					nt_while:
->bd4e	05 0d				        .byte 5, IM+CO+NN
->bd50	42 bd 0d a6 20 a6		        .word nt_case, xt_while, z_while
->bd56	77 68 69 6c 65			        .text "while"
-.bd5b					nt_until:
->bd5b	05 0d				        .byte 5, IM+CO+NN
->bd5d	4e bd c5 a5 cf a5		        .word nt_while, xt_until, z_until
->bd63	75 6e 74 69 6c			        .text "until"
-.bd68					nt_repeat:
->bd68	06 0d				        .byte 6, IM+CO+NN
->bd6a	5b bd bc 9a c8 9a		        .word nt_until, xt_repeat, z_repeat
->bd70	72 65 70 65 61 74		        .text "repeat"
-.bd76					nt_else:
->bd76	04 0d				        .byte 4, IM+CO+NN
->bd78	68 bd b1 8d ca 8d		        .word nt_repeat, xt_else, z_else
->bd7e	65 6c 73 65			        .text "else"
-.bd82					nt_then:
->bd82	04 0d				        .byte 4, IM+CO+NN
->bd84	76 bd 3e a1 47 a1		        .word nt_else, xt_then, z_then
->bd8a	74 68 65 6e			        .text "then"
-.bd8e					nt_if:
->bd8e	02 0d				        .byte 2, IM+CO+NN
->bd90	82 bd f3 91 03 92		        .word nt_then, xt_if, z_if
->bd96	69 66				        .text "if"
-.bd98					nt_dot_paren:
->bd98	02 04				        .byte 2, IM
->bd9a	8e bd 48 8c 56 8c		        .word nt_if, xt_dot_paren, z_dot_paren
->bda0	2e 28				        .text ".("
-.bda2					nt_paren:
->bda2	01 04				        .byte 1, IM
->bda4	98 bd 51 98 60 98		        .word nt_dot_paren, xt_paren, z_paren
->bdaa	28				        .text "("
-.bdab					nt_word:
->bdab	04 10				        .byte 4, UF
->bdad	a2 bd 37 a6 7c a6		        .word nt_paren, xt_word, z_word
->bdb3	77 6f 72 64			        .text "word"
-.bdb7					nt_find:
->bdb7	04 10				        .byte 4, UF
->bdb9	ab bd 83 8f ca 8f		        .word nt_word, xt_find, z_find
->bdbf	66 69 6e 64			        .text "find"
-.bdc3					nt_environment_q:
->bdc3	0c 10				        .byte 12, UF
->bdc5	b7 bd 05 8e 81 8e		        .word nt_find, xt_environment_q, z_environment_q
->bdcb	65 6e 76 69 72 6f 6e 6d		        .text "environment?"
->bdd3	65 6e 74 3f
-.bdd7					nt_search:
->bdd7	06 18				        .byte 6, UF+NN
->bdd9	c3 bd 6b 9e 09 9f		        .word nt_environment_q, xt_search, z_search
->bddf	73 65 61 72 63 68		        .text "search"
-.bde5					nt_compare:
->bde5	07 10				        .byte 7, UF
->bde7	d7 bd 78 87 dc 87		        .word nt_search, xt_compare, z_compare
->bded	63 6f 6d 70 61 72 65		        .text "compare"
-.bdf4					nt_disasm:
->bdf4	06 10				        .byte 6, UF
->bdf6	e5 bd 2a 8b 30 8b		        .word nt_compare, xt_disasm, z_disasm
->bdfc	64 69 73 61 73 6d		        .text "disasm"
-.be02					nt_dot_s:
->be02	02 00				        .byte 2, 0
->be04	f4 bd 90 8c d3 8c		        .word nt_disasm, xt_dot_s, z_dot_s
->be0a	2e 73				        .text ".s"
-.be0c					nt_dump:
->be0c	04 10				        .byte 4, UF
->be0e	02 be 24 8d 8a 8d		        .word nt_dot_s, xt_dump, z_dump
->be14	64 75 6d 70			        .text "dump"
-.be18					nt_bell:
->be18	04 00				        .byte 4, 0
->be1a	0c be 84 83 89 83		        .word nt_dump, xt_bell, z_bell
->be20	62 65 6c 6c			        .text "bell"
-.be24					nt_align:
->be24	05 00				        .byte 5, 0
->be26	18 be aa 82 aa 82		        .word nt_bell, xt_align, z_align
->be2c	61 6c 69 67 6e			        .text "align"
-.be31					nt_aligned:
->be31	07 00				        .byte 7, 0
->be33	24 be aa 82 aa 82		        .word nt_align, xt_align, z_align
->be39	61 6c 69 67 6e 65 64		        .text "aligned"
-.be40					nt_wordsize:
->be40	08 10				        .byte 8, UF
->be42	31 be f0 a6 10 a7		        .word nt_aligned, xt_wordsize, z_wordsize
->be48	77 6f 72 64 73 69 7a 65		        .text "wordsize"
-.be50					nt_words:
->be50	05 00				        .byte 5, 0
->be52	40 be 94 a6 ef a6		        .word nt_wordsize, xt_words, z_words
->be58	77 6f 72 64 73			        .text "words"
-.be5d					nt_marker:
->be5d	06 04				        .byte 6, IM
->be5f	50 be 99 94 d6 94		        .word nt_words, xt_marker, z_marker
->be65	6d 61 72 6b 65 72		        .text "marker"
-.be6b					nt_at_xy:
->be6b	05 10				        .byte 5, UF
->be6d	5d be 50 83 6d 83		        .word nt_marker, xt_at_xy, z_at_xy
->be73	61 74 2d 78 79			        .text "at-xy"
-.be78					nt_page:
->be78	04 00				        .byte 4, 0
->be7a	6b be 33 98 50 98		        .word nt_at_xy, xt_page, z_page
->be80	70 61 67 65			        .text "page"
-.be84					nt_cr:
->be84	02 00				        .byte 2, 0
->be86	78 be 53 89 58 89		        .word nt_page, xt_cr, z_cr
->be8c	63 72				        .text "cr"
-.be8e					nt_input:
->be8e	05 00				        .byte 5, 0
->be90	84 be 47 92 51 92		        .word nt_cr, xt_input, z_input
->be96	69 6e 70 75 74			        .text "input"
-.be9b					nt_output:
->be9b	06 00				        .byte 6, 0
->be9d	8e be 0a 98 14 98		        .word nt_input, xt_output, z_output
->bea3	6f 75 74 70 75 74		        .text "output"
-.bea9					nt_sign:
->bea9	04 10				        .byte 4, UF
->beab	9b be 69 9f 7d 9f		        .word nt_output, xt_sign, z_sign
->beb1	73 69 67 6e			        .text "sign"
-.beb5					nt_hold:
->beb5	04 10				        .byte 4, UF
->beb7	a9 be c7 91 d8 91		        .word nt_sign, xt_hold, z_hold
->bebd	68 6f 6c 64			        .text "hold"
-.bec1					nt_number_sign_greater:
->bec1	02 10				        .byte 2, UF
->bec3	b5 be 3e 97 5f 97		        .word nt_hold, xt_number_sign_greater, z_number_sign_greater
->bec9	23 3e				        .text "#>"
-.becb					nt_number_sign_s:
->becb	02 10				        .byte 2, UF
->becd	c1 be 60 97 70 97		        .word nt_number_sign_greater, xt_number_sign_s, z_number_sign_s
->bed3	23 73				        .text "#s"
-.bed5					nt_number_sign:
->bed5	01 10				        .byte 1, UF
->bed7	cb be 09 97 3d 97		        .word nt_number_sign_s, xt_number_sign, z_number_sign
->bedd	23				        .text "#"
-.bede					nt_less_number_sign:
->bede	02 00				        .byte 2, 0
->bee0	d5 be 4a 93 57 93		        .word nt_number_sign, xt_less_number_sign, z_less_number_sign
->bee6	3c 23				        .text "<#"
-.bee8					nt_to_in:
->bee8	03 00				        .byte 3, 0
->beea	de be 2e a2 38 a2		        .word nt_less_number_sign, xt_to_in, z_to_in
->bef0	3e 69 6e			        .text ">in"
-.bef3					nt_within:
->bef3	06 10				        .byte 6, UF
->bef5	e8 be 21 a6 36 a6		        .word nt_to_in, xt_within, z_within
->befb	77 69 74 68 69 6e		        .text "within"
-.bf01					nt_hexstore:
->bf01	08 10				        .byte 8, UF
->bf03	f3 be 74 91 c6 91		        .word nt_within, xt_hexstore, z_hexstore
->bf09	68 65 78 73 74 6f 72 65		        .text "hexstore"
-.bf11					nt_cleave:
->bf11	06 10				        .byte 6, UF
->bf13	01 bf 3c 86 88 86		        .word nt_hexstore, xt_cleave, z_cleave
->bf19	63 6c 65 61 76 65		        .text "cleave"
-.bf1f					nt_pad:
->bf1f	03 00				        .byte 3, 0
->bf21	11 bf 23 98 32 98		        .word nt_cleave, xt_pad, z_pad
->bf27	70 61 64			        .text "pad"
-.bf2a					nt_cmove:
->bf2a	05 10				        .byte 5, UF
->bf2c	1f bf 89 86 c3 86		        .word nt_pad, xt_cmove, z_cmove
->bf32	63 6d 6f 76 65			        .text "cmove"
-.bf37					nt_cmove_up:
->bf37	06 10				        .byte 6, UF
->bf39	2a bf c4 86 fe 86		        .word nt_cmove, xt_cmove_up, z_cmove_up
->bf3f	63 6d 6f 76 65 3e		        .text "cmove>"
-.bf45					nt_move:
->bf45	04 18				        .byte 4, NN+UF
->bf47	37 bf b2 95 d0 95		        .word nt_cmove_up, xt_move, z_move
->bf4d	6d 6f 76 65			        .text "move"
-.bf51					nt_backslash:
->bf51	01 04				        .byte 1, IM
->bf53	45 bf 6e 83 76 83		        .word nt_move, xt_backslash, z_backslash
->bf59	5c				        .byte $5c
-.bf5a					nt_star_slash:
->bf5a	02 10				        .byte 2, UF
->bf5c	51 bf e5 a0 ed a0		        .word nt_backslash, xt_star_slash, z_star_slash
->bf62	2a 2f				        .text "*/"
-.bf64					nt_star_slash_mod:
->bf64	05 10				        .byte 5, UF
->bf66	5a bf ee a0 fd a0		        .word nt_star_slash, xt_star_slash_mod, z_star_slash_mod
->bf6c	2a 2f 6d 6f 64			        .text "*/mod"
-.bf71					nt_mod:
->bf71	03 10				        .byte 3, UF
->bf73	64 bf a9 95 b1 95		        .word nt_star_slash_mod, xt_mod, z_mod
->bf79	6d 6f 64			        .text "mod"
-.bf7c					nt_slash_mod:
->bf7c	04 10				        .byte 4, UF
->bf7e	71 bf 83 9f 9a 9f		        .word nt_mod, xt_slash_mod, z_slash_mod
->bf84	2f 6d 6f 64			        .text "/mod"
-.bf88					nt_slash:
->bf88	01 10				        .byte 1, UF
->bf8a	7c bf 7e 9f 9a 9f		        .word nt_slash_mod, xt_slash, z_slash
->bf90	2f				        .text "/"
-.bf91					nt_fm_slash_mod:
->bf91	06 10				        .byte 6, UF
->bf93	88 bf 81 90 b7 90		        .word nt_slash, xt_fm_slash_mod, z_fm_slash_mod
->bf99	66 6d 2f 6d 6f 64		        .text "fm/mod"
-.bf9f					nt_sm_slash_rem:
->bf9f	06 10				        .byte 6, UF
->bfa1	91 bf 57 a0 7f a0		        .word nt_fm_slash_mod, xt_sm_slash_rem, z_sm_slash_rem
->bfa7	73 6d 2f 72 65 6d		        .text "sm/rem"
-.bfad					nt_um_slash_mod:
->bfad	06 10				        .byte 6, UF
->bfaf	9f bf 36 a5 77 a5		        .word nt_sm_slash_rem, xt_um_slash_mod, z_um_slash_mod
->bfb5	75 6d 2f 6d 6f 64		        .text "um/mod"
-.bfbb					nt_star:
->bfbb	01 10				        .byte 1, UF
->bfbd	ad bf dc a0 e4 a0		        .word nt_um_slash_mod, xt_star, z_star
->bfc3	2a				        .text "*"
-.bfc4					nt_um_star:
->bfc4	03 10				        .byte 3, UF
->bfc6	bb bf 78 a5 bd a5		        .word nt_star, xt_um_star, z_um_star
->bfcc	75 6d 2a			        .text "um*"
-.bfcf					nt_m_star:
->bfcf	02 10				        .byte 2, UF
->bfd1	c4 bf 7e 94 98 94		        .word nt_um_star, xt_m_star, z_m_star
->bfd7	6d 2a				        .text "m*"
-.bfd9					nt_count:
->bfd9	05 10				        .byte 5, UF
->bfdb	cf bf 3f 89 52 89		        .word nt_m_star, xt_count, z_count
->bfe1	63 6f 75 6e 74			        .text "count"
-.bfe6					nt_decimal:
->bfe6	07 00				        .byte 7, 0
->bfe8	d9 bf 95 8a 9b 8a		        .word nt_count, xt_decimal, z_decimal
->bfee	64 65 63 69 6d 61 6c		        .text "decimal"
-.bff5					nt_hex:
->bff5	03 00				        .byte 3, 0
->bff7	e6 bf 6d 91 73 91		        .word nt_decimal, xt_hex, z_hex
->bffd	68 65 78			        .text "hex"
-.c000					nt_to_number:
->c000	07 10				        .byte 7, UF
->c002	f5 bf 39 a2 d8 a2		        .word nt_hex, xt_to_number, z_to_number
->c008	3e 6e 75 6d 62 65 72		        .text ">number"
-.c00f					nt_number:
->c00f	06 10				        .byte 6, UF
->c011	00 c0 7a 96 08 97		        .word nt_to_number, xt_number, z_number
->c017	6e 75 6d 62 65 72		        .text "number"
-.c01d					nt_digit_question:
->c01d	06 10				        .byte 6, UF
->c01f	0f c0 f5 8a 29 8b		        .word nt_number, xt_digit_question, z_digit_question
->c025	64 69 67 69 74 3f		        .text "digit?"
-.c02b					nt_base:
->c02b	04 00				        .byte 4, 0
->c02d	1d c0 77 83 7f 83		        .word nt_digit_question, xt_base, z_base
->c033	62 61 73 65			        .text "base"
-.c037					nt_evaluate:
->c037	08 10				        .byte 8, UF
->c039	2b c0 c5 90 18 91		        .word nt_base, xt_evaluate, z_evaluate
->c03f	65 76 61 6c 75 61 74 65		        .text "evaluate"
-.c047					nt_state:
->c047	05 00				        .byte 5, 0
->c049	37 c0 fe a0 08 a1		        .word nt_evaluate, xt_state, z_state
->c04f	73 74 61 74 65			        .text "state"
-.c054					nt_again:
->c054	05 17				        .byte 5, AN+CO+IM+UF
->c056	47 c0 89 82 a9 82		        .word nt_state, xt_again, z_again
->c05c	61 67 61 69 6e			        .text "again"
-.c061					nt_begin:
->c061	05 07				        .byte 5, AN+CO+IM
->c063	54 c0 80 83 83 83		        .word nt_again, xt_begin, z_begin
->c069	62 65 67 69 6e			        .text "begin"
-.c06e					nt_quit:
->c06e	04 00				        .byte 4, 0
->c070	61 c0 83 80 c5 80		        .word nt_begin, xt_quit, z_quit
->c076	71 75 69 74			        .text "quit"
-.c07a					nt_recurse:
->c07a	07 0d				        .byte 7, CO+IM+NN
->c07c	6e c0 3d 9a 79 9a		        .word nt_quit, xt_recurse, z_recurse
->c082	72 65 63 75 72 73 65		        .text "recurse"
-.c089					nt_leave:
->c089	05 03				        .byte 5, AN+CO
->c08b	7a c0 40 93 45 93		        .word nt_recurse, xt_leave, z_leave
->c091	6c 65 61 76 65			        .text "leave"
-.c096					nt_unloop:
->c096	06 03				        .byte 6, AN+CO
->c098	89 c0 be a5 c4 a5		        .word nt_leave, xt_unloop, z_unloop
->c09e	75 6e 6c 6f 6f 70		        .text "unloop"
-.c0a4					nt_exit:
->c0a4	04 03				        .byte 4, AN+CO
->c0a6	96 c0 68 8f 69 8f		        .word nt_unloop, xt_exit, z_exit
->c0ac	65 78 69 74			        .text "exit"
-.c0b0					nt_plus_loop:
->c0b0	05 05				        .byte 5, CO+IM
->c0b2	a4 c0 f2 93 58 94		        .word nt_exit, xt_plus_loop, z_plus_loop
->c0b8	2b 6c 6f 6f 70			        .text "+loop"
-.c0bd					nt_loop:
->c0bd	04 05				        .byte 4, CO+IM
->c0bf	b0 c0 eb 93 58 94		        .word nt_plus_loop, xt_loop, z_loop
->c0c5	6c 6f 6f 70			        .text "loop"
-.c0c9					nt_j:
->c0c9	01 03				        .byte 1, AN+CO
->c0cb	bd c0 04 93 1d 93		        .word nt_loop, xt_j, z_j
->c0d1	6a				        .text "j"
-.c0d2					nt_i:
->c0d2	01 03				        .byte 1, AN+CO
->c0d4	c9 c0 d9 91 f2 91		        .word nt_j, xt_i, z_i
->c0da	69				        .text "i"
-.c0db					nt_question_do:
->c0db	03 0d				        .byte 3, CO+IM+NN
->c0dd	d2 c0 4c 8b ac 8b		        .word nt_i, xt_question_do, z_question_do
->c0e3	3f 64 6f			        .text "?do"
-.c0e6					nt_do:
->c0e6	02 0d				        .byte 2, CO+IM+NN
->c0e8	db c0 52 8b ac 8b		        .word nt_question_do, xt_do, z_do
->c0ee	64 6f				        .text "do"
-.c0f0					nt_abort_quote:
->c0f0	06 0d				        .byte 6, CO+IM+NN
->c0f2	e6 c0 19 81 23 81		        .word nt_do, xt_abort_quote, z_abort_quote
->c0f8	61 62 6f 72 74 22		        .text "abort", $22
-.c0fe					nt_abort:
->c0fe	05 00				        .byte 5, 0
->c100	f0 c0 81 80 c5 80		        .word nt_abort_quote, xt_abort, z_abort
->c106	61 62 6f 72 74			        .text "abort"
-.c10b					nt_strip_underflow:
->c10b	0f 00				        .byte 15, 0
->c10d	fe c0 1f a1 29 a1		        .word nt_abort, xt_strip_underflow, z_strip_underflow
->c113	73 74 72 69 70 2d 75 6e		        .text "strip-underflow"
->c11b	64 65 72 66 6c 6f 77
-.c122					nt_nc_limit:
->c122	08 00				        .byte 8, 0
->c124	0b c1 08 96 12 96		        .word nt_strip_underflow, xt_nc_limit, z_nc_limit
->c12a	6e 63 2d 6c 69 6d 69 74		        .text "nc-limit"
-.c132					nt_allow_native:
->c132	0c 00				        .byte 12, 0
->c134	22 c1 14 83 1f 83		        .word nt_nc_limit, xt_allow_native, z_allow_native
->c13a	61 6c 6c 6f 77 2d 6e 61		        .text "allow-native"
->c142	74 69 76 65
-.c146					nt_always_native:
->c146	0d 00				        .byte 13, 0
->c148	32 c1 30 83 3d 83		        .word nt_allow_native, xt_always_native, z_always_native
->c14e	61 6c 77 61 79 73 2d 6e		        .text "always-native"
->c156	61 74 69 76 65
-.c15b					nt_never_native:
->c15b	0c 00				        .byte 12, 0
->c15d	46 c1 24 96 31 96		        .word nt_always_native, xt_never_native, z_never_native
->c163	6e 65 76 65 72 2d 6e 61		        .text "never-native"
->c16b	74 69 76 65
-.c16f					nt_compile_only:
->c16f	0c 00				        .byte 12, 0
->c171	5b c1 f5 88 00 89		        .word nt_never_native, xt_compile_only, z_compile_only
->c177	63 6f 6d 70 69 6c 65 2d		        .text "compile-only"
->c17f	6f 6e 6c 79
-.c183					nt_immediate:
->c183	09 00				        .byte 9, 0
->c185	6f c1 3b 92 46 92		        .word nt_compile_only, xt_immediate, z_immediate
->c18b	69 6d 6d 65 64 69 61 74		        .text "immediate"
->c193	65
-.c194					nt_postpone:
->c194	08 05				        .byte 8, IM+CO
->c196	83 c1 98 99 d6 99		        .word nt_immediate, xt_postpone, z_postpone
->c19c	70 6f 73 74 70 6f 6e 65		        .text "postpone"
-.c1a4					nt_s_backslash_quote:
->c1a4	03 04				        .byte 3, IM
->c1a6	94 c1 09 9b 12 9b		        .word nt_postpone, xt_s_backslash_quote, z_s_backslash_quote
->c1ac	73 5c 22			        .text "s", $5C, $22
-.c1af					nt_s_quote:
->c1af	02 0c				        .byte 2, IM+NN
->c1b1	a4 c1 d1 9c 2d 9e		        .word nt_s_backslash_quote, xt_s_quote, z_s_quote
->c1b7	73 22				        .text "s", $22
-.c1b9					nt_dot_quote:
->c1b9	02 05				        .byte 2, CO+IM
->c1bb	af c1 57 8c 61 8c		        .word nt_s_quote, xt_dot_quote, z_dot_quote
->c1c1	2e 22				        .text ".", $22
-.c1c3					nt_sliteral:
->c1c3	08 15				        .byte 8, CO+IM+UF
->c1c5	b9 c1 bb 9f 2a a0		        .word nt_dot_quote, xt_sliteral, z_sliteral
->c1cb	73 6c 69 74 65 72 61 6c		        .text "sliteral"
-.c1d3					nt_literal:
->c1d3	07 15				        .byte 7, IM+CO+UF
->c1d5	c3 c1 7a 93 87 93		        .word nt_sliteral, xt_literal, z_literal
->c1db	6c 69 74 65 72 61 6c		        .text "literal"
-.c1e2					nt_right_bracket:
->c1e2	01 04				        .byte 1, IM
->c1e4	d3 c1 c9 9a cf 9a		        .word nt_literal, xt_right_bracket, z_right_bracket
->c1ea	5d				        .text "]"
-.c1eb					nt_left_bracket:
->c1eb	01 05				        .byte 1, IM+CO
->c1ed	e2 c1 45 93 49 93		        .word nt_right_bracket, xt_left_bracket, z_left_bracket
->c1f3	5b				        .text "["
-.c1f4					nt_compile_comma:
->c1f4	08 18				        .byte 8, UF+NN
->c1f6	eb c1 dd 87 f4 88		        .word nt_left_bracket, xt_compile_comma, z_compile_comma
->c1fc	63 6f 6d 70 69 6c 65 2c		        .text "compile,"
-.c204					nt_colon_noname:
->c204	07 00				        .byte 7, 0
->c206	f4 c1 42 87 5d 87		        .word nt_compile_comma, xt_colon_noname, z_colon_noname
->c20c	3a 6e 6f 6e 61 6d 65		        .text ":noname"
-.c213					nt_semicolon:
->c213	01 05				        .byte 1, CO+IM
->c215	04 c2 0a 9f 68 9f		        .word nt_colon_noname, xt_semicolon, z_semicolon
->c21b	3b				        .text ";"
-.c21c					nt_colon:
->c21c	01 00				        .byte 1, 0
->c21e	13 c2 ff 86 41 87		        .word nt_semicolon, xt_colon, z_colon
->c224	3a				        .text ":"
-.c225					nt_source_id:
->c225	09 00				        .byte 9, 0
->c227	1c c2 95 a0 9f a0		        .word nt_colon, xt_source_id, z_source_id
->c22d	73 6f 75 72 63 65 2d 69		        .text "source-id"
->c235	64
-.c236					nt_source:
->c236	06 00				        .byte 6, 0
->c238	25 c2 80 a0 94 a0		        .word nt_source_id, xt_source, z_source
->c23e	73 6f 75 72 63 65		        .text "source"
-.c244					nt_execute_parsing:
->c244	0f 10				        .byte 15, UF
->c246	36 c2 41 8f 67 8f		        .word nt_source, xt_execute_parsing, z_execute_parsing
->c24c	65 78 65 63 75 74 65 2d		        .text "execute-parsing"
->c254	70 61 72 73 69 6e 67
-.c25b					nt_parse:
->c25b	05 10				        .byte 5, UF
->c25d	44 c2 bc 98 53 99		        .word nt_execute_parsing, xt_parse, z_parse
->c263	70 61 72 73 65			        .text "parse"
-.c268					nt_parse_name:
->c268	0a 08				        .byte 10, NN
->c26a	5b c2 61 98 53 99		        .word nt_parse, xt_parse_name, z_parse_name
->c270	70 61 72 73 65 2d 6e 61		        .text "parse-name"
->c278	6d 65
-.c27a					nt_latestnt:
->c27a	08 00				        .byte 8, 0
->c27c	68 c2 2b 93 38 93		        .word nt_parse_name, xt_latestnt, z_latestnt
->c282	6c 61 74 65 73 74 6e 74		        .text "latestnt"
-.c28a					nt_latestxt:
->c28a	08 00				        .byte 8, 0
->c28c	7a c2 39 93 3f 93		        .word nt_latestnt, xt_latestxt, z_latestxt
->c292	6c 61 74 65 73 74 78 74		        .text "latestxt"
-.c29a					nt_defer:
->c29a	05 00				        .byte 5, 0
->c29c	8a c2 9c 8a ce 8a		        .word nt_latestxt, xt_defer, z_defer
->c2a2	64 65 66 65 72			        .text "defer"
-.c2a7					nt_to_body:
->c2a7	05 10				        .byte 5, UF
->c2a9	9a c2 09 a2 2d a2		        .word nt_defer, xt_to_body, z_to_body
->c2af	3e 62 6f 64 79			        .text ">body"
-.c2b4					nt_name_to_string:
->c2b4	0b 10				        .byte 11, UF
->c2b6	a7 c2 ee 95 07 96		        .word nt_to_body, xt_name_to_string, z_name_to_string
->c2bc	6e 61 6d 65 3e 73 74 72		        .text "name>string"
->c2c4	69 6e 67
-.c2c7					nt_int_to_name:
->c2c7	08 10				        .byte 8, UF
->c2c9	b4 c2 68 92 da 92		        .word nt_name_to_string, xt_int_to_name, z_int_to_name
->c2cf	69 6e 74 3e 6e 61 6d 65		        .text "int>name"
-.c2d7					nt_name_to_int:
->c2d7	08 10				        .byte 8, UF
->c2d9	c7 c2 d1 95 ed 95		        .word nt_int_to_name, xt_name_to_int, z_name_to_int
->c2df	6e 61 6d 65 3e 69 6e 74		        .text "name>int"
-.c2e7					nt_bracket_tick:
->c2e7	03 05				        .byte 3, CO+IM
->c2e9	d7 c2 8e 85 94 85		        .word nt_name_to_int, xt_bracket_tick, z_bracket_tick
->c2ef	5b 27 5d			        .text "[']"
-.c2f2					nt_tick:
->c2f2	01 00				        .byte 1, 0
->c2f4	e7 c2 8d a1 ac a1		        .word nt_bracket_tick, xt_tick, z_tick
->c2fa	27				        .text "'"
-.c2fb					nt_find_name:
->c2fb	09 10				        .byte 9, UF
->c2fd	f2 c2 cb 8f 76 90		        .word nt_tick, xt_find_name, z_find_name
->c303	66 69 6e 64 2d 6e 61 6d		        .text "find-name"
->c30b	65
-.c30c					nt_fill:
->c30c	04 10				        .byte 4, UF
->c30e	fb c2 ea 8e 2c 8f		        .word nt_find_name, xt_fill, z_fill
->c314	66 69 6c 6c			        .text "fill"
-.c318					nt_blank:
->c318	05 00				        .byte 5, 0     ; underflow checked by FILL
->c31a	0c c3 da 8e 2c 8f		        .word nt_fill, xt_blank, z_blank
->c320	62 6c 61 6e 6b			        .text "blank"
-.c325					nt_erase:
->c325	05 00				        .byte 5, 0      ; underflow checked by FILL
->c327	18 c3 e4 8e 2c 8f		        .word nt_blank, xt_erase, z_erase
->c32d	65 72 61 73 65			        .text "erase"
-.c332					nt_d_plus:
->c332	02 10				        .byte 2, UF
->c334	25 c3 4f 8a 6f 8a		        .word nt_erase, xt_d_plus, z_d_plus
->c33a	64 2b				        .text "d+"
-.c33c					nt_d_minus:
->c33c	02 10				        .byte 2, UF
->c33e	32 c3 2e 8a 4e 8a		        .word nt_d_plus, xt_d_minus, z_d_minus
->c344	64 2d				        .text "d-"
-.c346					nt_d_to_s:
->c346	03 10				        .byte 3, UF
->c348	3c c3 70 8a 75 8a		        .word nt_d_minus, xt_d_to_s, z_d_to_s
->c34e	64 3e 73			        .text "d>s"
-.c351					nt_s_to_d:
->c351	03 10				        .byte 3, UF
->c353	46 c3 2e 9e 3f 9e		        .word nt_d_to_s, xt_s_to_d, z_s_to_d
->c359	73 3e 64			        .text "s>d"
-.c35c					nt_to:
->c35c	02 0c				        .byte 2, NN+IM
->c35e	51 c3 ad a1 08 a2		        .word nt_s_to_d, xt_to, z_to
->c364	74 6f				        .text "to"
-.c366					nt_value:
->c366	05 10				        .byte 5, UF
->c368	5c c3 01 89 3e 89		        .word nt_to, xt_constant, z_constant
->c36e	76 61 6c 75 65			        .text "value"
-.c373					nt_constant:
->c373	08 10				        .byte 8, UF
->c375	66 c3 01 89 3e 89		        .word nt_value, xt_constant, z_constant
->c37b	63 6f 6e 73 74 61 6e 74		        .text "constant"
-.c383					nt_variable:
->c383	08 00				        .byte 8, 0
->c385	73 c3 f4 a5 0c a6		        .word nt_constant, xt_variable, z_variable
->c38b	76 61 72 69 61 62 6c 65		        .text "variable"
-.c393					nt_does:
->c393	05 05				        .byte 5, CO+IM
->c395	83 c3 e5 8b f3 8b		        .word nt_variable, xt_does, z_does
->c39b	64 6f 65 73 3e			        .text "does>"
-.c3a0					nt_create:
->c3a0	06 00				        .byte 6, 0
->c3a2	93 c3 59 89 2d 8a		        .word nt_does, xt_create, z_create
->c3a8	63 72 65 61 74 65		        .text "create"
-.c3ae					nt_allot:
->c3ae	05 10				        .byte 5, UF
->c3b0	a0 c3 ab 82 13 83		        .word nt_create, xt_allot, z_allot
->c3b6	61 6c 6c 6f 74			        .text "allot"
-.c3bb					nt_key:
->c3bb	03 00				        .byte 3, 0
->c3bd	ae c3 1e 93 27 93		        .word nt_allot, xt_key, z_key
->c3c3	6b 65 79			        .text "key"
-.c3c6					nt_depth:
->c3c6	05 00				        .byte 5, 0
->c3c8	bb c3 e6 8a f4 8a		        .word nt_key, xt_depth, z_depth
->c3ce	64 65 70 74 68			        .text "depth"
-.c3d3					nt_unused:
->c3d3	06 00				        .byte 6, 0
->c3d5	c6 c3 d0 a5 df a5		        .word nt_depth, xt_unused, z_unused
->c3db	75 6e 75 73 65 64		        .text "unused"
-.c3e1					nt_r_to_input:
->c3e1	07 08				        .byte 7, NN
->c3e3	d3 c3 25 9a 3c 9a		        .word nt_unused, xt_r_to_input, z_r_to_input
->c3e9	72 3e 69 6e 70 75 74		        .text "r>input"
-.c3f0					nt_input_to_r:
->c3f0	07 08				        .byte 7, NN
->c3f2	e1 c3 52 92 67 92		        .word nt_r_to_input, xt_input_to_r, z_input_to_r
->c3f8	69 6e 70 75 74 3e 72		        .text "input>r"
-.c3ff					nt_accept:
->c3ff	06 18				        .byte 6, UF+NN
->c401	f0 c3 4e 81 46 82		        .word nt_input_to_r, xt_accept, z_accept
->c407	61 63 63 65 70 74		        .text "accept"
-.c40d					nt_refill:
->c40d	06 00				        .byte 6, 0
->c40f	ff c3 7a 9a bb 9a		        .word nt_accept, xt_refill, z_refill
->c415	72 65 66 69 6c 6c		        .text "refill"
-.c41b					nt_slash_string:
->c41b	07 10				        .byte 7, UF
->c41d	0d c4 9b 9f ba 9f		        .word nt_refill, xt_slash_string, z_slash_string
->c423	2f 73 74 72 69 6e 67		        .text "/string"
-.c42a					nt_minus_leading:
->c42a	08 10				        .byte 8, UF
->c42c	1b c4 53 95 6b 95		        .word nt_slash_string, xt_minus_leading, z_minus_leading
->c432	2d 6c 65 61 64 69 6e 67		        .text "-leading"
-.c43a					nt_minus_trailing:
->c43a	09 10				        .byte 9, UF
->c43c	2a c4 6c 95 a8 95		        .word nt_minus_leading, xt_minus_trailing, z_minus_trailing
->c442	2d 74 72 61 69 6c 69 6e		        .text "-trailing"
->c44a	67
-.c44b					nt_bl:
->c44b	02 00				        .byte 2, 0
->c44d	3a c4 8a 83 92 83		        .word nt_minus_trailing, xt_bl, z_bl
->c453	62 6c				        .text "bl"
-.c455					nt_spaces:
->c455	06 10				        .byte 6, UF
->c457	4b c4 a6 a0 db a0		        .word nt_bl, xt_spaces, z_spaces
->c45d	73 70 61 63 65 73		        .text "spaces"
-.c463					nt_bounds:
->c463	06 10				        .byte 6, UF
->c465	55 c4 6e 85 86 85		        .word nt_spaces, xt_bounds, z_bounds
->c46b	62 6f 75 6e 64 73		        .text "bounds"
-.c471					nt_c_comma:
->c471	02 10				        .byte 2, UF
->c473	63 c4 f0 85 fa 85		        .word nt_bounds, xt_c_comma, z_c_comma
->c479	63 2c				        .text "c,"
-.c47b					nt_dnegate:
->c47b	07 10				        .byte 7, UF
->c47d	71 c4 31 8b 4b 8b		        .word nt_c_comma, xt_dnegate, z_dnegate
->c483	64 6e 65 67 61 74 65		        .text "dnegate"
-.c48a					nt_negate:
->c48a	06 10				        .byte 6, UF
->c48c	7b c4 13 96 23 96		        .word nt_dnegate, xt_negate, z_negate
->c492	6e 65 67 61 74 65		        .text "negate"
-.c498					nt_invert:
->c498	06 10				        .byte 6, UF
->c49a	8a c4 db 92 ea 92		        .word nt_negate, xt_invert, z_invert
->c4a0	69 6e 76 65 72 74		        .text "invert"
-.c4a6					nt_two_to_r:
->c4a6	03 11				        .byte 3, CO+UF          ; native is special case
->c4a8	98 c4 1e a4 3d a4		        .word nt_invert, xt_two_to_r, z_two_to_r
->c4ae	32 3e 72			        .text "2>r"
-.c4b1					nt_two_r_from:
->c4b1	03 01				        .byte 3, CO             ; native is special case
->c4b3	a6 c4 a4 a3 c0 a3		        .word nt_two_to_r, xt_two_r_from, z_two_r_from
->c4b9	32 72 3e			        .text "2r>"
-.c4bc					nt_two_r_fetch:
->c4bc	03 09				        .byte 3, CO+NN          ; native is special case, leave NN for now
->c4be	b1 c4 86 a3 a3 a3		        .word nt_two_r_from, xt_two_r_fetch, z_two_r_fetch
->c4c4	32 72 40			        .text "2r@"
-.c4c7					nt_two_literal:
->c4c7	08 14				        .byte 8, UF+IM
->c4c9	bc c4 63 a4 6f a4		        .word nt_two_r_fetch, xt_two_literal, z_two_literal
->c4cf	32 6c 69 74 65 72 61 6c		        .text "2literal"
-.c4d7					nt_two_constant:
->c4d7	09 10				        .byte 9, UF
->c4d9	c7 c4 3e a4 62 a4		        .word nt_two_literal, xt_two_constant, z_two_constant
->c4df	32 63 6f 6e 73 74 61 6e		        .text "2constant"
->c4e7	74
-.c4e8					nt_two_variable:
->c4e8	09 00				        .byte 9, 0
->c4ea	d7 c4 70 a4 7e a4		        .word nt_two_constant, xt_two_variable, z_two_variable
->c4f0	32 76 61 72 69 61 62 6c		        .text "2variable"
->c4f8	65
-.c4f9					nt_two_fetch:
->c4f9	02 10				        .byte 2, UF
->c4fb	e8 c4 4c a3 6d a3		        .word nt_two_variable, xt_two_fetch, z_two_fetch
->c501	32 40				        .text "2@"
-.c503					nt_two_store:
->c503	02 10				        .byte 2, UF
->c505	f9 c4 d4 a3 f9 a3		        .word nt_two_fetch, xt_two_store, z_two_store
->c50b	32 21				        .text "2!"
-.c50d					nt_two_over:
->c50d	05 10				        .byte 5, UF
->c50f	03 c5 6e a3 85 a3		        .word nt_two_store, xt_two_over, z_two_over
->c515	32 6f 76 65 72			        .text "2over"
-.c51a					nt_two_swap:
->c51a	05 10				        .byte 5, UF
->c51c	0d c5 fa a3 1d a4		        .word nt_two_over, xt_two_swap, z_two_swap
->c522	32 73 77 61 70			        .text "2swap"
-.c527					nt_two_drop:
->c527	05 10				        .byte 5, UF
->c529	1a c5 2c a3 33 a3		        .word nt_two_swap, xt_two_drop, z_two_drop
->c52f	32 64 72 6f 70			        .text "2drop"
-.c534					nt_max:
->c534	03 10				        .byte 3, UF
->c536	27 c5 08 95 23 95		        .word nt_two_drop, xt_max, z_max
->c53c	6d 61 78			        .text "max"
-.c53f					nt_min:
->c53f	03 10				        .byte 3, UF
->c541	34 c5 24 95 3f 95		        .word nt_max, xt_min, z_min
->c547	6d 69 6e			        .text "min"
-.c54a					nt_zero_less:
->c54a	02 10				        .byte 2, UF
->c54c	3f c5 52 a7 61 a7		        .word nt_min, xt_zero_less, z_zero_less
->c552	30 3c				        .text "0<"
-.c554					nt_zero_greater:
->c554	02 10				        .byte 2, UF
->c556	4a c5 3e a7 51 a7		        .word nt_zero_less, xt_zero_greater, z_zero_greater
->c55c	30 3e				        .text "0>"
-.c55e					nt_zero_unequal:
->c55e	03 10				        .byte 3, UF
->c560	54 c5 62 a7 73 a7		        .word nt_zero_greater, xt_zero_unequal, z_zero_unequal
->c566	30 3c 3e			        .text "0<>"
-.c569					nt_zero_equal:
->c569	02 10				        .byte 2, UF
->c56b	5e c5 2a a7 3d a7		        .word nt_zero_unequal, xt_zero_equal, z_zero_equal
->c571	30 3d				        .text "0="
-.c573					nt_greater_than:
->c573	01 10				        .byte 1, UF
->c575	69 c5 4d 91 61 91		        .word nt_zero_equal, xt_greater_than, z_greater_than
->c57b	3e				        .text ">"
-.c57c					nt_u_greater_than:
->c57c	02 10				        .byte 2, UF
->c57e	73 c5 d8 a4 ed a4		        .word nt_greater_than, xt_u_greater_than, z_u_greater_than
->c584	75 3e				        .text "u>"
-.c586					nt_u_less_than:
->c586	02 10				        .byte 2, UF
->c588	7c c5 ee a4 03 a5		        .word nt_u_greater_than, xt_u_less_than, z_u_less_than
->c58e	75 3c				        .text "u<"
-.c590					nt_less_than:
->c590	01 10				        .byte 1, UF
->c592	86 c5 58 93 6c 93		        .word nt_u_less_than, xt_less_than, z_less_than
->c598	3c				        .text "<"
-.c599					nt_not_equals:
->c599	02 10				        .byte 2, UF
->c59b	90 c5 40 96 5d 96		        .word nt_less_than, xt_not_equals, z_not_equals
->c5a1	3c 3e				        .text "<>"
-.c5a3					nt_equal:
->c5a3	01 10				        .byte 1, UF
->c5a5	99 c5 be 8e d9 8e		        .word nt_not_equals, xt_equal, z_equal
->c5ab	3d				        .text "="
-.c5ac					nt_two_slash:
->c5ac	02 10				        .byte 2, UF
->c5ae	a3 c5 c1 a3 cb a3		        .word nt_equal, xt_two_slash, z_two_slash
->c5b4	32 2f				        .text "2/"
-.c5b6					nt_two_star:
->c5b6	02 10				        .byte 2, UF
->c5b8	ac c5 cc a3 d3 a3		        .word nt_two_slash, xt_two_star, z_two_star
->c5be	32 2a				        .text "2*"
-.c5c0					nt_one_plus:
->c5c0	02 10				        .byte 2, UF
->c5c2	b6 c5 9f 97 a8 97		        .word nt_two_star, xt_one_plus, z_one_plus
->c5c8	31 2b				        .text "1+"
-.c5ca					nt_one_minus:
->c5ca	02 10				        .byte 2, UF
->c5cc	c0 c5 93 97 9e 97		        .word nt_one_plus, xt_one_minus, z_one_minus
->c5d2	31 2d				        .text "1-"
-.c5d4					nt_here:
->c5d4	04 00				        .byte 4, 0
->c5d6	ca c5 62 91 6c 91		        .word nt_one_minus, xt_here, z_here
->c5dc	68 65 72 65			        .text "here"
-.c5e0					nt_cell_plus:
->c5e0	05 10				        .byte 5, UF
->c5e2	d4 c5 11 86 20 86		        .word nt_here, xt_cell_plus, z_cell_plus
->c5e8	63 65 6c 6c 2b			        .text "cell+"
-.c5ed					nt_cells:
->c5ed	05 00				        .byte 5, 0
->c5ef	e0 c5 cc a3 d3 a3		        .word nt_cell_plus, xt_two_star, z_two_star  ; same as 2*
->c5f5	63 65 6c 6c 73			        .text "cells"
-.c5fa					nt_chars:
->c5fa	05 12				        .byte 5, AN+UF   ; deleted during compile
->c5fc	ed c5 38 86 3b 86		        .word nt_cells, xt_chars, z_chars
->c602	63 68 61 72 73			        .text "chars"
-.c607					nt_char_plus:
->c607	05 00				        .byte 5, 0
->c609	fa c5 9f 97 a8 97		        .word nt_chars, xt_one_plus, z_one_plus ; same as 1+
->c60f	63 68 61 72 2b			        .text "char+"
-.c614					nt_bracket_char:
->c614	06 05				        .byte 6, CO+IM
->c616	07 c6 87 85 8d 85		        .word nt_char_plus, xt_bracket_char, z_bracket_char
->c61c	5b 63 68 61 72 5d		        .text "[char]"
-.c622					nt_char:
->c622	04 00				        .byte 4, 0
->c624	14 c6 21 86 37 86		        .word nt_bracket_char, xt_char, z_char
->c62a	63 68 61 72			        .text "char"
-.c62e					nt_pick:
->c62e	04 00				        .byte 4, 0    ; underflow check is complicated, leave off here
->c630	22 c6 54 99 64 99		        .word nt_char, xt_pick, z_pick
->c636	70 69 63 6b			        .text "pick"
-.c63a					nt_lshift:
->c63a	06 10				        .byte 6, UF
->c63c	2e c6 6a 94 7d 94		        .word nt_pick, xt_lshift, z_lshift
->c642	6c 73 68 69 66 74		        .text "lshift"
-.c648					nt_rshift:
->c648	06 10				        .byte 6, UF
->c64a	3a c6 f5 9a 08 9b		        .word nt_lshift, xt_rshift, z_rshift
->c650	72 73 68 69 66 74		        .text "rshift"
-.c656					nt_xor:
->c656	03 10				        .byte 3, UF
->c658	48 c6 11 a7 22 a7		        .word nt_rshift, xt_xor, z_xor
->c65e	78 6f 72			        .text "xor"
-.c661					nt_or:
->c661	02 10				        .byte 2, UF
->c663	56 c6 b5 97 c6 97		        .word nt_xor, xt_or, z_or
->c669	6f 72				        .text "or"
-.c66b					nt_and:
->c66b	03 10				        .byte 3, UF
->c66d	61 c6 3e 83 4f 83		        .word nt_or, xt_and, z_and
->c673	61 6e 64			        .text "and"
-.c676					nt_dabs:
->c676	04 10				        .byte 4, UF
->c678	6b c6 76 8a 94 8a		        .word nt_and, xt_dabs, z_dabs
->c67e	64 61 62 73			        .text "dabs"
-.c682					nt_abs:
->c682	03 10				        .byte 3, UF
->c684	76 c6 39 81 4d 81		        .word nt_dabs, xt_abs, z_abs
->c68a	61 62 73			        .text "abs"
-.c68d					nt_minus:
->c68d	01 10				        .byte 1, UF
->c68f	82 c6 40 95 52 95		        .word nt_abs, xt_minus, z_minus
->c695	2d				        .text "-"
-.c696					nt_plus:
->c696	01 10				        .byte 1, UF
->c698	8d c6 65 99 77 99		        .word nt_minus, xt_plus, z_plus
->c69e	2b				        .text "+"
-.c69f					nt_question_dup:
->c69f	04 10				        .byte 4, UF
->c6a1	96 c6 eb 99 fe 99		        .word nt_plus, xt_question_dup, z_question_dup
->c6a7	3f 64 75 70			        .text "?dup"
-.c6ab					nt_two_dup:
->c6ab	04 10				        .byte 4, UF
->c6ad	9f c6 34 a3 4b a3		        .word nt_question_dup, xt_two_dup, z_two_dup
->c6b3	32 64 75 70			        .text "2dup"
-.c6b7					nt_two:
->c6b7	01 00				        .byte 1, 0
->c6b9	ab c6 23 a3 2b a3		        .word nt_two_dup, xt_two, z_two
->c6bf	32				        .text "2"
-.c6c0					nt_one:
->c6c0	01 00				        .byte 1, 0
->c6c2	b7 c6 8a 97 92 97		        .word nt_two, xt_one, z_one
->c6c8	31				        .text "1"
-.c6c9					nt_zero:
->c6c9	01 00				        .byte 1, 0
->c6cb	c0 c6 23 a7 29 a7		        .word nt_one, xt_zero, z_zero
->c6d1	30				        .text "0"
-.c6d2					nt_space:
->c6d2	05 00				        .byte 5, 0
->c6d4	c9 c6 a0 a0 a5 a0		        .word nt_zero, xt_space, z_space
->c6da	73 70 61 63 65			        .text "space"
-.c6df					nt_true:
->c6df	04 00				        .byte 4, 0
->c6e1	d2 c6 00 a3 08 a3		        .word nt_space, xt_true, z_true
->c6e7	74 72 75 65			        .text "true"
-.c6eb					nt_false:
->c6eb	05 00				        .byte 5, 0
->c6ed	df c6 69 8f 6f 8f		        .word nt_true, xt_false, z_false
->c6f3	66 61 6c 73 65			        .text "false"
-.c6f8					nt_question:
->c6f8	01 00				        .byte 1, 0
->c6fa	eb c6 e4 99 ea 99		        .word nt_false, xt_question, z_question
->c700	3f				        .text "?"
-.c701					nt_ud_dot_r:
->c701	04 10				        .byte 4, UF
->c703	f8 c6 17 a5 35 a5		        .word nt_question, xt_ud_dot_r, z_ud_dot_r
->c709	75 64 2e 72			        .text "ud.r"
-.c70d					nt_ud_dot:
->c70d	03 10				        .byte 3, UF
->c70f	01 c7 04 a5 16 a5		        .word nt_ud_dot_r, xt_ud_dot, z_ud_dot
->c715	75 64 2e			        .text "ud."
-.c718					nt_d_dot_r:
->c718	03 10				        .byte 3, UF
->c71a	0d c7 f3 8c 1d 8d		        .word nt_ud_dot, xt_d_dot_r, z_d_dot_r
->c720	64 2e 72			        .text "d.r"
-.c723					nt_d_dot:
->c723	02 10				        .byte 2, UF
->c725	18 c7 d4 8c f2 8c		        .word nt_d_dot_r, xt_d_dot, z_d_dot
->c72b	64 2e				        .text "d."
-.c72d					nt_dot_r:
->c72d	02 10				        .byte 2, UF
->c72f	23 c7 62 8c 8f 8c		        .word nt_d_dot, xt_dot_r, z_dot_r
->c735	2e 72				        .text ".r"
-.c737					nt_u_dot_r:
->c737	03 10				        .byte 3, UF
->c739	2d c7 b6 a4 d7 a4		        .word nt_dot_r, xt_u_dot_r, z_u_dot_r
->c73f	75 2e 72			        .text "u.r"
-.c742					nt_u_dot:
->c742	02 10				        .byte 2, UF
->c744	37 c7 aa a4 b5 a4		        .word nt_u_dot_r, xt_u_dot, z_u_dot
->c74a	75 2e				        .text "u."
-.c74c					nt_dot:
->c74c	01 10				        .byte 1, UF
->c74e	42 c7 26 8c 47 8c		        .word nt_u_dot, xt_dot, z_dot
->c754	2e				        .text "."
-.c755					nt_type:
->c755	04 10				        .byte 4, UF
->c757	4c c7 7f a4 a9 a4		        .word nt_dot, xt_type, z_type
->c75d	74 79 70 65			        .text "type"
-.c761					nt_emit:
->c761	04 18				        .byte 4, NN+UF
->c763	55 c7 df 8d e9 8d		        .word nt_type, xt_emit, z_emit
->c769	65 6d 69 74			        .text "emit"
-.c76d					nt_execute:
->c76d	07 10				        .byte 7, UF
->c76f	61 c7 2d 8f 33 8f		        .word nt_emit, xt_execute, z_execute
->c775	65 78 65 63 75 74 65		        .text "execute"
-.c77c					nt_plus_store:
->c77c	02 10				        .byte 2, UF
->c77e	6d c7 78 99 97 99		        .word nt_execute, xt_plus_store, z_plus_store
->c784	2b 21				        .text "+!"
-.c786					nt_c_store:
->c786	02 10				        .byte 2, UF
->c788	7c c7 05 86 10 86		        .word nt_plus_store, xt_c_store, z_c_store
->c78e	63 21				        .text "c!"
-.c790					nt_c_fetch:
->c790	02 10				        .byte 2, UF
->c792	86 c7 fb 85 04 86		        .word nt_c_store, xt_c_fetch, z_c_fetch
->c798	63 40				        .text "c@"
-.c79a					nt_comma:
->c79a	01 10				        .byte 1, UF
->c79c	90 c7 5e 87 77 87		        .word nt_c_fetch, xt_comma, z_comma
->c7a2	2c				        .text ","
-.c7a3					nt_tuck:
->c7a3	04 10				        .byte 4, UF
->c7a5	9a c7 09 a3 22 a3		        .word nt_comma, xt_tuck, z_tuck
->c7ab	74 75 63 6b			        .text "tuck"
-.c7af					nt_not_rote:
->c7af	04 10				        .byte 4, UF
->c7b1	a3 c7 5e 96 79 96		        .word nt_tuck, xt_not_rote, z_not_rote
->c7b7	2d 72 6f 74			        .text "-rot"
-.c7bb					nt_rot:
->c7bb	03 10				        .byte 3, UF
->c7bd	af c7 d9 9a f4 9a		        .word nt_not_rote, xt_rot, z_rot
->c7c3	72 6f 74			        .text "rot"
-.c7c6					nt_nip:
->c7c6	03 10				        .byte 3, UF
->c7c8	bb c7 32 96 3f 96		        .word nt_rot, xt_nip, z_nip
->c7ce	6e 69 70			        .text "nip"
-.c7d1					nt_r_fetch:
->c7d1	02 01				        .byte 2, CO    ; native is special case
->c7d3	c6 c7 ff 99 13 9a		        .word nt_nip, xt_r_fetch, z_r_fetch
->c7d9	72 40				        .text "r@"
-.c7db					nt_r_from:
->c7db	02 01				        .byte 2, CO    ; native is special case
->c7dd	d1 c7 14 9a 24 9a		        .word nt_r_fetch, xt_r_from, z_r_from
->c7e3	72 3e				        .text "r>"
-.c7e5					nt_to_r:
->c7e5	02 11				        .byte 2, CO+UF ; native is special case
->c7e7	db c7 ec a2 ff a2		        .word nt_r_from, xt_to_r, z_to_r
->c7ed	3e 72				        .text ">r"
-.c7ef					nt_over:
->c7ef	04 10				        .byte 4, UF
->c7f1	e5 c7 15 98 22 98		        .word nt_to_r, xt_over, z_over
->c7f7	6f 76 65 72			        .text "over"
-.c7fb					nt_fetch:
->c7fb	01 10				        .byte 1, UF
->c7fd	ef c7 70 8f 82 8f		        .word nt_over, xt_fetch, z_fetch
->c803	40				        .text "@"
-.c804					nt_store:
->c804	01 10				        .byte 1, UF
->c806	fb c7 09 a1 1e a1		        .word nt_fetch, xt_store, z_store
->c80c	21				        .text "!"
-.c80d					nt_swap:
->c80d	04 10				        .byte 4, UF
->c80f	04 c8 2a a1 3d a1		        .word nt_store, xt_swap, z_swap
->c815	73 77 61 70			        .text "swap"
-.c819					nt_dup:
->c819	03 10				        .byte 3, UF
->c81b	0d c8 9f 8d ac 8d		        .word nt_swap, xt_dup, z_dup
->c821	64 75 70			        .text "dup"
-.c824					dictionary_start:
-.c824					nt_drop:
->c824	04 10				        .byte 4, UF
->c826	19 c8 1e 8d 23 8d		        .word nt_dup, xt_drop, z_drop
->c82c	64 72 6f 70			        .text "drop"
-.c830					nt_root_words:
->c830	05 00				        .byte 5, 0
->c832	00 00 94 a6 ef a6		        .word 0000, xt_words, z_words
->c838	77 6f 72 64 73			        .text "words"
-.c83d					nt_root_forth_wordlist:
->c83d	0e 00				        .byte 14, 0
->c83f	30 c8 23 a7 29 a7		        .word nt_root_words, xt_forth_wordlist, z_forth_wordlist
->c845	66 6f 72 74 68 2d 77 6f		        .text "forth-wordlist"
->c84d	72 64 6c 69 73 74
-.c853					nt_root_forth:
->c853	05 00				        .byte 5, 0
->c855	3d c8 b8 90 be 90		        .word nt_root_forth_wordlist, xt_forth, z_forth
->c85b	66 6f 72 74 68			        .text "forth"
-.c860					root_dictionary_start:
-.c860					nt_root_set_order:
->c860	09 00				        .byte 9, 0
->c862	53 c8 9d 9c d0 9c		        .word nt_root_forth, xt_set_order, z_set_order
->c868	73 65 74 2d 6f 72 64 65		        .text "set-order"
->c870	72
-.c871					nt_editor_enter_screen:
->c871	0c 00				        .byte 12, 0
->c873	00 00 81 a7 9c a7		        .word 0000, xt_editor_enter_screen, z_editor_enter_screen
->c879	65 6e 74 65 72 2d 73 63		        .text "enter-screen"
->c881	72 65 65 6e
-.c885					nt_editor_erase_screen:
->c885	0c 00				        .byte 12, 0
->c887	71 c8 9d a7 ae a7		        .word nt_editor_enter_screen, xt_editor_erase_screen, z_editor_erase_screen
->c88d	65 72 61 73 65 2d 73 63		        .text "erase-screen"
->c895	72 65 65 6e
-.c899					nt_editor_el:
->c899	02 00				        .byte 2, 0
->c89b	85 c8 af a7 c0 a7		        .word nt_editor_erase_screen, xt_editor_el, z_editor_el
->c8a1	65 6c				        .text "el"
-.c8a3					nt_editor_l:
->c8a3	01 00				        .byte 1, 0
->c8a5	99 c8 c1 a7 3c a8		        .word nt_editor_el, xt_editor_l, z_editor_l
->c8ab	6c				        .text "l"
-.c8ac					nt_editor_line:
->c8ac	04 10				        .byte 4, UF
->c8ae	a3 c8 3d a8 55 a8		        .word nt_editor_l, xt_editor_line, z_editor_line
->c8b4	6c 69 6e 65			        .text "line"
-.c8b8					editor_dictionary_start:
-.c8b8					nt_editor_o:
->c8b8	01 00				        .byte 1, 0
->c8ba	ac c8 56 a8 9b a8		        .word nt_editor_line, xt_editor_o, z_editor_o
->c8c0	6f				        .text "o"
+.ba29					dictionary_start:
+.ba29					nt_drop:
+>ba29	04 10				        .byte 4, UF
+>ba2b	35 ba 1e 8d 23 8d		        .word nt_dup, xt_drop, z_drop
+>ba31	64 72 6f 70			        .text "drop"
+.ba35					nt_dup:
+>ba35	03 10				        .byte 3, UF
+>ba37	40 ba 9f 8d ac 8d		        .word nt_swap, xt_dup, z_dup
+>ba3d	64 75 70			        .text "dup"
+.ba40					nt_swap:
+>ba40	04 10				        .byte 4, UF
+>ba42	4c ba 2a a1 3d a1		        .word nt_store, xt_swap, z_swap
+>ba48	73 77 61 70			        .text "swap"
+.ba4c					nt_store:
+>ba4c	01 10				        .byte 1, UF
+>ba4e	55 ba 09 a1 1e a1		        .word nt_fetch, xt_store, z_store
+>ba54	21				        .text "!"
+.ba55					nt_fetch:
+>ba55	01 10				        .byte 1, UF
+>ba57	5e ba 70 8f 82 8f		        .word nt_over, xt_fetch, z_fetch
+>ba5d	40				        .text "@"
+.ba5e					nt_over:
+>ba5e	04 10				        .byte 4, UF
+>ba60	6a ba 15 98 22 98		        .word nt_to_r, xt_over, z_over
+>ba66	6f 76 65 72			        .text "over"
+.ba6a					nt_to_r:
+>ba6a	02 11				        .byte 2, CO+UF ; native is special case
+>ba6c	74 ba ec a2 ff a2		        .word nt_r_from, xt_to_r, z_to_r
+>ba72	3e 72				        .text ">r"
+.ba74					nt_r_from:
+>ba74	02 01				        .byte 2, CO    ; native is special case
+>ba76	7e ba 14 9a 24 9a		        .word nt_r_fetch, xt_r_from, z_r_from
+>ba7c	72 3e				        .text "r>"
+.ba7e					nt_r_fetch:
+>ba7e	02 01				        .byte 2, CO    ; native is special case
+>ba80	88 ba ff 99 13 9a		        .word nt_nip, xt_r_fetch, z_r_fetch
+>ba86	72 40				        .text "r@"
+.ba88					nt_nip:
+>ba88	03 10				        .byte 3, UF
+>ba8a	93 ba 32 96 3f 96		        .word nt_rot, xt_nip, z_nip
+>ba90	6e 69 70			        .text "nip"
+.ba93					nt_rot:
+>ba93	03 10				        .byte 3, UF
+>ba95	9e ba d9 9a f4 9a		        .word nt_not_rote, xt_rot, z_rot
+>ba9b	72 6f 74			        .text "rot"
+.ba9e					nt_not_rote:
+>ba9e	04 10				        .byte 4, UF
+>baa0	aa ba 5e 96 79 96		        .word nt_tuck, xt_not_rote, z_not_rote
+>baa6	2d 72 6f 74			        .text "-rot"
+.baaa					nt_tuck:
+>baaa	04 10				        .byte 4, UF
+>baac	b6 ba 09 a3 22 a3		        .word nt_comma, xt_tuck, z_tuck
+>bab2	74 75 63 6b			        .text "tuck"
+.bab6					nt_comma:
+>bab6	01 10				        .byte 1, UF
+>bab8	bf ba 5e 87 77 87		        .word nt_c_fetch, xt_comma, z_comma
+>babe	2c				        .text ","
+.babf					nt_c_fetch:
+>babf	02 10				        .byte 2, UF
+>bac1	c9 ba fb 85 04 86		        .word nt_c_store, xt_c_fetch, z_c_fetch
+>bac7	63 40				        .text "c@"
+.bac9					nt_c_store:
+>bac9	02 10				        .byte 2, UF
+>bacb	d3 ba 05 86 10 86		        .word nt_plus_store, xt_c_store, z_c_store
+>bad1	63 21				        .text "c!"
+.bad3					nt_plus_store:
+>bad3	02 10				        .byte 2, UF
+>bad5	dd ba 78 99 97 99		        .word nt_execute, xt_plus_store, z_plus_store
+>badb	2b 21				        .text "+!"
+.badd					nt_execute:
+>badd	07 10				        .byte 7, UF
+>badf	ec ba 2d 8f 33 8f		        .word nt_emit, xt_execute, z_execute
+>bae5	65 78 65 63 75 74 65		        .text "execute"
+.baec					nt_emit:
+>baec	04 18				        .byte 4, NN+UF
+>baee	f8 ba df 8d e9 8d		        .word nt_type, xt_emit, z_emit
+>baf4	65 6d 69 74			        .text "emit"
+.baf8					nt_type:
+>baf8	04 10				        .byte 4, UF
+>bafa	04 bb 7f a4 a9 a4		        .word nt_dot, xt_type, z_type
+>bb00	74 79 70 65			        .text "type"
+.bb04					nt_dot:
+>bb04	01 10				        .byte 1, UF
+>bb06	0d bb 26 8c 47 8c		        .word nt_u_dot, xt_dot, z_dot
+>bb0c	2e				        .text "."
+.bb0d					nt_u_dot:
+>bb0d	02 10				        .byte 2, UF
+>bb0f	17 bb aa a4 b5 a4		        .word nt_u_dot_r, xt_u_dot, z_u_dot
+>bb15	75 2e				        .text "u."
+.bb17					nt_u_dot_r:
+>bb17	03 10				        .byte 3, UF
+>bb19	22 bb b6 a4 d7 a4		        .word nt_dot_r, xt_u_dot_r, z_u_dot_r
+>bb1f	75 2e 72			        .text "u.r"
+.bb22					nt_dot_r:
+>bb22	02 10				        .byte 2, UF
+>bb24	2c bb 62 8c 8f 8c		        .word nt_d_dot, xt_dot_r, z_dot_r
+>bb2a	2e 72				        .text ".r"
+.bb2c					nt_d_dot:
+>bb2c	02 10				        .byte 2, UF
+>bb2e	36 bb d4 8c f2 8c		        .word nt_d_dot_r, xt_d_dot, z_d_dot
+>bb34	64 2e				        .text "d."
+.bb36					nt_d_dot_r:
+>bb36	03 10				        .byte 3, UF
+>bb38	41 bb f3 8c 1d 8d		        .word nt_ud_dot, xt_d_dot_r, z_d_dot_r
+>bb3e	64 2e 72			        .text "d.r"
+.bb41					nt_ud_dot:
+>bb41	03 10				        .byte 3, UF
+>bb43	4c bb 04 a5 16 a5		        .word nt_ud_dot_r, xt_ud_dot, z_ud_dot
+>bb49	75 64 2e			        .text "ud."
+.bb4c					nt_ud_dot_r:
+>bb4c	04 10				        .byte 4, UF
+>bb4e	58 bb 17 a5 35 a5		        .word nt_question, xt_ud_dot_r, z_ud_dot_r
+>bb54	75 64 2e 72			        .text "ud.r"
+.bb58					nt_question:
+>bb58	01 00				        .byte 1, 0
+>bb5a	61 bb e4 99 ea 99		        .word nt_false, xt_question, z_question
+>bb60	3f				        .text "?"
+.bb61					nt_false:
+>bb61	05 00				        .byte 5, 0
+>bb63	6e bb 69 8f 6f 8f		        .word nt_true, xt_false, z_false
+>bb69	66 61 6c 73 65			        .text "false"
+.bb6e					nt_true:
+>bb6e	04 00				        .byte 4, 0
+>bb70	7a bb 00 a3 08 a3		        .word nt_space, xt_true, z_true
+>bb76	74 72 75 65			        .text "true"
+.bb7a					nt_space:
+>bb7a	05 00				        .byte 5, 0
+>bb7c	87 bb a0 a0 a5 a0		        .word nt_zero, xt_space, z_space
+>bb82	73 70 61 63 65			        .text "space"
+.bb87					nt_zero:
+>bb87	01 00				        .byte 1, 0
+>bb89	90 bb 23 a7 29 a7		        .word nt_one, xt_zero, z_zero
+>bb8f	30				        .text "0"
+.bb90					nt_one:
+>bb90	01 00				        .byte 1, 0
+>bb92	99 bb 8a 97 92 97		        .word nt_two, xt_one, z_one
+>bb98	31				        .text "1"
+.bb99					nt_two:
+>bb99	01 00				        .byte 1, 0
+>bb9b	a2 bb 23 a3 2b a3		        .word nt_two_dup, xt_two, z_two
+>bba1	32				        .text "2"
+.bba2					nt_two_dup:
+>bba2	04 10				        .byte 4, UF
+>bba4	ae bb 34 a3 4b a3		        .word nt_question_dup, xt_two_dup, z_two_dup
+>bbaa	32 64 75 70			        .text "2dup"
+.bbae					nt_question_dup:
+>bbae	04 10				        .byte 4, UF
+>bbb0	ba bb eb 99 fe 99		        .word nt_plus, xt_question_dup, z_question_dup
+>bbb6	3f 64 75 70			        .text "?dup"
+.bbba					nt_plus:
+>bbba	01 10				        .byte 1, UF
+>bbbc	c3 bb 65 99 77 99		        .word nt_minus, xt_plus, z_plus
+>bbc2	2b				        .text "+"
+.bbc3					nt_minus:
+>bbc3	01 10				        .byte 1, UF
+>bbc5	cc bb 40 95 52 95		        .word nt_abs, xt_minus, z_minus
+>bbcb	2d				        .text "-"
+.bbcc					nt_abs:
+>bbcc	03 10				        .byte 3, UF
+>bbce	d7 bb 39 81 4d 81		        .word nt_dabs, xt_abs, z_abs
+>bbd4	61 62 73			        .text "abs"
+.bbd7					nt_dabs:
+>bbd7	04 10				        .byte 4, UF
+>bbd9	e3 bb 76 8a 94 8a		        .word nt_and, xt_dabs, z_dabs
+>bbdf	64 61 62 73			        .text "dabs"
+.bbe3					nt_and:
+>bbe3	03 10				        .byte 3, UF
+>bbe5	ee bb 3e 83 4f 83		        .word nt_or, xt_and, z_and
+>bbeb	61 6e 64			        .text "and"
+.bbee					nt_or:
+>bbee	02 10				        .byte 2, UF
+>bbf0	f8 bb b5 97 c6 97		        .word nt_xor, xt_or, z_or
+>bbf6	6f 72				        .text "or"
+.bbf8					nt_xor:
+>bbf8	03 10				        .byte 3, UF
+>bbfa	03 bc 11 a7 22 a7		        .word nt_rshift, xt_xor, z_xor
+>bc00	78 6f 72			        .text "xor"
+.bc03					nt_rshift:
+>bc03	06 10				        .byte 6, UF
+>bc05	11 bc f5 9a 08 9b		        .word nt_lshift, xt_rshift, z_rshift
+>bc0b	72 73 68 69 66 74		        .text "rshift"
+.bc11					nt_lshift:
+>bc11	06 10				        .byte 6, UF
+>bc13	1f bc 6a 94 7d 94		        .word nt_pick, xt_lshift, z_lshift
+>bc19	6c 73 68 69 66 74		        .text "lshift"
+.bc1f					nt_pick:
+>bc1f	04 00				        .byte 4, 0    ; underflow check is complicated, leave off here
+>bc21	2b bc 54 99 64 99		        .word nt_char, xt_pick, z_pick
+>bc27	70 69 63 6b			        .text "pick"
+.bc2b					nt_char:
+>bc2b	04 00				        .byte 4, 0
+>bc2d	37 bc 21 86 37 86		        .word nt_bracket_char, xt_char, z_char
+>bc33	63 68 61 72			        .text "char"
+.bc37					nt_bracket_char:
+>bc37	06 05				        .byte 6, CO+IM
+>bc39	45 bc 87 85 8d 85		        .word nt_char_plus, xt_bracket_char, z_bracket_char
+>bc3f	5b 63 68 61 72 5d		        .text "[char]"
+.bc45					nt_char_plus:
+>bc45	05 00				        .byte 5, 0
+>bc47	52 bc 9f 97 a8 97		        .word nt_chars, xt_one_plus, z_one_plus ; same as 1+
+>bc4d	63 68 61 72 2b			        .text "char+"
+.bc52					nt_chars:
+>bc52	05 12				        .byte 5, AN+UF   ; deleted during compile
+>bc54	5f bc 38 86 3b 86		        .word nt_cells, xt_chars, z_chars
+>bc5a	63 68 61 72 73			        .text "chars"
+.bc5f					nt_cells:
+>bc5f	05 00				        .byte 5, 0
+>bc61	6c bc cc a3 d3 a3		        .word nt_cell_plus, xt_two_star, z_two_star  ; same as 2*
+>bc67	63 65 6c 6c 73			        .text "cells"
+.bc6c					nt_cell_plus:
+>bc6c	05 10				        .byte 5, UF
+>bc6e	79 bc 11 86 20 86		        .word nt_here, xt_cell_plus, z_cell_plus
+>bc74	63 65 6c 6c 2b			        .text "cell+"
+.bc79					nt_here:
+>bc79	04 00				        .byte 4, 0
+>bc7b	85 bc 62 91 6c 91		        .word nt_one_minus, xt_here, z_here
+>bc81	68 65 72 65			        .text "here"
+.bc85					nt_one_minus:
+>bc85	02 10				        .byte 2, UF
+>bc87	8f bc 93 97 9e 97		        .word nt_one_plus, xt_one_minus, z_one_minus
+>bc8d	31 2d				        .text "1-"
+.bc8f					nt_one_plus:
+>bc8f	02 10				        .byte 2, UF
+>bc91	99 bc 9f 97 a8 97		        .word nt_two_star, xt_one_plus, z_one_plus
+>bc97	31 2b				        .text "1+"
+.bc99					nt_two_star:
+>bc99	02 10				        .byte 2, UF
+>bc9b	a3 bc cc a3 d3 a3		        .word nt_two_slash, xt_two_star, z_two_star
+>bca1	32 2a				        .text "2*"
+.bca3					nt_two_slash:
+>bca3	02 10				        .byte 2, UF
+>bca5	ad bc c1 a3 cb a3		        .word nt_equal, xt_two_slash, z_two_slash
+>bcab	32 2f				        .text "2/"
+.bcad					nt_equal:
+>bcad	01 10				        .byte 1, UF
+>bcaf	b6 bc be 8e d9 8e		        .word nt_not_equals, xt_equal, z_equal
+>bcb5	3d				        .text "="
+.bcb6					nt_not_equals:
+>bcb6	02 10				        .byte 2, UF
+>bcb8	c0 bc 40 96 5d 96		        .word nt_less_than, xt_not_equals, z_not_equals
+>bcbe	3c 3e				        .text "<>"
+.bcc0					nt_less_than:
+>bcc0	01 10				        .byte 1, UF
+>bcc2	c9 bc 58 93 6c 93		        .word nt_u_less_than, xt_less_than, z_less_than
+>bcc8	3c				        .text "<"
+.bcc9					nt_u_less_than:
+>bcc9	02 10				        .byte 2, UF
+>bccb	d3 bc ee a4 03 a5		        .word nt_u_greater_than, xt_u_less_than, z_u_less_than
+>bcd1	75 3c				        .text "u<"
+.bcd3					nt_u_greater_than:
+>bcd3	02 10				        .byte 2, UF
+>bcd5	dd bc d8 a4 ed a4		        .word nt_greater_than, xt_u_greater_than, z_u_greater_than
+>bcdb	75 3e				        .text "u>"
+.bcdd					nt_greater_than:
+>bcdd	01 10				        .byte 1, UF
+>bcdf	e6 bc 4d 91 61 91		        .word nt_zero_equal, xt_greater_than, z_greater_than
+>bce5	3e				        .text ">"
+.bce6					nt_zero_equal:
+>bce6	02 10				        .byte 2, UF
+>bce8	f0 bc 2a a7 3d a7		        .word nt_zero_unequal, xt_zero_equal, z_zero_equal
+>bcee	30 3d				        .text "0="
+.bcf0					nt_zero_unequal:
+>bcf0	03 10				        .byte 3, UF
+>bcf2	fb bc 62 a7 73 a7		        .word nt_zero_greater, xt_zero_unequal, z_zero_unequal
+>bcf8	30 3c 3e			        .text "0<>"
+.bcfb					nt_zero_greater:
+>bcfb	02 10				        .byte 2, UF
+>bcfd	05 bd 3e a7 51 a7		        .word nt_zero_less, xt_zero_greater, z_zero_greater
+>bd03	30 3e				        .text "0>"
+.bd05					nt_zero_less:
+>bd05	02 10				        .byte 2, UF
+>bd07	0f bd 52 a7 61 a7		        .word nt_min, xt_zero_less, z_zero_less
+>bd0d	30 3c				        .text "0<"
+.bd0f					nt_min:
+>bd0f	03 10				        .byte 3, UF
+>bd11	1a bd 24 95 3f 95		        .word nt_max, xt_min, z_min
+>bd17	6d 69 6e			        .text "min"
+.bd1a					nt_max:
+>bd1a	03 10				        .byte 3, UF
+>bd1c	25 bd 08 95 23 95		        .word nt_two_drop, xt_max, z_max
+>bd22	6d 61 78			        .text "max"
+.bd25					nt_two_drop:
+>bd25	05 10				        .byte 5, UF
+>bd27	32 bd 2c a3 33 a3		        .word nt_two_swap, xt_two_drop, z_two_drop
+>bd2d	32 64 72 6f 70			        .text "2drop"
+.bd32					nt_two_swap:
+>bd32	05 10				        .byte 5, UF
+>bd34	3f bd fa a3 1d a4		        .word nt_two_over, xt_two_swap, z_two_swap
+>bd3a	32 73 77 61 70			        .text "2swap"
+.bd3f					nt_two_over:
+>bd3f	05 10				        .byte 5, UF
+>bd41	4c bd 6e a3 85 a3		        .word nt_two_store, xt_two_over, z_two_over
+>bd47	32 6f 76 65 72			        .text "2over"
+.bd4c					nt_two_store:
+>bd4c	02 10				        .byte 2, UF
+>bd4e	56 bd d4 a3 f9 a3		        .word nt_two_fetch, xt_two_store, z_two_store
+>bd54	32 21				        .text "2!"
+.bd56					nt_two_fetch:
+>bd56	02 10				        .byte 2, UF
+>bd58	60 bd 4c a3 6d a3		        .word nt_two_variable, xt_two_fetch, z_two_fetch
+>bd5e	32 40				        .text "2@"
+.bd60					nt_two_variable:
+>bd60	09 00				        .byte 9, 0
+>bd62	71 bd 70 a4 7e a4		        .word nt_two_constant, xt_two_variable, z_two_variable
+>bd68	32 76 61 72 69 61 62 6c		        .text "2variable"
+>bd70	65
+.bd71					nt_two_constant:
+>bd71	09 10				        .byte 9, UF
+>bd73	82 bd 3e a4 62 a4		        .word nt_two_literal, xt_two_constant, z_two_constant
+>bd79	32 63 6f 6e 73 74 61 6e		        .text "2constant"
+>bd81	74
+.bd82					nt_two_literal:
+>bd82	08 14				        .byte 8, UF+IM
+>bd84	92 bd 63 a4 6f a4		        .word nt_two_r_fetch, xt_two_literal, z_two_literal
+>bd8a	32 6c 69 74 65 72 61 6c		        .text "2literal"
+.bd92					nt_two_r_fetch:
+>bd92	03 09				        .byte 3, CO+NN          ; native is special case, leave NN for now
+>bd94	9d bd 86 a3 a3 a3		        .word nt_two_r_from, xt_two_r_fetch, z_two_r_fetch
+>bd9a	32 72 40			        .text "2r@"
+.bd9d					nt_two_r_from:
+>bd9d	03 01				        .byte 3, CO             ; native is special case
+>bd9f	a8 bd a4 a3 c0 a3		        .word nt_two_to_r, xt_two_r_from, z_two_r_from
+>bda5	32 72 3e			        .text "2r>"
+.bda8					nt_two_to_r:
+>bda8	03 11				        .byte 3, CO+UF          ; native is special case
+>bdaa	b3 bd 1e a4 3d a4		        .word nt_invert, xt_two_to_r, z_two_to_r
+>bdb0	32 3e 72			        .text "2>r"
+.bdb3					nt_invert:
+>bdb3	06 10				        .byte 6, UF
+>bdb5	c1 bd db 92 ea 92		        .word nt_negate, xt_invert, z_invert
+>bdbb	69 6e 76 65 72 74		        .text "invert"
+.bdc1					nt_negate:
+>bdc1	06 10				        .byte 6, UF
+>bdc3	cf bd 13 96 23 96		        .word nt_dnegate, xt_negate, z_negate
+>bdc9	6e 65 67 61 74 65		        .text "negate"
+.bdcf					nt_dnegate:
+>bdcf	07 10				        .byte 7, UF
+>bdd1	de bd 31 8b 4b 8b		        .word nt_c_comma, xt_dnegate, z_dnegate
+>bdd7	64 6e 65 67 61 74 65		        .text "dnegate"
+.bdde					nt_c_comma:
+>bdde	02 10				        .byte 2, UF
+>bde0	e8 bd f0 85 fa 85		        .word nt_bounds, xt_c_comma, z_c_comma
+>bde6	63 2c				        .text "c,"
+.bde8					nt_bounds:
+>bde8	06 10				        .byte 6, UF
+>bdea	f6 bd 6e 85 86 85		        .word nt_spaces, xt_bounds, z_bounds
+>bdf0	62 6f 75 6e 64 73		        .text "bounds"
+.bdf6					nt_spaces:
+>bdf6	06 10				        .byte 6, UF
+>bdf8	04 be a6 a0 db a0		        .word nt_bl, xt_spaces, z_spaces
+>bdfe	73 70 61 63 65 73		        .text "spaces"
+.be04					nt_bl:
+>be04	02 00				        .byte 2, 0
+>be06	0e be 8a 83 92 83		        .word nt_minus_trailing, xt_bl, z_bl
+>be0c	62 6c				        .text "bl"
+.be0e					nt_minus_trailing:
+>be0e	09 10				        .byte 9, UF
+>be10	1f be 6c 95 a8 95		        .word nt_minus_leading, xt_minus_trailing, z_minus_trailing
+>be16	2d 74 72 61 69 6c 69 6e		        .text "-trailing"
+>be1e	67
+.be1f					nt_minus_leading:
+>be1f	08 10				        .byte 8, UF
+>be21	2f be 53 95 6b 95		        .word nt_slash_string, xt_minus_leading, z_minus_leading
+>be27	2d 6c 65 61 64 69 6e 67		        .text "-leading"
+.be2f					nt_slash_string:
+>be2f	07 10				        .byte 7, UF
+>be31	3e be 9b 9f ba 9f		        .word nt_refill, xt_slash_string, z_slash_string
+>be37	2f 73 74 72 69 6e 67		        .text "/string"
+.be3e					nt_refill:
+>be3e	06 00				        .byte 6, 0
+>be40	4c be 7a 9a bb 9a		        .word nt_accept, xt_refill, z_refill
+>be46	72 65 66 69 6c 6c		        .text "refill"
+.be4c					nt_accept:
+>be4c	06 18				        .byte 6, UF+NN
+>be4e	5a be 4e 81 46 82		        .word nt_input_to_r, xt_accept, z_accept
+>be54	61 63 63 65 70 74		        .text "accept"
+.be5a					nt_input_to_r:
+>be5a	07 08				        .byte 7, NN
+>be5c	69 be 52 92 67 92		        .word nt_r_to_input, xt_input_to_r, z_input_to_r
+>be62	69 6e 70 75 74 3e 72		        .text "input>r"
+.be69					nt_r_to_input:
+>be69	07 08				        .byte 7, NN
+>be6b	78 be 25 9a 3c 9a		        .word nt_unused, xt_r_to_input, z_r_to_input
+>be71	72 3e 69 6e 70 75 74		        .text "r>input"
+.be78					nt_unused:
+>be78	06 00				        .byte 6, 0
+>be7a	86 be d0 a5 df a5		        .word nt_depth, xt_unused, z_unused
+>be80	75 6e 75 73 65 64		        .text "unused"
+.be86					nt_depth:
+>be86	05 00				        .byte 5, 0
+>be88	93 be e6 8a f4 8a		        .word nt_key, xt_depth, z_depth
+>be8e	64 65 70 74 68			        .text "depth"
+.be93					nt_key:
+>be93	03 00				        .byte 3, 0
+>be95	9e be 1e 93 27 93		        .word nt_allot, xt_key, z_key
+>be9b	6b 65 79			        .text "key"
+.be9e					nt_allot:
+>be9e	05 10				        .byte 5, UF
+>bea0	ab be ab 82 13 83		        .word nt_create, xt_allot, z_allot
+>bea6	61 6c 6c 6f 74			        .text "allot"
+.beab					nt_create:
+>beab	06 00				        .byte 6, 0
+>bead	b9 be 59 89 2d 8a		        .word nt_does, xt_create, z_create
+>beb3	63 72 65 61 74 65		        .text "create"
+.beb9					nt_does:
+>beb9	05 05				        .byte 5, CO+IM
+>bebb	c6 be e5 8b f3 8b		        .word nt_variable, xt_does, z_does
+>bec1	64 6f 65 73 3e			        .text "does>"
+.bec6					nt_variable:
+>bec6	08 00				        .byte 8, 0
+>bec8	d6 be f4 a5 0c a6		        .word nt_constant, xt_variable, z_variable
+>bece	76 61 72 69 61 62 6c 65		        .text "variable"
+.bed6					nt_constant:
+>bed6	08 10				        .byte 8, UF
+>bed8	e6 be 01 89 3e 89		        .word nt_value, xt_constant, z_constant
+>bede	63 6f 6e 73 74 61 6e 74		        .text "constant"
+.bee6					nt_value:
+>bee6	05 10				        .byte 5, UF
+>bee8	f3 be 01 89 3e 89		        .word nt_to, xt_constant, z_constant
+>beee	76 61 6c 75 65			        .text "value"
+.bef3					nt_to:
+>bef3	02 0c				        .byte 2, NN+IM
+>bef5	fd be ad a1 08 a2		        .word nt_s_to_d, xt_to, z_to
+>befb	74 6f				        .text "to"
+.befd					nt_s_to_d:
+>befd	03 10				        .byte 3, UF
+>beff	08 bf 2e 9e 3f 9e		        .word nt_d_to_s, xt_s_to_d, z_s_to_d
+>bf05	73 3e 64			        .text "s>d"
+.bf08					nt_d_to_s:
+>bf08	03 10				        .byte 3, UF
+>bf0a	13 bf 70 8a 75 8a		        .word nt_d_minus, xt_d_to_s, z_d_to_s
+>bf10	64 3e 73			        .text "d>s"
+.bf13					nt_d_minus:
+>bf13	02 10				        .byte 2, UF
+>bf15	1d bf 2e 8a 4e 8a		        .word nt_d_plus, xt_d_minus, z_d_minus
+>bf1b	64 2d				        .text "d-"
+.bf1d					nt_d_plus:
+>bf1d	02 10				        .byte 2, UF
+>bf1f	27 bf 4f 8a 6f 8a		        .word nt_erase, xt_d_plus, z_d_plus
+>bf25	64 2b				        .text "d+"
+.bf27					nt_erase:
+>bf27	05 00				        .byte 5, 0      ; underflow checked by FILL
+>bf29	34 bf e4 8e 2c 8f		        .word nt_blank, xt_erase, z_erase
+>bf2f	65 72 61 73 65			        .text "erase"
+.bf34					nt_blank:
+>bf34	05 00				        .byte 5, 0     ; underflow checked by FILL
+>bf36	41 bf da 8e 2c 8f		        .word nt_fill, xt_blank, z_blank
+>bf3c	62 6c 61 6e 6b			        .text "blank"
+.bf41					nt_fill:
+>bf41	04 10				        .byte 4, UF
+>bf43	4d bf ea 8e 2c 8f		        .word nt_find_name, xt_fill, z_fill
+>bf49	66 69 6c 6c			        .text "fill"
+.bf4d					nt_find_name:
+>bf4d	09 10				        .byte 9, UF
+>bf4f	5e bf cb 8f 76 90		        .word nt_tick, xt_find_name, z_find_name
+>bf55	66 69 6e 64 2d 6e 61 6d		        .text "find-name"
+>bf5d	65
+.bf5e					nt_tick:
+>bf5e	01 00				        .byte 1, 0
+>bf60	67 bf 8d a1 ac a1		        .word nt_bracket_tick, xt_tick, z_tick
+>bf66	27				        .text "'"
+.bf67					nt_bracket_tick:
+>bf67	03 05				        .byte 3, CO+IM
+>bf69	72 bf 8e 85 94 85		        .word nt_name_to_int, xt_bracket_tick, z_bracket_tick
+>bf6f	5b 27 5d			        .text "[']"
+.bf72					nt_name_to_int:
+>bf72	08 10				        .byte 8, UF
+>bf74	82 bf d1 95 ed 95		        .word nt_int_to_name, xt_name_to_int, z_name_to_int
+>bf7a	6e 61 6d 65 3e 69 6e 74		        .text "name>int"
+.bf82					nt_int_to_name:
+>bf82	08 10				        .byte 8, UF
+>bf84	92 bf 68 92 da 92		        .word nt_name_to_string, xt_int_to_name, z_int_to_name
+>bf8a	69 6e 74 3e 6e 61 6d 65		        .text "int>name"
+.bf92					nt_name_to_string:
+>bf92	0b 10				        .byte 11, UF
+>bf94	a5 bf ee 95 07 96		        .word nt_to_body, xt_name_to_string, z_name_to_string
+>bf9a	6e 61 6d 65 3e 73 74 72		        .text "name>string"
+>bfa2	69 6e 67
+.bfa5					nt_to_body:
+>bfa5	05 10				        .byte 5, UF
+>bfa7	b2 bf 09 a2 2d a2		        .word nt_defer, xt_to_body, z_to_body
+>bfad	3e 62 6f 64 79			        .text ">body"
+.bfb2					nt_defer:
+>bfb2	05 00				        .byte 5, 0
+>bfb4	bf bf 9c 8a ce 8a		        .word nt_latestxt, xt_defer, z_defer
+>bfba	64 65 66 65 72			        .text "defer"
+.bfbf					nt_latestxt:
+>bfbf	08 00				        .byte 8, 0
+>bfc1	cf bf 39 93 3f 93		        .word nt_latestnt, xt_latestxt, z_latestxt
+>bfc7	6c 61 74 65 73 74 78 74		        .text "latestxt"
+.bfcf					nt_latestnt:
+>bfcf	08 00				        .byte 8, 0
+>bfd1	df bf 2b 93 38 93		        .word nt_parse_name, xt_latestnt, z_latestnt
+>bfd7	6c 61 74 65 73 74 6e 74		        .text "latestnt"
+.bfdf					nt_parse_name:
+>bfdf	0a 08				        .byte 10, NN
+>bfe1	f1 bf 61 98 53 99		        .word nt_parse, xt_parse_name, z_parse_name
+>bfe7	70 61 72 73 65 2d 6e 61		        .text "parse-name"
+>bfef	6d 65
+.bff1					nt_parse:
+>bff1	05 10				        .byte 5, UF
+>bff3	fe bf bc 98 53 99		        .word nt_execute_parsing, xt_parse, z_parse
+>bff9	70 61 72 73 65			        .text "parse"
+.bffe					nt_execute_parsing:
+>bffe	0f 10				        .byte 15, UF
+>c000	15 c0 41 8f 67 8f		        .word nt_source, xt_execute_parsing, z_execute_parsing
+>c006	65 78 65 63 75 74 65 2d		        .text "execute-parsing"
+>c00e	70 61 72 73 69 6e 67
+.c015					nt_source:
+>c015	06 00				        .byte 6, 0
+>c017	23 c0 80 a0 94 a0		        .word nt_source_id, xt_source, z_source
+>c01d	73 6f 75 72 63 65		        .text "source"
+.c023					nt_source_id:
+>c023	09 00				        .byte 9, 0
+>c025	34 c0 95 a0 9f a0		        .word nt_colon, xt_source_id, z_source_id
+>c02b	73 6f 75 72 63 65 2d 69		        .text "source-id"
+>c033	64
+.c034					nt_colon:
+>c034	01 00				        .byte 1, 0
+>c036	3d c0 ff 86 41 87		        .word nt_semicolon, xt_colon, z_colon
+>c03c	3a				        .text ":"
+.c03d					nt_semicolon:
+>c03d	01 05				        .byte 1, CO+IM
+>c03f	46 c0 0a 9f 68 9f		        .word nt_colon_noname, xt_semicolon, z_semicolon
+>c045	3b				        .text ";"
+.c046					nt_colon_noname:
+>c046	07 00				        .byte 7, 0
+>c048	55 c0 42 87 5d 87		        .word nt_compile_comma, xt_colon_noname, z_colon_noname
+>c04e	3a 6e 6f 6e 61 6d 65		        .text ":noname"
+.c055					nt_compile_comma:
+>c055	08 18				        .byte 8, UF+NN
+>c057	65 c0 dd 87 f4 88		        .word nt_left_bracket, xt_compile_comma, z_compile_comma
+>c05d	63 6f 6d 70 69 6c 65 2c		        .text "compile,"
+.c065					nt_left_bracket:
+>c065	01 05				        .byte 1, IM+CO
+>c067	6e c0 45 93 49 93		        .word nt_right_bracket, xt_left_bracket, z_left_bracket
+>c06d	5b				        .text "["
+.c06e					nt_right_bracket:
+>c06e	01 04				        .byte 1, IM
+>c070	77 c0 c9 9a cf 9a		        .word nt_literal, xt_right_bracket, z_right_bracket
+>c076	5d				        .text "]"
+.c077					nt_literal:
+>c077	07 15				        .byte 7, IM+CO+UF
+>c079	86 c0 7a 93 87 93		        .word nt_sliteral, xt_literal, z_literal
+>c07f	6c 69 74 65 72 61 6c		        .text "literal"
+.c086					nt_sliteral:
+>c086	08 15				        .byte 8, CO+IM+UF
+>c088	96 c0 bb 9f 2a a0		        .word nt_dot_quote, xt_sliteral, z_sliteral
+>c08e	73 6c 69 74 65 72 61 6c		        .text "sliteral"
+.c096					nt_dot_quote:
+>c096	02 05				        .byte 2, CO+IM
+>c098	a0 c0 57 8c 61 8c		        .word nt_s_quote, xt_dot_quote, z_dot_quote
+>c09e	2e 22				        .text ".", $22
+.c0a0					nt_s_quote:
+>c0a0	02 0c				        .byte 2, IM+NN
+>c0a2	aa c0 d1 9c 2d 9e		        .word nt_s_backslash_quote, xt_s_quote, z_s_quote
+>c0a8	73 22				        .text "s", $22
+.c0aa					nt_s_backslash_quote:
+>c0aa	03 04				        .byte 3, IM
+>c0ac	b5 c0 09 9b 12 9b		        .word nt_postpone, xt_s_backslash_quote, z_s_backslash_quote
+>c0b2	73 5c 22			        .text "s", $5C, $22
+.c0b5					nt_postpone:
+>c0b5	08 05				        .byte 8, IM+CO
+>c0b7	c5 c0 98 99 d6 99		        .word nt_immediate, xt_postpone, z_postpone
+>c0bd	70 6f 73 74 70 6f 6e 65		        .text "postpone"
+.c0c5					nt_immediate:
+>c0c5	09 00				        .byte 9, 0
+>c0c7	d6 c0 3b 92 46 92		        .word nt_compile_only, xt_immediate, z_immediate
+>c0cd	69 6d 6d 65 64 69 61 74		        .text "immediate"
+>c0d5	65
+.c0d6					nt_compile_only:
+>c0d6	0c 00				        .byte 12, 0
+>c0d8	ea c0 f5 88 00 89		        .word nt_never_native, xt_compile_only, z_compile_only
+>c0de	63 6f 6d 70 69 6c 65 2d		        .text "compile-only"
+>c0e6	6f 6e 6c 79
+.c0ea					nt_never_native:
+>c0ea	0c 00				        .byte 12, 0
+>c0ec	fe c0 24 96 31 96		        .word nt_always_native, xt_never_native, z_never_native
+>c0f2	6e 65 76 65 72 2d 6e 61		        .text "never-native"
+>c0fa	74 69 76 65
+.c0fe					nt_always_native:
+>c0fe	0d 00				        .byte 13, 0
+>c100	13 c1 30 83 3d 83		        .word nt_allow_native, xt_always_native, z_always_native
+>c106	61 6c 77 61 79 73 2d 6e		        .text "always-native"
+>c10e	61 74 69 76 65
+.c113					nt_allow_native:
+>c113	0c 00				        .byte 12, 0
+>c115	27 c1 14 83 1f 83		        .word nt_nc_limit, xt_allow_native, z_allow_native
+>c11b	61 6c 6c 6f 77 2d 6e 61		        .text "allow-native"
+>c123	74 69 76 65
+.c127					nt_nc_limit:
+>c127	08 00				        .byte 8, 0
+>c129	37 c1 08 96 12 96		        .word nt_strip_underflow, xt_nc_limit, z_nc_limit
+>c12f	6e 63 2d 6c 69 6d 69 74		        .text "nc-limit"
+.c137					nt_strip_underflow:
+>c137	0f 00				        .byte 15, 0
+>c139	4e c1 1f a1 29 a1		        .word nt_abort, xt_strip_underflow, z_strip_underflow
+>c13f	73 74 72 69 70 2d 75 6e		        .text "strip-underflow"
+>c147	64 65 72 66 6c 6f 77
+.c14e					nt_abort:
+>c14e	05 00				        .byte 5, 0
+>c150	5b c1 81 80 c5 80		        .word nt_abort_quote, xt_abort, z_abort
+>c156	61 62 6f 72 74			        .text "abort"
+.c15b					nt_abort_quote:
+>c15b	06 0d				        .byte 6, CO+IM+NN
+>c15d	69 c1 19 81 23 81		        .word nt_do, xt_abort_quote, z_abort_quote
+>c163	61 62 6f 72 74 22		        .text "abort", $22
+.c169					nt_do:
+>c169	02 0d				        .byte 2, CO+IM+NN
+>c16b	73 c1 52 8b ac 8b		        .word nt_question_do, xt_do, z_do
+>c171	64 6f				        .text "do"
+.c173					nt_question_do:
+>c173	03 0d				        .byte 3, CO+IM+NN
+>c175	7e c1 4c 8b ac 8b		        .word nt_i, xt_question_do, z_question_do
+>c17b	3f 64 6f			        .text "?do"
+.c17e					nt_i:
+>c17e	01 03				        .byte 1, AN+CO
+>c180	87 c1 d9 91 f2 91		        .word nt_j, xt_i, z_i
+>c186	69				        .text "i"
+.c187					nt_j:
+>c187	01 03				        .byte 1, AN+CO
+>c189	90 c1 04 93 1d 93		        .word nt_loop, xt_j, z_j
+>c18f	6a				        .text "j"
+.c190					nt_loop:
+>c190	04 05				        .byte 4, CO+IM
+>c192	9c c1 eb 93 58 94		        .word nt_plus_loop, xt_loop, z_loop
+>c198	6c 6f 6f 70			        .text "loop"
+.c19c					nt_plus_loop:
+>c19c	05 05				        .byte 5, CO+IM
+>c19e	a9 c1 f2 93 58 94		        .word nt_exit, xt_plus_loop, z_plus_loop
+>c1a4	2b 6c 6f 6f 70			        .text "+loop"
+.c1a9					nt_exit:
+>c1a9	04 03				        .byte 4, AN+CO
+>c1ab	b5 c1 68 8f 69 8f		        .word nt_unloop, xt_exit, z_exit
+>c1b1	65 78 69 74			        .text "exit"
+.c1b5					nt_unloop:
+>c1b5	06 03				        .byte 6, AN+CO
+>c1b7	c3 c1 be a5 c4 a5		        .word nt_leave, xt_unloop, z_unloop
+>c1bd	75 6e 6c 6f 6f 70		        .text "unloop"
+.c1c3					nt_leave:
+>c1c3	05 03				        .byte 5, AN+CO
+>c1c5	d0 c1 40 93 45 93		        .word nt_recurse, xt_leave, z_leave
+>c1cb	6c 65 61 76 65			        .text "leave"
+.c1d0					nt_recurse:
+>c1d0	07 0d				        .byte 7, CO+IM+NN
+>c1d2	df c1 3d 9a 79 9a		        .word nt_quit, xt_recurse, z_recurse
+>c1d8	72 65 63 75 72 73 65		        .text "recurse"
+.c1df					nt_quit:
+>c1df	04 00				        .byte 4, 0
+>c1e1	eb c1 83 80 c5 80		        .word nt_begin, xt_quit, z_quit
+>c1e7	71 75 69 74			        .text "quit"
+.c1eb					nt_begin:
+>c1eb	05 07				        .byte 5, AN+CO+IM
+>c1ed	f8 c1 80 83 83 83		        .word nt_again, xt_begin, z_begin
+>c1f3	62 65 67 69 6e			        .text "begin"
+.c1f8					nt_again:
+>c1f8	05 17				        .byte 5, AN+CO+IM+UF
+>c1fa	05 c2 89 82 a9 82		        .word nt_state, xt_again, z_again
+>c200	61 67 61 69 6e			        .text "again"
+.c205					nt_state:
+>c205	05 00				        .byte 5, 0
+>c207	12 c2 fe a0 08 a1		        .word nt_evaluate, xt_state, z_state
+>c20d	73 74 61 74 65			        .text "state"
+.c212					nt_evaluate:
+>c212	08 10				        .byte 8, UF
+>c214	22 c2 c5 90 18 91		        .word nt_base, xt_evaluate, z_evaluate
+>c21a	65 76 61 6c 75 61 74 65		        .text "evaluate"
+.c222					nt_base:
+>c222	04 00				        .byte 4, 0
+>c224	2e c2 77 83 7f 83		        .word nt_digit_question, xt_base, z_base
+>c22a	62 61 73 65			        .text "base"
+.c22e					nt_digit_question:
+>c22e	06 10				        .byte 6, UF
+>c230	3c c2 f5 8a 29 8b		        .word nt_number, xt_digit_question, z_digit_question
+>c236	64 69 67 69 74 3f		        .text "digit?"
+.c23c					nt_number:
+>c23c	06 10				        .byte 6, UF
+>c23e	4a c2 7a 96 08 97		        .word nt_to_number, xt_number, z_number
+>c244	6e 75 6d 62 65 72		        .text "number"
+.c24a					nt_to_number:
+>c24a	07 10				        .byte 7, UF
+>c24c	59 c2 39 a2 d8 a2		        .word nt_hex, xt_to_number, z_to_number
+>c252	3e 6e 75 6d 62 65 72		        .text ">number"
+.c259					nt_hex:
+>c259	03 00				        .byte 3, 0
+>c25b	64 c2 6d 91 73 91		        .word nt_decimal, xt_hex, z_hex
+>c261	68 65 78			        .text "hex"
+.c264					nt_decimal:
+>c264	07 00				        .byte 7, 0
+>c266	73 c2 95 8a 9b 8a		        .word nt_count, xt_decimal, z_decimal
+>c26c	64 65 63 69 6d 61 6c		        .text "decimal"
+.c273					nt_count:
+>c273	05 10				        .byte 5, UF
+>c275	80 c2 3f 89 52 89		        .word nt_m_star, xt_count, z_count
+>c27b	63 6f 75 6e 74			        .text "count"
+.c280					nt_m_star:
+>c280	02 10				        .byte 2, UF
+>c282	8a c2 7e 94 98 94		        .word nt_um_star, xt_m_star, z_m_star
+>c288	6d 2a				        .text "m*"
+.c28a					nt_um_star:
+>c28a	03 10				        .byte 3, UF
+>c28c	95 c2 78 a5 bd a5		        .word nt_star, xt_um_star, z_um_star
+>c292	75 6d 2a			        .text "um*"
+.c295					nt_star:
+>c295	01 10				        .byte 1, UF
+>c297	9e c2 dc a0 e4 a0		        .word nt_um_slash_mod, xt_star, z_star
+>c29d	2a				        .text "*"
+.c29e					nt_um_slash_mod:
+>c29e	06 10				        .byte 6, UF
+>c2a0	ac c2 36 a5 77 a5		        .word nt_sm_slash_rem, xt_um_slash_mod, z_um_slash_mod
+>c2a6	75 6d 2f 6d 6f 64		        .text "um/mod"
+.c2ac					nt_sm_slash_rem:
+>c2ac	06 10				        .byte 6, UF
+>c2ae	ba c2 57 a0 7f a0		        .word nt_fm_slash_mod, xt_sm_slash_rem, z_sm_slash_rem
+>c2b4	73 6d 2f 72 65 6d		        .text "sm/rem"
+.c2ba					nt_fm_slash_mod:
+>c2ba	06 10				        .byte 6, UF
+>c2bc	c8 c2 81 90 b7 90		        .word nt_slash, xt_fm_slash_mod, z_fm_slash_mod
+>c2c2	66 6d 2f 6d 6f 64		        .text "fm/mod"
+.c2c8					nt_slash:
+>c2c8	01 10				        .byte 1, UF
+>c2ca	d1 c2 7e 9f 9a 9f		        .word nt_slash_mod, xt_slash, z_slash
+>c2d0	2f				        .text "/"
+.c2d1					nt_slash_mod:
+>c2d1	04 10				        .byte 4, UF
+>c2d3	dd c2 83 9f 9a 9f		        .word nt_mod, xt_slash_mod, z_slash_mod
+>c2d9	2f 6d 6f 64			        .text "/mod"
+.c2dd					nt_mod:
+>c2dd	03 10				        .byte 3, UF
+>c2df	e8 c2 a9 95 b1 95		        .word nt_star_slash_mod, xt_mod, z_mod
+>c2e5	6d 6f 64			        .text "mod"
+.c2e8					nt_star_slash_mod:
+>c2e8	05 10				        .byte 5, UF
+>c2ea	f5 c2 ee a0 fd a0		        .word nt_star_slash, xt_star_slash_mod, z_star_slash_mod
+>c2f0	2a 2f 6d 6f 64			        .text "*/mod"
+.c2f5					nt_star_slash:
+>c2f5	02 10				        .byte 2, UF
+>c2f7	ff c2 e5 a0 ed a0		        .word nt_backslash, xt_star_slash, z_star_slash
+>c2fd	2a 2f				        .text "*/"
+.c2ff					nt_backslash:
+>c2ff	01 04				        .byte 1, IM
+>c301	08 c3 6e 83 76 83		        .word nt_move, xt_backslash, z_backslash
+>c307	5c				        .byte $5c
+.c308					nt_move:
+>c308	04 18				        .byte 4, NN+UF
+>c30a	14 c3 b2 95 d0 95		        .word nt_cmove_up, xt_move, z_move
+>c310	6d 6f 76 65			        .text "move"
+.c314					nt_cmove_up:
+>c314	06 10				        .byte 6, UF
+>c316	22 c3 c4 86 fe 86		        .word nt_cmove, xt_cmove_up, z_cmove_up
+>c31c	63 6d 6f 76 65 3e		        .text "cmove>"
+.c322					nt_cmove:
+>c322	05 10				        .byte 5, UF
+>c324	2f c3 89 86 c3 86		        .word nt_pad, xt_cmove, z_cmove
+>c32a	63 6d 6f 76 65			        .text "cmove"
+.c32f					nt_pad:
+>c32f	03 00				        .byte 3, 0
+>c331	3a c3 23 98 32 98		        .word nt_cleave, xt_pad, z_pad
+>c337	70 61 64			        .text "pad"
+.c33a					nt_cleave:
+>c33a	06 10				        .byte 6, UF
+>c33c	48 c3 3c 86 88 86		        .word nt_hexstore, xt_cleave, z_cleave
+>c342	63 6c 65 61 76 65		        .text "cleave"
+.c348					nt_hexstore:
+>c348	08 10				        .byte 8, UF
+>c34a	58 c3 74 91 c6 91		        .word nt_within, xt_hexstore, z_hexstore
+>c350	68 65 78 73 74 6f 72 65		        .text "hexstore"
+.c358					nt_within:
+>c358	06 10				        .byte 6, UF
+>c35a	66 c3 21 a6 36 a6		        .word nt_to_in, xt_within, z_within
+>c360	77 69 74 68 69 6e		        .text "within"
+.c366					nt_to_in:
+>c366	03 00				        .byte 3, 0
+>c368	71 c3 2e a2 38 a2		        .word nt_less_number_sign, xt_to_in, z_to_in
+>c36e	3e 69 6e			        .text ">in"
+.c371					nt_less_number_sign:
+>c371	02 00				        .byte 2, 0
+>c373	7b c3 4a 93 57 93		        .word nt_number_sign, xt_less_number_sign, z_less_number_sign
+>c379	3c 23				        .text "<#"
+.c37b					nt_number_sign:
+>c37b	01 10				        .byte 1, UF
+>c37d	84 c3 09 97 3d 97		        .word nt_number_sign_s, xt_number_sign, z_number_sign
+>c383	23				        .text "#"
+.c384					nt_number_sign_s:
+>c384	02 10				        .byte 2, UF
+>c386	8e c3 60 97 70 97		        .word nt_number_sign_greater, xt_number_sign_s, z_number_sign_s
+>c38c	23 73				        .text "#s"
+.c38e					nt_number_sign_greater:
+>c38e	02 10				        .byte 2, UF
+>c390	98 c3 3e 97 5f 97		        .word nt_hold, xt_number_sign_greater, z_number_sign_greater
+>c396	23 3e				        .text "#>"
+.c398					nt_hold:
+>c398	04 10				        .byte 4, UF
+>c39a	a4 c3 c7 91 d8 91		        .word nt_sign, xt_hold, z_hold
+>c3a0	68 6f 6c 64			        .text "hold"
+.c3a4					nt_sign:
+>c3a4	04 10				        .byte 4, UF
+>c3a6	b0 c3 69 9f 7d 9f		        .word nt_output, xt_sign, z_sign
+>c3ac	73 69 67 6e			        .text "sign"
+.c3b0					nt_output:
+>c3b0	06 00				        .byte 6, 0
+>c3b2	be c3 0a 98 14 98		        .word nt_input, xt_output, z_output
+>c3b8	6f 75 74 70 75 74		        .text "output"
+.c3be					nt_input:
+>c3be	05 00				        .byte 5, 0
+>c3c0	cb c3 47 92 51 92		        .word nt_cr, xt_input, z_input
+>c3c6	69 6e 70 75 74			        .text "input"
+.c3cb					nt_cr:
+>c3cb	02 00				        .byte 2, 0
+>c3cd	d5 c3 53 89 58 89		        .word nt_page, xt_cr, z_cr
+>c3d3	63 72				        .text "cr"
+.c3d5					nt_page:
+>c3d5	04 00				        .byte 4, 0
+>c3d7	e1 c3 33 98 50 98		        .word nt_at_xy, xt_page, z_page
+>c3dd	70 61 67 65			        .text "page"
+.c3e1					nt_at_xy:
+>c3e1	05 10				        .byte 5, UF
+>c3e3	ee c3 50 83 6d 83		        .word nt_marker, xt_at_xy, z_at_xy
+>c3e9	61 74 2d 78 79			        .text "at-xy"
+.c3ee					nt_marker:
+>c3ee	06 04				        .byte 6, IM
+>c3f0	fc c3 99 94 d6 94		        .word nt_words, xt_marker, z_marker
+>c3f6	6d 61 72 6b 65 72		        .text "marker"
+.c3fc					nt_words:
+>c3fc	05 00				        .byte 5, 0
+>c3fe	09 c4 94 a6 ef a6		        .word nt_wordsize, xt_words, z_words
+>c404	77 6f 72 64 73			        .text "words"
+.c409					nt_wordsize:
+>c409	08 10				        .byte 8, UF
+>c40b	19 c4 f0 a6 10 a7		        .word nt_aligned, xt_wordsize, z_wordsize
+>c411	77 6f 72 64 73 69 7a 65		        .text "wordsize"
+.c419					nt_aligned:
+>c419	07 00				        .byte 7, 0
+>c41b	28 c4 aa 82 aa 82		        .word nt_align, xt_align, z_align
+>c421	61 6c 69 67 6e 65 64		        .text "aligned"
+.c428					nt_align:
+>c428	05 00				        .byte 5, 0
+>c42a	35 c4 aa 82 aa 82		        .word nt_bell, xt_align, z_align
+>c430	61 6c 69 67 6e			        .text "align"
+.c435					nt_bell:
+>c435	04 00				        .byte 4, 0
+>c437	41 c4 84 83 89 83		        .word nt_dump, xt_bell, z_bell
+>c43d	62 65 6c 6c			        .text "bell"
+.c441					nt_dump:
+>c441	04 10				        .byte 4, UF
+>c443	4d c4 24 8d 8a 8d		        .word nt_dot_s, xt_dump, z_dump
+>c449	64 75 6d 70			        .text "dump"
+.c44d					nt_dot_s:
+>c44d	02 00				        .byte 2, 0
+>c44f	57 c4 90 8c d3 8c		        .word nt_disasm, xt_dot_s, z_dot_s
+>c455	2e 73				        .text ".s"
+.c457					nt_disasm:
+>c457	06 10				        .byte 6, UF
+>c459	65 c4 2a 8b 30 8b		        .word nt_compare, xt_disasm, z_disasm
+>c45f	64 69 73 61 73 6d		        .text "disasm"
+.c465					nt_compare:
+>c465	07 10				        .byte 7, UF
+>c467	74 c4 78 87 dc 87		        .word nt_search, xt_compare, z_compare
+>c46d	63 6f 6d 70 61 72 65		        .text "compare"
+.c474					nt_search:
+>c474	06 18				        .byte 6, UF+NN
+>c476	82 c4 6b 9e 09 9f		        .word +, xt_search, z_search
+>c47c	73 65 61 72 63 68		        .text "search"
+.c482					+
+.c482					nt_environment_q:
+>c482	0c 10				        .byte 12, UF
+>c484	96 c4 05 8e 81 8e		        .word +, xt_environment_q, z_environment_q
+>c48a	65 6e 76 69 72 6f 6e 6d		        .text "environment?"
+>c492	65 6e 74 3f
+.c496					+
+.c496					nt_find:
+>c496	04 10				        .byte 4, UF
+>c498	a2 c4 83 8f ca 8f		        .word nt_word, xt_find, z_find
+>c49e	66 69 6e 64			        .text "find"
+.c4a2					nt_word:
+>c4a2	04 10				        .byte 4, UF
+>c4a4	ae c4 37 a6 7c a6		        .word nt_paren, xt_word, z_word
+>c4aa	77 6f 72 64			        .text "word"
+.c4ae					nt_paren:
+>c4ae	01 04				        .byte 1, IM
+>c4b0	b7 c4 51 98 60 98		        .word nt_dot_paren, xt_paren, z_paren
+>c4b6	28				        .text "("
+.c4b7					nt_dot_paren:
+>c4b7	02 04				        .byte 2, IM
+>c4b9	c1 c4 48 8c 56 8c		        .word nt_if, xt_dot_paren, z_dot_paren
+>c4bf	2e 28				        .text ".("
+.c4c1					nt_if:
+>c4c1	02 0d				        .byte 2, IM+CO+NN
+>c4c3	cb c4 f3 91 03 92		        .word nt_then, xt_if, z_if
+>c4c9	69 66				        .text "if"
+.c4cb					nt_then:
+>c4cb	04 0d				        .byte 4, IM+CO+NN
+>c4cd	d7 c4 3e a1 47 a1		        .word nt_else, xt_then, z_then
+>c4d3	74 68 65 6e			        .text "then"
+.c4d7					nt_else:
+>c4d7	04 0d				        .byte 4, IM+CO+NN
+>c4d9	e3 c4 b1 8d ca 8d		        .word nt_repeat, xt_else, z_else
+>c4df	65 6c 73 65			        .text "else"
+.c4e3					nt_repeat:
+>c4e3	06 0d				        .byte 6, IM+CO+NN
+>c4e5	f1 c4 bc 9a c8 9a		        .word nt_until, xt_repeat, z_repeat
+>c4eb	72 65 70 65 61 74		        .text "repeat"
+.c4f1					nt_until:
+>c4f1	05 0d				        .byte 5, IM+CO+NN
+>c4f3	fe c4 c5 a5 cf a5		        .word nt_while, xt_until, z_until
+>c4f9	75 6e 74 69 6c			        .text "until"
+.c4fe					nt_while:
+>c4fe	05 0d				        .byte 5, IM+CO+NN
+>c500	0b c5 0d a6 20 a6		        .word nt_case, xt_while, z_while
+>c506	77 68 69 6c 65			        .text "while"
+.c50b					nt_case:
+>c50b	04 0d				        .byte 4, IM+CO+NN
+>c50d	17 c5 23 a7 29 a7		        .word nt_of, xt_case, z_case    ; shares code with ZERO
+>c513	63 61 73 65			        .text "case"
+.c517					nt_of:
+>c517	02 0d				        .byte 2, IM+CO+NN
+>c519	21 c5 71 97 89 97		        .word nt_endof, xt_of, z_of
+>c51f	6f 66				        .text "of"
+.c521					nt_endof:
+>c521	05 0d				        .byte 5, IM+CO+NN
+>c523	2e c5 b1 8d ca 8d		        .word nt_endcase, xt_endof, z_endof ; shares code with ELSE
+>c529	65 6e 64 6f 66			        .text "endof"
+.c52e					nt_endcase:
+>c52e	07 0d				        .byte 7, IM+CO+NN
+>c530	3d c5 f0 8d 04 8e		        .word nt_defer_fetch, xt_endcase, z_endcase
+>c536	65 6e 64 63 61 73 65		        .text "endcase"
+.c53d					nt_defer_fetch:
+>c53d	06 00				        .byte 6, 0
+>c53f	4b c5 cf 8a d5 8a		        .word nt_defer_store, xt_defer_fetch, z_defer_fetch
+>c545	64 65 66 65 72 40		        .text "defer@"
+.c54b					nt_defer_store:
+>c54b	06 00				        .byte 6, 0
+>c54d	59 c5 d6 8a dc 8a		        .word nt_is, xt_defer_store, z_defer_store
+>c553	64 65 66 65 72 21		        .text "defer!"
+.c559					nt_is:
+>c559	02 04				        .byte 2, IM
+>c55b	63 c5 eb 92 03 93		        .word nt_action_of, xt_is, z_is
+>c561	69 73				        .text "is"
+.c563					nt_action_of:
+>c563	09 04				        .byte 9, IM
+>c565	74 c5 70 82 88 82		        .word nt_useraddr, xt_action_of, z_action_of
+>c56b	61 63 74 69 6f 6e 2d 6f		        .text "action-of"
+>c573	66
+.c574					nt_useraddr:
+>c574	08 00				        .byte 8, 0
+>c576	84 c5 e9 a5 f3 a5		        .word nt_buffer_colon, xt_useraddr, z_useraddr
+>c57c	75 73 65 72 61 64 64 72		        .text "useraddr"
+.c584					nt_buffer_colon:
+>c584	07 00				        .byte 7, 0
+>c586	93 c5 d6 85 dc 85		        .word +, xt_buffer_colon, z_buffer_colon
+>c58c	62 75 66 66 65 72 3a		        .text "buffer:"
+.c593					+
+.c593					nt_buffstatus:
+>c593	0a 00				        .byte 10, 0
+>c595	a5 c5 dd 85 ec 85		        .word nt_buffblocknum, xt_buffstatus, z_buffstatus
+>c59b	62 75 66 66 73 74 61 74		        .text "buffstatus"
+>c5a3	75 73
+.c5a5					nt_buffblocknum:
+>c5a5	0c 00				        .byte 12, 0
+>c5a7	b9 c5 95 85 a4 85		        .word nt_blkbuffer, xt_buffblocknum, z_buffblocknum
+>c5ad	62 75 66 66 62 6c 6f 63		        .text "buffblocknum"
+>c5b5	6b 6e 75 6d
+.c5b9					nt_blkbuffer:
+>c5b9	09 00				        .byte 9, 0
+>c5bb	ca c5 a3 83 b0 83		        .word nt_scr, xt_blkbuffer, z_blkbuffer
+>c5c1	62 6c 6b 62 75 66 66 65		        .text "blkbuffer"
+>c5c9	72
+.c5ca					nt_scr:
+>c5ca	03 00				        .byte 3, 0
+>c5cc	d5 c5 5b 9e 6a 9e		        .word nt_blk, xt_scr, z_scr
+>c5d2	73 63 72			        .text "scr"
+.c5d5					nt_blk:
+>c5d5	03 00				        .byte 3, 0
+>c5d7	e0 c5 93 83 a2 83		        .word nt_block_write, xt_blk, z_blk
+>c5dd	62 6c 6b			        .text "blk"
+.c5e0					nt_block_write:
+>c5e0	0b 08				        .byte 11, NN ; Deferred words need the HC (Code Field) flag.
+>c5e2	f3 c5 50 85 5e 85		        .word nt_block_write_vector, xt_block_write, z_block_write
+>c5e8	62 6c 6f 63 6b 2d 77 72		        .text "block-write"
+>c5f0	69 74 65
+.c5f3					nt_block_write_vector:
+>c5f3	12 08				        .byte 18, NN ; Deferred words need the HC (Code Field) flag.
+>c5f5	0d c6 5e 85 6d 85		        .word nt_block_read, xt_block_write_vector, z_block_write_vector
+>c5fb	62 6c 6f 63 6b 2d 77 72		        .text "block-write-vector"
+>c603	69 74 65 2d 76 65 63 74 6f 72
+.c60d					nt_block_read:
+>c60d	0a 28				        .byte 10, HC+NN ; Deferred words need the HC (Code Field) flag.
+>c60f	1f c6 2d 85 3b 85		        .word nt_block_read_vector, xt_block_read, z_block_read
+>c615	62 6c 6f 63 6b 2d 72 65		        .text "block-read"
+>c61d	61 64
+.c61f					nt_block_read_vector:
+>c61f	11 28				        .byte 17, HC+NN ; Deferred words need the HC (Code Field) flag.
+>c621	38 c6 3b 85 4a 85		        .word nt_save_buffers, xt_block_read_vector, z_block_read_vector
+>c627	62 6c 6f 63 6b 2d 72 65		        .text "block-read-vector"
+>c62f	61 64 2d 76 65 63 74 6f 72
+.c638					nt_save_buffers:
+>c638	0c 00				        .byte 12, 0
+>c63a	4c c6 40 9e 5a 9e		        .word nt_block, xt_save_buffers, z_save_buffers
+>c640	73 61 76 65 2d 62 75 66		        .text "save-buffers"
+>c648	66 65 72 73
+.c64c					nt_block:
+>c64c	05 00				        .byte 5, 0
+>c64e	59 c6 b1 83 03 84		        .word nt_update, xt_block, z_block
+>c654	62 6c 6f 63 6b			        .text "block"
+.c659					nt_update:
+>c659	06 00				        .byte 6, 0
+>c65b	67 c6 e0 a5 e8 a5		        .word nt_buffer, xt_update, z_update
+>c661	75 70 64 61 74 65		        .text "update"
+.c667					nt_buffer:
+>c667	06 00				        .byte 6, 0
+>c669	75 c6 a5 85 d5 85		        .word nt_empty_buffers, xt_buffer, z_buffer
+>c66f	62 75 66 66 65 72		        .text "buffer"
+.c675					nt_empty_buffers:
+>c675	0d 00				        .byte 13, 0
+>c677	8a c6 e9 8d ef 8d		        .word nt_flush, xt_empty_buffers, z_empty_buffers
+>c67d	65 6d 70 74 79 2d 62 75		        .text "empty-buffers"
+>c685	66 66 65 72 73
+.c68a					nt_flush:
+>c68a	05 00				        .byte 5, 0
+>c68c	97 c6 77 90 80 90		        .word nt_load, xt_flush, z_flush
+>c692	66 6c 75 73 68			        .text "flush"
+.c697					nt_load:
+>c697	04 10				        .byte 4, UF
+>c699	a3 c6 a7 93 ea 93		        .word nt_thru, xt_load, z_load
+>c69f	6c 6f 61 64			        .text "load"
+.c6a3					nt_thru:
+>c6a3	04 10				        .byte 4, UF
+>c6a5	af c6 48 a1 8c a1		        .word nt_list, xt_thru, z_thru
+>c6ab	74 68 72 75			        .text "thru"
+.c6af					nt_list:
+>c6af	04 10				        .byte 4, UF
+>c6b1	bb c6 6d 93 79 93		        .word +, xt_list, z_list
+>c6b7	6c 69 73 74			        .text "list"
+.c6bb					+
+.c6bb					nt_block_ramdrive_init:
+>c6bb	13 10				        .byte 19, UF
+>c6bd	d6 c6 04 84 2c 85		        .word +, xt_block_ramdrive_init, z_block_ramdrive_init
+>c6c3	62 6c 6f 63 6b 2d 72 61		        .text "block-ramdrive-init"
+>c6cb	6d 64 72 69 76 65 2d 69 6e 69 74
+.c6d6					+
+.c6d6					nt_definitions:
+>c6d6	0b 00				        .byte 11, 0
+>c6d8	e9 c6 dd 8a e5 8a		        .word nt_wordlist, xt_definitions, z_definitions
+>c6de	64 65 66 69 6e 69 74 69		        .text "definitions"
+>c6e6	6f 6e 73
+.c6e9					nt_wordlist:
+>c6e9	08 00				        .byte 8, 0
+>c6eb	f9 c6 7d a6 93 a6		        .word nt_search_wordlist, xt_wordlist, z_wordlist
+>c6f1	77 6f 72 64 6c 69 73 74		        .text "wordlist"
+.c6f9					nt_search_wordlist:
+>c6f9	0f 10				        .byte 15, UF
+>c6fb	10 c7 22 9b 02 9c		        .word nt_set_current, xt_search_wordlist, z_search_wordlist
+>c701	73 65 61 72 63 68 2d 77		        .text "search-wordlist"
+>c709	6f 72 64 6c 69 73 74
+.c710					nt_set_current:
+>c710	0b 10				        .byte 11, UF
+>c712	23 c7 91 9c 9c 9c		        .word nt_get_current, xt_set_current, z_set_current
+>c718	73 65 74 2d 63 75 72 72		        .text "set-current"
+>c720	65 6e 74
+.c723					nt_get_current:
+>c723	0b 00				        .byte 11, 0
+>c725	36 c7 19 91 23 91		        .word nt_set_order, xt_get_current, z_get_current
+>c72b	67 65 74 2d 63 75 72 72		        .text "get-current"
+>c733	65 6e 74
+.c736					nt_set_order:
+>c736	09 00				        .byte 9, 0
+>c738	47 c7 9d 9c d0 9c		        .word nt_get_order, xt_set_order, z_set_order
+>c73e	73 65 74 2d 6f 72 64 65		        .text "set-order"
+>c746	72
+.c747					nt_get_order:
+>c747	09 00				        .byte 9, 0
+>c749	58 c7 24 91 4c 91		        .word nt_root_wordlist, xt_get_order, z_get_order
+>c74f	67 65 74 2d 6f 72 64 65		        .text "get-order"
+>c757	72
+.c758					nt_root_wordlist:
+>c758	0d 00				        .byte 13, 0
+>c75a	6d c7 d0 9a d8 9a		        .word +, xt_root_wordlist, z_root_wordlist
+>c760	72 6f 6f 74 2d 77 6f 72		        .text "root-wordlist"
+>c768	64 6c 69 73 74
+.c76d					+
+.c76d					nt_assembler_wordlist:
+>c76d	12 00				        .byte 18, 0
+>c76f	87 c7 23 a3 2b a3		        .word +, xt_assembler_wordlist, z_assembler_wordlist
+>c775	61 73 73 65 6d 62 6c 65		        .text "assembler-wordlist"
+>c77d	72 2d 77 6f 72 64 6c 69 73 74
+.c787					+
+.c787					nt_editor_wordlist:
+>c787	0f 00				        .byte 15, 0
+>c789	9e c7 8a 97 92 97		        .word +, xt_editor_wordlist, z_editor_wordlist
+>c78f	65 64 69 74 6f 72 2d 77		        .text "editor-wordlist"
+>c797	6f 72 64 6c 69 73 74
+.c79e					+
+.c79e					nt_forth_wordlist:
+>c79e	0e 00				        .byte 14, 0
+>c7a0	b4 c7 23 a7 29 a7		        .word nt_only, xt_forth_wordlist, z_forth_wordlist
+>c7a6	66 6f 72 74 68 2d 77 6f		        .text "forth-wordlist"
+>c7ae	72 64 6c 69 73 74
+.c7b4					nt_only:
+>c7b4	04 00				        .byte 4, 0
+>c7b6	c0 c7 a9 97 b4 97		        .word nt_also, xt_only, z_only
+>c7bc	6f 6e 6c 79			        .text "only"
+.c7c0					nt_also:
+>c7c0	04 00				        .byte 4, 0
+>c7c2	cc c7 20 83 2f 83		        .word nt_previous, xt_also, z_also
+>c7c8	61 6c 73 6f			        .text "also"
+.c7cc					nt_previous:
+>c7cc	08 00				        .byte 8, 0
+>c7ce	dc c7 d7 99 e3 99		        .word nt_to_order, xt_previous, z_previous
+>c7d4	70 72 65 76 69 6f 75 73		        .text "previous"
+.c7dc					nt_to_order:
+>c7dc	06 00				        .byte 6, 0
+>c7de	ea c7 d9 a2 eb a2		        .word nt_order, xt_to_order, z_to_order
+>c7e4	3e 6f 72 64 65 72		        .text ">order"
+.c7ea					nt_order:
+>c7ea	05 00				        .byte 5, 0
+>c7ec	f7 c7 c7 97 f1 97		        .word nt_forth, xt_order, z_order
+>c7f2	6f 72 64 65 72			        .text "order"
+.c7f7					nt_forth:
+>c7f7	05 00				        .byte 5, 0
+>c7f9	04 c8 b8 90 be 90		        .word +, xt_forth, z_forth
+>c7ff	66 6f 72 74 68			        .text "forth"
+.c804					+
+>c804	03 08				nt_see: .byte 3, NN
+>c806	0f c8 03 9c 90 9c		        .word +, xt_see, z_see
+>c80c	73 65 65			        .text "see"
+.c80f					+
+.c80f					nt_ed:
+>c80f	02 08				        .byte 2, NN
+>c811	19 c8 ad 8d b0 8d		        .word +, xt_ed, z_ed
+>c817	65 64				        .text "ed"
+.c819					+
+.c819					nt_cold:
+>c819	04 00				        .byte 4, 0
+>c81b	25 c8 00 80 c5 80		        .word nt_bye, xt_cold, z_cold
+>c821	63 6f 6c 64			        .text "cold"
+.c825					nt_bye:
+>c825	03				        .byte 3         ; length of word strings
+>c826	00				        .byte 0         ; status byte
+>c827	00 00				        .word 0000      ; next word in Dictionary, 0000 signals end
+>c829	ed 85				        .word xt_bye    ; start of code block (xt of this word)
+>c82b	f0 85				        .word z_bye     ; end of code (RTS)
+>c82d	62 79 65			        .text "bye"     ; word name, always lower case, not zero-terminated
+.c830					root_dictionary_start:
+.c830					nt_root_set_order:
+>c830	09 00				        .byte 9, 0
+>c832	41 c8 9d 9c d0 9c		        .word nt_root_forth, xt_set_order, z_set_order
+>c838	73 65 74 2d 6f 72 64 65		        .text "set-order"
+>c840	72
+.c841					nt_root_forth:
+>c841	05 00				        .byte 5, 0
+>c843	4e c8 b8 90 be 90		        .word nt_root_forth_wordlist, xt_forth, z_forth
+>c849	66 6f 72 74 68			        .text "forth"
+.c84e					nt_root_forth_wordlist:
+>c84e	0e 00				        .byte 14, 0
+>c850	64 c8 23 a7 29 a7		        .word nt_root_words, xt_forth_wordlist, z_forth_wordlist
+>c856	66 6f 72 74 68 2d 77 6f		        .text "forth-wordlist"
+>c85e	72 64 6c 69 73 74
+.c864					nt_root_words:
+>c864	05 00				        .byte 5, 0
+>c866	00 00 94 a6 ef a6		        .word 0000, xt_words, z_words
+>c86c	77 6f 72 64 73			        .text "words"
+.c871					editor_dictionary_start:
+.c871					nt_editor_o:
+>c871	01 00				        .byte 1, 0
+>c873	7a c8 56 a8 9b a8		        .word nt_editor_line, xt_editor_o, z_editor_o
+>c879	6f				        .text "o"
+.c87a					nt_editor_line:
+>c87a	04 10				        .byte 4, UF
+>c87c	86 c8 3d a8 55 a8		        .word nt_editor_l, xt_editor_line, z_editor_line
+>c882	6c 69 6e 65			        .text "line"
+.c886					nt_editor_l:
+>c886	01 00				        .byte 1, 0
+>c888	8f c8 c1 a7 3c a8		        .word nt_editor_el, xt_editor_l, z_editor_l
+>c88e	6c				        .text "l"
+.c88f					nt_editor_el:
+>c88f	02 00				        .byte 2, 0
+>c891	99 c8 af a7 c0 a7		        .word nt_editor_erase_screen, xt_editor_el, z_editor_el
+>c897	65 6c				        .text "el"
+.c899					nt_editor_erase_screen:
+>c899	0c 00				        .byte 12, 0
+>c89b	ad c8 9d a7 ae a7		        .word nt_editor_enter_screen, xt_editor_erase_screen, z_editor_erase_screen
+>c8a1	65 72 61 73 65 2d 73 63		        .text "erase-screen"
+>c8a9	72 65 65 6e
+.c8ad					nt_editor_enter_screen:
+>c8ad	0c 00				        .byte 12, 0
+>c8af	00 00 81 a7 9c a7		        .word 0000, xt_editor_enter_screen, z_editor_enter_screen
+>c8b5	65 6e 74 65 72 2d 73 63		        .text "enter-screen"
+>c8bd	72 65 65 6e
 .c8c1					assembler_dictionary_start:
 .c8c1					nt_asm_adc_h:
 >c8c1	05 04						.byte 5, IM

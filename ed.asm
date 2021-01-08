@@ -3,6 +3,8 @@
 ; First version: 13. Okt 2018
 ; This version: 28. Dec 2018
 
+.if "ed" in TALI_OPTIONAL_WORDS
+    
 ; Ed is a line-orientated editor for Tali Forth 2 based on the classic Unix
 ; editor of the same name. It is included because a) I like line editors and
 ; this is my project, so there, and b) as a very simple editor that will work
@@ -1711,3 +1713,4 @@ ed_cmd_table:
 
 
 ed6502_end:     ; Used to calculate size of editor code
+.endif

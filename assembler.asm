@@ -41,7 +41,7 @@
 ; more detail.
 
 assembler:              ; used to calculate size of assembler code
-
+.if "assembler" in TALI_OPTIONAL_WORDS
 xt_asm_adc_h:   ; adc.# \ ADC #nn
                 lda #$69
                 jmp asm_common
@@ -1064,7 +1064,7 @@ xt_asm_back_branch:
 
 z_asm_back_branch:
                 rts
-
+.endif
 assembler_end:
 
 ; END

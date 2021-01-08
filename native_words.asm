@@ -876,6 +876,7 @@ z_allow_native:
                 rts
 
 
+.if "wordlist" in TALI_OPTIONAL_WORDS
 ; ## ALSO ( -- ) "Make room in the search order for another wordlist"
 ; ## "also"  auto  ANS search ext
         ; """http://forth-standard.org/standard/search/ALSO"""
@@ -887,6 +888,7 @@ xt_also:
                 jsr xt_set_order
 
 z_also:         rts
+.endif
 
 
 ; ## ALWAYS_NATIVE ( -- ) "Flag last word as always natively compiled"
@@ -1023,6 +1025,7 @@ xt_bl:
 
 z_bl:           rts
 
+.if "block" in TALI_OPTIONAL_WORDS
 ; ## BLK ( -- addr ) "Push address of block being interpreted"
 ; ## "block"  auto  ANS block
         ; """https://forth-standard.org/standard/block/BLK"""
@@ -1039,8 +1042,10 @@ xt_blk:
                 sta 1,x
 
 z_blk:          rts
+.endif
 
 
+.if "block" in TALI_OPTIONAL_WORDS
 ; ## BLKBUFFER ( -- addr ) "Push address of block buffer"
 ; ## "blkbuffer"  auto  Tali block
 xt_blkbuffer:
@@ -1059,8 +1064,9 @@ xt_blkbuffer:
                 sta 1,x
 
 z_blkbuffer:    rts
+.endif
 
-
+.if "block" in TALI_OPTIONAL_WORDS
 ; ## BLOCK ( u -- a-addr ) "Fetch a block into a buffer"
 ; ## "block"  auto  ANS block
         ; """https://forth-standard.org/standard/block/BLOCK"""
@@ -1132,8 +1138,9 @@ _done:
                 sta 1,x
 
 z_block:        rts
+.endif
 
-
+.if "block" in TALI_OPTIONAL_WORDS && "ramdrive" in TALI_OPTIONAL_WORDS
 ; ## BLOCK_RAMDRIVE_INIT ( u -- ) "Create a ramdrive for blocks"
 ; ## "block-ramdrive-init"  auto  Tali block
         ; """Create a RAM drive, with the given number of
@@ -1175,8 +1182,10 @@ _after_ramdrive_code:
 
 z_block_ramdrive_init:
                 rts
+.endif
 
 
+.if "block" in TALI_OPTIONAL_WORDS
 ; ## BLOCK_READ ( addr u -- ) "Read a block from storage (deferred word)"
 ; ## "block-read"  auto  Tali block
         ; """BLOCK-READ is a vectored word that the user needs to override
@@ -1195,8 +1204,10 @@ xt_block_read:
                 jmp (tmp1)
 
 z_block_read:   ; No RTS needed
+.endif
 
 
+.if "block" in TALI_OPTIONAL_WORDS
 ; ## BLOCK_READ_VECTOR ( -- addr ) "Address of the block-read vector"
 ; ## "block-read-vector"  auto  Tali block
         ; """BLOCK-READ is a vectored word that the user needs to override
@@ -1217,7 +1228,7 @@ xt_block_read_vector:
 
 z_block_read_vector:
                 rts
-
+.endif
 
 ; This is the default error message the vectored words BLOCK-READ and
 ; BLOCK-WRITE start with. This word is not included in the dictionary.
@@ -1226,6 +1237,7 @@ xt_block_word_error:
                 jmp error       ; no RTS needed
 z_block_word_error:
 
+.if "block" in TALI_OPTIONAL_WORDS
 ; ## BLOCK_WRITE ( addr u -- ) "Write a block to storage (deferred word)"
 ; ## "block-write"  auto  Tali block
         ; """BLOCK-WRITE is a vectored word that the user needs to override
@@ -1243,8 +1255,10 @@ xt_block_write:
                 jmp (tmp1)
 
 z_block_write:  ; No RTS needed
+.endif
 
 
+.if "block" in TALI_OPTIONAL_WORDS
 ; ## BLOCK_WRITE_VECTOR ( -- addr ) "Address of the block-write vector"
 ; ## "block-write-vector"  auto  Tali block
         ; """BLOCK-WRITE is a vectored word that the user needs to override
@@ -1265,7 +1279,7 @@ xt_block_write_vector:
 
 z_block_write_vector:
                 rts
-
+.endif
 
 ; ## BOUNDS ( addr u -- addr+u addr ) "Prepare address for looping"
 ; ## "bounds"  auto  Gforth
@@ -1317,7 +1331,7 @@ xt_bracket_tick:
                 jsr xt_literal
 z_bracket_tick: rts
 
-
+.if "block" in TALI_OPTIONAL_WORDS
 ; ## BUFFBLOCKNUM ( -- addr ) "Push address of variable holding block in buffer"
 ; ## "buffblocknum"  auto  Tali block
 xt_buffblocknum:
@@ -1333,8 +1347,10 @@ xt_buffblocknum:
                 sta 1,x
 
 z_buffblocknum: rts
+.endif
 
 
+.if "block" in TALI_OPTIONAL_WORDS
 ; ## BUFFER ( u -- a-addr ) "Get a buffer for a block"
 ; ## "buffer"  auto  ANS block
         ; """https://forth-standard.org/standard/block/BUFFER"""
@@ -1375,7 +1391,7 @@ _done:
                 sta 1,x
 
 z_buffer:       rts
-
+.endif
 
 ; ## BUFFER_COLON ( u "<name>" -- ; -- addr ) "Create an uninitialized buffer"
 ; ## "buffer:"  auto  ANS core ext
@@ -1389,6 +1405,7 @@ xt_buffer_colon:
 z_buffer_colon: rts
 
 
+.if "block" in TALI_OPTIONAL_WORDS
 ; ## BUFFSTATUS ( -- addr ) "Push address of variable holding buffer status"
 ; ## "buffstatus"  auto  Tali block
 xt_buffstatus:
@@ -1404,6 +1421,7 @@ xt_buffstatus:
                 sta 1,x
 
 z_buffstatus:   rts
+.endif
 
 
 ; ## BYE ( -- ) "Break"
@@ -2844,7 +2862,7 @@ xt_defer_store:
 z_defer_store:  rts
 
 
-
+.if "wordlist" in TALI_OPTIONAL_WORDS
 ; ## DEFINITIONS ( -- ) "Make first wordlist in search order the current wordlist"
 ; ## "definitions" auto ANS search
 xt_definitions:
@@ -2853,6 +2871,7 @@ xt_definitions:
                 ldy #current_offset         ; byte variable CURRENT.
                 sta (up),y
 z_definitions:  rts
+.endif
 
 
 ; ## DEPTH ( -- u ) "Get number of cells (not bytes) used by stack"
@@ -3639,6 +3658,7 @@ xt_dup:
 z_dup:          rts
 
 
+.if "ed" in TALI_OPTIONAL_WORDS        
 ; ## ED ( -- u ) "Line-based editor"
 ; ## "ed"  fragment  Tali Forth
         ; """Start the line-based editor ed6502. See separate file
@@ -3648,7 +3668,7 @@ xt_ed:
                 jsr ed6502      ; kept in separate file
 
 z_ed:           rts
-
+.endif
 
 ; ## EDITOR_WORDLIST ( -- u ) "WID for the Editor wordlist"
 ; ## "editor-wordlist"  tested  Tali Editor
@@ -3751,6 +3771,7 @@ z_emit:         ; never reached
 
 
 
+.if "block" in TALI_OPTIONAL_WORDS
 ; ## EMPTY_BUFFERS ( -- ) "Empty all buffers without saving"
 ; ## "empty-buffers"  tested  ANS block ext
         ; """https://forth-standard.org/standard/block/EMPTY-BUFFERS"""
@@ -3761,7 +3782,7 @@ xt_empty_buffers:
                 sta (up),y      ; Only LSB is used.
 z_empty_buffers:
                 rts
-
+.endif
 
 ; ## ENDCASE (C: case-sys -- ) ( x -- ) "Conditional flow control"
 ; ## "endcase"  auto  ANS core ext
@@ -3801,6 +3822,7 @@ z_endcase:      rts
         ; """
 
 
+.if "environment?" in TALI_OPTIONAL_WORDS
 ; ## ENVIRONMENT_Q  ( addr u -- 0 | i*x true )  "Return system information"
 ; ## "environment?"  auto  ANS core
         ; """https://forth-standard.org/standard/core/ENVIRONMENTq
@@ -3835,7 +3857,6 @@ z_endcase:      rts
         ; word is rarely used so we can try to keep it short at the expense
         ; of speed.
         ; """
-
 xt_environment_q:
                 jsr underflow_1
 
@@ -4025,7 +4046,7 @@ env_results_single:
 env_results_double:
         .word $7FFF, $FFFF      ; MAX-D
         .word $FFFF, $FFFF      ; MAX-UD
-
+.endif
 
 ; ## EQUAL ( n n -- f ) "See if TOS and NOS are equal"
 ; ## "="  auto  ANS core
@@ -4549,6 +4570,7 @@ z_find_name:    rts
 
 
 
+.if "block" in TALI_OPTIONAL_WORDS
 ; ## FLUSH ( -- ) "Save dirty buffers and empty buffers"
 ; ## "flush"  auto  ANS block
         ; """https://forth-standard.org/standard/block/FLUSH"""
@@ -4561,6 +4583,7 @@ xt_flush:
                 sta (up),y      ; Only LSB is used.
 z_flush:
                 rts
+.endif
 
 
 ; ## FM_SLASH_MOD ( d n1  -- rem n2 ) "Floored signed division"
@@ -4621,6 +4644,7 @@ z_fm_slash_mod: rts
 
 
 
+.if "wordlist" in TALI_OPTIONAL_WORDS
 ; ## FORTH ( -- ) "Replace first WID in search order with Forth-Wordlist"
 ; ## "forth"  auto  ANS search ext
         ; """https://forth-standard.org/standard/search/FORTH"""
@@ -4631,7 +4655,7 @@ xt_forth:
                 sta (up),y
 z_forth:
                 rts
-
+.endif
 
 ; This is a special jsr target to skip the zeroing of BLK at the beginning
 ; of evaluate.  It's used by LOAD to allow setting BLK while the block is
@@ -4747,6 +4771,7 @@ z_evaluate:     rts
         ; This is a dummy entry, the actual code is shared with ZERO.
 
 
+.if "wordlist" in TALI_OPTIONAL_WORDS
 ; ## GET_CURRENT ( -- wid ) "Get the id of the compilation wordlist"
 ; ## "get-current" auto ANS search
         ; """https://forth-standard.org/standard/search/GET-CURRENT"""
@@ -4763,9 +4788,10 @@ xt_get_current:
                 stz 1,x         ; so the MSB is zero.
 
 z_get_current:  rts
+.endif
 
 
-
+.if "wordlist" in TALI_OPTIONAL_WORDS
 ; ## GET_ORDER ( -- wid_n .. wid_1 n) "Get the current search order"
 ; ## "get-order" auto ANS search
         ; """https://forth-standard.org/standard/search/GET-ORDER"""
@@ -4810,7 +4836,7 @@ _done:
                 stz 1,x         ; We only support 8 wordlists.
 
 z_get_order:    rts
-
+.endif
 
 
 ; ## GREATER_THAN ( n n -- f ) "See if NOS is greater than TOS"
@@ -5533,7 +5559,7 @@ _false:
 z_less_than:    rts
 
 
-
+.if "block" in TALI_OPTIONAL_WORDS
 ; ## LIST ( scr# -- ) "List the given screen"
 ; ## "list"  tested  ANS block ext
         ; """https://forth-standard.org/standard/block/LIST"""
@@ -5549,7 +5575,7 @@ xt_list:
                 jsr xt_editor_l
 
 z_list:         rts
-
+.endif
 
 
 ; ## LITERAL ( n -- ) "Store TOS to be push on stack during runtime"
@@ -5613,6 +5639,7 @@ literal_runtime:
 
 
 
+.if "block" in TALI_OPTIONAL_WORDS
 ; ## LOAD ( scr# -- ) "Load the Forth code in a screen/block"
 ; ## "load"  auto  ANS block
         ; """https://forth-standard.org/standard/block/LOAD
@@ -5686,7 +5713,7 @@ xt_load:
 
 _done:
 z_load:         rts
-
+.endif
 
 
 ; ## LOOP ( -- ) "Finish loop construct"
@@ -6868,6 +6895,7 @@ z_one_plus:     rts
 
 
 
+.if "wordlist" in TALI_OPTIONAL_WORDS
 ; ## ONLY ( -- ) "Set earch order to minimum wordlist"
 ; ## "only"  auto  ANS search ext
         ; """https://forth-standard.org/standard/search/ONLY"""
@@ -6884,7 +6912,7 @@ xt_only:
                 jsr xt_set_order
 
 z_only:         rts
-
+.endif
 
 
 ; ## OR ( m n -- n ) "Logically OR TOS and NOS"
@@ -6907,6 +6935,7 @@ xt_or:
 z_or:           rts
 
 
+.if "wordlist" in TALI_OPTIONAL_WORDS
 ; ## ORDER ( -- ) "Print current word order list and current WID"
 ; ## "order"  auto  ANS core
         ; """https://forth-standard.org/standard/search/ORDER
@@ -7015,7 +7044,7 @@ _wid_data:
         .byte str_wid_editor           ; WID 1: "Editor"
         .byte str_wid_assembler        ; WID 2: "Assembler"
         .byte str_wid_root             ; WID 3: "Root"
-
+.endif
 
 
 ; ## OUTPUT ( -- addr ) "Return the address of the EMIT vector address"
@@ -7566,6 +7595,7 @@ z_postpone:     rts
 
 
 
+.if "wordlist" in TALI_OPTIONAL_WORDS
 ; ## PREVIOUS ( -- ) "Remove the first wordlist in the search order"
 ; ## "previous"  auto  ANS search ext
         ; """http://forth-standard.org/standard/search/PREVIOUS"""
@@ -7577,7 +7607,7 @@ xt_previous:
                 jsr xt_set_order
 
 z_previous:     rts
-
+.endif
 
 
 ; ## QUESTION ( addr -- ) "Print content of a variable"
@@ -7929,6 +7959,7 @@ z_right_bracket:
                 rts
 
 
+.if "wordlist" in TALI_OPTIONAL_WORDS
 ; ## ROOT_WORDLIST ( -- u ) "WID for the Root (minimal) wordlist"
 ; ## "root-wordlist"  tested  Tali Editor
 xt_root_wordlist:
@@ -7940,7 +7971,7 @@ xt_root_wordlist:
 
 z_root_wordlist:
                 rts
-
+.endif
 
 ; ## ROT ( a b c -- b c a ) "Rotate first three stack entries downwards"
 ; ## "rot"  auto  ANS core
@@ -8045,6 +8076,7 @@ _done:
 
 
 
+.if "wordlist" in TALI_OPTIONAL_WORDS
 ; ## SEARCH_WORDLIST ( caddr u wid -- 0 | xt 1 | xt -1) "Search for a word in a wordlist"
 ; ## "search-wordlist" auto ANS search
         ; """https://forth-standard.org/standard/search/SEARCH_WORDLIST"""
@@ -8262,6 +8294,7 @@ _done:
 _done_nodrop:
 z_search_wordlist:
                 rts
+.endif
 
 
 
@@ -8368,6 +8401,7 @@ z_see:          rts
 
 
 
+.if "wordlist" in TALI_OPTIONAL_WORDS
 ; ## SET_CURRENT ( wid -- ) "Set the compilation wordlist"
 ; ## "set-current" auto ANS search
         ; """https://forth-standard.org/standard/search/SET-CURRENT"""
@@ -8384,9 +8418,10 @@ xt_set_current:
                 inx
 
 z_set_current:  rts
+.endif
 
 
-
+.if "wordlist" in TALI_OPTIONAL_WORDS
 ; ## SET_ORDER ( wid_n .. wid_1 n -- ) "Set the current search order"
 ; ## "set-order" auto ANS search
         ; """https://forth-standard.org/standard/search/SET-ORDER"""
@@ -8445,7 +8480,7 @@ _loop:
 
 _done:
 z_set_order:    rts
-
+.endif
 
 
 
@@ -8856,7 +8891,7 @@ _done:
 z_s_to_d:       rts
 
 
-
+.if "block" in TALI_OPTIONAL_WORDS
 ; ## SAVE_BUFFERS ( -- ) "Save all dirty buffers to storage"
 ; ## "save-buffers"  tested  ANS block
         ; """https://forth-standard.org/standard/block/SAVE-BUFFERS"""
@@ -8881,9 +8916,10 @@ xt_save_buffers:
 
 _done:
 z_save_buffers: rts
+.endif
 
 
-
+.if "block" in TALI_OPTIONAL_WORDS
 ; ## SCR ( -- addr ) "Push address of variable holding last screen listed"
 ; ## "scr"  auto  ANS block ext
         ; """https://forth-standard.org/standard/block/SCR"""
@@ -8900,7 +8936,7 @@ xt_scr:
                 sta 1,x
 
 z_scr:          rts
-
+.endif
 
 ; ## SEARCH ( addr1 u1 addr2 u2 -- addr3 u3 flag) "Search for a substring"
 ; ## "search"   auto  ANS string
@@ -9797,6 +9833,7 @@ xt_then:
 z_then:         rts
 
 
+.if "block" in TALI_OPTIONAL_WORDS
 ; ## THRU ( scr# scr# -- ) "Load screens in the given range"
 ; ## "thru"  tested  ANS block ext
         ; """https://forth-standard.org/standard/block/THRU"""
@@ -9874,7 +9911,7 @@ _next_screen:
                 bra _thru_loop
 _done:
 z_thru:         rts
-
+.endif
 
 
 ; ## TICK ( "name" -- xt ) "Return a word's execution token (xt)"
@@ -10274,6 +10311,7 @@ z_to_number:    rts
 
 
 
+.if "wordlist" in TALI_OPTIONAL_WORDS
 ; ## TO_ORDER ( wid -- ) "Add wordlist at beginning of search order"
 ; ## ">order"  tested  Gforth search
         ; """https://www.complang.tuwien.ac.at/forth/gforth/Docs-html/Word-Lists.html"""
@@ -10294,7 +10332,7 @@ xt_to_order:
                 jsr xt_set_order
 
 z_to_order:     rts
-
+.endif
 
 
 ; ## TO_R ( n -- )(R: -- n) "Push TOS to the Return Stack"
@@ -11176,6 +11214,7 @@ xt_unused:
 z_unused:       rts
 
 
+.if "block" in TALI_OPTIONAL_WORDS
 ; ## UPDATE ( -- ) "Mark current block as dirty"
 ; ## "update"  auto  ANS block
         ; """https://forth-standard.org/standard/block/UPDATE"""
@@ -11188,6 +11227,7 @@ xt_update:
                 sta (up),y
 
 z_update:       rts
+.endif
 
 
 ; ## USERADDR ( -- addr ) "Push address of base address of user variables"
@@ -11363,6 +11403,7 @@ _found_char:
 z_word:         rts
 
 
+.if "wordlist" in TALI_OPTIONAL_WORDS
 ; ## WORDLIST ( -- wid ) "Create new wordlist (from pool of 8)"
 ; ## "wordlist" auto ANS search
         ; """https://forth-standard.org/standard/search/WORDLIST
@@ -11393,7 +11434,7 @@ _ok:
                 stz 1,x         ; 12 is the max, so upper byte is always zero.
 
 z_wordlist:     rts
-
+.endif
 
 
 ; ## WORDS ( -- ) "Print known words from Dictionary"
@@ -11667,6 +11708,7 @@ z_zero_unequal: rts
 ; ==========================================================
 ; EDITOR words
 
+.if "editor" in TALI_OPTIONAL_WORDS && "block" in TALI_OPTIONAL_WORDS
 ; This routine is used by both enter-screen and erase-screen
 ; to get a buffer for the given screen number and set SCR to
 ; the given screen number.  This word is not in the dictionary.
@@ -11760,8 +11802,10 @@ xt_editor_el:
                 jsr xt_update
 
 z_editor_el:    rts
+.endif
 
-
+; "l" needs special handling as it's used by LIST in the block words.  
+.if "block" in TALI_OPTIONAL_WORDS
 ; ## EDITOR_L ( -- ) "List the current screen"
 ; ## "l"  tested  Tali Editor
 
@@ -11857,9 +11901,9 @@ _line_loop:
                 inx
 
 z_editor_l:            rts
+.endif
 
-
-
+.if "editor" in TALI_OPTIONAL_WORDS && "block" in TALI_OPTIONAL_WORDS
 ; ## EDITOR_LINE ( line# -- c-addr ) "Turn a line number into address in current screen"
 ; ## "line"  tested  Tali Editor
 
@@ -11927,5 +11971,6 @@ xt_editor_o:
                 jsr xt_update
 
 z_editor_o:     rts
+.endif
 
 ; END
