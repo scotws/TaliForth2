@@ -190,7 +190,7 @@ _get_line:
                 stz ciblen+1
 
                 ; Accept a line from the current import source. This is how
-                ; modern Forths to it.
+                ; modern Forths do it.
                 jsr xt_refill           ; ( -- f )
 
                 ; Test flag: LSB of TOS
