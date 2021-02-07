@@ -3,7 +3,7 @@
 
 # Notes: The manual is not automatically updated because not everybody
 # can be expected to have the asciidoc toolchain and ditaa installed.
-# Tali requires python 3.x, Ophis, and GNU make to build the 65C02
+# Tali requires python 3.x, 64tass, and GNU make to build the 65C02
 # binary image.
 
 # Example uses ($ is the prompt - yours might be C:\>):
