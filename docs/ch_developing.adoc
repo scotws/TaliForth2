@@ -478,7 +478,7 @@ need this bit for words that you write in assembly.
 If you created a short word made out of just JSRs with underflow checking at the top, and
 you wanted it to be an immediate word, you might put `IM+UF` for this field.
 
-The next line contains three addresses, so the Ophis `.word` directive is used
+The next line contains three addresses, so the 64tass `.word` directive is used
 here.  The first address is the nt_xxxx of the next word in the word list (with 0
 used for the very last word in the word list).  The
 words are listed in dictionary order, so this will normally be the nt_xxxx of
