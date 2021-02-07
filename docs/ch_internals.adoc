@@ -11,16 +11,18 @@ like this:
 image::pics/memory_map.png[]
 
 Note that some of these values are hard-coded into the test suite; see the file
-`definitions.txt` for details.
+`definitions.asm` for details.
 
 
 === The Data Stack
 
-Tali Forth uses the lowest part of the top half of the Zero Page((("Zero
-Page"))) for the Data Stack (DS). This leaves the lower half of the Zero Page
-for any kernel stuff the user might require. The DS grows towards the initial
-user variables. See the file `definitions.asm` for details. Because of the
-danger of underflow,(((underflow))) it is recommended that the user kernel's
+Tali Forth uses half of Zero Page((("Zero Page"))) for the system variables and
+Data Stack (DS).  In the default py65mon platform, this is the address range
+$00-$7F (it can be adjusted by changing `zpage` and `zpage_end` in the platform
+file).  This leaves the other half of the Zero Page for any kernel stuff the
+user might require. The DS grows from the end of Tali's space down towards the
+initial system variables. See the file `definitions.asm` for details. Because of
+the danger of underflow,(((underflow))) it is recommended that the user kernel's
 variables are kept closer to $0100 than to $007F.
 
 The X register((("X register"))) is used as the Data Stack Pointer (DSP). It
@@ -71,7 +73,7 @@ with the test:
 
 Underflow detection adds three bytes and 16 cycles to the words that have it.
 However, it increases the stability of the program. There is an option for
-stripping it out during for user-defined words (see below).
+stripping it out when compiling user-defined words (see below).
 
 Tali Forth does not check for overflow, which in normal operation is too rare
 to justify the computing expense. 
@@ -113,7 +115,8 @@ IM::
   *Immediate.* This Word is executed immediately during definitions of new words.
 NN:: 
   *Never Native.* This Word is never inlined. Usually means that the return address
-  from a subroutine jump is required for processing.
+  from a subroutine jump is required for processing.  Any words containing flow control
+  should have this flag set and it is set by default for new words.
 AN:: 
   *Always Native.* This word must always be inlined.
 UF:: 
@@ -181,7 +184,7 @@ forms. There are four possible input sources:
 * A block file
 * A text file
 
-To check which one is being used, we first call `blk` which gives us the number
+To check which one is being used, we first check `blk` which gives us the number
 of a mass storage block being used, or 0 for the one of the other input sources.
 In the second case, we use `source-id` to find out where input is coming from:
 
@@ -192,7 +195,7 @@ In the second case, we use `source-id` to find out where input is coming from:
 
 | 0 | keyboard (can be redirected)
 | -1 | string in memory
-| `n` | file-id (not currently supported)
+| `n` | file-id
 
 |===
 
@@ -206,13 +209,13 @@ routine in the memory location given by the word `output`.  Tali
 expects this routine to accept the character to out in A, rather than
 on the stack.
 
-Both the input routine and output routine may use the tmp1, tmp2, and
-tmp3 memory locations (defined in assembly.asm), but they need to
-push/pop them so they can restore the original values before
-returning.  If the input or output routines are written in Forth,
-extra care needs to be taken because many of the Forth words use these
-tmp variables and it's not immediately obvious without checking the
-assembly for each word.
+Both the input routine and output routine may use the tmp1, tmp2, and tmp3
+memory locations (defined in assembly.asm), but they need to push/pop them so
+they can restore the original values before returning.  The X and Y registers
+also need to be preserved.  If the input or output routines are written in
+Forth, extra care needs to be taken because many of the Forth words use these
+tmp variables and it's not immediately obvious without checking the assembly for
+each word.
 
 ==== Booting
 
@@ -226,7 +229,7 @@ Keyboard entry::
 	This is the default. Get line of input via `accept` and return `true`
 	even if the input string was empty.
 `evaluate` string:: Return a `false` flag
-Input from a buffer:: _Not implemented at this time_
+Input from a buffer:: _Not fully implemented at this time_
 Input from a file:: _Not implemented at this time_
 
 
@@ -248,8 +251,11 @@ s" 1 2 + ." evaluate
 ----
 
 Tali Forth uses `evaluate` to load high-level Forth words from the file
-`forth_words.asc` and, if present, any extra, user-defined words from
-`user_words.asc`.
+`forth_words.fs` and, if present, any extra, user-defined words from
+`user_words.fs`.  The code in these files has all comments removed and all
+whitespace replaced with a single splace between words.  This minimized version
+is assembled directly into the ROM image as a string that will be evaluated at
+startup.
 
 === The Words `create` and `does>`
 
