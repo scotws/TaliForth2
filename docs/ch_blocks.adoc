@@ -1,6 +1,6 @@
 Tali supports the optional BLOCK word set. The 2012 Forth standard
 defines a block as 1024 bytes, and the buffers for them are the same
-size (as opposed to some older forths that had smaller buffers.) Tali
+size (as opposed to some older forths that had smaller buffers). Tali
 currently comes with one buffer.
 
 Before these words can be used, the user needs to write two routines: one for

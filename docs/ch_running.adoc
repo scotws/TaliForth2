@@ -1,6 +1,13 @@
 [quote, Charles Moore, Masterminds of Programming]
 One doesn't write programs in Forth. Forth is the program.
 
+=== Recommended Reading
+
+If you are not familiar with Forth, now would be an excellent time to
+go and read Leo Brodie's excellent "Starting Forth", available for
+free online, before continuing through this manual.  You can use Tali
+Forth 2 to run the examples given in the book.
+
 === Booting
 
 Out of the box, Tali Forth boots a minimal kernel(((kernel))) to connect to the
@@ -116,9 +123,9 @@ In addition, there are words that are specific to Tali Forth.
 word speeds up processing because the interpreter doesn't have to convert the
 character "0" into the number `0`.
 
-*1 ( +--+ 0 )* - Push the number 1 on the Data Stack.
+*1 ( +--+ 1 )* - Push the number 1 on the Data Stack.
 
-*2 ( +--+ 0 )* - Push the number 2 on the Data Stack.
+*2 ( +--+ 2 )* - Push the number 2 on the Data Stack.
 
 *allow-native ( +--+ )* - Mark last word in dictionary to that it can be natively
 compiled if it is less than or equal to nc-limit in size.
@@ -196,8 +203,9 @@ create a version of the `map` higher-order function in Forth.
 
 *compile-only ( +--+ )* - Mark last word in dictionary as compile-only.
 
-*digit? ( char +--+ u f | char f )* - If character is a digit, convert and set flag to
-`true`, otherwise return the offending character and a `false` flag.
+*digit? ( char +--+ u true | char false )* - If character is a digit, convert
+and set flag to `true`, otherwise return the offending character and a `false`
+flag.
 
 *ed ( +--+ )* - Start the command-line editor. There is a whole chapter on this father
 down. 
@@ -214,7 +222,7 @@ assembler:
 ----
 
 With this behavior, `hexstore` functions as a reverse `dump`. The names "store"
-or "numberstore" might have been more appropriate, but "hexstore" as the
+or "numberstore" might have been more appropriate, but "hexstore" has the
 association of the Unix command `hexdump` and should be easier to understand.
 
 *input ( +--+ )* - Return the address where the vector for the input routine is
@@ -273,9 +281,8 @@ words that have the same name but live in different wordlists.
 
 On startup, only the FORTH-WORDLIST is in the search order, so only those words
 will be found.  Tali also comes with an EDITOR-WORDLIST and an
-ASSEMBLER-WORDLIST, however those are not fully populated (mostly empty would be
-a better description of the current situation).  Room for 8 user wordlists is
-available, and the search order can also hold 8 wordlist identifiers. See
+ASSEMBLER-WORDLIST, Room for 8 user wordlists is available, and the search order
+can also hold 8 wordlist identifiers. See
 https://forth-standard.org/standard/search for more information on wordlists and
 the search order.
 

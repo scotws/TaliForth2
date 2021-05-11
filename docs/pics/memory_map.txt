@@ -1,6 +1,6 @@
                    RAM
    $0000  +-------------------+ ram_start, zpage, user0
-          |  User variables   |
+          | System Variables  |
           +-------------------+
           |                   |
           |  ^  Data Stack    |  <-- dsp

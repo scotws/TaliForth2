@@ -54,27 +54,27 @@ giving the code away freely. It is also to let people play around with it and
 adapt it to their own machines. This is also the reason it is (perversely)
 over-commented.
 
-To work on the internals of Tali Forth, you will need the Ophis assembler.
+To work on the internals of Tali Forth, you will need the 64tass assembler.
 
-==== The Ophis Assembler
+==== The 64tass Assembler
 
-Michael Martin's Ophis Cross-Assembler can be downloaded from
-http://michaelcmartin.github.io/Ophis/. It uses a slightly different format than
-other assemblers, but is in Python and therefore will run on pretty much any
-operating system. To install Ophis on Windows, use the link provided above. For
-Linux:
+While Tali Forth 2 was originally developed with the Ophis assember, it was
+ported to the 64tass assembler because this assembler allows conditional
+compilation.
 
-----
-git clone https://github.com/michaelcmartin/Ophis
-cd Ophis/src
-sudo python setup.py install
-----
+For Linux users, your operating system may have a pre-built 64tass package you
+can install.  For everyone else, you can head over to:
+https://sourceforge.net/projects/tass64/
+Windows users will probably want to just grab a binary (just put the executable
+in a convenient folder and make sure that folder is in the path).  Users of
+other OSes will probably need to compile from source (which is super easy as the
+code has almost no dependancies).
 
-Switch to the folder where the Tali code lives, and run the Makefile with a
-simple `make` command. This also updates the file listings in the `docs` folder.
 
-Ophis has some quirks. For instance, you cannot use math symbols in label names,
-because it will try to perform those operations. Use underscores instead.
+Once you have 64tass installed, switch to the folder where the Tali code lives
+and run the Makefile with a simple `make` command (assumes you have GNU make
+installed). This also updates the file listings in the `docs` folder.
+
 
 ==== General Notes
 
@@ -94,7 +94,7 @@ because it will try to perform those operations. Use underscores instead.
 
 ==== Coding Style
 
-Until there is a tool for Ophis assembly code that formats the source file the
+Until there is a tool for 64tass assembly code that formats the source file the
 way gofmt does for Go (golang), the following format is suggested.
 
 * Tabs are **eight characters long** and converted to spaces.
@@ -114,9 +114,6 @@ way gofmt does for Go (golang), the following format is suggested.
   thank you very much.
 
 * Hex numbers are, however, upper case, such as `$FFFE`. 
-
-WARNING: The Ophis assembler interprets numbers with a leading zero as octal.
-This can be an annoying source of errors.
 
 * Numbers in mnemonics are a stripped-down as possible to reduce
   visual clutter: use `lda 0,x` instead of `lda $00,x`.
@@ -155,13 +152,11 @@ Translates into:
 ---- 
 ; ## GETSTATE ( -- n ) "Get the current state" 
 ; ## "getstate" coded Custom 
-.scope 
 xt_getstate: 
                 jsr xt_state
                 jsr xt_fetch ; @ is pronounced "fetch" in Forth.
 z_getstate: 
                 rts 
-.scend 
 ----
 
 The above code would be added to native_words.asm, probably right after
@@ -181,10 +176,9 @@ Gforth, etc.)  See the top of native_words.asm for more information on the
 status field, but "coded" is likely to be the right choice until you've
 thoroughly tested your new word.
 
-The `.scope` and `.scend` are special directives to the Ophis assembler to
-create a scope for local labels.  Local labels begin with an underscore "_" and
-are only visible within the same scope.  This allows multiple words to all have
-a `_done:` label, for example, and each word will only branch to its own local
+Local labels begin with an underscore "_" and are only visible within the same
+scope (between two regular labels).  This allows multiple words to all have a
+`_done:` label, for example, and each word will only branch to its own local
 version of `_done:` found within its scope.  Any branching within the word
 (eg. for ifs and loops) should be done with local labels.  Labels without an
 underscore at the beginning are globally available.
@@ -234,7 +228,6 @@ to deal with that complication as well.
 ---- 
 ; ## STAR_WORD ( -- ) "Print a * on the screen" 
 ; ## "star" coded Custom 
-.scope 
 xt_star_word: 
                 ; Put a * character on the stack.  
                 dex             ; Make room on the data stack.  
@@ -245,7 +238,6 @@ xt_star_word:
                 jsr xt_emit     ; Print the character to the screen.
 z_star_word: 
                 rts 
-.scend 
 ----
 
 We chose the labels xt_star_word and z_star_word for this word, but it will be
@@ -297,7 +289,6 @@ the actual assembly definition of this word) is:
 ; ## IS ( xt "name" -- ) "Set named word to execute xt"
 ; ## "is"  auto  ANS core ext
         ; """http://forth-standard.org/standard/core/IS"""
-.scope
 xt_is:
                 ; This is a state aware word with different behavior
                 ; when used while compiling vs interpreting.
@@ -320,7 +311,6 @@ _interpreting:
                 jsr xt_defer_store
 _done:          
 z_is:           rts
-.scend
 ----
 
 In the header, you can see this word is part of the ANS standard in the extended
@@ -383,7 +373,6 @@ The assembly code for `2CONSTANT` (taken from native_words.asm) looks like:
         ; Based on the Forth code
         ; : 2CONSTANT ( D -- )  CREATE SWAP , , DOES> DUP @ SWAP CELL+ @ ;
         ; """
-.scope
 xt_two_constant:
                 jsr underflow_2
 
@@ -402,7 +391,6 @@ xt_two_constant:
                 jsr xt_fetch
                 
 z_two_constant: rts
-.scend
 ----
 
 This word takes an argument, so underflow checking is added right at the top
@@ -427,7 +415,7 @@ comment block over it and the xt_xxxx and z_xxxx labels for the entry and exit
 points, it is time to add the dictionary header for your word to link it into
 one of the existing wordlists.  The words here are not in alphabetical order and
 are loosely grouped by function.  If you aren't sure where to put your word, then
-put it near the top of the file just under the header for `cold`.
+put it near the top of the file just under the header for `drop`.
 
 Each header is simply a declaration of bytes and words that provides some basic
 information that Tali needs to use the word, as well as the addresses of the
@@ -437,29 +425,28 @@ spelled-out version of your word's name).
 
 Before we dicuss adding a word, let's go over the form a dictionary header.  The
 fields we will be filling in are described right at the top of headers.asm for
-reference. We'll look at an easy to locate word, `cold`, which is used to
-perform a cold reset of Tali. It's right near the top of the list.  We'll also
-show the word `ed`, which is currently below `cold`, because you will need to
-modify it (or whatever word is currently just below `cold`) when you put your
-word under `cold`.  The headers for these two words currently look like:
+reference. We'll look at an easy to locate word, `drop`, which is used to
+remove the top item on the stack. It's right near the top of the list.  We'll also
+show the word `dup`, which is the next word is the dictionary. 
+The headers for these two words currently look like:
 
 ----
-nt_cold:
-        .byte 4, 0
-        .word nt_bye, xt_cold, z_cold
-        .byte "cold"
+nt_drop:
+        .byte 4, UF
+        .word nt_dup, xt_drop, z_drop
+        .text "drop"
 
-nt_ed:                  ; ed6502
-        .byte 2, NN
-        .word nt_cold, xt_ed, z_ed
-        .byte "ed"
+nt_dup:
+        .byte 3, UF
+        .word nt_swap, xt_dup, z_dup
+        .text "dup"
 ----
 
 The first component of a dictionary header is the label, which comes in the form
 nt_xxxx where xxxx is the spelled out version of your word's name.  The xxxx
 should match whatever you used in your xt_xxxx and z_xxxx labels.
 
-The next two fields are byte fields, so we create them with the Ophis assembler
+The next two fields are byte fields, so we create them with the 64tass assembler
 `.byte` directive.  The first field is the length of the name, in characters, as
 it will be typed in Tali.  The second field is the status of the word, where
 each bit has a special meaning.  If there is nothing special about your word,
@@ -491,28 +478,29 @@ need this bit for words that you write in assembly.
 If you created a short word made out of just JSRs with underflow checking at the top, and
 you wanted it to be an immediate word, you might put `IM+UF` for this field.
 
-The next line contains three addresses, so the Ophis `.word` directive is used
-here.  The first address is the nt_xxxx of the next word in the word list.  The
-words are actually listed from bottom to top in this file, so this will be the
-nt_xxxx label of the word just above this one in the file.  The second address
-is the xt (execution token), or entry point, of your new word.  This will be
-your xt_xxxx label for your word.  The third address is the end of your routine,
-just before the RTS instruction.  You will use your z_xxxx label here.  The
-xt_xxxx and z_xxxx are used as the bounds of your word if it ends up being
-natively compiled.
+The next line contains three addresses, so the 64tass `.word` directive is used
+here.  The first address is the nt_xxxx of the next word in the word list (with 0
+used for the very last word in the word list).  The
+words are listed in dictionary order, so this will normally be the nt_xxxx of
+the word just below (there may be some anonymous labels used if the next word is
+conditionally assembled).  The second address is the xt (execution token), or
+entry point, of your new word.  This will be your xt_xxxx label for your word.
+The third address is the end of your routine, just before the RTS instruction.
+You will use your z_xxxx label here.  The xt_xxxx and z_xxxx are used as the
+bounds of your word if it ends up being natively compiled.
 
-In the sample headers above, you can see that `ed` links to `cold` as the next
-word, and `cold` links to `bye` (not shown) as the next word.  When you go to
+In the sample headers above, you can see that `drop` links to `dup` as the next
+word, and `dup` links to `swap` (not shown) as the next word.  When you go to
 add your own word, you will need to adjust these linkages.
 
 The last line is the actual name of the word, as it will be typed in forth, in
-lowercase.  It uses the Ophis `.byte` directive and Ophis allows literal
+lowercase.  It uses the 64tass `.text` directive and 64tass allows literal
 strings, so you can just put the name of your word in double-quotes.  If your
 word has a double-quote in it, look up `nt_s_quote` in the headers to see how
 this is handled.
 
-Although Tali is not case-sensitive, all words in the dictionary headers must be
-in lowercase or Tali will not be able to find them.  The length of this string
+Although Tali is not case-sensitive, all words in the dictionary headers *must be
+in lowercase* or Tali will not be able to find them.  The length of this string
 also needs to match the length given as the first byte, or Tali will not be able
 to find this word.
 
@@ -522,33 +510,30 @@ you how to create the header for a regular word (`star`) and for one that
 requires one of the status flags (`is`).
 
 ----
-nt_cold:
-        .byte 4, 0
-        .word nt_bye, xt_cold, z_cold
-        .byte "cold"
+nt_drop:
+        .byte 4, UF
+        .word nt_star_word, xt_drop, z_drop
+        .text "drop"
 
-nt_star:
+nt_star_word:
         .byte 4, 0
-        .word nt_cold, xt_star_word, z_star_word
-        .byte "star"
+        .word nt_is, xt_star_word, z_star_word
+        .text "star"
 
 nt_is:
         .byte 2, IM
-        .word nt_star, xt_is, z_is
-        .byte "is"
-
-nt_ed:                  ; ed6502
-        .byte 2, NN
-        .word nt_is, xt_ed, z_ed
-        .byte "ed"
+        .word nt_dup, xt_is, z_is
+        .text "is"
+nt_dup:
+        .byte 3, UF
+        .word nt_swap, xt_dup, z_dup
+        .text "dup"
 ----
 
 The first thing to note is the updated linked list of words.  In order to put
-the new words between `ed` and `cold`, we make `ed` link to `is`, which then
-links to `star`, and that links back to `cold`.  Because this file links the
-headers from the bottom to the top of the file, this actually places the new
-words near the end of the dictionary.  If you use the `words` command, you will
-find the new words near the end of the list.
+the new words between `drop` and `dup`, we make `drop` link to `star`, which then
+links to `is`, and that links back to `dup`.  If you use the `words` command, you will
+find the new words near the beginning of the list.
 
 The second thing to note is the status byte of each word.  If the word doesn't
 need any special status, then just use 0.  Neither of our added words contain

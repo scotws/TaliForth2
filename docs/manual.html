@@ -2,24 +2,22 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 1.5.6.1">
+<meta name="generator" content="Asciidoctor 2.0.10">
 <meta name="keywords" content="forth, 6502, assembler, programming, 8-bit, vintage, retro">
 <meta name="author" content="Sam Colwell, Scot W. Stevenson">
 <title>Manual for Tali Forth 2 for the 65c02</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
-/* Asciidoctor default stylesheet | MIT License | http://asciidoctor.org */
-/* Remove comment around @import statement below when using as a custom stylesheet */
+/* Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
+/* Uncomment @import statement to use as custom stylesheet */
 /*@import "https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700";*/
-article,aside,details,figcaption,figure,footer,header,hgroup,main,nav,section,summary{display:block}
-audio,canvas,video{display:inline-block}
+article,aside,details,figcaption,figure,footer,header,hgroup,main,nav,section{display:block}
+audio,video{display:inline-block}
 audio:not([controls]){display:none;height:0}
-[hidden],template{display:none}
-script{display:none!important}
 html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}
-a{background:transparent}
+a{background:none}
 a:focus{outline:thin dotted}
 a:active,a:hover{outline:0}
 h1{font-size:2em;margin:.67em 0}
@@ -46,12 +44,10 @@ button,select{text-transform:none}
 button,html input[type="button"],input[type="reset"],input[type="submit"]{-webkit-appearance:button;cursor:pointer}
 button[disabled],html input[disabled]{cursor:default}
 input[type="checkbox"],input[type="radio"]{box-sizing:border-box;padding:0}
-input[type="search"]{-webkit-appearance:textfield;-moz-box-sizing:content-box;-webkit-box-sizing:content-box;box-sizing:content-box}
-input[type="search"]::-webkit-search-cancel-button,input[type="search"]::-webkit-search-decoration{-webkit-appearance:none}
 button::-moz-focus-inner,input::-moz-focus-inner{border:0;padding:0}
 textarea{overflow:auto;vertical-align:top}
 table{border-collapse:collapse;border-spacing:0}
-*,*:before,*:after{-moz-box-sizing:border-box;-webkit-box-sizing:border-box;box-sizing:border-box}
+*,*::before,*::after{-moz-box-sizing:border-box;-webkit-box-sizing:border-box;box-sizing:border-box}
 html,body{font-size:100%}
 body{background:#fff;color:rgba(0,0,0,.8);padding:0;margin:0;font-family:"Noto Serif","DejaVu Serif",serif;font-weight:400;font-style:normal;line-height:1;position:relative;cursor:auto;tab-size:4;-moz-osx-font-smoothing:grayscale;-webkit-font-smoothing:antialiased}
 a:hover{cursor:pointer}
@@ -69,13 +65,12 @@ img,object,svg{display:inline-block;vertical-align:middle}
 textarea{height:auto;min-height:50px}
 select{width:100%}
 .center{margin-left:auto;margin-right:auto}
-.spread{width:100%}
-p.lead,.paragraph.lead>p,#preamble>.sectionbody>.paragraph:first-of-type p{font-size:1.21875em;line-height:1.6}
+.stretch{width:100%}
 .subheader,.admonitionblock td.content>.title,.audioblock>.title,.exampleblock>.title,.imageblock>.title,.listingblock>.title,.literalblock>.title,.stemblock>.title,.openblock>.title,.paragraph>.title,.quoteblock>.title,table.tableblock>.title,.verseblock>.title,.videoblock>.title,.dlist>.title,.olist>.title,.ulist>.title,.qlist>.title,.hdlist>.title{line-height:1.45;color:#7a2518;font-weight:400;margin-top:0;margin-bottom:.25em}
 div,dl,dt,dd,ul,ol,li,h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6,pre,form,p,blockquote,th,td{margin:0;padding:0;direction:ltr}
 a{color:#2156a5;text-decoration:underline;line-height:inherit}
 a:hover,a:focus{color:#1d4b8f}
-a img{border:none}
+a img{border:0}
 p{font-family:inherit;font-weight:400;font-size:1em;line-height:1.6;margin-bottom:1.25em;text-rendering:optimizeLegibility}
 p aside{font-size:.875em;line-height:1.35;font-style:italic}
 h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{font-family:"Open Sans","DejaVu Sans",sans-serif;font-weight:300;font-style:normal;color:#ba3925;text-rendering:optimizeLegibility;margin-top:1em;margin-bottom:.5em;line-height:1.0125em}
@@ -85,7 +80,7 @@ h2{font-size:1.6875em}
 h3,#toctitle,.sidebarblock>.content>.title{font-size:1.375em}
 h4,h5{font-size:1.125em}
 h6{font-size:1em}
-hr{border:solid #ddddd8;border-width:1px 0 0;clear:both;margin:1.25em 0 1.1875em;height:0}
+hr{border:solid #dddddf;border-width:1px 0 0;clear:both;margin:1.25em 0 1.1875em;height:0}
 em,i{font-style:italic;line-height:inherit}
 strong,b{font-weight:bold;line-height:inherit}
 small{font-size:60%;line-height:inherit}
@@ -104,32 +99,35 @@ abbr,acronym{text-transform:uppercase;font-size:90%;color:rgba(0,0,0,.8);border-
 abbr{text-transform:none}
 blockquote{margin:0 0 1.25em;padding:.5625em 1.25em 0 1.1875em;border-left:1px solid #ddd}
 blockquote cite{display:block;font-size:.9375em;color:rgba(0,0,0,.6)}
-blockquote cite:before{content:"\2014 \0020"}
+blockquote cite::before{content:"\2014 \0020"}
 blockquote cite a,blockquote cite a:visited{color:rgba(0,0,0,.6)}
 blockquote,blockquote p{line-height:1.6;color:rgba(0,0,0,.85)}
-@media only screen and (min-width:768px){h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{line-height:1.2}
+@media screen and (min-width:768px){h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{line-height:1.2}
 h1{font-size:2.75em}
 h2{font-size:2.3125em}
 h3,#toctitle,.sidebarblock>.content>.title{font-size:1.6875em}
 h4{font-size:1.4375em}}
 table{background:#fff;margin-bottom:1.25em;border:solid 1px #dedede}
-table thead,table tfoot{background:#f7f8f7;font-weight:bold}
+table thead,table tfoot{background:#f7f8f7}
 table thead tr th,table thead tr td,table tfoot tr th,table tfoot tr td{padding:.5em .625em .625em;font-size:inherit;color:rgba(0,0,0,.8);text-align:left}
 table tr th,table tr td{padding:.5625em .625em;font-size:inherit;color:rgba(0,0,0,.8)}
-table tr.even,table tr.alt,table tr:nth-of-type(even){background:#f8f8f7}
+table tr.even,table tr.alt{background:#f8f8f7}
 table thead tr th,table tfoot tr th,table tbody tr td,table tr td,table tfoot tr td{display:table-cell;line-height:1.6}
 h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{line-height:1.2;word-spacing:-.05em}
 h1 strong,h2 strong,h3 strong,#toctitle strong,.sidebarblock>.content>.title strong,h4 strong,h5 strong,h6 strong{font-weight:400}
-.clearfix:before,.clearfix:after,.float-group:before,.float-group:after{content:" ";display:table}
-.clearfix:after,.float-group:after{clear:both}
-*:not(pre)>code{font-size:.9375em;font-style:normal!important;letter-spacing:0;padding:.1em .5ex;word-spacing:-.15em;background-color:#f7f7f8;-webkit-border-radius:4px;border-radius:4px;line-height:1.45;text-rendering:optimizeSpeed;word-wrap:break-word}
-*:not(pre)>code.nobreak{word-wrap:normal}
-*:not(pre)>code.nowrap{white-space:nowrap}
-pre,pre>code{line-height:1.45;color:rgba(0,0,0,.9);font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;font-weight:400;text-rendering:optimizeSpeed}
+.clearfix::before,.clearfix::after,.float-group::before,.float-group::after{content:" ";display:table}
+.clearfix::after,.float-group::after{clear:both}
+:not(pre):not([class^=L])>code{font-size:.9375em;font-style:normal!important;letter-spacing:0;padding:.1em .5ex;word-spacing:-.15em;background:#f7f7f8;-webkit-border-radius:4px;border-radius:4px;line-height:1.45;text-rendering:optimizeSpeed;word-wrap:break-word}
+:not(pre)>code.nobreak{word-wrap:normal}
+:not(pre)>code.nowrap{white-space:nowrap}
+pre{color:rgba(0,0,0,.9);font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;line-height:1.45;text-rendering:optimizeSpeed}
+pre code,pre pre{color:inherit;font-size:inherit;line-height:inherit}
+pre>code{display:block}
+pre.nowrap,pre.nowrap pre{white-space:pre;word-wrap:normal}
 em em{font-style:normal}
 strong strong{font-weight:400}
 .keyseq{color:rgba(51,51,51,.8)}
-kbd{font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;display:inline-block;color:rgba(0,0,0,.8);font-size:.65em;line-height:1.45;background-color:#f7f7f7;border:1px solid #ccc;-webkit-border-radius:3px;border-radius:3px;-webkit-box-shadow:0 1px 0 rgba(0,0,0,.2),0 0 0 .1em white inset;box-shadow:0 1px 0 rgba(0,0,0,.2),0 0 0 .1em #fff inset;margin:0 .15em;padding:.2em .5em;vertical-align:middle;position:relative;top:-.1em;white-space:nowrap}
+kbd{font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;display:inline-block;color:rgba(0,0,0,.8);font-size:.65em;line-height:1.45;background:#f7f7f7;border:1px solid #ccc;-webkit-border-radius:3px;border-radius:3px;-webkit-box-shadow:0 1px 0 rgba(0,0,0,.2),0 0 0 .1em white inset;box-shadow:0 1px 0 rgba(0,0,0,.2),0 0 0 .1em #fff inset;margin:0 .15em;padding:.2em .5em;vertical-align:middle;position:relative;top:-.1em;white-space:nowrap}
 .keyseq kbd:first-child{margin-left:0}
 .keyseq kbd:last-child{margin-right:0}
 .menuseq,.menuref{color:#000}
@@ -137,29 +135,29 @@ kbd{font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;display:inline-bl
 .menuseq{word-spacing:-.02em}
 .menuseq b.caret{font-size:1.25em;line-height:.8}
 .menuseq i.caret{font-weight:bold;text-align:center;width:.45em}
-b.button:before,b.button:after{position:relative;top:-1px;font-weight:400}
-b.button:before{content:"[";padding:0 3px 0 2px}
-b.button:after{content:"]";padding:0 2px 0 3px}
+b.button::before,b.button::after{position:relative;top:-1px;font-weight:400}
+b.button::before{content:"[";padding:0 3px 0 2px}
+b.button::after{content:"]";padding:0 2px 0 3px}
 p a>code:hover{color:rgba(0,0,0,.9)}
 #header,#content,#footnotes,#footer{width:100%;margin-left:auto;margin-right:auto;margin-top:0;margin-bottom:0;max-width:62.5em;*zoom:1;position:relative;padding-left:.9375em;padding-right:.9375em}
-#header:before,#header:after,#content:before,#content:after,#footnotes:before,#footnotes:after,#footer:before,#footer:after{content:" ";display:table}
-#header:after,#content:after,#footnotes:after,#footer:after{clear:both}
+#header::before,#header::after,#content::before,#content::after,#footnotes::before,#footnotes::after,#footer::before,#footer::after{content:" ";display:table}
+#header::after,#content::after,#footnotes::after,#footer::after{clear:both}
 #content{margin-top:1.25em}
-#content:before{content:none}
+#content::before{content:none}
 #header>h1:first-child{color:rgba(0,0,0,.85);margin-top:2.25rem;margin-bottom:0}
-#header>h1:first-child+#toc{margin-top:8px;border-top:1px solid #ddddd8}
-#header>h1:only-child,body.toc2 #header>h1:nth-last-child(2){border-bottom:1px solid #ddddd8;padding-bottom:8px}
-#header .details{border-bottom:1px solid #ddddd8;line-height:1.45;padding-top:.25em;padding-bottom:.25em;padding-left:.25em;color:rgba(0,0,0,.6);display:-ms-flexbox;display:-webkit-flex;display:flex;-ms-flex-flow:row wrap;-webkit-flex-flow:row wrap;flex-flow:row wrap}
+#header>h1:first-child+#toc{margin-top:8px;border-top:1px solid #dddddf}
+#header>h1:only-child,body.toc2 #header>h1:nth-last-child(2){border-bottom:1px solid #dddddf;padding-bottom:8px}
+#header .details{border-bottom:1px solid #dddddf;line-height:1.45;padding-top:.25em;padding-bottom:.25em;padding-left:.25em;color:rgba(0,0,0,.6);display:-ms-flexbox;display:-webkit-flex;display:flex;-ms-flex-flow:row wrap;-webkit-flex-flow:row wrap;flex-flow:row wrap}
 #header .details span:first-child{margin-left:-.125em}
 #header .details span.email a{color:rgba(0,0,0,.85)}
 #header .details br{display:none}
-#header .details br+span:before{content:"\00a0\2013\00a0"}
-#header .details br+span.author:before{content:"\00a0\22c5\00a0";color:rgba(0,0,0,.85)}
-#header .details br+span#revremark:before{content:"\00a0|\00a0"}
+#header .details br+span::before{content:"\00a0\2013\00a0"}
+#header .details br+span.author::before{content:"\00a0\22c5\00a0";color:rgba(0,0,0,.85)}
+#header .details br+span#revremark::before{content:"\00a0|\00a0"}
 #header #revnumber{text-transform:capitalize}
-#header #revnumber:after{content:"\00a0"}
-#content>h1:first-child:not([class]){color:rgba(0,0,0,.85);border-bottom:1px solid #ddddd8;padding-bottom:8px;margin-top:0;padding-top:1rem;margin-bottom:1.25rem}
-#toc{border-bottom:1px solid #efefed;padding-bottom:.5em}
+#header #revnumber::after{content:"\00a0"}
+#content>h1:first-child:not([class]){color:rgba(0,0,0,.85);border-bottom:1px solid #dddddf;padding-bottom:8px;margin-top:0;padding-top:1rem;margin-bottom:1.25rem}
+#toc{border-bottom:1px solid #e7e7e9;padding-bottom:.5em}
 #toc>ul{margin-left:.125em}
 #toc ul.sectlevel0>li>a{font-style:italic}
 #toc ul.sectlevel0 ul.sectlevel1{margin:.5em 0}
@@ -168,16 +166,16 @@ p a>code:hover{color:rgba(0,0,0,.9)}
 #toc a{text-decoration:none}
 #toc a:active{text-decoration:underline}
 #toctitle{color:#7a2518;font-size:1.2em}
-@media only screen and (min-width:768px){#toctitle{font-size:1.375em}
+@media screen and (min-width:768px){#toctitle{font-size:1.375em}
 body.toc2{padding-left:15em;padding-right:0}
-#toc.toc2{margin-top:0!important;background-color:#f8f8f7;position:fixed;width:15em;left:0;top:0;border-right:1px solid #efefed;border-top-width:0!important;border-bottom-width:0!important;z-index:1000;padding:1.25em 1em;height:100%;overflow:auto}
+#toc.toc2{margin-top:0!important;background:#f8f8f7;position:fixed;width:15em;left:0;top:0;border-right:1px solid #e7e7e9;border-top-width:0!important;border-bottom-width:0!important;z-index:1000;padding:1.25em 1em;height:100%;overflow:auto}
 #toc.toc2 #toctitle{margin-top:0;margin-bottom:.8rem;font-size:1.2em}
 #toc.toc2>ul{font-size:.9em;margin-bottom:0}
 #toc.toc2 ul ul{margin-left:0;padding-left:1em}
 #toc.toc2 ul.sectlevel0 ul.sectlevel1{padding-left:0;margin-top:.5em;margin-bottom:.5em}
 body.toc2.toc-right{padding-left:0;padding-right:15em}
-body.toc2.toc-right #toc.toc2{border-right-width:0;border-left:1px solid #efefed;left:auto;right:0}}
-@media only screen and (min-width:1280px){body.toc2{padding-left:20em;padding-right:0}
+body.toc2.toc-right #toc.toc2{border-right-width:0;border-left:1px solid #e7e7e9;left:auto;right:0}}
+@media screen and (min-width:1280px){body.toc2{padding-left:20em;padding-right:0}
 #toc.toc2{width:20em}
 #toc.toc2 #toctitle{font-size:1.375em}
 #toc.toc2>ul{font-size:.95em}
@@ -186,89 +184,101 @@ body.toc2.toc-right{padding-left:0;padding-right:20em}}
 #content #toc{border-style:solid;border-width:1px;border-color:#e0e0dc;margin-bottom:1.25em;padding:1.25em;background:#f8f8f7;-webkit-border-radius:4px;border-radius:4px}
 #content #toc>:first-child{margin-top:0}
 #content #toc>:last-child{margin-bottom:0}
-#footer{max-width:100%;background-color:rgba(0,0,0,.8);padding:1.25em}
+#footer{max-width:100%;background:rgba(0,0,0,.8);padding:1.25em}
 #footer-text{color:rgba(255,255,255,.8);line-height:1.44}
+#content{margin-bottom:.625em}
 .sect1{padding-bottom:.625em}
-@media only screen and (min-width:768px){.sect1{padding-bottom:1.25em}}
-.sect1+.sect1{border-top:1px solid #efefed}
+@media screen and (min-width:768px){#content{margin-bottom:1.25em}
+.sect1{padding-bottom:1.25em}}
+.sect1:last-child{padding-bottom:0}
+.sect1+.sect1{border-top:1px solid #e7e7e9}
 #content h1>a.anchor,h2>a.anchor,h3>a.anchor,#toctitle>a.anchor,.sidebarblock>.content>.title>a.anchor,h4>a.anchor,h5>a.anchor,h6>a.anchor{position:absolute;z-index:1001;width:1.5ex;margin-left:-1.5ex;display:block;text-decoration:none!important;visibility:hidden;text-align:center;font-weight:400}
-#content h1>a.anchor:before,h2>a.anchor:before,h3>a.anchor:before,#toctitle>a.anchor:before,.sidebarblock>.content>.title>a.anchor:before,h4>a.anchor:before,h5>a.anchor:before,h6>a.anchor:before{content:"\00A7";font-size:.85em;display:block;padding-top:.1em}
+#content h1>a.anchor::before,h2>a.anchor::before,h3>a.anchor::before,#toctitle>a.anchor::before,.sidebarblock>.content>.title>a.anchor::before,h4>a.anchor::before,h5>a.anchor::before,h6>a.anchor::before{content:"\00A7";font-size:.85em;display:block;padding-top:.1em}
 #content h1:hover>a.anchor,#content h1>a.anchor:hover,h2:hover>a.anchor,h2>a.anchor:hover,h3:hover>a.anchor,#toctitle:hover>a.anchor,.sidebarblock>.content>.title:hover>a.anchor,h3>a.anchor:hover,#toctitle>a.anchor:hover,.sidebarblock>.content>.title>a.anchor:hover,h4:hover>a.anchor,h4>a.anchor:hover,h5:hover>a.anchor,h5>a.anchor:hover,h6:hover>a.anchor,h6>a.anchor:hover{visibility:visible}
 #content h1>a.link,h2>a.link,h3>a.link,#toctitle>a.link,.sidebarblock>.content>.title>a.link,h4>a.link,h5>a.link,h6>a.link{color:#ba3925;text-decoration:none}
 #content h1>a.link:hover,h2>a.link:hover,h3>a.link:hover,#toctitle>a.link:hover,.sidebarblock>.content>.title>a.link:hover,h4>a.link:hover,h5>a.link:hover,h6>a.link:hover{color:#a53221}
-.audioblock,.imageblock,.literalblock,.listingblock,.stemblock,.videoblock{margin-bottom:1.25em}
+details,.audioblock,.imageblock,.literalblock,.listingblock,.stemblock,.videoblock{margin-bottom:1.25em}
+details>summary:first-of-type{cursor:pointer;display:list-item;outline:none;margin-bottom:.75em}
 .admonitionblock td.content>.title,.audioblock>.title,.exampleblock>.title,.imageblock>.title,.listingblock>.title,.literalblock>.title,.stemblock>.title,.openblock>.title,.paragraph>.title,.quoteblock>.title,table.tableblock>.title,.verseblock>.title,.videoblock>.title,.dlist>.title,.olist>.title,.ulist>.title,.qlist>.title,.hdlist>.title{text-rendering:optimizeLegibility;text-align:left;font-family:"Noto Serif","DejaVu Serif",serif;font-size:1rem;font-style:italic}
-table.tableblock>caption.title{white-space:nowrap;overflow:visible;max-width:0}
-.paragraph.lead>p,#preamble>.sectionbody>.paragraph:first-of-type p{color:rgba(0,0,0,.85)}
-table.tableblock #preamble>.sectionbody>.paragraph:first-of-type p{font-size:inherit}
+table.tableblock.fit-content>caption.title{white-space:nowrap;width:0}
+.paragraph.lead>p,#preamble>.sectionbody>[class="paragraph"]:first-of-type p{font-size:1.21875em;line-height:1.6;color:rgba(0,0,0,.85)}
+table.tableblock #preamble>.sectionbody>[class="paragraph"]:first-of-type p{font-size:inherit}
 .admonitionblock>table{border-collapse:separate;border:0;background:none;width:100%}
 .admonitionblock>table td.icon{text-align:center;width:80px}
-.admonitionblock>table td.icon img{max-width:initial}
+.admonitionblock>table td.icon img{max-width:none}
 .admonitionblock>table td.icon .title{font-weight:bold;font-family:"Open Sans","DejaVu Sans",sans-serif;text-transform:uppercase}
-.admonitionblock>table td.content{padding-left:1.125em;padding-right:1.25em;border-left:1px solid #ddddd8;color:rgba(0,0,0,.6)}
+.admonitionblock>table td.content{padding-left:1.125em;padding-right:1.25em;border-left:1px solid #dddddf;color:rgba(0,0,0,.6)}
 .admonitionblock>table td.content>:last-child>:last-child{margin-bottom:0}
 .exampleblock>.content{border-style:solid;border-width:1px;border-color:#e6e6e6;margin-bottom:1.25em;padding:1.25em;background:#fff;-webkit-border-radius:4px;border-radius:4px}
 .exampleblock>.content>:first-child{margin-top:0}
 .exampleblock>.content>:last-child{margin-bottom:0}
-.sidebarblock{border-style:solid;border-width:1px;border-color:#e0e0dc;margin-bottom:1.25em;padding:1.25em;background:#f8f8f7;-webkit-border-radius:4px;border-radius:4px}
+.sidebarblock{border-style:solid;border-width:1px;border-color:#dbdbd6;margin-bottom:1.25em;padding:1.25em;background:#f3f3f2;-webkit-border-radius:4px;border-radius:4px}
 .sidebarblock>:first-child{margin-top:0}
 .sidebarblock>:last-child{margin-bottom:0}
 .sidebarblock>.content>.title{color:#7a2518;margin-top:0;text-align:center}
 .exampleblock>.content>:last-child>:last-child,.exampleblock>.content .olist>ol>li:last-child>:last-child,.exampleblock>.content .ulist>ul>li:last-child>:last-child,.exampleblock>.content .qlist>ol>li:last-child>:last-child,.sidebarblock>.content>:last-child>:last-child,.sidebarblock>.content .olist>ol>li:last-child>:last-child,.sidebarblock>.content .ulist>ul>li:last-child>:last-child,.sidebarblock>.content .qlist>ol>li:last-child>:last-child{margin-bottom:0}
-.literalblock pre,.listingblock pre:not(.highlight),.listingblock pre[class="highlight"],.listingblock pre[class^="highlight "],.listingblock pre.CodeRay,.listingblock pre.prettyprint{background:#f7f7f8}
-.sidebarblock .literalblock pre,.sidebarblock .listingblock pre:not(.highlight),.sidebarblock .listingblock pre[class="highlight"],.sidebarblock .listingblock pre[class^="highlight "],.sidebarblock .listingblock pre.CodeRay,.sidebarblock .listingblock pre.prettyprint{background:#f2f1f1}
-.literalblock pre,.literalblock pre[class],.listingblock pre,.listingblock pre[class]{-webkit-border-radius:4px;border-radius:4px;word-wrap:break-word;padding:1em;font-size:.8125em}
-.literalblock pre.nowrap,.literalblock pre[class].nowrap,.listingblock pre.nowrap,.listingblock pre[class].nowrap{overflow-x:auto;white-space:pre;word-wrap:normal}
-@media only screen and (min-width:768px){.literalblock pre,.literalblock pre[class],.listingblock pre,.listingblock pre[class]{font-size:.90625em}}
-@media only screen and (min-width:1280px){.literalblock pre,.literalblock pre[class],.listingblock pre,.listingblock pre[class]{font-size:1em}}
-.literalblock.output pre{color:#f7f7f8;background-color:rgba(0,0,0,.9)}
+.literalblock pre,.listingblock>.content>pre{-webkit-border-radius:4px;border-radius:4px;word-wrap:break-word;overflow-x:auto;padding:1em;font-size:.8125em}
+@media screen and (min-width:768px){.literalblock pre,.listingblock>.content>pre{font-size:.90625em}}
+@media screen and (min-width:1280px){.literalblock pre,.listingblock>.content>pre{font-size:1em}}
+.literalblock pre,.listingblock>.content>pre:not(.highlight),.listingblock>.content>pre[class="highlight"],.listingblock>.content>pre[class^="highlight "]{background:#f7f7f8}
+.literalblock.output pre{color:#f7f7f8;background:rgba(0,0,0,.9)}
+.listingblock>.content{position:relative}
+.listingblock code[data-lang]::before{display:none;content:attr(data-lang);position:absolute;font-size:.75em;top:.425rem;right:.5rem;line-height:1;text-transform:uppercase;color:inherit;opacity:.5}
+.listingblock:hover code[data-lang]::before{display:block}
+.listingblock.terminal pre .command::before{content:attr(data-prompt);padding-right:.5em;color:inherit;opacity:.5}
+.listingblock.terminal pre .command:not([data-prompt])::before{content:"$"}
 .listingblock pre.highlightjs{padding:0}
 .listingblock pre.highlightjs>code{padding:1em;-webkit-border-radius:4px;border-radius:4px}
 .listingblock pre.prettyprint{border-width:0}
-.listingblock>.content{position:relative}
-.listingblock code[data-lang]:before{display:none;content:attr(data-lang);position:absolute;font-size:.75em;top:.425rem;right:.5rem;line-height:1;text-transform:uppercase;color:#999}
-.listingblock:hover code[data-lang]:before{display:block}
-.listingblock.terminal pre .command:before{content:attr(data-prompt);padding-right:.5em;color:#999}
-.listingblock.terminal pre .command:not([data-prompt]):before{content:"$"}
-table.pyhltable{border-collapse:separate;border:0;margin-bottom:0;background:none}
-table.pyhltable td{vertical-align:top;padding-top:0;padding-bottom:0;line-height:1.45}
-table.pyhltable td.code{padding-left:.75em;padding-right:0}
-pre.pygments .lineno,table.pyhltable td:not(.code){color:#999;padding-left:0;padding-right:.5em;border-right:1px solid #ddddd8}
-pre.pygments .lineno{display:inline-block;margin-right:.25em}
-table.pyhltable .linenodiv{background:none!important;padding-right:0!important}
+.prettyprint{background:#f7f7f8}
+pre.prettyprint .linenums{line-height:1.45;margin-left:2em}
+pre.prettyprint li{background:none;list-style-type:inherit;padding-left:0}
+pre.prettyprint li code[data-lang]::before{opacity:1}
+pre.prettyprint li:not(:first-child) code[data-lang]::before{display:none}
+table.linenotable{border-collapse:separate;border:0;margin-bottom:0;background:none}
+table.linenotable td[class]{color:inherit;vertical-align:top;padding:0;line-height:inherit;white-space:normal}
+table.linenotable td.code{padding-left:.75em}
+table.linenotable td.linenos{border-right:1px solid currentColor;opacity:.35;padding-right:.5em}
+pre.pygments .lineno{border-right:1px solid currentColor;opacity:.35;display:inline-block;margin-right:.75em}
+pre.pygments .lineno::before{content:"";margin-right:-.125em}
 .quoteblock{margin:0 1em 1.25em 1.5em;display:table}
-.quoteblock>.title{margin-left:-1.5em;margin-bottom:.75em}
-.quoteblock blockquote,.quoteblock blockquote p{color:rgba(0,0,0,.85);font-size:1.15rem;line-height:1.75;word-spacing:.1em;letter-spacing:0;font-style:italic;text-align:justify}
+.quoteblock:not(.excerpt)>.title{margin-left:-1.5em;margin-bottom:.75em}
+.quoteblock blockquote,.quoteblock p{color:rgba(0,0,0,.85);font-size:1.15rem;line-height:1.75;word-spacing:.1em;letter-spacing:0;font-style:italic;text-align:justify}
 .quoteblock blockquote{margin:0;padding:0;border:0}
-.quoteblock blockquote:before{content:"\201c";float:left;font-size:2.75em;font-weight:bold;line-height:.6em;margin-left:-.6em;color:#7a2518;text-shadow:0 1px 2px rgba(0,0,0,.1)}
+.quoteblock blockquote::before{content:"\201c";float:left;font-size:2.75em;font-weight:bold;line-height:.6em;margin-left:-.6em;color:#7a2518;text-shadow:0 1px 2px rgba(0,0,0,.1)}
 .quoteblock blockquote>.paragraph:last-child p{margin-bottom:0}
-.quoteblock .attribution{margin-top:.5em;margin-right:.5ex;text-align:right}
-.quoteblock .quoteblock{margin-left:0;margin-right:0;padding:.5em 0;border-left:3px solid rgba(0,0,0,.6)}
-.quoteblock .quoteblock blockquote{padding:0 0 0 .75em}
-.quoteblock .quoteblock blockquote:before{display:none}
-.verseblock{margin:0 1em 1.25em 1em}
+.quoteblock .attribution{margin-top:.75em;margin-right:.5ex;text-align:right}
+.verseblock{margin:0 1em 1.25em}
 .verseblock pre{font-family:"Open Sans","DejaVu Sans",sans;font-size:1.15rem;color:rgba(0,0,0,.85);font-weight:300;text-rendering:optimizeLegibility}
 .verseblock pre strong{font-weight:400}
 .verseblock .attribution{margin-top:1.25rem;margin-left:.5ex}
 .quoteblock .attribution,.verseblock .attribution{font-size:.9375em;line-height:1.45;font-style:italic}
 .quoteblock .attribution br,.verseblock .attribution br{display:none}
 .quoteblock .attribution cite,.verseblock .attribution cite{display:block;letter-spacing:-.025em;color:rgba(0,0,0,.6)}
-.quoteblock.abstract{margin:0 0 1.25em 0;display:block}
-.quoteblock.abstract blockquote,.quoteblock.abstract blockquote p{text-align:left;word-spacing:0}
-.quoteblock.abstract blockquote:before,.quoteblock.abstract blockquote p:first-of-type:before{display:none}
+.quoteblock.abstract blockquote::before,.quoteblock.excerpt blockquote::before,.quoteblock .quoteblock blockquote::before{display:none}
+.quoteblock.abstract blockquote,.quoteblock.abstract p,.quoteblock.excerpt blockquote,.quoteblock.excerpt p,.quoteblock .quoteblock blockquote,.quoteblock .quoteblock p{line-height:1.6;word-spacing:0}
+.quoteblock.abstract{margin:0 1em 1.25em;display:block}
+.quoteblock.abstract>.title{margin:0 0 .375em;font-size:1.15em;text-align:center}
+.quoteblock.excerpt>blockquote,.quoteblock .quoteblock{padding:0 0 .25em 1em;border-left:.25em solid #dddddf}
+.quoteblock.excerpt,.quoteblock .quoteblock{margin-left:0}
+.quoteblock.excerpt blockquote,.quoteblock.excerpt p,.quoteblock .quoteblock blockquote,.quoteblock .quoteblock p{color:inherit;font-size:1.0625rem}
+.quoteblock.excerpt .attribution,.quoteblock .quoteblock .attribution{color:inherit;text-align:left;margin-right:0}
 table.tableblock{max-width:100%;border-collapse:separate}
-table.tableblock td>.paragraph:last-child p>p:last-child,table.tableblock th>p:last-child,table.tableblock td>p:last-child{margin-bottom:0}
+p.tableblock:last-child{margin-bottom:0}
+td.tableblock>.content>:last-child{margin-bottom:-1.25em}
+td.tableblock>.content>:last-child.sidebarblock{margin-bottom:0}
 table.tableblock,th.tableblock,td.tableblock{border:0 solid #dedede}
 table.grid-all>thead>tr>.tableblock,table.grid-all>tbody>tr>.tableblock{border-width:0 1px 1px 0}
 table.grid-all>tfoot>tr>.tableblock{border-width:1px 1px 0 0}
 table.grid-cols>*>tr>.tableblock{border-width:0 1px 0 0}
-table.grid-rows>thead>tr>.tableblock,table.grid-rows>tbody>tr>.tableblock{border-width:0 0 1px 0}
-table.grid-rows>tfoot>tr>.tableblock{border-width:1px 0 0 0}
+table.grid-rows>thead>tr>.tableblock,table.grid-rows>tbody>tr>.tableblock{border-width:0 0 1px}
+table.grid-rows>tfoot>tr>.tableblock{border-width:1px 0 0}
 table.grid-all>*>tr>.tableblock:last-child,table.grid-cols>*>tr>.tableblock:last-child{border-right-width:0}
 table.grid-all>tbody>tr:last-child>.tableblock,table.grid-all>thead:last-child>tr>.tableblock,table.grid-rows>tbody>tr:last-child>.tableblock,table.grid-rows>thead:last-child>tr>.tableblock{border-bottom-width:0}
 table.frame-all{border-width:1px}
 table.frame-sides{border-width:0 1px}
-table.frame-topbot{border-width:1px 0}
+table.frame-topbot,table.frame-ends{border-width:1px 0}
+table.stripes-all tr,table.stripes-odd tr:nth-of-type(odd),table.stripes-even tr:nth-of-type(even),table.stripes-hover tr:hover{background:#f8f8f7}
 th.halign-left,td.halign-left{text-align:left}
 th.halign-right,td.halign-right{text-align:right}
 th.halign-center,td.halign-center{text-align:center}
@@ -280,7 +290,6 @@ tbody tr th{display:table-cell;line-height:1.6;background:#f7f8f7}
 tbody tr th,tbody tr th p,tfoot tr th,tfoot tr th p{color:rgba(0,0,0,.8);font-weight:bold}
 p.tableblock>code:only-child{background:none;padding:0}
 p.tableblock{font-size:1em}
-td>div.verse{white-space:pre}
 ol{margin-left:1.75em}
 ul li ol{margin-left:1.5em}
 dl dd{margin-left:1.125em}
@@ -292,9 +301,8 @@ ul.unstyled,ol.unstyled{margin-left:0}
 ul.checklist{margin-left:.625em}
 ul.checklist li>p:first-child>.fa-square-o:first-child,ul.checklist li>p:first-child>.fa-check-square-o:first-child{width:1.25em;font-size:.8em;position:relative;bottom:.125em}
 ul.checklist li>p:first-child>input[type="checkbox"]:first-child{margin-right:.25em}
-ul.inline{margin:0 auto .625em auto;margin-left:-1.375em;margin-right:0;padding:0;list-style:none;overflow:hidden}
-ul.inline>li{list-style:none;float:left;margin-left:1.375em;display:block}
-ul.inline>li>*{display:block}
+ul.inline{display:-ms-flexbox;display:-webkit-box;display:flex;-ms-flex-flow:row wrap;-webkit-flex-flow:row wrap;flex-flow:row wrap;list-style:none;margin:0 0 .625em -1.25em}
+ul.inline>li{margin-left:1.25em}
 .unstyled dl dt{font-weight:400;font-style:normal}
 ol.arabic{list-style-type:decimal}
 ol.decimal{list-style-type:decimal-leading-zero}
@@ -308,12 +316,12 @@ ol.lowergreek{list-style-type:lower-greek}
 td.hdlist1,td.hdlist2{vertical-align:top;padding:0 .625em}
 td.hdlist1{font-weight:bold;padding-bottom:1.25em}
 .literalblock+.colist,.listingblock+.colist{margin-top:-.5em}
-.colist>table tr>td:first-of-type{padding:.4em .75em 0 .75em;line-height:1;vertical-align:top}
-.colist>table tr>td:first-of-type img{max-width:initial}
-.colist>table tr>td:last-of-type{padding:.25em 0}
+.colist td:not([class]):first-child{padding:.4em .75em 0;line-height:1;vertical-align:top}
+.colist td:not([class]):first-child img{max-width:none}
+.colist td:not([class]):last-child{padding:.25em 0}
 .thumb,.th{line-height:0;display:inline-block;border:solid 4px #fff;-webkit-box-shadow:0 0 0 1px #ddd;box-shadow:0 0 0 1px #ddd}
-.imageblock.left,.imageblock[style*="float: left"]{margin:.25em .625em 1.25em 0}
-.imageblock.right,.imageblock[style*="float: right"]{margin:.25em 0 1.25em .625em}
+.imageblock.left{margin:.25em .625em 1.25em 0}
+.imageblock.right{margin:.25em 0 1.25em .625em}
 .imageblock>.title{margin-bottom:0}
 .imageblock.thumb,.imageblock.th{border-width:6px}
 .imageblock.thumb>.title,.imageblock.th>.title{padding:0 .125em}
@@ -326,9 +334,9 @@ sup.footnote,sup.footnoteref{font-size:.875em;position:static;vertical-align:sup
 sup.footnote a,sup.footnoteref a{text-decoration:none}
 sup.footnote a:active,sup.footnoteref a:active{text-decoration:underline}
 #footnotes{padding-top:.75em;padding-bottom:.75em;margin-bottom:.625em}
-#footnotes hr{width:20%;min-width:6.25em;margin:-.25em 0 .75em 0;border-width:1px 0 0 0}
-#footnotes .footnote{padding:0 .375em 0 .225em;line-height:1.3334;font-size:.875em;margin-left:1.2em;text-indent:-1.05em;margin-bottom:.2em}
-#footnotes .footnote a:first-of-type{font-weight:bold;text-decoration:none}
+#footnotes hr{width:20%;min-width:6.25em;margin:-.25em 0 .75em;border-width:1px 0 0}
+#footnotes .footnote{padding:0 .375em 0 .225em;line-height:1.3334;font-size:.875em;margin-left:1.2em;margin-bottom:.2em}
+#footnotes .footnote a:first-of-type{font-weight:bold;text-decoration:none;margin-left:-1.05em}
 #footnotes .footnote:last-of-type{margin-bottom:0}
 #content #footnotes{margin-top:-.625em;margin-bottom:0;padding:.75em 0}
 .gist .file-data>table{border:0;background:#fff;width:100%;margin-bottom:0}
@@ -340,49 +348,49 @@ div.unbreakable{page-break-inside:avoid}
 .overline{text-decoration:overline}
 .line-through{text-decoration:line-through}
 .aqua{color:#00bfbf}
-.aqua-background{background-color:#00fafa}
+.aqua-background{background:#00fafa}
 .black{color:#000}
-.black-background{background-color:#000}
+.black-background{background:#000}
 .blue{color:#0000bf}
-.blue-background{background-color:#0000fa}
+.blue-background{background:#0000fa}
 .fuchsia{color:#bf00bf}
-.fuchsia-background{background-color:#fa00fa}
+.fuchsia-background{background:#fa00fa}
 .gray{color:#606060}
-.gray-background{background-color:#7d7d7d}
+.gray-background{background:#7d7d7d}
 .green{color:#006000}
-.green-background{background-color:#007d00}
+.green-background{background:#007d00}
 .lime{color:#00bf00}
-.lime-background{background-color:#00fa00}
+.lime-background{background:#00fa00}
 .maroon{color:#600000}
-.maroon-background{background-color:#7d0000}
+.maroon-background{background:#7d0000}
 .navy{color:#000060}
-.navy-background{background-color:#00007d}
+.navy-background{background:#00007d}
 .olive{color:#606000}
-.olive-background{background-color:#7d7d00}
+.olive-background{background:#7d7d00}
 .purple{color:#600060}
-.purple-background{background-color:#7d007d}
+.purple-background{background:#7d007d}
 .red{color:#bf0000}
-.red-background{background-color:#fa0000}
+.red-background{background:#fa0000}
 .silver{color:#909090}
-.silver-background{background-color:#bcbcbc}
+.silver-background{background:#bcbcbc}
 .teal{color:#006060}
-.teal-background{background-color:#007d7d}
+.teal-background{background:#007d7d}
 .white{color:#bfbfbf}
-.white-background{background-color:#fafafa}
+.white-background{background:#fafafa}
 .yellow{color:#bfbf00}
-.yellow-background{background-color:#fafa00}
+.yellow-background{background:#fafa00}
 span.icon>.fa{cursor:default}
 a span.icon>.fa{cursor:inherit}
 .admonitionblock td.icon [class^="fa icon-"]{font-size:2.5em;text-shadow:1px 1px 2px rgba(0,0,0,.5);cursor:default}
-.admonitionblock td.icon .icon-note:before{content:"\f05a";color:#19407c}
-.admonitionblock td.icon .icon-tip:before{content:"\f0eb";text-shadow:1px 1px 2px rgba(155,155,0,.8);color:#111}
-.admonitionblock td.icon .icon-warning:before{content:"\f071";color:#bf6900}
-.admonitionblock td.icon .icon-caution:before{content:"\f06d";color:#bf3400}
-.admonitionblock td.icon .icon-important:before{content:"\f06a";color:#bf0000}
-.conum[data-value]{display:inline-block;color:#fff!important;background-color:rgba(0,0,0,.8);-webkit-border-radius:100px;border-radius:100px;text-align:center;font-size:.75em;width:1.67em;height:1.67em;line-height:1.67em;font-family:"Open Sans","DejaVu Sans",sans-serif;font-style:normal;font-weight:bold}
+.admonitionblock td.icon .icon-note::before{content:"\f05a";color:#19407c}
+.admonitionblock td.icon .icon-tip::before{content:"\f0eb";text-shadow:1px 1px 2px rgba(155,155,0,.8);color:#111}
+.admonitionblock td.icon .icon-warning::before{content:"\f071";color:#bf6900}
+.admonitionblock td.icon .icon-caution::before{content:"\f06d";color:#bf3400}
+.admonitionblock td.icon .icon-important::before{content:"\f06a";color:#bf0000}
+.conum[data-value]{display:inline-block;color:#fff!important;background:rgba(0,0,0,.8);-webkit-border-radius:100px;border-radius:100px;text-align:center;font-size:.75em;width:1.67em;height:1.67em;line-height:1.67em;font-family:"Open Sans","DejaVu Sans",sans-serif;font-style:normal;font-weight:bold}
 .conum[data-value] *{color:#fff!important}
 .conum[data-value]+b{display:none}
-.conum[data-value]:after{content:attr(data-value)}
+.conum[data-value]::after{content:attr(data-value)}
 pre .conum[data-value]{position:relative;top:-.125em}
 b.conum *{color:inherit!important}
 .conum:not([data-value]):empty{display:none}
@@ -392,41 +400,44 @@ p strong,td.content strong,div.footnote strong{letter-spacing:-.005em}
 p,blockquote,dt,td.content,span.alt{font-size:1.0625rem}
 p{margin-bottom:1.25rem}
 .sidebarblock p,.sidebarblock dt,.sidebarblock td.content,p.tableblock{font-size:1em}
-.exampleblock>.content{background-color:#fffef7;border-color:#e0e0dc;-webkit-box-shadow:0 1px 4px #e0e0dc;box-shadow:0 1px 4px #e0e0dc}
+.exampleblock>.content{background:#fffef7;border-color:#e0e0dc;-webkit-box-shadow:0 1px 4px #e0e0dc;box-shadow:0 1px 4px #e0e0dc}
 .print-only{display:none!important}
-@media print{@page{margin:1.25cm .75cm}
-*{-webkit-box-shadow:none!important;box-shadow:none!important;text-shadow:none!important}
+@page{margin:1.25cm .75cm}
+@media print{*{-webkit-box-shadow:none!important;box-shadow:none!important;text-shadow:none!important}
+html{font-size:80%}
 a{color:inherit!important;text-decoration:underline!important}
 a.bare,a[href^="#"],a[href^="mailto:"]{text-decoration:none!important}
-a[href^="http:"]:not(.bare):after,a[href^="https:"]:not(.bare):after{content:"(" attr(href) ")";display:inline-block;font-size:.875em;padding-left:.25em}
-abbr[title]:after{content:" (" attr(title) ")"}
+a[href^="http:"]:not(.bare)::after,a[href^="https:"]:not(.bare)::after{content:"(" attr(href) ")";display:inline-block;font-size:.875em;padding-left:.25em}
+abbr[title]::after{content:" (" attr(title) ")"}
 pre,blockquote,tr,img,object,svg{page-break-inside:avoid}
 thead{display:table-header-group}
 svg{max-width:100%}
 p,blockquote,dt,td.content{font-size:1em;orphans:3;widows:3}
 h2,h3,#toctitle,.sidebarblock>.content>.title{page-break-after:avoid}
 #toc,.sidebarblock,.exampleblock>.content{background:none!important}
-#toc{border-bottom:1px solid #ddddd8!important;padding-bottom:0!important}
-.sect1{padding-bottom:0!important}
-.sect1+.sect1{border:0!important}
-#header>h1:first-child{margin-top:1.25rem}
+#toc{border-bottom:1px solid #dddddf!important;padding-bottom:0!important}
 body.book #header{text-align:center}
-body.book #header>h1:first-child{border:0!important;margin:2.5em 0 1em 0}
+body.book #header>h1:first-child{border:0!important;margin:2.5em 0 1em}
 body.book #header .details{border:0!important;display:block;padding:0!important}
 body.book #header .details span:first-child{margin-left:0!important}
 body.book #header .details br{display:block}
-body.book #header .details br+span:before{content:none!important}
+body.book #header .details br+span::before{content:none!important}
 body.book #toc{border:0!important;text-align:left!important;padding:0!important;margin:0!important}
 body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-break-before:always}
-.listingblock code[data-lang]:before{display:block}
-#footer{background:none!important;padding:0 .9375em}
-#footer-text{color:rgba(0,0,0,.6)!important;font-size:.9em}
+.listingblock code[data-lang]::before{display:block}
+#footer{padding:0 .9375em}
 .hide-on-print{display:none!important}
 .print-only{display:block!important}
 .hide-for-print{display:none!important}
 .show-for-print{display:inherit!important}}
+@media print,amzn-kf8{#header>h1:first-child{margin-top:1.25rem}
+.sect1{padding:0!important}
+.sect1+.sect1{border:0}
+#footer{background:none}
+#footer-text{color:rgba(0,0,0,.6);font-size:.9em}}
+@media amzn-kf8{#header,#content,#footnotes,#footer{padding:0}}
 </style>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body class="book toc2 toc-left">
 <div id="header">
@@ -470,6 +481,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#_running_tali_forth">Running Tali Forth</a>
 <ul class="sectlevel2">
+<li><a href="#_recommended_reading">Recommended Reading</a></li>
 <li><a href="#_booting">Booting</a></li>
 <li><a href="#_command_line_history">Command-Line History</a></li>
 <li><a href="#_words">Words</a></li>
@@ -484,7 +496,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel2">
 <li><a href="#_blocks">Blocks</a></li>
 <li><a href="#_the_block_editor">The Block Editor</a></li>
-<li><a href="#_the_line_based_editor_code_ed_code">The Line-Based Editor <code>ed</code></a></li>
+<li><a href="#_the_line_based_editor_ed">The Line-Based Editor <code>ed</code></a></li>
 <li><a href="#_the_assembler">The Assembler</a></li>
 <li><a href="#_the_disassembler">The Disassembler</a></li>
 </ul>
@@ -499,10 +511,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_the_data_stack">The Data Stack</a></li>
 <li><a href="#_dictionary">Dictionary</a></li>
 <li><a href="#_input">Input</a></li>
-<li><a href="#_the_words_code_create_code_and_code_does_code">The Words <code>create</code> and <code>does&gt;</code></a></li>
+<li><a href="#_the_words_create_and_does">The Words <code>create</code> and <code>does&gt;</code></a></li>
 <li><a href="#_control_flow">Control Flow</a></li>
 <li><a href="#_native_compiling_2">Native Compiling</a></li>
-<li><a href="#_code_cmove_code_code_cmove_code_and_code_move_code"><code>cmove</code>, <code>cmove&gt;</code> and <code>move</code></a></li>
+<li><a href="#_cmove_cmove_and_move"><code>cmove</code>, <code>cmove&gt;</code> and <code>move</code></a></li>
 </ul>
 </li>
 <li><a href="#_developing">Developing</a>
@@ -526,12 +538,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_storing_binary_data_in_blocks">Storing Binary Data in Blocks</a></li>
 </ul>
 </li>
-<li><a href="#_the_code_ed_code_line_based_editor_a_id_ed_tutorial_a">The <code>ed</code> Line-Based Editor<a id="ed-tutorial"></a></a>
+<li><a href="#_the_ed_line_based_editor">The <code>ed</code> Line-Based Editor</a>
 <ul class="sectlevel2">
-<li><a href="#_first_steps_with_code_ed_code">First steps with <code>ed</code></a></li>
+<li><a href="#_first_steps_with_ed">First steps with <code>ed</code></a></li>
 <li><a href="#_saving_your_text">Saving Your Text</a></li>
-<li><a href="#_getting_out_of_code_ed_code">Getting Out of <code>ed</code></a></li>
-<li><a href="#_programming_with_code_ed_code">Programming with <code>ed</code></a></li>
+<li><a href="#_getting_out_of_ed">Getting Out of <code>ed</code></a></li>
+<li><a href="#_programming_with_ed">Programming with <code>ed</code></a></li>
 <li><a href="#_further_information">Further Information</a></li>
 </ul>
 </li>
@@ -616,7 +628,7 @@ all those things.</p>
 <p>It is a well-established fact that humanity reached the apex of processor design
 with the 6502 in 1976.</p>
 </div>
-<div id="img_65c02" class="imageblock" style="float: left">
+<div id="img_65c02" class="imageblock left">
 <div class="content">
 <img src="pics/W65c02.jpg" alt="W65c02">
 </div>
@@ -625,7 +637,7 @@ with the 6502 in 1976.</p>
 <div class="paragraph">
 <p>Created by a team including Chuck Peddle and Bill
 Mensch, it was the engine that powered the 8-bit home
-computer revolution of the 1980s.<sup class="footnote">[<a id="_footnoteref_1" class="footnote" href="#_footnote_1" title="View footnote.">1</a>]</sup> The
+computer revolution of the 1980s.<sup class="footnote">[<a id="_footnoteref_1" class="footnote" href="#_footnotedef_1" title="View footnote.">1</a>]</sup> The
 VIC-20, Commodore PET, Apple II,
 and Atari 800 all used the 6502, among others.</p>
 </div>
@@ -876,7 +888,7 @@ words.</p>
 apparent when you realize that Forth classically uses at least four virtual
 registers:</p>
 </div>
-<table class="tableblock frame-all grid-all">
+<table class="tableblock frame-all grid-all fit-content">
 <caption class="title">Table 1. The classic Forth registers</caption>
 <colgroup>
 <col>
@@ -1090,6 +1102,15 @@ One doesn&#8217;t write programs in Forth. Forth is the program.
 </div>
 </div>
 <div class="sect2">
+<h3 id="_recommended_reading">Recommended Reading</h3>
+<div class="paragraph">
+<p>If you are not familiar with Forth, now would be an excellent time to
+go and read Leo Brodie&#8217;s excellent "Starting Forth", available for
+free online, before continuing through this manual.  You can use Tali
+Forth 2 to run the examples given in the book.</p>
+</div>
+</div>
+<div class="sect2">
 <h3 id="_booting">Booting</h3>
 <div class="paragraph">
 <p>Out of the box, Tali Forth boots a minimal kernel to connect to the
@@ -1187,7 +1208,7 @@ inside Tali Forth.
 dictionary, that is, which words are found first. For instance,
 the native words &#8201;&#8212;&#8201;those coded in assembler&#8201;&#8212;&#8201;always start
 with <code>drop</code> and end with <code>bye</code>. This is the last word that Tali will find in
-the dictionary. <sup class="footnote">[<a id="_footnoteref_2" class="footnote" href="#_footnote_2" title="View footnote.">2</a>]</sup> The words before <code>drop</code> are those that are defined in high-level
+the dictionary. <sup class="footnote">[<a id="_footnoteref_2" class="footnote" href="#_footnotedef_2" title="View footnote.">2</a>]</sup> The words before <code>drop</code> are those that are defined in high-level
 Forth. For more information on individual the words, use the <code>see</code> command.</p>
 </div>
 <div class="admonitionblock tip">
@@ -1240,10 +1261,10 @@ word speeds up processing because the interpreter doesn&#8217;t have to convert 
 character "0" into the number <code>0</code>.</p>
 </div>
 <div class="paragraph">
-<p><strong>1 ( -- 0 )</strong> - Push the number 1 on the Data Stack.</p>
+<p><strong>1 ( -- 1 )</strong> - Push the number 1 on the Data Stack.</p>
 </div>
 <div class="paragraph">
-<p><strong>2 ( -- 0 )</strong> - Push the number 2 on the Data Stack.</p>
+<p><strong>2 ( -- 2 )</strong> - Push the number 2 on the Data Stack.</p>
 </div>
 <div class="paragraph">
 <p><strong>allow-native ( -- )</strong> - Mark last word in dictionary to that it can be natively
@@ -1339,8 +1360,9 @@ create a version of the <code>map</code> higher-order function in Forth.</p>
 <p><strong>compile-only ( -- )</strong> - Mark last word in dictionary as compile-only.</p>
 </div>
 <div class="paragraph">
-<p><strong>digit? ( char -- u f | char f )</strong> - If character is a digit, convert and set flag to
-<code>true</code>, otherwise return the offending character and a <code>false</code> flag.</p>
+<p><strong>digit? ( char -- u true | char false )</strong> - If character is a digit, convert
+and set flag to <code>true</code>, otherwise return the offending character and a <code>false</code>
+flag.</p>
 </div>
 <div class="paragraph">
 <p><strong>ed ( -- )</strong> - Start the command-line editor. There is a whole chapter on this father
@@ -1361,7 +1383,7 @@ assembler:</p>
 </div>
 <div class="paragraph">
 <p>With this behavior, <code>hexstore</code> functions as a reverse <code>dump</code>. The names "store"
-or "numberstore" might have been more appropriate, but "hexstore" as the
+or "numberstore" might have been more appropriate, but "hexstore" has the
 association of the Unix command <code>hexdump</code> and should be easier to understand.</p>
 </div>
 <div class="paragraph">
@@ -1437,9 +1459,8 @@ words that have the same name but live in different wordlists.</p>
 <div class="paragraph">
 <p>On startup, only the FORTH-WORDLIST is in the search order, so only those words
 will be found.  Tali also comes with an EDITOR-WORDLIST and an
-ASSEMBLER-WORDLIST, however those are not fully populated (mostly empty would be
-a better description of the current situation).  Room for 8 user wordlists is
-available, and the search order can also hold 8 wordlist identifiers. See
+ASSEMBLER-WORDLIST, Room for 8 user wordlists is available, and the search order
+can also hold 8 wordlist identifiers. See
 <a href="https://forth-standard.org/standard/search" class="bare">https://forth-standard.org/standard/search</a> for more information on wordlists and
 the search order.</p>
 </div>
@@ -1600,7 +1621,7 @@ covered in the standard, see the footnote at
 </div>
 </div>
 <div class="sect3">
-<h4 id="_negative_code_allot_code">Negative <code>allot</code></h4>
+<h4 id="_negative_allot">Negative <code>allot</code></h4>
 <div class="paragraph">
 <p>The ANSI standard does not define what happens if there is an attempt to free
 more memory with <code>allot</code> by passing a negative value than is available. Tali
@@ -1628,7 +1649,7 @@ message to document this. Realistically, you&#8217;ll probably want to restart w
 <div class="paragraph">
 <p>Tali supports the optional BLOCK word set. The 2012 Forth standard
 defines a block as 1024 bytes, and the buffers for them are the same
-size (as opposed to some older forths that had smaller buffers.) Tali
+size (as opposed to some older forths that had smaller buffers). Tali
 currently comes with one buffer.</p>
 </div>
 <div class="paragraph">
@@ -1798,7 +1819,7 @@ with blocks.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_the_line_based_editor_code_ed_code">The Line-Based Editor <code>ed</code></h3>
+<h3 id="_the_line_based_editor_ed">The Line-Based Editor <code>ed</code></h3>
 <div class="quoteblock">
 <blockquote>
 Ed makes no response to most commands – there is no prompting or typing of
@@ -1822,9 +1843,8 @@ fame. It is envoked with <code>ed</code>, though the formal name is <code>ed6502
 </td>
 <td class="content">
 <code>ed</code> uses about 2 KB of ROM in the default setup. If you know for certain
-you are not going to be using it, you can reclaim that space by commenting out
-the line <code>.require "ed.asm"</code> in <code>taliforth.asm</code> and the subroutine jump
-<code>jsr ed6502</code> for the <code>ed</code> command in <code>native_words.asm</code>.
+you are not going to be using it, you can reclaim that space by removing "ed"
+from the TALI_OPTIONAL_WORDS list in your platform file.
 </td>
 </tr>
 </table>
@@ -2073,14 +2093,14 @@ to write the text to as <code>7000w</code>.</p>
 </td>
 <td class="content">
 <code>ed</code> currently only works with decimal numbers. When in doubt, use
-<code>decimal</code> to make sure your using base ten.
+<code>decimal</code> to make sure you&#8217;re using base ten.
 </td>
 </tr>
 </table>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_using_code_ed_code_for_programming">Using <code>ed</code> for programming</h4>
+<h4 id="_using_ed_for_programming">Using <code>ed</code> for programming</h4>
 <div class="paragraph">
 <p><code>Ed</code> can be used to write programs and then execute them with <code>evaluate</code>. For
 instance, a session to add a small string could look something like this:</p>
@@ -2118,7 +2138,7 @@ go immediately to saving the text. Then, we can run the program:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>Ǹote that <code>evaluate</code> will handle line feeds, carriage returns and other white
+<p>Note that <code>evaluate</code> will handle line feeds, carriage returns and other white
 space apart from simple spaces without problems.</p>
 </div>
 </div>
@@ -2307,12 +2327,12 @@ than one assembler instruction in a line or including in-line comments:</p>
 <div class="paragraph">
 <p>The assembler words are immediate, that is, they are executed even during
 compilation. Simply adding them to a word doesn&#8217;t work. For example, if we want
-a word that pushes 1 on the Forth data stack, we might be tempted to do this
-(assuming <code>assembler-wordlist &gt;order</code> first):</p>
+a word that pushes 1 on the Forth data stack and prints it, we might be tempted
+to do this (assuming <code>assembler-wordlist &gt;order</code> first):</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>        : one-to-tos  compiled
+<pre>        : print-a-one  compiled
         1 lda.#                 \ fails with "Stack underflow"</pre>
 </div>
 </div>
@@ -2323,7 +2343,7 @@ problem, we can use the <code>[</code> and <code>]</code> words:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>        : one-to-tos  compiled
+<pre>        : print-a-one  compiled
         [ 1 lda.# ]  compiled
         [ push-a ]  compiled
         u. ;  ok</pre>
@@ -2344,11 +2364,11 @@ Forth uses Subroutine Threaded Code (STC).
 </table>
 </div>
 <div class="paragraph">
-<p>Running <code>one-to-tos</code> prints the number <code>1</code>. We can use a slightly simpler variant:</p>
+<p>Running <code>print-a-one</code> prints the number <code>1</code>. We can use a slightly simpler variant:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>        : one-to-tos  compiled
+<pre>        : print-a-one  compiled
         [ 1 lda.#  ok
         push-a ]  compiled
         u. ;  ok</pre>
@@ -2920,16 +2940,19 @@ like this:</p>
 </div>
 <div class="paragraph">
 <p>Note that some of these values are hard-coded into the test suite; see the file
-<code>definitions.txt</code> for details.</p>
+<code>definitions.asm</code> for details.</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_the_data_stack">The Data Stack</h3>
 <div class="paragraph">
-<p>Tali Forth uses the lowest part of the top half of the Zero Page for the Data Stack (DS). This leaves the lower half of the Zero Page
-for any kernel stuff the user might require. The DS grows towards the initial
-user variables. See the file <code>definitions.asm</code> for details. Because of the
-danger of underflow, it is recommended that the user kernel&#8217;s
+<p>Tali Forth uses half of Zero Page for the system variables and
+Data Stack (DS).  In the default py65mon platform, this is the address range
+$00-$7F (it can be adjusted by changing <code>zpage</code> and <code>zpage_end</code> in the platform
+file).  This leaves the other half of the Zero Page for any kernel stuff the
+user might require. The DS grows from the end of Tali&#8217;s space down towards the
+initial system variables. See the file <code>definitions.asm</code> for details. Because of
+the danger of underflow, it is recommended that the user kernel&#8217;s
 variables are kept closer to $0100 than to $007F.</p>
 </div>
 <div class="paragraph">
@@ -2961,7 +2984,7 @@ the DSP is defined as <code>dsp0</code> in the code.</p>
 <div class="paragraph">
 <p>Since the cell size is 16 bits, each stack entry consists of two bytes. They are
 stored little endian (least significant byte first). Therefore, the DSP points
-to the LSB of the current TOS. <sup class="footnote">[<a id="_footnoteref_3" class="footnote" href="#_footnote_3" title="View footnote.">3</a>]</sup></p>
+to the LSB of the current TOS. <sup class="footnote">[<a id="_footnoteref_3" class="footnote" href="#_footnotedef_3" title="View footnote.">3</a>]</sup></p>
 </div>
 <div class="paragraph">
 <p>Because the DSP points to the current top of the stack, the byte it points to
@@ -3001,7 +3024,7 @@ with the test:</p>
 <div class="paragraph">
 <p>Underflow detection adds three bytes and 16 cycles to the words that have it.
 However, it increases the stability of the program. There is an option for
-stripping it out during for user-defined words (see below).</p>
+stripping it out when compiling user-defined words (see below).</p>
 </div>
 <div class="paragraph">
 <p>Tali Forth does not check for overflow, which in normal operation is too rare
@@ -3074,7 +3097,8 @@ NN
 </td>
 <td class="hdlist2">
 <p><strong>Never Native.</strong> This Word is never inlined. Usually means that the return address
-from a subroutine jump is required for processing.</p>
+from a subroutine jump is required for processing.  Any words containing flow control
+should have this flag set and it is set by default for new words.</p>
 </td>
 </tr>
 <tr>
@@ -3195,11 +3219,11 @@ forms. There are four possible input sources:</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>To check which one is being used, we first call <code>blk</code> which gives us the number
+<p>To check which one is being used, we first check <code>blk</code> which gives us the number
 of a mass storage block being used, or 0 for the one of the other input sources.
 In the second case, we use <code>source-id</code> to find out where input is coming from:</p>
 </div>
-<table class="tableblock frame-all grid-all">
+<table class="tableblock frame-all grid-all fit-content">
 <caption class="title">Table 2. Non-block input sources</caption>
 <colgroup>
 <col>
@@ -3222,7 +3246,7 @@ In the second case, we use <code>source-id</code> to find out where input is com
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>n</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">file-id (not currently supported)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">file-id</p></td>
 </tr>
 </tbody>
 </table>
@@ -3239,13 +3263,13 @@ expects this routine to accept the character to out in A, rather than
 on the stack.</p>
 </div>
 <div class="paragraph">
-<p>Both the input routine and output routine may use the tmp1, tmp2, and
-tmp3 memory locations (defined in assembly.asm), but they need to
-push/pop them so they can restore the original values before
-returning.  If the input or output routines are written in Forth,
-extra care needs to be taken because many of the Forth words use these
-tmp variables and it&#8217;s not immediately obvious without checking the
-assembly for each word.</p>
+<p>Both the input routine and output routine may use the tmp1, tmp2, and tmp3
+memory locations (defined in assembly.asm), but they need to push/pop them so
+they can restore the original values before returning.  The X and Y registers
+also need to be preserved.  If the input or output routines are written in
+Forth, extra care needs to be taken because many of the Forth words use these
+tmp variables and it&#8217;s not immediately obvious without checking the assembly for
+each word.</p>
 </div>
 <div class="sect3">
 <h4 id="_booting_2">Booting</h4>
@@ -3279,7 +3303,7 @@ even if the input string was empty.</p>
 Input from a buffer
 </td>
 <td class="hdlist2">
-<p><em>Not implemented at this time</em></p>
+<p><em>Not fully implemented at this time</em></p>
 </td>
 </tr>
 <tr>
@@ -3304,7 +3328,7 @@ buffer.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_the_word_code_evaluate_code">The Word <code>evaluate</code></h4>
+<h4 id="_the_word_evaluate">The Word <code>evaluate</code></h4>
 <div class="paragraph">
 <p>The word `evaluate`is used to execute commands that are in a string. A simple example:</p>
 </div>
@@ -3315,13 +3339,16 @@ buffer.</p>
 </div>
 <div class="paragraph">
 <p>Tali Forth uses <code>evaluate</code> to load high-level Forth words from the file
-<code>forth_words.asc</code> and, if present, any extra, user-defined words from
-<code>user_words.asc</code>.</p>
+<code>forth_words.fs</code> and, if present, any extra, user-defined words from
+<code>user_words.fs</code>.  The code in these files has all comments removed and all
+whitespace replaced with a single splace between words.  This minimized version
+is assembled directly into the ROM image as a string that will be evaluated at
+startup.</p>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_the_words_code_create_code_and_code_does_code">The Words <code>create</code> and <code>does&gt;</code></h3>
+<h3 id="_the_words_create_and_does">The Words <code>create</code> and <code>does&gt;</code></h3>
 <div class="paragraph">
 <p>The tandem of words <code>create</code> and <code>does&gt;</code> is the most complex, but also most
 powerful part of Forth. Understanding how it works in Tali Forth is important
@@ -3356,7 +3383,7 @@ word <code>constant</code>.</p>
 <a href="#DB">[DB]</a>).</p>
 </div>
 <div class="sect3">
-<h4 id="_sequence_1_compiling_the_word_code_constant_code">Sequence 1: Compiling the Word <code>constant</code></h4>
+<h4 id="_sequence_1_compiling_the_word_constant">Sequence 1: Compiling the Word <code>constant</code></h4>
 <div class="paragraph">
 <p><code>constant</code> is a defining word, one that makes new words. In pseudocode,
 ignoring any compilation to native 65c02 assembler, the above compiles to:</p>
@@ -3410,7 +3437,7 @@ well.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_sequence_2_executing_the_word_code_constant_code">Sequence 2: Executing the Word <code>constant</code></h4>
+<h4 id="_sequence_2_executing_the_word_constant">Sequence 2: Executing the Word <code>constant</code></h4>
 <div class="paragraph">
 <p>Now when we execute</p>
 </div>
@@ -3469,7 +3496,7 @@ aborts the execution of the rest of <code>constant</code>, and we don&#8217;t wa
 </div>
 </div>
 <div class="sect3">
-<h4 id="_sequence_3_executing_code_life_code">Sequence 3: Executing <code>life</code></h4>
+<h4 id="_sequence_3_executing_life">Sequence 3: Executing <code>life</code></h4>
 <div class="paragraph">
 <p>Now we execute the word <code>life</code> from our "main" program. In a STC Forth
 such as Tali Forth, this executes a subroutine jump.</p>
@@ -3678,7 +3705,7 @@ a list of what we want to happen at compile time and what at run time. Let&#8217
 start with a simple <code>do</code>-<code>loop</code>.</p>
 </div>
 <div class="sect4">
-<h5 id="_code_do_code_at_compile_time"><code>do</code> at compile-time:</h5>
+<h5 id="_do_at_compile_time"><code>do</code> at compile-time:</h5>
 <div class="ulist">
 <ul>
 <li>
@@ -3699,7 +3726,7 @@ where the loop contents begin</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_code_do_code_at_run_time"><code>do</code> at run-time:</h5>
+<h5 id="_do_at_run_time"><code>do</code> at run-time:</h5>
 <div class="ulist">
 <ul>
 <li>
@@ -3713,7 +3740,7 @@ away with considering them at the same time.</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_code_loop_code_at_compile_time"><code>loop</code> at compile time:</h5>
+<h5 id="_loop_at_compile_time"><code>loop</code> at compile time:</h5>
 <div class="ulist">
 <ul>
 <li>
@@ -3739,7 +3766,7 @@ construct to the Return Stack at run-time</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_code_loop_code_at_run_time_which_is_code_loop_code"><code>loop</code> at run-time (which is <code>(+loop)</code>)</h5>
+<h5 id="_loop_at_run_time_which_is_loop"><code>loop</code> at run-time (which is <code>(+loop)</code>)</h5>
 <div class="ulist">
 <ul>
 <li>
@@ -4071,7 +4098,7 @@ headers.asm file and should never have the AN (Always Native) flag set.
 </div>
 </div>
 <div class="sect2">
-<h3 id="_code_cmove_code_code_cmove_code_and_code_move_code"><code>cmove</code>, <code>cmove&gt;</code> and <code>move</code></h3>
+<h3 id="_cmove_cmove_and_move"><code>cmove</code>, <code>cmove&gt;</code> and <code>move</code></h3>
 <div class="paragraph">
 <p>The three moving words <code>cmove</code>, <code>cmove&gt;</code> and <code>move</code> show subtle differences
 that can trip up new users and are reflected by different code under the hood.
@@ -4191,31 +4218,28 @@ adapt it to their own machines. This is also the reason it is (perversely)
 over-commented.</p>
 </div>
 <div class="paragraph">
-<p>To work on the internals of Tali Forth, you will need the Ophis assembler.</p>
+<p>To work on the internals of Tali Forth, you will need the 64tass assembler.</p>
 </div>
 <div class="sect3">
-<h4 id="_the_ophis_assembler">The Ophis Assembler</h4>
+<h4 id="_the_64tass_assembler">The 64tass Assembler</h4>
 <div class="paragraph">
-<p>Michael Martin&#8217;s Ophis Cross-Assembler can be downloaded from
-<a href="http://michaelcmartin.github.io/Ophis/" class="bare">http://michaelcmartin.github.io/Ophis/</a>. It uses a slightly different format than
-other assemblers, but is in Python and therefore will run on pretty much any
-operating system. To install Ophis on Windows, use the link provided above. For
-Linux:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>git clone https://github.com/michaelcmartin/Ophis
-cd Ophis/src
-sudo python setup.py install</pre>
-</div>
+<p>While Tali Forth 2 was originally developed with the Ophis assember, it was
+ported to the 64tass assembler because this assembler allows conditional
+compilation.</p>
 </div>
 <div class="paragraph">
-<p>Switch to the folder where the Tali code lives, and run the Makefile with a
-simple <code>make</code> command. This also updates the file listings in the <code>docs</code> folder.</p>
+<p>For Linux users, your operating system may have a pre-built 64tass package you
+can install.  For everyone else, you can head over to:
+<a href="https://sourceforge.net/projects/tass64/" class="bare">https://sourceforge.net/projects/tass64/</a>
+Windows users will probably want to just grab a binary (just put the executable
+in a convenient folder and make sure that folder is in the path).  Users of
+other OSes will probably need to compile from source (which is super easy as the
+code has almost no dependancies).</p>
 </div>
 <div class="paragraph">
-<p>Ophis has some quirks. For instance, you cannot use math symbols in label names,
-because it will try to perform those operations. Use underscores instead.</p>
+<p>Once you have 64tass installed, switch to the folder where the Tali code lives
+and run the Makefile with a simple <code>make</code> command (assumes you have GNU make
+installed). This also updates the file listings in the <code>docs</code> folder.</p>
 </div>
 </div>
 <div class="sect3">
@@ -4245,7 +4269,7 @@ this requires a branch to an internal label <code>_done</code> right before <cod
 <div class="sect3">
 <h4 id="_coding_style">Coding Style</h4>
 <div class="paragraph">
-<p>Until there is a tool for Ophis assembly code that formats the source file the
+<p>Until there is a tool for 64tass assembly code that formats the source file the
 way gofmt does for Go (golang), the following format is suggested.</p>
 </div>
 <div class="ulist">
@@ -4274,23 +4298,6 @@ thank you very much.</p>
 <li>
 <p>Hex numbers are, however, upper case, such as <code>$FFFE</code>.</p>
 </li>
-</ul>
-</div>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
-The Ophis assembler interprets numbers with a leading zero as octal.
-This can be an annoying source of errors.
-</td>
-</tr>
-</table>
-</div>
-<div class="ulist">
-<ul>
 <li>
 <p>Numbers in mnemonics are a stripped-down as possible to reduce
 visual clutter: use <code>lda 0,x</code> instead of <code>lda $00,x</code>.</p>
@@ -4344,13 +4351,11 @@ numbers and symbols) of the word.</p>
 <div class="content">
 <pre>; ## GETSTATE ( -- n ) "Get the current state"
 ; ## "getstate" coded Custom
-.scope
 xt_getstate:
                 jsr xt_state
                 jsr xt_fetch ; @ is pronounced "fetch" in Forth.
 z_getstate:
-                rts
-.scend</pre>
+                rts</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -4373,10 +4378,9 @@ status field, but "coded" is likely to be the right choice until you&#8217;ve
 thoroughly tested your new word.</p>
 </div>
 <div class="paragraph">
-<p>The <code>.scope</code> and <code>.scend</code> are special directives to the Ophis assembler to
-create a scope for local labels.  Local labels begin with an underscore "_" and
-are only visible within the same scope.  This allows multiple words to all have
-a <code>_done:</code> label, for example, and each word will only branch to its own local
+<p>Local labels begin with an underscore "_" and are only visible within the same
+scope (between two regular labels).  This allows multiple words to all have a
+<code>_done:</code> label, for example, and each word will only branch to its own local
 version of <code>_done:</code> found within its scope.  Any branching within the word
 (eg. for ifs and loops) should be done with local labels.  Labels without an
 underscore at the beginning are globally available.</p>
@@ -4436,7 +4440,6 @@ to deal with that complication as well.</p>
 <div class="content">
 <pre>; ## STAR_WORD ( -- ) "Print a * on the screen"
 ; ## "star" coded Custom
-.scope
 xt_star_word:
                 ; Put a * character on the stack.
                 dex             ; Make room on the data stack.
@@ -4446,8 +4449,7 @@ xt_star_word:
                 stz 1,x         ; high byte is zeroed for characters.
                 jsr xt_emit     ; Print the character to the screen.
 z_star_word:
-                rts
-.scend</pre>
+                rts</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -4509,7 +4511,6 @@ the actual assembly definition of this word) is:</p>
 <pre>; ## IS ( xt "name" -- ) "Set named word to execute xt"
 ; ## "is"  auto  ANS core ext
         ; """http://forth-standard.org/standard/core/IS"""
-.scope
 xt_is:
                 ; This is a state aware word with different behavior
                 ; when used while compiling vs interpreting.
@@ -4531,8 +4532,7 @@ _interpreting:
                 jsr xt_tick
                 jsr xt_defer_store
 _done:
-z_is:           rts
-.scend</pre>
+z_is:           rts</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -4610,7 +4610,6 @@ bignum d.</pre>
         ; Based on the Forth code
         ; : 2CONSTANT ( D -- )  CREATE SWAP , , DOES&gt; DUP @ SWAP CELL+ @ ;
         ; """
-.scope
 xt_two_constant:
                 jsr underflow_2
 
@@ -4628,8 +4627,7 @@ xt_two_constant:
                 jsr xt_cell_plus
                 jsr xt_fetch
 
-z_two_constant: rts
-.scend</pre>
+z_two_constant: rts</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -4659,7 +4657,7 @@ comment block over it and the xt_xxxx and z_xxxx labels for the entry and exit
 points, it is time to add the dictionary header for your word to link it into
 one of the existing wordlists.  The words here are not in alphabetical order and
 are loosely grouped by function.  If you aren&#8217;t sure where to put your word, then
-put it near the top of the file just under the header for <code>cold</code>.</p>
+put it near the top of the file just under the header for <code>drop</code>.</p>
 </div>
 <div class="paragraph">
 <p>Each header is simply a declaration of bytes and words that provides some basic
@@ -4671,23 +4669,22 @@ spelled-out version of your word&#8217;s name).</p>
 <div class="paragraph">
 <p>Before we dicuss adding a word, let&#8217;s go over the form a dictionary header.  The
 fields we will be filling in are described right at the top of headers.asm for
-reference. We&#8217;ll look at an easy to locate word, <code>cold</code>, which is used to
-perform a cold reset of Tali. It&#8217;s right near the top of the list.  We&#8217;ll also
-show the word <code>ed</code>, which is currently below <code>cold</code>, because you will need to
-modify it (or whatever word is currently just below <code>cold</code>) when you put your
-word under <code>cold</code>.  The headers for these two words currently look like:</p>
+reference. We&#8217;ll look at an easy to locate word, <code>drop</code>, which is used to
+remove the top item on the stack. It&#8217;s right near the top of the list.  We&#8217;ll also
+show the word <code>dup</code>, which is the next word is the dictionary.
+The headers for these two words currently look like:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>nt_cold:
-        .byte 4, 0
-        .word nt_bye, xt_cold, z_cold
-        .byte "cold"
+<pre>nt_drop:
+        .byte 4, UF
+        .word nt_dup, xt_drop, z_drop
+        .text "drop"
 
-nt_ed:                  ; ed6502
-        .byte 2, NN
-        .word nt_cold, xt_ed, z_ed
-        .byte "ed"</pre>
+nt_dup:
+        .byte 3, UF
+        .word nt_swap, xt_dup, z_dup
+        .text "dup"</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -4696,7 +4693,7 @@ nt_xxxx where xxxx is the spelled out version of your word&#8217;s name.  The xx
 should match whatever you used in your xt_xxxx and z_xxxx labels.</p>
 </div>
 <div class="paragraph">
-<p>The next two fields are byte fields, so we create them with the Ophis assembler
+<p>The next two fields are byte fields, so we create them with the 64tass assembler
 <code>.byte</code> directive.  The first field is the length of the name, in characters, as
 it will be typed in Tali.  The second field is the status of the word, where
 each bit has a special meaning.  If there is nothing special about your word,
@@ -4775,30 +4772,31 @@ you wanted it to be an immediate word, you might put <code>IM+UF</code> for this
 </div>
 <div class="paragraph">
 <p>The next line contains three addresses, so the Ophis <code>.word</code> directive is used
-here.  The first address is the nt_xxxx of the next word in the word list.  The
-words are actually listed from bottom to top in this file, so this will be the
-nt_xxxx label of the word just above this one in the file.  The second address
-is the xt (execution token), or entry point, of your new word.  This will be
-your xt_xxxx label for your word.  The third address is the end of your routine,
-just before the RTS instruction.  You will use your z_xxxx label here.  The
-xt_xxxx and z_xxxx are used as the bounds of your word if it ends up being
-natively compiled.</p>
+here.  The first address is the nt_xxxx of the next word in the word list (with 0
+used for the very last word in the word list).  The
+words are listed in dictionary order, so this will normally be the nt_xxxx of
+the word just below (there may be some anonymous labels used if the next word is
+conditionally assembled).  The second address is the xt (execution token), or
+entry point, of your new word.  This will be your xt_xxxx label for your word.
+The third address is the end of your routine, just before the RTS instruction.
+You will use your z_xxxx label here.  The xt_xxxx and z_xxxx are used as the
+bounds of your word if it ends up being natively compiled.</p>
 </div>
 <div class="paragraph">
-<p>In the sample headers above, you can see that <code>ed</code> links to <code>cold</code> as the next
-word, and <code>cold</code> links to <code>bye</code> (not shown) as the next word.  When you go to
+<p>In the sample headers above, you can see that <code>drop</code> links to <code>dup</code> as the next
+word, and <code>dup</code> links to <code>swap</code> (not shown) as the next word.  When you go to
 add your own word, you will need to adjust these linkages.</p>
 </div>
 <div class="paragraph">
 <p>The last line is the actual name of the word, as it will be typed in forth, in
-lowercase.  It uses the Ophis <code>.byte</code> directive and Ophis allows literal
+lowercase.  It uses the 64tass <code>.text</code> directive and 64tass allows literal
 strings, so you can just put the name of your word in double-quotes.  If your
 word has a double-quote in it, look up <code>nt_s_quote</code> in the headers to see how
 this is handled.</p>
 </div>
 <div class="paragraph">
-<p>Although Tali is not case-sensitive, all words in the dictionary headers must be
-in lowercase or Tali will not be able to find them.  The length of this string
+<p>Although Tali is not case-sensitive, all words in the dictionary headers <strong>must be
+in lowercase</strong> or Tali will not be able to find them.  The length of this string
 also needs to match the length given as the first byte, or Tali will not be able
 to find this word.</p>
 </div>
@@ -4810,34 +4808,31 @@ requires one of the status flags (<code>is</code>).</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>nt_cold:
-        .byte 4, 0
-        .word nt_bye, xt_cold, z_cold
-        .byte "cold"
+<pre>nt_drop:
+        .byte 4, UF
+        .word nt_star_word, xt_drop, z_drop
+        .text "drop"
 
-nt_star:
+nt_star_word:
         .byte 4, 0
-        .word nt_cold, xt_star_word, z_star_word
-        .byte "star"
+        .word nt_is, xt_star_word, z_star_word
+        .text "star"
 
 nt_is:
         .byte 2, IM
-        .word nt_star, xt_is, z_is
-        .byte "is"
-
-nt_ed:                  ; ed6502
-        .byte 2, NN
-        .word nt_is, xt_ed, z_ed
-        .byte "ed"</pre>
+        .word nt_dup, xt_is, z_is
+        .text "is"
+nt_dup:
+        .byte 3, UF
+        .word nt_swap, xt_dup, z_dup
+        .text "dup"</pre>
 </div>
 </div>
 <div class="paragraph">
 <p>The first thing to note is the updated linked list of words.  In order to put
-the new words between <code>ed</code> and <code>cold</code>, we make <code>ed</code> link to <code>is</code>, which then
-links to <code>star</code>, and that links back to <code>cold</code>.  Because this file links the
-headers from the bottom to the top of the file, this actually places the new
-words near the end of the dictionary.  If you use the <code>words</code> command, you will
-find the new words near the end of the list.</p>
+the new words between <code>drop</code> and <code>dup</code>, we make <code>drop</code> link to <code>star</code>, which then
+links to <code>is</code>, and that links back to <code>dup</code>.  If you use the <code>words</code> command, you will
+find the new words near the beginning of the list.</p>
 </div>
 <div class="paragraph">
 <p>The second thing to note is the status byte of each word.  If the word doesn&#8217;t
@@ -5376,7 +5371,7 @@ it yourself if you want.</p>
 <h4 id="_a_simple_block_example">A simple block example</h4>
 <div class="openblock float-group">
 <div class="content">
-<div class="imageblock" style="float: left">
+<div class="imageblock left">
 <div class="content">
 <img src="pics/blocks-block.png" alt="blocks block">
 </div>
@@ -5404,7 +5399,7 @@ buffer contents will be replaced every time.</p>
 </div>
 <div class="openblock float-group">
 <div class="content">
-<div class="imageblock" style="float: left">
+<div class="imageblock left">
 <div class="content">
 <img src="pics/blocks-update.png" alt="blocks update">
 </div>
@@ -5431,7 +5426,7 @@ would be lost.</p>
 </div>
 <div class="openblock float-group">
 <div class="content">
-<div class="imageblock" style="float: left">
+<div class="imageblock left">
 <div class="content">
 <img src="pics/blocks-newblock.png" alt="blocks newblock">
 </div>
@@ -5452,7 +5447,7 @@ in the buffer, it will be marked as "in-use" with block 3 and "clean".</p>
 </div>
 <div class="openblock float-group">
 <div class="content">
-<div class="imageblock" style="float: left">
+<div class="imageblock left">
 <div class="content">
 <img src="pics/blocks-update3.png" alt="blocks update3">
 </div>
@@ -5477,7 +5472,7 @@ point.</p>
 </div>
 <div class="openblock float-group">
 <div class="content">
-<div class="imageblock" style="float: left">
+<div class="imageblock left">
 <div class="content">
 <img src="pics/blocks-flush.png" alt="blocks flush">
 </div>
@@ -5723,7 +5718,7 @@ value was changed, making the routine much slower.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_the_code_ed_code_line_based_editor_a_id_ed_tutorial_a">The <code>ed</code> Line-Based Editor<a id="ed-tutorial"></a></h2>
+<h2 id="_the_ed_line_based_editor">The <code>ed</code> Line-Based Editor<a id="ed-tutorial"></a></h2>
 <div class="sectionbody">
 <div class="quoteblock">
 <blockquote>
@@ -5771,7 +5766,7 @@ line numbers the command is supposed to work on. For example, <code>1,4d</code> 
 lines one to four.</p>
 </div>
 <div class="sect2">
-<h3 id="_first_steps_with_code_ed_code">First steps with <code>ed</code></h3>
+<h3 id="_first_steps_with_ed">First steps with <code>ed</code></h3>
 <div class="paragraph">
 <p>Like its big brother <code>vi</code> (or its newer incarnation <code>vim</code>), <code>ed</code> has various
 modes, except that <code>ed</code> is so small it only has two. We start out in the
@@ -5782,7 +5777,7 @@ modes, except that <code>ed</code> is so small it only has two. We start out in 
 <p>The first important thing is about how to get out of command mode: You type <code>.</code>
 (the period or dot) at the beginning of the line as the only character to return
 to command mode. A typical <code>ed</code> session will look something like
-this:<sup class="footnote">[<a id="_footnoteref_4" class="footnote" href="#_footnote_4" title="View footnote.">4</a>]</sup></p>
+this:<sup class="footnote">[<a id="_footnoteref_4" class="footnote" href="#_footnotedef_4" title="View footnote.">4</a>]</sup></p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -6055,7 +6050,7 @@ which will overwrite the zero page of the 65c02.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_getting_out_of_code_ed_code">Getting Out of <code>ed</code></h3>
+<h3 id="_getting_out_of_ed">Getting Out of <code>ed</code></h3>
 <div class="paragraph">
 <p>We can leave <code>ed</code> at any time with <code>Q</code> - note this is the capital letter "q".
 Any unsaved (unwritten, rather) text will be lost. The lowercase <code>q</code> will refuse
@@ -6122,7 +6117,7 @@ character. This control character marks the end of the line.</td>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_programming_with_code_ed_code">Programming with <code>ed</code></h3>
+<h3 id="_programming_with_ed">Programming with <code>ed</code></h3>
 <div class="paragraph">
 <p>You can use <code>ed</code> to write and save programs. Fire it up as usual:</p>
 </div>
@@ -9425,7 +9420,7 @@ receive bug fixes. In fact, new bugs are not even documented.</p>
 </dd>
 </dl>
 </div>
-<div id="img_talialpha" class="imageblock" style="text-align: center">
+<div id="img_talialpha" class="imageblock text-center">
 <div class="content">
 <img src="pics/tali_forth_alpha003.png" alt="tali forth alpha003">
 </div>
@@ -9440,7 +9435,7 @@ it to. If it sounds vaguely familiar, you&#8217;re probably thinking of Tali&#82
 Normandy a character in the <em>Mass
 Effect</em>  universe created by BioWare. This
 software has absolutely nothing to do with neither the game nor the companies and
-neither do I, expect that I&#8217;ve played the whole series and enjoyed it.<sup class="footnote">[<a id="_footnoteref_5" class="footnote" href="#_footnote_5" title="View footnote.">5</a>]</sup></p>
+neither do I, expect that I&#8217;ve played the whole series and enjoyed it.<sup class="footnote">[<a id="_footnoteref_5" class="footnote" href="#_footnotedef_5" title="View footnote.">5</a>]</sup></p>
 </dd>
 <dt class="hdlist1">And who is "Liara"?</dt>
 <dd>
@@ -9633,7 +9628,7 @@ such as a small Forth assembler here are limited at best.</p>
 </div>
 <div class="sect2">
 <h3 id="_complete_list_of_65c02_addressing_modes">Complete list of 65c02 addressing modes</h3>
-<table class="tableblock frame-all grid-all spread">
+<table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 33.3333%;">
@@ -9846,26 +9841,26 @@ under <a href="https://www.ubuntu.com/">Ubuntu</a> Linux 16.04 LTS.</p>
 </div>
 <div id="footnotes">
 <hr>
-<div class="footnote" id="_footnote_1">
+<div class="footnote" id="_footnotedef_1">
 <a href="#_footnoteref_1">1</a>. Rumor has it that there was another MPU called "Z80", but it ended up being a mere footnote.
 </div>
-<div class="footnote" id="_footnote_2">
+<div class="footnote" id="_footnotedef_2">
 <a href="#_footnoteref_2">2</a>. If you&#8217;re going to quit anyway, speed can&#8217;t be that important
 </div>
-<div class="footnote" id="_footnote_3">
+<div class="footnote" id="_footnotedef_3">
 <a href="#_footnoteref_3">3</a>. Try reading that last sentence to a friend who isn&#8217;t into computers. Aren&#8217;t abbreviations fun?
 </div>
-<div class="footnote" id="_footnote_4">
+<div class="footnote" id="_footnotedef_4">
 <a href="#_footnoteref_4">4</a>. All quotes in the <code>ed</code> tutorial are taken from the <em>Mass Effect</em> games by BioWare/EA. As stated already, they hold the rights to all characters and whatnot.
 </div>
-<div class="footnote" id="_footnote_5">
+<div class="footnote" id="_footnotedef_5">
 <a href="#_footnoteref_5">5</a>. Though I do wish they would tell us what happened to the quarian ark in <em>Andromeda</em>.
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
 Version 1.0<br>
-Last updated 2019-01-12 16:01:50 EST
+Last updated 2019-01-12 16:01:50 -0500
 </div>
 </div>
 </body>

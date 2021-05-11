@@ -82,11 +82,11 @@ than one assembler instruction in a line or including in-line comments:
 
 The assembler words are immediate, that is, they are executed even during
 compilation. Simply adding them to a word doesn't work. For example, if we want
-a word that pushes 1 on the Forth data stack, we might be tempted to do this
-(assuming `assembler-wordlist >order` first):
+a word that pushes 1 on the Forth data stack and prints it, we might be tempted
+to do this (assuming `assembler-wordlist >order` first):
 
 ----
-        : one-to-tos  compiled
+        : print-a-one  compiled
         1 lda.#                 \ fails with "Stack underflow"
 ----
 
@@ -95,7 +95,7 @@ The problem is that the number `1` is compiled, and then the immediate word
 problem, we can use the `[` and `]` words:
 
 ----
-        : one-to-tos  compiled
+        : print-a-one  compiled
         [ 1 lda.# ]  compiled
         [ push-a ]  compiled
         u. ;  ok
@@ -105,10 +105,10 @@ NOTE: We do not need to add an explicit `rts` instruction when compiling new
 words with assembler because the `;` does it automatically. This is because Tali
 Forth uses Subroutine Threaded Code (STC).
 
-Running `one-to-tos` prints the number `1`. We can use a slightly simpler variant:
+Running `print-a-one` prints the number `1`. We can use a slightly simpler variant:
 
 ----
-        : one-to-tos  compiled
+        : print-a-one  compiled
         [ 1 lda.#  ok   
         push-a ]  compiled
         u. ;  ok
