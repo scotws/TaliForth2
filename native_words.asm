@@ -11522,7 +11522,8 @@ _loop:
                 bcc +
 
                 jsr xt_cr
-                lda #0
+                lda 0,x
+                inc
 *
                 pha
                 jsr xt_type             ; ( nt )
