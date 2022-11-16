@@ -1,7 +1,11 @@
 # Tali Forth 2 for the 65c02  
 Scot W. Stevenson <scot.stevenson@gmail.com>   
-First version: (Tali Forth 1 ) 19. Jan 2014
-This version: (Version 1.0 ) 25. Jan 2020
+First version: (Tali Forth 1) 19. Jan 2014  
+This version: (Version 1.0) 25. Jan 2020  
+
+**IMPORTANT: As of 2022-11-16, this version of Tali Forth is not being maintained.** See 
+[https://github.com/SamCoVT/TaliForth2](https://github.com/SamCoVT/TaliForth2) for the current 
+version. Please submit issues and pull requests in that respository as well. **Thank you!** 
 
 ## Dude, I am the very model of a Salarian scientist, just let me start!
 
